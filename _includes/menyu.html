@@ -1,0 +1,11 @@
+<nav class="menyu" aria-label="Asosiy menyu">
+  <ul>
+    <li><a href="{{ '/uz/' | relative_url }}">Bosh sahifa</a></li>
+    {% assign ochiq_bolimlar = site.data.bolimlar | where: "holat", "ochiq" %}
+    {% for b in ochiq_bolimlar %}
+    <li><a href="{{ '/uz/' | append: b.slug | append: '/' | relative_url }}">{{ b.nomi }}</a></li>
+    {% endfor %}
+    <li><a href="{{ '/uz/deadline/' | relative_url }}">Deadline</a></li>
+    <li><a href="{{ '/uz/manbalar/' | relative_url }}">Manbalar</a></li>
+  </ul>
+</nav>
