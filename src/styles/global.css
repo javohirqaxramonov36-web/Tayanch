@@ -1,0 +1,82 @@
+@import '@fontsource-variable/figtree';
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fon);
+  color: var(--matn);
+  font-family: var(--shrift);
+  font-size: var(--matn-asosiy);
+  line-height: 1.6;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 800; }
+h1 { font-size: var(--matn-h1); line-height: 1.12; }
+h2 { font-size: var(--matn-h2); line-height: 1.2; }
+h3 { font-size: var(--matn-h3); line-height: 1.25; }
+p { margin: 0; }
+
+a { color: inherit; text-underline-offset: 0.15em; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--rang-asosiy);
+  outline-offset: 2px;
+}
+
+.ichki {
+  max-width: var(--kenglik);
+  margin: 0 auto;
+  padding-inline: var(--b-5);
+}
+
+.otish {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--sirt);
+  padding: var(--b-2) var(--b-3);
+  z-index: 10;
+}
+.otish:focus { left: var(--b-2); }
+
+/* Tugmalar */
+.tugma {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--b-2);
+  min-height: 48px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--r-toliq);
+  font: inherit;
+  font-size: var(--matn-asosiy);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.tugma-asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+.tugma-asosiy:hover { background: var(--rang-asosiy-toq); }
+.tugma-ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
+.tugma-ikkinchi:hover { background: var(--chiziq); }
+
+/* Yorliq */
+.yorliq {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: var(--r-toliq);
+  background: var(--sirt-ikkinchi);
+  color: var(--matn-ikkinchi);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sust { color: var(--matn-sust); }
+.ikkinchi { color: var(--matn-ikkinchi); }
+.kichik { font-size: var(--matn-kichik); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

@@ -1,0 +1,217 @@
+---
+import Asosiy from '../../layouts/Asosiy.astro';
+import MaqsadTesti from '../../components/MaqsadTesti.astro';
+import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
+import { bolimlar } from '../../data/bolimlar';
+import { yol } from '../../lib/yol';
+---
+<Asosiy
+  title="Tayanch"
+  description="Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq yo'riqnoma: universitetga topshirish, IELTS, SAT va El-Yurt Umidi."
+  turi="bosh-sahifa"
+  bolim="umumiy"
+  holat="chop-etilgan"
+  tekshirilgan="2026-11-04"
+  keyingiTekshiruv="2026-12-04"
+>
+  <section class="ichki kirish">
+    <h1>Chet elda o'qish yo'lingizni qayerdan boshlaysiz?</h1>
+    <p class="kirish-matn ikkinchi">3 ta savolga javob bering, Tayanch qaysi bo'limdan boshlashni tavsiya qiladi. Ro'yxatdan o'tish shart emas.</p>
+  </section>
+
+  <div class="ichki test-orni">
+    <MaqsadTesti />
+  </div>
+
+  <section id="yonalish" class="oq">
+    <div class="ichki blok">
+      <h2>Yoki to'g'ridan-to'g'ri tanlang</h2>
+      <ul class="kartalar">
+        {bolimlar.map((b) => {
+          const Teg = b.holat === 'ochiq' ? 'a' : 'div';
+          return (
+            <li>
+              <Teg class="karta" href={b.holat === 'ochiq' ? yol(`/uz/${b.slug}/`) : undefined} style={`background:${b.rangToken}`}>
+                <span class="karta-nom">{b.nomi}</span>
+                <span class="karta-tavsif">{b.tavsif}</span>
+                <span class="jonli" aria-hidden="true">
+                  {b.slug === 'top-admission' && (
+                    <span class="royxatcha">
+                      <span><i class="belgi toliq"></i>Universitetlar ro'yxati</span>
+                      <span><i class="belgi toliq"></i>Hujjatlar</span>
+                      <span><i class="belgi"></i>Esse</span>
+                    </span>
+                  )}
+                  {b.slug === 'ielts' && (
+                    <span class="tfng">
+                      <span class="kichik">The museum opened in 1990.</span>
+                      <span class="tfng-tugmalar"><span>True</span><span>False</span><span>Not Given</span></span>
+                    </span>
+                  )}
+                  {b.slug === 'sat' && (
+                    <span class="soz">
+                      <span class="kichik sust">Kunlik so'z</span>
+                      <span class="soz-matn">meticulous</span>
+                      <span class="kichik ikkinchi">juda sinchkov, puxta</span>
+                    </span>
+                  )}
+                  {b.slug === 'eyuf' && (
+                    <span class="nuqtalar">
+                      <i class="n toliq"></i><i class="c toliq"></i><i class="n toliq"></i><i class="c"></i><i class="n"></i>
+                    </span>
+                  )}
+                </span>
+                {b.holat !== 'ochiq' && <span class="yorliq oq-yorliq">Tez orada</span>}
+              </Teg>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <section class="ichki blok bosqichlar">
+    <div class="bosqich">
+      <div class="bosqich-matn">
+        <span class="ust">1 · BOSHLASH</span>
+        <h3>Aniq yo'l, taxminsiz</h3>
+        <p class="ikkinchi">Har bo'limda qadam-baqadam qo'llanma. Har qoida yonida rasmiy manba va tekshirilgan sana.</p>
+      </div>
+      <div class="bosqich-rasm" style="background:var(--bolim-top-admission)" aria-hidden="true">
+        <span class="mini-karta">
+          <strong>Hujjatlar ro'yxati</strong>
+          <span class="kichik sust">Manba: rasmiy sayt · tekshirilgan sana</span>
+          <span class="chiziqcha"></span><span class="chiziqcha qisqa"></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="bosqich teskari">
+      <div class="bosqich-matn">
+        <span class="ust">2 · TAYYORLANISH</span>
+        <h3>Har kuni oz-ozdan</h3>
+        <p class="ikkinchi">So'z kartochkalari, qisqa mashqlar va 30 kunlik reja. Natijangiz faqat brauzeringizda saqlanadi.</p>
+      </div>
+      <div class="bosqich-rasm" style="background:var(--bolim-sat)" aria-hidden="true">
+        <span class="mini-karta markaz">
+          <span class="kichik sust">2 / 5</span>
+          <strong class="katta">concise</strong>
+          <span class="kichik sust">Aylantirish uchun bosing</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="bosqich">
+      <div class="bosqich-matn">
+        <span class="ust">3 · TOPSHIRISH</span>
+        <h3>Muddatni o'tkazib yubormang</h3>
+        <p class="ikkinchi">Rasmiy tasdiqlangan muddatlar bitta kalendarda. Natija kafolatlanmaydi, lekin yo'l aniq bo'ladi.</p>
+      </div>
+      <div class="bosqich-rasm" style="background:var(--bolim-eyuf)" aria-hidden="true">
+        <span class="mini-karta">
+          <strong>Muddatlar</strong>
+          <span class="qator"><i></i><span class="chiziqcha"></span></span>
+          <span class="qator"><i></i><span class="chiziqcha qisqa"></span></span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="oq">
+    <div class="ichki blok muallif">
+      <span class="avatar" aria-hidden="true">J</span>
+      <div>
+        <h2 class="muallif-nom">Muallif: Javohir</h2>
+        <p class="ikkinchi">IELTS 7.0 va SAT 1420 ga qimmat kurslarsiz, mustaqil tayyorlangan. Tayanch shu yo'lni boshqalar uchun ochiq qiladi.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ichki blok">
+    <h2>Yaqin muddatlar</h2>
+    <DeadlineRoyxati faqatKelajak />
+    <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
+  </section>
+</Asosiy>
+
+<style>
+  .kirish {
+    padding-block: var(--b-14) var(--b-10);
+    display: flex; flex-direction: column; align-items: center; gap: var(--b-4);
+    text-align: center;
+  }
+  .kirish h1 { max-width: 760px; }
+  .kirish-matn { font-size: var(--matn-katta); max-width: 620px; }
+  .test-orni { max-width: 760px; padding-bottom: var(--b-16); }
+
+  .oq { background: var(--sirt); }
+  .blok { padding-block: var(--b-16); display: flex; flex-direction: column; gap: 28px; }
+
+  .kartalar {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px;
+  }
+  .karta {
+    height: 100%;
+    display: flex; flex-direction: column; gap: 14px;
+    border-radius: var(--r-katta); padding: 22px;
+    text-decoration: none; color: var(--matn);
+  }
+  a.karta:hover { outline: 2px solid var(--matn); outline-offset: -2px; }
+  .karta-nom { font-weight: 800; font-size: var(--matn-h3); }
+  .karta-tavsif { font-size: 15px; line-height: 1.5; }
+  .jonli { background: var(--sirt); border-radius: var(--r-orta); padding: 14px; flex: 1; display: flex; }
+  .oq-yorliq { align-self: flex-start; background: var(--sirt); }
+
+  .royxatcha { display: flex; flex-direction: column; gap: 8px; font-size: var(--matn-kichik); font-weight: 500; }
+  .royxatcha span { display: flex; gap: 8px; align-items: center; }
+  .belgi { width: 18px; height: 18px; border-radius: var(--r-kichik); border: 2px solid #aab3ff; }
+  .belgi.toliq { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
+
+  .tfng { display: flex; flex-direction: column; gap: 10px; }
+  .tfng .kichik { font-weight: 600; }
+  .tfng-tugmalar { display: flex; flex-wrap: wrap; gap: 6px; font-size: var(--matn-mayda); font-weight: 700; }
+  .tfng-tugmalar span { background: var(--bolim-ielts); border-radius: var(--r-toliq); padding: 6px 10px; }
+
+  .soz { display: flex; flex-direction: column; gap: 2px; }
+  .soz-matn { font-weight: 800; font-size: 20px; }
+
+  .nuqtalar { display: flex; align-items: center; gap: 6px; width: 100%; padding-block: 4px; }
+  .nuqtalar .n { width: 18px; height: 18px; border-radius: var(--r-toliq); border: 3px solid #a6dfe3; flex: none; }
+  .nuqtalar .n.toliq { background: #0b7a83; border-color: #0b7a83; }
+  .nuqtalar .c { flex: 1; height: 4px; border-radius: 2px; background: #a6dfe3; }
+  .nuqtalar .c.toliq { background: #0b7a83; }
+
+  .bosqichlar { gap: var(--b-14); }
+  .bosqich { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-10); }
+  .bosqich.teskari { flex-wrap: wrap-reverse; flex-direction: row-reverse; }
+  .bosqich-matn { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .bosqich-matn p { font-size: 17px; max-width: 62ch; }
+  .ust { font-size: var(--matn-mayda); font-weight: 800; letter-spacing: 1px; color: var(--rang-asosiy); }
+  .bosqich-rasm {
+    flex: 1 1 420px; min-width: 0; min-height: 240px;
+    border-radius: var(--r-katta);
+    display: flex; align-items: center; justify-content: center; padding: var(--b-6);
+  }
+  .mini-karta {
+    background: var(--sirt); border-radius: var(--r-orta); box-shadow: var(--soya);
+    padding: 20px; width: min(320px, 100%);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .mini-karta.markaz { align-items: center; text-align: center; padding-block: 32px; }
+  .mini-karta .katta { font-size: 28px; }
+  .chiziqcha { display: block; height: 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); width: 100%; }
+  .chiziqcha.qisqa { width: 60%; }
+  .qator { display: flex; align-items: center; gap: 10px; }
+  .qator i { width: 12px; height: 12px; border-radius: var(--r-toliq); background: #0b7a83; flex: none; }
+
+  .muallif { flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--b-6); }
+  .muallif > div { flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .muallif-nom { font-size: 22px; }
+  .avatar {
+    width: 88px; height: 88px; border-radius: var(--r-toliq);
+    background: var(--bolim-top-admission); color: var(--rang-asosiy);
+    font-weight: 800; font-size: 36px;
+    display: flex; align-items: center; justify-content: center;
+  }
+</style>
