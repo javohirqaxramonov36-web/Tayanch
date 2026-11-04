@@ -149,6 +149,19 @@ th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--chizi
 }
 .deadline-royxati li.otgan { opacity: 0.6; }
 
+/* Ko'p beriladigan savollar (JS'siz ochiladi) */
+.savol {
+  background: var(--sirt);
+  border: 1px solid var(--chiziq);
+  border-radius: var(--radius);
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+}
+.savol summary { cursor: pointer; font-weight: 600; }
+.savol p { margin: 0.5rem 0 0.25rem; }
+
+.karta h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+
 .bosh-holat { color: var(--matn-sust); font-style: italic; }
 .kichik { font-size: 0.875rem; color: var(--matn-sust); }
 
