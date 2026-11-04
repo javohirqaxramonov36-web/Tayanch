@@ -33,10 +33,10 @@ const savollar = [
 ];
 
 const tavsiyalar = [
-  { id: 'ielts', nomi: 'IELTS', sabab: "Ko'p universitetlar til sertifikatini so'raydi. Avval shu.", fon: 'var(--bolim-ielts)' },
-  { id: 'sat', nomi: 'SAT', sabab: "AQShdagi ba'zi universitetlar SAT natijasini so'raydi yoki inobatga oladi.", fon: 'var(--bolim-sat)' },
-  { id: 'top-admission', nomi: 'Top Admission', sabab: "Universitetlar ro'yxati, hujjatlar va esse.", fon: 'var(--bolim-top-admission)' },
-  { id: 'eyuf', nomi: 'El-Yurt Umidi', sabab: "Davlat stipendiyasi shartlarini rasmiy manbada ko'rib chiqing.", fon: 'var(--bolim-eyuf)' },
+  { id: 'ielts', nomi: 'IELTS', sabab: "Ko'p universitetlar til sertifikatini so'raydi. Avval shu." },
+  { id: 'sat', nomi: 'SAT', sabab: "AQShdagi ba'zi universitetlar SAT natijasini so'raydi yoki inobatga oladi." },
+  { id: 'top-admission', nomi: 'Top Admission', sabab: "Universitetlar ro'yxati, hujjatlar va esse." },
+  { id: 'eyuf', nomi: 'El-Yurt Umidi', sabab: "Davlat stipendiyasi shartlarini rasmiy manbada ko'rib chiqing." },
 ];
 ---
 <div class="test" data-maqsad-testi>
@@ -63,7 +63,7 @@ const tavsiyalar = [
       <ol class="tavsiyalar">
         {tavsiyalar.map((t) => (
           <li data-tavsiya={t.id} hidden>
-            <a href="#yonalish" style={`background:${t.fon}`}>
+            <a href="#yonalish">
               <span class="raqam" data-raqam></span>
               <span class="tavsiya-matn">
                 <strong>{t.nomi}</strong>
@@ -74,7 +74,7 @@ const tavsiyalar = [
         ))}
       </ol>
       <p class="kichik sust">Bu faqat taxminiy yo'nalish. Har bir talabni rasmiy manbada tekshiring.</p>
-      <button type="button" class="tugma tugma-asosiy" data-qayta>Qaytadan boshlash</button>
+      <button type="button" class="tugma tugma-ikkinchi" data-qayta>Qaytadan boshlash</button>
     </div>
   </div>
   <noscript><p class="ikkinchi">Test uchun JavaScript kerak. Quyidagi bo'limlardan birini to'g'ridan-to'g'ri tanlashingiz mumkin.</p></noscript>
@@ -134,13 +134,14 @@ const tavsiyalar = [
 <style>
   .test {
     background: var(--sirt);
+    border: 1.5px solid var(--qora);
     border-radius: var(--r-katta);
     padding: 28px;
-    box-shadow: var(--soya);
   }
   .qadam { display: flex; flex-direction: column; gap: 18px; }
   .qadam[hidden] { display: none; }
   .tepa { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
+  .tepa .kichik { white-space: nowrap; }
   .progress { flex: 0 1 220px; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .progress div { height: 8px; border-radius: var(--r-toliq); background: var(--rang-asosiy); }
   .savol { font-size: 26px; outline: none; }
@@ -166,11 +167,12 @@ const tavsiyalar = [
   .tavsiyalar a {
     display: flex; gap: 14px; align-items: center;
     text-decoration: none; color: var(--matn);
+    background: var(--fon-ikkinchi);
     border-radius: var(--r-orta); padding: 16px 18px;
   }
   .raqam {
     width: 36px; height: 36px; flex: none;
-    border-radius: var(--r-toliq); background: var(--sirt);
+    border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
     font-weight: 800; display: flex; align-items: center; justify-content: center;
   }
   .tavsiya-matn { display: flex; flex-direction: column; gap: 2px; }

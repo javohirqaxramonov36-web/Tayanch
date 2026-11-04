@@ -1,33 +1,37 @@
-/* Tayanch dizayn tokenlari. Qiymatlar va rollari: DESIGN.md */
+/* Tayanch dizayn tokenlari. Qiymatlar va rollari: DESIGN.md
+   Palitra: oq, qora, ko'k (2026-11-04 qarori). */
 :root {
   /* Rang */
-  --rang-asosiy: #4255ff;
-  --rang-asosiy-toq: #2f40e0;
+  --rang-asosiy: #4255ff;          /* ko'k: tugmalar, havolalar, ta'kid */
+  --rang-asosiy-toq: #2f40e0;      /* hover */
+  --rang-asosiy-qorada: #8b97ff;   /* qora fon ustidagi ko'k (matn va chiziq) */
   --rang-asosiy-matn: #ffffff;
-  --fon: #f6f7fb;
+
+  --fon: #ffffff;
+  --fon-ikkinchi: #f5f6fa;         /* tinch sahna foni */
   --sirt: #ffffff;
-  --sirt-ikkinchi: #eef0f6;
-  --chiziq: #e3e6ef;
-  --chiziq-kuchli: #d9dde8;
-  --matn: #282e3e;
-  --matn-ikkinchi: #4b5266;
-  --matn-sust: #586380;
+  --sirt-ikkinchi: #eceef3;        /* neytral yorliq, ikkinchi darajali tugma */
+  --chiziq: #e6e8ee;
+  --chiziq-kuchli: #dfe2ea;
+  --matn: #0f1115;                 /* qora: matn, qora sahna, karta chegarasi */
+  --matn-ikkinchi: #4a5063;
+  --matn-sust: #5a6072;
 
-  --bolim-top-admission: #dbdfff;
-  --bolim-ielts: #ffe8cc;
-  --bolim-sat: #d9ffcc;
-  --bolim-eyuf: #ccf3f5;
+  --qora: #0f1115;
+  --qora-sirt: #1b1e26;
+  --qora-chiziq: #2a2e38;
+  --qora-matn-ikkinchi: #b4b9c8;
 
-  --rang-ogoh-fon: #ffe8cc;
-  --rang-ogoh-matn: #9a3412;
-  --rang-yulduz: #f59e0b;
+  --rang-ogoh-fon: #fff4e5;
+  --rang-ogoh-matn: #8a3b0a;
 
   /* Tipografiya */
   --shrift: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --matn-hero: 4rem;
   --matn-h1: 2.875rem;
-  --matn-h2: 2rem;
+  --matn-h2: 2.75rem;
   --matn-h3: 1.5rem;
-  --matn-katta: 1.125rem;
+  --matn-katta: 1.1875rem;
   --matn-asosiy: 1rem;
   --matn-kichik: 0.875rem;
   --matn-mayda: 0.8125rem;
@@ -43,6 +47,7 @@
   --b-10: 40px;
   --b-14: 56px;
   --b-16: 64px;
+  --b-24: 96px;
   --kenglik: 1200px;
 
   /* Shakl */
@@ -50,12 +55,14 @@
   --r-orta: 16px;
   --r-katta: 24px;
   --r-toliq: 999px;
-  --soya: 0 4px 16px rgba(40, 46, 62, 0.08);
+  --soya: 0 4px 16px rgba(15, 17, 21, 0.08);
 }
 
 @media (max-width: 640px) {
   :root {
+    --matn-hero: 2.5rem;
     --matn-h1: 2.125rem;
-    --matn-h2: 1.625rem;
+    --matn-h2: 2rem;
+    --b-24: 64px;
   }
 }

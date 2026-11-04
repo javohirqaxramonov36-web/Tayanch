@@ -1,0 +1,121 @@
+---
+// Bosh sahifaning cho'qqi sahnasi: muallif yo'li timeline'i (qora fon).
+// Scroll bilan ochilish: faqat CSS (animation-timeline) qo'llaydigan brauzerlarda va
+// "kam harakat" sozlamasi yoqilmagan bo'lsa. Aks holda hammasi darhol ko'rinadi.
+import { yolBosqichlari, qabulXatlari } from '../data/muallif';
+import { yol } from '../lib/yol';
+---
+<section class="qora-sahna" aria-labelledby="muallif-sarlavha">
+  <div class="ichki sahna-ichki">
+    <div class="chap">
+      <h2 id="muallif-sarlavha">Bu yo'lni men o'zim bosib o'tganman.</h2>
+      <p class="lead">Qimmat kurslarsiz, mustaqil tayyorgarlik bilan. Endi navbat sizda.</p>
+      <div class="kim">
+        <span class="avatar" aria-hidden="true">J</span>
+        <span><strong>Javohir</strong><span class="sust-qora">Tayanch muallifi</span></span>
+      </div>
+    </div>
+
+    <ol class="timeline">
+      {yolBosqichlari.map((b) => (
+        <li class="qadam">
+          <span class={`nuqta ${b.katta ? 'toliq' : ''}`} aria-hidden="true"></span>
+          {b.yil && <span class="yil">{b.yil}</span>}
+          <span class={b.katta ? 'sarlavha katta' : 'sarlavha'}>{b.sarlavha}</span>
+          <span class="matn">{b.matn}</span>
+          {b.sarlavha === 'SAT 1420' && (
+            <img class="preview kichik-preview" src={yol('/proof/sat-score-preview.webp')} width="420" height="368" loading="lazy" decoding="async"
+              alt="SAT natijasi preview'i: umumiy ball 1420. Shaxsiy ma'lumotlar yopilgan, original hujjat emas." />
+          )}
+        </li>
+      ))}
+
+      <li class="qadam oxirgi">
+        <span class="nuqta oq" aria-hidden="true"></span>
+        <span class="sarlavha katta">{qabulXatlari.soni} ta qabul xati</span>
+        <span class="matn">Hujjat bilan tasdiqlangan qabul xatlari va {qabulXatlari.stipendiyaMatni}.</span>
+        <ul class="previewlar">
+          {qabulXatlari.previewlar.map((p) => (
+            <li>
+              <img class="preview" src={yol(`/proof/${p.fayl}`)} width="960" height="540" loading="lazy" decoding="async"
+                alt={`${p.nomi}: ${p.izoh}. Shaxsiy ma'lumotlar yopilgan preview, original hujjat emas.`} />
+            </li>
+          ))}
+        </ul>
+        <details class="qolgan">
+          <summary>Qolgan {qabulXatlari.qolganlari.length} ta universitet</summary>
+          <ul>{qabulXatlari.qolganlari.map((n) => <li>{n}</li>)}</ul>
+        </details>
+        <p class="izoh">Previewlar faqat ma'lumot uchun: original hujjat emas va tekshiruv uchun yaroqsiz. Shaxsiy ma'lumotlar, identifikatorlar va moliyaviy tafsilotlar yopilgan.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .qora-sahna { background: var(--qora); color: #ffffff; }
+  .sahna-ichki {
+    padding-block: 120px 128px;
+    display: flex; flex-wrap: wrap; gap: var(--b-14);
+  }
+  .chap { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); align-self: flex-start; }
+  @media (min-width: 900px) { .chap { position: sticky; top: 32px; } }
+  h2 { font-size: 3.25rem; line-height: 1.06; letter-spacing: -0.5px; font-weight: 900; }
+  @media (max-width: 640px) { h2 { font-size: 2.25rem; } .sahna-ichki { padding-block: 80px; } }
+  .lead { font-size: var(--matn-katta); color: var(--qora-matn-ikkinchi); max-width: 440px; }
+  .kim { display: flex; align-items: center; gap: 14px; padding-top: var(--b-2); }
+  .kim > span:last-child { display: flex; flex-direction: column; }
+  .avatar {
+    width: 52px; height: 52px; border-radius: var(--r-toliq);
+    background: #ffffff; color: var(--qora);
+    font-weight: 900; font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sust-qora { font-size: 15px; color: var(--qora-matn-ikkinchi); }
+
+  .timeline {
+    flex: 1 1 520px; min-width: 0;
+    list-style: none; margin: 0; padding: 0 0 0 40px;
+    position: relative;
+    display: flex; flex-direction: column; gap: var(--b-14);
+  }
+  .timeline::before, .timeline::after {
+    content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px;
+    width: 3px; border-radius: 2px;
+  }
+  .timeline::before { background: var(--qora-chiziq); }
+  .timeline::after { background: var(--rang-asosiy-qorada); transform-origin: top; }
+
+  .qadam { position: relative; display: flex; flex-direction: column; gap: 6px; }
+  .nuqta {
+    position: absolute; left: -40px; top: 4px;
+    width: 25px; height: 25px; border-radius: var(--r-toliq);
+    border: 3px solid var(--rang-asosiy-qorada); background: var(--qora);
+  }
+  .nuqta.toliq { background: var(--rang-asosiy-qorada); }
+  .nuqta.oq { background: #ffffff; border-color: #ffffff; width: 31px; height: 31px; left: -43px; top: 2px; }
+  .yil { font-size: var(--matn-kichik); font-weight: 700; color: var(--qora-matn-ikkinchi); }
+  .sarlavha { font-weight: 800; font-size: 26px; }
+  .sarlavha.katta { font-weight: 900; font-size: 44px; line-height: 1; }
+  .matn { font-size: 17px; line-height: 1.55; color: var(--qora-matn-ikkinchi); max-width: 56ch; }
+
+  .preview { display: block; width: 100%; height: auto; border-radius: var(--r-orta); background: var(--qora-sirt); }
+  .kichik-preview { max-width: 260px; margin-top: var(--b-2); }
+  .previewlar {
+    list-style: none; margin: var(--b-3) 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 45%), 1fr)); gap: var(--b-3);
+  }
+  .qolgan { margin-top: var(--b-3); background: var(--qora-sirt); border-radius: var(--r-orta); padding: 14px 18px; }
+  .qolgan summary { cursor: pointer; font-weight: 700; }
+  .qolgan ul { margin: var(--b-3) 0 0; padding-left: 1.2em; color: var(--qora-matn-ikkinchi); columns: 2 220px; }
+  .izoh { font-size: var(--matn-kichik); color: var(--qora-matn-ikkinchi); max-width: 60ch; }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .qadam { animation: chiq linear both; animation-timeline: view(); animation-range: entry 5% cover 30%; }
+      .timeline::after { animation: tol linear both; animation-timeline: view(); animation-range: entry 20% exit 70%; }
+    }
+  }
+  @keyframes chiq { from { opacity: 0.15; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+  @keyframes tol { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+</style>
