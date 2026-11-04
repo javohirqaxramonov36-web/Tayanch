@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title and page.title != site.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | strip_html | strip_newlines }}">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+</head>
+<body>
+  <a class="otish" href="#asosiy">Asosiy matnga o'tish</a>
+
+  <header class="sayt-boshi">
+    <div class="ichki">
+      <a class="logo" href="{{ '/uz/' | relative_url }}">{{ site.title }}</a>
+      {% include menyu.html %}
+    </div>
+  </header>
+
+  <main id="asosiy" class="ichki">
+    {% if page.title %}<h1>{{ page.title }}</h1>{% endif %}
+    {{ content }}
+    {% unless page.sahifa_oxiri == false %}{% include sahifa-oxiri.html %}{% endunless %}
+  </main>
+
+  {% include footer.html %}
+</body>
+</html>

@@ -1,0 +1,31 @@
+# Tayanch sayti: Jekyll sozlamalari (GitHub Pages)
+
+title: Tayanch
+description: "Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq yo'riqnoma."
+lang: uz
+
+# Sayt https://javohirqaxramonov36-web.github.io/tayanch/ ostida ochiladi.
+# Ichki havolalar hamma joyda `relative_url` filtri orqali yoziladi,
+# shunda o'z domenga o'tganda faqat shu ikki qatorni o'zgartirish kifoya.
+url: "https://javohirqaxramonov36-web.github.io"
+baseurl: "/tayanch"
+
+# Tayanch Telegram kanali. Manzil tasdiqlanmaguncha bo'sh turadi
+# va saytda havola ko'rinmaydi (TEKSHIRISH KERAK).
+telegram: ""
+
+markdown: kramdown
+
+# Saytga hech qachon chiqmasligi kerak bo'lgan narsalar.
+exclude:
+  - README.md
+  - grants-qoralama.json
+  - inbox/
+  - .env
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      lang: uz
