@@ -1,0 +1,22 @@
+---
+import { yol } from '../lib/yol';
+
+const qurilgan = new Date().toISOString().slice(0, 10);
+---
+<footer class="footer">
+  <div class="ichki footer-ichki">
+    <p class="ogoh">Natija kafolatlanmaydi. Har qoida va muddatni rasmiy manbada o'zingiz ham tekshiring.</p>
+    <ul>
+      <li><a href={yol('/uz/maxfiylik/')}>Maxfiylik</a></li>
+      <li><a href={yol('/uz/manbalar/')}>Manba jurnali</a></li>
+    </ul>
+    <p class="kichik sust">Oxirgi yangilanish: {qurilgan}</p>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--sirt); border-top: 1px solid var(--chiziq); }
+  .footer-ichki { padding-block: 28px; display: flex; flex-direction: column; gap: var(--b-3); }
+  .ogoh { font-weight: 700; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5); }
+</style>

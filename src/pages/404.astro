@@ -1,0 +1,22 @@
+---
+import Asosiy from '../layouts/Asosiy.astro';
+import { yol } from '../lib/yol';
+---
+<Asosiy
+  title="Sahifa topilmadi"
+  description="Bu manzilda sahifa yo'q."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="chop-etilgan"
+  sahifaOxiri={false}
+>
+  <section class="ichki sahifa">
+    <h1>Sahifa topilmadi</h1>
+    <p class="ikkinchi">Bu manzilda sahifa yo'q. Ehtimol u ko'chirilgan yoki hali qurilmagan.</p>
+    <p><a class="tugma tugma-asosiy" href={yol('/uz/')}>Bosh sahifaga</a></p>
+  </section>
+</Asosiy>
+
+<style>
+  .sahifa { padding-block: var(--b-16); display: flex; flex-direction: column; gap: var(--b-4); align-items: flex-start; }
+</style>

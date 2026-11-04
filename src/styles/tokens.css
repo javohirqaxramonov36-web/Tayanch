@@ -1,0 +1,61 @@
+/* Tayanch dizayn tokenlari. Qiymatlar va rollari: DESIGN.md */
+:root {
+  /* Rang */
+  --rang-asosiy: #4255ff;
+  --rang-asosiy-toq: #2f40e0;
+  --rang-asosiy-matn: #ffffff;
+  --fon: #f6f7fb;
+  --sirt: #ffffff;
+  --sirt-ikkinchi: #eef0f6;
+  --chiziq: #e3e6ef;
+  --chiziq-kuchli: #d9dde8;
+  --matn: #282e3e;
+  --matn-ikkinchi: #4b5266;
+  --matn-sust: #586380;
+
+  --bolim-top-admission: #dbdfff;
+  --bolim-ielts: #ffe8cc;
+  --bolim-sat: #d9ffcc;
+  --bolim-eyuf: #ccf3f5;
+
+  --rang-ogoh-fon: #ffe8cc;
+  --rang-ogoh-matn: #9a3412;
+  --rang-yulduz: #f59e0b;
+
+  /* Tipografiya */
+  --shrift: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --matn-h1: 2.875rem;
+  --matn-h2: 2rem;
+  --matn-h3: 1.5rem;
+  --matn-katta: 1.125rem;
+  --matn-asosiy: 1rem;
+  --matn-kichik: 0.875rem;
+  --matn-mayda: 0.8125rem;
+
+  /* Bo'shliq */
+  --b-1: 4px;
+  --b-2: 8px;
+  --b-3: 12px;
+  --b-4: 16px;
+  --b-5: 20px;
+  --b-6: 24px;
+  --b-8: 32px;
+  --b-10: 40px;
+  --b-14: 56px;
+  --b-16: 64px;
+  --kenglik: 1200px;
+
+  /* Shakl */
+  --r-kichik: 6px;
+  --r-orta: 16px;
+  --r-katta: 24px;
+  --r-toliq: 999px;
+  --soya: 0 4px 16px rgba(40, 46, 62, 0.08);
+}
+
+@media (max-width: 640px) {
+  :root {
+    --matn-h1: 2.125rem;
+    --matn-h2: 1.625rem;
+  }
+}

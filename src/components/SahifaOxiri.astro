@@ -1,0 +1,62 @@
+---
+// Har sahifa oxiridagi blok (T1): rasmiy manbalar, tekshirilgan sana, tekshirilmagan joylar.
+import { rasmiyManbalar } from '../data/manbalar';
+
+interface Props {
+  manbalar?: string[];
+  tekshirilgan?: string;
+  keyingiTekshiruv?: string;
+  tekshirilmagan?: string[];
+}
+const { manbalar = [], tekshirilgan, keyingiTekshiruv, tekshirilmagan = [] } = Astro.props;
+const rasmiy = rasmiyManbalar(manbalar);
+---
+<section class="ichki oxiri" aria-labelledby="oxiri-sarlavha">
+  <div class="oxiri-karta">
+    <h2 id="oxiri-sarlavha">Manbalar va tekshiruv</h2>
+
+    <h3>Rasmiy manbalar</h3>
+    {rasmiy.length > 0 ? (
+      <ul>
+        {rasmiy.map((m) => (
+          <li>
+            <a href={m.havola} rel="noopener">{m.nomi}</a> ({m.tashkilot}). Tekshirilgan: {m.tekshirilganSana}. ID: {m.id}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="ikkinchi">Bu sahifada hali rasmiy manbaga tayangan qoida yoki muddat yo'q.</p>
+    )}
+
+    <dl>
+      <dt>Sahifa tekshirilgan sana</dt>
+      <dd>{tekshirilgan ?? 'belgilanmagan'}</dd>
+      <dt>Keyingi tekshiruv</dt>
+      <dd>{keyingiTekshiruv ?? 'belgilanmagan'}</dd>
+    </dl>
+
+    <h3>Tekshirilmagan joylar</h3>
+    {tekshirilmagan.length > 0 ? (
+      <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul>
+    ) : (
+      <p class="ikkinchi">Yo'q.</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .oxiri { padding-block: var(--b-14); }
+  .oxiri-karta {
+    background: var(--sirt);
+    border-radius: var(--r-katta);
+    padding: var(--b-6);
+    font-size: 15px;
+    display: flex; flex-direction: column; gap: var(--b-3);
+  }
+  h2 { font-size: 22px; }
+  h3 { font-size: 17px; margin-top: var(--b-2); }
+  ul { margin: 0; padding-left: 1.2em; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: var(--b-1) var(--b-4); margin: var(--b-2) 0 0; }
+  dt { color: var(--matn-sust); }
+  dd { margin: 0; }
+</style>

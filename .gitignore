@@ -2,14 +2,12 @@
 grants-qoralama.json
 inbox/
 .env
+.env.*
 
-# Jekyll lokal build fayllari
-_site/
-.jekyll-cache/
-.sass-cache/
-.jekyll-metadata
-Gemfile
-Gemfile.lock
+# Astro va npm
+node_modules/
+dist/
+.astro/
 
 # Tizim fayllari
 .DS_Store

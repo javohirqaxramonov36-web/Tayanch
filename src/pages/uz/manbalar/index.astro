@@ -1,0 +1,48 @@
+---
+import Asosiy from '../../../layouts/Asosiy.astro';
+import { manbalar } from '../../../data/manbalar';
+---
+<Asosiy
+  title="Manba jurnali"
+  description="Tayanch saytida ishlatilgan manbalar, ularning tekshiruv darajasi va tekshirilgan sanasi."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="chop-etilgan"
+  tekshirilgan="2026-11-04"
+  keyingiTekshiruv="2026-12-04"
+  sahifaOxiri={false}
+>
+  <section class="ichki sahifa">
+    <h1>Manba jurnali</h1>
+    <p class="ikkinchi">Saytda qoida, talab yoki muddat sifatida faqat <strong>rasmiy</strong> manba ishlatiladi: chiqaruvchi tashkilotning o'z sayti yoki rasmiy hujjat. Boshqa saytlar faqat "qo'shimcha o'qish" bo'lishi mumkin.</p>
+    {manbalar.length > 0 ? (
+      <div class="jadval-orami">
+        <table>
+          <thead><tr><th>ID</th><th>Manba</th><th>Tashkilot</th><th>Daraja</th><th>Tekshirilgan</th></tr></thead>
+          <tbody>
+            {manbalar.map((m) => (
+              <tr>
+                <td>{m.id}</td>
+                <td><a href={m.havola} rel="noopener">{m.nomi}</a>{m.izoh && <><br /><span class="kichik sust">{m.izoh}</span></>}</td>
+                <td>{m.tashkilot}</td>
+                <td>{m.tekshiruvDarajasi === 'rasmiy' ? 'rasmiy' : 'rasmiy emas'}</td>
+                <td>{m.tekshirilganSana}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p class="ikkinchi">Jurnal hozircha bo'sh.</p>
+    )}
+  </section>
+</Asosiy>
+
+<style>
+  .sahifa { padding-block: var(--b-14); display: flex; flex-direction: column; gap: var(--b-6); }
+  .sahifa > p { max-width: 70ch; }
+  .jadval-orami { overflow-x: auto; background: var(--sirt); border-radius: var(--r-katta); padding: var(--b-2) var(--b-4); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--chiziq); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+</style>

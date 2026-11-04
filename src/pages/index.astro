@@ -1,0 +1,18 @@
+---
+// Ildiz sahifasi: o'zbekcha bosh sahifaga yo'naltiradi (T1 qarori).
+import { yol } from '../lib/yol';
+const manzil = yol('/uz/');
+---
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tayanch</title>
+    <meta http-equiv="refresh" content={`0; url=${manzil}`} />
+    <link rel="canonical" href={new URL(manzil, Astro.site)} />
+  </head>
+  <body>
+    <p>Sahifa ochilmasa, <a href={manzil}>bu yerni bosing</a>.</p>
+  </body>
+</html>

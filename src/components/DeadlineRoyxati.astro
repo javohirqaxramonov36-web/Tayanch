@@ -1,0 +1,41 @@
+---
+import { korinadiganDeadlinelar } from '../data/deadline';
+import type { BolimSlug } from '../data/bolimlar';
+
+interface Props { bolim?: BolimSlug; faqatKelajak?: boolean }
+const { bolim, faqatKelajak = false } = Astro.props;
+const royxat = korinadiganDeadlinelar({ bolim, faqatKelajak });
+const bugun = new Date().toISOString().slice(0, 10);
+---
+{royxat.length > 0 ? (
+  <ul class="royxat">
+    {royxat.map((d) => (
+      <li class={d.sana < bugun ? 'otgan' : ''}>
+        <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
+        {d.sana < bugun && <span class="yorliq">o'tgan</span>}
+        <span>{d.dastur}: {d.bosqich}</span>
+        <span class="kichik sust">Manba: {d.manbaIdlar.join(', ')}. Tekshirilgan: {d.tekshirilganSana}</span>
+      </li>
+    ))}
+  </ul>
+) : (
+  <p class="bosh">Hozircha rasmiy manba bilan tasdiqlangan muddat yo'q.</p>
+)}
+
+<style>
+  .royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .royxat li {
+    background: var(--sirt);
+    border-radius: var(--r-orta);
+    padding: var(--b-4) var(--b-5);
+    display: flex; flex-direction: column; gap: var(--b-1);
+  }
+  .royxat li.otgan { opacity: 0.6; }
+  .bosh {
+    background: var(--sirt);
+    border: 1px dashed var(--chiziq-kuchli);
+    border-radius: var(--r-orta);
+    padding: var(--b-6);
+    color: var(--matn-ikkinchi);
+  }
+</style>

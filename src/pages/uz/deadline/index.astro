@@ -1,0 +1,24 @@
+---
+import Asosiy from '../../../layouts/Asosiy.astro';
+import DeadlineRoyxati from '../../../components/DeadlineRoyxati.astro';
+---
+<Asosiy
+  title="Muddatlar"
+  description="Tayanch bo'limlariga tegishli muddatlar. Faqat rasmiy manba bilan tasdiqlanganlari."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="chop-etilgan"
+  tekshirilgan="2026-11-04"
+  keyingiTekshiruv="2026-12-04"
+>
+  <section class="ichki sahifa">
+    <h1>Muddatlar</h1>
+    <p class="izoh">Bu yerda faqat chiqaruvchi tashkilotning o'z sayti yoki rasmiy hujjati bilan tasdiqlangan muddatlar chiqadi. Topshirishdan oldin muddatni rasmiy manbada o'zingiz ham tekshiring.</p>
+    <DeadlineRoyxati />
+  </section>
+</Asosiy>
+
+<style>
+  .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-6); }
+  .izoh { background: var(--rang-ogoh-fon); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); max-width: 70ch; }
+</style>

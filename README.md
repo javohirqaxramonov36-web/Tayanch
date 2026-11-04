@@ -1,39 +1,40 @@
 # Tayanch
 
-Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq yo'riqnoma sayti.
-Jekyll, GitHub Pages. Manzil: https://javohirqaxramonov36-web.github.io/Tayanch/
+Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq, interaktiv yo'riqnoma sayti.
+Astro, GitHub Pages (GitHub Actions orqali). Manzil: https://javohirqaxramonov36-web.github.io/Tayanch/
+
+## Ishga tushirish
+
+```sh
+npm install
+npm run dev      # lokal ko'rish
+npm run build    # dist/ ga qurish
+```
 
 ## Tuzilma
 
 | Joy | Nima uchun |
 | --- | --- |
-| `_config.yml` | Sayt sozlamalari, `baseurl`, Telegram manzili |
-| `_layouts/default.html` | Hamma sahifaning umumiy qolipi |
-| `_includes/` | Menyu, footer, sahifa oxiri bloki, deadline ro'yxati |
-| `_data/bolimlar.yml` | 4 bo'lim va ularning holati (`ochiq` yoki `tez-orada`) |
-| `_data/manbalar.yml` | Manba jurnali |
-| `_data/deadline.yml` | Deadline kalendari |
-| `uz/` | O'zbekcha sahifalar |
+| `DESIGN.md` | Dizayn tizimi: ranglar, shrift, o'lchamlar, komponentlar |
+| `astro.config.mjs` | `site` va `base` ("/Tayanch", harf katta-kichikligiga sezgir) |
+| `src/styles/tokens.css` | DESIGN.md dagi tokenlar. Kodda xom qiymat yozilmaydi |
+| `src/layouts/Asosiy.astro` | Umumiy qolip: menyu, sahifa oxiri bloki, footer |
+| `src/components/` | Menyu, Footer, SahifaOxiri, DeadlineRoyxati, MaqsadTesti |
+| `src/data/bolimlar.ts` | 4 bo'lim va holati (`ochiq` yoki `tez-orada`) |
+| `src/data/manbalar.ts` | Manba jurnali |
+| `src/data/deadline.ts` | Deadline kalendari |
+| `src/pages/uz/` | O'zbekcha sahifalar |
+| `.github/workflows/deploy.yml` | `main` ga push bo'lganda saytni qurib joylaydi |
 
 ## Qoidalar
 
-- Ichki havolalar faqat `relative_url` filtri orqali yoziladi.
+- Ichki havolalar faqat `yol()` orqali yoziladi (`src/lib/yol.ts`).
 - Saytda qoida, talab yoki muddat faqat "rasmiy" darajadagi manba bilan chiqadi.
 - Repo ochiq: ichki qoralamalar (`grants-qoralama.json`), `inbox/`, `.env` bu yerga qo'yilmaydi.
 - Foydalanuvchi kiritgan narsa faqat uning brauzerida saqlanadi. Formalar va to'lov yo'q.
 - Natija kafolatlanmaydi.
 
-## Har sahifaning front matter maydonlari
+## Har sahifaning maydonlari (T1)
 
-```yaml
-title: ""
-description: ""
-turi: ""              # bolim-kirishi | qollanma | mashq | vosita | umumiy ...
-bolim: ""             # top-admission | ielts | sat | eyuf | umumiy
-holat: qoralama       # qoralama | chop-etilgan
-published: false      # qoralama sahifa saytga chiqmasligi uchun
-tekshirilgan: 2026-11-04
-keyingi_tekshiruv: 2026-12-04
-manbalar: []          # _data/manbalar.yml dagi ID lar
-tekshirilmagan: []
-```
+`Asosiy` qolipiga beriladi: `title`, `description`, `turi`, `bolim`, `holat`, `tekshirilgan`, `keyingiTekshiruv`, `manbalar` (manba ID lari), `tekshirilmagan`.
+Qoralama sahifa `src/pages/` ga qo'yilmaydi, shuning uchun saytga chiqmaydi.
