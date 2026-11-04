@@ -1,7 +1,7 @@
 # Tayanch
 
 Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq yo'riqnoma sayti.
-Jekyll, GitHub Pages. Manzil: https://javohirqaxramonov36-web.github.io/tayanch/
+Jekyll, GitHub Pages. Manzil: https://javohirqaxramonov36-web.github.io/Tayanch/
 
 ## Tuzilma
 
