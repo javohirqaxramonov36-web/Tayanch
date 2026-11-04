@@ -16,6 +16,7 @@ const ochiq = bolimlar.filter((b) => b.holat === 'ochiq');
         {ochiq.map((b) => <li><a href={yol(`/uz/${b.slug}/`)}>{b.nomi}</a></li>)}
         <li><a href={yol('/uz/deadline/')}>Muddatlar</a></li>
         <li><a href={yol('/uz/manbalar/')}>Manbalar</a></li>
+        <li><a class="boshlash" href={yol('/uz/#yonalish')}>Boshlash</a></li>
       </ul>
     </nav>
   </div>
@@ -35,12 +36,12 @@ const ochiq = bolimlar.filter((b) => b.holat === 'ochiq');
   .logo-belgi {
     width: 36px; height: 36px;
     border-radius: 12px;
-    background: var(--rang-asosiy);
-    color: var(--rang-asosiy-matn);
+    background: var(--qora);
+    color: #ffffff;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 20px;
+    font-weight: 900; font-size: 20px;
   }
-  .logo-nom { font-weight: 800; font-size: 22px; }
+  .logo-nom { font-weight: 900; font-size: 22px; }
   ul {
     list-style: none; margin: 0; padding: 0;
     display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5);
@@ -48,4 +49,9 @@ const ochiq = bolimlar.filter((b) => b.holat === 'ochiq');
   }
   ul a { text-decoration: none; display: inline-block; padding-block: 10px; }
   ul a:hover { color: var(--rang-asosiy); }
+  ul a.boshlash {
+    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+    border-radius: var(--r-toliq); padding: 9px 16px;
+  }
+  ul a.boshlash:hover { background: var(--rang-asosiy-toq); color: var(--rang-asosiy-matn); }
 </style>

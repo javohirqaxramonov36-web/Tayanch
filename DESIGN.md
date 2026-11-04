@@ -1,36 +1,30 @@
 # Tayanch: dizayn tizimi
 
-Yo'nalish: **Quizlet'dan ilhomlangan, ochiq va interaktiv ta'lim sayti.** Och fon, oq kartalar, har bo'limning o'z rangi, yumaloq tugmalar, ichida jonli bo'lagi bor kartalar. Asos maket: Claude Design'dagi "Tayanch bosh sahifa maketlari", "Quizlet yo'nalishi" sahifasi (2026-11-04).
+Yo'nalish: **hikoyali bosh sahifa va o'yinli mashqlar** (Quizlet'dan ilhomlangan interaktivlik). Oq fon, qora tipografiya va chegaralar, ko'k ta'kid, yumaloq tugmalar. Asos maket: Claude Design'dagi "Tayanch bosh sahifa maketlari", "Hikoya (v2)" sahifasi (2026-11-04). Bosh sahifa tuzilmasi: loyihadagi `BRIEF-bosh-sahifa.md`.
 
 Kodda qiymat yozilmaydi, faqat `src/styles/tokens.css` dagi nomlar ishlatiladi.
 
 ## Rang
 
+Palitra: **oq, qora, ko'k** (2026-11-04 qarori). Bo'limlar rang bilan emas, ikonka va karta ichidagi mazmun bilan farqlanadi.
+
 | Token | Qiymat | Roli |
 | --- | --- | --- |
-| `--rang-asosiy` | `#4255ff` | Asosiy tugmalar, havolalar, progress, logo. Muqobil: `#0b7a83` (firuza), qaror hali yakuniy emas |
-| `--rang-asosiy-matn` | `#ffffff` | Asosiy rang ustidagi matn |
-| `--fon` | `#f6f7fb` | Sahifa foni |
-| `--sirt` | `#ffffff` | Kartalar, sarlavha qatori |
-| `--sirt-ikkinchi` | `#eef0f6` | Neytral yorliqlar, ikkinchi darajali tugma |
-| `--chiziq` | `#e3e6ef` | Ajratuvchi chiziqlar |
-| `--chiziq-kuchli` | `#d9dde8` | Variant tugmalari chegarasi |
-| `--matn` | `#282e3e` | Asosiy matn |
-| `--matn-ikkinchi` | `#4b5266` | Tavsiflar |
-| `--matn-sust` | `#586380` | Yorliqlar, izohlar (oq fonda 4.5:1 dan yuqori) |
+| `--rang-asosiy` | `#4255ff` | Ko'k: asosiy tugmalar, havolalar, progress, ta'kid so'zlar, ikonkalar |
+| `--rang-asosiy-toq` | `#2f40e0` | Ko'k tugma hover |
+| `--rang-asosiy-qorada` | `#8b97ff` | Qora fon ustidagi ko'k (timeline chizig'i va nuqtalari) |
+| `--fon` | `#ffffff` | Sahifa foni |
+| `--fon-ikkinchi` | `#f5f6fa` | Tinch sahna foni, ichki kartalar |
+| `--sirt-ikkinchi` | `#eceef3` | Neytral yorliq, ikkinchi darajali tugma |
+| `--chiziq` / `--chiziq-kuchli` | `#e6e8ee` / `#dfe2ea` | Ajratuvchi va variant tugmasi chegarasi |
+| `--matn` = `--qora` | `#0f1115` | Asosiy matn, qora sahna, karta chegarasi (1.5px) |
+| `--matn-ikkinchi` | `#4a5063` | Tavsiflar |
+| `--matn-sust` | `#5a6072` | Yorliqlar, izohlar |
+| `--qora-sirt` / `--qora-chiziq` | `#1b1e26` / `#2a2e38` | Qora sahna ichidagi kartalar va chiziqlar |
+| `--qora-matn-ikkinchi` | `#b4b9c8` | Qora fondagi ikkinchi darajali matn |
 
-Bo'lim ranglari (faqat fon, ustidagi matn `--matn`):
-
-| Token | Qiymat | Bo'lim |
-| --- | --- | --- |
-| `--bolim-top-admission` | `#dbdfff` | Top Admission |
-| `--bolim-ielts` | `#ffe8cc` | IELTS |
-| `--bolim-sat` | `#d9ffcc` | SAT |
-| `--bolim-eyuf` | `#ccf3f5` | El-Yurt Umidi |
-
-Holat ranglari: `--rang-ogoh-fon #ffe8cc` / `--rang-ogoh-matn #9a3412` (takrorlash, ogohlantirish), `--rang-yulduz #f59e0b`.
-
-Qorong'i rejim: hozircha yo'q. Qo'shilganda har token uchun alohida qiymat yoziladi.
+Qora sahna sahifada faqat bitta: bosh sahifadagi cho'qqi (muallif yo'li).
+Qorong'i rejim: hozircha yo'q.
 
 ## Tipografiya
 
@@ -62,7 +56,7 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 
 - **Tugma.** Asosiy: `--rang-asosiy` fon, oq matn, to'liq yumaloq, balandlik kamida 48px. Ikkinchi darajali: `--sirt` yoki `--sirt-ikkinchi` fon. Hover: ozgina to'qroq. Fokus: 3px `--rang-asosiy` chegara. Tugma faqat `<button>` yoki `<a>`.
 - **Variant tugmasi** (test javobi): oq, 2px `--chiziq-kuchli` chegara, `--r-orta`, chapga tekislangan matn, balandlik 56px.
-- **Bo'lim kartasi**: bo'lim rangidagi fon, `--r-katta`, ichida oq "jonli bo'lak" (ro'yxat, kartochka, T/F/NG yorliqlari, bosqich nuqtalari).
+- **Bo'lim kartasi**: oq fon, 1.5px qora chegara, `--r-katta`, ko'k chiziqli ikonka. Hover: qora ofset soya. Bitta karta (SAT) qora bo'lishi mumkin.
 - **Yorliq (pill)**: `--r-toliq`, 13px qalin matn. "Tez orada" = `--sirt-ikkinchi`.
 - **Progress**: 8px balandlik, `--r-toliq`, to'ldirish `--rang-asosiy`.
 - **Menyu**: oq qator, logo chapda, havolalar o'ngda; telefonda ikkinchi qatorga o'tadi.
