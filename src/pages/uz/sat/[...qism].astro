@@ -1,0 +1,75 @@
+---
+// SAT bo'limining "tez orada" sahifalari. Ro'yxat: src/data/satSahifalar.ts
+import SatQobiq from '../../../layouts/SatQobiq.astro';
+import { satSahifalar, satGuruhlar, turiNomi, type SatSahifa } from '../../../data/satSahifalar';
+import { yol } from '../../../lib/yol';
+
+export function getStaticPaths() {
+  return satSahifalar.map((s) => ({
+    params: { qism: s.qism.replace(/\/$/, '') },
+    props: { sahifa: s },
+  }));
+}
+
+interface Props { sahifa: SatSahifa }
+const { sahifa } = Astro.props;
+const guruh = satGuruhlar.find((g) => g.sahifalar.includes(sahifa))?.nomi ?? '';
+const TEKSHIRILGAN = '2026-11-04';
+const KEYINGI = '2026-12-04';
+---
+<SatQobiq
+  title={`${sahifa.nomi} · SAT`}
+  description={sahifa.tavsif}
+  turi={sahifa.turi}
+  holat="qoralama"
+  tekshirilgan={TEKSHIRILGAN}
+  keyingiTekshiruv={KEYINGI}
+  manbalar={sahifa.manbalar}
+  tekshirilmagan={sahifa.tekshirilmagan}
+>
+  <section class="ichki sahifa" aria-labelledby="sarlavha">
+    <p class="ustki">
+      <a href={yol('/uz/sat/')}>SAT</a>
+      <span aria-hidden="true">/</span>
+      <span>{guruh}</span>
+    </p>
+    <h1 id="sarlavha">{sahifa.nomi}</h1>
+    <p class="tavsif">{sahifa.tavsif}</p>
+
+    <div class="tez-orada" role="note">
+      <span class="yorliq">Tez orada</span>
+      <p>Bu sahifa hali tayyor emas. Hozircha faqat reja bor.</p>
+    </div>
+
+    <dl class="maydonlar">
+      <div><dt>Til</dt><dd>O'zbekcha</dd></div>
+      <div><dt>Sahifa turi</dt><dd>{turiNomi[sahifa.turi]}</dd></div>
+      <div><dt>Bo'lim</dt><dd>SAT</dd></div>
+      <div><dt>Holat</dt><dd>Qoralama</dd></div>
+    </dl>
+
+    <p><a class="tugma tugma-ikkinchi" href={yol('/uz/sat/')}>SAT bo'limiga qaytish</a></p>
+  </section>
+</SatQobiq>
+
+<style>
+  .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-5); }
+  .ustki { display: flex; flex-wrap: wrap; gap: var(--b-2); font-size: var(--matn-kichik); color: var(--matn-sust); font-weight: 600; }
+  .ustki a { color: var(--rang-havola); }
+  .sahifa h1 { font-weight: 900; letter-spacing: -0.5px; }
+  .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .tez-orada {
+    border: 1.5px dashed var(--chiziq-kuchli);
+    border-radius: var(--r-katta);
+    padding: var(--b-6);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
+  }
+  .maydonlar {
+    margin: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--b-3);
+  }
+  .maydonlar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .maydonlar dt { font-size: var(--matn-kichik); color: var(--matn-sust); }
+  .maydonlar dd { margin: 0; font-weight: 700; }
+</style>
