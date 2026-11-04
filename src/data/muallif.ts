@@ -10,11 +10,36 @@ export interface YolBosqichi {
   katta?: boolean; // natija bosqichi: katta yoziladi
 }
 
+// Matnlar eski saytdagi "Mening yo'lim" hikoyasidan qisqartirildi (6 bosqich).
+// Oila sharoiti haqidagi tafsilotlar muallifning o'z qarori bilan qoldirildi (2026-11-04).
 export const yolBosqichlari: YolBosqichi[] = [
-  { sarlavha: 'Ixtisoslashtirilgan maktab', matn: "Matematika va fizika, qattiq imtihonlar, vaqtni boshqarish." },
-  { sarlavha: 'IELTS 7.0', matn: 'Qimmat kurssiz, mustaqil tayyorgarlik bilan.', katta: true },
-  { sarlavha: 'SAT 1420', matn: 'Qimmat kurslarsiz.', katta: true },
-  { yil: '2025–2026', sarlavha: 'Gap year', matn: "Ishlash va tayyorlanish bir vaqtda: ingliz tili o'qituvchisi, kechasi o'qish." },
+  {
+    sarlavha: 'Otam bilan qurilishda',
+    matn: "\"Ikki marta o'lcha, bir marta kes.\" Beton quyish, kafel va material hisoblash. Muhandislikka qiziqishim shu yerdan boshlandi.",
+  },
+  {
+    sarlavha: 'IELTS 7.0',
+    matn: "Oilamizdagi moliyaviy qiyinchiliklar sabab IELTS kursini tark etib, mustaqil tayyorlandim. Imtihon to'lovi uchun hovlimizdagi daraxtlar ham sotilgan.",
+    katta: true,
+  },
+  {
+    sarlavha: 'SAT 1420',
+    matn: "Pullik kurssiz: bepul materiallar, muntazam amaliy testlar va bor resursni to'g'ri ishlatish.",
+    katta: true,
+  },
+  {
+    yil: '2025–2026',
+    sarlavha: 'Gap year',
+    matn: "Oilamni qo'llab-quvvatlash uchun yuk ortish-tushirish ishida ishladim. Ba'zan tungi va kunduzgi smenalar ulanib ketardi, lekin to'xtamadim.",
+  },
+  {
+    sarlavha: "AI: vaqtni bo'shatadigan vosita",
+    matn: "AutoCAD'dagi takrorlanuvchi ishni AI yordamida yozilgan AutoLISP skripti bilan 2 soatdan 15 daqiqaga tushirdim.",
+  },
+  {
+    sarlavha: "O'qituvchilik",
+    matn: "Sydney School'da 40 dan ortiq o'quvchiga ingliz tili, speaking va IELTS/CEFR bo'yicha dars berdim.",
+  },
 ];
 
 export const qabulXatlari = {
