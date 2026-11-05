@@ -94,7 +94,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.commonapp.org/static/c89a50d357fb5d5e8e9ddb911ffed933/Resource_TR_International_ENG_2025.06.25_1.pdf',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "\"Students from over 200 countries use the Common App\"; xalqaro talaba need-based Common App fee waiver olishi mumkin, u Profile bo'limida. Hujjat transfer (o'qishni ko'chiruvchi) arizachilar uchun resurs sifatida tayyorlangan.",
+    izoh: "\"Students from over 200 countries use the Common App to apply to college each year\"; xalqaro talaba need-based Common App fee waiver olishi mumkin, u Profile bo'limida. Hujjat transfer (o'qishni ko'chiruvchi) arizachilar uchun resurs sifatida tayyorlangan.",
   },
   {
     id: 'UC01',

@@ -42,12 +42,12 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
     ))}
   </section>
 
-  <section class="natija" aria-live="polite">
+  <section class="natija">
     <div class="natija-bosh">
       <div class="natija-matn">
         <span class="ustki">Natija</span>
         <h2 id="natija-sarlavha">Sizga mos yo'llar</h2>
-        <p id="natija-izoh">Birinchi karta asosiy yo'l. Kartani bosib aylantiring.</p>
+        <p id="natija-izoh" aria-live="polite">Birinchi karta asosiy yo'l. Kartani bosib aylantiring.</p>
       </div>
       <button class="tugma" id="ty-qayta" type="button">Qaytadan boshlash</button>
     </div>
@@ -79,6 +79,8 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       const s = JSON.parse(localStorage.getItem(M.KALIT) || 'null');
       if (s && typeof s === 'object') javob = s;
     } catch { /* o'qib bo'lmadi */ }
+    // Saqlangan qiymat faqat ma'lum variantlardan bo'lishi mumkin; boshqasi tashlab yuboriladi.
+    KALITLAR.forEach((k) => { if (javob[k] && !M.SAVOLLAR[k].variantlar.some((v) => v.id === javob[k])) delete javob[k]; });
     if (!javob.davlat && !javob.daraja && !javob.grant) { javob = { ...M.NAMUNA }; namunami = true; }
 
     const saqla = () => { try { localStorage.setItem(M.KALIT, JSON.stringify(javob)); } catch { /* saqlanmadi */ } };
