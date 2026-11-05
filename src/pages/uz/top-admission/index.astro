@@ -10,6 +10,7 @@ import Zina from '../../../components/Zina.astro';
 import { deadlinelar } from '../../../data/deadline';
 import { manbalar } from '../../../data/manbalar';
 import { qabulXatlari } from '../../../data/muallif';
+import { SAVOLLAR, KALIT } from '../../../data/topshirishYoli';
 import { yol } from '../../../lib/yol';
 
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
@@ -31,6 +32,8 @@ const chiptalar = [
     matn: `Hujjat qabuli ${eyuf.soat} gacha`,
     izoh: null as string | null,
     manba: m('EY01'),
+    ochilish: null as string | null,
+    yopilish: eyuf.sana,
     korishokKatta: sanaMatn(eyuf.sana),
     korishokMatn: 'oxirgi kun',
   },
@@ -40,6 +43,9 @@ const chiptalar = [
     matn: 'Ariza oynasi',
     izoh: "Har yilgi taqvim, 2027 e'loni kutilmoqda",
     manba: m('TB01'),
+    // TB01: ariza har yili 10-yanvarda ochiladi; yil deadline.ts dagi yopilish yilidan olinadi.
+    ochilish: `${tb.sana.slice(0, 4)}-01-10`,
+    yopilish: tb.sana,
     korishokKatta: sanaMatn(tb.sana),
     korishokMatn: 'oxirgi kun',
   },
@@ -51,6 +57,13 @@ const tezOrada = [
   { kod: 'UZ → AU', nomi: 'Avstraliya' },
   { kod: 'UZ → KR', nomi: 'Janubiy Koreya' },
 ];
+// "Mening yo'lim": Topshirish yo'li javoblari (faqat o'qiladi). Variant nomlari skriptga JSON bilan beriladi.
+const yolMalumot = {
+  KALIT,
+  nomlar: Object.fromEntries(
+    Object.entries(SAVOLLAR).map(([k, s]) => [k, Object.fromEntries(s.variantlar.map((v) => [v.id, v.nomi]))]),
+  ),
+};
 const savollar = [
   { n: 1, nomi: 'Davlat', variantlar: ['AQSH', 'Buyuk Britaniya', 'Turkiya', '…'] },
   { n: 2, nomi: 'Daraja', variantlar: ['Bakalavriat', 'Magistratura'] },
@@ -120,7 +133,7 @@ const savollar = [
       </div>
       <div class="chiptalar">
         {chiptalar.map((c) => (
-          <article class="chipta">
+          <article class="chipta" data-yopilish={c.yopilish} data-ochilish={c.ochilish}>
             <span class="teshik teshik-tepa" aria-hidden="true"></span>
             <span class="teshik teshik-past" aria-hidden="true"></span>
             <div class="chipta-asosiy">
@@ -177,6 +190,22 @@ const savollar = [
       </ul>
     </section>
 
+    <div class="yol-qator">
+    <section class="mening-yolim" id="mening-yolim" aria-labelledby="mening-sarlavha" data-mening-yolim>
+      <h2 id="mening-sarlavha" class="ustki">Mening yo'lim</h2>
+      <div data-holat="bosh">
+        <p class="mening-asosiy">Hali yo'l tanlanmagan</p>
+        <p class="ikkinchi kichik">Topshirish yo'lida javob bersangiz, tanlovingiz shu yerda turadi. Faqat shu brauzerda.</p>
+        <a class="havola" href={vosita}>3 savolga javob berish</a>
+      </div>
+      <div data-holat="bor" hidden>
+        <p class="mening-asosiy" data-tanlov></p>
+        <p class="ikkinchi kichik">Faqat shu brauzerda saqlangan. Qabul ehtimoli hisoblanmaydi.</p>
+        <a class="havola" href={vosita}>Yo'limni ochish</a>
+      </div>
+    </section>
+    <script type="application/json" id="ta-yol-malumot" set:html={JSON.stringify(yolMalumot)} />
+
     <section class="ishonch" aria-labelledby="ishonch-sarlavha">
       <div class="ishonch-bosh">
         <p id="ishonch-sarlavha" class="ustki">Muallif yo'li</p>
@@ -193,6 +222,7 @@ const savollar = [
         ))}
       </ul>
     </section>
+    </div>
 
     <Zina />
 
@@ -202,6 +232,53 @@ const savollar = [
     </div>
   </div>
 </Asosiy>
+
+<script>
+  // 1) Chiptadagi qolgan kun: bugungi sana Toshkent bo'yicha. JS bo'lmasa sana va "oxirgi kun" qoladi.
+  const bugun = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tashkent' }).format(new Date());
+  const kunFarqi = (a: string, b: string) => {
+    const k = (s: string) => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+    return Math.round((k(b) - k(a)) / 864e5);
+  };
+  document.querySelectorAll<HTMLElement>('.chipta[data-yopilish]').forEach((ch) => {
+    const katta = ch.querySelector('.korishok-katta');
+    const matn = ch.querySelector('.korishok-matn');
+    const korishok = ch.querySelector('.korishok');
+    if (!katta || !matn || !korishok) return;
+    const { yopilish = '', ochilish } = ch.dataset;
+    if (ochilish && bugun < ochilish) {
+      katta.textContent = String(kunFarqi(bugun, ochilish));
+      matn.textContent = 'kun ochilishiga';
+    } else if (bugun <= yopilish) {
+      const n = kunFarqi(bugun, yopilish);
+      katta.textContent = n === 0 ? 'Bugun' : String(n);
+      matn.textContent = n === 0 ? 'oxirgi kun' : 'kun qoldi';
+    } else {
+      katta.textContent = "O'tgan";
+      matn.textContent = 'muddat tugagan';
+      korishok.classList.add('otgan');
+    }
+    korishok.classList.add('son');
+  });
+
+  // 2) Mening yo'lim: Topshirish yo'li javoblari, faqat o'qiladi (spetsifikatsiya 3-band).
+  const blok = document.querySelector<HTMLElement>('[data-mening-yolim]');
+  const malumotEl = document.getElementById('ta-yol-malumot');
+  if (blok && malumotEl) {
+    try {
+      const M = JSON.parse(malumotEl.textContent || '{}') as { KALIT: string; nomlar: Record<string, Record<string, string>> };
+      const s = JSON.parse(localStorage.getItem(M.KALIT) || 'null');
+      const tanlov = s && typeof s === 'object'
+        ? ['davlat', 'daraja', 'grant'].map((k) => M.nomlar[k]?.[s[k]]).filter(Boolean)
+        : [];
+      if (tanlov.length) {
+        blok.querySelector('[data-tanlov]')!.textContent = tanlov.join(' · ');
+        blok.querySelector<HTMLElement>('[data-holat="bosh"]')!.hidden = true;
+        blok.querySelector<HTMLElement>('[data-holat="bor"]')!.hidden = false;
+      }
+    } catch { /* o'qib bo'lmadi: bo'sh holat qoladi */ }
+  }
+</script>
 
 <style>
   .ta-sahifa { display: grid; gap: var(--b-14); padding-bottom: var(--b-10); }
@@ -292,7 +369,15 @@ const savollar = [
   .tez-orada li { border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4); display: grid; gap: var(--b-2); justify-items: start; }
   .tez-nom { font-weight: 800; }
 
-  .ishonch { border: 1.5px solid var(--chiziq); border-radius: var(--r-katta); padding: var(--b-6); display: grid; gap: var(--b-3); }
+  .yol-qator { display: flex; flex-wrap: wrap; gap: var(--b-4); align-items: stretch; }
+  .mening-yolim { flex: 1 1 260px; background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); }
+  .mening-yolim > div:not([hidden]) { display: grid; gap: var(--b-2); justify-items: start; }
+  .mening-yolim h2 { margin-bottom: var(--b-2); }
+  .mening-asosiy { font-size: var(--matn-katta); font-weight: 800; }
+  .korishok.son .korishok-katta { font-size: 40px; font-weight: 900; line-height: 1; }
+  .korishok.otgan .korishok-katta { font-size: 20px; color: var(--matn-sust); }
+  @media (max-width: 760px) { .korishok.son .korishok-katta { font-size: 28px; } .korishok.otgan .korishok-katta { font-size: 14px; } }
+  .ishonch { flex: 2 1 420px; min-width: 0; border: 1.5px solid var(--chiziq); border-radius: var(--r-katta); padding: var(--b-6); display: grid; gap: var(--b-3); }
   .ishonch-bosh { display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
   .ishonch-son { font-size: var(--matn-h3); font-weight: 800; }
   .previewlar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--b-2); }
