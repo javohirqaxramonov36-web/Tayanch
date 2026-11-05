@@ -1,0 +1,50 @@
+---
+// Zina: qavat kirish sahifasi pastida qo'shni qavatlarga havola.
+// 1-qavatda faqat yuqoriga, 5-qavatda faqat pastga.
+import { qavatlar, joriyQavat } from '../data/qavatlar';
+import { yol } from '../lib/yol';
+
+const n = joriyQavat(Astro.url.pathname);
+const past = qavatlar[n - 2];
+const yuqori = qavatlar[n];
+const kartalar = [
+  past && { q: past, yon: 'past' as const },
+  yuqori && { q: yuqori, yon: 'yuqori' as const },
+].filter(Boolean) as { q: (typeof qavatlar)[number]; yon: 'past' | 'yuqori' }[];
+---
+<nav class="zina" aria-label="Zina: qo'shni qavatlar">
+  {kartalar.map(({ q, yon }) => (
+    <a class={`zina-karta zina-${yon}`} href={yol(q.manzil)}>
+      <span class="z-yorliq">
+        {yon === 'past'
+          ? <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+          : <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6" /></svg>}
+        {yon === 'past' ? 'Pastga' : 'Yuqoriga'} · {q.raqam}-qavat
+      </span>
+      <span class="z-nom">{q.raqam}-qavat: {q.nomi}</span>
+      {q.holat === 'tez-orada' && <span class="z-pill">qurilmoqda</span>}
+    </a>
+  ))}
+</nav>
+
+<style>
+  .zina { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .zina-karta {
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+    padding: var(--b-5) var(--b-6); min-height: 96px;
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--b-1);
+    color: var(--matn); text-decoration: none;
+  }
+  .zina-yuqori { grid-column: 2; align-items: flex-end; text-align: right; }
+  .zina-past { grid-column: 1; }
+  .zina-karta:hover { background: var(--fon-ikkinchi); }
+  .z-yorliq { display: inline-flex; align-items: center; gap: var(--b-1); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .z-nom { font-size: 20px; font-weight: 800; }
+  .z-pill { padding: 3px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: 12px; font-weight: 700; }
+  @media (max-width: 640px) {
+    .zina { grid-template-columns: 1fr; }
+    .zina-yuqori, .zina-past { grid-column: 1; }
+    .zina-yuqori { order: -1; }
+    .z-nom { font-size: 18px; }
+  }
+</style>

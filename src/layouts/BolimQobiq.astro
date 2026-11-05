@@ -5,6 +5,8 @@
 import '../styles/global.css';
 import BoshQism from '../components/BoshQism.astro';
 import BolimYon from '../components/BolimYon.astro';
+import QavatYoli from '../components/QavatYoli.astro';
+import Lift from '../components/Lift.astro';
 
 export interface Props {
   title: string;
@@ -17,9 +19,12 @@ export interface Props {
   keyingiTekshiruv?: string;
   manbalar?: string[];
   tekshirilmagan?: string[];
+  /** Qavat yo'lidagi oraliq bandlar: ["Mashq"] */
+  yol?: string[];
 }
 
-const { title, description, til = 'uz', holat, bolim = 'sat' } = Astro.props;
+const { title, description, til = 'uz', holat, bolim = 'sat', yol: bandlar = [] } = Astro.props;
+const sahifaNomi = title.split(' · ')[0];
 ---
 <!doctype html>
 <html lang={til}>
@@ -31,9 +36,11 @@ const { title, description, til = 'uz', holat, bolim = 'sat' } = Astro.props;
     <BolimYon bolim={bolim} />
     <div class="kontent-ustun" data-panel-tashqari>
       <main id="asosiy">
+        <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
         <slot />
       </main>
     </div>
+    <Lift variant="pastki" />
   </body>
 </html>
 

@@ -5,6 +5,8 @@ import Menyu from '../components/Menyu.astro';
 import Footer from '../components/Footer.astro';
 import SahifaOxiri from '../components/SahifaOxiri.astro';
 import BoshQism from '../components/BoshQism.astro';
+import QavatYoli from '../components/QavatYoli.astro';
+import Lift from '../components/Lift.astro';
 
 export interface Props {
   title: string;
@@ -18,11 +20,13 @@ export interface Props {
   manbalar?: string[];
   tekshirilmagan?: string[];
   sahifaOxiri?: boolean;
+  /** Qavat yo'lidagi oraliq bandlar */
+  yol?: string[];
 }
 
 const {
   title, description, til = 'uz', holat, tekshirilgan, keyingiTekshiruv,
-  manbalar = [], tekshirilmagan = [], sahifaOxiri = true,
+  manbalar = [], tekshirilmagan = [], sahifaOxiri = true, yol: bandlar = [],
 } = Astro.props;
 ---
 <!doctype html>
@@ -34,6 +38,7 @@ const {
     <a class="otish" href="#asosiy">Asosiy matnga o'tish</a>
     <Menyu />
     <main id="asosiy">
+      <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={title} /></div>
       <slot />
       {sahifaOxiri && (
         <SahifaOxiri
@@ -45,5 +50,6 @@ const {
       )}
     </main>
     <Footer />
+    <Lift variant="pastki" />
   </body>
 </html>

@@ -4,6 +4,7 @@
 // British Council sahifasi tekshirib bo'lmadi: havolasiz, "tekshirilmoqda".
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
+import Zina from '../../../components/Zina.astro';
 import { qollanmalar, asos, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
 import { manbalar } from '../../../data/manbalar';
 import { yol } from '../../../lib/yol';
@@ -186,6 +187,8 @@ const namunalar = [
         <p>IELTS – British Council, IDP va Cambridge'ning savdo belgisi. Tayanch ular bilan bog'liq emas.</p>
       </div>
     </section>
+
+    <Zina />
 
     <ManbaBlok
       manbalar={['IE01', 'IE03', 'ID01']}

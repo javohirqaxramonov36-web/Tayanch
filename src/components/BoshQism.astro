@@ -11,7 +11,7 @@ const { title, description, holat } = Astro.props;
 const toliqSarlavha = title === 'Tayanch' ? 'Tayanch' : `${title} · Tayanch`;
 ---
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>{toliqSarlavha}</title>
 <meta name="description" content={description} />
 {holat === 'qoralama' && <meta name="robots" content="noindex" />}

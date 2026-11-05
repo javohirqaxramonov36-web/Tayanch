@@ -1,0 +1,36 @@
+---
+// "Qayerdaman" yo'li: "3-qavat › Mashq › Test". Oxirgi band havola emas (aria-current="page").
+// 1-qavat bosh sahifasida ko'rsatilmaydi.
+import { joriyQavat, qavatI } from '../data/qavatlar';
+import { yol } from '../lib/yol';
+
+interface Props {
+  /** Qavat va sahifa nomi orasidagi bandlar: ["Mashq"] */
+  bandlar?: string[];
+  sahifaNomi: string;
+}
+const { bandlar = [], sahifaNomi } = Astro.props;
+const pathname = Astro.url.pathname;
+const n = joriyQavat(pathname);
+const q = qavatI(n);
+const qavatKirishi = pathname === yol(q.manzil);
+const boshSahifa = n === 1 && qavatKirishi;
+---
+{!boshSahifa && (
+  <nav class="qavat-yoli" aria-label="Qayerdaman">
+    <ol>
+      <li>{qavatKirishi ? <span>{n}-qavat</span> : <a href={yol(q.manzil)}>{n}-qavat</a>}</li>
+      {bandlar.map((b) => <li><span>{b}</span></li>)}
+      <li><span aria-current="page">{qavatKirishi ? q.nomi : sahifaNomi}</span></li>
+    </ol>
+  </nav>
+)}
+
+<style>
+  .qavat-yoli { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
+  ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-1) var(--b-2); }
+  li { display: inline-flex; align-items: center; gap: var(--b-2); }
+  li + li::before { content: '›'; color: var(--matn-sust); }
+  a { color: var(--rang-havola); font-weight: 700; display: inline-flex; align-items: center; min-height: 32px; }
+  [aria-current='page'] { color: var(--matn); font-weight: 700; }
+</style>

@@ -1,8 +1,7 @@
 ---
-import { bolimlar } from '../data/bolimlar';
 import { yol } from '../lib/yol';
-
-const ochiq = bolimlar.filter((b) => b.holat === 'ochiq');
+import Lift from './Lift.astro';
+// Bo'limlarga o'tishni lift bajaradi (Tayanch binosi, 5 qavat).
 ---
 <header class="menyu-qator">
   <div class="ichki menyu-ichki">
@@ -13,12 +12,12 @@ const ochiq = bolimlar.filter((b) => b.holat === 'ochiq');
     <nav aria-label="Asosiy menyu">
       <ul>
         <li><a href={yol('/uz/#yonalish')}>Yo'nalishlar</a></li>
-        {ochiq.map((b) => <li><a href={yol(`/uz/${b.slug}/`)}>{b.nomi}</a></li>)}
         <li><a href={yol('/uz/deadline/')}>Muddatlar</a></li>
         <li><a href={yol('/uz/manbalar/')}>Manbalar</a></li>
         <li><a class="boshlash" href={yol('/uz/#yonalish')}>Boshlash</a></li>
       </ul>
     </nav>
+    <Lift variant="menyu" />
   </div>
 </header>
 
