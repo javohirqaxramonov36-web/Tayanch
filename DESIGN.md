@@ -42,7 +42,7 @@ Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`).
 
 Boshlang'ich holat `prefers-color-scheme` dan. Tanlov `localStorage` da (`tayanch:mavzu`), `<head>` dagi inline skript sahifa chizilishidan oldin `data-mavzu` qo'yadi, shuning uchun rang miltillamaydi. Tanlov tugmasi hozircha faqat SAT yon panelida.
 
-Brauzerda saqlanadigan hamma kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`). Natijalar sahifasidagi "Natijalarni o'chirish" tugmasi faqat `tayanch:sat-javoblar` ni o'chiradi.
+Brauzerda saqlanadigan hamma kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`). Natijalar sahifasidagi "Natijalarni o'chirish" tugmasi faqat `tayanch:sat-javoblar` ni o'chiradi.
 
 ## Tipografiya
 
@@ -80,7 +80,8 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 - **SAT bo'limi dizayni** (2026-11-04): asos `Tayanch-SAT-dizayn.md` (Claude Design kanvasi, 6 ekran: Main, Mashq, Telefon, Natijalar, Lug'at, Savol banki). Ekranlardagi savol, so'z va raqamlar namuna, saytga qo'yilmaydi. Hammasi qo'llangan: yon panel, SAT kirishi (hero, qora "Imtihon tuzilmasi" kartasi CB03 raqamlari bilan, 3 qadam, sahifalar guruhlari), telefon ko'rinishi, Mashq testi va Lug'at (yon panelsiz "fokus" qolipi `SatFokus`), Savol banki, Mening natijalarim. Namuna savollar va so'zlar `src/data/satNamuna.ts` da, ekranda "Namuna" deb belgilangan. Natijalar haqiqiy javoblarni ko'rsatadi; javob bo'lmasa namuna chiqadi va "Namuna ma'lumot" yorlig'i turadi.
   - Yon panel qatori: 44px, `--r-yon` 12px, faol qator ko'k fon va oq matn, ikonkalar ko'k. Qo'llanmalar ikonkasiz, 44px chapdan surilgan. Bu yerdagi kichik tugmalar 44px (umumiy 48px qoidasidan istisno, dizayn bo'yicha).
   - Katta tugma: 52px, to'liq yumaloq, 800 qalinlik. Telefonda to'liq kenglik.
-- **SAT yon paneli** (`SatYon`): 1024px va undan kengda chapda doimiy (`--yon-kenglik` 288px), yig'ilganda `--yon-yigilgan` 72px. Undan torda ustki qatordagi hamburger tugmasi panelni chapdan chiqaradi: Esc yopadi, fokus panel ichida qoladi, qolgan sahifa `inert`. Pastda "Tayanch bosh sahifasi" havolasi va mavzu tugmasi (dizayn bo'yicha).
+- **IELTS bo'limi dizayni** (2026-11-05): asos `Tayanch-IELTS-dizayn.md` (7 ekran: kirish, Reading qo'llanma, 30 kunlik reja; har biri telefon varianti bilan). SAT'dan farqlari: yon panel qatori 48px va `--r-orta` 16px, matn 16px; "tez orada" bandlar havola emas (kulrang ikonka va yorliq, Tab bilan o'tilmaydi); logo radiusi `--r-kichik`; pastda Telegram bandi. Sahifadagi yagona soya: kirishda reja kartasi, qo'llanmada mini-mashq, rejada savol kartasi. "Manbalar va tekshiruv" bloki `ManbaBlok`. Kvadrat qavsdagi joylar rasmiy manbadan to'ldirildi (IE01–IE03, ID01); tekshirib bo'lmaganlari "tekshirilmoqda" deb qoldi.
+- **Bo'lim yon paneli** (`BolimYon`, `bolim="sat" | "ielts"`, qolip `BolimQobiq`): 1024px va undan kengda chapda doimiy (`--yon-kenglik` 288px), yig'ilganda `--yon-yigilgan` 72px. Undan torda ustki qatordagi hamburger tugmasi panelni chapdan chiqaradi: Esc yopadi, fokus panel ichida qoladi, qolgan sahifa `inert`. Pastda "Tayanch bosh sahifasi" havolasi va mavzu tugmasi (dizayn bo'yicha).
 - **Menyu**: oq qator, logo chapda, havolalar o'ngda; telefonda ikkinchi qatorga o'tadi.
 - **Footer**: "Natija kafolatlanmaydi", Maxfiylik, Manba jurnali.
 - **Sahifa oxiri bloki** (har sahifada, T1): rasmiy manbalar, tekshirilgan sana, keyingi tekshiruv, tekshirilmagan joylar.

@@ -2,7 +2,7 @@
 // SAT bo'limi kirishi (T1, 2-tur).
 // Dizayn: Tayanch-SAT-dizayn.md, "Main" (kompyuter) va "Telefon" ekranlari.
 // Matnlar dizayndan. Imtihon tuzilmasi raqamlari: CB03 (College Board, rasmiy).
-import SatQobiq from '../../../layouts/SatQobiq.astro';
+import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import { satGuruhlar } from '../../../data/satSahifalar';
 import { manbalar } from '../../../data/manbalar';
 const cb03 = manbalar.find((m) => m.id === 'CB03')!;
@@ -15,7 +15,7 @@ const qadamlar = [
   { yorliq: 'TAHLIL', nomi: 'Mening natijalarim', tavsif: "Xatolar ro'yxati, faqat shu brauzerda saqlanadi. Ball hisoblanmaydi.", havola: "Natijalarni ko'rish", qism: 'vosita/natijalar/' },
 ];
 ---
-<SatQobiq
+<BolimQobiq
   title="SAT"
   description="Digital SAT tayyorgarligi: English (Reading & Writing) va Math. Mustaqil, qimmat kurslarsiz reja."
   turi="bolim-kirishi"
@@ -105,7 +105,7 @@ const qadamlar = [
       <p class="eslatma">SAT College Board'ning savdo belgisi. Tayanch u bilan bog'liq emas. Natija kafolatlanmaydi.</p>
     </section>
   </div>
-</SatQobiq>
+</BolimQobiq>
 
 <style>
   .sat-kirish { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-14); }

@@ -1,0 +1,359 @@
+---
+// IELTS bo'limi kirishi. Dizayn: Tayanch-IELTS-dizayn.md, "Main" va "KirishTelefon" ekranlari.
+// Vaqtlar: IE01 (ielts.org). Rasmiy namunalar: IE03 (ielts.org), ID01 (IDP).
+// British Council sahifasi tekshirib bo'lmadi: havolasiz, "tekshirilmoqda".
+import BolimQobiq from '../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../components/ManbaBlok.astro';
+import { qollanmalar, asos, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
+import { manbalar } from '../../../data/manbalar';
+import { yol } from '../../../lib/yol';
+
+const m = (id: string) => manbalar.find((x) => x.id === id)!;
+const reja = yol('/uz/ielts/vosita/reja/');
+const reading = yol('/uz/ielts/qollanma/reading/');
+const bolimlar = [
+  { nomi: 'Listening', vaqt: 'Taxminan 30 daqiqa', ikonka: IKONKA.listening },
+  { nomi: 'Reading', vaqt: "60 daqiqa (ko'chirish vaqti ichida)", ikonka: IKONKA.reading },
+  { nomi: 'Writing', vaqt: '60 daqiqa', ikonka: IKONKA.writing },
+  { nomi: 'Speaking', vaqt: '11–14 daqiqa', ikonka: IKONKA.speaking },
+];
+const qadamlar = [
+  { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
+  { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
+  { nomi: '30 kunlik reja tuz', tavsif: "Uchta savolga javob ber: reja qiyin bo'limingga ko'proq kun ajratadi.", havola: 'Reja tuzish', href: reja },
+];
+const namunalar = [
+  { nomi: 'IELTS.org', tavsif: "Academic namuna topshiriqlari: to'rt ko'nikma, Listening va Reading uchun javob kalitlari.", manba: m('IE03') },
+  { nomi: 'IDP', tavsif: 'Bepul tanishuv testlari: Listening, Reading, Writing va Speaking 1-qism.', manba: m('ID01') },
+  { nomi: 'British Council', tavsif: "Bepul mashq testlari sahifasi tekshirilmoqda, havola tekshiruvdan keyin qo'yiladi.", manba: null },
+];
+---
+<BolimQobiq
+  title="IELTS"
+  description="IELTS'ga mustaqil tayyorgarlik: har bo'lim uchun strategiya va 30 kunlik mashq rejasi."
+  turi="bolim-kirishi"
+  bolim="ielts"
+  holat="qoralama"
+>
+  <div class="ichki ielts">
+    <section class="hero" aria-labelledby="ielts-h">
+      <div class="hero-matn">
+        <p class="ustki-kok">IELTS bo'limi · mustaqil tayyorgarlik</p>
+        <h1 id="ielts-h">IELTS'ga o'zing tayyorlan,<br /><span class="kok">reja bilan.</span></h1>
+        <p class="lead">Bu yerda har bo'lim uchun strategiya va kunma-kun mashq rejasi bor. Natijani esa hech kim kafolatlay olmaydi, biz ham: u sening mashqingga bog'liq.</p>
+        <div class="cta">
+          <a class="katta asosiy" href={reja}>
+            30 kunlik reja tuzish
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </a>
+          <a class="katta ikkinchi" href="#boshla">Qayerdan boshlayman?</a>
+        </div>
+      </div>
+
+      <div class="format" aria-labelledby="format-h">
+        <h2 id="format-h" class="ustki-yorliq">Imtihon to'rt bo'limdan iborat</h2>
+        <ul>
+          {bolimlar.map((x) => (
+            <li>
+              <span class="f-belgi" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} /></span>
+              <span><strong>{x.nomi}</strong><span class="f-vaqt">{x.vaqt}</span></span>
+            </li>
+          ))}
+        </ul>
+        <p class="f-manba">IELTS Academic. Manba: <a href={m('IE01').havola} rel="noopener">ielts.org</a>, tekshirilgan {m('IE01').tekshirilganSana}.</p>
+      </div>
+    </section>
+
+    <section id="boshla" class="boshla" aria-labelledby="boshla-h">
+      <div class="bosh-qator">
+        <h2 id="boshla-h">Qayerdan boshlayman?</h2>
+        <p class="izoh">Shu tartibda, bir haftadan kam vaqtda</p>
+      </div>
+      <ol class="qadamlar">
+        {qadamlar.map((q, i) => (
+          <li>
+            <span class={i === 2 ? 'raqam kok-raqam' : 'raqam'} aria-hidden="true">{i + 1}</span>
+            <div class="q-matn"><h3>{q.nomi}</h3><p>{q.tavsif}</p></div>
+            <a href={q.href}>{q.havola}</a>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="reja-karta" aria-labelledby="reja-cta-h" data-reja-kalit={KALIT_IELTS_REJA}>
+      <div class="rk-matn">
+        <p class="ustki-kok">Asosiy qadam</p>
+        <div id="reja-yoq">
+          <h2 id="reja-cta-h">Uch savolga javob ber, 30 kunlik rejang tayyor</h2>
+          <p class="izoh-m">Imtihongacha qancha vaqt qolgani, kuniga necha soat bo'shligi va qaysi bo'lim qiyinligi. Reja shulardan tuziladi.</p>
+          <div class="rk-tugmalar">
+            <a class="katta asosiy katta-56" href={reja}>
+              Rejani tuzish
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
+            <p class="izoh">Ro'yxatdan o'tish ham, email ham kerak emas.</p>
+          </div>
+        </div>
+        <div id="reja-bor" hidden>
+          <h2 id="reja-bor-h">Rejang davom etmoqda: <span id="reja-soni">0</span> / 30 kun belgilangan</h2>
+          <div class="iz" aria-hidden="true"><div class="toldirish" id="reja-toldirish"></div></div>
+          <div class="rk-tugmalar">
+            <a class="katta asosiy" href={reja}>Bugungi kunni ochish</a>
+          </div>
+        </div>
+      </div>
+      <div class="rk-namuna" aria-hidden="true">
+        <p class="ustki-yorliq">1-hafta, namuna</p>
+        <div class="kun"><span class="katak toldirilgan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7" /></svg></span><span class="kun-raqam">1-kun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Writing</div>
+        <div class="kun"><span class="katak"></span><span class="kun-raqam">2-kun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Listening</div>
+        <div class="kun"><span class="katak"></span><span class="kun-raqam">3-kun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Writing</div>
+      </div>
+    </section>
+
+    <section class="qollanmalar" aria-labelledby="qol-h">
+      <h2 id="qol-h">Qo'llanmalar</h2>
+      <div class="q-tor">
+        <div class="kul-blok">
+          <h3 class="ustki-yorliq">IELTS bo'limlari</h3>
+          <ul>
+            {qollanmalar.map((q) => (
+              <li>
+                {q.qism ? (
+                  <a class="q-qator" href={yol(`/uz/ielts/${q.qism}`)}>
+                    <svg class="q-ikonka" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={q.ikonka} />
+                    <span class="q-nom"><strong>{q.nomi}</strong><span>{q.tavsif}</span></span>
+                    <span class="pill-ochiq">ochiq</span>
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+                  </a>
+                ) : (
+                  <div class="q-qator nofaol">
+                    <svg class="q-ikonka" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={q.ikonka} />
+                    <span class="q-nom"><strong>{q.nomi}</strong><span>{q.tavsif}</span></span>
+                    <span class="pill-tez">tez orada</span>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="kul-blok">
+          <h3 class="ustki-yorliq">Asos</h3>
+          <div class="asos nofaol">
+            <div class="asos-bosh">
+              <svg class="q-ikonka" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={asos.ikonka} />
+              <span class="pill-tez">tez orada</span>
+            </div>
+            <strong>{asos.nomi}</strong>
+            <span>{asos.tavsif}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rasmiy" class="rasmiy" aria-labelledby="rasmiy-h">
+      <div class="r-bosh">
+        <h2 id="rasmiy-h">Rasmiy bepul namunalar</h2>
+        <p class="izoh-m">Mashqni rasmiy namunadan boshla: format va qiyinlik haqiqiy imtihonga eng yaqin shu yerda. Havolalar tashqi saytga, yangi oynada ochiladi.</p>
+      </div>
+      <ul class="r-royxat">
+        {namunalar.map((n) => (
+          <li>
+            {n.manba ? (
+              <a class="r-qator" href={n.manba.havola} target="_blank" rel="noopener">
+                <span class="r-nom">{n.nomi}</span>
+                <span class="r-matn"><span>{n.tavsif}</span><span class="r-url">{new URL(n.manba.havola).hostname}</span></span>
+                <svg role="img" aria-label="Tashqi havola, yangi oynada" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" /></svg>
+              </a>
+            ) : (
+              <div class="r-qator nofaol">
+                <span class="r-nom">{n.nomi}</span>
+                <span class="r-matn"><span>{n.tavsif}</span></span>
+                <span class="pill-tez">tekshirilmoqda</span>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="pastki" aria-label="Telegram va eslatma">
+      <div class="telegram">
+        <span class="t-belgi" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" /></svg></span>
+        <span class="t-matn"><strong>Telegram kanal</strong><span class="pill-tez">tez orada</span></span>
+      </div>
+      <div class="eslatma">
+        <span class="pill-tez">matn tekshiriladi</span>
+        <p>IELTS – British Council, IDP va Cambridge'ning savdo belgisi. Tayanch ular bilan bog'liq emas.</p>
+      </div>
+    </section>
+
+    <ManbaBlok
+      manbalar={['IE01', 'IE03', 'ID01']}
+      tekshirilgan="2026-11-05"
+      keyingiTekshiruv="2026-12-05"
+      tekshirilmagan={[
+        "British Council'ning bepul mashq testlari sahifasi (saytga ulanib bo'lmadi).",
+        "IELTS.org namunalari bepulligi sahifada yozilmagan.",
+        "Savdo belgisi haqidagi eslatma matni.",
+        "Listening, Writing Task 2, Speaking va General English qo'llanmalari hali yozilmagan.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  // Reja kartasi: brauzerda reja bo'lsa, "davom etmoqda" holati.
+  const karta = document.querySelector<HTMLElement>('.reja-karta')!;
+  try {
+    const r = JSON.parse(localStorage.getItem(karta.dataset.rejaKalit!) || 'null');
+    if (r && r.javob && r.javob.qiyin) {
+      const soni = Object.values(r.bajarilgan || {}).filter(Boolean).length;
+      document.getElementById('reja-yoq')!.hidden = true;
+      document.getElementById('reja-bor')!.hidden = false;
+      document.getElementById('reja-soni')!.textContent = String(soni);
+      document.getElementById('reja-toldirish')!.style.width = Math.round((soni / 30) * 100) + '%';
+      karta.setAttribute('aria-labelledby', 'reja-bor-h');
+    }
+  } catch { /* brauzer ruxsat bermadi: bo'sh holat qoladi */ }
+</script>
+
+<style>
+  .ielts { padding-top: var(--b-14); display: flex; flex-direction: column; gap: var(--b-16); max-width: calc(912px + 2 * var(--b-10)) !important; }
+  .kok { color: var(--rang-havola); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .ustki-yorliq { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); line-height: 1.4; }
+  .izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .izoh-m { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+  .pill-tez, .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-tez { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
+  .pill-ochiq { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+
+  .katta {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--b-3);
+    min-height: 52px; padding: 0 28px; border-radius: var(--r-toliq);
+    text-decoration: none; font-weight: 800; font-size: 16px;
+  }
+  .katta-56 { min-height: 56px; padding: 0 32px; font-size: 18px; }
+  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta.ikkinchi { background: var(--fon-ikkinchi); color: var(--matn); font-weight: 700; }
+  .katta.ikkinchi:hover { background: var(--sirt-ikkinchi); }
+
+  /* Hero */
+  .hero { display: flex; gap: var(--b-8); align-items: stretch; }
+  .hero-matn { flex: 3 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); }
+  .hero h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 56ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
+  .format {
+    flex: 2 1 0; min-width: 0;
+    background: var(--qora); color: var(--rang-asosiy-matn);
+    border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta);
+    padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4);
+  }
+  .format .ustki-yorliq { color: var(--rang-asosiy-qorada); }
+  .format ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .format li { background: var(--qora-sirt); border: 1px solid var(--qora-chiziq); border-radius: var(--r-orta); padding: 12px 16px; display: flex; align-items: center; gap: var(--b-3); }
+  .format li > span:last-child { display: flex; flex-direction: column; }
+  .format strong { font-weight: 800; }
+  .f-belgi { width: 36px; height: 36px; flex: none; border-radius: var(--r-kichik); background: var(--rang-asosiy); color: var(--rang-asosiy-matn); display: flex; align-items: center; justify-content: center; }
+  .f-vaqt, .f-manba { font-size: var(--matn-kichik); color: var(--qora-matn-ikkinchi); }
+  .f-manba { font-size: var(--matn-mayda); }
+  .f-manba a { color: var(--qora-matn-ikkinchi); }
+
+  /* Qadamlar */
+  .boshla, .qollanmalar, .rasmiy { display: flex; flex-direction: column; gap: var(--b-5); }
+  .bosh-qator { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
+  .qadamlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .qadamlar li { padding: var(--b-6) 28px; display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; column-gap: var(--b-5); }
+  .qadamlar li + li { border-top: 1px solid var(--chiziq); }
+  .raqam { width: 48px; height: 48px; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
+  .kok-raqam { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .q-matn { display: flex; flex-direction: column; gap: var(--b-1); }
+  .q-matn h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .q-matn p { line-height: 1.6; color: var(--matn-ikkinchi); }
+  .qadamlar a { font-weight: 700; white-space: nowrap; min-height: 48px; display: inline-flex; align-items: center; color: var(--rang-havola); }
+  .qadamlar a:hover { color: var(--rang-asosiy-toq); }
+
+  /* Reja kartasi: sahifadagi yagona soya */
+  .reja-karta {
+    background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+    box-shadow: var(--soya); padding: var(--b-10);
+    display: flex; gap: var(--b-10); align-items: center;
+  }
+  .rk-matn { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-4); }
+  .rk-matn > div { display: flex; flex-direction: column; gap: var(--b-4); }
+  .rk-matn > div[hidden] { display: none; }
+  .rk-tugmalar { display: flex; align-items: center; gap: var(--b-4); flex-wrap: wrap; padding-top: var(--b-1); }
+  .iz { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .toldirish { height: 100%; width: 0; background: var(--rang-asosiy); }
+  .rk-namuna { flex: 0 0 300px; background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-2); }
+  .rk-namuna .ustki-yorliq { margin-bottom: var(--b-1); }
+  .kun { background: var(--fon); border-radius: var(--r-kichik); padding: 12px; display: flex; align-items: center; gap: var(--b-3); font-size: var(--matn-kichik); font-weight: 700; }
+  .kun > svg { color: var(--rang-havola); }
+  .katak { width: 20px; height: 20px; flex: none; border-radius: var(--r-kichik); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; }
+  .katak.toldirilgan { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .kun-raqam { color: var(--matn-ikkinchi); font-weight: 500; width: 44px; }
+
+  /* Qo'llanmalar */
+  .q-tor { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--b-4); align-items: start; }
+  .kul-blok { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-2); }
+  .kul-blok > .ustki-yorliq { margin: var(--b-3) var(--b-4) var(--b-2); }
+  .kul-blok ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-1); }
+  .q-qator { background: var(--fon); border-radius: var(--r-orta); min-height: 64px; padding: 0 var(--b-4); display: flex; align-items: center; gap: var(--b-4); color: var(--matn); text-decoration: none; }
+  a.q-qator:hover { box-shadow: inset 0 0 0 1.5px var(--matn); }
+  .q-ikonka { flex: none; color: var(--rang-havola); }
+  .nofaol .q-ikonka { color: var(--matn-sust); }
+  .q-nom { flex: 1; min-width: 0; display: flex; flex-direction: column; padding-block: var(--b-2); }
+  .q-nom strong { font-weight: 800; }
+  .q-nom span { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .nofaol { color: var(--matn-ikkinchi); }
+  .nofaol .q-nom strong { font-weight: 700; }
+  .asos { background: var(--fon); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-3); }
+  .asos-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-2); }
+  .asos > span:last-child { font-size: var(--matn-kichik); font-weight: 500; line-height: 1.5; }
+
+  /* Rasmiy namunalar */
+  .r-bosh { display: flex; flex-direction: column; gap: var(--b-2); }
+  .r-royxat { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .r-royxat li + li { border-top: 1px solid var(--chiziq); }
+  .r-qator { display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; align-items: center; column-gap: var(--b-6); min-height: 80px; padding: var(--b-3) 28px; color: var(--matn); text-decoration: none; }
+  a.r-qator:hover { background: var(--fon-ikkinchi); }
+  .r-nom { font-weight: 800; font-size: 18px; }
+  .r-matn { display: flex; flex-direction: column; gap: var(--b-1); color: var(--matn-ikkinchi); }
+  .r-url { font-size: var(--matn-kichik); font-weight: 500; color: var(--rang-havola); }
+
+  /* Telegram va eslatma */
+  .pastki { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--b-4); align-items: stretch; }
+  .telegram { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); display: flex; align-items: center; gap: var(--b-4); }
+  .t-belgi { width: 48px; height: 48px; flex: none; border-radius: var(--r-toliq); background: var(--fon); color: var(--rang-havola); display: flex; align-items: center; justify-content: center; }
+  .t-matn { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-1); }
+  .t-matn strong { font-weight: 800; font-size: 18px; }
+  .eslatma { border: 1.5px dashed var(--matn); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); }
+  .eslatma p { font-size: var(--matn-kichik); line-height: 1.6; color: var(--matn-ikkinchi); }
+
+  /* Telefon: KirishTelefon ekrani */
+  @media (max-width: 760px) {
+    .hero { flex-direction: column; }
+    .reja-karta { flex-direction: column; align-items: stretch; padding: var(--b-6); gap: var(--b-6); }
+    .rk-namuna { flex: none; }
+    .q-tor, .pastki { grid-template-columns: 1fr; }
+    .r-qator { grid-template-columns: minmax(0, 1fr) auto; row-gap: var(--b-1); padding: var(--b-4) var(--b-5); }
+    .r-nom { grid-column: 1; }
+    .r-matn { grid-column: 1; grid-row: 2; }
+    .r-qator > svg, .r-qator > .pill-tez { grid-column: 2; grid-row: 1 / span 2; }
+  }
+  @media (max-width: 640px) {
+    .ielts { padding-top: 28px; gap: var(--b-10); }
+    .hero h1 { font-size: 34px; }
+    h2 { font-size: 24px; }
+    .cta .katta, .rk-tugmalar .katta { width: 100%; }
+    .qadamlar li { grid-template-columns: 48px minmax(0, 1fr); row-gap: var(--b-1); padding: var(--b-5); }
+    .qadamlar a { grid-column: 2; min-height: 44px; }
+    .raqam { width: 40px; height: 40px; font-size: 16px; }
+    .q-matn h3 { font-size: 20px; }
+    .bosh-qator .izoh { display: none; }
+    .q-qator .pill-ochiq { display: none; }
+  }
+</style>

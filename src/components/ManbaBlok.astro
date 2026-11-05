@@ -1,0 +1,50 @@
+---
+// "Manbalar va tekshiruv" bloki, Tayanch-IELTS-dizayn.md uslubida.
+import { rasmiyManbalar } from '../data/manbalar';
+
+interface Props {
+  manbalar: string[];
+  tekshirilgan: string;
+  keyingiTekshiruv: string;
+  tekshirilmagan: string[];
+}
+const { manbalar, tekshirilgan, keyingiTekshiruv, tekshirilmagan } = Astro.props;
+const rasmiy = rasmiyManbalar(manbalar);
+---
+<section class="manba" aria-labelledby="manba-h">
+  <h2 id="manba-h">Manbalar va tekshiruv</h2>
+  <dl>
+    <div>
+      <dt>Rasmiy manbalar</dt>
+      <dd>
+        {rasmiy.length > 0 ? (
+          <ul>
+            {rasmiy.map((m) => (
+              <li><a href={m.havola} rel="noopener">{m.nomi}</a> ({m.tashkilot}, {m.id})</li>
+            ))}
+          </ul>
+        ) : "Yo'q"}
+      </dd>
+    </div>
+    <div><dt>Tekshirilgan sana</dt><dd>{tekshirilgan}</dd></div>
+    <div><dt>Keyingi tekshiruv</dt><dd>{keyingiTekshiruv}</dd></div>
+    <div>
+      <dt>Tekshirilmagan joylar</dt>
+      <dd>
+        {tekshirilmagan.length > 0 ? <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul> : "Yo'q"}
+      </dd>
+    </div>
+  </dl>
+</section>
+
+<style>
+  .manba { border-top: 1.5px solid var(--matn); padding-top: var(--b-8); display: flex; flex-direction: column; gap: var(--b-5); }
+  h2 { font-size: var(--matn-h3); font-weight: 800; }
+  dl { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4) var(--b-8); }
+  dl > div { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  dt { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  dd { margin: 0; line-height: 1.6; }
+  ul { margin: 0; padding-left: 1.2em; }
+  a { color: var(--rang-havola); }
+  @media (max-width: 640px) { dl { grid-template-columns: 1fr; } }
+</style>

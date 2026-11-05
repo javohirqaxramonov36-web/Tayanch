@@ -1,6 +1,6 @@
 ---
 // SAT bo'limining "tez orada" sahifalari. Ro'yxat: src/data/satSahifalar.ts
-import SatQobiq from '../../../layouts/SatQobiq.astro';
+import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import { satSahifalar, satGuruhlar, turiNomi, type SatSahifa } from '../../../data/satSahifalar';
 import { yol } from '../../../lib/yol';
 
@@ -17,7 +17,7 @@ const guruh = satGuruhlar.find((g) => g.sahifalar.includes(sahifa))?.nomi ?? '';
 const TEKSHIRILGAN = '2026-11-04';
 const KEYINGI = '2026-12-04';
 ---
-<SatQobiq
+<BolimQobiq
   title={`${sahifa.nomi} · SAT`}
   description={sahifa.tavsif}
   turi={sahifa.turi}
@@ -62,7 +62,7 @@ const KEYINGI = '2026-12-04';
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
       SAT bo'limiga qaytish</a></p>
   </section>
-</SatQobiq>
+</BolimQobiq>
 
 <style>
   /* Dizayn: Tayanch-SAT-dizayn.md (Natijalar va Savol banki sarlavhasi) */

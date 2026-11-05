@@ -1,0 +1,332 @@
+---
+// 30 kunlik IELTS rejasi. Dizayn: Tayanch-IELTS-dizayn.md, "Reja", "RejaTelefon", "RejaHolatlar".
+// Uch savol bittadan; eng qiyin bo'limga 30 kundan 12 tasi, har hafta oxiri takrorlash, 29–30: rasmiy namuna va tahlil.
+// Holat faqat shu brauzerda: tayanch:ielts-reja. Ball ham, band ham yo'q.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { IKONKA, KALIT_IELTS_REJA } from '../../../../../data/ieltsSahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const ikonkalar = {
+  Listening: IKONKA.listening, Reading: IKONKA.reading, Writing: IKONKA.writing, Speaking: IKONKA.speaking,
+  Takror: IKONKA.takror, Namuna: IKONKA.namuna, Tahlil: IKONKA.tahlil,
+};
+---
+<BolimQobiq
+  title="30 kunlik reja · IELTS"
+  description="Uch savolga javob ber: imtihongacha qolgan vaqt, kunlik bo'sh vaqt va eng qiyin bo'lim asosida 30 kunlik IELTS rejasi."
+  turi="vosita"
+  bolim="ielts"
+  holat="qoralama"
+>
+  <script type="application/json" id="reja-sozlama" set:html={JSON.stringify({ kalit: KALIT_IELTS_REJA, ikonkalar })} />
+  <div class="ichki reja">
+    <header class="bosh">
+      <p class="ustki-kok">Vosita</p>
+      <h1>30 kunlik IELTS rejasi</h1>
+      <p class="maxfiy">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+        Ma'lumotlaring faqat shu brauzerda saqlanadi.
+      </p>
+    </header>
+
+    <section class="ekran-bosh" id="ekran-bosh" aria-labelledby="bosh-h">
+      <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reja} />
+      <h2 id="bosh-h" tabindex="-1">Hali reja yo'q</h2>
+      <p class="izoh-m">Uchta savolga javob ber, reja shu yerda paydo bo'ladi. Ro'yxatdan o'tish ham, email ham kerak emas.</p>
+      <button type="button" class="katta asosiy" id="boshla">Boshlash</button>
+    </section>
+
+    <section class="ekran-savol" id="ekran-savol" aria-labelledby="savol-h" hidden>
+      <div class="progress-qator">
+        <div class="iz" role="progressbar" aria-label="Savollar" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1" id="progress"><div class="toldirish" id="progress-t"></div></div>
+        <span class="p-matn" id="progress-matn">1 / 3</span>
+      </div>
+      <div class="s-matn">
+        <h2 id="savol-h" tabindex="-1"></h2>
+        <p class="izoh-m" id="savol-izoh"></p>
+      </div>
+      <div class="variantlar" role="radiogroup" aria-labelledby="savol-h" id="variantlar"></div>
+      <div class="s-tugmalar">
+        <button type="button" class="matn-tugma" id="orqaga">Orqaga</button>
+        <button type="button" class="katta asosiy" id="keyingi" disabled>Keyingisi</button>
+      </div>
+    </section>
+
+    <section class="ekran-natija" id="ekran-natija" aria-labelledby="natija-h" hidden>
+      <div class="xulosa">
+        <div class="x-chap">
+          <h2 id="natija-h" tabindex="-1">Sening rejang</h2>
+          <p class="pillar">
+            <span class="pill" id="p-hafta"></span>
+            <span class="pill" id="p-soat"></span>
+            <span class="pill pill-kok" id="p-qiyin"></span>
+          </p>
+          <p class="izoh" id="qisqa" hidden>Imtihon 30 kundan oldin: oxirgi kunlarni rasmiy namunaga ajrat.</p>
+        </div>
+        <div class="x-ong">
+          <span class="b-soni" id="b-soni">Belgilangan: 0 / 30 kun</span>
+          <div class="iz" aria-hidden="true"><div class="toldirish" id="b-toldirish"></div></div>
+          <button type="button" class="chiziq-tugma" id="qayta">Qayta tuzish</button>
+        </div>
+      </div>
+      <div id="haftalar" class="haftalar"></div>
+      <p class="izoh oxirgi-izoh">Rejani qanday ishlatish: Reading kunlari uchun <a href={yol('/uz/ielts/qollanma/reading/')}>Reading qo'llanmasi</a>, namuna kunlari uchun <a href={yol('/uz/ielts/#rasmiy')}>rasmiy bepul namunalar</a>.</p>
+    </section>
+  </div>
+</BolimQobiq>
+
+<script>
+  const { kalit, ikonkalar } = JSON.parse(document.getElementById('reja-sozlama')!.textContent!) as { kalit: string; ikonkalar: Record<string, string> };
+  type Javob = { hafta: string | null; soat: string | null; qiyin: string | null };
+  type Holat = { javob: Javob; bajarilgan: Record<string, boolean> };
+
+  const SAVOLLAR = [
+    { key: 'hafta', sarlavha: 'Imtihongacha necha hafta qoldi?', izoh: 'Taxminiy javob ham yetadi.', v: ['1–2 hafta', '3–4 hafta', '5–8 hafta', "8 haftadan ko'p"] },
+    { key: 'soat', sarlavha: 'Kuniga necha soat ajrata olasan?', izoh: "Orzu qilganingni emas, haqiqiy vaqtingni tanla.", v: ['1 soatgacha', '1–2 soat', '2–3 soat', "3 soatdan ko'p"] },
+    { key: 'qiyin', sarlavha: "Qaysi bo'lim senga eng qiyin?", izoh: "Shu bo'limga ko'proq kun ajratiladi.", v: ['Listening', 'Reading', 'Writing', 'Speaking'] },
+  ] as const;
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const oqi = (): Holat | null => {
+    try {
+      const r = JSON.parse(localStorage.getItem(kalit) || 'null');
+      return r && r.javob && r.javob.qiyin ? r : null;
+    } catch { return null; }
+  };
+  const saqla = (h: Holat) => { try { localStorage.setItem(kalit, JSON.stringify(h)); } catch { /* saqlanmadi */ } };
+
+  let javob: Javob = { hafta: null, soat: null, qiyin: null };
+  let qadam = 0;
+  let bajarilgan: Record<string, boolean> = {};
+
+  const korsat = (ekran: 'bosh' | 'savol' | 'natija', fokus = true) => {
+    $('ekran-bosh').hidden = ekran !== 'bosh';
+    $('ekran-savol').hidden = ekran !== 'savol';
+    $('ekran-natija').hidden = ekran !== 'natija';
+    if (fokus) $(ekran === 'bosh' ? 'bosh-h' : ekran === 'savol' ? 'savol-h' : 'natija-h').focus();
+  };
+
+  // --- Savol ekrani ---
+  const savolChiz = () => {
+    const q = SAVOLLAR[qadam];
+    const tanlov = javob[q.key];
+    $('savol-h').textContent = q.sarlavha;
+    $('savol-izoh').textContent = q.izoh;
+    $('progress-t').style.width = Math.round(((qadam + 1) / 3) * 100) + '%';
+    $('progress').setAttribute('aria-valuenow', String(qadam + 1));
+    $('progress-matn').textContent = `${qadam + 1} / 3`;
+    const v = $('variantlar');
+    v.replaceChildren();
+    q.v.forEach((m) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', String(tanlov === m));
+      b.tabIndex = tanlov === m || (!tanlov && m === q.v[0]) ? 0 : -1;
+      b.textContent = m;
+      b.addEventListener('click', () => { javob = { ...javob, [q.key]: m }; savolChiz(); (v.querySelector('[aria-checked="true"]') as HTMLElement).focus(); });
+      v.append(b);
+    });
+    const keyingi = $<HTMLButtonElement>('keyingi');
+    keyingi.disabled = !tanlov;
+    keyingi.textContent = qadam === 2 ? "Rejani ko'rish" : 'Keyingisi';
+  };
+  // Radiogroup: strelkalar bilan yurish
+  $('variantlar').addEventListener('keydown', (e) => {
+    const t = [...$('variantlar').querySelectorAll<HTMLButtonElement>('button')];
+    const i = t.indexOf(document.activeElement as HTMLButtonElement);
+    if (i < 0) return;
+    const yon = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (!yon) return;
+    e.preventDefault();
+    t[(i + yon + t.length) % t.length].click();
+  });
+
+  // --- Reja tuzish ---
+  const kunlarTuz = (qiyin: string) => {
+    const tartib = ['Listening', 'Reading', 'Writing', 'Speaking'];
+    const boshqa = tartib.filter((x) => x !== qiyin);
+    const n: string[] = [];
+    for (let w = 0; w < 4; w++) n.push(qiyin, boshqa[w % 3], qiyin, boshqa[(w + 1) % 3], qiyin, boshqa[(w + 2) % 3], 'Takror');
+    n.push('Namuna', 'Tahlil');
+    return n;
+  };
+
+  const natijaChiz = () => {
+    const nomlar = kunlarTuz(javob.qiyin!);
+    $('p-hafta').textContent = javob.hafta!;
+    $('p-soat').textContent = `Kuniga ${javob.soat}`;
+    $('p-qiyin').textContent = `Eng qiyin: ${javob.qiyin} · 12 kun`;
+    $('qisqa').hidden = javob.hafta !== '1–2 hafta';
+    const soni = Object.values(bajarilgan).filter(Boolean).length;
+    $('b-soni').textContent = `Belgilangan: ${soni} / 30 kun`;
+    $('b-toldirish').style.width = Math.round((soni / 30) * 100) + '%';
+
+    const h = $('haftalar');
+    h.replaceChildren();
+    const haftalar = [0, 1, 2, 3].map((w) => ({ nom: `${w + 1}-hafta`, oraliq: `${w * 7 + 1}–${w * 7 + 7}-kun`, bosh: w * 7, oxir: w * 7 + 7 }));
+    haftalar.push({ nom: 'Yakun', oraliq: '29–30-kun: rasmiy namuna va tahlil', bosh: 28, oxir: 30 });
+    haftalar.forEach((hf) => {
+      const blok = document.createElement('section');
+      blok.className = 'hafta';
+      const sarl = document.createElement('h3');
+      sarl.innerHTML = `<span></span> <span class="oraliq"></span>`;
+      (sarl.children[0] as HTMLElement).textContent = hf.nom;
+      (sarl.children[1] as HTMLElement).textContent = hf.oraliq;
+      blok.append(sarl);
+      const tor = document.createElement('div');
+      tor.className = 'kunlar' + (hf.oxir - hf.bosh < 7 ? ' qisqa-tor' : '');
+      for (let i = hf.bosh; i < hf.oxir; i++) {
+        const k = i + 1;
+        const nom = nomlar[i];
+        const b = !!bajarilgan[k];
+        const label = document.createElement('label');
+        label.className = 'kun' + (b ? ' bajarildi' : '');
+        label.innerHTML = `
+          <span class="k-bosh"><span class="k-raqam">${k}-kun</span><input type="checkbox" ${b ? 'checked' : ''}></span>
+          <span class="k-nom"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ikonkalar[nom]}</svg><span></span></span>`;
+        (label.querySelector('.k-nom span') as HTMLElement).textContent = nom;
+        label.querySelector('input')!.addEventListener('change', (e) => {
+          bajarilgan = { ...bajarilgan, [k]: (e.target as HTMLInputElement).checked };
+          saqla({ javob, bajarilgan });
+          label.classList.toggle('bajarildi', bajarilgan[k]);
+          const s = Object.values(bajarilgan).filter(Boolean).length;
+          $('b-soni').textContent = `Belgilangan: ${s} / 30 kun`;
+          $('b-toldirish').style.width = Math.round((s / 30) * 100) + '%';
+        });
+        tor.append(label);
+      }
+      blok.append(tor);
+      h.append(blok);
+    });
+  };
+
+  $('boshla').addEventListener('click', () => { qadam = 0; savolChiz(); korsat('savol'); });
+  $('orqaga').addEventListener('click', () => {
+    if (qadam === 0) { korsat('bosh'); return; }
+    qadam--; savolChiz(); $('savol-h').focus();
+  });
+  $('keyingi').addEventListener('click', () => {
+    if (!javob[SAVOLLAR[qadam].key]) return;
+    if (qadam === 2) {
+      bajarilgan = {};
+      saqla({ javob, bajarilgan });
+      natijaChiz();
+      korsat('natija');
+    } else {
+      qadam++; savolChiz(); $('savol-h').focus();
+    }
+  });
+  $('qayta').addEventListener('click', () => {
+    javob = { hafta: null, soat: null, qiyin: null };
+    bajarilgan = {};
+    try { localStorage.removeItem(kalit); } catch { /* ruxsat yo'q */ }
+    qadam = 0; savolChiz(); korsat('savol');
+  });
+
+  const saqlangan = oqi();
+  if (saqlangan) {
+    javob = saqlangan.javob;
+    bajarilgan = saqlangan.bajarilgan || {};
+    natijaChiz();
+    korsat('natija', false);
+  }
+</script>
+
+<style>
+  .reja { padding-top: calc(2 * var(--b-6)); display: flex; flex-direction: column; gap: var(--b-8); max-width: calc(912px + 2 * var(--b-10)) !important; }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; }
+  h2 { font-size: 32px; line-height: 1.2; font-weight: 800; }
+  h2:focus { outline: none; }
+  .maxfiy { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .maxfiy svg { color: var(--rang-havola); flex: none; }
+  .izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .izoh a { color: var(--rang-havola); font-weight: 700; }
+  .izoh-m { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 52ch; }
+  section[hidden], .izoh[hidden] { display: none !important; }
+
+  .katta { min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); cursor: not-allowed; }
+  .matn-tugma { min-height: 52px; padding: 0 20px; border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
+  .matn-tugma:hover { background: var(--fon-ikkinchi); }
+  .chiziq-tugma { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
+  .chiziq-tugma:hover { background: var(--fon-ikkinchi); }
+
+  .ekran-bosh { border: 1.5px dashed var(--matn); border-radius: var(--r-katta); padding: 48px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-4); }
+  .ekran-bosh > svg { color: var(--rang-havola); }
+
+  .ekran-savol { background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya); padding: var(--b-10); display: flex; flex-direction: column; gap: var(--b-6); max-width: 680px; }
+  .progress-qator { display: flex; align-items: center; gap: var(--b-4); }
+  .iz { flex: 1; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .toldirish { height: 100%; width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); transition: width 0.2s ease; }
+  .p-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .s-matn { display: flex; flex-direction: column; gap: var(--b-2); }
+  .variantlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-3); }
+  .variantlar :global(button) {
+    min-height: 60px; padding: 0 20px; border-radius: var(--r-orta);
+    font: inherit; font-size: 16px; font-weight: 700; text-align: left; cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
+  }
+  .variantlar :global(button:hover), .variantlar :global(button:active) { border-color: var(--matn); }
+  .variantlar :global(button[aria-checked='true']) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .s-tugmalar { display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); }
+
+  .ekran-natija { display: flex; flex-direction: column; gap: var(--b-6); }
+  .xulosa { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: 28px; display: flex; gap: var(--b-8); align-items: center; }
+  .x-chap { flex: 1; display: flex; flex-direction: column; gap: var(--b-3); }
+  .x-ong { flex: 0 0 260px; display: flex; flex-direction: column; gap: var(--b-2); }
+  .pillar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--fon-ikkinchi); font-size: var(--matn-kichik); font-weight: 700; }
+  .pill-kok { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .b-soni { font-size: var(--matn-kichik); font-weight: 700; }
+  .x-ong .iz { flex: none; }
+  .x-ong .chiziq-tugma { margin-top: var(--b-2); }
+
+  .haftalar { display: flex; flex-direction: column; gap: var(--b-4); }
+  .haftalar :global(.hafta) { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); }
+  .haftalar :global(h3) { font-size: var(--matn-h3); font-weight: 800; }
+  .haftalar :global(.oraliq) { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .haftalar :global(.kunlar) { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--b-2); }
+  .haftalar :global(.kun) {
+    min-height: 88px; padding: 12px; border-radius: var(--r-orta);
+    display: flex; flex-direction: column; justify-content: space-between; gap: var(--b-2);
+    cursor: pointer; background: var(--fon); border: 1.5px solid var(--chiziq-kuchli);
+  }
+  .haftalar :global(.kun:hover) { border-color: var(--matn); }
+  .haftalar :global(.kun.bajarildi) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .haftalar :global(.kun:has(input:focus-visible)) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .haftalar :global(.k-bosh) { display: flex; align-items: center; justify-content: space-between; }
+  .haftalar :global(.k-raqam) { font-size: var(--matn-mayda); font-weight: 500; color: var(--matn-ikkinchi); }
+  .haftalar :global(input) { width: 20px; height: 20px; margin: 0; accent-color: var(--rang-asosiy); cursor: pointer; }
+  .haftalar :global(.k-nom) { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); font-weight: 800; min-width: 0; }
+  .haftalar :global(.k-nom svg) { flex: none; color: var(--rang-havola); }
+  .oxirgi-izoh { line-height: 1.6; }
+
+  /* Kompyuterda torroq kenglik: 7 ustun sig'maydi */
+  @media (max-width: 1180px) {
+    .haftalar :global(.kunlar) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  /* Telefon: RejaTelefon ekrani, kunlar qator bo'lib */
+  @media (max-width: 640px) {
+    .reja { padding-top: var(--b-6); gap: var(--b-6); }
+    h1 { font-size: 34px; }
+    h2 { font-size: 24px; }
+    .ekran-bosh { padding: var(--b-6); }
+    .ekran-savol { padding: var(--b-5); }
+    .variantlar { grid-template-columns: 1fr; }
+    .s-tugmalar .katta { flex: 1; }
+    .xulosa { flex-direction: column; align-items: stretch; padding: var(--b-5); gap: var(--b-5); }
+    .x-ong { flex: none; }
+    .haftalar :global(.hafta) { padding: var(--b-4); }
+    .haftalar :global(.kunlar) { grid-template-columns: 1fr; gap: var(--b-1); }
+    .haftalar :global(.kun) { min-height: 56px; flex-direction: row; align-items: center; justify-content: flex-start; gap: var(--b-3); padding: 0 var(--b-3); }
+    .haftalar :global(.k-bosh) { display: contents; }
+    .haftalar :global(input) { order: 1; }
+    .haftalar :global(.k-raqam) { order: 2; min-width: 44px; }
+    .haftalar :global(.k-nom) { order: 3; }
+  }
+</style>
