@@ -9,7 +9,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | Qavat | Nomi | Manzil | Holat (`bolimlar.ts`) | Nima bor |
 | --- | --- | --- | --- | --- |
 | 1 | Navigator | `/uz/` | doim ochiq | Bosh sahifa, muddatlar, manbalar, maxfiylik |
-| 2 | Top Admission | `/uz/top-admission/` | tez-orada | "Qavat qurilmoqda" sahifasi + Topshirish yo'li vositasi |
+| 2 | Top Admission | `/uz/top-admission/` | ochiq (PR #12 da) | Kirish sahifasi (PR #12, merge kutilmoqda) + Topshirish yo'li vositasi |
 | 3 | SAT prep | `/uz/sat/` | ochiq | To'liq bo'lim |
 | 4 | IELTS prep | `/uz/ielts/` | ochiq | To'liq bo'lim |
 | 5 | EYUF prep | `/uz/eyuf/` | tez-orada | Faqat "qavat qurilmoqda" sahifasi |
@@ -23,18 +23,19 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | #8 | **IELTS bo'limi** (`Tayanch-IELTS-dizayn.md`): kirish, Reading qo'llanmasi (mini-mashq bilan), 30 kunlik reja. Listening, Writing Task 2, Speaking, General English "tez orada" |
 | #9 | Bo'limlar bitta saytga bog'landi (SAT va IELTS ochildi) |
 | #10 | **Tayanch binosi**: Lift (5 qavat tugmasi; telefonda pastki panel), Qavat yo'li ("3-qavat › Mashq › Test"), Zina (qo'shni qavatlar), 2- va 5-qavat "qurilmoqda" sahifalari |
+| #12 (ochiq PR) | **Top Admission kirish sahifasi** (maket A): Topshirish yo'li kartasi, muddat chiptalari muhr bilan (EY01, TB01), yo'nalishlar (TB01, SH01), muallif bloki, Zina, MRZ. `Asosiy` qolipida (yon panelsiz). `bolimlar.ts`: top-admission `ochiq` |
 | #11 | **Topshirish yo'li** (`/uz/top-admission/vosita/topshirish-yoli/`): 3 savol → mos ariza yo'llari, aylanadigan "pasport" kartalar, muhrli rasmiy faktlar. Holati: qoralama |
 
 ## 3. Nima qurilmagan (navbat taklifi)
 
-1. **2-qavat Top Admission kirish sahifasi**: maket bor ("Main", "KirishQorongi", "KirishTelefon" artboard'lari). Hozirgi `/uz/top-admission/` qurilmoqda sahifasining o'rnini oladi.
-2. **Türkiye Burslari sahifasi**: maket bor ("Burslar*" artboard'lari). Viza sahifasi va chipta detallari DESIGN.md'da tavsiflangan.
-3. **Top Admission yon paneli**: `BolimYon` ga `bolim="top-admission"` qo'shiladi (SAT/IELTS kabi). Maket: "LiftSidebar" artboard'i.
-4. **5-qavat EYUF**: dizayn fayli hali yo'q.
-5. Ochilgandan keyin `bolimlar.ts` da `top-admission` holatini `ochiq` ga o'tkazish (muallif tasdig'i bilan).
+1. **Chiptadagi qolgan kun**: kirish sahifasidagi muddat chiptalarida hozir "oxirgi kun" turibdi. Brauzerda kun sanash skripti kerak: avval spetsifikatsiya (CLAUDE.md, 2-qadam).
+2. **"Mening yo'lim" bloki**: Topshirish yo'li javoblaridan kirish sahifasida kichik blok. Skript: avval spetsifikatsiya (saqlash kaliti savoli: 5-bo'lim, 3-band).
+3. **Türkiye Burslari sahifasi**: maket bor ("Burslar*" artboard'lari). Viza sahifasi va chipta detallari DESIGN.md'da tavsiflangan.
+4. **Top Admission yon paneli**: `BolimYon` ga `bolim="top-admission"` qo'shiladi (SAT/IELTS kabi). Maket: "LiftSidebar" artboard'i. Shundan keyin kirish va vosita sahifalari `BolimQobiq` ga o'tadi.
+5. **5-qavat EYUF**: dizayn fayli hali yo'q.
 6. Tez-oradagi sahifalar: SAT (Kitoblar, Strategiya, Math va Desmos, Reading & Writing, Vaqt va retake), IELTS (Listening, Writing Task 2, Speaking, General English).
 
-Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF. Artboard'lar: Main/Kirish (A), Burslar (B), Vosita (C, qurilgan), Lift* (D, qurilgan). Har birining yorug', qorong'i va telefon varianti bor.
+Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF. Artboard'lar: Main/Kirish (A, PR #12), Burslar (B), Vosita (C, qurilgan), Lift* (D, qurilgan). Har birining yorug', qorong'i va telefon varianti bor.
 
 ## 4. Qabul qilingan qarorlar
 
