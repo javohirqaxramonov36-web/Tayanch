@@ -1,0 +1,633 @@
+<title>Tayanch 3D Laboratoriya</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: chap tomonda 3D sahna (asosiy harakat), o'ngda o'quv paneli; telefonda ustma-ust */
+:root{
+  --bg:#ffffff; --surface:#f5f6fa; --line:#e1e4ec; --fg:#0b0c10; --muted:#555b6e;
+  --accent:#4255ff; --accent-fg:#ffffff; --accent-text:#3442d9; --accent-soft:#eef0ff;
+  --stage:#eceff7; --ok:#1d7a4b; --ok-soft:#e5f5ec; --bad:#b4390f; --bad-soft:#fdeee7;
+  --warn-bg:#fff3e2; --warn-fg:#7f4500;
+  --f-display:"Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body:"Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1115; --surface:#1b1e26; --line:#2a2e38; --fg:#ffffff; --muted:#b4b9c8;
+  --accent:#4255ff; --accent-fg:#ffffff; --accent-text:#8b97ff; --accent-soft:#1d2140;
+  --stage:#151821; --ok:#6fd3a0; --ok-soft:#14281e; --bad:#ff9b78; --bad-soft:#2c1a14;
+  --warn-bg:#33240f; --warn-fg:#ffc98a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1115; --surface:#1b1e26; --line:#2a2e38; --fg:#ffffff; --muted:#b4b9c8;
+  --accent:#4255ff; --accent-fg:#ffffff; --accent-text:#8b97ff; --accent-soft:#1d2140;
+  --stage:#151821; --ok:#6fd3a0; --ok-soft:#14281e; --bad:#ff9b78; --bad-soft:#2c1a14;
+  --warn-bg:#33240f; --warn-fg:#ffc98a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 24px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand small{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.brand h1{margin:0;font-family:var(--f-display);font-size:28px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+.brand h1 span{color:var(--accent-text)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:5px}
+nav.tabs button{font:600 14px var(--f-body);color:var(--muted);background:transparent;border:0;border-radius:10px;padding:0 16px;min-height:44px;cursor:pointer}
+nav.tabs button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+nav.tabs button:hover:not([aria-pressed="true"]){color:var(--fg)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.lab{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:20px;margin-top:20px;align-items:start}
+@media (max-width:900px){.lab{grid-template-columns:1fr}}
+.stage-col{display:flex;flex-direction:column;gap:10px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:900px){.stage-col{position:static}}
+.stage{position:relative;background:var(--stage);border:1px solid var(--line);border-radius:18px;overflow:hidden;height:520px;max-width:100%}
+@media (max-width:900px){.stage{height:360px}}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.stage .hud{position:absolute;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+.chip{font:600 12px var(--f-mono);letter-spacing:.04em;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.stage .reset{position:absolute;right:12px;bottom:12px}
+.stage-note{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+
+.panel{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel h2{margin:0;font-family:var(--f-display);font-size:24px;letter-spacing:-.015em;line-height:1.2;text-wrap:balance}
+.eyebrow{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.lead{margin:0;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h3{margin:0;font-size:16px}
+.btn{font:600 14px var(--f-body);min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:600 13px var(--f-body);min-height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-text)}
+.slider{display:grid;grid-template-columns:72px minmax(0,1fr) 44px;gap:10px;align-items:center}
+.slider label{font:600 13px var(--f-mono)}
+.slider output{font:600 14px var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:32px}
+.formula{font-family:var(--f-mono);font-size:15px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;overflow-x:auto}
+.formula .big{font-size:20px;font-weight:600;color:var(--accent-text)}
+.formula .sub{color:var(--muted);font-size:13px}
+
+.q{display:flex;flex-direction:column;gap:10px}
+.q p{margin:0;font-weight:600}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;font:500 14px var(--f-body);min-height:44px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.opts button:hover{border-color:var(--accent)}
+.opts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.opts button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{font-size:14px;border-radius:12px;padding:10px 12px}
+.fb.right{background:var(--ok-soft);color:var(--fg);border:1px solid var(--ok)}
+.fb.wrong{background:var(--bad-soft);color:var(--fg);border:1px solid var(--bad)}
+.qnav{display:flex;justify-content:space-between;align-items:center;gap:8px;font:600 12px var(--f-mono);color:var(--muted)}
+
+table.data{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+table.data th,table.data td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data thead th{font:600 12px var(--f-mono);letter-spacing:.05em;color:var(--muted)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.scroll{overflow-x:auto}
+
+.steps-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.steps-list button{width:100%;display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;font:500 14px var(--f-body);min-height:44px;padding:6px 10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.steps-list button[aria-current="step"]{border-color:var(--accent);background:var(--accent-soft)}
+.num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 13px var(--f-mono);background:var(--surface);border:1px solid var(--line)}
+.steps-list button[aria-current="step"] .num{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.steps-list .done-tag{font:600 11px var(--f-mono);color:var(--ok)}
+.check{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:8px 0;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
+.bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+.timer{font:600 48px var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.timer.over{color:var(--bad)}
+.qcard{background:var(--bg);border:1px solid var(--accent);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.qcard .qtext{font-size:19px;font-weight:600;line-height:1.35;margin:0;text-wrap:balance}
+.hint{margin:0;font-size:14px;color:var(--muted)}
+textarea{width:100%;min-height:110px;resize:vertical;font:15px/1.5 var(--f-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.warn{background:var(--warn-bg);color:var(--warn-fg);border-radius:12px;padding:10px 12px;font-size:13px}
+.links{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px}
+.links a{color:var(--accent-text);font-weight:600}
+ul.plain{margin:0;padding-left:18px;display:grid;gap:4px}
+footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <small>Tayanch · interaktiv o'quv materiallari</small>
+      <h1>3D <span>laboratoriya</span></h1>
+    </div>
+    <nav class="tabs" aria-label="Bo'limlar">
+      <button type="button" data-tab="top" aria-pressed="false">Top Admission</button>
+      <button type="button" data-tab="sat" aria-pressed="false">SAT Prep</button>
+      <button type="button" data-tab="ielts" aria-pressed="false">IELTS Prep</button>
+      <button type="button" data-tab="eyuf" aria-pressed="false">EYUF Prep</button>
+    </nav>
+  </header>
+
+  <main class="lab">
+    <div class="stage-col">
+      <div class="stage" id="stage">
+        <canvas id="gl" aria-label="Interaktiv 3D sahna"></canvas>
+        <div class="hud" id="hud"></div>
+        <button type="button" class="btn reset" id="resetCam">Kamerani tiklash</button>
+        <div class="fallback" id="fallback" hidden>3D sahna yuklanmadi. Internet yoki brauzer WebGL'ni qo'llab-quvvatlashini tekshiring. O'ngdagi o'quv paneli baribir ishlaydi.</div>
+      </div>
+      <div class="stage-note"><span>Sudrab aylantiring · g'ildirak yoki ikki barmoq bilan yaqinlashtiring</span><span id="stageHint"></span></div>
+    </div>
+
+    <!-- TOP ADMISSION -->
+    <section class="panel" data-mod="top" hidden>
+      <div>
+        <div class="eyebrow">Top Admission · Ariza zinapoyasi</div>
+        <h2>Xorijiy universitetga ariza: 6 qadam</h2>
+      </div>
+      <p class="lead">Har bir zinapoya pog'onasi ariza jarayonining bir bosqichi. Pog'onani bosing yoki ro'yxatdan tanlang. Belgilagan bandlaringiz shu brauzerda saqlanadi.</p>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h3>Umumiy tayyorlik</h3><span class="chip" id="topProgressTxt">0 / 0</span></div>
+        <div class="bar"><i id="topBar"></i></div>
+        <ol class="steps-list" id="topSteps"></ol>
+      </div>
+      <div class="card" id="topDetail"></div>
+      <div class="row">
+        <button type="button" class="btn" id="topPrev">Oldingi qadam</button>
+        <button type="button" class="btn primary" id="topNext">Keyingi qadam</button>
+      </div>
+      <div class="links"><a href="https://www.commonapp.org" target="_blank" rel="noopener">Common App</a><a href="https://www.ucas.com" target="_blank" rel="noopener">UCAS</a></div>
+      <div class="warn">Muddatlar, to'lovlar va talablar har yili o'zgaradi. Har bir universitetning rasmiy qabul sahifasidan tekshiring.</div>
+    </section>
+
+    <!-- SAT -->
+    <section class="panel" data-mod="sat" hidden>
+      <div>
+        <div class="eyebrow">SAT Math · Geometriya</div>
+        <h2>Hajm laboratoriyasi</h2>
+      </div>
+      <p class="lead">SAT ma'lumotnoma varag'idagi hajm formulalarini ko'z bilan ko'ring. O'lchamni o'zgartiring: shakl sahnada, hisob esa pastda darhol yangilanadi. Poldagi har bir katak 1 birlik.</p>
+      <div class="card">
+        <div class="seg" id="satShapes">
+          <button type="button" data-shape="cyl" aria-pressed="true">Silindr</button>
+          <button type="button" data-shape="cone" aria-pressed="false">Konus</button>
+          <button type="button" data-shape="sphere" aria-pressed="false">Shar</button>
+          <button type="button" data-shape="prism" aria-pressed="false">To'g'ri burchakli prizma</button>
+        </div>
+        <div class="slider" data-for="r"><label for="sat-r">r</label><input type="range" id="sat-r" min="1" max="5" step="1" value="3"><output id="sat-r-o">3</output></div>
+        <div class="slider" data-for="h"><label for="sat-h">h</label><input type="range" id="sat-h" min="1" max="10" step="1" value="6"><output id="sat-h-o">6</output></div>
+        <div class="slider" data-for="l" hidden><label for="sat-l">l</label><input type="range" id="sat-l" min="1" max="8" step="1" value="4"><output id="sat-l-o">4</output></div>
+        <div class="slider" data-for="w" hidden><label for="sat-w">w</label><input type="range" id="sat-w" min="1" max="8" step="1" value="3"><output id="sat-w-o">3</output></div>
+        <div class="formula" id="satFormula"></div>
+      </div>
+      <div class="card q" id="satQuiz"></div>
+      <div class="links"><a href="https://www.khanacademy.org/test-prep/digital-sat" target="_blank" rel="noopener">Khan Academy · Digital SAT (bepul)</a><a href="https://satsuite.collegeboard.org" target="_blank" rel="noopener">College Board SAT Suite</a></div>
+    </section>
+
+    <!-- IELTS -->
+    <section class="panel" data-mod="ielts" hidden>
+      <div>
+        <div class="eyebrow">IELTS Academic · Writing Task 1</div>
+        <h2>3D diagrammani o'qish: overview yozish</h2>
+      </div>
+      <p class="lead">Task 1'da eng ko'p ball yo'qotiladigan joy — overview. Diagrammani aylantirib, umumiy tendensiyani toping, keyin eng yaxshi overview gapini tanlang.</p>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:baseline"><h3>Jamoat transportidan foydalanish, %</h3><span class="chip">namuna ma'lumot</span></div>
+        <div class="seg" id="ieltsFocus">
+          <button type="button" data-f="all" aria-pressed="true">Hammasi</button>
+          <button type="button" data-f="0" aria-pressed="false">A shahar</button>
+          <button type="button" data-f="1" aria-pressed="false">B shahar</button>
+          <button type="button" data-f="2" aria-pressed="false">C shahar</button>
+        </div>
+        <div class="scroll"><table class="data" id="ieltsTable"></table></div>
+      </div>
+      <div class="card q" id="ieltsQuiz"></div>
+      <div class="card">
+        <h3>Overview qoidasi</h3>
+        <ul class="plain">
+          <li>Raqam keltirmang: overview umumiy manzara uchun, raqamlar keyingi paragraflarda.</li>
+          <li>2 ta asosiy xususiyat: umumiy yo'nalish va eng katta farq yoki o'rin almashish.</li>
+          <li>Boshlash iborasi: <i>Overall, …</i> yoki <i>It is clear that …</i></li>
+        </ul>
+      </div>
+      <div class="links"><a href="https://www.ielts.org" target="_blank" rel="noopener">IELTS rasmiy sayti</a></div>
+    </section>
+
+    <!-- EYUF -->
+    <section class="panel" data-mod="eyuf" hidden>
+      <div>
+        <div class="eyebrow">El-Yurt Umidi · Suhbat mashqi</div>
+        <h2>Komissiya oldida javob berish</h2>
+      </div>
+      <p class="lead">Sahnadagi faol a'zo savol beradi, uning ustidagi halqa qolgan vaqtni ko'rsatadi. Ovoz chiqarib javob bering, so'ng o'zingizni tekshiring.</p>
+      <div class="qcard">
+        <div class="qnav"><span id="eyufCount">1 / 6</span><span id="eyufType"></span></div>
+        <p class="qtext" id="eyufQ"></p>
+        <p class="hint" id="eyufHint"></p>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div class="timer" id="eyufTimer" aria-live="polite">2:00</div>
+          <div class="seg" id="eyufLimit">
+            <button type="button" data-s="60" aria-pressed="false">1 daq</button>
+            <button type="button" data-s="120" aria-pressed="true">2 daq</button>
+            <button type="button" data-s="180" aria-pressed="false">3 daq</button>
+          </div>
+        </div>
+        <div class="row">
+          <button type="button" class="btn primary" id="eyufStart">Boshlash</button>
+          <button type="button" class="btn" id="eyufReset">Qayta</button>
+          <button type="button" class="btn" id="eyufPrev">Oldingi savol</button>
+          <button type="button" class="btn" id="eyufNext">Keyingi savol</button>
+        </div>
+        <p class="hint" id="eyufMsg"></p>
+      </div>
+      <div class="card">
+        <h3>O'zini tekshirish</h3>
+        <div id="eyufChecks"></div>
+        <label for="eyuf-notes" style="font-weight:600;font-size:14px">Javob konspekti (shu savol uchun)</label>
+        <textarea id="eyuf-notes" placeholder="Asosiy fikr, 1 ta aniq misol, natija…"></textarea>
+      </div>
+      <div class="warn">Bu mashq vositasi. Savollar namuna sifatida tuzilgan; rasmiy suhbat formati, vaqt va shartlarni jamg'armaning rasmiy e'lonidan tekshiring.</div>
+    </section>
+  </main>
+
+  <footer>Tayanch ta'lim platformasi · 3D sahnalar Three.js bilan ishlaydi · Belgilar va konspektlar faqat shu brauzerda saqlanadi.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ACCENT=0x4255ff, ORANGE=0xf08a3c, SLATE=0x9aa3b5, GREEN=0x2fa36b, IDLE=0xc3c8d6;
+const fmt=n=>n.toFixed(2).replace('.',',');
+
+/* ---------- generic quiz ---------- */
+function quiz(el, items){
+  let i=0;
+  function render(){
+    const it=items[i];
+    el.innerHTML='';
+    const nav=document.createElement('div');nav.className='qnav';
+    nav.innerHTML='<span>Tekshiruv savoli</span><span>'+(i+1)+' / '+items.length+'</span>';
+    const p=document.createElement('p');p.textContent=it.q;
+    const opts=document.createElement('div');opts.className='opts';
+    const fb=document.createElement('div');fb.className='fb';fb.hidden=true;fb.setAttribute('aria-live','polite');
+    it.o.forEach((t,k)=>{const b=document.createElement('button');b.type='button';b.textContent=t;
+      b.addEventListener('click',()=>{opts.querySelectorAll('button').forEach(x=>x.classList.remove('right','wrong'));
+        const ok=k===it.a;b.classList.add(ok?'right':'wrong');fb.hidden=false;fb.className='fb '+(ok?'right':'wrong');
+        fb.textContent=(ok?'To\'g\'ri. ':'Hali emas. ')+it.e;});
+      opts.appendChild(b);});
+    const row=document.createElement('div');row.className='row';
+    const pr=document.createElement('button');pr.type='button';pr.className='btn';pr.textContent='Oldingi';pr.disabled=i===0;pr.onclick=()=>{i--;render()};
+    const nx=document.createElement('button');nx.type='button';nx.className='btn';nx.textContent='Keyingi';nx.disabled=i===items.length-1;nx.onclick=()=>{i++;render()};
+    row.append(pr,nx);
+    el.append(nav,p,opts,fb,row);
+  }
+  render();
+}
+
+/* ---------- three.js core ---------- */
+const canvas=$('#gl'), stageEl=$('#stage');
+let THREEOK = typeof THREE!=='undefined' && typeof THREE.OrbitControls!=='undefined';
+let renderer, camera, controls, current=null;
+let dirty=true, onScreen=true; const invalidate=()=>{dirty=true};
+const built={};
+if(THREEOK){
+  try{
+    renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, innerWidth<700?1.5:2));
+    renderer.setClearColor(0x000000,0);
+    camera=new THREE.PerspectiveCamera(45,1,0.1,200);
+    controls=new THREE.OrbitControls(camera,canvas);
+    controls.enableDamping=!reduce; controls.dampingFactor=0.08; controls.maxPolarAngle=Math.PI*0.49;
+    controls.minDistance=3; controls.maxDistance=40;
+    controls.addEventListener('change',invalidate);
+  }catch(e){THREEOK=false}
+}
+if(!THREEOK){$('#fallback').hidden=false;$('#resetCam').hidden=true;}
+
+function resize(){ if(!renderer)return; const w=stageEl.clientWidth,h=stageEl.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); invalidate(); }
+if(window.ResizeObserver) new ResizeObserver(resize).observe(stageEl); else addEventListener('resize',resize);
+if(window.IntersectionObserver) new IntersectionObserver(es=>{ onScreen=es[0].isIntersecting; if(onScreen) invalidate(); }).observe(stageEl);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) invalidate(); });
+
+function baseScene(){
+  const s=new THREE.Scene();
+  s.add(new THREE.HemisphereLight(0xffffff,0x8890a8,0.95));
+  const d=new THREE.DirectionalLight(0xffffff,0.75); d.position.set(6,12,8); s.add(d);
+  return s;
+}
+function grid(size){ const g=new THREE.GridHelper(size,size,0x8a90a0,0x8a90a0); g.material.transparent=true; g.material.opacity=0.32; return g; }
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+const texCache=new Map();
+function label(text,o){
+  o=o||{}; const key=text+'|'+(o.bg||'')+'|'+(o.border||'')+'|'+(o.color||''), hit=texCache.get(key);
+  if(hit){ const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:hit.tex,depthTest:false,transparent:true})); const s=o.size||0.5; sp.scale.set(s*hit.ar,s,1); sp.renderOrder=5; sp.userData.cachedTex=true; return sp; }
+  const fs=56, pad=22, c=document.createElement('canvas'), ctx=c.getContext('2d');
+  const font='600 '+fs+'px Onest, system-ui, sans-serif'; ctx.font=font;
+  const w=Math.ceil(ctx.measureText(text).width+pad*2), h=Math.ceil(fs+pad*1.3);
+  c.width=w; c.height=h; ctx.font=font;
+  ctx.fillStyle=o.bg||'#ffffff'; rr(ctx,0,0,w,h,h/2.4); ctx.fill();
+  if(o.border){ctx.strokeStyle=o.border;ctx.lineWidth=4;rr(ctx,2,2,w-4,h-4,h/2.5);ctx.stroke();}
+  ctx.fillStyle=o.color||'#0b0c10'; ctx.textBaseline='middle'; ctx.textAlign='center'; ctx.fillText(text,w/2,h/2+2);
+  const tex=new THREE.CanvasTexture(c); tex.minFilter=THREE.LinearFilter; tex.generateMipmaps=false; texCache.set(key,{tex,ar:w/h});
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));
+  const s=o.size||0.5; sp.scale.set(s*w/h,s,1); sp.renderOrder=5; sp.userData.cachedTex=true; return sp;
+}
+function line(pts,color){ const g=new THREE.BufferGeometry().setFromPoints(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2])));
+  const l=new THREE.Line(g,new THREE.LineBasicMaterial({color,depthTest:false})); l.renderOrder=4; return l; }
+function disposeGroup(g){ g.traverse(o=>{ if(o.geometry)o.geometry.dispose(); if(o.material){ if(o.material.map&&!o.userData.cachedTex)o.material.map.dispose(); o.material.dispose(); } }); g.clear ? g.clear() : (g.children.length=0); }
+
+/* ---------- picking ---------- */
+const ray=THREEOK?new THREE.Raycaster():null, ptr=THREEOK?new THREE.Vector2():null; let down=null;
+if(THREEOK){
+  canvas.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
+  canvas.addEventListener('pointerup',e=>{
+    if(!down||!current||!current.pick)return; const dx=e.clientX-down[0],dy=e.clientY-down[1]; down=null; if(dx*dx+dy*dy>36)return;
+    const r=canvas.getBoundingClientRect(); ptr.x=((e.clientX-r.left)/r.width)*2-1; ptr.y=-((e.clientY-r.top)/r.height)*2+1;
+    ray.setFromCamera(ptr,camera); const hit=ray.intersectObjects(current.pickables,false)[0]; if(hit) current.pick(hit.object);
+  });
+}
+
+/* ================= TOP ADMISSION ================= */
+const STEPS=[
+ {t:"Yo'nalish va universitetlar ro'yxati",d:"Mutaxassislikni aniqlang, so'ng ro'yxatni uch guruhga bo'ling: orzu, maqsad va ishonchli universitetlar. Har bir davlatda ariza tizimi boshqacha: AQShda ko'pincha Common App, Buyuk Britaniyada UCAS, ba'zi davlatlarda to'g'ridan-to'g'ri universitet portali.",
+  c:["8–12 ta universitetdan ro'yxat tuzdim","Har birining rasmiy qabul talablari sahifasini saqladim","Qaysi ariza tizimi orqali topshirishni aniqladim"]},
+ {t:"Testlar: SAT va IELTS",d:"Har bir universitet sahifasida SAT/ACT majburiymi yoki ixtiyoriymi, IELTS yoki TOEFL bo'yicha minimal ball qancha ekanini yozib oling. Imtihonni muddatdan oldin, qayta topshirishga vaqt qoladigan qilib rejalashtiring.",
+  c:["Kerakli testlar va minimal ballar jadvalini tuzdim","Imtihon sanasini band qildim","Maqsad ballimni yozib qo'ydim"]},
+ {t:"Hujjatlar",d:"Odatda transkript (baholar varaqasi) va uning ingliz tilidagi tasdiqlangan tarjimasi, pasport nusxasi va o'qituvchilardan tavsiyanoma so'raladi. Tavsiyanoma uchun o'qituvchiga kamida bir necha hafta oldin murojaat qiling.",
+  c:["Transkript va tarjimasini tayyorladim","Pasport amal qilish muddatini tekshirdim","Tavsiyanoma beradigan o'qituvchilar rozilik berdi"]},
+ {t:"Esse",d:"Common App'da asosiy shaxsiy esse, UCAS'da personal statement yoziladi; ko'p universitetlar qo'shimcha esse ham so'raydi. Ish tartibi: g'oyalar ro'yxati → qoralama → ustoz fikri → qayta yozish. Aniq voqea va undan nima o'rganganingiz umumiy gaplardan kuchliroq.",
+  c:["Esse mavzusi uchun 3 ta voqea yozdim","Birinchi qoralamani tugatdim","Kamida bitta odamdan fikr oldim"]},
+ {t:"Arizani topshirish",d:"Har bir universitetning muddatini uning rasmiy sahifasidan oling va kalendarga yozing. Ariza to'lovi bo'lsa, to'lovdan ozod qilish (fee waiver) imkoniyatini so'rang. Topshirishdan oldin barcha bo'limlarni qayta o'qing.",
+  c:["Barcha muddatlar kalendarda","To'lov yoki fee waiver masalasi hal qilindi","Ariza to'liq tekshirilib topshirildi"]},
+ {t:"Natija, grant va viza",d:"Qabul xatlarini taqqoslang: o'qish narxi, grant yoki stipendiya, yashash xarajatlari. Tanlovdan so'ng universitet bergan hujjat asosida viza jarayonini boshlang.",
+  c:["Takliflarni xarajat bo'yicha taqqosladim","Grant/stipendiya imkoniyatlarini tekshirdim","Viza uchun kerakli hujjatlar ro'yxatini oldim"]}
+];
+const TOPK='tayanch3d-top'; let topChecks=store.get(TOPK,{}), topActive=store.get(TOPK+'-active',0);
+function stepDone(i){return STEPS[i].c.every((_,j)=>topChecks[i+'-'+j]);}
+const topMod={
+  cam:[3,7.5,13], target:[0,1.6,0],
+  build(){
+    const s=baseScene(); s.add(grid(24)); this.pickables=[]; this.plats=[];
+    const pts=[];
+    STEPS.forEach((st,i)=>{
+      const x=(i-2.5)*2.7, y=i*0.6, z=(i%2?-0.9:0.9);
+      const g=new THREE.BoxGeometry(2.2,0.4+y*2,2.2); g.translate(0,(0.4+y*2)/2,0);
+      const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:IDLE,roughness:.55}));
+      m.position.set(x,0,z); m.userData.idx=i; s.add(m); this.pickables.push(m); this.plats.push(m);
+      const top=0.4+y*2; const lb=label(String(i+1),{size:0.7}); lb.position.set(x,top+0.6,z); s.add(lb);
+      pts.push([x,top+0.02,z]);
+    });
+    s.add(line(pts,ACCENT));
+    this.scene=s; this.colorize();
+  },
+  colorize(){ invalidate(); if(!this.plats)return; this.plats.forEach((m,i)=>{ m.material.color.setHex(i===topActive?ACCENT:(stepDone(i)?GREEN:IDLE)); }); },
+  focus(){ if(!this.plats||!controls)return; const p=this.plats[topActive].position; this.goal=new THREE.Vector3(p.x*0.6,1.2+topActive*0.5,0); },
+  pick(o){ setTopStep(o.userData.idx); },
+  tick(){ if(this.goal&&controls){ controls.target.lerp(this.goal,reduce?1:0.06); if(controls.target.distanceTo(this.goal)<0.005) this.goal=null; return true; } return false; },
+  hud:"Pog'onani bosing"
+};
+function renderTopList(){
+  const ol=$('#topSteps'); ol.innerHTML='';
+  STEPS.forEach((st,i)=>{ const li=document.createElement('li'); const b=document.createElement('button'); b.type='button';
+    if(i===topActive) b.setAttribute('aria-current','step');
+    b.innerHTML='<span class="num">'+(i+1)+'</span><span></span>'+(stepDone(i)?'<span class="done-tag">tayyor</span>':'<span></span>');
+    b.children[1].textContent=st.t; b.onclick=()=>setTopStep(i); li.appendChild(b); ol.appendChild(li); });
+  const total=STEPS.reduce((a,s)=>a+s.c.length,0), done=Object.values(topChecks).filter(Boolean).length;
+  $('#topProgressTxt').textContent=done+' / '+total; $('#topBar').style.width=(done/total*100)+'%';
+}
+function renderTopDetail(){
+  const st=STEPS[topActive], el=$('#topDetail'); el.innerHTML='';
+  const h=document.createElement('h3'); h.textContent=(topActive+1)+'-qadam. '+st.t;
+  const p=document.createElement('p'); p.style.margin='0'; p.textContent=st.d;
+  el.append(h,p);
+  st.c.forEach((c,j)=>{ const id='top-c-'+topActive+'-'+j; const lab=document.createElement('label'); lab.className='check'; lab.htmlFor=id;
+    const inp=document.createElement('input'); inp.type='checkbox'; inp.id=id; inp.checked=!!topChecks[topActive+'-'+j];
+    inp.onchange=()=>{ topChecks[topActive+'-'+j]=inp.checked; store.set(TOPK,topChecks); renderTopList(); topMod.colorize(); };
+    const sp=document.createElement('span'); sp.textContent=c; lab.append(inp,sp); el.appendChild(lab); });
+  $('#topPrev').disabled=topActive===0; $('#topNext').disabled=topActive===STEPS.length-1;
+}
+function setTopStep(i){ topActive=Math.max(0,Math.min(STEPS.length-1,i)); store.set(TOPK+'-active',topActive); renderTopList(); renderTopDetail(); topMod.colorize(); topMod.focus(); }
+$('#topPrev').onclick=()=>setTopStep(topActive-1); $('#topNext').onclick=()=>setTopStep(topActive+1);
+renderTopList(); renderTopDetail();
+
+/* ================= SAT ================= */
+const sat={shape:'cyl',r:3,h:6,l:4,w:3};
+function gcd(a,b){return b?gcd(b,a%b):a}
+function piFrac(k,d){const g=gcd(k,d);k/=g;d/=g;return d===1?k+'π':k+'π/'+d}
+function satFormula(){
+  const {shape,r,h,l,w}=sat; let a,b,c,v;
+  if(shape==='cyl'){a='V = πr²h';b='V = π · '+r+'² · '+h+' = '+piFrac(r*r*h,1);v=Math.PI*r*r*h;c='Asos yuzi (πr²) × balandlik.';}
+  else if(shape==='cone'){a='V = ⅓ πr²h';b='V = ⅓ · π · '+r+'² · '+h+' = '+piFrac(r*r*h,3);v=Math.PI*r*r*h/3;c='Xuddi shu r va h dagi silindrning aynan uchdan biri.';}
+  else if(shape==='sphere'){a='V = ⁴⁄₃ πr³';b='V = ⁴⁄₃ · π · '+r+'³ = '+piFrac(4*r*r*r,3);v=4*Math.PI*r*r*r/3;c='Faqat radiusga bog\'liq: r ikki marta oshsa, hajm 8 marta oshadi.';}
+  else {a='V = l · w · h';b='V = '+l+' · '+w+' · '+h+' = '+(l*w*h);v=l*w*h;c='Poldagi kataklar soni (l·w) × qatlamlar soni (h).';}
+  $('#satFormula').innerHTML='';
+  [['big',a],['',b+(shape==='prism'?' kub birlik':' ≈ '+fmt(v)+' kub birlik')],['sub',c]].forEach(([cls,t])=>{const d=document.createElement('div');if(cls)d.className=cls;d.textContent=t;$('#satFormula').appendChild(d)});
+}
+const satMod={
+  cam:[11,9,12], target:[0,3,0],
+  build(){ const s=baseScene(); s.add(grid(20)); this.group=new THREE.Group(); s.add(this.group); this.scene=s; this.rebuild(); },
+  rebuild(){
+    if(!this.group)return; invalidate(); disposeGroup(this.group);
+    const {shape,r,h,l,w}=sat, G=this.group; let geo, y=0;
+    if(shape==='cyl'){geo=new THREE.CylinderGeometry(r,r,h,64);y=h/2;}
+    else if(shape==='cone'){geo=new THREE.ConeGeometry(r,h,64);y=h/2;}
+    else if(shape==='sphere'){geo=new THREE.SphereGeometry(r,64,40);y=r;}
+    else {geo=new THREE.BoxGeometry(l,h,w);y=h/2;}
+    const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:ACCENT,transparent:true,opacity:0.78,roughness:.4}));
+    mesh.position.y=y; G.add(mesh);
+    if(shape!=='sphere'){ const e=new THREE.LineSegments(new THREE.EdgesGeometry(geo,20),new THREE.LineBasicMaterial({color:0x1b2499})); e.position.y=y; G.add(e); }
+    const lab=(t,p)=>{const s=label(t,{size:0.55,border:'#f08a3c'});s.position.set(p[0],p[1],p[2]);G.add(s);};
+    if(shape==='cyl'||shape==='cone'){
+      const ry=shape==='cyl'?h+0.02:0.03; G.add(line([[0,ry,0],[r,ry,0]],ORANGE)); lab('r = '+r,[r/2,ry+0.45,0]);
+      G.add(line([[r+0.7,0,0],[r+0.7,h,0]],ORANGE)); lab('h = '+h,[r+1.6,h/2,0]);
+      if(shape==='cone') G.add(line([[0,0.03,0],[0,h,0]],ORANGE));
+    } else if(shape==='sphere'){
+      G.add(line([[0,r,0],[r,r,0]],ORANGE)); lab('r = '+r,[r/2,r+0.45,0]);
+    } else {
+      G.add(line([[-l/2,0.03,w/2+0.6],[l/2,0.03,w/2+0.6]],ORANGE)); lab('l = '+l,[0,0.5,w/2+0.9]);
+      G.add(line([[l/2+0.6,0.03,-w/2],[l/2+0.6,0.03,w/2]],ORANGE)); lab('w = '+w,[l/2+1.3,0.5,0]);
+      G.add(line([[l/2+0.6,0,-w/2-0.6],[l/2+0.6,h,-w/2-0.6]],ORANGE)); lab('h = '+h,[l/2+1.4,h/2,-w/2-0.6]);
+    }
+  },
+  tick(){ return false; }, hud:"1 katak = 1 birlik"
+};
+$$('#satShapes button').forEach(b=>b.onclick=()=>{
+  sat.shape=b.dataset.shape; $$('#satShapes button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  const need={cyl:['r','h'],cone:['r','h'],sphere:['r'],prism:['l','w','h']}[sat.shape];
+  $$('.slider').forEach(s=>s.hidden=!need.includes(s.dataset.for)); satFormula(); satMod.rebuild();
+});
+['r','h','l','w'].forEach(k=>{const inp=$('#sat-'+k); inp.addEventListener('input',()=>{sat[k]=+inp.value; $('#sat-'+k+'-o').textContent=inp.value; satFormula(); satMod.rebuild();});});
+satFormula();
+quiz($('#satQuiz'),[
+ {q:"Silindr radiusi 2 marta oshirildi, balandligi o'zgarmadi. Hajmi necha marta oshadi?",o:["2 marta","4 marta","8 marta"],a:1,e:"Formulada r kvadratda: 2² = 4. Slayderda tekshiring: r = 2 da 24π, r = 4 da 96π (h = 6)."},
+ {q:"Radiusi va balandligi bir xil bo'lgan konus hajmi silindr hajmining qancha qismi?",o:["1/2","1/3","2/3"],a:1,e:"V(konus) = ⅓ πr²h, V(silindr) = πr²h. Nisbat 1/3."},
+ {q:"Shar radiusi 3 ga teng. Hajmi qancha?",o:["27π","36π","108π"],a:1,e:"⁴⁄₃ · π · 3³ = ⁴⁄₃ · 27π = 36π."},
+ {q:"Prizma: l = 4, w = 3. Hajm 60 bo'lishi uchun h nechaga teng bo'lishi kerak?",o:["4","5","6"],a:1,e:"60 = 4 · 3 · h → h = 60 / 12 = 5. Slayderda h = 5 qilib tekshiring."}
+]);
+
+/* ================= IELTS ================= */
+const ID={years:['2000','2010','2020'],cities:[
+ {n:'A shahar',v:[40,48,61],c:ACCENT,css:'#4255ff'},
+ {n:'B shahar',v:[55,52,47],c:ORANGE,css:'#f08a3c'},
+ {n:'C shahar',v:[20,31,33],c:SLATE,css:'#9aa3b5'}]};
+(function(){
+  const t=$('#ieltsTable'); let h='<thead><tr><th>Shahar</th>'+ID.years.map(y=>'<th>'+y+'</th>').join('')+'</tr></thead><tbody>';
+  ID.cities.forEach(c=>{h+='<tr><td><span class="swatch" style="background:'+c.css+'"></span>'+c.n+'</td>'+c.v.map(v=>'<td>'+v+'%</td>').join('')+'</tr>'}); t.innerHTML=h+'</tbody>';
+})();
+let ieltsFocus='all';
+const ieltsMod={
+  cam:[9,8,11], target:[0,2.2,0],
+  build(){
+    const s=baseScene(); s.add(grid(14)); this.bars=[]; this.t0=performance.now();
+    ID.cities.forEach((c,ci)=>c.v.forEach((v,yi)=>{
+      const g=new THREE.BoxGeometry(0.9,1,0.9); g.translate(0,0.5,0);
+      const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:c.c,roughness:.5,transparent:true,opacity:1}));
+      const x=(yi-1)*2.3, z=(ci-1)*1.7; m.position.set(x,0,z); m.userData={h:v/10,ci}; m.scale.y=reduce?v/10:0.001; s.add(m);
+      const lb=label(v+'%',{size:0.42}); lb.position.set(x,v/10+0.45,z); lb.userData.ci=ci; s.add(lb);
+      this.bars.push({m,lb});
+    }));
+    ID.years.forEach((y,yi)=>{const l=label(y,{size:0.5});l.position.set((yi-1)*2.3,0.3,3.2);s.add(l);});
+    ID.cities.forEach((c,ci)=>{const l=label(c.n,{size:0.45,border:c.css});l.position.set(-4.4,0.3,(ci-1)*1.7);s.add(l);});
+    [2,4,6].forEach(v=>{ s.add(line([[-3.4,v,-2.6],[3.4,v,-2.6]],0x8a90a0)); const l=label(v*10+'%',{size:0.36}); l.position.set(-3.9,v,-2.6); s.add(l); });
+    this.scene=s; this.applyFocus();
+  },
+  applyFocus(){ invalidate(); if(!this.bars)return; this.bars.forEach(({m,lb})=>{ const on=ieltsFocus==='all'||String(m.userData.ci)===ieltsFocus; m.material.opacity=on?1:0.14; lb.visible=on; }); },
+  tick(now){ if(reduce||!this.bars||this.grown)return false; const k=Math.min(1,(now-this.t0)/900), e=1-Math.pow(1-k,3); this.bars.forEach(({m})=>{m.scale.y=Math.max(0.001,m.userData.h*e)}); if(k>=1)this.grown=true; return true; },
+  enter(){ this.t0=performance.now(); this.grown=false; },
+  hud:"Balandlik = foiz"
+};
+$$('#ieltsFocus button').forEach(b=>b.onclick=()=>{ieltsFocus=b.dataset.f;$$('#ieltsFocus button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));ieltsMod.applyFocus();});
+quiz($('#ieltsQuiz'),[
+ {q:"Qaysi gap eng yaxshi overview?",o:[
+   "Overall, public transport use rose in cities A and C but declined in city B, with A overtaking B by the end of the period.",
+   "Overall, city A had 40% in 2000, 48% in 2010 and 61% in 2020.",
+   "Overall, all three cities saw a steady increase in public transport use."],a:0,
+  e:"Birinchi gap umumiy yo'nalishni (A va C o'sdi, B pasaydi) va asosiy o'zgarishni (A B'dan o'zib ketdi) raqamsiz beradi. Ikkinchisi faqat detal, uchinchisi noto'g'ri: B pasaygan."},
+ {q:"A shahar B shahardan qachon o'zib ketdi? (B'ni yashirib, faqat A'ni ko'rib chiqing)",o:["2000 va 2010 orasida","2010 va 2020 orasida","Butun davr davomida A yuqori edi"],a:1,
+  e:"2010 da A 48%, B 52% (B hali yuqori). 2020 da A 61%, B 47%. Demak o'rin almashish 2010–2020 oralig'ida."},
+ {q:"C shahar o'zgarishini qaysi ibora aniqroq tasvirlaydi?",o:["rose sharply throughout","rose noticeably, then levelled off","fell slightly"],a:1,
+  e:"20% → 31% (+11), keyin 31% → 33% (+2). Avval sezilarli o'sish, keyin deyarli barqaror."}
+]);
+
+/* ================= EYUF ================= */
+const EQ=[
+ {q:"O'zingiz haqingizda qisqacha gapirib bering.",t:"Tanishtiruv",h:"Tuzilma: kimsiz → asosiy yutuq (aniq natija bilan) → nega shu yo'nalish. 3–4 gapda tugating, tarjimai holni to'liq aytib bermang."},
+ {q:"Nega aynan shu mutaxassislik va shu universitetni tanladingiz?",t:"Motivatsiya",h:"Sabab → dalil → reja. Universitetning aniq dasturi, laboratoriyasi yoki moduli nomini ayting; umumiy reyting gapi kuchsiz."},
+ {q:"O'qishni tugatgach, O'zbekistonga qanday aniq foyda keltirasiz?",t:"Kelajak rejasi",h:"Bitta aniq muammo, siz egallaydigan bilim va 3–5 yillik reja. Tashkilot yoki soha nomini ayting."},
+ {q:"Hayotingizdagi eng qiyin vaziyat va undan nima o'rgandingiz?",t:"Tajriba (STAR)",h:"STAR: Vaziyat → Vazifa → Harakat → Natija. Harakat qismiga eng ko'p vaqt bering, natijani raqam yoki aniq o'zgarish bilan ayting."},
+ {q:"Xorijda o'qish davomida qiyinchilikka uchrasangiz, qanday yo'l tutasiz?",t:"Moslashuvchanlik",h:"O'tmishdagi o'xshash vaziyatdan bitta misol keltiring va undan qanday usulni olib o'tishingizni ayting."},
+ {q:"Nima uchun komissiya aynan sizni tanlashi kerak?",t:"Xulosa",h:"3 ta kuchli tomon, har biriga bitta dalil. Boshqa nomzodlarni tanqid qilmang."}
+];
+const CHECKS=["Bitta aniq misol keltirdim","Natijani raqam yoki aniq o'zgarish bilan aytdim","Javobni O'zbekiston yoki kelajak rejamga bog'ladim","Vaqtga sig'dim va aniq yakunladim"];
+let eq=0, limit=120, remaining=120, running=false, lastT=0;
+const eyufMod={
+  cam:[0,3.4,6.6], target:[0,2.1,-1],
+  build(){
+    const s=baseScene();
+    const floor=new THREE.Mesh(new THREE.PlaneGeometry(16,12),new THREE.MeshStandardMaterial({color:0xb8bdcb,roughness:.9})); floor.rotation.x=-Math.PI/2; s.add(floor);
+    const wood=new THREE.MeshStandardMaterial({color:0x6b5a4a,roughness:.7});
+    const top=new THREE.Mesh(new THREE.BoxGeometry(7.4,0.18,2),wood); top.position.set(0,1.5,-0.9); s.add(top);
+    [[-3.4,-1.6],[3.4,-1.6],[-3.4,-0.2],[3.4,-0.2]].forEach(([x,z])=>{const l=new THREE.Mesh(new THREE.BoxGeometry(0.14,1.42,0.14),wood);l.position.set(x,0.71,z);s.add(l);});
+    this.people=[];
+    [-2.3,0,2.3].forEach((x,i)=>{
+      const g=new THREE.Group(); g.position.set(x,0,-2.4);
+      const body=new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.55,1.5,32),new THREE.MeshStandardMaterial({color:0x2b3040,roughness:.6})); body.position.y=1.85; g.add(body);
+      const head=new THREE.Mesh(new THREE.SphereGeometry(0.36,32,24),new THREE.MeshStandardMaterial({color:IDLE,roughness:.5})); head.position.y=2.95; g.add(head);
+      const chair=new THREE.Mesh(new THREE.BoxGeometry(1.1,1.6,0.15),new THREE.MeshStandardMaterial({color:0x3a3f50})); chair.position.set(0,1.5,-0.55); g.add(chair);
+      const pl=label(i===1?'Rais':"A'zo",{size:0.32}); pl.position.set(0,1.75,1.3); g.add(pl);
+      s.add(g); this.people.push({g,head});
+    });
+    this.ringMat=new THREE.MeshBasicMaterial({color:ACCENT,side:THREE.DoubleSide});
+    this.ringBg=new THREE.Mesh(new THREE.RingGeometry(0.55,0.66,64),new THREE.MeshBasicMaterial({color:0x8a90a0,transparent:true,opacity:.35,side:THREE.DoubleSide}));
+    this.ring=new THREE.Mesh(new THREE.RingGeometry(0.55,0.66,64,1,Math.PI/2,Math.PI*2),this.ringMat);
+    s.add(this.ringBg); s.add(this.ring);
+    this.scene=s; this.lastFrac=-1; this.sync();
+  },
+  sync(){ invalidate();
+    if(!this.people)return; const a=eq%3;
+    this.people.forEach((p,i)=>p.head.material.color.setHex(i===a?ACCENT:IDLE));
+    const hp=this.people[a].g.position; [this.ring,this.ringBg].forEach(r=>r.position.set(hp.x,2.95,hp.z)); this.updRing(true);
+  },
+  updRing(force){
+    const f=Math.max(0,remaining/limit); if(!force&&Math.abs(f-this.lastFrac)<0.004)return; this.lastFrac=f;
+    this.ring.geometry.dispose(); this.ring.geometry=new THREE.RingGeometry(0.55,0.66,64,1,Math.PI/2,Math.max(0.0001,Math.PI*2*f));
+    this.ringMat.color.setHex(f<0.15?ORANGE:ACCENT); invalidate();
+  },
+  tick(now){
+    if(!this.people)return false; this.updRing(false);
+    this.ring.lookAt(camera.position); this.ringBg.lookAt(camera.position);
+    if(reduce||!running){ this.people.forEach(p=>p.head.position.y=2.95); return false; }
+    const a=eq%3;
+    this.people.forEach((p,i)=>{ p.head.position.y=2.95+(i===a?Math.sin(now/260)*0.04:0); });
+    return true;
+  },
+  hud:"Faol a'zo ko'k rangda"
+};
+function mmss(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function drawTimer(){ $('#eyufTimer').textContent=mmss(remaining); $('#eyufTimer').classList.toggle('over',remaining<=0); }
+function renderEQ(){
+  const it=EQ[eq]; $('#eyufCount').textContent=(eq+1)+' / '+EQ.length; $('#eyufType').textContent=it.t; $('#eyufQ').textContent=it.q; $('#eyufHint').textContent=it.h;
+  $('#eyuf-notes').value=store.get('tayanch3d-eyuf-n'+eq,'');
+  const ch=$('#eyufChecks'); ch.innerHTML=''; const saved=store.get('tayanch3d-eyuf-c'+eq,{});
+  CHECKS.forEach((c,j)=>{const id='eyuf-c-'+j; const lab=document.createElement('label'); lab.className='check'; lab.htmlFor=id;
+    const inp=document.createElement('input'); inp.type='checkbox'; inp.id=id; inp.checked=!!saved[j];
+    inp.onchange=()=>{saved[j]=inp.checked; store.set('tayanch3d-eyuf-c'+eq,saved)};
+    const sp=document.createElement('span'); sp.textContent=c; lab.append(inp,sp); ch.appendChild(lab);});
+  $('#eyufPrev').disabled=eq===0; $('#eyufNext').disabled=eq===EQ.length-1;
+  stopTimer(); remaining=limit; drawTimer(); $('#eyufMsg').textContent=''; eyufMod.sync();
+}
+function stopTimer(){ running=false; invalidate(); $('#eyufStart').textContent=remaining<limit&&remaining>0?'Davom ettirish':'Boshlash'; }
+$('#eyufStart').onclick=()=>{ if(running){stopTimer();return;} if(remaining<=0)remaining=limit; running=true; lastT=performance.now(); ensureTimer(); $('#eyufStart').textContent='To\'xtatish'; $('#eyufMsg').textContent='Javob bering. Vaqt ketmoqda.'; };
+$('#eyufReset').onclick=()=>{ running=false; remaining=limit; drawTimer(); stopTimer(); $('#eyufMsg').textContent=''; eyufMod.updRing(true); };
+$('#eyufPrev').onclick=()=>{eq--;renderEQ()}; $('#eyufNext').onclick=()=>{eq++;renderEQ()};
+$('#eyuf-notes').addEventListener('input',e=>store.set('tayanch3d-eyuf-n'+eq,e.target.value));
+$$('#eyufLimit button').forEach(b=>b.onclick=()=>{limit=+b.dataset.s; $$('#eyufLimit button').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); running=false; remaining=limit; drawTimer(); stopTimer(); eyufMod.updRing(true);});
+let tId=null;
+function ensureTimer(){ if(!tId) tId=setInterval(tickTimer,200); }
+function tickTimer(){ if(!running){ clearInterval(tId); tId=null; return; } const n=performance.now(); remaining-=(n-lastT)/1000; lastT=n;
+  if(remaining<=0){remaining=0;running=false;$('#eyufStart').textContent='Boshlash';$('#eyufMsg').textContent='Vaqt tugadi. Haqiqiy suhbatda ham javobni bir-ikki gap bilan aniq yakunlashni odat qiling.';}
+  drawTimer(); }
+renderEQ();
+
+/* ---------- switching ---------- */
+const MODS={top:topMod,sat:satMod,ielts:ieltsMod,eyuf:eyufMod};
+function show(name){
+  if(!MODS[name])name='top';
+  $$('nav.tabs button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===name)));
+  $$('.panel').forEach(p=>p.hidden=p.dataset.mod!==name);
+  const m=MODS[name];
+  $('#stageHint').textContent=m.hud||'';
+  if(THREEOK){
+    if(!m.scene){ try{ m.build(); }catch(e){ console.error(e); } }
+    current=m; m.enter&&m.enter(); resetCam(); invalidate(); if(name==='top') m.focus();
+  }
+  $('#hud').innerHTML=''; const c=document.createElement('span'); c.className='chip'; c.textContent={top:'TOP ADMISSION',sat:'SAT · GEOMETRIYA',ielts:'IELTS · TASK 1',eyuf:'EYUF · SUHBAT'}[name]; $('#hud').appendChild(c);
+  try{ if(location.hash.slice(1)!==name) history.replaceState(null,'','#'+name); }catch(e){}
+  store.set('tayanch3d-tab',name);
+}
+function resetCam(){ if(!current||!camera)return; camera.position.set(...current.cam); controls.target.set(...current.target); current.goal=null; controls.update(); }
+$('#resetCam').onclick=()=>{ resetCam(); if(current===topMod) topMod.focus(); };
+$$('nav.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.tab));
+addEventListener('hashchange',()=>show(location.hash.slice(1)));
+
+function loop(now){
+  requestAnimationFrame(loop);
+  if(!THREEOK||!current||!current.scene||!onScreen||document.hidden)return;
+  const anim=current.tick?current.tick(now):false, moved=controls.update();
+  if(anim||moved||dirty){ renderer.render(current.scene,camera); dirty=false; }
+}
+function start(){ resize(); show(location.hash.slice(1)||store.get('tayanch3d-tab','top')); requestAnimationFrame(loop); }
+let started=false; const go=()=>{ if(!started){started=true;start();} };
+if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(go); setTimeout(go,1500); } else go();
+})();
+</script>

@@ -1,0 +1,247 @@
+---
+// Birlik aylana (2D, SVG): P nuqtani aylana bo'ylab sudrash, sin/cos/tan, gradus va radian.
+// Klaviatura: burchak slayderi (strelka 1°), maxsus burchak tugmalari.
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
+---
+<DarsQolip
+  modul="aylana"
+  title="Birlik aylana · SAT"
+  description="SAT Math: birlik aylanada burchakni sudrab sin, cos va tan qiymatlarini ko'ring, gradus va radianni almashtiring. 5 ta mashq."
+  yonalish="Geometry and Trigonometry"
+  sarlavha="Birlik aylana: sin va cos nuqtaning koordinatasi"
+  lead="Radiusi 1 bo'lgan aylanada burchak bitta nuqtani belgilaydi. Shu nuqtaning x koordinatasi cos, y koordinatasi sin. Nuqtani sudrang va qiymatlar qanday o'zgarishini kuzating."
+  maqsadlar={[
+    "Gradusni radianga va radianni gradusga o'tkazasiz.",
+    "30°, 45°, 60° va ularga mos burchaklarning sin va cos qiymatlarini topasiz.",
+    "Chorakka qarab ishorani aniqlaysiz, sin x = cos(90° − x) qoidasini qo'llaysiz.",
+  ]}
+  xulosa={[
+    "Birlik aylanadagi nuqta (cos θ; sin θ). tan θ = sin θ / cos θ, cos θ = 0 bo'lsa aniqlanmagan.",
+    "Radian = gradus · π/180. 180° = π, 90° = π/2.",
+    "I chorakda hammasi musbat, II da faqat sin, III da faqat tan, IV da faqat cos.",
+    "sin x = cos(90° − x): to'ldiruvchi burchaklarning sin va cos qiymatlari almashadi.",
+    "Kalkulyatorda radian bilan ishlasangiz, radian rejimini tekshiring.",
+  ]}
+  keyingi={{ nomi: 'Statistika', qism: 'qollanma/math/statistika/' }}
+  tekshirilmagan={["Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan."]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti aylana-quti">
+      <svg id="aylana" viewBox="0 0 400 400" role="img" aria-labelledby="aylana-tavsif">
+        <g aria-hidden="true">
+          <line class="a-oq" x1="20" y1="200" x2="380" y2="200" /><line class="a-oq" x1="200" y1="20" x2="200" y2="380" />
+          <circle class="a-aylana" cx="200" cy="200" r="150" />
+          <text class="a-raqam" x="356" y="216">1</text><text class="a-raqam" x="32" y="216">−1</text>
+          <text class="a-raqam" x="208" y="44">1</text><text class="a-raqam" x="208" y="372">−1</text>
+          <text class="a-chorak" x="300" y="70">I</text><text class="a-chorak" x="92" y="70">II</text>
+          <text class="a-chorak" x="88" y="340">III</text><text class="a-chorak" x="296" y="340">IV</text>
+          <path id="a-yoy" class="a-yoy" d="" />
+          <line id="a-radius" class="a-radius" x1="200" y1="200" x2="350" y2="200" />
+          <line id="a-cos" class="a-cos" x1="200" y1="200" x2="350" y2="200" />
+          <line id="a-sin" class="a-sin" x1="350" y1="200" x2="350" y2="200" />
+          <text id="a-p" class="a-yozuv" x="0" y="0"></text>
+          <text id="a-burchak" class="a-yozuv a-kichik" x="0" y="0"></text>
+        </g>
+        <g id="a-tutqich" class="g-tutqich" aria-hidden="true">
+          <circle class="g-hit" cx="350" cy="200" r="14" />
+          <circle cx="350" cy="200" r="9" />
+        </g>
+      </svg>
+    </div>
+    <p class="sr" id="aylana-tavsif" aria-live="polite"></p>
+    <p class="sahna-izoh">Ko'k nuqtani aylana bo'ylab sudrang. Ko'k kesma: cos (x), qora kesma: sin (y).</p>
+  </div>
+
+  <div slot="animatsiya">
+    <p>Nuqta aylana bo'ylab 0° dan 360° gacha yuradi. Ko'k kesma (cos) va qora kesma (sin) uzunligi o'zgaradi, chorak almashganda ishorasi ham almashadi.</p>
+    <div class="segment"><button type="button" class="katta asosiy" id="anim-boshla">Aylantirish</button></div>
+    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Tugmani bosing.</span></div>
+  </div>
+
+  <div slot="formula">
+    <div class="formula">
+      <span class="f-asosiy">P = (cos θ; sin θ)</span>
+      <span class="f-qiymat">tan θ = sin θ / cos θ</span>
+      <span class="f-qiymat">radian = gradus · π/180</span>
+      <span class="f-qiymat">sin²θ + cos²θ = 1</span>
+      <span class="f-qiymat">sin x = cos(90° − x)</span>
+    </div>
+    <dl class="qiymatlar">
+      <div><dt>30° = π/6</dt><dd>(√3/2; 1/2)</dd></div>
+      <div><dt>45° = π/4</dt><dd>(√2/2; √2/2)</dd></div>
+      <div><dt>60° = π/3</dt><dd>(1/2; √3/2)</dd></div>
+    </dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="boshqaruv">
+      <div class="segment" role="group" aria-label="Burchak birligi">
+        <button type="button" data-birlik="gradus" aria-pressed="true">Gradus</button>
+        <button type="button" data-birlik="radian" aria-pressed="false">Radian</button>
+      </div>
+      <div class="slayder"><label for="a-theta">θ</label><input type="range" id="a-theta" min="0" max="359" step="1" value="30" /><output for="a-theta" id="a-theta-o">30°</output></div>
+      <div class="segment" role="group" aria-label="Maxsus burchaklar">
+        {maxsus.map((g) => <button type="button" class="kichik-tugma" data-burchak={g}>{g}°</button>)}
+      </div>
+    </div>
+    <dl class="qiymatlar" id="a-qiymatlar"></dl>
+    <div class="vazifa">
+      <p><b>Vazifa.</b> cos manfiy, sin musbat va tan = −1 bo'ladigan burchakni toping.</p>
+      <p class="vazifa-holat" id="vazifa-holat" aria-live="polite"></p>
+    </div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { son } from '../../../../../../lib/sonYozuv';
+  import { sudraladigan, bosishRadiusi, kechikibElon } from '../../../../../../lib/svgSudrash';
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const svg = $('aylana') as unknown as SVGSVGElement;
+  const kamaytir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const C = 200, R = 150;
+  let theta = 30;
+  let birlik: 'gradus' | 'radian' = 'gradus';
+
+  // Aniq qiymatlar: faqat 30° va 45° karralilarida
+  const ANIQ: Record<number, [string, string]> = {
+    0: ['0', '1'], 30: ['1/2', '√3/2'], 45: ['√2/2', '√2/2'], 60: ['√3/2', '1/2'], 90: ['1', '0'],
+  };
+  function aniq(g: number): { sin: string; cos: string } | null {
+    const asos = g % 90, chorak = Math.floor(g / 90);
+    const mos = asos === 0 ? 0 : asos;
+    if (!(mos in ANIQ)) return null;
+    // Burchakni I chorakka keltiramiz
+    let s: string, c: string;
+    const [s0, c0] = ANIQ[mos];
+    if (chorak === 0) { s = s0; c = c0; }
+    else if (chorak === 1) { s = c0; c = '−' + s0; }
+    else if (chorak === 2) { s = '−' + s0; c = '−' + c0; }
+    else { s = '−' + c0; c = s0; }
+    const toza = (x: string) => (x === '−0' ? '0' : x);
+    return { sin: toza(s), cos: toza(c) };
+  }
+  const ekub = (a: number, b: number): number => (b ? ekub(b, a % b) : a);
+  function radian(g: number): string {
+    if (g === 0) return '0';
+    if (g % 15 === 0) {
+      const k = g / 15, d = ekub(k, 12), s = k / d, m = 12 / d;
+      return `${s === 1 ? '' : s}π${m === 1 ? '' : '/' + m}`;
+    }
+    return `≈ ${son((g * Math.PI) / 180)}`;
+  }
+  const burchakMatni = (g: number) => (birlik === 'gradus' ? `${g}°` : `${radian(g)} rad`);
+  const chorakNomi = (g: number) => (g % 90 === 0 ? "o'qda" : ['I chorak', 'II chorak', 'III chorak', 'IV chorak'][Math.floor(g / 90)]);
+
+  const elon = kechikibElon($('aylana-tavsif'));
+  function qiymatlar() {
+    const r = (theta * Math.PI) / 180, s = Math.sin(r), c = Math.cos(r);
+    const a = aniq(theta);
+    const sinM = a ? a.sin : son(s, 3), cosM = a ? a.cos : son(c, 3);
+    const tanYoq = theta % 180 === 90;
+    let tanM: string;
+    if (tanYoq) tanM = 'aniqlanmagan';
+    else if (a) {
+      // tan aniq qiymati: 180° davriy; (90°; 180°) oralig'ida manfiy
+      const TAN: Record<number, string> = { 0: '0', 30: '√3/3', 45: '1', 60: '√3' };
+      const g180 = theta % 180;
+      tanM = g180 < 90 ? TAN[g180] : '−' + TAN[180 - g180];
+    }
+    else tanM = son(s / c, 3);
+    return { s, c, sinM, cosM, tanM, aniqmi: !!a };
+  }
+
+  function chiz() {
+    const r = (theta * Math.PI) / 180;
+    const px = C + R * Math.cos(r), py = C - R * Math.sin(r);
+    $('a-radius').setAttribute('x2', String(px)); $('a-radius').setAttribute('y2', String(py));
+    $('a-cos').setAttribute('x2', String(px));
+    ['x1', 'x2'].forEach((k) => $('a-sin').setAttribute(k, String(px)));
+    $('a-sin').setAttribute('y2', String(py));
+    const yr = 34, katta = theta > 180 ? 1 : 0;
+    $('a-yoy').setAttribute('d', theta === 0 ? '' : `M${C + yr} ${C} A${yr} ${yr} 0 ${katta} 0 ${C + yr * Math.cos(r)} ${C - yr * Math.sin(r)}`);
+    const q = qiymatlar();
+    const yozuv = $('a-p');
+    yozuv.textContent = `(${q.cosM}; ${q.sinM})`;
+    // Yozuv aylana ichiga qaratiladi: o'ng yarimda nuqtaning chapiga, chap yarimda o'ngiga
+    const ong = Math.cos(r) >= 0;
+    yozuv.setAttribute('x', String(px + (ong ? -14 : 14))); yozuv.setAttribute('text-anchor', ong ? 'end' : 'start');
+    yozuv.setAttribute('y', String(Math.min(388, Math.max(16, py + (Math.sin(r) >= 0 ? -16 : 26)))));
+    const b = $('a-burchak');
+    const yarim = r / 2;
+    b.textContent = burchakMatni(theta);
+    b.setAttribute('x', String(C + 58 * Math.cos(yarim))); b.setAttribute('y', String(C - 58 * Math.sin(yarim) + 5));
+    document.querySelectorAll('#a-tutqich circle').forEach((c) => { c.setAttribute('cx', String(px)); c.setAttribute('cy', String(py)); });
+
+    ($('a-theta') as HTMLInputElement).value = String(theta);
+    $('a-theta-o').textContent = birlik === 'gradus' ? `${theta}°` : radian(theta);
+    const dl = $('a-qiymatlar'); dl.replaceChildren();
+    ([['Burchak', `${theta}° = ${radian(theta)}`], ['Chorak', chorakNomi(theta)], ['cos θ (x)', q.cosM], ['sin θ (y)', q.sinM], ['tan θ', q.tanM]] as [string, string][])
+      .forEach(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); dl.append(d); });
+    const ok = theta === 135;
+    const vh = $('vazifa-holat');
+    vh.dataset.ok = ok ? '1' : '0';
+    vh.textContent = ok ? "Topildi: 135°. II chorakda cos < 0, sin > 0, va |sin| = |cos|, demak tan = −1." : "Hali emas. Maslahat: qaysi chorakda cos manfiy, sin musbat? tan = −1 uchun |sin| = |cos|.";
+    elon(`Burchak ${theta} gradus, ${radian(theta)} radian. cos ${q.cosM}, sin ${q.sinM}, tan ${q.tanM}.`);
+  }
+
+  function qoy(g: number) { theta = ((Math.round(g) % 360) + 360) % 360; chiz(); }
+
+  const t = $('a-tutqich') as unknown as SVGElement;
+  sudraladigan(svg, t, (p) => {
+    let g = (Math.atan2(C - p.y, p.x - C) * 180) / Math.PI;
+    if (g < 0) g += 360;
+    // Maxsus burchakka 3° dan yaqin bo'lsa, unga yopishadi
+    const yaqin = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360].find((m) => Math.abs(m - g) < 3);
+    qoy(yaqin ?? g);
+  });
+  bosishRadiusi(svg, 400, (r) => $('a-tutqich').querySelector('.g-hit')!.setAttribute('r', String(Math.max(12, r))));
+
+  ($('a-theta') as HTMLInputElement).addEventListener('input', (e) => qoy(Number((e.target as HTMLInputElement).value)));
+  document.querySelectorAll<HTMLButtonElement>('[data-burchak]').forEach((b) => b.addEventListener('click', () => qoy(Number(b.dataset.burchak))));
+  document.querySelectorAll<HTMLButtonElement>('[data-birlik]').forEach((b) => b.addEventListener('click', () => {
+    birlik = b.dataset.birlik as 'gradus' | 'radian';
+    document.querySelectorAll('[data-birlik]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    chiz();
+  }));
+
+  // Animatsiya: 0° → 360°. Harakatsiz rejimda har bosishda keyingi maxsus burchak.
+  const QADAMLAR = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
+  let animId = 0, animI = 0;
+  $('anim-boshla').addEventListener('click', () => {
+    if (kamaytir) {
+      animI = (animI + 1) % QADAMLAR.length; qoy(QADAMLAR[animI]);
+      $('anim-boshla').textContent = 'Keyingi burchak';
+      const q = qiymatlar(); $('anim-holat').textContent = `${theta}°: cos ${q.cosM}, sin ${q.sinM}`;
+      return;
+    }
+    cancelAnimationFrame(animId);
+    const bosh = performance.now(), DAVOM = 6000;
+    const qadam = (now: number) => {
+      const k = Math.min(1, (now - bosh) / DAVOM);
+      qoy(k * 359);
+      const q = qiymatlar(); $('anim-holat').textContent = `${theta}°: cos ${q.cosM}, sin ${q.sinM}, ${chorakNomi(theta)}`;
+      if (k < 1) animId = requestAnimationFrame(qadam);
+    };
+    animId = requestAnimationFrame(qadam);
+  });
+
+  chiz();
+</script>
+
+<style is:global>
+  .dars .aylana-quti svg { touch-action: pan-y; }
+  .dars .a-oq { stroke: var(--matn-sust); stroke-width: 1.5; }
+  .dars .a-aylana { fill: none; stroke: var(--matn); stroke-width: 2; }
+  .dars .a-raqam, .dars .a-chorak { fill: var(--matn-ikkinchi); font-size: 13px; font-weight: 700; font-family: var(--shrift); }
+  .dars .a-chorak { font-size: 15px; }
+  .dars .a-radius { stroke: var(--matn-sust); stroke-width: 2; }
+  .dars .a-cos { stroke: var(--rang-havola); stroke-width: 6; stroke-linecap: round; }
+  .dars .a-sin { stroke: var(--matn); stroke-width: 6; stroke-linecap: round; }
+  .dars .a-yoy { fill: none; stroke: var(--matn-sust); stroke-width: 2; }
+  .dars .a-yozuv { fill: var(--matn); font-size: 15px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 5px; }
+  .dars .a-kichik { font-size: 12px; }
+  .dars .g-tutqich circle:not(.g-hit) { fill: var(--rang-asosiy); stroke: var(--fon); stroke-width: 3; }
+  .dars .g-hit { fill: transparent; }
+</style>

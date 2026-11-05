@@ -1,0 +1,223 @@
+---
+// Hajm laboratoriyasi (3D). Three.js faqat sahna ekranga yaqinlashganda yuklanadi (src/lib/hajmSahna.ts).
+// Prototip: docs/prototip/tayanch-3d-laboratoriya.html (SAT bo'limi).
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+---
+<DarsQolip
+  modul="hajm"
+  title="Hajm laboratoriyasi · SAT"
+  description="SAT Math: silindr, konus, shar va prizma hajmi 3D sahnada. Disklar animatsiyasi, formula, sinov va 6 ta mashq."
+  yonalish="Geometry and Trigonometry"
+  sarlavha="Hajm: asos yuzi marta balandlik"
+  lead="Silindrni yupqa disklardan yig'ib ko'ring: formula o'zi chiqadi. Keyin konus, shar va prizmada o'lchamlarni o'zgartirib, hajm qanday o'sishini kuzating."
+  maqsadlar={[
+    "Silindr hajmi nega πr²h ekanini disklar orqali tushuntira olasiz.",
+    "Konus, shar va prizma hajmini to'g'ri formula bilan hisoblaysiz.",
+    "Radius va diametrni, r² va r³ ni adashtirmaysiz.",
+  ]}
+  xulosa={[
+    "Silindr va prizma: V = asos yuzi × balandlik. Silindrda asos yuzi πr².",
+    "Konus o'sha asos va balandlikdagi silindrning uchdan biri: V = ⅓πr²h.",
+    "Shar faqat radiusga bog'liq: V = ⁴⁄₃πr³. Radius 2 marta oshsa, hajm 8 marta oshadi.",
+    "Savolda diametr berilsa, avval uni 2 ga bo'ling.",
+  ]}
+  keyingi={{ nomi: 'Funksiya grafigi', qism: 'qollanma/math/grafik/' }}
+  tekshirilmagan={[
+    "Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "Imtihonda formulalar varag'i berilishi bu sahifada da'vo qilinmaydi: rasmiy manba hali jurnalga qo'shilmagan.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti hajm-quti" id="hajm-quti" tabindex="0" role="application" aria-roledescription="3D sahna" aria-label="Hajm sahnasi. Strelkalar bilan aylantiring, plyus va minus bilan yaqinlashtiring." aria-describedby="hajm-tavsif">
+      <canvas id="hajm-canvas" aria-hidden="true"></canvas>
+      <svg class="hajm-poster" id="hajm-poster" viewBox="0 0 200 150" aria-hidden="true">
+        <ellipse cx="100" cy="40" rx="45" ry="12" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M55 40v70c0 7 20 12 45 12s45-5 45-12V40" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M100 40h45" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
+      </svg>
+      <p class="hajm-holat" id="hajm-holat">3D sahna yuklanmoqda…</p>
+    </div>
+    <p class="sr" id="hajm-tavsif" aria-live="polite"></p>
+    <div class="sahna-tugmalar">
+      <button type="button" class="belgi-t" data-amal="chap" aria-label="Chapga aylantirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></svg></button>
+      <button type="button" class="belgi-t" data-amal="ong" aria-label="O'ngga aylantirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg></button>
+      <button type="button" class="belgi-t" data-amal="yaqin" aria-label="Yaqinlashtirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+      <button type="button" class="belgi-t" data-amal="uzoq" aria-label="Uzoqlashtirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+      <button type="button" class="kichik-tugma" data-amal="tikla">Kamerani tiklash</button>
+    </div>
+    <p class="sahna-izoh">Sichqoncha bilan sudrang. Telefonda bir barmoqni yonga suring, ikki barmoq bilan yaqinlashtiring. Poldagi katak = 1 birlik.</p>
+  </div>
+
+  <div slot="animatsiya">
+    <p>Silindrni qalinligi 1 bo'lgan bir xil disklardan yig'amiz. Har disk hajmi: asos yuzi × qalinlik = πr² × 1. Nechta disk bo'lsa, hajm shuncha marta πr².</p>
+    <div class="segment">
+      <button type="button" class="katta asosiy" id="disk-boshla">Disklarni yig'ish</button>
+      <button type="button" class="kichik-tugma" id="disk-tikla">Butun silindr</button>
+    </div>
+    <div class="formula">
+      <span class="f-qiymat" id="disk-matn" aria-live="polite">r = 3, h = 6 bo'lgan silindr: tugmani bosing.</span>
+    </div>
+    <p class="kichik ikkinchi">r va h ni "Sinab ko'r" qadamida o'zgartirish mumkin.</p>
+  </div>
+
+  <div slot="formula">
+    <div class="formula">
+      <span class="kichik ikkinchi" id="f-nomi">Silindr</span>
+      <span class="f-asosiy" id="f-asosiy">V = πr²h</span>
+      <span class="f-qiymat" id="f-qiymat"></span>
+      <span class="kichik ikkinchi" id="f-izoh"></span>
+    </div>
+    <dl class="qiymatlar formula-jadval">
+      <div><dt>Silindr</dt><dd>πr²h</dd></div>
+      <div><dt>Konus</dt><dd>⅓πr²h</dd></div>
+      <div><dt>Shar</dt><dd>⁴⁄₃πr³</dd></div>
+      <div><dt>Prizma</dt><dd>l · w · h</dd></div>
+    </dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="boshqaruv">
+      <div class="segment" role="group" aria-label="Shakl">
+        <button type="button" data-shakl="silindr" aria-pressed="true">Silindr</button>
+        <button type="button" data-shakl="konus" aria-pressed="false">Konus</button>
+        <button type="button" data-shakl="shar" aria-pressed="false">Shar</button>
+        <button type="button" data-shakl="prizma" aria-pressed="false">Prizma</button>
+      </div>
+      <div class="slayder" data-uchun="r"><label for="hajm-r">r</label><input type="range" id="hajm-r" min="1" max="5" step="1" value="3" /><output for="hajm-r" id="hajm-r-o">3</output></div>
+      <div class="slayder" data-uchun="h"><label for="hajm-h">h</label><input type="range" id="hajm-h" min="1" max="10" step="1" value="6" /><output for="hajm-h" id="hajm-h-o">6</output></div>
+      <div class="slayder" data-uchun="l" hidden><label for="hajm-l">l</label><input type="range" id="hajm-l" min="1" max="8" step="1" value="4" /><output for="hajm-l" id="hajm-l-o">4</output></div>
+      <div class="slayder" data-uchun="w" hidden><label for="hajm-w">w</label><input type="range" id="hajm-w" min="1" max="8" step="1" value="3" /><output for="hajm-w" id="hajm-w-o">3</output></div>
+    </div>
+    <div class="formula">
+      <span class="f-qiymat" id="sinab-natija" aria-live="polite"></span>
+    </div>
+    <div class="vazifa">
+      <p><b>Vazifa.</b> Hajmi 48π bo'lgan silindrni toping: r va h ni tanlang.</p>
+      <p class="vazifa-holat" id="vazifa-holat" aria-live="polite">Hali topilmadi.</p>
+    </div>
+  </div>
+</DarsQolip>
+
+<script>
+  import type { HajmHolat, HajmSahna, Shakl } from '../../../../../../lib/hajmSahna';
+  import { son } from '../../../../../../lib/sonYozuv';
+
+  const holat: HajmHolat = { shakl: 'silindr', r: 3, h: 6, l: 4, w: 3, disklar: null };
+  const kamaytir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (id: string) => document.getElementById(id)!;
+  let sahna: HajmSahna | null = null;
+
+  // ---------- Hisob ----------
+  const ekub = (a: number, b: number): number => (b ? ekub(b, a % b) : a);
+  const piKasr = (surat: number, maxraj: number) => { const g = ekub(surat, maxraj); const s = surat / g, m = maxraj / g; return m === 1 ? `${s}π` : `${s}π/${m}`; };
+  function hisob() {
+    const { shakl, r, h, l, w } = holat;
+    if (shakl === 'silindr') return { nomi: 'Silindr', asosiy: 'V = πr²h', qiymat: `V = π · ${r}² · ${h} = ${piKasr(r * r * h, 1)} ≈ ${son(Math.PI * r * r * h)}`, izoh: 'Asos yuzi (πr²) × balandlik.' };
+    if (shakl === 'konus') return { nomi: 'Konus', asosiy: 'V = ⅓πr²h', qiymat: `V = ⅓ · π · ${r}² · ${h} = ${piKasr(r * r * h, 3)} ≈ ${son(Math.PI * r * r * h / 3)}`, izoh: "Xuddi shu r va h dagi silindrning uchdan biri." };
+    if (shakl === 'shar') return { nomi: 'Shar', asosiy: 'V = ⁴⁄₃πr³', qiymat: `V = ⁴⁄₃ · π · ${r}³ = ${piKasr(4 * r * r * r, 3)} ≈ ${son(4 * Math.PI * r ** 3 / 3)}`, izoh: "Faqat radiusga bog'liq: r ikki marta oshsa, hajm 8 marta oshadi." };
+    return { nomi: "To'g'ri burchakli prizma", asosiy: 'V = l · w · h', qiymat: `V = ${l} · ${w} · ${h} = ${l * w * h}`, izoh: "Poldagi kataklar soni (l · w) × qatlamlar soni (h)." };
+  }
+  function matnlarniYangila() {
+    const x = hisob();
+    $('f-nomi').textContent = x.nomi; $('f-asosiy').textContent = x.asosiy; $('f-qiymat').textContent = x.qiymat; $('f-izoh').textContent = x.izoh;
+    $('sinab-natija').textContent = `${x.nomi}: ${x.qiymat}`;
+    $('hajm-tavsif').textContent = `${x.nomi}. ${x.qiymat}.`;
+    const topildi = holat.shakl === 'silindr' && holat.r * holat.r * holat.h === 48;
+    const v = $('vazifa-holat');
+    v.dataset.ok = topildi ? '1' : '0';
+    v.textContent = topildi ? `Topildi: r = ${holat.r}, h = ${holat.h}. Tekshirish: ${holat.r}² · ${holat.h} = 48.` : 'Hali topilmadi. Maslahat: r² · h = 48 bo\'lishi kerak.';
+  }
+  function yangila() { matnlarniYangila(); sahna?.yangila({ ...holat }); }
+
+  // ---------- Boshqaruv ----------
+  const kerak: Record<Shakl, string[]> = { silindr: ['r', 'h'], konus: ['r', 'h'], shar: ['r'], prizma: ['l', 'w', 'h'] };
+  document.querySelectorAll<HTMLButtonElement>('[data-shakl]').forEach((b) => b.addEventListener('click', () => {
+    holat.shakl = b.dataset.shakl as Shakl; holat.disklar = null; diskniToxtat();
+    document.querySelectorAll('[data-shakl]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelectorAll<HTMLElement>('.slayder[data-uchun]').forEach((s) => { s.hidden = !kerak[holat.shakl].includes(s.dataset.uchun!); });
+    yangila();
+  }));
+  (['r', 'h', 'l', 'w'] as const).forEach((k) => {
+    const inp = $(`hajm-${k}`) as HTMLInputElement;
+    inp.addEventListener('input', () => { holat[k] = Number(inp.value); $(`hajm-${k}-o`).textContent = inp.value; if (holat.disklar !== null) holat.disklar = holat.h; yangila(); });
+  });
+
+  // ---------- Disklar animatsiyasi ----------
+  let taymer = 0;
+  function diskniToxtat() { if (taymer) { clearInterval(taymer); taymer = 0; } }
+  function diskMatn(n: number) {
+    const { r, h } = holat;
+    $('disk-matn').textContent = n < h
+      ? `${n}-disk: hajm = ${n} · π · ${r}² = ${piKasr(n * r * r, 1)}`
+      : `${h} ta disk: V = ${h} · π · ${r}² = ${piKasr(h * r * r, 1)}. Bu πr²h.`;
+  }
+  $('disk-boshla').addEventListener('click', () => {
+    diskniToxtat();
+    if (holat.shakl !== 'silindr') document.querySelector<HTMLButtonElement>('[data-shakl="silindr"]')!.click();
+    if (kamaytir) { holat.disklar = holat.h; diskMatn(holat.h); yangila(); return; }
+    holat.disklar = 1; diskMatn(1); yangila();
+    taymer = window.setInterval(() => {
+      if (holat.disklar === null) return diskniToxtat();
+      if (holat.disklar >= holat.h) { diskMatn(holat.h); return diskniToxtat(); }
+      holat.disklar++; diskMatn(holat.disklar); yangila();
+    }, 600);
+  });
+  $('disk-tikla').addEventListener('click', () => { diskniToxtat(); holat.disklar = null; $('disk-matn').textContent = 'Butun silindr ko\'rsatilmoqda.'; yangila(); });
+  document.addEventListener('dars:qadam', (e) => {
+    if ((e as CustomEvent).detail.qadam !== 'animatsiya' && holat.disklar !== null) { diskniToxtat(); holat.disklar = null; yangila(); }
+  });
+
+  // ---------- Kamera tugmalari va klaviatura ----------
+  const amal = (a: string) => {
+    if (!sahna) return;
+    if (a === 'chap') sahna.aylantir(-0.35); else if (a === 'ong') sahna.aylantir(0.35);
+    else if (a === 'yaqin') sahna.yaqinlashtir(0.85); else if (a === 'uzoq') sahna.yaqinlashtir(1 / 0.85);
+    else if (a === 'tikla') sahna.tikla();
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-amal]').forEach((b) => b.addEventListener('click', () => amal(b.dataset.amal!)));
+  const quti = $('hajm-quti');
+  quti.addEventListener('keydown', (e) => {
+    if (!sahna) return;
+    const k: Record<string, () => void> = {
+      ArrowLeft: () => sahna!.aylantir(-0.15), ArrowRight: () => sahna!.aylantir(0.15),
+      ArrowUp: () => sahna!.aylantir(0, -0.1), ArrowDown: () => sahna!.aylantir(0, 0.1),
+      '+': () => sahna!.yaqinlashtir(0.9), '=': () => sahna!.yaqinlashtir(0.9), '-': () => sahna!.yaqinlashtir(1 / 0.9),
+    };
+    if (k[e.key]) { e.preventDefault(); k[e.key](); }
+  });
+
+  // ---------- Three.js ni kechiktirib yuklash ----------
+  let yuklandi = false;
+  const yukla = async () => {
+    if (yuklandi) return; yuklandi = true;
+    try {
+      const { sahnaYarat } = await import('../../../../../../lib/hajmSahna');
+      sahna = sahnaYarat(quti, $('hajm-canvas') as HTMLCanvasElement);
+      sahna.yangila({ ...holat });
+      quti.classList.add('tayyor');
+      $('hajm-holat').hidden = true;
+    } catch {
+      $('hajm-holat').textContent = "3D sahnani ochib bo'lmadi (brauzer WebGL'ni qo'llamaydi yoki o'chirilgan). Formula va mashqlar ishlayveradi.";
+      document.querySelectorAll('[data-amal]').forEach((b) => b.setAttribute('disabled', ''));
+    }
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { io.disconnect(); yukla(); } }, { rootMargin: '200px' });
+    io.observe(quti);
+  } else yukla();
+  addEventListener('pagehide', () => { diskniToxtat(); sahna?.yoq(); sahna = null; yuklandi = false; });
+
+  matnlarniYangila();
+</script>
+
+<style is:global>
+  .dars .hajm-quti { height: 320px; touch-action: pan-y; }
+  @container (min-width: 780px) { .dars .hajm-quti { height: 460px; } }
+  .dars .hajm-quti:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 3px; }
+  .dars .hajm-quti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
+  .dars .hajm-quti.ushlangan canvas { cursor: grabbing; }
+  .dars .hajm-poster { position: absolute; inset: 15% 20%; width: 60%; height: 60%; color: var(--matn-sust); }
+  .dars .hajm-quti.tayyor .hajm-poster { display: none; }
+  .dars .hajm-holat { position: absolute; left: var(--b-4); right: var(--b-4); bottom: var(--b-4); text-align: center; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
+  .dars .formula-jadval dd { font-size: 17px; }
+</style>
