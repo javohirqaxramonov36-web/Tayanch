@@ -362,6 +362,10 @@ const qadamlar = [
   .dars .lab-panel { min-width: 0; display: flex; flex-direction: column; gap: var(--b-4); }
   .dars .sahna-quti { position: relative; background: var(--fon-ikkinchi); border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
   .dars .sahna-quti svg { display: block; width: 100%; height: auto; }
+  .dars .sahna-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-2); margin-top: var(--b-3); }
+  .dars .belgi-t { width: 44px; height: 44px; display: grid; place-items: center; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); cursor: pointer; }
+  .dars .belgi-t:hover { border-color: var(--rang-asosiy); }
+  .dars .belgi-t:disabled, .dars .kichik-tugma:disabled { opacity: 0.5; cursor: not-allowed; }
   .dars .sahna-izoh { margin-top: var(--b-2); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
 
   .dars .qadamlar { display: flex; gap: var(--b-1); padding: var(--b-1); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); }

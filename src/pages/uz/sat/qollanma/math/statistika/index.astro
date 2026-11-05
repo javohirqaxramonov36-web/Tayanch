@@ -1,0 +1,232 @@
+---
+// Statistika (2D, SVG): son o'qidagi nuqtalarni sudrab o'rtacha, mediana, standart og'ish va oraliqni kuzatish.
+// Har nuqta role="slider": Tab bilan tanlanadi, strelkalar 1 ga suradi, Home/End chetga.
+// Standart og'ish populatsiya formulasi bilan (n ga bo'linadi), sahifada ham shunday yozilgan.
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+const belgilar = [0, 5, 10, 15, 20];
+const X = (v: number) => 20 + 19 * v;
+---
+<DarsQolip
+  modul="statistika"
+  title="Statistika · SAT"
+  description="SAT Math: nuqtalarni sudrab o'rtacha, mediana, standart og'ish va oraliq qanday o'zgarishini ko'ring. 5 ta mashq."
+  yonalish="Problem-Solving and Data Analysis"
+  sarlavha="Statistika: o'rtacha qochadi, mediana turadi"
+  lead="Nuqtalar son o'qida turibdi. Bittasini uzoqqa sudrang: o'rtacha unga ergashadi, mediana deyarli joyida qoladi. Standart og'ish esa nuqtalar qanchalik tarqalganini ko'rsatadi."
+  maqsadlar={[
+    "O'rtacha, mediana va oraliqni ro'yxatdan tez hisoblaysiz.",
+    "Chetga ketgan qiymat qaysi ko'rsatkichni ko'proq o'zgartirishini ayta olasiz.",
+    "Standart og'ishni hisoblamasdan, ikki to'plamni tarqalishi bo'yicha solishtirasiz.",
+  ]}
+  xulosa={[
+    "O'rtacha = yig'indi : sonlar soni. Bitta katta qiymat uni o'ziga tortadi.",
+    "Mediana: saralangan ro'yxatning o'rtasi; sonlar soni juft bo'lsa, o'rtadagi ikki sonning o'rtachasi.",
+    "Oraliq = eng katta − eng kichik. Chetga ketgan qiymat oraliqni darhol o'zgartiradi.",
+    "Standart og'ish: qiymatlar o'rtachadan o'rtacha qanchalik uzoq. Hamma qiymat teng bo'lsa, 0.",
+  ]}
+  keyingi={{ nomi: 'Reja tuzgich', qism: 'vosita/reja/' }}
+  tekshirilmagan={[
+    "Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi). SAT'da qaysi ta'rif ishlatilishi bu sahifada da'vo qilinmaydi.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti stat-quti">
+      <p class="stat-namuna"><span class="pill">Namuna ma'lumot</span></p>
+      <svg id="stat" viewBox="0 0 420 250" role="group" aria-labelledby="stat-tavsif">
+        <g aria-hidden="true">
+          <rect id="s-sigma" class="s-sigma" x="0" y="40" width="0" height="160" />
+          <line class="s-oq" x1={X(0)} y1="200" x2={X(20)} y2="200" />
+          {Array.from({ length: 21 }, (_, i) => <line class="s-chiziqcha" x1={X(i)} y1="200" x2={X(i)} y2={i % 5 === 0 ? 210 : 205} />)}
+          {belgilar.map((v) => <text class="s-raqam" x={X(v)} y="226" text-anchor="middle">{v}</text>)}
+          <line id="s-ortacha" class="s-ortacha" x1="0" y1="36" x2="0" y2="200" />
+          <line id="s-mediana" class="s-mediana" x1="0" y1="36" x2="0" y2="200" />
+          <path id="s-ortacha-belgi" class="s-ortacha-belgi" d="" />
+          <path id="s-mediana-belgi" class="s-mediana-belgi" d="" />
+          <text id="s-ortacha-yozuv" class="s-yozuv" x="0" y="24" text-anchor="middle"></text>
+          <text id="s-mediana-yozuv" class="s-yozuv" x="0" y="246" text-anchor="middle"></text>
+        </g>
+        <g id="s-nuqtalar"></g>
+      </svg>
+    </div>
+    <p class="sr" id="stat-tavsif" aria-live="polite"></p>
+    <div class="sahna-tugmalar">
+      <button type="button" class="kichik-tugma" id="s-chetga">Chetga ketgan nuqta</button>
+      <button type="button" class="kichik-tugma" id="s-qosh">Nuqta qo'shish</button>
+      <button type="button" class="kichik-tugma" id="s-ayir">Nuqta olib tashlash</button>
+      <button type="button" class="kichik-tugma" id="s-tikla">Namunani tiklash</button>
+    </div>
+    <p class="sahna-izoh">Nuqtani sudrang yoki Tab bilan tanlab, strelkalar bilan suring. Ko'k chiziq va uchburchak: o'rtacha. Qora uzuq chiziq va romb: mediana. Kulrang soha: o'rtacha ± standart og'ish.</p>
+  </div>
+
+  <div slot="animatsiya">
+    <p>Eng katta nuqta asta-sekin 20 gacha suriladi. Kuzating: o'rtacha (ko'k) unga ergashadi, mediana (qora) joyida qoladi, kulrang soha kengayadi.</p>
+    <div class="segment"><button type="button" class="katta asosiy" id="anim-boshla">Ko'rsatish</button></div>
+    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Tugmani bosing.</span></div>
+  </div>
+
+  <div slot="formula">
+    <div class="formula">
+      <span class="kichik ikkinchi">O'rtacha</span><span class="f-asosiy">x̄ = Σx : n</span><span class="f-qiymat" id="f-ortacha"></span>
+      <span class="kichik ikkinchi">Mediana</span><span class="f-qiymat" id="f-mediana"></span>
+      <span class="kichik ikkinchi">Standart og'ish (populatsiya, n ga bo'linadi)</span><span class="f-asosiy">σ = √( Σ(x − x̄)² : n )</span><span class="f-qiymat" id="f-sigma"></span>
+    </div>
+  </div>
+
+  <div slot="sinab">
+    <dl class="qiymatlar" id="s-qiymatlar"></dl>
+    <div class="vazifa">
+      <p><b>Vazifa.</b> 9 ta nuqta bilan medianani 8 da qoldirib, o'rtachani aynan 10 ga yetkazing.</p>
+      <p class="vazifa-holat" id="vazifa-holat" aria-live="polite"></p>
+    </div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { son } from '../../../../../../lib/sonYozuv';
+  import { sudraladigan, bosishRadiusi, kechikibElon } from '../../../../../../lib/svgSudrash';
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = $('stat') as unknown as SVGSVGElement;
+  const kamaytir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const X = (v: number) => 20 + 19 * v;
+  const NAMUNA = [4, 6, 7, 7, 8, 9, 10, 11, 12];
+  let qiymat = [...NAMUNA];
+  let bosishR = 14;
+
+  const ortacha = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
+  const mediana = (a: number[]) => { const b = [...a].sort((x, y) => x - y), n = b.length; return n % 2 ? b[(n - 1) / 2] : (b[n / 2 - 1] + b[n / 2]) / 2; };
+  const sigma = (a: number[]) => { const o = ortacha(a); return Math.sqrt(ortacha(a.map((x) => (x - o) ** 2))); };
+  const oraliq = (a: number[]) => Math.max(...a) - Math.min(...a);
+
+  const elon = kechikibElon($('stat-tavsif'), 500);
+  let oldingi = { o: ortacha(qiymat), m: mediana(qiymat) };
+
+  // ---------- Nuqtalar (role=slider) ----------
+  const guruh = $('s-nuqtalar');
+  function nuqtalarniQur() {
+    guruh.replaceChildren();
+    qiymat.forEach((_, i) => {
+      const g = document.createElementNS(NS, 'g');
+      g.setAttribute('class', 's-nuqta');
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('role', 'slider');
+      g.setAttribute('aria-valuemin', '0'); g.setAttribute('aria-valuemax', '20');
+      g.setAttribute('aria-label', `${i + 1}-nuqta`);
+      const hit = document.createElementNS(NS, 'circle'); hit.setAttribute('class', 's-hit');
+      const c = document.createElementNS(NS, 'circle'); c.setAttribute('class', 's-doira'); c.setAttribute('r', '9');
+      g.append(hit, c);
+      guruh.append(g);
+      sudraladigan(svg, g as unknown as SVGElement, (p) => { qiymat[i] = Math.max(0, Math.min(20, Math.round((p.x - 20) / 19))); chiz(); }, () => ozgarishniElon());
+      g.addEventListener('keydown', (e) => {
+        const k: Record<string, number> = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, PageDown: -5, PageUp: 5 };
+        let v = qiymat[i];
+        if (e.key in k) v += k[e.key]; else if (e.key === 'Home') v = 0; else if (e.key === 'End') v = 20; else return;
+        e.preventDefault();
+        qiymat[i] = Math.max(0, Math.min(20, v)); chiz(); ozgarishniElon();
+      });
+    });
+  }
+
+  function chiz() {
+    // Bir xil qiymatli nuqtalar ustma-ust taxlanadi (nuqtali diagramma)
+    const taxlam = new Map<number, number>();
+    const tartib = qiymat.map((v, i) => ({ v, i })).sort((a, b) => a.v - b.v || a.i - b.i);
+    const balandlik: number[] = [];
+    tartib.forEach(({ v, i }) => { const k = taxlam.get(v) ?? 0; taxlam.set(v, k + 1); balandlik[i] = k; });
+    [...guruh.children].forEach((g, i) => {
+      const cx = X(qiymat[i]), cy = 188 - balandlik[i] * 21;
+      g.querySelectorAll('circle').forEach((c) => { c.setAttribute('cx', String(cx)); c.setAttribute('cy', String(cy)); });
+      g.querySelector('.s-hit')!.setAttribute('r', String(bosishR));
+      g.setAttribute('aria-valuenow', String(qiymat[i]));
+      g.setAttribute('aria-valuetext', `${qiymat[i]}`);
+    });
+    const o = ortacha(qiymat), m = mediana(qiymat), s = sigma(qiymat);
+    ['x1', 'x2'].forEach((k) => { $('s-ortacha').setAttribute(k, String(X(o))); $('s-mediana').setAttribute(k, String(X(m))); });
+    $('s-ortacha-belgi').setAttribute('d', `M${X(o) - 8} 30L${X(o) + 8} 30L${X(o)} 42Z`);
+    $('s-mediana-belgi').setAttribute('d', `M${X(m)} 200l8 8l-8 8l-8-8Z`);
+    const oy = $('s-ortacha-yozuv'), my = $('s-mediana-yozuv');
+    oy.textContent = `o'rtacha ${son(o)}`; my.textContent = `mediana ${son(m)}`;
+    oy.setAttribute('x', String(Math.min(370, Math.max(50, X(o))))); my.setAttribute('x', String(Math.min(370, Math.max(50, X(m)))));
+    const chap = Math.max(X(0), X(o - s)), ong = Math.min(X(20), X(o + s));
+    $('s-sigma').setAttribute('x', String(chap)); $('s-sigma').setAttribute('width', String(Math.max(0, ong - chap)));
+
+    const dl = $('s-qiymatlar'); dl.replaceChildren();
+    ([['n', String(qiymat.length)], ["O'rtacha", son(o)], ['Mediana', son(m)], ["Standart og'ish", son(s)], ['Oraliq', son(oraliq(qiymat))]] as [string, string][])
+      .forEach(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); dl.append(d); });
+
+    const yig = qiymat.reduce((a, b) => a + b, 0);
+    const saralangan = [...qiymat].sort((a, b) => a - b);
+    $('f-ortacha').textContent = `${saralangan.join(' + ')} = ${yig}; ${yig} : ${qiymat.length} = ${son(o)}`;
+    const n = saralangan.length;
+    $('f-mediana').textContent = n % 2
+      ? `Saralangan ro'yxatning ${(n + 1) / 2}-qiymati: ${son(m)}`
+      : `O'rtadagi ikkitasi ${saralangan[n / 2 - 1]} va ${saralangan[n / 2]}: (${saralangan[n / 2 - 1]} + ${saralangan[n / 2]}) : 2 = ${son(m)}`;
+    $('f-sigma').textContent = `σ ≈ ${son(s)}`;
+
+    const ok = qiymat.length === 9 && Math.abs(o - 10) < 1e-9 && m === 8;
+    const vh = $('vazifa-holat');
+    vh.dataset.ok = ok ? '1' : '0';
+    vh.textContent = ok ? "Topildi: mediana 8, o'rtacha 10. Katta qiymatlarni oshirdingiz, o'rtadagi nuqtaga tegmadingiz." : `Hali emas: o'rtacha ${son(o)}, mediana ${son(m)}. Maslahat: yig'indi 90 bo'lishi kerak, o'rtadagi 5-qiymat 8 da qolsin.`;
+    ($('s-qosh') as HTMLButtonElement).disabled = qiymat.length >= 12;
+    ($('s-ayir') as HTMLButtonElement).disabled = qiymat.length <= 3;
+  }
+
+  function ozgarishniElon() {
+    const o = ortacha(qiymat), m = mediana(qiymat);
+    const t = `O'rtacha ${son(oldingi.o)} dan ${son(o)} ga, mediana ${son(oldingi.m)} dan ${son(m)} ga o'zgardi. Standart og'ish ${son(sigma(qiymat))}.`;
+    oldingi = { o, m };
+    elon(t);
+  }
+
+  $('s-chetga').addEventListener('click', () => { const i = qiymat.indexOf(Math.max(...qiymat)); qiymat[i] = 20; chiz(); ozgarishniElon(); });
+  $('s-qosh').addEventListener('click', () => { qiymat.push(Math.round(ortacha(qiymat))); nuqtalarniQur(); chiz(); ozgarishniElon(); });
+  $('s-ayir').addEventListener('click', () => { qiymat.pop(); nuqtalarniQur(); chiz(); ozgarishniElon(); });
+  $('s-tikla').addEventListener('click', () => { qiymat = [...NAMUNA]; nuqtalarniQur(); chiz(); ozgarishniElon(); });
+
+  // Animatsiya: eng katta nuqta 20 gacha suriladi
+  let animT = 0, animBosqich = 0;
+  $('anim-boshla').addEventListener('click', () => {
+    clearInterval(animT);
+    qiymat = [...NAMUNA]; nuqtalarniQur();
+    const i = qiymat.length - 1, boshO = ortacha(qiymat), boshM = mediana(qiymat);
+    const holat = () => `Nuqta ${qiymat[i]} da: o'rtacha ${son(boshO)} → ${son(ortacha(qiymat))}, mediana ${son(boshM)} → ${son(mediana(qiymat))}.`;
+    if (kamaytir) {
+      animBosqich = (animBosqich + 1) % 2;
+      qiymat[i] = animBosqich ? 20 : NAMUNA[i]; chiz();
+      $('anim-holat').textContent = holat();
+      $('anim-boshla').textContent = animBosqich ? 'Qaytarish' : "Ko'rsatish";
+      return;
+    }
+    chiz();
+    animT = window.setInterval(() => {
+      if (qiymat[i] >= 20) { clearInterval(animT); return; }
+      qiymat[i]++; chiz(); $('anim-holat').textContent = holat();
+    }, 300);
+  });
+
+  bosishRadiusi(svg, 420, (r) => { bosishR = Math.max(11, Math.min(r, 20)); chiz(); });
+  nuqtalarniQur();
+  chiz();
+</script>
+
+<style is:global>
+  .dars .stat-quti { padding-top: var(--b-3); }
+  .dars .stat-namuna { position: absolute; top: var(--b-3); right: var(--b-3); }
+  .dars .stat-quti svg { touch-action: pan-y; }
+  .dars .s-oq { stroke: var(--matn); stroke-width: 2; }
+  .dars .s-chiziqcha { stroke: var(--matn-sust); stroke-width: 1.5; }
+  .dars .s-raqam { fill: var(--matn-ikkinchi); font-size: 13px; font-weight: 700; font-family: var(--shrift); }
+  .dars .s-sigma { fill: var(--sirt-ikkinchi); }
+  .dars .s-ortacha { stroke: var(--rang-havola); stroke-width: 3; }
+  .dars .s-ortacha-belgi { fill: var(--rang-havola); }
+  .dars .s-mediana { stroke: var(--matn); stroke-width: 2.5; stroke-dasharray: 7 5; }
+  .dars .s-mediana-belgi { fill: var(--matn); }
+  .dars .s-yozuv { fill: var(--matn); font-size: 13px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 4px; }
+  .dars .s-nuqta { cursor: grab; outline: none; }
+  .dars .s-doira { fill: var(--fon); stroke: var(--matn); stroke-width: 3; }
+  .dars .s-nuqta:hover .s-doira { stroke: var(--rang-havola); }
+  .dars .s-nuqta:focus-visible .s-doira { stroke: var(--rang-asosiy); stroke-width: 5; }
+  .dars .s-hit { fill: transparent; }
+</style>
