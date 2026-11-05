@@ -3,6 +3,20 @@
 Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq, interaktiv yo'riqnoma sayti.
 Astro, GitHub Pages (GitHub Actions orqali). Manzil: https://javohirqaxramonov36-web.github.io/Tayanch/
 
+## Bo'limlar
+
+Tayanch bitta sayt, ichida to'rt bo'lim. Har bo'lim alohida sayt emas, shu repodagi papka:
+
+| Bo'lim | Manzil | Holat |
+| --- | --- | --- |
+| Top Admission | `/uz/top-admission/` | tez orada |
+| IELTS | `/uz/ielts/` | ochiq |
+| SAT | `/uz/sat/` | ochiq |
+| El-Yurt Umidi | `/uz/eyuf/` | tez orada |
+
+Holat `src/data/bolimlar.ts` da. "ochiq" bo'lim bosh sahifa kartasida, menyuda va har bo'lim yon panelidagi "Tayanch bo'limlari" guruhida havola bo'ladi.
+Yangi bo'lim: sahifalarni `src/pages/uz/<bolim>/` ga qo'shing, `BolimQobiq` qolipini ishlating, keyin holatni "ochiq" ga o'tkazing.
+
 ## Ishga tushirish
 
 ```sh

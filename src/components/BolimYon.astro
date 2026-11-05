@@ -6,6 +6,7 @@
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satGuruhlar } from '../data/satSahifalar';
 import { qollanmalar, asos, vositalar } from '../data/ieltsSahifalar';
+import { bolimlar } from '../data/bolimlar';
 import { yol } from '../lib/yol';
 
 interface Props { bolim?: 'sat' | 'ielts' }
@@ -22,6 +23,14 @@ const ikonkalar: Record<string, string> = {
   'mashq/lugat/': '<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/>',
 };
 const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/, '');
+// Bo'limlar orasida o'tish: Tayanch bitta sayt, to'rt bo'lim. Ikonkalar bosh sahifadagi kartalardan.
+const BOLIM_IKONKA: Record<string, string> = {
+  qalpoq: '<path d="M3 10l9-5 9 5-9 5z"/><path d="M7 12v5c3 2 7 2 10 0v-5"/>',
+  suhbat: '<path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>',
+  varaq: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',
+  medal: '<circle cx="12" cy="9" r="5"/><path d="M9 13l-2 8 5-3 5 3-2-8"/>',
+};
+const boshqaBolimlar = bolimlar.filter((x) => x.slug !== bolim);
 const ieltsGuruhlar = [
   { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
   { nomi: 'Vositalar', bandlar: vositalar },
@@ -117,6 +126,27 @@ const ieltsGuruhlar = [
         </ul>
       </div>
     ))}
+    <div class="guruh">
+      <h2 class="guruh-nom" id="yon-guruh-tayanch">Tayanch bo'limlari</h2>
+      <ul class="royxat" aria-labelledby="yon-guruh-tayanch">
+        {boshqaBolimlar.map((x) => (
+          <li>
+            {x.holat === 'ochiq' ? (
+              <a href={yol(`/uz/${x.slug}/`)}>
+                <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={BOLIM_IKONKA[x.ikonka]} />
+                {x.nomi}
+              </a>
+            ) : (
+              <p class="nofaol">
+                <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={BOLIM_IKONKA[x.ikonka]} />
+                <span class="nofaol-nom">{x.nomi}</span>
+                <span class="yorliq-tez">tez orada</span>
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   </nav>
 
   <div class="yon-past">
@@ -348,6 +378,7 @@ const ieltsGuruhlar = [
   [data-bolim='ielts'] .logo-belgi { border-radius: var(--r-kichik); font-weight: 800; }
   .yon[data-bolim='ielts'] .past-tugma { min-height: 48px; border-radius: var(--r-orta); font-weight: 500; }
   .nofaol {
+    min-height: 44px;
     margin: 0; display: flex; align-items: center; gap: var(--b-3);
     padding: 0 var(--b-3); color: var(--matn-ikkinchi); font-weight: 500;
   }

@@ -1,6 +1,10 @@
 ---
 // Bosh sahifadagi 3 savollik maqsad testi. Hech narsa saqlanmaydi va yuborilmaydi.
 // Tavsiya oddiy qoidalarga asoslangan, "taxminiy yo'nalish" deb belgilangan.
+// Ochiq bo'lim tavsiyasi o'sha bo'limga, tez-oradagisi bo'limlar kartalariga olib boradi.
+import { bolimlar } from '../data/bolimlar';
+import { yol } from '../lib/yol';
+const havola = (id: string) => (bolimlar.find((b) => b.slug === id)?.holat === 'ochiq' ? yol(`/uz/${id}/`) : '#yonalish');
 const savollar = [
   {
     kalit: 'joy',
@@ -63,7 +67,7 @@ const tavsiyalar = [
       <ol class="tavsiyalar">
         {tavsiyalar.map((t) => (
           <li data-tavsiya={t.id} hidden>
-            <a href="#yonalish">
+            <a href={havola(t.id)}>
               <span class="raqam" data-raqam></span>
               <span class="tavsiya-matn">
                 <strong>{t.nomi}</strong>
