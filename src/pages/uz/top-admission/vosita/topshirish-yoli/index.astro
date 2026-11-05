@@ -1,0 +1,33 @@
+---
+// 2-qavat · Top Admission · Vositalar · Topshirish yo'li.
+// Prototip: branch prototip-topshirish-yoli. Prototipdagi "Rasmiy manbalar" jadvali o'rniga SahifaOxiri.
+import Asosiy from '../../../../../layouts/Asosiy.astro';
+import TopshirishYoli from '../../../../../components/TopshirishYoli.astro';
+import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
+---
+<Asosiy
+  title="Topshirish yo'li"
+  description="Davlat, daraja va grant bo'yicha mos ariza yo'llari."
+  turi="vosita"
+  bolim="top-admission"
+  holat="qoralama"
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
+  manbalar={['CA01', 'CA02', 'CO01', 'UC01', 'TB01', 'SH01', 'EY01']}
+  tekshirilmagan={[...hammaTekshirilmagan, "EYUF muddatining vaqt mintaqasi (Toshkent deb olindi)"]}
+  yol={['Vositalar']}
+>
+  <div class="ichki ty-sahifa">
+    <TopshirishYoli />
+    <footer class="ty-oxir">
+      <p><strong>Natija kafolatlanmaydi.</strong> Vosita qabul yoki grant ehtimolini hisoblamaydi.</p>
+      <p>Tayanch Common App, UCAS, Coalition, Türkiye Bursları, Stipendium Hungaricum va El-yurt umidi jamg'armasi bilan bog'liq emas.</p>
+    </footer>
+  </div>
+</Asosiy>
+
+<style>
+  .ty-sahifa { display: grid; gap: var(--b-14); }
+  .ty-oxir { border-top: 1.5px solid var(--matn); padding-top: var(--b-6); display: grid; gap: var(--b-2); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .ty-oxir strong { color: var(--matn); }
+</style>

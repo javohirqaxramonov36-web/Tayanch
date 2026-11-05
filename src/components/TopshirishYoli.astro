@@ -1,0 +1,378 @@
+---
+// "Topshirish yo'li" vositasi. Prototip asosida (branch prototip-topshirish-yoli), freymvorksiz.
+// Ma'lumot brauzerga <script type="application/json"> orqali beriladi.
+// 3D savol zinapoyasi kodda "savol-zinasi" (saytdagi Zina komponenti boshqa narsa: qavatlar orasidagi o'tish).
+// Javoblar faqat localStorage'da (kalit: tayanch-topshirish-yoli). Qabul yoki grant ehtimoli hisoblanmaydi.
+import { SAVOLLAR, YOLLAR, NAMUNA, KALIT, IKONKA, ishlatilganManbalar } from '../data/topshirishYoli';
+
+const malumot = { SAVOLLAR, YOLLAR, NAMUNA, KALIT, IKONKA, MANBALAR: ishlatilganManbalar };
+const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
+---
+<div class="ty" data-topshirish-yoli>
+  <script type="application/json" id="ty-malumot" set:html={JSON.stringify(malumot)} />
+
+  <header class="ty-bosh">
+    <div class="ty-bosh-matn">
+      <span class="ustki">Top Admission · Vosita</span>
+      <h1>Topshirish yo'li</h1>
+      <p class="kirish">Uchta savolga javob bering: qaysi davlat, qaysi daraja va grant kerakmi. Sizga mos ariza yo'llari chiqadi. Har kartani aylantirsangiz, rasmiy manbadagi faktlar va hali tekshirilmagan joylar ko'rinadi.</p>
+      <div class="yorliqlar">
+        <span class="pill">Javoblar faqat shu brauzerda</span>
+        <span class="pill">Qabul ehtimoli hisoblanmaydi</span>
+      </div>
+    </div>
+    <div class="sahna" aria-hidden="true">
+      <div class="savol-zinasi" id="savol-zinasi">
+        <div class="pog p1" data-q="davlat"><div class="old"></div><div class="yon"></div><div class="ust"></div></div>
+        <div class="pog p2" data-q="daraja"><div class="old"></div><div class="yon"></div><div class="ust"></div></div>
+        <div class="pog p3" data-q="grant"><div class="old"></div><div class="yon"></div><div class="ust"></div></div>
+        <div class="bayroq"></div>
+      </div>
+      <p class="sahna-izoh sanoq" id="sahna-izoh"></p>
+    </div>
+  </header>
+
+  <section class="savollar" aria-label="Savollar">
+    {kalitlar.map((k, i) => (
+      <div class="savol" data-savol={k}>
+        <div class="savol-bosh"><span class="raqam">{i + 1}</span><h2 class="savol-h">{SAVOLLAR[k].sarlavha}</h2></div>
+        <div class="variantlar" role="group" aria-label={SAVOLLAR[k].yorliq}></div>
+      </div>
+    ))}
+  </section>
+
+  <section class="natija" aria-live="polite">
+    <div class="natija-bosh">
+      <div class="natija-matn">
+        <span class="ustki">Natija</span>
+        <h2 id="natija-sarlavha">Sizga mos yo'llar</h2>
+        <p id="natija-izoh">Birinchi karta asosiy yo'l. Kartani bosib aylantiring.</p>
+      </div>
+      <button class="tugma" id="ty-qayta" type="button">Qaytadan boshlash</button>
+    </div>
+    <div class="yollar" id="yollar"></div>
+  </section>
+</div>
+
+<script>
+  import { yollarniTanla, type Javoblar } from '../lib/yollarniTanla';
+
+  type Fakt = { matn: string; manbaId: string; muddat?: string; vaqtli?: boolean };
+  type Yol = { id: string; nomi: string; ikonka: string; tavsif: string; qadamlar: string[]; faktlar: Fakt[]; tekshirilmagan: string[] };
+  type Malumot = {
+    SAVOLLAR: Record<string, { variantlar: { id: string; nomi: string; izoh?: string }[] }>;
+    YOLLAR: Record<string, Yol>;
+    NAMUNA: Required<Javoblar>;
+    KALIT: string;
+    IKONKA: Record<string, string>;
+    MANBALAR: Record<string, { tashkilot: string; havola: string; sana: string }>;
+  };
+
+  const ildiz = document.querySelector<HTMLElement>('[data-topshirish-yoli]');
+  if (ildiz) {
+    const M: Malumot = JSON.parse(document.getElementById('ty-malumot')!.textContent!);
+    const KALITLAR = ['davlat', 'daraja', 'grant'] as const;
+    let javob: Javoblar = {};
+    let namunami = false;
+    try {
+      const s = JSON.parse(localStorage.getItem(M.KALIT) || 'null');
+      if (s && typeof s === 'object') javob = s;
+    } catch { /* o'qib bo'lmadi */ }
+    if (!javob.davlat && !javob.daraja && !javob.grant) { javob = { ...M.NAMUNA }; namunami = true; }
+
+    const saqla = () => { try { localStorage.setItem(M.KALIT, JSON.stringify(javob)); } catch { /* saqlanmadi */ } };
+    const el = <K extends keyof HTMLElementTagNameMap>(teg: K, sinf?: string | null, matn?: string | null) => {
+      const e = document.createElement(teg);
+      if (sinf) e.className = sinf;
+      if (matn != null) e.textContent = matn;
+      return e;
+    };
+    const svg = (ichi: string) => {
+      const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('fill', 'none'); s.setAttribute('stroke', 'currentColor');
+      s.setAttribute('stroke-width', '2'); s.setAttribute('stroke-linecap', 'round'); s.setAttribute('stroke-linejoin', 'round');
+      s.setAttribute('aria-hidden', 'true');
+      s.innerHTML = ichi;
+      return s;
+    };
+    const yopildimi = (iso: string) => new Date(iso).getTime() - Date.now() < 0;
+    const qolganKun = (iso: string) => {
+      const farq = new Date(iso).getTime() - Date.now();
+      if (farq < 0) return "muddat o'tdi";
+      return Math.ceil(farq / 86400000) + ' kun qoldi';
+    };
+
+    const savollarniChiz = () => {
+      KALITLAR.forEach((k) => {
+        const quti = ildiz.querySelector(`[data-savol="${k}"] .variantlar`)!;
+        quti.textContent = '';
+        M.SAVOLLAR[k].variantlar.forEach((v) => {
+          const b = el('button', 'variant');
+          b.type = 'button';
+          b.id = `v-${k}-${v.id}`;
+          b.setAttribute('aria-pressed', javob[k] === v.id ? 'true' : 'false');
+          b.append(el('span', null, v.nomi));
+          if (v.izoh) b.append(el('small', null, v.izoh));
+          b.addEventListener('click', () => { javob[k] = v.id; namunami = false; saqla(); yangila(); document.getElementById(b.id)?.focus(); });
+          quti.append(b);
+        });
+        ildiz.querySelector(`[data-savol="${k}"]`)!.classList.toggle('javobli', !!javob[k]);
+      });
+    };
+
+    const zinani = () => {
+      let soni = 0;
+      ildiz.querySelectorAll<HTMLElement>('.pog').forEach((p) => {
+        const ok = !!javob[p.dataset.q as keyof Javoblar];
+        if (ok) soni++;
+        p.classList.toggle('bajarildi', ok);
+      });
+      document.getElementById('savol-zinasi')!.classList.toggle('tayyor', soni === 3);
+      document.getElementById('sahna-izoh')!.textContent = soni === 3 ? "3 / 3 · yo'l tayyor" : `${soni} / 3 savol: davlat, daraja, grant`;
+    };
+
+    const kartaChiz = (id: string, birinchi: boolean) => {
+      const y = M.YOLLAR[id];
+      const muddatli = y.faktlar.find((f) => f.muddat);
+      const yopiq = !!(muddatli && yopildimi(muddatli.muddat!));
+      const faktlar = yopiq ? y.faktlar.filter((f) => !f.vaqtli) : y.faktlar;
+
+      const k = el('article', 'karta' + (birinchi ? ' asosiy-yol' : ''));
+      const ichi = el('div', 'karta-ichi');
+
+      // Old yuz
+      const old = el('div', 'yuz old');
+      const tepa = el('div', 'karta-tepa');
+      const ik = el('div', 'ikonka');
+      ik.append(svg(M.IKONKA[y.ikonka]));
+      tepa.append(ik, el('span', 'pill' + (birinchi ? ' kok' : ''), birinchi ? "Asosiy yo'l" : "Qo'shimcha yo'l"));
+      old.append(tepa, el('h3', null, y.nomi), el('p', 'tavsif', y.tavsif));
+      if (yopiq) old.append(el('p', 'yopiq-xabar', "Bu tanlov yopildi, keyingi e'lonni rasmiy kanalda kuting"));
+      old.append(el('span', 'qadam-yorliq', "Umumiy yo'naltiruvchi qadamlar"));
+      const ol = el('ol', 'qadamlar');
+      y.qadamlar.forEach((q) => ol.append(el('li', null, q)));
+      old.append(ol);
+      const past = el('div', 'karta-past');
+      past.append(el('span', 'meta sanoq',
+        muddatli && !yopiq ? 'Hujjat qabuli: ' + qolganKun(muddatli.muddat!) : `${faktlar.length} ta rasmiy fakt · ${y.tekshirilmagan.length} ta tekshirilmagan`));
+      const aylan = el('button', 'tugma', "Manbalarni ko'rish");
+      aylan.type = 'button';
+      aylan.setAttribute('aria-label', `${y.nomi}: manbalarni ko'rish`);
+      past.append(aylan);
+      old.append(past);
+
+      // Orqa yuz (pasport)
+      const orqa = el('div', 'yuz orqa');
+      orqa.append(el('h3', null, y.nomi));
+      if (faktlar.length) {
+        orqa.append(el('span', 'orqa-sarlavha', 'Rasmiy manbada'));
+        const fl = el('ul', 'faktlar');
+        faktlar.forEach((f) => {
+          const m = M.MANBALAR[f.manbaId];
+          const li = el('li');
+          li.append(el('span', null, f.matn));
+          const qator = el('span', 'fakt-qator');
+          const muhr = el('span', 'muhr', `Tekshirilgan · ${m.sana}`);
+          const a = el('a', null, `${f.manbaId} · ${m.tashkilot}`);
+          a.setAttribute('href', m.havola); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener');
+          qator.append(muhr, a);
+          li.append(qator);
+          fl.append(li);
+        });
+        orqa.append(fl);
+      }
+      orqa.append(el('span', 'orqa-sarlavha', 'Tekshirilmagan joylar'));
+      const yl = el('ul', 'yoq');
+      y.tekshirilmagan.forEach((t) => {
+        const li = el('li');
+        li.append(el('span', 'ogoh-yorliq', 'tekshirilmagan'), el('span', null, t));
+        yl.append(li);
+      });
+      orqa.append(yl);
+      const qayt = el('button', 'tugma qayt-tugma', 'Orqaga');
+      qayt.type = 'button';
+      orqa.append(qayt);
+
+      const ayl = (ochiq: boolean) => {
+        // Orqa yuz absolute: balandlik max(old, orqa); orqa chegarasi ham qo'shiladi, matn kesilmasin.
+        ichi.style.minHeight = ochiq ? Math.max(old.offsetHeight, orqa.scrollHeight + (orqa.offsetHeight - orqa.clientHeight)) + 'px' : '';
+        k.classList.toggle('ochiq', ochiq);
+        old.setAttribute('aria-hidden', ochiq ? 'true' : 'false');
+        orqa.setAttribute('aria-hidden', ochiq ? 'false' : 'true');
+        old.inert = ochiq;
+        orqa.inert = !ochiq;
+        (ochiq ? qayt : aylan).focus({ preventScroll: true });
+      };
+      orqa.setAttribute('aria-hidden', 'true');
+      orqa.inert = true;
+      aylan.addEventListener('click', () => ayl(true));
+      qayt.addEventListener('click', () => ayl(false));
+
+      ichi.append(old, orqa);
+      k.append(ichi);
+      return k;
+    };
+
+    const natijaniChiz = () => {
+      const quti = document.getElementById('yollar')!;
+      quti.textContent = '';
+      const toliq = javob.davlat && javob.daraja && javob.grant;
+      const izoh = document.getElementById('natija-izoh')!;
+      if (!toliq) {
+        const qolgan = KALITLAR.filter((k) => !javob[k]).length;
+        quti.append(el('div', 'bosh-xabar', `Yana ${qolgan} ta savolga javob bering, yo'llar shu yerda chiqadi.`));
+        izoh.textContent = 'Uchala savolga javob berilgach natija chiqadi.';
+        return;
+      }
+      izoh.textContent = namunami
+        ? "Namuna: AQSH, bakalavriat, to'liq grant. O'z javoblaringizni tanlang. Kartani bosib aylantiring."
+        : "Birinchi karta asosiy yo'l. Kartani bosib aylantiring.";
+      yollarniTanla(javob).forEach((id, i) => quti.append(kartaChiz(id, i === 0)));
+    };
+
+    const yangila = () => { savollarniChiz(); zinani(); natijaniChiz(); };
+
+    document.getElementById('ty-qayta')!.addEventListener('click', () => {
+      javob = {}; namunami = false;
+      try { localStorage.removeItem(M.KALIT); } catch { /* ruxsat yo'q */ }
+      yangila();
+      const tezmi = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      ildiz.querySelector('.savollar')!.scrollIntoView({ behavior: tezmi ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    yangila();
+  }
+</script>
+
+<style>
+  /* Prototip uslublari, ranglar tokens.css dan (yorug' va qorong'i mavzu) */
+  .ty { display: grid; gap: var(--b-14); }
+  .ty h1, .ty h2, .ty h3 { text-wrap: balance; margin: 0; font-weight: 800; }
+  .ty h1 { font-size: clamp(2.125rem, 6vw, var(--matn-h1)); line-height: 1.12; }
+  .ty h2 { font-size: clamp(1.625rem, 4vw, 2rem); line-height: 1.2; }
+  .ty .savol-h, .ty :global(h3) { font-size: 1.25rem; line-height: 1.25; }
+  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--matn-sust); }
+  .ty :global(.pill) { display: inline-flex; align-items: center; gap: 6px; font-size: var(--matn-mayda); font-weight: 700; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); }
+  .ty :global(.pill.kok) { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+
+  /* Bosh qism */
+  .ty-bosh { display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--b-10); align-items: center; }
+  .ty-bosh-matn { display: grid; gap: var(--b-4); min-width: 0; }
+  .kirish { font-size: 1.125rem; color: var(--matn-ikkinchi); max-width: 52ch; }
+  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+
+  /* 3D savol zinapoyasi */
+  .sahna { perspective: 900px; display: grid; place-items: center; gap: var(--b-1); min-height: 280px; }
+  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
+  .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
+  .pog .ust, .pog .old, .pog .yon { position: absolute; }
+  .pog .ust { inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); transition: background .4s, transform .6s cubic-bezier(.2,.8,.2,1); }
+  .pog .old { left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); transition: height .6s cubic-bezier(.2,.8,.2,1); }
+  .pog .yon { right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+  .pog.bajarildi .ust { background: var(--rang-asosiy); border-color: var(--rang-asosiy-toq); }
+  .pog.bajarildi .old { background: var(--rang-asosiy-toq); }
+  .pog.bajarildi .yon { background: var(--rang-asosiy-chuqur); }
+  .p1 { left: 0; top: 128px; --h: 28px; }
+  .p2 { left: 104px; top: 64px; --h: 56px; }
+  .p3 { left: 208px; top: 0; --h: 84px; }
+  .bayroq { position: absolute; left: 254px; top: 46px; width: 2px; height: 0; background: var(--matn); transform-origin: bottom; transform: translateZ(84px) rotateX(-90deg); transition: height .5s .3s; }
+  .bayroq::after { content: ""; position: absolute; top: 0; left: 2px; width: 22px; height: 14px; background: var(--rang-asosiy); clip-path: polygon(0 0, 100% 50%, 0 100%); opacity: 0; transition: opacity .3s .7s; }
+  .savol-zinasi.tayyor .bayroq { height: 48px; }
+  .savol-zinasi.tayyor .bayroq::after { opacity: 1; }
+  .sahna-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-sust); text-align: center; }
+
+  /* Savollar */
+  .savollar { display: grid; gap: var(--b-4); }
+  .savol { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: grid; gap: var(--b-4); background: var(--fon); }
+  .savol-bosh { display: flex; align-items: baseline; gap: var(--b-3); flex-wrap: wrap; }
+  .raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; font-weight: 800; font-size: var(--matn-kichik); background: var(--sirt-ikkinchi); }
+  .savol.javobli .raqam { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variantlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .variantlar :global(.variant) {
+    min-height: 56px; padding: 10px 16px; border-radius: var(--r-orta); border: 2px solid var(--chiziq-kuchli);
+    background: var(--fon); font: inherit; font-weight: 700; color: var(--matn); text-align: left; cursor: pointer;
+    display: grid; gap: 2px; transition: border-color .15s, background .15s, transform .15s;
+  }
+  .variantlar :global(.variant small) { font-weight: 500; font-size: var(--matn-mayda); color: var(--matn-sust); line-height: 1.35; }
+  .variantlar :global(.variant:hover) { border-color: var(--matn); transform: translateY(-2px); }
+  .variantlar :global(.variant[aria-pressed="true"]) { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
+  .variantlar :global(.variant[aria-pressed="true"] small) { color: var(--rang-havola); }
+
+  /* Natija */
+  .natija { display: grid; gap: var(--b-6); }
+  .natija-bosh { display: flex; justify-content: space-between; align-items: end; gap: var(--b-4); flex-wrap: wrap; }
+  .natija-matn { display: grid; gap: var(--b-2); }
+  .natija-bosh p { color: var(--matn-ikkinchi); max-width: 60ch; }
+  .ty :global(.tugma) {
+    min-height: 48px; padding: 0 22px; border-radius: var(--r-toliq); border: 0; font: inherit; font-weight: 700;
+    cursor: pointer; background: var(--sirt-ikkinchi); color: var(--matn);
+  }
+  .ty :global(.tugma:hover) { background: var(--chiziq-kuchli); }
+  .yollar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-5); perspective: 1400px; }
+  .yollar :global(.bosh-xabar) { grid-column: 1 / -1; border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); padding: var(--b-8); text-align: center; color: var(--matn-sust); }
+
+  /* 3D aylanadigan karta */
+  .yollar :global(.karta) { min-width: 0; transform-style: preserve-3d; }
+  .yollar :global(.karta-ichi) { display: grid; position: relative; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .yollar :global(.karta.ochiq .karta-ichi) { transform: rotateY(180deg); }
+  .yollar :global(.yuz) {
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--fon);
+    padding: var(--b-6); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+  }
+  .yollar :global(.yuz.old) { transition: box-shadow .2s, transform .2s; }
+  .yollar :global(.karta:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--matn); }
+  .yollar :global(.yuz.orqa) { transform: rotateY(180deg); background: var(--fon-ikkinchi); position: absolute; inset: 0; overflow: auto; }
+  .yollar :global(.karta.asosiy-yol .yuz.old) { background: var(--qora); color: var(--rang-asosiy-matn); border-color: var(--qora-chiziq); }
+  .yollar :global(.karta.asosiy-yol:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--rang-asosiy); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .tavsif),
+  .yollar :global(.karta.asosiy-yol .yuz.old .qadam-yorliq) { color: var(--qora-matn-ikkinchi); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .ikonka) { color: var(--rang-asosiy-qorada); border-color: var(--qora-chiziq); background: var(--qora-sirt); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .tugma) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .tugma:hover) { background: var(--rang-asosiy-toq); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .yopiq-xabar) { background: var(--qora-sirt); color: var(--rang-asosiy-matn); }
+  .yollar :global(.karta-tepa) { display: flex; justify-content: space-between; align-items: start; gap: var(--b-3); }
+  .yollar :global(.ikonka) { width: 48px; height: 48px; border-radius: var(--r-orta); border: 1.5px solid var(--chiziq-kuchli); display: grid; place-items: center; color: var(--rang-havola); flex: none; }
+  .yollar :global(.ikonka svg) { width: 24px; height: 24px; }
+  .yollar :global(.tavsif) { color: var(--matn-ikkinchi); }
+  .yollar :global(.yopiq-xabar) { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-weight: 700; font-size: 15px; }
+  .yollar :global(.qadam-yorliq) { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .yollar :global(.qadamlar) { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; counter-reset: q; }
+  .yollar :global(.qadamlar li) { counter-increment: q; display: grid; grid-template-columns: 24px 1fr; gap: var(--b-2); font-size: 15px; }
+  .yollar :global(.qadamlar li::before) { content: counter(q); font-weight: 800; font-size: var(--matn-mayda); width: 22px; height: 22px; border-radius: var(--r-toliq); display: grid; place-items: center; border: 1.5px solid currentColor; opacity: .7; }
+  .yollar :global(.karta-past) { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
+  .yollar :global(.karta-past .meta) { font-size: var(--matn-mayda); font-weight: 500; opacity: .75; }
+  .yollar :global(.faktlar), .yollar :global(.yoq) { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .yollar :global(.faktlar li) { font-size: 15px; display: grid; gap: var(--b-1); }
+  .yollar :global(.fakt-qator) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .yollar :global(.muhr) {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: var(--r-kichik);
+    border: 1.5px solid var(--rang-asosiy); color: var(--rang-havola);
+    font-size: 12px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase;
+  }
+  .yollar :global(.faktlar a) { font-size: var(--matn-mayda); font-weight: 700; color: var(--rang-havola); text-decoration: none; }
+  .yollar :global(.faktlar a:hover) { text-decoration: underline; }
+  .yollar :global(.yoq li) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-2); }
+  .yollar :global(.ogoh-yorliq) { padding: 1px 8px; border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: 12px; font-weight: 700; }
+  .yollar :global(.orqa-sarlavha) { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .yollar :global(.qayt-tugma) { margin-top: auto; align-self: flex-start; }
+  .sanoq { font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 760px) {
+    .ty-bosh { grid-template-columns: 1fr; gap: var(--b-2); }
+    .sahna { min-height: 250px; padding-top: var(--b-6); order: -1; }
+    .savol-zinasi, .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.82); }
+    .yollar { grid-template-columns: 1fr; }
+    .savol { padding: var(--b-5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ty *, .ty *::before, .ty *::after { transition: none !important; }
+    .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); }
+    .yollar :global(.karta.ochiq .karta-ichi) { transform: none; }
+    .yollar :global(.karta.ochiq .yuz.old) { visibility: hidden; }
+    .yollar :global(.yuz.orqa) { transform: none; visibility: hidden; }
+    .yollar :global(.karta.ochiq .yuz.orqa) { visibility: visible; }
+  }
+</style>
