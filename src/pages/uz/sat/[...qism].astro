@@ -1,0 +1,112 @@
+---
+// SAT bo'limining "tez orada" sahifalari. Ro'yxat: src/data/satSahifalar.ts
+import SatQobiq from '../../../layouts/SatQobiq.astro';
+import { satSahifalar, satGuruhlar, turiNomi, type SatSahifa } from '../../../data/satSahifalar';
+import { yol } from '../../../lib/yol';
+
+export function getStaticPaths() {
+  return satSahifalar.filter((s) => !s.tayyor).map((s) => ({
+    params: { qism: s.qism.replace(/\/$/, '') },
+    props: { sahifa: s },
+  }));
+}
+
+interface Props { sahifa: SatSahifa }
+const { sahifa } = Astro.props;
+const guruh = satGuruhlar.find((g) => g.sahifalar.includes(sahifa))?.nomi ?? '';
+const TEKSHIRILGAN = '2026-11-04';
+const KEYINGI = '2026-12-04';
+---
+<SatQobiq
+  title={`${sahifa.nomi} · SAT`}
+  description={sahifa.tavsif}
+  turi={sahifa.turi}
+  bolim="sat"
+  holat="qoralama"
+  tekshirilgan={TEKSHIRILGAN}
+  keyingiTekshiruv={KEYINGI}
+  manbalar={sahifa.manbalar}
+  tekshirilmagan={sahifa.tekshirilmagan}
+>
+  <section class="ichki sahifa" aria-labelledby="sarlavha">
+    <p class="ustki">
+      <a href={yol('/uz/sat/')}>SAT</a>
+      <span aria-hidden="true">/</span>
+      <span>{guruh}</span>
+    </p>
+    <div class="bosh">
+      <p class="pill-qator">
+        <span class="pill">{turiNomi[sahifa.turi]}</span>
+        <span class="pill pill-chiziq">Qoralama</span>
+      </p>
+      <h1 id="sarlavha">{sahifa.nomi}</h1>
+      <p class="tavsif">{sahifa.tavsif}</p>
+    </div>
+
+    <div class="tez-orada" role="note">
+      <span class="tez-belgi" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg></span>
+      <div>
+        <p class="tez-sarlavha">Tez orada</p>
+        <p class="tez-matn">Bu sahifa hali tayyor emas. Hozircha faqat reja bor.</p>
+      </div>
+    </div>
+
+    <dl class="maydonlar">
+      <div><dt>Til</dt><dd>O'zbekcha</dd></div>
+      <div><dt>Sahifa turi</dt><dd>{turiNomi[sahifa.turi]}</dd></div>
+      <div><dt>Bo'lim</dt><dd>SAT</dd></div>
+      <div><dt>Holat</dt><dd>Qoralama</dd></div>
+    </dl>
+
+    <p><a class="qaytish" href={yol('/uz/sat/')}>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+      SAT bo'limiga qaytish</a></p>
+  </section>
+</SatQobiq>
+
+<style>
+  /* Dizayn: Tayanch-SAT-dizayn.md (Natijalar va Savol banki sarlavhasi) */
+  .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-8); }
+  .ustki { display: flex; flex-wrap: wrap; gap: var(--b-2); font-size: var(--matn-kichik); color: var(--matn-sust); font-weight: 600; margin-bottom: calc(-1 * var(--b-4)); }
+  .ustki a { color: var(--rang-havola); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  .sahifa h1 { font-size: 46px; line-height: 1.1; font-weight: 900; letter-spacing: -0.5px; }
+  .tavsif { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .tez-orada {
+    border: 1.5px solid var(--matn);
+    border-radius: var(--r-katta);
+    padding: var(--b-6);
+    display: flex; align-items: flex-start; gap: var(--b-4);
+  }
+  .tez-belgi {
+    flex: none; width: 40px; height: 40px; border-radius: var(--r-yon);
+    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tez-sarlavha { font-weight: 800; font-size: 18px; }
+  .tez-matn { color: var(--matn-ikkinchi); }
+  .maydonlar {
+    margin: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--b-3);
+  }
+  .maydonlar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .maydonlar dt { font-size: var(--matn-kichik); color: var(--matn-sust); }
+  .maydonlar dd { margin: 0; font-weight: 700; }
+  .qaytish {
+    display: inline-flex; align-items: center; gap: var(--b-2);
+    min-height: 52px; padding: 0 22px 0 18px;
+    border-radius: var(--r-toliq);
+    background: var(--sirt-ikkinchi); color: var(--matn);
+    text-decoration: none; font-weight: 700;
+  }
+  .qaytish:hover { background: var(--chiziq); }
+  @media (max-width: 640px) {
+    .sahifa { padding-top: 28px; gap: var(--b-6); }
+    .sahifa h1 { font-size: 34px; }
+    .tavsif { font-size: 17px; }
+  }
+</style>

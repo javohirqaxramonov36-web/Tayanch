@@ -6,6 +6,8 @@
   --rang-asosiy-toq: #2f40e0;      /* hover */
   --rang-asosiy-qorada: #8b97ff;   /* qora fon ustidagi ko'k (matn va chiziq) */
   --rang-asosiy-matn: #ffffff;
+  --rang-asosiy-och: #eef0ff;      /* SAT dizayni: to'g'ri javob varianti foni */
+  --rang-havola: #4255ff;          /* matn ko'rinishidagi havola va ta'kid (fon ustida) */
 
   --fon: #ffffff;
   --fon-ikkinchi: #f5f6fa;         /* tinch sahna foni */
@@ -52,10 +54,47 @@
 
   /* Shakl */
   --r-kichik: 6px;
+  --r-yon: 12px;                   /* SAT dizayni: yon panel qatorlari, kichik tugmalar */
+  --r-logo: 10px;
   --r-orta: 16px;
   --r-katta: 24px;
   --r-toliq: 999px;
   --soya: 0 4px 16px rgba(15, 17, 21, 0.08);
+  --parda: rgba(15, 17, 21, 0.5);  /* telefonda panel ochilganda orqa fon */
+
+  /* Qobiq (SAT sidebar) */
+  --yon-kenglik: 288px;
+  --yon-yigilgan: 72px;
+
+  color-scheme: light;
+}
+
+/* Qorong'i mavzu. data-mavzu ni <head> dagi skript qo'yadi (BoshQism.astro):
+   avval localStorage dagi tanlov, bo'lmasa prefers-color-scheme.
+   Palitra o'zgarmaydi: oq, qora, ko'k. */
+:root[data-mavzu='qorongi'] {
+  --rang-asosiy: #4255ff;          /* fon sifatida: oq matn bilan 5.3:1 */
+  --rang-asosiy-toq: #2f40e0;
+  --rang-havola: #8b97ff;          /* qora fonda matn: 6.9:1 */
+  --rang-asosiy-och: #1b1e26;
+
+  --fon: #0f1115;
+  --fon-ikkinchi: #1b1e26;
+  --sirt: #0f1115;
+  --sirt-ikkinchi: #2a2e38;
+  --chiziq: #2a2e38;
+  --chiziq-kuchli: #2a2e38;
+  --matn: #ffffff;
+  --matn-ikkinchi: #b4b9c8;
+  --matn-sust: #b4b9c8;
+
+  --rang-ogoh-fon: #1b1e26;
+  --rang-ogoh-matn: #ffffff;
+
+  --soya: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --parda: rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
 }
 
 @media (max-width: 640px) {

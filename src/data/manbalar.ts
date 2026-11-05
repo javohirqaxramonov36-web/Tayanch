@@ -34,6 +34,15 @@ export const manbalar: Manba[] = [
     izoh: "Rasmiy tayyorgarlik materiallari ro'yxati: Bluebook, Khan Academy, Question Bank va boshqalar.",
   },
   {
+    id: 'CB03',
+    nomi: 'SAT Structure (What\'s on the Test)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/structure',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-05',
+    izoh: "Reading and Writing: ikki modul, har biri 32 daqiqa, 54 savol, jami 64 daqiqa. Math: ikki modul, har biri 35 daqiqa, 44 savol, jami 70 daqiqa.",
+  },
+  {
     id: 'EY01',
     nomi: "2026-yil 2-ochiq stipendiya tanlovi e'loni (290 kvota, hujjatlar 1–15-noyabr)",
     tashkilot: "\"El-yurt umidi\" jamg'armasining rasmiy Telegram kanali",

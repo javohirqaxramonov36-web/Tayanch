@@ -1,0 +1,33 @@
+---
+// <head> ichidagi umumiy qism: meta teglar va mavzu skripti.
+// Mavzu skripti inline va sinxron: sahifa chizilishidan oldin data-mavzu qo'yiladi, rang miltillamaydi.
+// localStorage kalitlari faqat "tayanch:" bilan boshlanadi (o'chirish tugmasi shularni o'chiradi).
+interface Props {
+  title: string;
+  description: string;
+  holat: 'qoralama' | 'chop-etilgan';
+}
+const { title, description, holat } = Astro.props;
+const toliqSarlavha = title === 'Tayanch' ? 'Tayanch' : `${title} · Tayanch`;
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{toliqSarlavha}</title>
+<meta name="description" content={description} />
+{holat === 'qoralama' && <meta name="robots" content="noindex" />}
+<meta name="color-scheme" content="light dark" />
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+<script is:inline>
+  (function () {
+    var d = document.documentElement;
+    var m = null;
+    try { m = localStorage.getItem('tayanch:mavzu'); } catch (e) {}
+    if (m !== 'yorug' && m !== 'qorongi') {
+      m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'qorongi' : 'yorug';
+    }
+    d.setAttribute('data-mavzu', m);
+    try {
+      if (localStorage.getItem('tayanch:sidebar') === 'yigilgan') d.setAttribute('data-sidebar', 'yigilgan');
+    } catch (e) {}
+  })();
+</script>

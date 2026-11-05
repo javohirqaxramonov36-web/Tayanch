@@ -1,0 +1,56 @@
+---
+// SAT bo'limi qobig'i: chapda yon panel (SatYon), o'ngda kontent.
+// Dizayn: Tayanch-SAT-dizayn.md (Main, Natijalar, Savol banki). Footer va sahifa oxiri bloki dizaynda yo'q.
+// Props = T1'dagi majburiy maydonlar (Asosiy bilan bir xil).
+import '../styles/global.css';
+import BoshQism from '../components/BoshQism.astro';
+import SatYon from '../components/SatYon.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  til?: 'uz' | 'en';
+  turi: 'bolim-kirishi' | 'mashq' | 'vosita' | 'qollanma';
+  bolim?: 'sat';
+  holat: 'qoralama' | 'chop-etilgan';
+  tekshirilgan?: string;
+  keyingiTekshiruv?: string;
+  manbalar?: string[];
+  tekshirilmagan?: string[];
+}
+
+const { title, description, til = 'uz', holat } = Astro.props;
+---
+<!doctype html>
+<html lang={til}>
+  <head>
+    <BoshQism title={title} description={description} holat={holat} />
+  </head>
+  <body class="sat-qobiq">
+    <a class="otish" href="#asosiy" data-panel-tashqari>Asosiy matnga o'tish</a>
+    <SatYon />
+    <div class="kontent-ustun" data-panel-tashqari>
+      <main id="asosiy">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  .sat-qobiq .kontent-ustun { min-width: 0; }
+  .sat-qobiq .kontent-ustun .ichki { max-width: 960px; padding-inline: var(--b-4); padding-bottom: var(--b-16); }
+
+  @media (min-width: 1024px) {
+    .sat-qobiq {
+      display: grid;
+      grid-template-columns: var(--yon-kenglik) minmax(0, 1fr);
+      align-items: start;
+    }
+    [data-sidebar='yigilgan'] .sat-qobiq { grid-template-columns: var(--yon-yigilgan) minmax(0, 1fr); }
+    .sat-qobiq > .yon { grid-column: 1; grid-row: 1; }
+    .sat-qobiq > .kontent-ustun { grid-column: 2; grid-row: 1; min-height: 100vh; display: flex; flex-direction: column; }
+    .sat-qobiq > .kontent-ustun > main { flex: 1; }
+    .sat-qobiq .kontent-ustun .ichki { padding-inline: var(--b-10); margin: 0; max-width: calc(960px + 2 * var(--b-10)); }
+  }
+</style>
