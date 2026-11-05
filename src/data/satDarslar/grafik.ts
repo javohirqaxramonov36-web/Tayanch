@@ -1,0 +1,86 @@
+// Funksiya grafigi: 5 ta mashq. Tayanch uchun yozilgan, rasmiy SAT savoli emas.
+// Koordinatalar (x; y) ko'rinishida: o'nli kasr vergul bilan yozilgani uchun ajratuvchi nuqtali vergul.
+import type { DarsSavol } from './turlar';
+
+export const grafikSavollar: DarsSavol[] = [
+  {
+    id: 'grafik-1',
+    modul: 'grafik',
+    mavzu: "To'g'ri chiziq",
+    qiyinlik: 'oson',
+    matn: "y = 2x − 3 to'g'ri chizig'i y o'qini qaysi nuqtada kesadi?",
+    variantlar: [
+      { matn: '(0; 3)', xato: "Ishora xatosi: b = −3 o'rniga 3 olingan" },
+      { matn: '(0; −3)' },
+      { matn: '(1,5; 0)', xato: "x o'qi bilan kesishish nuqtasi topilgan" },
+      { matn: '(0; 2)', xato: "Burchak koeffitsienti m bilan adashtirilgan" },
+    ],
+    togri: 1,
+    yechim: "y o'qida x = 0. y = 2 · 0 − 3 = −3. Nuqta: (0; −3).",
+    verified: false,
+  },
+  {
+    id: 'grafik-2',
+    modul: 'grafik',
+    mavzu: 'Ikki chiziq kesishishi',
+    qiyinlik: "o'rta",
+    matn: "y = 2x + 1 va y = −x + 7 to'g'ri chiziqlari qaysi nuqtada kesishadi?",
+    variantlar: [
+      { matn: '(5; 2)', xato: "x va y koordinatalari almashtirilgan" },
+      { matn: '(6; 13)', xato: "Hadni o'tkazishda ishora xatosi: 2x − x = 6" },
+      { matn: '(2; 5)' },
+      { matn: '(−2; −3)', xato: "Ishora xatosi: 3x = −6 olingan" },
+    ],
+    togri: 2,
+    yechim: "2x + 1 = −x + 7 → 3x = 6 → x = 2. y = 2 · 2 + 1 = 5. Tekshirish: −2 + 7 = 5.",
+    verified: false,
+  },
+  {
+    id: 'grafik-3',
+    modul: 'grafik',
+    mavzu: "Parabola: simmetriya o'qi",
+    qiyinlik: "o'rta",
+    matn: "f(x) = 2(x − 3)² − 8 parabolasining simmetriya o'qi qaysi?",
+    variantlar: [
+      { matn: 'x = 3' },
+      { matn: 'x = −3', xato: "Ishora xatosi: (x − h) da h = 3, −3 emas" },
+      { matn: 'y = −8', xato: "Uchning y koordinatasi bilan adashtirilgan" },
+      { matn: 'x = 6', xato: "h ni a ga ko'paytirilgan: 2 · 3" },
+    ],
+    togri: 0,
+    yechim: "a(x − h)² + k ko'rinishida uch (h; k) = (3; −8). Simmetriya o'qi uchdan o'tadi: x = 3.",
+    verified: false,
+  },
+  {
+    id: 'grafik-4',
+    modul: 'grafik',
+    mavzu: 'Parabola: eng kichik qiymat',
+    qiyinlik: 'qiyin',
+    matn: "f(x) = x² − 6x + 5 funksiyasining eng kichik qiymati nechaga teng?",
+    variantlar: [
+      { matn: '3', xato: "Uchning x koordinatasi javob deb olingan" },
+      { matn: '5', xato: "c (y o'qi bilan kesishish) bilan adashtirilgan" },
+      { matn: '32', xato: "Ishora xatosi: uch x = −3 deb olingan" },
+      { matn: '−4' },
+    ],
+    togri: 3,
+    yechim: "Uch: x = −b / (2a) = 6 / 2 = 3. f(3) = 9 − 18 + 5 = −4. Boshqa usul: x² − 6x + 5 = (x − 3)² − 4, eng kichik qiymat −4.",
+    verified: false,
+  },
+  {
+    id: 'grafik-5',
+    modul: 'grafik',
+    mavzu: 'Tenglamalar sistemasi',
+    qiyinlik: 'qiyin',
+    matn: "y = 3x + 2 va y = 3x − 4 tenglamalar sistemasi nechta yechimga ega?",
+    variantlar: [
+      { matn: 'Bitta', xato: "Ikki to'g'ri chiziq doim kesishadi deb olingan" },
+      { matn: "Yechimi yo'q" },
+      { matn: "Cheksiz ko'p", xato: "Qiyalik bir xil bo'lsa chiziq ham bir xil deb olingan" },
+      { matn: 'Ikkita', xato: "Ikki tenglama ikki yechim beradi deb olingan" },
+    ],
+    togri: 1,
+    yechim: "Qiyaliklari teng (3), y o'qidagi nuqtalari har xil (2 va −4): chiziqlar parallel, kesishmaydi. 3x + 2 = 3x − 4 → 2 = −4, bu noto'g'ri tenglik.",
+    verified: false,
+  },
+];
