@@ -9,7 +9,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | Qavat | Nomi | Manzil | Holat (`bolimlar.ts`) | Nima bor |
 | --- | --- | --- | --- | --- |
 | 1 | Navigator | `/uz/` | doim ochiq | Bosh sahifa, muddatlar, manbalar, maxfiylik |
-| 2 | Top Admission | `/uz/top-admission/` | tez-orada (sahifa PR #12 da, ochish muallif qarori bilan) | Kirish sahifasi (PR #12, merge kutilmoqda) + Topshirish yo'li vositasi |
+| 2 | Top Admission | `/uz/top-admission/` | tez-orada (ochish muallif qarori bilan) | Kirish sahifasi (qoralama) + Topshirish yo'li vositasi |
 | 3 | SAT prep | `/uz/sat/` | ochiq | To'liq bo'lim |
 | 4 | IELTS prep | `/uz/ielts/` | ochiq | To'liq bo'lim |
 | 5 | EYUF prep | `/uz/eyuf/` | tez-orada | Faqat "qavat qurilmoqda" sahifasi |
@@ -23,7 +23,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | #8 | **IELTS bo'limi** (`Tayanch-IELTS-dizayn.md`): kirish, Reading qo'llanmasi (mini-mashq bilan), 30 kunlik reja. Listening, Writing Task 2, Speaking, General English "tez orada" |
 | #9 | Bo'limlar bitta saytga bog'landi (SAT va IELTS ochildi) |
 | #10 | **Tayanch binosi**: Lift (5 qavat tugmasi; telefonda pastki panel), Qavat yo'li ("3-qavat › Mashq › Test"), Zina (qo'shni qavatlar), 2- va 5-qavat "qurilmoqda" sahifalari |
-| #12 (ochiq PR) | **Top Admission kirish sahifasi** (maket A): Topshirish yo'li kartasi, muddat chiptalari muhr bilan (EY01, TB01), yo'nalishlar (TB01, SH01), muallif bloki, Zina, MRZ. `Asosiy` qolipida (yon panelsiz). Chiptada qolgan kun (brauzer, Toshkent sanasi) va "Mening yo'lim" bloki (`tayanch-topshirish-yoli` dan faqat o'qiydi). `bolimlar.ts`: top-admission `tez-orada` (muallif qarori, 2026-11-05) |
+| #12, #14 | **Top Admission kirish sahifasi** (maket A): Topshirish yo'li kartasi, muddat chiptalari muhr bilan (EY01, TB01), yo'nalishlar (TB01, SH01), muallif bloki, Zina, MRZ. `Asosiy` qolipida (yon panelsiz). Chiptada qolgan kun (brauzer, Toshkent sanasi) va "Mening yo'lim" bloki (`tayanch-topshirish-yoli` dan faqat o'qiydi). `bolimlar.ts`: top-admission `tez-orada` (muallif qarori, 2026-11-05). #14: "Muallif yo'li" nomi `h2`. Sinalgan (2026-11-05): muddat holatlari (Bugun, kun ochilishiga, kun qoldi, O'tgan), 375px, qorong'i mavzu, Tab tartibi, a11y semantikasi, jonli sayt. Sinalmagan: haqiqiy VoiceOver |
 | #11 | **Topshirish yo'li** (`/uz/top-admission/vosita/topshirish-yoli/`): 3 savol → mos ariza yo'llari, aylanadigan "pasport" kartalar, muhrli rasmiy faktlar. Holati: qoralama |
 
 ## 3. Nima qurilmagan (navbat taklifi)
@@ -33,7 +33,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 3. **5-qavat EYUF**: dizayn fayli hali yo'q.
 4. Tez-oradagi sahifalar: SAT (Kitoblar, Strategiya, Math va Desmos, Reading & Writing, Vaqt va retake), IELTS (Listening, Writing Task 2, Speaking, General English).
 
-Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF. Artboard'lar: Main/Kirish (A, PR #12), Burslar (B), Vosita (C, qurilgan), Lift* (D, qurilgan). Har birining yorug', qorong'i va telefon varianti bor.
+Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF. Artboard'lar: Main/Kirish (A, qurilgan), Burslar (B), Vosita (C, qurilgan), Lift* (D, qurilgan). Har birining yorug', qorong'i va telefon varianti bor.
 
 ## 4. Qabul qilingan qarorlar
 
@@ -61,6 +61,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 6. IELTS va EYUF uchun "bog'liq emaslik" eslatmasi matni tekshirilmagan (IELTS'da "matn tekshiriladi" yorlig'i turibdi).
 7. British Council'ning bepul mashq testlari sahifasiga bu mashinadan ulanib bo'lmadi: IELTS'dagi qatori "tekshirilmoqda".
 8. Telegram kanal manzili hali yo'q (hamma joyda "tez orada").
+9. 2-qavat Top Admission qachon `ochiq` bo'ladi (`bolimlar.ts`) va kirish sahifasi qachon "chop-etilgan" bo'ladi.
 
 ## 6. Fayl nomlash qoidalari
 
