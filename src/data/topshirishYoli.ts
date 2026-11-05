@@ -65,6 +65,8 @@ export interface Yol {
   id: string;
   nomi: string;
   ikonka: keyof typeof IKONKA;
+  /** Pasport sarlavhasidagi yo'nalish kodi (maket): "UZ → US" */
+  kod: string;
   tavsif: string;
   qadamlar: string[];
   faktlar: Fakt[];
@@ -81,7 +83,7 @@ const eyufYopilish = `${eK}-${OYLAR[eO - 1]}, ${eyufMuddat.soat}`;
 
 export const YOLLAR: Record<string, Yol> = {
   commonapp: {
-    id: 'commonapp', nomi: 'Common App', ikonka: 'hujjat',
+    id: 'commonapp', nomi: 'Common App', kod: 'UZ → US', ikonka: 'hujjat',
     tavsif: "Bitta ariza bilan ko'plab AQSH kollejlariga topshirish platformasi.",
     qadamlar: ['Akkaunt va profil', "Kollejlar ro'yxatini tuzish", 'Esse va tavsiyanomalar', 'Har kollejga alohida yuborish'],
     faktlar: [
@@ -93,7 +95,7 @@ export const YOLLAR: Record<string, Yol> = {
     tekshirilmagan: ["A'zo kollejlar soni", '2026–27 esse mavzulari', "Deadline'lar (har kollejda alohida)", 'Magistraturaga tegishliligi'],
   },
   coalition: {
-    id: 'coalition', nomi: 'Coalition (Scoir orqali)', ikonka: 'yol',
+    id: 'coalition', nomi: 'Coalition (Scoir orqali)', kod: 'UZ → US', ikonka: 'yol',
     tavsif: "Coalition a'zo kollejlariga Scoir platformasi orqali ariza.",
     qadamlar: ['Bepul Scoir akkaunti', 'Profil va hujjatlar', "Coalition a'zo kollejni tanlash", 'Ariza yuborish'],
     faktlar: [
@@ -104,7 +106,7 @@ export const YOLLAR: Record<string, Yol> = {
     tekshirilmagan: ['Xalqaro talabalar uchun shartlar', "A'zo kollejlar ro'yxati"],
   },
   ucas: {
-    id: 'ucas', nomi: 'UCAS', ikonka: 'hujjat',
+    id: 'ucas', nomi: 'UCAS', kod: 'UZ → GB', ikonka: 'hujjat',
     tavsif: 'Buyuk Britaniya bakalavriatiga ariza markazi.',
     qadamlar: ["UCAS'da ro'yxatdan o'tish", 'Kurslarni tanlash', 'Personal statement va tavsiyanoma', "To'lov va yuborish"],
     faktlar: [
@@ -114,7 +116,7 @@ export const YOLLAR: Record<string, Yol> = {
     tekshirilmagan: ["2027 sikli ariza to'lovi miqdori", "Deadline'lar", "Grant va stipendiyalar (universitetga bog'liq)"],
   },
   turkiye: {
-    id: 'turkiye', nomi: 'Türkiye Bursları', ikonka: 'yulduz',
+    id: 'turkiye', nomi: 'Türkiye Bursları', kod: 'UZ → TR', ikonka: 'yulduz',
     tavsif: 'Turkiya hukumatining xalqaro talabalar uchun stipendiya dasturi.',
     qadamlar: ['Portalda ariza: 10-yanvar – 20-fevral', 'Baholash: mart–aprel', 'Intervyu: aprel–iyun', 'Natija: avgust boshi'],
     faktlar: [
@@ -125,7 +127,7 @@ export const YOLLAR: Record<string, Yol> = {
     tekshirilmagan: ['2027-yil e\'loni (taqvimda yil yozilmagan)', "Daraja bo'yicha talablar", 'Stipendiya qamrovi va miqdori'],
   },
   hungary: {
-    id: 'hungary', nomi: 'Stipendium Hungaricum', ikonka: 'yulduz',
+    id: 'hungary', nomi: 'Stipendium Hungaricum', kod: 'UZ → HU', ikonka: 'yulduz',
     tavsif: 'Vengriya hukumatining hamkor davlatlar uchun stipendiyasi.',
     qadamlar: ["Rasmiy e'lonni kuting", 'Dasturni tanlang', 'Onlayn ariza', 'Yuboruvchi tashkilot (sending partner) jarayoni'],
     faktlar: [
@@ -134,7 +136,7 @@ export const YOLLAR: Record<string, Yol> = {
     tekshirilmagan: ["2027/28 e'loni va muddati (hali chiqmagan)", "O'zbekiston uchun ochiq darajalar", 'Sending partner talablari'],
   },
   eyuf: {
-    id: 'eyuf', nomi: 'El-yurt umidi', ikonka: 'qalpoq',
+    id: 'eyuf', nomi: 'El-yurt umidi', kod: 'UZ', ikonka: 'qalpoq',
     tavsif: "O'zbekiston davlat jamg'armasining xorijda o'qish uchun stipendiyasi.",
     qadamlar: ['Qabul xati va hujjatlar', 'el-yurt.uz/application orqali ariza', 'Tanlov bosqichlari', 'Natija'],
     faktlar: [
@@ -145,14 +147,14 @@ export const YOLLAR: Record<string, Yol> = {
     tekshirilmagan: ['Yosh chegarasi', 'Til sertifikati talabi', 'Qabul xati sharti va tanlov bosqichlari'],
   },
   portal: {
-    id: 'portal', nomi: "Universitetning o'z portali", ikonka: 'bino',
+    id: 'portal', nomi: "Universitetning o'z portali", kod: 'UZ → ?', ikonka: 'bino',
     tavsif: "Ko'p universitetlar arizani o'z saytida qabul qiladi.",
     qadamlar: ['"International admissions" sahifasini toping', "Talab va deadline'ni yozib oling", "Moliyaviy yordam sahifasini o'qing", 'Portalda ariza'],
     faktlar: [],
     tekshirilmagan: ["Hammasi universitetga bog'liq: har birini o'sha universitetning rasmiy sahifasida tekshiring"],
   },
   pathway: {
-    id: 'pathway', nomi: 'Pathway dasturi', ikonka: 'globus',
+    id: 'pathway', nomi: 'Pathway dasturi', kod: 'UZ → ?', ikonka: 'globus',
     tavsif: 'Universitetga tayyorlov dasturi orqali kirish yo\'li (masalan Kaplan).',
     qadamlar: ['Dastur va hamkor universitetni tanlash', 'Dastur talablarini tekshirish', 'Ariza', "Dasturdan keyin universitetga o'tish"],
     faktlar: [],

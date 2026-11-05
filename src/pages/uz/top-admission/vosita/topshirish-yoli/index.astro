@@ -22,6 +22,7 @@ import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
     <footer class="ty-oxir">
       <p><strong>Natija kafolatlanmaydi.</strong> Vosita qabul yoki grant ehtimolini hisoblamaydi.</p>
       <p>Tayanch Common App, UCAS, Coalition, Türkiye Bursları, Stipendium Hungaricum va El-yurt umidi jamg'armasi bilan bog'liq emas.</p>
+      <div class="mrz" aria-hidden="true"><p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p><p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p></div>
     </footer>
   </div>
 </Asosiy>
@@ -30,4 +31,8 @@ import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
   .ty-sahifa { display: grid; gap: var(--b-14); }
   .ty-oxir { border-top: 1.5px solid var(--matn); padding-top: var(--b-6); display: grid; gap: var(--b-2); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .ty-oxir strong { color: var(--matn); }
+  /* MRZ lentasi: pasport metaforasi, shaxsiy ma'lumot yo'q (DESIGN.md) */
+  .mrz { margin-top: var(--b-2); background: var(--fon-ikkinchi); border-radius: var(--r-orta) var(--r-orta) 0 0; padding: 14px var(--b-4); display: grid; gap: 2px; overflow: hidden; }
+  .mrz p { font-weight: 700; font-size: 16px; letter-spacing: .22em; color: var(--matn-ikkinchi); white-space: nowrap; overflow: hidden; }
+  @media (max-width: 640px) { .mrz p { font-size: 13px; letter-spacing: .18em; } }
 </style>

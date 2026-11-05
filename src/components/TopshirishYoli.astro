@@ -17,6 +17,7 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       <h1>Topshirish yo'li</h1>
       <p class="kirish">Uchta savolga javob bering: qaysi davlat, qaysi daraja va grant kerakmi. Sizga mos ariza yo'llari chiqadi. Har kartani aylantirsangiz, rasmiy manbadagi faktlar va hali tekshirilmagan joylar ko'rinadi.</p>
       <div class="yorliqlar">
+        <span class="pill pill-namuna" id="namuna-yorliq" hidden>Namuna</span>
         <span class="pill">Javoblar faqat shu brauzerda</span>
         <span class="pill">Qabul ehtimoli hisoblanmaydi</span>
       </div>
@@ -58,7 +59,7 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   import { yollarniTanla, type Javoblar } from '../lib/yollarniTanla';
 
   type Fakt = { matn: string; manbaId: string; muddat?: string; vaqtli?: boolean };
-  type Yol = { id: string; nomi: string; ikonka: string; tavsif: string; qadamlar: string[]; faktlar: Fakt[]; tekshirilmagan: string[] };
+  type Yol = { id: string; nomi: string; kod: string; ikonka: string; tavsif: string; qadamlar: string[]; faktlar: Fakt[]; tekshirilmagan: string[] };
   type Malumot = {
     SAVOLLAR: Record<string, { variantlar: { id: string; nomi: string; izoh?: string }[] }>;
     YOLLAR: Record<string, Yol>;
@@ -148,9 +149,13 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       tepa.append(ik, el('span', 'pill' + (birinchi ? ' kok' : ''), birinchi ? "Asosiy yo'l" : "Qo'shimcha yo'l"));
       old.append(tepa, el('h3', null, y.nomi), el('p', 'tavsif', y.tavsif));
       if (yopiq) old.append(el('p', 'yopiq-xabar', "Bu tanlov yopildi, keyingi e'lonni rasmiy kanalda kuting"));
-      old.append(el('span', 'qadam-yorliq', "Umumiy yo'naltiruvchi qadamlar"));
+      old.append(el('span', 'pill pill-umumiy', "Umumiy yo'naltiruvchi qadamlar"));
       const ol = el('ol', 'qadamlar');
-      y.qadamlar.forEach((q) => ol.append(el('li', null, q)));
+      y.qadamlar.forEach((q, n) => {
+        const li = el('li');
+        li.append(el('span', 'raqamcha', String(n + 1)), el('span', null, q));
+        ol.append(li);
+      });
       old.append(ol);
       const past = el('div', 'karta-past');
       past.append(el('span', 'meta sanoq',
@@ -163,20 +168,25 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
 
       // Orqa yuz (pasport)
       const orqa = el('div', 'yuz orqa');
-      orqa.append(el('h3', null, y.nomi));
+      const pasport = el('div', 'pasport-bosh');
+      pasport.append(el('h3', null, y.nomi), el('span', 'kod', y.kod));
+      orqa.append(pasport);
       if (faktlar.length) {
         orqa.append(el('span', 'orqa-sarlavha', 'Rasmiy manbada'));
         const fl = el('ul', 'faktlar');
         faktlar.forEach((f) => {
           const m = M.MANBALAR[f.manbaId];
           const li = el('li');
-          li.append(el('span', null, f.matn));
-          const qator = el('span', 'fakt-qator');
-          const muhr = el('span', 'muhr', `Tekshirilgan · ${m.sana}`);
+          const matn = el('span', 'fakt-matn');
+          matn.append(el('span', null, f.matn));
           const a = el('a', null, `${f.manbaId} · ${m.tashkilot}`);
           a.setAttribute('href', m.havola); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener');
-          qator.append(muhr, a);
-          li.append(qator);
+          matn.append(a);
+          const muhr = el('span', 'muhr');
+          muhr.setAttribute('role', 'img');
+          muhr.setAttribute('aria-label', `Tekshirilgan ${m.sana}`);
+          muhr.append(el('b', null, 'TEKSHIRILGAN'), el('span', null, m.sana));
+          li.append(matn, muhr);
           fl.append(li);
         });
         orqa.append(fl);
@@ -185,17 +195,18 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       const yl = el('ul', 'yoq');
       y.tekshirilmagan.forEach((t) => {
         const li = el('li');
-        li.append(el('span', 'ogoh-yorliq', 'tekshirilmagan'), el('span', null, t));
+        li.append(el('span', 'ogoh-yorliq', 'tekshirish kerak'), el('span', null, t));
         yl.append(li);
       });
       orqa.append(yl);
       const qayt = el('button', 'tugma qayt-tugma', 'Orqaga');
+      qayt.setAttribute('aria-label', `${y.nomi}: orqaga`);
       qayt.type = 'button';
       orqa.append(qayt);
 
       const ayl = (ochiq: boolean) => {
         // Orqa yuz absolute: balandlik max(old, orqa); orqa chegarasi ham qo'shiladi, matn kesilmasin.
-        ichi.style.minHeight = ochiq ? Math.max(old.offsetHeight, orqa.scrollHeight + (orqa.offsetHeight - orqa.clientHeight)) + 'px' : '';
+        ichi.style.minHeight = ochiq ? Math.max(old.offsetHeight, orqa.scrollHeight + (orqa.offsetHeight - orqa.clientHeight) + 2) + 'px' : '';
         k.classList.toggle('ochiq', ochiq);
         old.setAttribute('aria-hidden', ochiq ? 'true' : 'false');
         orqa.setAttribute('aria-hidden', ochiq ? 'false' : 'true');
@@ -230,7 +241,10 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       yollarniTanla(javob).forEach((id, i) => quti.append(kartaChiz(id, i === 0)));
     };
 
-    const yangila = () => { savollarniChiz(); zinani(); natijaniChiz(); };
+    const yangila = () => {
+      savollarniChiz(); zinani(); natijaniChiz();
+      (document.getElementById('namuna-yorliq') as HTMLElement).hidden = !namunami;
+    };
 
     document.getElementById('ty-qayta')!.addEventListener('click', () => {
       javob = {}; namunami = false;
@@ -254,6 +268,8 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--matn-sust); }
   .ty :global(.pill) { display: inline-flex; align-items: center; gap: 6px; font-size: var(--matn-mayda); font-weight: 700; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); }
   .ty :global(.pill.kok) { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .ty :global(.pill-namuna) { background: var(--fon); border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  .ty :global(.pill[hidden]) { display: none; }
 
   /* Bosh qism */
   .ty-bosh { display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--b-10); align-items: center; }
@@ -323,11 +339,23 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   }
   .yollar :global(.yuz.old) { transition: box-shadow .2s, transform .2s; }
   .yollar :global(.karta:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--matn); }
-  .yollar :global(.yuz.orqa) { transform: rotateY(180deg); background: var(--fon-ikkinchi); position: absolute; inset: 0; overflow: auto; }
+  /* Orqa yuz: pasport sahifasi (20px katakli fon, maket) */
+  .yollar :global(.yuz.orqa) {
+    transform: rotateY(180deg); position: absolute; inset: 0; overflow: auto;
+    background-color: var(--fon-ikkinchi);
+    background-image: linear-gradient(var(--chiziq) 1px, transparent 1px), linear-gradient(90deg, var(--chiziq) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .yollar :global(.pasport-bosh) { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); border-bottom: 1.5px solid var(--matn); padding-bottom: 10px; }
+  .yollar :global(.kod) { font-size: var(--matn-mayda); font-weight: 800; letter-spacing: .06em; color: var(--rang-havola); white-space: nowrap; }
   .yollar :global(.karta.asosiy-yol .yuz.old) { background: var(--qora); color: var(--rang-asosiy-matn); border-color: var(--qora-chiziq); }
   .yollar :global(.karta.asosiy-yol:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--rang-asosiy); }
   .yollar :global(.karta.asosiy-yol .yuz.old .tavsif),
-  .yollar :global(.karta.asosiy-yol .yuz.old .qadam-yorliq) { color: var(--qora-matn-ikkinchi); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .meta) { color: var(--qora-matn-ikkinchi); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .pill-umumiy) { background: var(--qora-chiziq); color: var(--rang-asosiy-matn); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .raqamcha) { border-color: var(--qora-matn-ikkinchi); }
+  /* Qorong'i mavzu: asosiy karta fon bilan qo'shilib ketmasin (maket) */
+  :global([data-mavzu='qorongi']) .yollar :global(.karta.asosiy-yol .yuz.old) { background: var(--fon-ikkinchi); border: 2px solid var(--rang-havola); }
   .yollar :global(.karta.asosiy-yol .yuz.old .ikonka) { color: var(--rang-asosiy-qorada); border-color: var(--qora-chiziq); background: var(--qora-sirt); }
   .yollar :global(.karta.asosiy-yol .yuz.old .tugma) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .yollar :global(.karta.asosiy-yol .yuz.old .tugma:hover) { background: var(--rang-asosiy-toq); }
@@ -337,27 +365,35 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   .yollar :global(.ikonka svg) { width: 24px; height: 24px; }
   .yollar :global(.tavsif) { color: var(--matn-ikkinchi); }
   .yollar :global(.yopiq-xabar) { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-weight: 700; font-size: 15px; }
-  .yollar :global(.qadam-yorliq) { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
-  .yollar :global(.qadamlar) { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; counter-reset: q; }
-  .yollar :global(.qadamlar li) { counter-increment: q; display: grid; grid-template-columns: 24px 1fr; gap: var(--b-2); font-size: 15px; }
-  .yollar :global(.qadamlar li::before) { content: counter(q); font-weight: 800; font-size: var(--matn-mayda); width: 22px; height: 22px; border-radius: var(--r-toliq); display: grid; place-items: center; border: 1.5px solid currentColor; opacity: .7; }
+  .yollar :global(.pill-umumiy) { align-self: flex-start; font-size: 12px; }
+  .yollar :global(.qadamlar) { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--b-2); }
+  .yollar :global(.qadamlar li) { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
+  .yollar :global(.raqamcha) { width: 22px; height: 22px; flex: none; border-radius: var(--r-toliq); border: 1.5px solid var(--matn-sust); display: grid; place-items: center; font-weight: 800; font-size: 12px; margin-top: 1px; }
   .yollar :global(.karta-past) { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
   .yollar :global(.karta-past .meta) { font-size: var(--matn-mayda); font-weight: 500; opacity: .75; }
   .yollar :global(.faktlar), .yollar :global(.yoq) { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-  .yollar :global(.faktlar li) { font-size: 15px; display: grid; gap: var(--b-1); }
-  .yollar :global(.fakt-qator) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .yollar :global(.faktlar li) { font-size: 15px; display: flex; gap: 10px; align-items: center; }
+  .yollar :global(.fakt-matn) { flex: 1; min-width: 0; display: grid; gap: 2px; line-height: 1.45; }
+  /* Muhr: faqat rasmiy manbada tekshirilgan faktda (DESIGN.md, Top Admission pasport detallari) */
   .yollar :global(.muhr) {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 2px 8px; border-radius: var(--r-kichik);
-    border: 1.5px solid var(--rang-asosiy); color: var(--rang-havola);
-    font-size: 12px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase;
+    width: 58px; height: 58px; flex: none; border-radius: 50%;
+    border: 2px dashed var(--rang-asosiy); outline: 1.5px solid var(--rang-asosiy); outline-offset: -6px;
+    color: var(--rang-havola); background: var(--fon);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+    transform: rotate(-8deg); text-align: center;
   }
+  :global([data-mavzu='qorongi']) .yollar :global(.muhr) { border-color: var(--rang-havola); outline-color: var(--rang-havola); }
+  .yollar :global(.muhr b) { font-size: 6px; letter-spacing: .03em; font-weight: 800; }
+  .yollar :global(.muhr span) { font-size: 8px; font-weight: 700; }
   .yollar :global(.faktlar a) { font-size: var(--matn-mayda); font-weight: 700; color: var(--rang-havola); text-decoration: none; }
   .yollar :global(.faktlar a:hover) { text-decoration: underline; }
-  .yollar :global(.yoq li) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-2); }
+  .yollar :global(.yoq li) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); display: flex; align-items: flex-start; gap: var(--b-2); }
+  .yollar :global(.yoq li > span:last-child) { flex: 1; min-width: 0; }
+  .yollar :global(.ogoh-yorliq) { flex: none; white-space: nowrap; margin-top: 1px; }
   .yollar :global(.ogoh-yorliq) { padding: 1px 8px; border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: 12px; font-weight: 700; }
   .yollar :global(.orqa-sarlavha) { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
-  .yollar :global(.qayt-tugma) { margin-top: auto; align-self: flex-start; }
+  .yollar :global(.qayt-tugma) { margin-top: auto; align-self: flex-start; background: var(--fon); border: 1.5px solid var(--matn); }
+  .yollar :global(.qayt-tugma:hover) { background: var(--fon-ikkinchi); }
   .sanoq { font-variant-numeric: tabular-nums; }
 
   @media (max-width: 760px) {
@@ -366,6 +402,9 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
     .savol-zinasi, .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.82); }
     .yollar { grid-template-columns: 1fr; }
     .savol { padding: var(--b-5); }
+    .yollar :global(.muhr) { width: 54px; height: 54px; }
+    .yollar :global(.muhr b) { font-size: 5.2px; letter-spacing: 0; }
+    .yollar :global(.muhr span) { font-size: 7.5px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .ty *, .ty *::before, .ty *::after { transition: none !important; }
