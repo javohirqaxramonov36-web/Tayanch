@@ -3,19 +3,21 @@
 Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq, interaktiv yo'riqnoma sayti.
 Astro, GitHub Pages (GitHub Actions orqali). Manzil: https://javohirqaxramonov36-web.github.io/Tayanch/
 
-## Bo'limlar
+## Tayanch binosi: 5 qavat
 
-Tayanch bitta sayt, ichida to'rt bo'lim. Har bo'lim alohida sayt emas, shu repodagi papka:
+Tayanch bitta sayt, 5 qavatli bino. Har qavat alohida sayt emas, shu repodagi papka:
 
-| Bo'lim | Manzil | Holat |
-| --- | --- | --- |
-| Top Admission | `/uz/top-admission/` | tez orada |
-| IELTS | `/uz/ielts/` | ochiq |
-| SAT | `/uz/sat/` | ochiq |
-| El-Yurt Umidi | `/uz/eyuf/` | tez orada |
+| Qavat | Nomi | Manzil | Holat |
+| --- | --- | --- | --- |
+| 1 | Navigator (bosh sahifa, muddatlar, manbalar) | `/uz/` | ochiq |
+| 2 | Top Admission | `/uz/top-admission/` | qurilmoqda |
+| 3 | SAT prep | `/uz/sat/` | ochiq |
+| 4 | IELTS prep | `/uz/ielts/` | ochiq |
+| 5 | EYUF prep | `/uz/eyuf/` | qurilmoqda |
 
-Holat `src/data/bolimlar.ts` da. "ochiq" bo'lim bosh sahifa kartasida, menyuda va har bo'lim yon panelidagi "Tayanch bo'limlari" guruhida havola bo'ladi.
-Yangi bo'lim: sahifalarni `src/pages/uz/<bolim>/` ga qo'shing, `BolimQobiq` qolipini ishlating, keyin holatni "ochiq" ga o'tkazing.
+Qavatlar `src/data/qavatlar.ts` da, 2–5 qavat holati `src/data/bolimlar.ts` dan olinadi.
+Qavatlar orasida o'tish: **Lift** (kompyuterda yon panel yoki menyuda, telefonda pastki panel), **Qavat yo'li** (sahifa tepasida) va **Zina** (qavat kirish sahifasi pastida). Tafsilot: `DESIGN.md`.
+Yangi qavat: sahifalarni `src/pages/uz/<bolim>/` ga qo'shing, `BolimQobiq` qolipini ishlating, keyin `bolimlar.ts` da holatni "ochiq" ga o'tkazing.
 
 ## Ishga tushirish
 
@@ -33,7 +35,7 @@ npm run build    # dist/ ga qurish
 | `astro.config.mjs` | `site` va `base` ("/Tayanch", harf katta-kichikligiga sezgir) |
 | `src/styles/tokens.css` | DESIGN.md dagi tokenlar. Kodda xom qiymat yozilmaydi |
 | `src/layouts/Asosiy.astro` | Umumiy qolip: menyu, sahifa oxiri bloki, footer |
-| `src/components/` | Menyu, Footer, SahifaOxiri, DeadlineRoyxati, MaqsadTesti |
+| `src/components/` | Menyu, Footer, SahifaOxiri, DeadlineRoyxati, MaqsadTesti, Lift, QavatYoli, Zina, BolimYon |
 | `src/data/bolimlar.ts` | 4 bo'lim va holati (`ochiq` yoki `tez-orada`) |
 | `src/data/manbalar.ts` | Manba jurnali |
 | `src/data/deadline.ts` | Deadline kalendari |

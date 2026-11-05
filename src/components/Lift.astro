@@ -13,8 +13,9 @@ interface Props { variant: 'yon' | 'menyu' | 'fokus' | 'pastki' }
 const { variant } = Astro.props;
 const joriy = joriyQavat(Astro.url.pathname);
 const jq = qavatI(joriy);
+// Yorliq ko'rinadigan matn bilan boshlanadi (WCAG 2.5.3): telefonda "3 SAT", boshqa joyda "3".
 const yorliq = (q: (typeof qavatlar)[number]) =>
-  `${q.raqam}-qavat, ${q.nomi}${q.holat === 'tez-orada' ? ', tez orada' : ''}`;
+  `${variant === 'pastki' ? `${q.raqam} ${q.qisqaNom}, ` : ''}${q.raqam}-qavat, ${q.nomi}${q.holat === 'tez-orada' ? ', tez orada' : ''}`;
 ---
 <nav
   class={`lift lift-${variant}`}
