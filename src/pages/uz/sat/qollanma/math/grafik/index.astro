@@ -46,8 +46,8 @@ const Y = (y: number) => 210 - 20 * y;
           <line x1="0" y1="210" x2="420" y2="210" /><line x1="210" y1="0" x2="210" y2="420" />
         </g>
         <g class="g-raqamlar" aria-hidden="true">
-          {panjara.filter((i) => i !== 0 && i % 2 === 0).map((i) => <text x={X(i)} y="224" text-anchor="middle">{i < 0 ? `−${-i}` : i}</text>)}
-          {panjara.filter((i) => i !== 0 && i % 2 === 0).map((i) => <text x="204" y={Y(i) + 4} text-anchor="end">{i < 0 ? `−${-i}` : i}</text>)}
+          {panjara.filter((i) => i !== 0 && i % 2 === 0 && Math.abs(i) < 10).map((i) => <text x={X(i)} y="224" text-anchor="middle">{i < 0 ? `−${-i}` : i}</text>)}
+          {panjara.filter((i) => i !== 0 && i % 2 === 0 && Math.abs(i) < 10).map((i) => <text x="204" y={Y(i) + 4} text-anchor="end">{i < 0 ? `−${-i}` : i}</text>)}
           <text x="410" y="200" text-anchor="end">x</text><text x="218" y="14">y</text>
         </g>
         <g clip-path="url(#g-kesim)">
@@ -144,11 +144,20 @@ const Y = (y: number) => 210 - 20 * y;
   };
   const belgilar = $('g-belgilar'), tutqichlar = $('g-tutqichlar');
   let bosishR = 14;
+  /** Nuqta va yozuv. Yozuv tutqichlar bilan to'qnashmasligi uchun nuqtaning chap-pastiga qo'yiladi,
+   *  chetga yaqin bo'lsa ichkariga suriladi. */
   function belgi(x: number, y: number, matn: string, sinf = '') {
     if (Math.abs(x) > 10.5 || Math.abs(y) > 10.5) return;
     const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', String(X(x))); c.setAttribute('cy', String(Y(y))); c.setAttribute('r', '5'); c.setAttribute('class', 'g-nuqta ' + sinf);
-    const t = document.createElementNS(NS, 'text'); t.setAttribute('x', String(Math.min(400, X(x) + 8))); t.setAttribute('y', String(Math.max(14, Y(y) - 8))); t.setAttribute('class', 'g-yozuv'); t.textContent = matn;
-    belgilar.append(c, t);
+    belgilar.append(c);
+    if (!matn) return;
+    const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'g-yozuv'); t.textContent = matn;
+    const kenglik = matn.length * 7.5;
+    const chapga = X(x) - 14 - kenglik > 4;
+    t.setAttribute('x', String(chapga ? X(x) - 14 : X(x) + 14));
+    t.setAttribute('text-anchor', chapga ? 'end' : 'start');
+    t.setAttribute('y', String(Math.min(410, Math.max(16, Y(y) + 22))));
+    belgilar.append(t);
   }
   // Tutqichlar rejim almashganda bir marta quriladi; sudrash davomida faqat joyi yangilanadi
   // (element DOM'dan olinsa pointer capture yo'qolib, sudrash uziladi).

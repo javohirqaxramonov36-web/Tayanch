@@ -164,9 +164,10 @@ const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
     const q = qiymatlar();
     const yozuv = $('a-p');
     yozuv.textContent = `(${q.cosM}; ${q.sinM})`;
+    // Yozuv aylana ichiga qaratiladi: o'ng yarimda nuqtaning chapiga, chap yarimda o'ngiga
     const ong = Math.cos(r) >= 0;
-    yozuv.setAttribute('x', String(px + (ong ? 12 : -12))); yozuv.setAttribute('text-anchor', ong ? 'start' : 'end');
-    yozuv.setAttribute('y', String(Math.min(388, Math.max(16, py + (Math.sin(r) >= 0 ? -12 : 22)))));
+    yozuv.setAttribute('x', String(px + (ong ? -14 : 14))); yozuv.setAttribute('text-anchor', ong ? 'end' : 'start');
+    yozuv.setAttribute('y', String(Math.min(388, Math.max(16, py + (Math.sin(r) >= 0 ? -16 : 26)))));
     const b = $('a-burchak');
     const yarim = r / 2;
     b.textContent = burchakMatni(theta);
