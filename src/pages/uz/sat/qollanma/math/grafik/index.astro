@@ -1,0 +1,343 @@
+---
+// Funksiya grafigi (2D, SVG): to'g'ri chiziq, parabola (uch shakl), ikki chiziq kesishishi.
+// Sudrash: chiziqda (0; b) va (1; m + b) tutqichlari, parabolada uch, kesishishda ikki chiziqning (0; b) tutqichlari.
+// Klaviatura: hamma qiymat slayderlar bilan ham boshqariladi.
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+
+const panjara = Array.from({ length: 21 }, (_, i) => i - 10);
+const X = (x: number) => 210 + 20 * x;
+const Y = (y: number) => 210 - 20 * y;
+---
+<DarsQolip
+  modul="grafik"
+  title="Funksiya grafigi · SAT"
+  description="SAT Math: y = mx + b, parabolaning uch shakli, simmetriya o'qi va ikki tenglama kesishishi interaktiv grafikda. 5 ta mashq."
+  yonalish="Algebra · Advanced Math"
+  sarlavha="Grafik: tenglama nimani chizadi"
+  lead="Har bir son grafikda biror narsani boshqaradi: m qiyalikni, b chiziq qayerdan o'tishini, h va k parabola uchini. Slayderni suring yoki nuqtani sudrang, tenglama shu zahoti o'zgaradi."
+  maqsadlar={[
+    "y = mx + b dagi m va b ni grafikdan o'qiy olasiz.",
+    "Parabolaning uch shaklidan uchni, simmetriya o'qini va ildizlarni topasiz.",
+    "Ikki tenglama kesishishini, yechimi yo'q va cheksiz ko'p holatlarni ajratasiz.",
+  ]}
+  xulosa={[
+    "y = mx + b: m qiyalik (x 1 ga oshganda y qancha o'zgaradi), b y o'qini kesish nuqtasi (0; b).",
+    "a(x − h)² + k: uch (h; k), simmetriya o'qi x = h. a > 0 bo'lsa yuqoriga, a < 0 bo'lsa pastga ochiladi.",
+    "ax² + bx + c da uch x = −b / (2a), y o'qini kesish nuqtasi (0; c).",
+    "Qiyaliklar teng, b har xil: chiziqlar parallel, yechim yo'q. Qiyalik ham, b ham teng: bir xil chiziq, cheksiz ko'p yechim.",
+  ]}
+  keyingi={{ nomi: 'Birlik aylana', qism: 'qollanma/math/birlik-aylana/' }}
+  tekshirilmagan={["Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan."]}
+>
+  <div slot="sahna">
+    <div class="segment rejim-tanlov" role="group" aria-label="Grafik turi">
+      <button type="button" data-rejim="chiziq" aria-pressed="true">To'g'ri chiziq</button>
+      <button type="button" data-rejim="parabola" aria-pressed="false">Parabola</button>
+      <button type="button" data-rejim="kesishish" aria-pressed="false">Kesishish</button>
+    </div>
+    <div class="sahna-quti grafik-quti">
+      <svg id="grafik" viewBox="0 0 420 420" role="img" aria-labelledby="grafik-tavsif">
+        <defs><clipPath id="g-kesim"><rect x="0" y="0" width="420" height="420" /></clipPath></defs>
+        <g class="g-panjara" aria-hidden="true">
+          {panjara.map((i) => <line x1={X(i)} y1="0" x2={X(i)} y2="420" />)}
+          {panjara.map((i) => <line x1="0" y1={Y(i)} x2="420" y2={Y(i)} />)}
+        </g>
+        <g class="g-oqlar" aria-hidden="true">
+          <line x1="0" y1="210" x2="420" y2="210" /><line x1="210" y1="0" x2="210" y2="420" />
+        </g>
+        <g class="g-raqamlar" aria-hidden="true">
+          {panjara.filter((i) => i !== 0 && i % 2 === 0).map((i) => <text x={X(i)} y="224" text-anchor="middle">{i < 0 ? `−${-i}` : i}</text>)}
+          {panjara.filter((i) => i !== 0 && i % 2 === 0).map((i) => <text x="204" y={Y(i) + 4} text-anchor="end">{i < 0 ? `−${-i}` : i}</text>)}
+          <text x="410" y="200" text-anchor="end">x</text><text x="218" y="14">y</text>
+        </g>
+        <g clip-path="url(#g-kesim)">
+          <line id="g-oq-sim" class="g-sim" x1="0" y1="0" x2="0" y2="420" />
+          <path id="g-egri1" class="g-egri1" d="" />
+          <path id="g-egri2" class="g-egri2" d="" />
+          <path id="g-qiyalik" class="g-qiyalik" d="" />
+        </g>
+        <g id="g-belgilar"></g>
+        <g id="g-tutqichlar"></g>
+      </svg>
+    </div>
+    <p class="sr" id="grafik-tavsif" aria-live="polite"></p>
+    <p class="sahna-izoh" id="grafik-izoh"></p>
+  </div>
+
+  <div slot="animatsiya">
+    <p id="anim-matn"></p>
+    <div class="segment">
+      <button type="button" class="katta asosiy" id="anim-boshla">Ko'rsatish</button>
+    </div>
+    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Tugmani bosing.</span></div>
+  </div>
+
+  <div slot="formula">
+    <div class="formula" id="formula-karta"></div>
+    <dl class="qiymatlar" id="formula-qiymat"></dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="boshqaruv" id="slayderlar"></div>
+    <div class="vazifa">
+      <p id="vazifa-matn"></p>
+      <p class="vazifa-holat" id="vazifa-holat" aria-live="polite"></p>
+    </div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { son, had, qosh, nuqta } from '../../../../../../lib/sonYozuv';
+  import { sudraladigan, bosishRadiusi, kechikibElon } from '../../../../../../lib/svgSudrash';
+
+  type Rejim = 'chiziq' | 'parabola' | 'kesishish';
+  const NS = 'http://www.w3.org/2000/svg';
+  const X = (x: number) => 210 + 20 * x;
+  const Y = (y: number) => 210 - 20 * y;
+  const kamaytir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (id: string) => document.getElementById(id)!;
+  const svg = $('grafik') as unknown as SVGSVGElement;
+
+  const h = { rejim: 'chiziq' as Rejim, m: 1, b: 2, a: 1, ph: 2, pk: -3, m1: 2, b1: 1, m2: -1, b2: 7 };
+
+  // Slayderlar ta'rifi: [kalit, yorliq, min, max, qadam]
+  const SL: Record<Rejim, [keyof typeof h, string, number, number, number][]> = {
+    chiziq: [['m', 'm', -5, 5, 0.5], ['b', 'b', -8, 8, 1]],
+    parabola: [['a', 'a', -3, 3, 0.5], ['ph', 'h', -6, 6, 1], ['pk', 'k', -8, 8, 1]],
+    kesishish: [['m1', 'm₁', -4, 4, 0.5], ['b1', 'b₁', -8, 8, 1], ['m2', 'm₂', -4, 4, 0.5], ['b2', 'b₂', -8, 8, 1]],
+  };
+  const chegarala = (k: keyof typeof h, v: number) => {
+    const t = Object.values(SL).flat().find((x) => x[0] === k)!;
+    let q = Math.round(v / t[4]) * t[4];
+    q = Math.max(t[2], Math.min(t[3], q));
+    if (k === 'a' && q === 0) q = (h.a < 0 ? -0.5 : 0.5); // a ≠ 0
+    return q;
+  };
+
+  function slayderlarniQur() {
+    const quti = $('slayderlar');
+    quti.replaceChildren();
+    SL[h.rejim].forEach(([k, yorliq, min, max, qadam]) => {
+      const qator = document.createElement('div'); qator.className = 'slayder';
+      const id = `g-${String(k)}`;
+      qator.innerHTML = `<label for="${id}"></label><input type="range" id="${id}" min="${min}" max="${max}" step="${qadam}" /><output for="${id}"></output>`;
+      qator.querySelector('label')!.textContent = yorliq;
+      const inp = qator.querySelector('input')!; inp.value = String(h[k]);
+      const out = qator.querySelector('output')!; out.textContent = son(h[k] as number);
+      inp.addEventListener('input', () => { (h as Record<string, unknown>)[k] = chegarala(k, Number(inp.value)); chiz(); });
+      quti.append(qator);
+    });
+  }
+  function slayderlarniSinxronla() {
+    SL[h.rejim].forEach(([k]) => {
+      const inp = document.getElementById(`g-${String(k)}`) as HTMLInputElement | null;
+      if (!inp) return;
+      inp.value = String(h[k]); inp.nextElementSibling!.textContent = son(h[k] as number);
+    });
+  }
+
+  // ---------- Chizish ----------
+  const yol = (f: (x: number) => number) => {
+    let d = '';
+    for (let x = -10.6; x <= 10.6; x += 0.05) { const y = f(x); if (Math.abs(y) > 40) { d += ''; continue; } d += `${d ? 'L' : 'M'}${X(x).toFixed(1)} ${Y(y).toFixed(1)}`; }
+    return d;
+  };
+  const belgilar = $('g-belgilar'), tutqichlar = $('g-tutqichlar');
+  let bosishR = 14;
+  function belgi(x: number, y: number, matn: string, sinf = '') {
+    if (Math.abs(x) > 10.5 || Math.abs(y) > 10.5) return;
+    const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', String(X(x))); c.setAttribute('cy', String(Y(y))); c.setAttribute('r', '5'); c.setAttribute('class', 'g-nuqta ' + sinf);
+    const t = document.createElementNS(NS, 'text'); t.setAttribute('x', String(Math.min(400, X(x) + 8))); t.setAttribute('y', String(Math.max(14, Y(y) - 8))); t.setAttribute('class', 'g-yozuv'); t.textContent = matn;
+    belgilar.append(c, t);
+  }
+  // Tutqichlar rejim almashganda bir marta quriladi; sudrash davomida faqat joyi yangilanadi
+  // (element DOM'dan olinsa pointer capture yo'qolib, sudrash uziladi).
+  type Tutqich = { g: SVGGElement; joy: () => [number, number] };
+  let faol: Tutqich[] = [];
+  function tutqich(sinf: string, joy: () => [number, number], harakat: (gx: number, gy: number) => void) {
+    const g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'g-tutqich ' + sinf); g.setAttribute('aria-hidden', 'true');
+    const hit = document.createElementNS(NS, 'circle'); hit.setAttribute('class', 'g-hit');
+    const c = document.createElementNS(NS, 'circle'); c.setAttribute('r', '8');
+    g.append(hit, c);
+    tutqichlar.append(g);
+    sudraladigan(svg, g as unknown as SVGElement, (p) => harakat((p.x - 210) / 20, (210 - p.y) / 20), () => elon(tavsif()));
+    faol.push({ g, joy });
+  }
+  function tutqichlarniQur() {
+    tutqichlar.replaceChildren(); faol = [];
+    if (h.rejim === 'chiziq') {
+      tutqich('', () => [0, h.b], (_, gy) => { h.b = chegarala('b', gy); chiz(); });
+      tutqich('g-t2', () => [1, h.m + h.b], (_, gy) => { h.m = chegarala('m', gy - h.b); chiz(); });
+    } else if (h.rejim === 'parabola') {
+      tutqich('', () => [h.ph, h.pk], (gx, gy) => { h.ph = chegarala('ph', gx); h.pk = chegarala('pk', gy); chiz(); });
+    } else {
+      tutqich('', () => [0, h.b1], (_, gy) => { h.b1 = chegarala('b1', gy); chiz(); });
+      tutqich('g-t2', () => [0, h.b2], (_, gy) => { h.b2 = chegarala('b2', gy); chiz(); });
+    }
+  }
+  function tutqichlarniJoyla() {
+    faol.forEach(({ g, joy }) => {
+      const [x, y] = joy();
+      const kor = Math.abs(x) <= 10.5 && Math.abs(y) <= 10.5;
+      g.setAttribute('visibility', kor ? 'visible' : 'hidden');
+      g.querySelectorAll('circle').forEach((c) => { c.setAttribute('cx', String(X(x))); c.setAttribute('cy', String(Y(y))); });
+      g.querySelector('.g-hit')!.setAttribute('r', String(bosishR));
+    });
+  }
+
+  function chiz() {
+    const e1 = $('g-egri1'), e2 = $('g-egri2'), qiy = $('g-qiyalik'), sim = $('g-oq-sim');
+    belgilar.replaceChildren();
+    e2.setAttribute('d', ''); qiy.setAttribute('d', ''); sim.setAttribute('visibility', 'hidden');
+    if (h.rejim === 'chiziq') {
+      e1.setAttribute('d', yol((x) => h.m * x + h.b));
+      qiy.setAttribute('d', `M${X(0)} ${Y(h.b)}H${X(1)}V${Y(h.b + h.m)}`);
+      belgi(0, h.b, nuqta(0, h.b));
+      if (h.m !== 0) belgi(-h.b / h.m, 0, nuqta(-h.b / h.m, 0), 'g-ikkinchi');
+    } else if (h.rejim === 'parabola') {
+      e1.setAttribute('d', yol((x) => h.a * (x - h.ph) ** 2 + h.pk));
+      sim.setAttribute('x1', String(X(h.ph))); sim.setAttribute('x2', String(X(h.ph))); sim.setAttribute('visibility', 'visible');
+      belgi(h.ph, h.pk, `uch ${nuqta(h.ph, h.pk)}`);
+      const d = -h.pk / h.a;
+      if (d >= 0) { const r = Math.sqrt(d); belgi(h.ph - r, 0, '', 'g-ikkinchi'); if (r > 0) belgi(h.ph + r, 0, '', 'g-ikkinchi'); }
+    } else {
+      e1.setAttribute('d', yol((x) => h.m1 * x + h.b1));
+      e2.setAttribute('d', yol((x) => h.m2 * x + h.b2));
+      if (h.m1 !== h.m2) { const x = (h.b2 - h.b1) / (h.m1 - h.m2); belgi(x, h.m1 * x + h.b1, nuqta(x, h.m1 * x + h.b1)); }
+    }
+    tutqichlarniJoyla();
+    slayderlarniSinxronla();
+    matnlar();
+  }
+
+  // ---------- Matnlar ----------
+  const chiziqTenglama = (m: number, b: number) => `y = ${m === 0 ? son(b) : had(m, 'x') + qosh(b)}`;
+  /** (x − x0) ko'paytuvchisi: x0 = 0 bo'lsa qavssiz "x" */
+  const kop = (x0: number) => (x0 === 0 ? 'x' : `(x${qosh(-x0)})`);
+  const koef = (a: number) => (a === 1 ? '' : a === -1 ? '−' : son(a));
+  function parabolaShakllari() {
+    const { a, ph, pk } = h;
+    const B = -2 * a * ph, C = a * ph * ph + pk;
+    const uch = `y = ${koef(a)}${kop(ph)}²${qosh(pk)}`;
+    const standart = `y = ${had(a, 'x²')}${qosh(B, 'x')}${qosh(C)}`;
+    const d = -pk / a;
+    let ildiz: string;
+    if (d < 0) ildiz = "Haqiqiy ildiz yo'q: ko'paytuvchilarga ajralmaydi";
+    else if (d === 0) ildiz = `y = ${koef(a)}${kop(ph)}²`;
+    else {
+      const r = Math.sqrt(d), p = ph - r, q = ph + r;
+      const aniq = Math.abs(r * 100 - Math.round(r * 100)) < 1e-9;
+      ildiz = `y = ${koef(a)}${kop(Math.round(p * 100) / 100)}${kop(Math.round(q * 100) / 100)}${aniq ? '' : ' (taqriban)'}`;
+    }
+    return { uch, standart, ildiz, B, C, d };
+  }
+  function tavsif(): string {
+    if (h.rejim === 'chiziq') return `To'g'ri chiziq ${chiziqTenglama(h.m, h.b)}. Qiyalik ${son(h.m)}, y o'qini ${nuqta(0, h.b)} da kesadi.`;
+    if (h.rejim === 'parabola') { const s = parabolaShakllari(); return `Parabola ${s.uch}. Uch ${nuqta(h.ph, h.pk)}, simmetriya o'qi x = ${son(h.ph)}.`; }
+    return `${chiziqTenglama(h.m1, h.b1)} va ${chiziqTenglama(h.m2, h.b2)}. ${kesishishMatni()}`;
+  }
+  function kesishishMatni() {
+    if (h.m1 === h.m2) return h.b1 === h.b2 ? "Bir xil chiziq: cheksiz ko'p yechim." : "Qiyaliklar teng, chiziqlar parallel: yechim yo'q.";
+    const x = (h.b2 - h.b1) / (h.m1 - h.m2);
+    return `Kesishish nuqtasi ${nuqta(x, h.m1 * x + h.b1)}.`;
+  }
+  const elon = kechikibElon($('grafik-tavsif'));
+
+  function qiymatlar(qator: [string, string][]) {
+    const dl = $('formula-qiymat'); dl.replaceChildren();
+    qator.forEach(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); dl.append(d); });
+  }
+  function karta(qatorlar: [string, string][]) {
+    const f = $('formula-karta'); f.replaceChildren();
+    qatorlar.forEach(([sinf, t]) => { const s = document.createElement('span'); s.className = sinf; s.textContent = t; f.append(s); });
+  }
+
+  function matnlar() {
+    elon(tavsif());
+    const v = $('vazifa-holat');
+    let ok = false;
+    if (h.rejim === 'chiziq') {
+      $('grafik-izoh').textContent = "Ko'k nuqtani yuqori-pastga sudrang: b o'zgaradi. Ikkinchi nuqta qiyalikni o'zgartiradi. Kulrang zinapoya: x 1 ga oshganda y m ga o'zgaradi.";
+      karta([['kichik ikkinchi', "To'g'ri chiziq"], ['f-asosiy', 'y = mx + b'], ['f-qiymat', chiziqTenglama(h.m, h.b)], ['kichik ikkinchi', 'm: qiyalik, b: y o\'qini kesish nuqtasi (0; b).']]);
+      qiymatlar([['Qiyalik m', son(h.m)], ["y o'qi bilan", nuqta(0, h.b)], ["x o'qi bilan", h.m === 0 ? (h.b === 0 ? 'butun o\'q' : "yo'q") : nuqta(-h.b / h.m, 0)]]);
+      $('vazifa-matn').innerHTML = "<b>Vazifa.</b> Qiyaligi 2 bo'lgan va (2; 7) nuqtadan o'tadigan chiziqni hosil qiling.";
+      ok = h.m === 2 && h.b === 3;
+      v.textContent = ok ? "Topildi: y = 2x + 3. Tekshirish: 2 · 2 + 3 = 7." : "Hali emas. Maslahat: 7 = 2 · 2 + b.";
+    } else if (h.rejim === 'parabola') {
+      const s = parabolaShakllari();
+      $('grafik-izoh').textContent = "Uchni sudrang: h va k o'zgaradi. Uzuq chiziq: simmetriya o'qi x = h. a ni slayderda o'zgartiring.";
+      karta([['kichik ikkinchi', 'Uch shakli'], ['f-qiymat', s.uch], ['kichik ikkinchi', 'Standart shakl'], ['f-qiymat', s.standart], ['kichik ikkinchi', "Ko'paytuvchilar shakli"], ['f-qiymat', s.ildiz]]);
+      qiymatlar([['Uch', nuqta(h.ph, h.pk)], ["Simmetriya o'qi", `x = ${son(h.ph)}`], ["y o'qi bilan", nuqta(0, s.C)], ['Ochilishi', h.a > 0 ? 'yuqoriga' : 'pastga']]);
+      $('vazifa-matn').innerHTML = "<b>Vazifa.</b> Uchi (−2; 1) bo'lgan va pastga ochiladigan parabolani hosil qiling.";
+      ok = h.ph === -2 && h.pk === 1 && h.a < 0;
+      v.textContent = ok ? `Topildi: ${s.uch}.` : "Hali emas. Maslahat: uch (h; k), pastga ochilishi uchun a < 0.";
+    } else {
+      $('grafik-izoh').textContent = "Ikkala chiziqning y o'qidagi nuqtasini sudrang. Ko'k chiziq birinchi, qora uzuq chiziq ikkinchi tenglama.";
+      karta([['kichik ikkinchi', 'Tenglamalar sistemasi'], ['f-qiymat', chiziqTenglama(h.m1, h.b1)], ['f-qiymat', chiziqTenglama(h.m2, h.b2)], ['f-asosiy', h.m1 !== h.m2 ? 'x = (b₂ − b₁) / (m₁ − m₂)' : 'm₁ = m₂'], ['kichik ikkinchi', kesishishMatni()]]);
+      qiymatlar([['Yechimlar soni', h.m1 !== h.m2 ? '1' : h.b1 === h.b2 ? "cheksiz ko'p" : "yo'q"], ['Kesishish', h.m1 !== h.m2 ? nuqta((h.b2 - h.b1) / (h.m1 - h.m2), h.m1 * (h.b2 - h.b1) / (h.m1 - h.m2) + h.b1) : '—']]);
+      $('vazifa-matn').innerHTML = "<b>Vazifa.</b> Ikki chiziq (1; 4) nuqtada kesishsin.";
+      ok = h.m1 !== h.m2 && h.m1 + h.b1 === 4 && h.m2 + h.b2 === 4;
+      v.textContent = ok ? "Topildi: ikkala chiziq x = 1 da y = 4 beradi." : "Hali emas. Maslahat: har bir chiziq uchun m + b = 4 bo'lsin, qiyaliklar har xil.";
+    }
+    v.dataset.ok = ok ? '1' : '0';
+    animMatni();
+  }
+
+  // ---------- Animatsiya ----------
+  const ANIM: Record<Rejim, { matn: string; kalit: keyof typeof h; qiymatlar: number[] }> = {
+    chiziq: { matn: "b o'zgarmaydi, m −3 dan 3 gacha o'sadi: chiziq (0; b) atrofida aylanadi. m > 0 da chiziq ko'tariladi, m < 0 da tushadi, m = 0 da gorizontal.", kalit: 'm', qiymatlar: [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3] },
+    parabola: { matn: "a va k o'zgarmaydi, h −4 dan 4 gacha suriladi: parabola va uning simmetriya o'qi birga yonga siljiydi, shakli o'zgarmaydi.", kalit: 'ph', qiymatlar: [-4, -3, -2, -1, 0, 1, 2, 3, 4] },
+    kesishish: { matn: "Ikkinchi chiziqning qiyaligi birinchisinikiga yaqinlashadi: kesishish nuqtasi uzoqlashadi, qiyaliklar tenglashganda chiziqlar parallel bo'lib, yechim yo'qoladi.", kalit: 'm2', qiymatlar: [-2, -1, 0, 1, 1.5, 2] },
+  };
+  function animMatni() { $('anim-matn').textContent = ANIM[h.rejim].matn; }
+  let animT = 0, animQadam = 0;
+  $('anim-boshla').addEventListener('click', () => {
+    const a = ANIM[h.rejim];
+    if (kamaytir) {
+      // Harakatsiz rejim: har bosishda keyingi holat
+      animQadam = (animQadam + 1) % a.qiymatlar.length;
+      (h as Record<string, unknown>)[a.kalit] = a.qiymatlar[animQadam]; chiz();
+      $('anim-holat').textContent = `${animQadam + 1} / ${a.qiymatlar.length}: ${tavsif()}`;
+      $('anim-boshla').textContent = 'Keyingi holat';
+      return;
+    }
+    clearInterval(animT); let i = 0;
+    const qadam = () => {
+      (h as Record<string, unknown>)[a.kalit] = a.qiymatlar[i]; chiz();
+      $('anim-holat').textContent = tavsif();
+      if (++i >= a.qiymatlar.length) clearInterval(animT);
+    };
+    qadam(); animT = window.setInterval(qadam, 650);
+  });
+
+  // ---------- Rejim ----------
+  document.querySelectorAll<HTMLButtonElement>('[data-rejim]').forEach((b) => b.addEventListener('click', () => {
+    clearInterval(animT); animQadam = 0; $('anim-boshla').textContent = kamaytir ? 'Keyingi holat' : "Ko'rsatish";
+    h.rejim = b.dataset.rejim as Rejim;
+    document.querySelectorAll('[data-rejim]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    slayderlarniQur(); tutqichlarniQur(); chiz();
+  }));
+
+  bosishRadiusi(svg, 420, (r) => { bosishR = Math.max(10, r); tutqichlarniJoyla(); });
+  slayderlarniQur();
+  tutqichlarniQur();
+  chiz();
+</script>
+
+<style is:global>
+  .dars .rejim-tanlov { margin-bottom: var(--b-3); }
+  .dars .grafik-quti svg { touch-action: pan-y; }
+  .dars .g-panjara line { stroke: var(--chiziq-kuchli); stroke-width: 1; }
+  .dars .g-oqlar line { stroke: var(--matn-sust); stroke-width: 1.5; }
+  .dars .g-raqamlar text { fill: var(--matn-ikkinchi); font-size: 11px; font-weight: 600; font-family: var(--shrift); }
+  .dars .g-egri1 { fill: none; stroke: var(--rang-havola); stroke-width: 3.5; }
+  .dars .g-egri2 { fill: none; stroke: var(--matn); stroke-width: 3; stroke-dasharray: 9 6; }
+  .dars .g-qiyalik { fill: none; stroke: var(--matn-sust); stroke-width: 2; stroke-dasharray: 4 3; }
+  .dars .g-sim { stroke: var(--matn-sust); stroke-width: 2; stroke-dasharray: 6 5; }
+  .dars .g-nuqta { fill: var(--fon); stroke: var(--matn); stroke-width: 2.5; }
+  .dars .g-nuqta.g-ikkinchi { fill: var(--matn); }
+  .dars .g-yozuv { fill: var(--matn); font-size: 13px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 4px; }
+  .dars .g-tutqich circle:not(.g-hit) { fill: var(--rang-asosiy); stroke: var(--fon); stroke-width: 3; }
+  .dars .g-tutqich.g-t2 circle:not(.g-hit) { fill: var(--matn); }
+  .dars .g-hit { fill: transparent; }
+</style>
