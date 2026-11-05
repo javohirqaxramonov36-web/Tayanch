@@ -137,7 +137,7 @@ const qadamlar = [
       <h2 id="xulosa-h">Xulosa</h2>
       <ul class="xulosa-royxat">{xulosa.map((x) => <li>{x}</li>)}</ul>
 
-      <div class="daftar" aria-labelledby="daftar-h">
+      <section class="daftar" aria-labelledby="daftar-h">
         <div class="daftar-bosh">
           <h3 id="daftar-h">Xato daftari</h3>
           <p class="kichik ikkinchi">Shu darsda xato qilingan mashqlar. To'g'ri yechsangiz ro'yxatdan chiqadi.</p>
@@ -153,7 +153,7 @@ const qadamlar = [
           </span>
         </div>
         <p class="kichik ikkinchi" id="saqlash-holat">Natijalar faqat shu brauzerda saqlanadi.</p>
-      </div>
+      </section>
 
       {keyingi && (
         <a class="katta asosiy keyingi-dars" href={yol('/uz/sat/' + keyingi.qism)}>Keyingi dars: {keyingi.nomi}</a>

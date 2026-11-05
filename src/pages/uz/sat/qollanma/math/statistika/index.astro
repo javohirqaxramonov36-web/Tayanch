@@ -36,6 +36,8 @@ const X = (v: number) => 20 + 19 * v;
       <svg id="stat" viewBox="0 0 420 250" role="group" aria-labelledby="stat-tavsif">
         <g aria-hidden="true">
           <rect id="s-sigma" class="s-sigma" x="0" y="40" width="0" height="160" />
+          <line id="s-sigma-chap" class="s-sigma-chegara" x1="0" y1="40" x2="0" y2="200" />
+          <line id="s-sigma-ong" class="s-sigma-chegara" x1="0" y1="40" x2="0" y2="200" />
           <line class="s-oq" x1={X(0)} y1="200" x2={X(20)} y2="200" />
           {Array.from({ length: 21 }, (_, i) => <line class="s-chiziqcha" x1={X(i)} y1="200" x2={X(i)} y2={i % 5 === 0 ? 210 : 205} />)}
           {belgilar.map((v) => <text class="s-raqam" x={X(v)} y="226" text-anchor="middle">{v}</text>)}
@@ -56,7 +58,7 @@ const X = (v: number) => 20 + 19 * v;
       <button type="button" class="kichik-tugma" id="s-ayir">Nuqta olib tashlash</button>
       <button type="button" class="kichik-tugma" id="s-tikla">Namunani tiklash</button>
     </div>
-    <p class="sahna-izoh">Nuqtani sudrang yoki Tab bilan tanlab, strelkalar bilan suring. Ko'k chiziq va uchburchak: o'rtacha. Qora uzuq chiziq va romb: mediana. Kulrang soha: o'rtacha ± standart og'ish.</p>
+    <p class="sahna-izoh">Nuqtani sudrang yoki Tab bilan tanlab, strelkalar bilan suring. Ko'k chiziq va uchburchak: o'rtacha. Qora uzuq chiziq va romb: mediana. Uzuq chegarali kulrang soha: o'rtacha ± standart og'ish.</p>
   </div>
 
   <div slot="animatsiya">
@@ -151,6 +153,7 @@ const X = (v: number) => 20 + 19 * v;
     oy.setAttribute('x', String(Math.min(370, Math.max(50, X(o))))); my.setAttribute('x', String(Math.min(370, Math.max(50, X(m)))));
     const chap = Math.max(X(0), X(o - s)), ong = Math.min(X(20), X(o + s));
     $('s-sigma').setAttribute('x', String(chap)); $('s-sigma').setAttribute('width', String(Math.max(0, ong - chap)));
+    ['x1', 'x2'].forEach((k) => { $('s-sigma-chap').setAttribute(k, String(chap)); $('s-sigma-ong').setAttribute(k, String(ong)); });
 
     const dl = $('s-qiymatlar'); dl.replaceChildren();
     ([['n', String(qiymat.length)], ["O'rtacha", son(o)], ['Mediana', son(m)], ["Standart og'ish", son(s)], ['Oraliq', son(oraliq(qiymat))]] as [string, string][])
@@ -219,6 +222,8 @@ const X = (v: number) => 20 + 19 * v;
   .dars .s-chiziqcha { stroke: var(--matn-sust); stroke-width: 1.5; }
   .dars .s-raqam { fill: var(--matn-ikkinchi); font-size: 13px; font-weight: 700; font-family: var(--shrift); }
   .dars .s-sigma { fill: var(--sirt-ikkinchi); }
+  /* Soha fondan 3:1 ajralmaydi (WCAG 1.4.11): chegaralari --matn-sust uzuq chiziq bilan (5,8:1) */
+  .dars .s-sigma-chegara { stroke: var(--matn-sust); stroke-width: 1.5; stroke-dasharray: 3 4; }
   .dars .s-ortacha { stroke: var(--rang-havola); stroke-width: 3; }
   .dars .s-ortacha-belgi { fill: var(--rang-havola); }
   .dars .s-mediana { stroke: var(--matn); stroke-width: 2.5; stroke-dasharray: 7 5; }
