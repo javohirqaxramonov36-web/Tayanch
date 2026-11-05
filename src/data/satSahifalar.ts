@@ -12,6 +12,8 @@ export interface SatSahifa {
   turi: SatTuri;
   manbalar: string[];
   tekshirilmagan: string[];
+  /** true: sahifa o'z ekrani bilan qurilgan (dizayndagi interaktiv ekran) */
+  tayyor?: boolean;
 }
 
 export interface SatGuruh {
@@ -27,6 +29,7 @@ export const satGuruhlar: SatGuruh[] = [
     sahifalar: [
       {
         qism: 'mashq/test/',
+        tayyor: true,
         nomi: 'Test',
         tavsif: "Reading & Writing va Math bo'yicha qisqa mashq testlari. To'liq mock uchun rasmiy materiallarga havola beriladi.",
         turi: 'mashq',
@@ -35,6 +38,7 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'mashq/bank/',
+        tayyor: true,
         nomi: 'Savol banki',
         tavsif: "Mavzu bo'yicha saralangan mashq savollari: Reading & Writing va Math.",
         turi: 'mashq',
@@ -43,6 +47,7 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'vosita/natijalar/',
+        tayyor: true,
         nomi: 'Mening natijalarim',
         tavsif: "Mashqlardagi javoblaringiz va xatolaringiz ro'yxati. Ma'lumot faqat shu brauzerda saqlanadi. Ball hisoblanmaydi.",
         turi: 'vosita',
@@ -64,6 +69,7 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'mashq/lugat/',
+        tayyor: true,
         nomi: "Lug'at",
         tavsif: "Reading & Writing matnlarida uchraydigan so'zlar uchun kartochkalar.",
         turi: 'mashq',

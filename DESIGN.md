@@ -24,7 +24,25 @@ Palitra: **oq, qora, ko'k** (2026-11-04 qarori). Bo'limlar rang bilan emas, ikon
 | `--qora-matn-ikkinchi` | `#b4b9c8` | Qora fondagi ikkinchi darajali matn |
 
 Qora sahna sahifada faqat bitta: bosh sahifadagi cho'qqi (muallif yo'li).
-Qorong'i rejim: hozircha yo'q.
+Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`). Telefonda panel orqasidagi parda: `--parda`.
+
+### Qorong'i mavzu (2026-11-04, S1)
+
+`:root[data-mavzu='qorongi']` ichida tokenlar qayta beriladi. Yangi rang yo'q: faqat yuqoridagi oq, qora, ko'k va kulranglar.
+
+| Token | Qorong'i qiymat |
+| --- | --- |
+| `--fon`, `--sirt` | `#0f1115` |
+| `--fon-ikkinchi` | `#1b1e26` |
+| `--sirt-ikkinchi`, `--chiziq`, `--chiziq-kuchli` | `#2a2e38` |
+| `--matn` | `#ffffff` |
+| `--matn-ikkinchi`, `--matn-sust` | `#b4b9c8` |
+| `--rang-asosiy` | `#4255ff` (fon sifatida, oq matn bilan) |
+| `--rang-havola` | `#8b97ff` (qora fondagi matn) |
+
+Boshlang'ich holat `prefers-color-scheme` dan. Tanlov `localStorage` da (`tayanch:mavzu`), `<head>` dagi inline skript sahifa chizilishidan oldin `data-mavzu` qo'yadi, shuning uchun rang miltillamaydi. Tanlov tugmasi hozircha faqat SAT yon panelida.
+
+Brauzerda saqlanadigan hamma kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`). Natijalar sahifasidagi "Natijalarni o'chirish" tugmasi faqat `tayanch:sat-javoblar` ni o'chiradi.
 
 ## Tipografiya
 
@@ -49,7 +67,7 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 
 ## Shakl va chuqurlik
 
-- Radius: `--r-kichik` 6px, `--r-orta` 16px, `--r-katta` 24px, `--r-toliq` 999px.
+- Radius: `--r-kichik` 6px, `--r-logo` 10px, `--r-yon` 12px, `--r-orta` 16px, `--r-katta` 24px, `--r-toliq` 999px.
 - Soya: faqat bitta, `--soya` `0 4px 16px rgba(40,46,62,0.08)`. Faqat asosiy interaktiv karta (test, kartochka) uchun.
 
 ## Komponentlar
@@ -59,6 +77,10 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 - **Bo'lim kartasi**: oq fon, 1.5px qora chegara, `--r-katta`, ko'k chiziqli ikonka. Hover: qora ofset soya. Bitta karta (SAT) qora bo'lishi mumkin.
 - **Yorliq (pill)**: `--r-toliq`, 13px qalin matn. "Tez orada" = `--sirt-ikkinchi`.
 - **Progress**: 8px balandlik, `--r-toliq`, to'ldirish `--rang-asosiy`.
+- **SAT bo'limi dizayni** (2026-11-04): asos `Tayanch-SAT-dizayn.md` (Claude Design kanvasi, 6 ekran: Main, Mashq, Telefon, Natijalar, Lug'at, Savol banki). Ekranlardagi savol, so'z va raqamlar namuna, saytga qo'yilmaydi. Hammasi qo'llangan: yon panel, SAT kirishi (hero, qora "Imtihon tuzilmasi" kartasi CB03 raqamlari bilan, 3 qadam, sahifalar guruhlari), telefon ko'rinishi, Mashq testi va Lug'at (yon panelsiz "fokus" qolipi `SatFokus`), Savol banki, Mening natijalarim. Namuna savollar va so'zlar `src/data/satNamuna.ts` da, ekranda "Namuna" deb belgilangan. Natijalar haqiqiy javoblarni ko'rsatadi; javob bo'lmasa namuna chiqadi va "Namuna ma'lumot" yorlig'i turadi.
+  - Yon panel qatori: 44px, `--r-yon` 12px, faol qator ko'k fon va oq matn, ikonkalar ko'k. Qo'llanmalar ikonkasiz, 44px chapdan surilgan. Bu yerdagi kichik tugmalar 44px (umumiy 48px qoidasidan istisno, dizayn bo'yicha).
+  - Katta tugma: 52px, to'liq yumaloq, 800 qalinlik. Telefonda to'liq kenglik.
+- **SAT yon paneli** (`SatYon`): 1024px va undan kengda chapda doimiy (`--yon-kenglik` 288px), yig'ilganda `--yon-yigilgan` 72px. Undan torda ustki qatordagi hamburger tugmasi panelni chapdan chiqaradi: Esc yopadi, fokus panel ichida qoladi, qolgan sahifa `inert`. Pastda "Tayanch bosh sahifasi" havolasi va mavzu tugmasi (dizayn bo'yicha).
 - **Menyu**: oq qator, logo chapda, havolalar o'ngda; telefonda ikkinchi qatorga o'tadi.
 - **Footer**: "Natija kafolatlanmaydi", Maxfiylik, Manba jurnali.
 - **Sahifa oxiri bloki** (har sahifada, T1): rasmiy manbalar, tekshirilgan sana, keyingi tekshiruv, tekshirilmagan joylar.

@@ -1,101 +1,234 @@
 ---
-// SAT bo'limi kirishi (T1, 2-tur). Karta matni, maqsad va eslatma S1 vazifasidan o'zgartirmasdan olingan.
+// SAT bo'limi kirishi (T1, 2-tur).
+// Dizayn: Tayanch-SAT-dizayn.md, "Main" (kompyuter) va "Telefon" ekranlari.
+// Matnlar dizayndan. Imtihon tuzilmasi raqamlari: CB03 (College Board, rasmiy).
 import SatQobiq from '../../../layouts/SatQobiq.astro';
 import { satGuruhlar } from '../../../data/satSahifalar';
+import { manbalar } from '../../../data/manbalar';
+const cb03 = manbalar.find((m) => m.id === 'CB03')!;
 import { yol } from '../../../lib/yol';
+
+const sat = (qism: string) => yol(`/uz/sat/${qism}`);
+const qadamlar = [
+  { yorliq: 'TUSHUNISH', nomi: 'Strategiya', tavsif: 'Tayyorgarlikni qayerdan boshlash va qanday rejalashtirish.', havola: "Qo'llanmani ochish", qism: 'qollanma/strategiya/' },
+  { yorliq: 'MASHQ', nomi: 'Test va savol banki', tavsif: "Mavzu bo'yicha qisqa testlar, javobdan keyin darhol izoh.", havola: 'Mashq qilish', qism: 'mashq/test/' },
+  { yorliq: 'TAHLIL', nomi: 'Mening natijalarim', tavsif: "Xatolar ro'yxati, faqat shu brauzerda saqlanadi. Ball hisoblanmaydi.", havola: "Natijalarni ko'rish", qism: 'vosita/natijalar/' },
+];
 ---
 <SatQobiq
   title="SAT"
   description="Digital SAT tayyorgarligi: English (Reading & Writing) va Math. Mustaqil, qimmat kurslarsiz reja."
   turi="bolim-kirishi"
+  bolim="sat"
   holat="qoralama"
   tekshirilgan="2026-11-04"
   keyingiTekshiruv="2026-12-04"
-  manbalar={['CB01', 'CB02']}
-  tekshirilmagan={[
-    "\"Rasmiy bepul materiallar\": CB01 sahifasida practice testlarning bepulligi yozilmagan, alohida tekshirish kerak.",
-    "Telegram kanal manzili hali belgilanmagan.",
-    "Bo'lim ichidagi sahifalar hali yozilmagan (hammasi \"tez orada\").",
-  ]}
+  manbalar={['CB03']}
 >
-  <section class="ichki kirish" aria-labelledby="sat-sarlavha">
-    <p class="ustki"><span class="yorliq">Qoralama</span> <span class="sust kichik">Bo'lim kirishi</span></p>
-    <h1 id="sat-sarlavha">Digital SAT</h1>
-    <p class="karta-matni">Faqat Digital SAT tayyorgarligi: English (Reading &amp; Writing) va Math bir xil e'tibor bilan. Reja muallifning SAT 1420 natijasiga olib kelgan mustaqil, qimmat kurslarsiz tayyorgarligiga asoslanadi: Desmos va formulalarni qo'llash, vaqtni boshqarish, xatolar tahlili. To'liq mock uchun rasmiy bepul materiallarga havola qilinadi. Tayanch College Board bilan aloqador emas.</p>
-  </section>
-
-  <section class="ichki ikki-blok">
-    <div class="blok" aria-labelledby="maqsad-s">
-      <h2 id="maqsad-s">Maqsad</h2>
-      <p>O'quvchi imtihon tuzilmasini tushunishi, vaqtni to'g'ri taqsimlashi, xatolaridan o'rganishi. Natija kafolatlanmaydi.</p>
-    </div>
-    <div class="blok" aria-labelledby="kimga-s">
-      <h2 id="kimga-s">Kimga mos</h2>
-      <p>Digital SAT topshirmoqchi bo'lgan o'zbekistonlik o'quvchilar.</p>
-    </div>
-  </section>
-
-  <section class="ichki sahifalar" aria-labelledby="sahifalar-s">
-    <h2 id="sahifalar-s">Bo'limdagi sahifalar</h2>
-    <div class="guruhlar">
-      {satGuruhlar.map((g, i) => (
-        <div class="guruh">
-          <h3 id={`kirish-guruh-${i}`}>{g.nomi}</h3>
-          <ul aria-labelledby={`kirish-guruh-${i}`}>
-            {g.sahifalar.map((s) => (
-              <li>
-                <a href={yol(`/uz/sat/${s.qism}`)}>
-                  <span class="s-nom">{s.nomi}</span>
-                  <span class="yorliq">tez orada</span>
-                </a>
-                <span class="s-tavsif kichik ikkinchi">{s.tavsif}</span>
-              </li>
-            ))}
-          </ul>
+  <div class="ichki sat-kirish">
+    <section class="hero" aria-labelledby="sat-h">
+      <div class="hero-matn">
+        <p class="pill-qator"><span class="pill">Qoralama</span><span class="pill-izoh">Bo'lim kirishi</span></p>
+        <h1 id="sat-h">Digital SAT,<br /><span class="kok">qimmat kurslarsiz.</span></h1>
+        <p class="lead">English (Reading &amp; Writing) va Math bir xil e'tibor bilan. Reja muallifning SAT 1420 natijasiga olib kelgan mustaqil tayyorgarligiga asoslanadi: Desmos va formulalar, vaqtni boshqarish, xatolar tahlili.</p>
+        <p class="lead lead-telefon">English va Math bir xil e'tibor bilan. Muallifning mustaqil tayyorgarligiga asoslangan reja.</p>
+        <div class="cta">
+          <a class="katta-tugma asosiy" href={sat('mashq/test/')}>
+            Mashq testini boshlash
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
+          </a>
+          <a class="katta-tugma ikkinchi" href={sat('qollanma/strategiya/')}>Strategiyani o'qish</a>
         </div>
-      ))}
-    </div>
-  </section>
+      </div>
 
-  <section class="ichki pastki" aria-label="Aloqa va eslatma">
-    <div class="blok">
-      <h2 class="kichik-h2">Telegram kanal</h2>
-      <p>Savol-javob uchun Telegram kanal: <span class="yorliq">tez orada</span></p>
-    </div>
-    <p class="eslatma kichik">SAT College Board'ning savdo belgisi. Tayanch u bilan bog'liq emas va uni tasdiqlamaydi.</p>
-  </section>
+      <div class="tuzilma" aria-labelledby="tuzilma-h">
+        <h2 id="tuzilma-h" class="ustki-yorliq">Imtihon tuzilmasi</h2>
+        <ul>
+          <li>
+            <span class="tuzilma-belgi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" /></svg></span>
+            <span><strong>Reading &amp; Writing</strong><span class="tuzilma-izoh">2 modul, har biri 32 daqiqa · 54 savol</span></span>
+          </li>
+          <li>
+            <span class="tuzilma-belgi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></span>
+            <span><strong>Math</strong><span class="tuzilma-izoh">2 modul, har biri 35 daqiqa · 44 savol</span></span>
+          </li>
+        </ul>
+        <p class="tuzilma-izoh">Tayanch College Board bilan aloqador emas. Manba: <a href={cb03.havola} rel="noopener">{cb03.tashkilot}</a>, tekshirilgan {cb03.tekshirilganSana}.</p>
+      </div>
+    </section>
+
+    <section class="yol" aria-labelledby="yol-h">
+      <div class="bosh-qator">
+        <h2 id="yol-h">Qayerdan boshlaysiz?</h2>
+        <p class="sust kichik">Uch qadam, istalgan tartibda</p>
+      </div>
+      <ol class="qadamlar">
+        {qadamlar.map((q, i) => (
+          <li>
+            <a href={sat(q.qism)} class="qadam">
+              <span class="qadam-yorliq"><span class="qadam-raqam">{i + 1}</span><span class="qadam-soz"> · {q.yorliq}</span></span>
+              <span class="qadam-matn">
+                <span class="qadam-nom">{q.nomi}</span>
+                <span class="qadam-tavsif">{q.tavsif}</span>
+              </span>
+              <span class="qadam-havola">{q.havola}</span>
+              <svg class="qadam-strelka" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="sahifalar" aria-labelledby="sahifa-h">
+      <h2 id="sahifa-h">Bo'limdagi barcha sahifalar</h2>
+      <div class="guruhlar">
+        {satGuruhlar.filter((g) => g.nomi !== 'Mashq').map((g, i) => (
+          <div class="guruh">
+            <h3 id={`kirish-guruh-${i}`} class="ustki-yorliq">{g.nomi}</h3>
+            <ul aria-labelledby={`kirish-guruh-${i}`}>
+              {g.sahifalar.map((s) => (
+                <li>
+                  <a href={sat(s.qism)}>
+                    <span class="s-nom">{s.nomi}</span>
+                    {!s.tayyor && <span class="pill pill-kichik">tez orada</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="pastki" aria-label="Aloqa va eslatma">
+      <p class="telegram">Telegram kanal <span class="pill pill-kichik">tez orada</span></p>
+      <p class="eslatma">SAT College Board'ning savdo belgisi. Tayanch u bilan bog'liq emas. Natija kafolatlanmaydi.</p>
+    </section>
+  </div>
 </SatQobiq>
 
 <style>
-  .kirish { padding-block: var(--b-14) var(--b-8); display: flex; flex-direction: column; gap: var(--b-5); }
-  .ustki { display: flex; align-items: center; gap: var(--b-3); }
-  .kirish h1 { font-weight: 900; letter-spacing: -0.5px; }
-  .karta-matni {
-    font-size: var(--matn-katta); color: var(--matn-ikkinchi);
-    max-width: 62ch;
-  }
+  .sat-kirish { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-14); }
+  .kok { color: var(--rang-havola); }
 
-  .ikki-blok { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--b-4); padding-block: var(--b-4); }
-  .blok {
-    background: var(--fon-ikkinchi);
+  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-kichik { padding: 3px 10px; font-size: 12px; color: var(--matn-ikkinchi); white-space: nowrap; }
+  .pill-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-sust); }
+  .ustki-yorliq { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); line-height: 1.4; }
+
+  /* Hero */
+  .hero { display: flex; flex-wrap: wrap; gap: var(--b-8); align-items: stretch; }
+  .hero-matn { flex: 3 1 420px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); }
+  .hero h1 { font-size: 56px; line-height: 1.05; font-weight: 900; letter-spacing: -1px; }
+  .lead { font-size: 19px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 58ch; }
+  .lead-telefon { display: none; }
+  .tuzilma a { color: var(--qora-matn-ikkinchi); }
+  .cta { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
+  .katta-tugma {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 0 26px;
+    border-radius: var(--r-toliq);
+    text-decoration: none; font-weight: 800; font-size: 16px;
+  }
+  .katta-tugma.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katta-tugma.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta-tugma.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); font-weight: 700; }
+  .katta-tugma.ikkinchi:hover { background: var(--chiziq); }
+
+  /* Qora karta: imtihon tuzilmasi (har ikki mavzuda qora) */
+  .tuzilma {
+    flex: 2 1 280px; min-width: 0;
+    background: var(--qora); color: var(--rang-asosiy-matn);
+    border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta);
-    padding: var(--b-6);
-    display: flex; flex-direction: column; gap: var(--b-2);
+    padding: 28px;
+    display: flex; flex-direction: column; gap: var(--b-5);
   }
-  .blok h2, .kichik-h2 { font-size: var(--matn-h3); }
+  .tuzilma .ustki-yorliq { color: var(--rang-asosiy-qorada); }
+  .tuzilma ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .tuzilma li {
+    background: var(--qora-sirt); border: 1px solid var(--qora-chiziq);
+    border-radius: var(--r-orta); padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .tuzilma li > span:last-child { display: flex; flex-direction: column; gap: 2px; }
+  .tuzilma strong { font-weight: 800; font-size: 17px; }
+  .tuzilma-belgi {
+    flex: none; width: 40px; height: 40px; border-radius: var(--r-yon);
+    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tuzilma-izoh { font-size: var(--matn-kichik); line-height: 1.5; color: var(--qora-matn-ikkinchi); }
+  p.tuzilma-izoh { font-size: var(--matn-mayda); margin-top: auto; }
 
-  .sahifalar { padding-block: var(--b-14) var(--b-4); display: flex; flex-direction: column; gap: var(--b-6); }
-  .guruhlar { display: flex; flex-direction: column; gap: var(--b-8); }
-  .guruh { display: flex; flex-direction: column; gap: var(--b-3); }
-  .guruh h3 { font-size: var(--matn-mayda); text-transform: uppercase; letter-spacing: 0.06em; color: var(--matn-sust); }
-  .guruh ul { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
-  .guruh li { padding: var(--b-4) var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
-  .guruh li + li { border-top: 1px solid var(--chiziq); }
-  .guruh a { display: flex; align-items: center; gap: var(--b-3); text-decoration: none; min-height: 32px; }
-  .s-nom { font-weight: 800; font-size: 17px; color: var(--rang-havola); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; }
-  .guruh a:hover .s-nom { text-decoration-thickness: 3px; }
+  /* Qadamlar */
+  .yol, .sahifalar { display: flex; flex-direction: column; gap: var(--b-5); }
+  .bosh-qator { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
+  .yol h2, .sahifalar h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+  .qadamlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .qadamlar li + li { border-top: 1px solid var(--chiziq); }
+  .qadam {
+    display: grid; grid-template-columns: 140px minmax(0, 1fr) auto;
+    align-items: center; column-gap: var(--b-6); row-gap: var(--b-1);
+    padding: 22px 28px;
+    text-decoration: none; color: var(--matn);
+  }
+  .qadam:hover { background: var(--fon-ikkinchi); }
+  .qadam-yorliq { font-size: var(--matn-mayda); font-weight: 700; color: var(--rang-havola); }
+  .qadam-matn { display: flex; flex-direction: column; gap: var(--b-1); }
+  .qadam-nom { font-size: 20px; font-weight: 800; }
+  .qadam-tavsif { font-size: 15px; line-height: 1.55; color: var(--matn-ikkinchi); }
+  .qadam-havola { font-weight: 700; font-size: 15px; white-space: nowrap; color: var(--rang-havola); text-decoration: underline; text-underline-offset: 0.15em; }
+  .qadam:hover .qadam-havola { color: var(--rang-asosiy-toq); }
+  .qadam-strelka { display: none; color: var(--matn-sust); }
 
-  .pastki { padding-block: var(--b-10) 0; display: flex; flex-direction: column; gap: var(--b-5); }
-  .pastki .blok p { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .eslatma { color: var(--matn-sust); max-width: 62ch; }
+
+  /* Barcha sahifalar */
+  .guruhlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--b-4); align-items: start; }
+  .guruh { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-2); }
+  .guruh h3 { margin: var(--b-3) var(--b-4) var(--b-2); }
+  .guruh ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-1); }
+  .guruh a {
+    background: var(--fon); border-radius: var(--r-orta);
+    padding: 14px 16px; min-height: 52px;
+    display: flex; align-items: center; justify-content: space-between; gap: var(--b-3);
+    text-decoration: none; color: var(--matn);
+  }
+  .guruh a:hover .s-nom { color: var(--rang-havola); text-decoration: underline; }
+  .s-nom { font-weight: 700; }
+
+  /* Pastki qator */
+  .pastki {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
+    border-top: 1px solid var(--chiziq); padding-top: var(--b-8);
+  }
+  .telegram { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .eslatma { font-size: var(--matn-kichik); color: var(--matn-sust); max-width: 60ch; }
+
+  /* Telefon ekrani */
+  @media (max-width: 640px) {
+    .sat-kirish { padding-top: 28px; gap: var(--b-10); }
+    .hero h1 { font-size: 38px; line-height: 1.08; letter-spacing: -0.5px; }
+    .lead { display: none; }
+    .lead-telefon { display: block; font-size: 17px; }
+    .sahifalar, .pastki { display: none; }
+    .hero { display: contents; }
+    .hero-matn { order: 1; flex: none; }
+    .yol { order: 2; }
+    .tuzilma { order: 3; flex: none; }
+    .katta-tugma { width: 100%; }
+    .yol h2, .sahifalar h2 { font-size: 22px; }
+    .bosh-qator p { display: none; }
+    .qadamlar { border-color: var(--chiziq); border-radius: 20px; }
+    .qadam {
+      grid-template-columns: 16px minmax(0, 1fr) auto;
+      column-gap: 14px; min-height: 64px; padding: 12px 16px;
+    }
+    .qadam-yorliq { font-weight: 800; }
+    .qadam-soz, .qadam-tavsif, .qadam-havola { display: none; }
+    .qadam-nom { font-size: 16px; font-weight: 700; }
+    .qadam-strelka { display: block; }
+    .tuzilma { border-radius: 20px; padding: 18px; }
+  }
 </style>
