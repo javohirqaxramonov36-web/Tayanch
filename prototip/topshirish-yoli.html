@@ -1,0 +1,525 @@
+<title>Topshirish yo'li</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;700;800&display=swap">
+<style>
+/* Tayanch DESIGN.md tokenlari. Bitta yorug' mavzu (DESIGN.md: qorong'i rejim hozircha yo'q).
+   Tuzilma: 3D zinapoya (3 savol) -> savol kartalari -> 3D aylanadigan yo'l kartalari -> manbalar. */
+:root {
+  --rang-asosiy: #4255ff;
+  --rang-asosiy-toq: #2f40e0;
+  --rang-asosiy-och: #e8ebff;
+  --fon: #ffffff;
+  --fon-ikkinchi: #f5f6fa;
+  --sirt-ikkinchi: #eceef3;
+  --chiziq: #e6e8ee;
+  --chiziq-kuchli: #dfe2ea;
+  --matn: #0f1115;
+  --matn-ikkinchi: #4a5063;
+  --matn-sust: #5a6072;
+  --ogohlik: #8a5a00;
+  --ogohlik-fon: #fff4dc;
+  --soya: 0 4px 16px rgba(40,46,62,0.08);
+  --shrift: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r-kichik: 6px; --r-orta: 16px; --r-katta: 24px; --r-toliq: 999px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--fon); color: var(--matn); font-family: var(--shrift);
+  font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.sahifa { max-width: 1040px; margin: 0 auto; display: grid; gap: 56px; }
+a { color: var(--rang-asosiy); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 800; }
+h1 { font-size: clamp(34px, 6vw, 46px); line-height: 1.12; }
+h2 { font-size: clamp(26px, 4vw, 32px); line-height: 1.2; }
+h3 { font-size: 20px; line-height: 1.25; }
+p { margin: 0; }
+.ustki { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--matn-sust); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); }
+.pill.kok { background: var(--rang-asosiy-och); color: var(--rang-asosiy-toq); }
+.pill.ogoh { background: var(--ogohlik-fon); color: var(--ogohlik); }
+
+/* Bosh qism */
+.bosh { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+.bosh-matn { display: grid; gap: 16px; min-width: 0; }
+.bosh-matn .kirish { font-size: 18px; color: var(--matn-ikkinchi); max-width: 52ch; }
+.bosh-matn .yorliqlar { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* 3D zinapoya */
+.sahna { perspective: 900px; display: grid; place-items: center; gap: 4px; min-height: 280px; }
+.zina { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.sahna:hover .zina { transform: rotateX(54deg) rotateZ(-30deg); }
+.pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
+.pog .ust, .pog .old, .pog .yon { position: absolute; }
+.pog .ust { inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; transition: background .4s, transform .6s cubic-bezier(.2,.8,.2,1); }
+.pog .ust span { transform: rotateZ(38deg) rotateX(-58deg); font-weight: 800; font-size: 13px; text-align: center; line-height: 1.15; }
+.pog .old { left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); transition: height .6s cubic-bezier(.2,.8,.2,1); }
+.pog .yon { right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.pog.bajarildi .ust { background: var(--rang-asosiy); color: var(--fon); border-color: var(--rang-asosiy-toq); }
+.pog.bajarildi .old { background: var(--rang-asosiy-toq); }
+.pog.bajarildi .yon { background: #2433b8; }
+.p1 { left: 0; top: 128px; --h: 28px; }
+.p2 { left: 104px; top: 64px; --h: 56px; }
+.p3 { left: 208px; top: 0; --h: 84px; }
+.bayroq { position: absolute; left: 254px; top: 46px; width: 2px; height: 0; background: var(--matn); transform-origin: bottom; transform: translateZ(84px) rotateX(-90deg); transition: height .5s .3s; }
+.bayroq::after { content: ""; position: absolute; top: 0; left: 2px; width: 22px; height: 14px; background: var(--rang-asosiy); clip-path: polygon(0 0, 100% 50%, 0 100%); opacity: 0; transition: opacity .3s .7s; }
+.zina.tayyor .bayroq { height: 48px; }
+.zina.tayyor .bayroq::after { opacity: 1; }
+.sahna-izoh { font-size: 14px; font-weight: 500; color: var(--matn-sust); text-align: center; }
+
+/* Savollar */
+.savollar { display: grid; gap: 16px; }
+.savol { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: 24px; display: grid; gap: 16px; background: var(--fon); }
+.savol-bosh { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; font-weight: 800; font-size: 14px; background: var(--sirt-ikkinchi); }
+.savol.javobli .raqam { background: var(--rang-asosiy); color: var(--fon); }
+.variantlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.variant {
+  min-height: 56px; padding: 10px 16px; border-radius: var(--r-orta); border: 2px solid var(--chiziq-kuchli);
+  background: var(--fon); font: inherit; font-weight: 700; color: var(--matn); text-align: left; cursor: pointer;
+  display: grid; gap: 2px; transition: border-color .15s, background .15s, transform .15s;
+}
+.variant small { font-weight: 500; font-size: 13px; color: var(--matn-sust); line-height: 1.35; }
+.variant:hover { border-color: var(--matn); transform: translateY(-2px); }
+.variant[aria-pressed="true"] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
+.variant[aria-pressed="true"] small { color: var(--rang-asosiy-toq); }
+
+/* Natija */
+.natija { display: grid; gap: 24px; }
+.natija-bosh { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+.natija-bosh p { color: var(--matn-ikkinchi); max-width: 60ch; }
+.tugma {
+  min-height: 48px; padding: 0 22px; border-radius: var(--r-toliq); border: 0; font: inherit; font-weight: 700;
+  cursor: pointer; background: var(--sirt-ikkinchi); color: var(--matn);
+}
+.tugma:hover { background: var(--chiziq-kuchli); }
+.tugma.asosiy { background: var(--rang-asosiy); color: var(--fon); }
+.tugma.asosiy:hover { background: var(--rang-asosiy-toq); }
+.yollar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; perspective: 1400px; }
+.bosh-xabar { grid-column: 1 / -1; border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); padding: 32px; text-align: center; color: var(--matn-sust); }
+
+/* 3D aylanadigan karta: ikki yuz bitta grid katakda, balandlik kattasiga teng */
+.karta { min-width: 0; transform-style: preserve-3d; }
+.karta-ichi { display: grid; transition: transform .7s cubic-bezier(.2,.8,.2,1), min-height .4s; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+.karta.ochiq .karta-ichi { transform: rotateY(180deg); }
+.yuz { backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--fon);
+  padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.yuz.old { transition: box-shadow .2s, transform .2s; }
+.karta:not(.ochiq):hover .yuz.old { box-shadow: 6px 6px 0 var(--matn); }
+.yuz.orqa { transform: rotateY(180deg); background: var(--fon-ikkinchi); position: absolute; inset: 0; overflow: auto; }
+.karta-ichi { position: relative; }
+.karta.asosiy-yol .yuz.old { background: var(--matn); color: var(--fon); }
+.karta.asosiy-yol .yuz.old .tavsif { color: #b4b9c8; }
+.karta.asosiy-yol .yuz.old .ikonka { color: #8b97ff; border-color: #2a2e38; background: #1b1e26; }
+.karta.asosiy-yol .yuz.old .tugma { background: var(--rang-asosiy); color: var(--fon); }
+.karta-tepa { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.ikonka { width: 48px; height: 48px; border-radius: var(--r-orta); border: 1.5px solid var(--chiziq-kuchli); display: grid; place-items: center; color: var(--rang-asosiy); flex: none; }
+.ikonka svg { width: 24px; height: 24px; }
+.tavsif { color: var(--matn-ikkinchi); }
+.qadamlar { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; counter-reset: q; }
+.qadamlar li { counter-increment: q; display: grid; grid-template-columns: 24px 1fr; gap: 8px; font-size: 15px; }
+.qadamlar li::before { content: counter(q); font-weight: 800; font-size: 13px; width: 22px; height: 22px; border-radius: var(--r-toliq); display: grid; place-items: center; border: 1.5px solid currentColor; opacity: .7; }
+.karta-past { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.karta-past .meta { font-size: 13px; font-weight: 500; color: inherit; opacity: .75; }
+.faktlar, .yoq { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.faktlar li { font-size: 15px; display: grid; gap: 2px; }
+.faktlar li a { font-size: 13px; font-weight: 700; text-decoration: none; }
+.faktlar li a:hover { text-decoration: underline; }
+.yoq li { font-size: 14px; color: var(--matn-ikkinchi); padding-left: 18px; position: relative; }
+.yoq li::before { content: "?"; position: absolute; left: 0; font-weight: 800; color: var(--ogohlik); }
+.orqa-sarlavha { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+.sanoq { font-variant-numeric: tabular-nums; }
+
+/* Manbalar va pastki qism */
+.manbalar { display: grid; gap: 16px; }
+.jadval-oram { overflow-x: auto; border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--chiziq); vertical-align: top; }
+th { font-size: 13px; color: var(--matn-sust); background: var(--fon-ikkinchi); }
+tr:last-child td { border-bottom: 0; }
+td code { font-weight: 700; font-family: var(--shrift); }
+.oxir { border-top: 1.5px solid var(--matn); padding-top: 24px; display: grid; gap: 8px; font-size: 14px; color: var(--matn-ikkinchi); }
+.oxir strong { color: var(--matn); }
+
+@media (max-width: 760px) {
+  .bosh { grid-template-columns: 1fr; gap: 8px; }
+  .sahna { min-height: 250px; padding-top: 24px; order: -1; }
+  .zina { transform: rotateX(58deg) rotateZ(-38deg) scale(.82); }
+  .sahna:hover .zina { transform: rotateX(58deg) rotateZ(-38deg) scale(.82); }
+  .yollar { grid-template-columns: 1fr; }
+  .savol { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  .karta.ochiq .karta-ichi { transform: none; }
+  .karta.ochiq .yuz.old { visibility: hidden; }
+  .yuz.orqa { transform: none; visibility: hidden; }
+  .karta.ochiq .yuz.orqa { visibility: visible; }
+}
+</style>
+
+<main class="sahifa">
+  <header class="bosh">
+    <div class="bosh-matn">
+      <span class="ustki">Top Admission · Vosita</span>
+      <h1>Topshirish yo'li</h1>
+      <p class="kirish">Uchta savolga javob bering: qaysi davlat, qaysi daraja va grant kerakmi. Sizga mos ariza yo'llari chiqadi. Har kartani aylantirsangiz, rasmiy manbadagi faktlar va hali tekshirilmagan joylar ko'rinadi.</p>
+      <div class="yorliqlar">
+        <span class="pill kok">Prototip</span>
+        <span class="pill">Javoblar faqat shu brauzerda</span>
+        <span class="pill">Qabul ehtimoli hisoblanmaydi</span>
+      </div>
+    </div>
+    <div class="sahna" aria-hidden="true">
+      <div class="zina" id="zina">
+        <div class="pog p1" data-q="davlat"><div class="old"></div><div class="yon"></div><div class="ust"></div></div>
+        <div class="pog p2" data-q="daraja"><div class="old"></div><div class="yon"></div><div class="ust"></div></div>
+        <div class="pog p3" data-q="grant"><div class="old"></div><div class="yon"></div><div class="ust"></div></div>
+        <div class="bayroq"></div>
+      </div>
+      <p class="sahna-izoh sanoq" id="sahna-izoh"></p>
+    </div>
+  </header>
+
+  <section class="savollar" aria-label="Savollar">
+    <div class="savol" data-savol="davlat">
+      <div class="savol-bosh"><span class="raqam">1</span><h3>Qaysi davlatda o'qimoqchisiz?</h3></div>
+      <div class="variantlar" role="group" aria-label="Davlat"></div>
+    </div>
+    <div class="savol" data-savol="daraja">
+      <div class="savol-bosh"><span class="raqam">2</span><h3>Qaysi darajaga topshirasiz?</h3></div>
+      <div class="variantlar" role="group" aria-label="Daraja"></div>
+    </div>
+    <div class="savol" data-savol="grant">
+      <div class="savol-bosh"><span class="raqam">3</span><h3>Moliyaviy yordam kerakmi?</h3></div>
+      <div class="variantlar" role="group" aria-label="Grant"></div>
+    </div>
+  </section>
+
+  <section class="natija" aria-live="polite">
+    <div class="natija-bosh">
+      <div style="display:grid;gap:8px">
+        <span class="ustki">Natija</span>
+        <h2 id="natija-sarlavha">Sizga mos yo'llar</h2>
+        <p id="natija-izoh">Birinchi karta asosiy yo'l. Kartani bosib aylantiring.</p>
+      </div>
+      <button class="tugma" id="qayta" type="button">Qaytadan boshlash</button>
+    </div>
+    <div class="yollar" id="yollar"></div>
+  </section>
+
+  <section class="manbalar" aria-labelledby="manba-sarlavha">
+    <h2 id="manba-sarlavha">Rasmiy manbalar</h2>
+    <div class="jadval-oram">
+      <table>
+        <thead><tr><th>ID</th><th>Manba</th><th>Tashkilot</th><th>Tekshirilgan</th></tr></thead>
+        <tbody id="manba-jadval"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="oxir">
+    <p><strong>Natija kafolatlanmaydi.</strong> Bu vosita ariza yo'llarini ko'rsatadi, qabul qilinish yoki grant olish ehtimolini hisoblamaydi.</p>
+    <p>Tekshirilgan sana: 2026-11-05. Keyingi tekshiruv: 2026-12-05 yoki rasmiy e'londa. Tayanch Common App, UCAS, Coalition, Türkiye Bursları, Stipendium Hungaricum va El-yurt umidi jamg'armasi bilan bog'liq emas.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var MANBALAR = {
+    CA01: { nomi: "Understanding application fees and waivers (2026-yil sentabr)", tashkilot: "Common App", havola: "https://www.commonapp.org/static/653ded5d8d0d5d685e10ae814a7b2c85/Understanding-App-Fees-and-Waivers.pdf", sana: "2026-11-05" },
+    CA02: { nomi: "Common App for international students", tashkilot: "Common App", havola: "https://www.commonapp.org/static/c89a50d357fb5d5e8e9ddb911ffed933/Resource_TR_International_ENG_2025.06.25_1.pdf", sana: "2026-11-05" },
+    CO01: { nomi: "Coalition for College: Scoir bilan hamkorlik", tashkilot: "Coalition for College", havola: "https://coalitionforcollegeaccess.org/2022-new-partnership", sana: "2026-11-04" },
+    UC01: { nomi: "FAQs for international students", tashkilot: "UCAS", havola: "https://www.ucas.com/international/international-students/faqs-for-international-students", sana: "2026-11-05" },
+    TB01: { nomi: "Application Calendar", tashkilot: "Türkiye Bursları (YTB)", havola: "https://www.turkiyeburslari.gov.tr/calendar", sana: "2026-11-04" },
+    SH01: { nomi: "Partners (hamkor davlatlar)", tashkilot: "Stipendium Hungaricum", havola: "https://stipendiumhungaricum.hu/partners/", sana: "2026-11-05" },
+    EY01: { nomi: "2026-yil 2-ochiq stipendiya tanlovi e'loni", tashkilot: "El-yurt umidi jamg'armasi (rasmiy Telegram)", havola: "https://t.me/elyurtumidifoundation/16705", sana: "2026-11-04" }
+  };
+
+  var SAVOLLAR = {
+    davlat: [
+      { id: "aqsh", nomi: "AQSH" },
+      { id: "uk", nomi: "Buyuk Britaniya" },
+      { id: "turkiya", nomi: "Turkiya" },
+      { id: "vengriya", nomi: "Vengriya" },
+      { id: "boshqa", nomi: "Boshqa davlat", izoh: "Kanada, Avstraliya, Koreya..." }
+    ],
+    daraja: [
+      { id: "bak", nomi: "Bakalavriat" },
+      { id: "mag", nomi: "Magistratura" }
+    ],
+    grant: [
+      { id: "toliq", nomi: "Ha, to'liq", izoh: "O'zim to'lay olmayman" },
+      { id: "qisman", nomi: "Qisman", izoh: "Bir qismini to'lay olaman" },
+      { id: "yoq", nomi: "Yo'q", izoh: "O'zim to'layman" }
+    ]
+  };
+
+  var IK = {
+    hujjat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>',
+    qalpoq: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>',
+    bino: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>',
+    yulduz: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/></svg>',
+    yol: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/></svg>',
+    globus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>'
+  };
+
+  var YOLLAR = {
+    commonapp: {
+      nomi: "Common App", ikonka: "hujjat",
+      tavsif: "Bitta ariza bilan ko'plab AQSH kollejlariga topshirish platformasi.",
+      qadamlar: ["Akkaunt va profil", "Kollejlar ro'yxatini tuzish", "Esse va tavsiyanomalar", "Har kollejga alohida yuborish"],
+      faktlar: [
+        { m: "Har yili 200 dan ortiq davlatdan talabalar foydalanadi.", id: "CA02" },
+        { m: "Xalqaro talaba ehtiyojga asoslangan fee waiver olishi mumkin (Profile bo'limida).", id: "CA02" },
+        { m: "Kollej fee waiver'ni hamma talabadan yoki faqat AQSH talabalaridan qabul qilishi mumkin: har kollej sahifasini tekshiring.", id: "CA01" },
+        { m: "Fee waiver huquqingizni maktab maslahatchisi (counselor) tasdiqlashi so'raladi.", id: "CA01" }
+      ],
+      yoq: ["A'zo kollejlar soni", "2026–27 esse mavzulari", "Deadline'lar (har kollejda alohida)", "Magistraturaga tegishliligi"]
+    },
+    coalition: {
+      nomi: "Coalition (Scoir orqali)", ikonka: "yol",
+      tavsif: "Coalition a'zo kollejlariga Scoir platformasi orqali ariza.",
+      qadamlar: ["Bepul Scoir akkaunti", "Profil va hujjatlar", "Coalition a'zo kollejni tanlash", "Ariza yuborish"],
+      faktlar: [
+        { m: "Ariza Scoir platformasi orqali topshiriladi.", id: "CO01" },
+        { m: "Scoir akkaunti har qanday talaba uchun bepul.", id: "CO01" },
+        { m: "Coalition'ning eski platformasi to'xtatilgan.", id: "CO01" }
+      ],
+      yoq: ["Xalqaro talabalar uchun shartlar", "A'zo kollejlar ro'yxati"]
+    },
+    ucas: {
+      nomi: "UCAS", ikonka: "hujjat",
+      tavsif: "Buyuk Britaniya bakalavriatiga ariza markazi.",
+      qadamlar: ["UCAS'da ro'yxatdan o'tish", "Kurslarni tanlash", "Personal statement va tavsiyanoma", "To'lov va yuborish"],
+      faktlar: [
+        { m: "UCAS orqali bakalavriatda 5 tagacha kursga topshirish mumkin.", id: "UC01" },
+        { m: "Ariza to'lovi bor (miqdori shu sahifada yozilmagan).", id: "UC01" }
+      ],
+      yoq: ["2027 sikli ariza to'lovi miqdori", "Deadline'lar", "Grant va stipendiyalar (universitetga bog'liq)"]
+    },
+    turkiye: {
+      nomi: "Türkiye Bursları", ikonka: "yulduz",
+      tavsif: "Turkiya hukumatining xalqaro talabalar uchun stipendiya dasturi.",
+      qadamlar: ["Portalda ariza: 10-yanvar – 20-fevral", "Baholash: mart–aprel", "Intervyu: aprel–iyun", "Natija: avgust boshi"],
+      faktlar: [
+        { m: "Umumiy ariza har yili 10-yanvar – 20-fevral.", id: "TB01" },
+        { m: "Baholash mart–aprel, intervyu aprel–iyun, natija avgust boshida.", id: "TB01" },
+        { m: "Ariza tbbs.turkiyeburslari.gov.tr portali orqali (rasmiy saytdagi \"Application/Login\").", id: "TB01" }
+      ],
+      yoq: ["2027-yil e'loni (taqvimda yil yozilmagan)", "Daraja bo'yicha talablar", "Stipendiya qamrovi va miqdori"]
+    },
+    hungary: {
+      nomi: "Stipendium Hungaricum", ikonka: "yulduz",
+      tavsif: "Vengriya hukumatining hamkor davlatlar uchun stipendiyasi.",
+      qadamlar: ["Rasmiy e'lonni kuting", "Dasturni tanlang", "Onlayn ariza", "Yuboruvchi tashkilot (sending partner) jarayoni"],
+      faktlar: [
+        { m: "O'zbekiston hamkor davlatlar ro'yxatida bor.", id: "SH01" }
+      ],
+      yoq: ["2027/28 e'loni va muddati (hali chiqmagan)", "O'zbekiston uchun ochiq darajalar", "Sending partner talablari"]
+    },
+    eyuf: {
+      nomi: "El-yurt umidi", ikonka: "qalpoq",
+      tavsif: "O'zbekiston davlat jamg'armasining xorijda o'qish uchun stipendiyasi.",
+      qadamlar: ["Qabul xati va hujjatlar", "el-yurt.uz/application orqali ariza", "Tanlov bosqichlari", "Natija"],
+      faktlar: [
+        { m: "2026-yil 2-tanlov: hujjatlar 1–15-noyabr, 23:59 gacha.", id: "EY01", muddat: "2026-11-15T23:59:00+05:00" },
+        { m: "Kvota 290 ta: bakalavriat 101, magistratura 158, doktorantura 31.", id: "EY01" },
+        { m: "Ariza el-yurt.uz/application platformasi orqali.", id: "EY01" }
+      ],
+      yoq: ["Yosh chegarasi", "Til sertifikati talabi", "Qabul xati sharti va tanlov bosqichlari"]
+    },
+    portal: {
+      nomi: "Universitetning o'z portali", ikonka: "bino",
+      tavsif: "Ko'p universitetlar arizani o'z saytida qabul qiladi.",
+      qadamlar: ["\"International admissions\" sahifasini toping", "Talab va deadline'ni yozib oling", "Moliyaviy yordam sahifasini o'qing", "Portalda ariza"],
+      faktlar: [],
+      yoq: ["Hammasi universitetga bog'liq: har birini o'sha universitetning rasmiy sahifasida tekshiring"]
+    },
+    pathway: {
+      nomi: "Pathway dasturi", ikonka: "globus",
+      tavsif: "Universitetga tayyorlov dasturi orqali kirish yo'li (masalan Kaplan).",
+      qadamlar: ["Dastur va hamkor universitetni tanlash", "Dastur talablarini tekshirish", "Ariza", "Dasturdan keyin universitetga o'tish"],
+      faktlar: [],
+      yoq: ["Narx", "Hamkor universitetlar", "O'tish shartlari"]
+    }
+  };
+
+  function yollarniTanla(j) {
+    var r = [];
+    var bak = j.daraja === "bak";
+    if (j.davlat === "aqsh") { if (bak) r.push("commonapp", "coalition"); r.push("portal"); }
+    if (j.davlat === "uk") { r.push(bak ? "ucas" : "portal"); }
+    if (j.davlat === "turkiya") { r.push("turkiye"); if (j.grant === "yoq") r.push("portal"); }
+    if (j.davlat === "vengriya") { r.push("hungary"); if (j.grant === "yoq") r.push("portal"); }
+    if (j.davlat === "boshqa") { r.push("portal"); if (bak) r.push("pathway"); }
+    if (j.grant && j.grant !== "yoq") r.push("eyuf");
+    return r;
+  }
+
+  var KALIT = "tayanch-topshirish-yoli";
+  var NAMUNA = { davlat: "aqsh", daraja: "bak", grant: "toliq" };
+  var javob = {};
+  var namunami = false;
+  try { var s = JSON.parse(localStorage.getItem(KALIT) || "null"); if (s && typeof s === "object") javob = s; } catch (e) {}
+  if (!javob.davlat && !javob.daraja && !javob.grant) { javob = Object.assign({}, NAMUNA); namunami = true; }
+
+  function saqla() { try { localStorage.setItem(KALIT, JSON.stringify(javob)); } catch (e) {} }
+
+  function el(teg, sinf, matn) { var e = document.createElement(teg); if (sinf) e.className = sinf; if (matn != null) e.textContent = matn; return e; }
+
+  function qolganKun(iso) {
+    var farq = new Date(iso).getTime() - Date.now();
+    if (farq < 0) return "muddat o'tdi";
+    var kun = Math.ceil(farq / 86400000);
+    return kun + " kun qoldi";
+  }
+
+  function savollarniChiz() {
+    Object.keys(SAVOLLAR).forEach(function (k) {
+      var quti = document.querySelector('[data-savol="' + k + '"] .variantlar');
+      quti.textContent = "";
+      SAVOLLAR[k].forEach(function (v) {
+        var b = el("button", "variant");
+        b.type = "button";
+        b.id = "v-" + k + "-" + v.id;
+        b.setAttribute("aria-pressed", javob[k] === v.id ? "true" : "false");
+        b.appendChild(el("span", null, v.nomi));
+        if (v.izoh) b.appendChild(el("small", null, v.izoh));
+        b.addEventListener("click", function () {
+          javob[k] = v.id; namunami = false; saqla(); yangila();
+        });
+        quti.appendChild(b);
+      });
+      document.querySelector('[data-savol="' + k + '"]').classList.toggle("javobli", !!javob[k]);
+    });
+  }
+
+  function zinani(){
+    var soni = 0;
+    document.querySelectorAll(".pog").forEach(function (p) {
+      var ok = !!javob[p.dataset.q]; if (ok) soni++;
+      p.classList.toggle("bajarildi", ok);
+    });
+    document.getElementById("zina").classList.toggle("tayyor", soni === 3);
+    document.getElementById("sahna-izoh").textContent = soni === 3 ? "3 / 3 · yo'l tayyor" : soni + " / 3 savol: davlat, daraja, grant";
+  }
+
+  function kartaChiz(id, birinchi) {
+    var y = YOLLAR[id];
+    var k = el("article", "karta" + (birinchi ? " asosiy-yol" : ""));
+    var ichi = el("div", "karta-ichi");
+
+    var old = el("div", "yuz old");
+    var tepa = el("div", "karta-tepa");
+    var ik = el("div", "ikonka"); ik.innerHTML = IK[y.ikonka]; tepa.appendChild(ik);
+    tepa.appendChild(el("span", "pill" + (birinchi ? " kok" : ""), birinchi ? "Asosiy yo'l" : "Qo'shimcha yo'l"));
+    old.appendChild(tepa);
+    old.appendChild(el("h3", null, y.nomi));
+    old.appendChild(el("p", "tavsif", y.tavsif));
+    var ol = el("ol", "qadamlar");
+    y.qadamlar.forEach(function (q) { ol.appendChild(el("li", null, q)); });
+    old.appendChild(ol);
+    var past = el("div", "karta-past");
+    var muddatli = y.faktlar.filter(function (f) { return f.muddat; })[0];
+    past.appendChild(el("span", "meta sanoq", muddatli ? "Hujjat qabuli: " + qolganKun(muddatli.muddat) : y.faktlar.length + " ta rasmiy fakt · " + y.yoq.length + " ta tekshirilmagan"));
+    var aylan = el("button", "tugma", "Manbalarni ko'rish");
+    aylan.type = "button";
+    past.appendChild(aylan);
+    old.appendChild(past);
+
+    var orqa = el("div", "yuz orqa");
+    orqa.appendChild(el("h3", null, y.nomi));
+    if (y.faktlar.length) {
+      orqa.appendChild(el("span", "orqa-sarlavha", "Rasmiy manbada"));
+      var fl = el("ul", "faktlar");
+      y.faktlar.forEach(function (f) {
+        var li = el("li");
+        li.appendChild(el("span", null, f.m));
+        var m = MANBALAR[f.id];
+        var a = el("a", null, f.id + " · " + m.tashkilot + " · " + m.sana);
+        a.href = m.havola; a.target = "_blank"; a.rel = "noopener";
+        li.appendChild(a);
+        fl.appendChild(li);
+      });
+      orqa.appendChild(fl);
+    }
+    orqa.appendChild(el("span", "orqa-sarlavha", "Tekshirilmagan joylar"));
+    var yl = el("ul", "yoq");
+    y.yoq.forEach(function (t) { yl.appendChild(el("li", null, t)); });
+    orqa.appendChild(yl);
+    var qayt = el("button", "tugma", "Orqaga");
+    qayt.type = "button"; qayt.style.marginTop = "auto"; qayt.style.justifySelf = "start";
+    orqa.appendChild(qayt);
+
+    function ayl(ochiq) {
+      ichi.style.minHeight = ochiq ? Math.max(old.offsetHeight, orqa.scrollHeight) + "px" : "";
+      k.classList.toggle("ochiq", ochiq);
+      old.setAttribute("aria-hidden", ochiq ? "true" : "false");
+      orqa.setAttribute("aria-hidden", ochiq ? "false" : "true");
+      old.inert = ochiq; orqa.inert = !ochiq;
+      (ochiq ? qayt : aylan).focus({ preventScroll: true });
+    }
+    orqa.setAttribute("aria-hidden", "true"); orqa.inert = true;
+    aylan.addEventListener("click", function () { ayl(true); });
+    qayt.addEventListener("click", function () { ayl(false); });
+
+    ichi.appendChild(old); ichi.appendChild(orqa);
+    k.appendChild(ichi);
+    return k;
+  }
+
+  function natijaniChiz() {
+    var quti = document.getElementById("yollar");
+    quti.textContent = "";
+    var toliq = javob.davlat && javob.daraja && javob.grant;
+    var izoh = document.getElementById("natija-izoh");
+    if (!toliq) {
+      var qolgan = ["davlat", "daraja", "grant"].filter(function (k) { return !javob[k]; }).length;
+      quti.appendChild(el("div", "bosh-xabar", "Yana " + qolgan + " ta savolga javob bering, yo'llar shu yerda chiqadi."));
+      izoh.textContent = "Uchala savolga javob berilgach natija chiqadi.";
+      return;
+    }
+    izoh.textContent = namunami
+      ? "Namuna: AQSH, bakalavriat, to'liq grant. O'z javoblaringizni tanlang. Kartani bosib aylantiring."
+      : "Birinchi karta asosiy yo'l. Kartani bosib aylantiring.";
+    yollarniTanla(javob).forEach(function (id, i) { quti.appendChild(kartaChiz(id, i === 0)); });
+  }
+
+  function manbaJadval() {
+    var tb = document.getElementById("manba-jadval");
+    Object.keys(MANBALAR).forEach(function (id) {
+      var m = MANBALAR[id];
+      var tr = el("tr");
+      var t1 = el("td"); t1.appendChild(el("code", null, id)); tr.appendChild(t1);
+      var t2 = el("td"); var a = el("a", null, m.nomi); a.href = m.havola; a.target = "_blank"; a.rel = "noopener"; t2.appendChild(a); tr.appendChild(t2);
+      tr.appendChild(el("td", null, m.tashkilot));
+      tr.appendChild(el("td", "sanoq", m.sana));
+      tb.appendChild(tr);
+    });
+  }
+
+  function yangila() { savollarniChiz(); zinani(); natijaniChiz(); }
+
+  document.getElementById("qayta").addEventListener("click", function () {
+    javob = {}; namunami = false;
+    try { localStorage.removeItem(KALIT); } catch (e) {}
+    yangila();
+    document.querySelector(".savollar").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  manbaJadval();
+  yangila();
+})();
+</script>
