@@ -6,6 +6,7 @@ import MuallifYoli from '../../components/MuallifYoli.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
 import { bolimlar } from '../../data/bolimlar';
 import { yol } from '../../lib/yol';
+import Zina from '../../components/Zina.astro';
 
 const sochilgan = [
   { t: 'IELTS', x: 4, y: 6, r: -6 },
@@ -109,9 +110,12 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
     <DeadlineRoyxati faqatKelajak />
     <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
   </section>
+
+  <div class="ichki zina-orami"><Zina /></div>
 </Asosiy>
 
 <style>
+  .zina-orami { padding-top: var(--b-14); }
   .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 520px; }
   .ikkinchi { color: var(--matn-ikkinchi); font-size: var(--matn-katta); }
   .kok { color: var(--rang-asosiy); }

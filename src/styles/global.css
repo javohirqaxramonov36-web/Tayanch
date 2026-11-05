@@ -77,6 +77,18 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .ikkinchi { color: var(--matn-ikkinchi); }
 .kichik { font-size: var(--matn-kichik); }
 
+/* Qavat yo'li: sahifa tepasida, sahifaning o'z yuqori bo'shlig'i qisqaradi */
+.qavat-yoli-orami { padding-top: var(--b-6); padding-bottom: 0 !important; }
+.qavat-yoli-orami:empty { display: none; }
+.qavat-yoli-orami:not(:empty) + .ichki,
+.qavat-yoli-orami:not(:empty) + section,
+.qavat-yoli-orami:not(:empty) + div { padding-top: var(--b-6) !important; }
+
+/* Telefonda pastki lift paneli kontentni yopmasin */
+@media (max-width: 1023.98px) {
+  body:has(.lift-pastki) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }

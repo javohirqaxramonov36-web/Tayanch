@@ -33,14 +33,11 @@ const tuzoqlar = [
   title="Reading qo'llanmasi · IELTS"
   description="IELTS Reading: savol turlari, skimming va scanning, True/False/Not Given, tuzoqlar va vaqt strategiyasi."
   turi="qollanma"
+  yol={["Qo'llanmalar"]}
   bolim="ielts"
   holat="qoralama"
 >
   <div class="ichki qol">
-    <nav class="joy" aria-label="Joylashuv">
-      <a href={yol('/uz/ielts/')}>IELTS</a><span aria-hidden="true">/</span><span>Qo'llanmalar</span><span aria-hidden="true">/</span><span aria-current="page">Reading</span>
-    </nav>
-
     <header class="bosh">
       <p class="pill-qator"><span class="ustki-kok">Qo'llanma</span><span class="pill-ochiq">ochiq</span></p>
       <h1>Reading: javobni emas, <span class="kok">dalilni qidir</span></h1>
@@ -239,9 +236,6 @@ const tuzoqlar = [
   h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
   .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
 
-  .joy { display: flex; flex-wrap: wrap; gap: var(--b-2); align-items: center; font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
-  .joy a { font-weight: 700; color: var(--rang-havola); }
-  .joy [aria-current] { color: var(--matn); font-weight: 700; }
 
   .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
   .pill-qator { display: flex; align-items: center; gap: var(--b-3); }

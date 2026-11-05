@@ -7,6 +7,7 @@ import { satGuruhlar } from '../../../data/satSahifalar';
 import { manbalar } from '../../../data/manbalar';
 const cb03 = manbalar.find((m) => m.id === 'CB03')!;
 import { yol } from '../../../lib/yol';
+import Zina from '../../../components/Zina.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 const qadamlar = [
@@ -99,6 +100,8 @@ const qadamlar = [
         ))}
       </div>
     </section>
+
+    <Zina />
 
     <section class="pastki" aria-label="Aloqa va eslatma">
       <p class="telegram">Telegram kanal <span class="pill pill-kichik">tez orada</span></p>

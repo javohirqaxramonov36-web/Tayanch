@@ -4,6 +4,8 @@
 import '../styles/global.css';
 import BoshQism from '../components/BoshQism.astro';
 import { yol } from '../lib/yol';
+import QavatYoli from '../components/QavatYoli.astro';
+import Lift from '../components/Lift.astro';
 
 export interface Props {
   title: string;
@@ -11,8 +13,10 @@ export interface Props {
   ustki: string;      // "Math · Namuna"
   nomi: string;       // "Chiziqli tenglamalar"
   progressNomi: string;
+  /** Qavat yo'lidagi oraliq bandlar */
+  yol?: string[];
 }
-const { title, description, ustki, nomi, progressNomi } = Astro.props;
+const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Astro.props;
 ---
 <!doctype html>
 <html lang="uz">
@@ -36,10 +40,13 @@ const { title, description, ustki, nomi, progressNomi } = Astro.props;
         <span class="progress-matn" id="fokus-progress-matn"></span>
       </div>
       <slot name="amal" />
+      <Lift variant="fokus" />
     </header>
     <main id="asosiy" class="fokus-asosiy">
+      <div class="fokus-yol"><QavatYoli bandlar={bandlar} sahifaNomi={title.split(' · ')[0]} /></div>
       <slot />
     </main>
+    <Lift variant="pastki" />
   </body>
 </html>
 
@@ -65,7 +72,8 @@ const { title, description, ustki, nomi, progressNomi } = Astro.props;
   .fokus-bosh .progress { flex: 1; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); transition: width 0.25s ease; }
   .fokus-bosh .progress-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); white-space: nowrap; }
-  .fokus-asosiy { flex: 1; padding: var(--b-10) var(--b-8); }
+  .fokus-asosiy { flex: 1; padding: var(--b-6) var(--b-8) var(--b-10); }
+  .fokus-yol { max-width: 760px; margin: 0 auto var(--b-5); }
 
   @media (max-width: 640px) {
     .fokus-bosh { padding: var(--b-3) var(--b-4); }

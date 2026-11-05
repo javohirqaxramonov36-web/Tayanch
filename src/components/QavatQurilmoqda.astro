@@ -1,0 +1,54 @@
+---
+// "Qavat qurilmoqda" sahifasi: hali qurilmagan bo'lim qavati (2-qavat Top Admission, 5-qavat EYUF).
+// Matn faqat bolimlar.ts dagi tavsifdan; muddatlar faqat rasmiy manbali yozuvlardan.
+// Keyin bo'limning o'z dizayni bilan almashtiriladi.
+import Asosiy from '../layouts/Asosiy.astro';
+import DeadlineRoyxati from './DeadlineRoyxati.astro';
+import Zina from './Zina.astro';
+import { bolimlar, type BolimSlug } from '../data/bolimlar';
+import { qavatlar } from '../data/qavatlar';
+import { korinadiganDeadlinelar } from '../data/deadline';
+import { yol } from '../lib/yol';
+
+interface Props { bolim: BolimSlug }
+const { bolim } = Astro.props;
+const b = bolimlar.find((x) => x.slug === bolim)!;
+const q = qavatlar.find((x) => x.slug === bolim)!;
+const muddatlar = korinadiganDeadlinelar({ bolim, faqatKelajak: true });
+const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
+---
+<Asosiy
+  title={q.nomi}
+  description={`${q.raqam}-qavat · ${q.nomi}. ${b.tavsif}`}
+  turi="bolim-kirishi"
+  bolim={bolim}
+  holat="qoralama"
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
+  manbalar={manbaIdlar}
+  tekshirilmagan={["Bo'lim hali qurilmoqda: bu sahifada faqat tavsif va rasmiy manbali muddatlar bor."]}
+>
+  <section class="ichki qurilmoqda" aria-labelledby="q-h">
+    <p class="pill">Qavat qurilmoqda</p>
+    <h1 id="q-h">{q.raqam}-qavat · {q.nomi}</h1>
+    <p class="tavsif">{b.tavsif}</p>
+
+    <section class="muddatlar" aria-labelledby="m-h">
+      <h2 id="m-h">Shu bo'limning muddatlari</h2>
+      <DeadlineRoyxati bolim={bolim} faqatKelajak />
+      <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
+    </section>
+
+    <Zina />
+  </section>
+</Asosiy>
+
+<style>
+  .qurilmoqda { padding-block: var(--b-6) 0; display: flex; flex-direction: column; gap: var(--b-6); }
+  .pill { align-self: flex-start; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  h1 { font-weight: 900; letter-spacing: -0.5px; }
+  .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .muddatlar { display: flex; flex-direction: column; gap: var(--b-4); padding-top: var(--b-4); }
+  .muddatlar h2 { font-size: var(--matn-h3); }
+  .muddatlar a { color: var(--rang-havola); font-weight: 700; }
+</style>

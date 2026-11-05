@@ -1,0 +1,152 @@
+---
+// Lift: istalgan sahifadan istalgan qavatga bir bosishda o'tish (Tayanch binosi, 5 qavat).
+// Ko'rinishlar:
+//   yon    — bo'lim yon paneli, logo ostida (>= 1024px). Yig'ilgan panelda ustun, yozuvsiz.
+//   menyu  — 1-qavat yuqori menyusining o'ng tomoni (>= 1024px).
+//   fokus  — yon panelsiz mashq sahifasi sarlavhasi (>= 1024px).
+//   pastki — telefon (< 1024px): pastda doim turuvchi 5 tugmali panel.
+// Oldingi qavat sessionStorage "tayanch:qavat" da; qavat o'zgarsa qisqa "2 → 3" ko'rsatkichi.
+import { qavatlar, joriyQavat, qavatI } from '../data/qavatlar';
+import { yol } from '../lib/yol';
+
+interface Props { variant: 'yon' | 'menyu' | 'fokus' | 'pastki' }
+const { variant } = Astro.props;
+const joriy = joriyQavat(Astro.url.pathname);
+const jq = qavatI(joriy);
+const yorliq = (q: (typeof qavatlar)[number]) =>
+  `${q.raqam}-qavat, ${q.nomi}${q.holat === 'tez-orada' ? ', tez orada' : ''}`;
+---
+<nav
+  class={`lift lift-${variant}`}
+  aria-label="Qavatlar (lift)"
+  data-joriy={joriy}
+  data-panel-tashqari={variant === 'pastki' ? '' : undefined}
+>
+  <ol class="lift-tugmalar">
+    {qavatlar.map((q) => (
+      <li>
+        <a
+          href={yol(q.manzil)}
+          class={q.holat === 'tez-orada' ? 'tez' : undefined}
+          aria-current={q.raqam === joriy ? 'location' : undefined}
+          aria-label={yorliq(q)}
+          title={yorliq(q)}
+        >
+          <span class="raqam">{q.raqam}</span>
+          {variant === 'pastki' && <span class="qisqa">{q.qisqaNom}</span>}
+          {q.holat === 'tez-orada' && <span class="nuqta" aria-hidden="true"></span>}
+        </a>
+      </li>
+    ))}
+  </ol>
+  {variant === 'yon' ? (
+    <p class="lift-yozuv">
+      <span class="lift-joriy">{joriy}-qavat · {jq.nomi}</span>
+      <span class="lift-harakat" aria-hidden="true" hidden></span>
+    </p>
+  ) : (
+    <span class="lift-harakat" aria-hidden="true" hidden></span>
+  )}
+</nav>
+
+<script>
+  // Lift animatsiyasi: oldingi qavat sessionStorage'da. Ishlamasa animatsiya yo'q, xato yo'q.
+  const KALIT = 'tayanch:qavat';
+  const nav = document.querySelector<HTMLElement>('.lift[data-joriy]');
+  if (nav) {
+    const joriy = Number(nav.dataset.joriy);
+    let oldingi: number | null = null;
+    try {
+      oldingi = Number(sessionStorage.getItem(KALIT)) || null;
+      sessionStorage.setItem(KALIT, String(joriy));
+    } catch { oldingi = null; }
+    if (oldingi && oldingi !== joriy) {
+      const yuqori = joriy > oldingi;
+      const strelka = yuqori
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>'
+        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
+      document.querySelectorAll<HTMLElement>('.lift-harakat').forEach((el) => {
+        el.innerHTML = `${strelka}<span>${oldingi} → ${joriy}</span>`;
+        el.classList.add(yuqori ? 'yuqoriga' : 'pastga');
+        el.hidden = false;
+        setTimeout(() => el.classList.add('ketdi'), 1800);
+        setTimeout(() => { el.hidden = true; }, 2300);
+      });
+    }
+  }
+</script>
+
+<style>
+  .lift-tugmalar { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--b-1); }
+  .lift-tugmalar a {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    border-radius: var(--r-toliq);
+    background: var(--fon-ikkinchi); color: var(--matn);
+    text-decoration: none; font-weight: 800; font-size: 17px;
+  }
+  .lift-tugmalar a:hover { background: var(--sirt-ikkinchi); }
+  .lift-tugmalar a[aria-current='location'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .lift-tugmalar a.tez .raqam { color: var(--matn-sust); }
+  .nuqta {
+    position: absolute; top: 7px; right: 9px;
+    width: 6px; height: 6px; border-radius: var(--r-toliq);
+    background: var(--matn-sust);
+  }
+
+  .lift-yozuv { margin: var(--b-2) 0 0; display: flex; align-items: center; gap: var(--b-2); flex-wrap: wrap; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .lift-harakat {
+    display: inline-flex; align-items: center; gap: var(--b-1);
+    padding: 2px 8px; border-radius: var(--r-toliq);
+    background: var(--rang-asosiy-och); color: var(--rang-havola);
+    font-size: var(--matn-mayda); font-weight: 800; white-space: nowrap;
+    transition: opacity 0.4s ease;
+  }
+  .lift-harakat[hidden] { display: none; }
+  .lift-harakat.yuqoriga { animation: lift-yuqori 0.45s ease-out; }
+  .lift-harakat.pastga { animation: lift-past 0.45s ease-out; }
+  .lift-harakat.ketdi { opacity: 0; }
+  @keyframes lift-yuqori { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes lift-past { from { transform: translateY(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .lift-harakat.yuqoriga, .lift-harakat.pastga { animation: none; }
+  }
+
+  /* Yon panel */
+  .lift-yon { padding: 0 var(--b-4) var(--b-2); }
+  :global([data-sidebar='yigilgan']) .lift-yon { padding-inline: var(--b-3); }
+  :global([data-sidebar='yigilgan']) .lift-yon .lift-tugmalar { flex-direction: column; align-items: center; }
+  :global([data-sidebar='yigilgan']) .lift-yon .lift-yozuv { display: none; }
+
+  /* Menyu va fokus sarlavhasi */
+  .lift-menyu, .lift-fokus { display: flex; align-items: center; gap: var(--b-2); }
+  .lift-fokus .lift-tugmalar a { width: 44px; height: 48px; font-size: 16px; }
+
+  /* Telefon: pastki panel */
+  .lift-pastki {
+    position: fixed; z-index: 25; left: 0; right: 0; bottom: 0;
+    background: var(--fon); border-top: 1px solid var(--chiziq);
+    padding: 6px var(--b-2) calc(6px + env(safe-area-inset-bottom));
+  }
+  .lift-pastki .lift-tugmalar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--b-1); }
+  .lift-pastki .lift-tugmalar a {
+    width: auto; height: 52px; border-radius: var(--r-orta);
+    flex-direction: column; gap: 0;
+    background: transparent;
+  }
+  .lift-pastki .lift-tugmalar a:hover { background: var(--fon-ikkinchi); }
+  .lift-pastki .lift-tugmalar a[aria-current='location'] { background: var(--rang-asosiy); }
+  .lift-pastki .raqam { font-size: 17px; line-height: 1.1; }
+  .lift-pastki .qisqa { font-size: 11px; font-weight: 700; line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lift-pastki .nuqta { top: 6px; right: calc(50% - 16px); }
+  .lift-pastki .lift-harakat { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); box-shadow: var(--soya); }
+  .lift-pastki .lift-harakat.yuqoriga, .lift-pastki .lift-harakat.pastga { animation: none; }
+
+  @media (max-width: 1023.98px) {
+    .lift-yon, .lift-menyu, .lift-fokus { display: none; }
+  }
+  @media (min-width: 1024px) {
+    .lift-pastki { display: none; }
+  }
+</style>
