@@ -1,11 +1,11 @@
 ---
 // Savol banki. Dizayn: Tayanch-SAT-dizayn.md, "SavolBanki" ekrani.
 // Mavzular va ularning holati namuna ma'lumot (ekranda belgilangan).
-import SatQobiq from '../../../../../layouts/SatQobiq.astro';
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import { bankMavzular } from '../../../../../data/satNamuna';
 import { yol } from '../../../../../lib/yol';
 ---
-<SatQobiq
+<BolimQobiq
   title="Savol banki · SAT"
   description="Mavzuni tanlang va faqat shu mavzudagi savollarni yeching. Har javobdan keyin izoh chiqadi."
   turi="mashq"
@@ -60,7 +60,7 @@ import { yol } from '../../../../../lib/yol';
 
     <p class="eslatma">Savollar Tayanch uchun alohida tuziladi, boshqa saytlardan ko'chirilmaydi. Mavzular holati namuna: hozircha har mavzuda savollar soni kam.</p>
   </div>
-</SatQobiq>
+</BolimQobiq>
 
 <script>
   import type { BankMavzu } from '../../../../../data/satNamuna';

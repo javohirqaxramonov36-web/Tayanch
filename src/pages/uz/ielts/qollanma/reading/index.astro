@@ -1,0 +1,380 @@
+---
+// IELTS Reading qo'llanmasi. Dizayn: Tayanch-IELTS-dizayn.md, "Qollanma" va "QollanmaTelefon" ekranlari.
+// Format raqamlari: IE02 (ielts.org). Mini-mashq parchasi Tayanch uchun yozilgan namuna.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { IKONKA } from '../../../../../data/ieltsSahifalar';
+import { manbalar } from '../../../../../data/manbalar';
+import { yol } from '../../../../../lib/yol';
+
+const ie02 = manbalar.find((x) => x.id === 'IE02')!;
+const mundarija = [
+  { id: 'turlar', nomi: 'Savol turlari' },
+  { id: 'skim', nomi: 'Skimming va scanning' },
+  { id: 'tfng', nomi: 'True / False / Not Given' },
+  { id: 'tuzoq', nomi: 'Tuzoqlar' },
+  { id: 'vaqt', nomi: 'Vaqt strategiyasi' },
+];
+const turlar = [
+  ['True / False / Not Given', "Fakt matnga mosmi, zidmi yoki umuman yo'qmi"],
+  ['Yes / No / Not Given', "Xuddi shunday, lekin muallifning fikri haqida"],
+  ['Matching headings', "Har abzasning asosiy g'oyasi"],
+  ['Multiple choice', 'Bir variantni dalil bilan tasdiqlash, qolganini rad etish'],
+  ['Completion', "Gap, jadval yoki xulosadagi bo'sh joy: so'z cheklovini o'qi"],
+];
+const tuzoqlar = [
+  ["Bir xil so'z, boshqa ma'no.", "Savoldagi so'z matnda bor, lekin u boshqa fikrni aytayotgan bo'lishi mumkin."],
+  ["Not Given'ni False deb belgilash.", "Zid gapni topmaguncha False qo'yma."],
+  ['"Some", "always", "only".', "Bitta cheklovchi so'z javobni butunlay o'zgartiradi."],
+  ['Bitta savolda qotib qolish.', "Belgilab qo'y, keyingisiga o't, oxirida qayt."],
+];
+---
+<BolimQobiq
+  title="Reading qo'llanmasi · IELTS"
+  description="IELTS Reading: savol turlari, skimming va scanning, True/False/Not Given, tuzoqlar va vaqt strategiyasi."
+  turi="qollanma"
+  bolim="ielts"
+  holat="qoralama"
+>
+  <div class="ichki qol">
+    <nav class="joy" aria-label="Joylashuv">
+      <a href={yol('/uz/ielts/')}>IELTS</a><span aria-hidden="true">/</span><span>Qo'llanmalar</span><span aria-hidden="true">/</span><span aria-current="page">Reading</span>
+    </nav>
+
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Qo'llanma</span><span class="pill-ochiq">ochiq</span></p>
+      <h1>Reading: javobni emas, <span class="kok">dalilni qidir</span></h1>
+      <p class="lead">Har bir to'g'ri javobning orqasida matndagi bitta gap turadi. Bu qo'llanma o'sha gapni tez topishni o'rgatadi: savol turlari, skimming va scanning, True/False/Not Given va vaqt.</p>
+    </header>
+
+    <section class="format" aria-label="Format kartasi">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reading} />Bo'lim</span><span class="f-qiymat">Reading</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">60 daqiqa</span><span class="f-izoh">ko'chirish vaqti ichida</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Savollar</span><span class="f-qiymat">40 ta</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6" /></svg>Matnlar</span><span class="f-qiymat">3 bo'lim</span><span class="f-izoh">jami 2150–2750 so'z</span></div>
+    </section>
+
+    <details class="mundarija-tel">
+      <summary>
+        Mundarija
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </summary>
+      <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
+    </details>
+
+    <div class="ikki">
+      <article class="maqola">
+        <section id="turlar" aria-labelledby="turlar-h">
+          <h2 id="turlar-h">Savol turlari</h2>
+          <p class="izoh-m">Savol turini birinchi bo'lib aniqla: u matnda nimani qidirishingni aytadi.</p>
+          <ul class="turlar">
+            {turlar.map(([n, t]) => <li><span class="t-nom">{n}</span><span class="t-matn">{t}</span></li>)}
+          </ul>
+        </section>
+
+        <section id="skim" aria-labelledby="skim-h">
+          <h2 id="skim-h">Skimming va scanning</h2>
+          <div class="juft">
+            <div class="kul">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z" /></svg>
+              <h3>Skimming</h3>
+              <p><b>Nima uchun:</b> abzasning asosiy g'oyasi.</p>
+              <p class="ikkinchi-m">Sarlavha, birinchi va oxirgi gaplarni o'qi. Tafsilotga to'xtama.</p>
+            </div>
+            <div class="kul">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM21 21l-4.3-4.3" /></svg>
+              <h3>Scanning</h3>
+              <p><b>Nima uchun:</b> aniq ism, son yoki sana.</p>
+              <p class="ikkinchi-m">Savoldan kalit so'zni ol, matnda o'zini va sinonimini izla.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="tfng" aria-labelledby="tfng-h">
+          <h2 id="tfng-h">True / False / Not Given</h2>
+          <dl class="tfng">
+            <div><dt>True</dt><dd>Matn xuddi shu narsani aytadi, boshqa so'zlar bilan bo'lsa ham.</dd></div>
+            <div><dt>False</dt><dd>Matn buning teskarisini aytadi.</dd></div>
+            <div><dt>Not Given</dt><dd>Matnda bu haqda tasdiq ham, inkor ham yo'q.</dd></div>
+          </dl>
+
+          <div class="qoida" role="group" aria-label="Qoida va misol">
+            <div class="q-chap">
+              <p class="ustki-kok">Qoida</p>
+              <p class="q-asosiy">False uchun matnda zid gap bo'lishi shart. Uni topa olmasang, javob Not Given.</p>
+              <p class="ikkinchi-m">Umumiy bilimingga suyanma: faqat matn hisob.</p>
+            </div>
+            <figure class="q-ong">
+              <figcaption class="ustki-yorliq">Misol · passage parchasi (namuna)</figcaption>
+              <p lang="en">The town library opened in 1998 in a former railway station. <mark>At first it held only a few thousand books, but its collection grew quickly after local schools began sending classes there every week.</mark> Today the building also hosts language clubs in the evenings.</p>
+              <p class="belgi-izoh"><span aria-hidden="true" class="chiziqcha"></span>Ko'k tagchiziq: savolga eng yaqin gap</p>
+            </figure>
+          </div>
+
+          <section class="mashq" aria-labelledby="mashq-h">
+            <div class="m-bosh">
+              <p id="mashq-h" class="ustki-kok">Mini-mashq</p>
+              <span class="izoh">Ball hisoblanmaydi</span>
+            </div>
+            <p class="dawo" lang="en">"Most of the library's visitors today are school students."</p>
+            <p class="izoh-m">Yuqoridagi parchaga ko'ra bu gap qanday?</p>
+            <div class="variantlar" role="radiogroup" aria-labelledby="mashq-h">
+              <button type="button" role="radio" aria-checked="false" data-v="t">True</button>
+              <button type="button" role="radio" aria-checked="false" data-v="f">False</button>
+              <button type="button" role="radio" aria-checked="false" data-v="ng">Not Given</button>
+            </div>
+            <div class="javob" id="javob" aria-live="polite" hidden>
+              <p class="j-sarlavha" id="j-sarlavha"></p>
+              <p>Eng yaqin gap: <mark lang="en">its collection grew quickly after local schools began sending classes there every week.</mark></p>
+              <p class="ikkinchi-m">Matnda maktablar sinflarni yuborgani aytilgan, lekin bugungi tashrifchilarning ko'pchiligi kim ekani haqida hech narsa yo'q: na tasdiq, na inkor. Shuning uchun javob Not Given. False bo'lishi uchun matnda "ko'pchilik o'quvchilar emas" degan zid gap bo'lishi kerak edi.</p>
+              <button type="button" class="chiziq-tugma" id="qayta">Qayta urinish</button>
+            </div>
+          </section>
+        </section>
+
+        <section id="tuzoq" aria-labelledby="tuzoq-h">
+          <h2 id="tuzoq-h">Tuzoqlar</h2>
+          <ol class="tuzoqlar">
+            {tuzoqlar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span></p></li>)}
+          </ol>
+        </section>
+
+        <section id="vaqt" aria-labelledby="vaqt-h">
+          <h2 id="vaqt-h">Vaqt strategiyasi</h2>
+          <p class="izoh-m">Umumiy vaqt: 60 daqiqa, 3 bo'lim, javoblarni ko'chirish ham shu vaqt ichida (<a href={ie02.havola} rel="noopener">ielts.org</a>). Uni matnlar orasida oldindan bo'lib qo'y va soatga qarab tur.</p>
+          <div class="vaqt-karta">
+            <div class="chiziqlar" aria-hidden="true"><span></span><span></span><span class="qora"></span></div>
+            <div class="ulushlar">
+              <span><b>1-matn</b><br /><span class="ikkinchi-m">taxminan 17 daqiqa</span></span>
+              <span><b>2-matn</b><br /><span class="ikkinchi-m">taxminan 20 daqiqa</span></span>
+              <span><b>3-matn</b><br /><span class="ikkinchi-m">taxminan 20 daqiqa + 3 daqiqa tekshiruv</span></span>
+            </div>
+            <p class="izoh">Bu Tayanch tavsiyasi, rasmiy qoida emas. Matnlar odatda qiyinlashib boradi, shuning uchun birinchisiga kamroq vaqt.</p>
+          </div>
+        </section>
+
+        <section class="keyingi" aria-labelledby="keyingi-h">
+          <p class="ustki-yorliq kok-q">Keyingi qadam</p>
+          <h2 id="keyingi-h">Rasmiy namunadagi bitta Reading matnini soat bilan ishla</h2>
+          <p class="k-matn">Keyin har xatoning dalil gapini top. Reja vositasi bu ishni kunlarga bo'lib beradi.</p>
+          <div class="k-tugmalar">
+            <a class="katta asosiy" href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja tuzish</a>
+            <a class="katta qora-tugma" href={yol('/uz/ielts/#rasmiy')}>Rasmiy namunalar</a>
+          </div>
+        </section>
+      </article>
+
+      <nav class="mundarija" aria-label="Sahifa mundarijasi">
+        <p class="ustki-yorliq">Mundarija</p>
+        {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
+      </nav>
+    </div>
+
+    <ManbaBlok
+      manbalar={['IE02']}
+      tekshirilgan="2026-11-05"
+      keyingiTekshiruv="2026-12-05"
+      tekshirilmagan={[
+        "Savol turlari ro'yxati rasmiy manba bilan to'liq solishtirilmagan.",
+        "General Training Reading formati (bu sahifa Academic bo'yicha).",
+        "Mini-mashq parchasi Tayanch uchun yozilgan namuna, rasmiy IELTS matni emas.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  // Mini-mashq (T/F/NG)
+  const TOGRI = 'ng';
+  const tugmalar = [...document.querySelectorAll<HTMLButtonElement>('.variantlar button')];
+  const javob = document.getElementById('javob')!;
+  const tanla = (b: HTMLButtonElement) => {
+    if (!javob.hidden) return;
+    const togrimi = b.dataset.v === TOGRI;
+    tugmalar.forEach((x) => {
+      x.setAttribute('aria-checked', String(x === b));
+      x.setAttribute('aria-disabled', 'true');
+      x.classList.toggle('togri', x.dataset.v === TOGRI);
+      x.classList.toggle('xato', x === b && !togrimi);
+      x.classList.toggle('sust', x.dataset.v !== TOGRI && x !== b);
+    });
+    javob.classList.toggle('j-togri', togrimi);
+    document.getElementById('j-sarlavha')!.textContent = togrimi ? "To'g'ri: Not Given" : "Bu safar emas. To'g'ri javob: Not Given";
+    javob.hidden = false;
+  };
+  tugmalar.forEach((b) => b.addEventListener('click', () => tanla(b)));
+  document.getElementById('qayta')!.addEventListener('click', () => {
+    javob.hidden = true;
+    tugmalar.forEach((x) => {
+      x.setAttribute('aria-checked', 'false');
+      x.removeAttribute('aria-disabled');
+      x.classList.remove('togri', 'xato', 'sust');
+    });
+    tugmalar[0].focus();
+  });
+
+  // Mundarija: joriy bo'limni belgilash
+  const havolalar = [...document.querySelectorAll<HTMLAnchorElement>('.mundarija a')];
+  const bolimlar = havolalar.map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!)!);
+  const yangila = () => {
+    let joriy = 0;
+    bolimlar.forEach((s, i) => { if (s.getBoundingClientRect().top < 160) joriy = i; });
+    havolalar.forEach((a, i) => { if (i === joriy) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', yangila, { passive: true });
+  yangila();
+  // Telefon mundarijasi: band bosilsa yopiladi
+  const tel = document.querySelector<HTMLDetailsElement>('.mundarija-tel')!;
+  tel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { tel.open = false; }));
+</script>
+
+<style>
+  .qol { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); max-width: calc(912px + 2 * var(--b-10)) !important; }
+  .kok { color: var(--rang-havola); }
+  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .ustki-yorliq { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--matn-ikkinchi); }
+  .izoh-m a { color: var(--rang-havola); }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+  .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
+
+  .joy { display: flex; flex-wrap: wrap; gap: var(--b-2); align-items: center; font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .joy a { font-weight: 700; color: var(--rang-havola); }
+  .joy [aria-current] { color: var(--matn); font-weight: 700; }
+
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+
+  .format { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
+  .format > div { padding: var(--b-5) var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
+  .format > div + div { border-left: 1px solid var(--chiziq); }
+  .f-yorliq { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .f-yorliq svg { color: var(--rang-havola); }
+  .f-qiymat { font-size: 18px; font-weight: 800; }
+  .f-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+
+  .mundarija-tel { display: none; }
+
+  .ikki { display: flex; gap: var(--b-10); align-items: flex-start; }
+  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-14); }
+  .maqola > section { display: flex; flex-direction: column; gap: var(--b-4); scroll-margin-top: var(--b-6); }
+  #tfng { gap: var(--b-5); }
+
+  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .turlar li { padding: var(--b-4) var(--b-5); display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--b-4); row-gap: var(--b-1); }
+  .turlar li + li { border-top: 1px solid var(--chiziq); }
+  .t-nom { font-weight: 800; }
+  .t-matn { color: var(--matn-ikkinchi); }
+
+  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .kul { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); }
+  .kul > svg { color: var(--rang-havola); }
+  .kul h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .kul p { line-height: 1.6; }
+
+  .tfng { margin: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .tfng div { display: flex; gap: var(--b-3); }
+  .tfng dt { flex: 0 0 104px; font-weight: 800; }
+  .tfng dd { margin: 0; color: var(--matn-ikkinchi); line-height: 1.6; }
+
+  .qoida { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); overflow: hidden; }
+  .q-chap { padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); }
+  .q-asosiy { font-size: 18px; font-weight: 800; line-height: 1.4; }
+  .q-ong { margin: 0; padding: var(--b-6); background: var(--fon-ikkinchi); display: flex; flex-direction: column; gap: var(--b-3); }
+  .q-ong p[lang] { line-height: 1.7; }
+  mark {
+    background: var(--rang-asosiy-och); color: var(--matn);
+    text-decoration: underline; text-decoration-color: var(--rang-asosiy); text-decoration-thickness: 2px; text-underline-offset: 4px;
+    padding: 0 4px; border-radius: var(--r-kichik);
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+  .belgi-izoh { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .chiziqcha { width: 16px; height: 4px; border-radius: var(--r-toliq); background: var(--rang-asosiy); }
+
+  /* Mini-mashq: sahifadagi yagona soya */
+  .mashq { background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya); padding: 28px; display: flex; flex-direction: column; gap: var(--b-5); }
+  .m-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
+  .dawo { font-size: var(--matn-h3); line-height: 1.4; font-weight: 800; }
+  .variantlar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--b-3); }
+  .variantlar button {
+    min-height: 56px; padding: 0 12px; border-radius: var(--r-orta);
+    font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--matn);
+  }
+  .variantlar button:hover { background: var(--fon-ikkinchi); }
+  .variantlar button[aria-disabled='true'] { cursor: default; }
+  .variantlar button.togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variantlar button.xato { background: var(--fon-ikkinchi); border-style: dashed; text-decoration: line-through; }
+  .variantlar button.sust { color: var(--matn-ikkinchi); border-color: var(--chiziq-kuchli); }
+  .javob { border-radius: var(--r-orta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); background: var(--fon-ikkinchi); border: 1.5px dashed var(--matn); }
+  .javob[hidden] { display: none; }
+  .javob.j-togri { background: var(--rang-asosiy-och); border: 1.5px solid var(--rang-asosiy); }
+  .j-sarlavha { font-size: 18px; font-weight: 800; }
+  .javob p { line-height: 1.6; }
+  .chiziq-tugma { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
+
+  .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }
+  .tuzoqlar li { display: flex; gap: var(--b-4); align-items: flex-start; }
+  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: var(--matn-kichik); }
+  .tuzoqlar p { margin-top: var(--b-1); line-height: 1.6; }
+
+  .vaqt-karta { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); }
+  .chiziqlar, .ulushlar { display: grid; grid-template-columns: 17fr 20fr 23fr; gap: var(--b-2); }
+  .chiziqlar span { height: 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy); }
+  .chiziqlar span.qora { background: var(--matn); }
+  .ulushlar { font-size: var(--matn-kichik); }
+
+  .keyingi { background: var(--qora); color: var(--rang-asosiy-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
+  .kok-q { color: var(--rang-asosiy-qorada); }
+  .keyingi h2 { font-size: 26px; line-height: 1.25; }
+  .k-matn { line-height: 1.6; color: var(--qora-matn-ikkinchi); }
+  .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
+  .katta { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 24px; border-radius: var(--r-toliq); text-decoration: none; font-weight: 800; }
+  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta.qora-tugma { background: var(--qora-sirt); color: var(--rang-asosiy-matn); font-weight: 700; }
+
+  .mundarija { flex: 0 0 240px; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1); border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-3); }
+  .mundarija .ustki-yorliq { margin: var(--b-2) var(--b-3); }
+  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
+  .mundarija a:hover { background: var(--fon-ikkinchi); }
+  .mundarija a[aria-current='true'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+
+  /* Telefon: QollanmaTelefon ekrani */
+  @media (max-width: 1180px) {
+    .mundarija { display: none; }
+    .mundarija-tel { display: block; border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
+    .mundarija-tel summary {
+      list-style: none; min-height: 52px; padding: 0 var(--b-4);
+      display: flex; align-items: center; justify-content: space-between;
+      font-weight: 800; cursor: pointer;
+    }
+    .mundarija-tel summary::-webkit-details-marker { display: none; }
+    .mundarija-tel[open] summary svg { transform: rotate(180deg); }
+    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--b-2) var(--b-2); display: flex; flex-direction: column; gap: 2px; }
+    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
+    .mundarija-tel a:hover { background: var(--fon-ikkinchi); }
+  }
+  @media (max-width: 760px) {
+    .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .format > div:nth-child(3) { border-left: 0; }
+    .format > div:nth-child(n + 3) { border-top: 1px solid var(--chiziq); }
+    .qoida, .juft { grid-template-columns: 1fr; }
+    .turlar li { grid-template-columns: 1fr; }
+    .variantlar { grid-template-columns: 1fr; }
+    .ulushlar { grid-template-columns: 1fr; gap: var(--b-2); }
+  }
+  @media (max-width: 640px) {
+    .qol { padding-top: var(--b-6); gap: var(--b-8); }
+    h1 { font-size: 34px; }
+    h2 { font-size: 24px; }
+    .maqola { gap: var(--b-10); }
+    .mashq { padding: var(--b-5); }
+    .dawo { font-size: 20px; }
+    .tfng dt { flex-basis: 88px; }
+    .k-tugmalar .katta { width: 100%; }
+  }
+</style>

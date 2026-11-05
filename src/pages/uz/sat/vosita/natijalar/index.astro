@@ -2,11 +2,11 @@
 // Mening natijalarim. Dizayn: Tayanch-SAT-dizayn.md, "Natijalar" ekrani.
 // Haqiqiy javoblar localStorage'dan (tayanch:sat-javoblar). Javob yo'q bo'lsa, namuna ko'rsatiladi va belgilanadi.
 // Ball hisoblanmaydi.
-import SatQobiq from '../../../../../layouts/SatQobiq.astro';
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import { namunaJavoblar } from '../../../../../data/satNamuna';
 import { yol } from '../../../../../lib/yol';
 ---
-<SatQobiq
+<BolimQobiq
   title="Mening natijalarim · SAT"
   description="Mashqlardagi javoblaringiz va xatolaringiz. Ma'lumot faqat shu brauzerda saqlanadi. Ball hisoblanmaydi."
   turi="vosita"
@@ -75,7 +75,7 @@ import { yol } from '../../../../../lib/yol';
       </div>
     </form>
   </dialog>
-</SatQobiq>
+</BolimQobiq>
 
 <script>
   import { KALIT_JAVOBLAR, type Javob } from '../../../../../data/satNamuna';
