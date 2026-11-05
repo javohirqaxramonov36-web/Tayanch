@@ -33,6 +33,14 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
     <h1 id="q-h">{q.raqam}-qavat · {q.nomi}</h1>
     <p class="tavsif">{b.tavsif}</p>
 
+    {bolim === 'top-admission' && (
+      <a class="vosita-karta" href={yol('/uz/top-admission/vosita/topshirish-yoli/')}>
+        <span class="vk-yorliq">Vosita</span>
+        <span class="vk-nom">Topshirish yo'li</span>
+        <span class="vk-matn">Davlat, daraja va grant bo'yicha mos ariza yo'llari.</span>
+      </a>
+    )}
+
     <section class="muddatlar" aria-labelledby="m-h">
       <h2 id="m-h">Shu bo'limning muddatlari</h2>
       <DeadlineRoyxati bolim={bolim} faqatKelajak />
@@ -48,6 +56,15 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
   .pill { align-self: flex-start; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
   h1 { font-weight: 900; letter-spacing: -0.5px; }
   .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .vosita-karta {
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya);
+    padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1);
+    color: var(--matn); text-decoration: none; max-width: 520px;
+  }
+  .vosita-karta:hover { background: var(--fon-ikkinchi); }
+  .vk-yorliq { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .vk-nom { font-size: var(--matn-h3); font-weight: 800; }
+  .vk-matn { color: var(--matn-ikkinchi); }
   .muddatlar { display: flex; flex-direction: column; gap: var(--b-4); padding-top: var(--b-4); }
   .muddatlar h2 { font-size: var(--matn-h3); }
   .muddatlar a { color: var(--rang-havola); font-weight: 700; }

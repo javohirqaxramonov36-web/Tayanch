@@ -12,6 +12,7 @@ Palitra: **oq, qora, ko'k** (2026-11-04 qarori). Bo'limlar rang bilan emas, ikon
 | --- | --- | --- |
 | `--rang-asosiy` | `#4255ff` | Ko'k: asosiy tugmalar, havolalar, progress, ta'kid so'zlar, ikonkalar |
 | `--rang-asosiy-toq` | `#2f40e0` | Ko'k tugma hover |
+| `--rang-asosiy-chuqur` | `#2433b8` | Topshirish yo'li: 3D pog'onaning yon yuzi (ikkala mavzuda) |
 | `--rang-asosiy-qorada` | `#8b97ff` | Qora fon ustidagi ko'k (timeline chizig'i va nuqtalari) |
 | `--fon` | `#ffffff` | Sahifa foni |
 | `--fon-ikkinchi` | `#f5f6fa` | Tinch sahna foni, ichki kartalar |
@@ -28,7 +29,7 @@ Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`).
 
 ### Qorong'i mavzu (2026-11-04, S1)
 
-`:root[data-mavzu='qorongi']` ichida tokenlar qayta beriladi. Yangi rang yo'q: faqat yuqoridagi oq, qora, ko'k va kulranglar.
+`:root[data-mavzu='qorongi']` ichida tokenlar qayta beriladi. Yangi rang yo'q: faqat yuqoridagi oq, qora, ko'k va kulranglar. Yagona istisno: ogohlik juftligi (2026-11-05 qarori, quyida).
 
 | Token | Qorong'i qiymat |
 | --- | --- |
@@ -39,6 +40,7 @@ Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`).
 | `--matn-ikkinchi`, `--matn-sust` | `#b4b9c8` |
 | `--rang-asosiy` | `#4255ff` (fon sifatida, oq matn bilan) |
 | `--rang-havola` | `#8b97ff` (qora fondagi matn) |
+| `--rang-ogoh-fon` / `--rang-ogoh-matn` | `#33240f` / `#ffc98a` ("tekshirish kerak" yorlig'i; yorug'da `#fff4e5` / `#8a3b0a`). Oldingi `#1b1e26` / oq juftligi ogohlikni oddiy yorliqdan ajratmas edi |
 
 Boshlang'ich holat `prefers-color-scheme` dan. Tanlov `localStorage` da (`tayanch:mavzu`), `<head>` dagi inline skript sahifa chizilishidan oldin `data-mavzu` qo'yadi, shuning uchun rang miltillamaydi. Tanlov tugmasi hozircha faqat SAT yon panelida.
 
@@ -86,6 +88,13 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 - **Lift** (`Lift.astro`): 5 ta yumaloq raqamli tugma (48px), `<nav aria-label="Qavatlar (lift)">`, tugma `<a>`. Joriy qavat ko'k fon va oq raqam, `aria-current="location"`. Tez-oradagi qavat kulrang raqam va nuqta, lekin kirsa bo'ladi ("qavat qurilmoqda" sahifasi). Kompyuterda: bo'lim yon panelida logo ostida ("3-qavat · SAT prep" yozuvi bilan; yig'ilgan panelda ustun, yozuvsiz), 1-qavat menyusining o'ng tomonida, mashq sahifasi sarlavhasida. Telefonda: pastda doim turuvchi 5 tugmali panel (raqam + qisqa nom, 64px + safe area), sahifa pastiga shuncha bo'shliq qo'shiladi; chiqib keladigan panel ochiqligida inert. Qavat o'zgarsa qisqa "2 → 3" ko'rsatkichi (sessionStorage `tayanch:qavat`; reduced motion'da animatsiyasiz).
 - **Qavat yo'li** (`QavatYoli.astro`): sahifa tepasida "3-qavat › Mashq › Test"; oxirgi band havola emas (`aria-current="page"`). 1-qavat bosh sahifasida yo'q.
 - **Zina** (`Zina.astro`): qavat kirish sahifasi pastida qo'shni qavatlarga ikki karta (pastga chapda, yuqoriga o'ngda). 1-qavatda faqat yuqoriga, 5-qavatda faqat pastga.
+- **Top Admission: pasport/viza detallari** (maket, 2026-11-05: Claude Design "Tayanch Top Admission maketi", https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF; A kirish, B Türkiye Bursları, C Topshirish yo'li, D lift; yorug' va qorong'i). Detallar ma'no tashiydi, bezak emas; hammasi CSS/SVG, rasmsiz (pasport surati, bayroq, gerb yo'q).
+  - **Muhr**: 58–92px doira, 2px uzuq ko'k chegara + ichki 1.5px halqa, -8° burilgan, ichida "TEKSHIRILGAN" va sana. Faqat rasmiy manbada tekshirilgan faktda. Tekshirilmaganida muhr yo'q, o'rniga ogohlik rangidagi "tekshirish kerak" yorlig'i.
+  - **Chipta**: faqat muddat kartalari. 1.5px qora chegara, `--r-orta`; o'ng "korishok" (150px, telefonda 96px) uzuq chiziq bilan ajratilgan, chegarasida tepa va pastda yarim doira teshik. Chapda sana katta (900), korishokda qolgan kun.
+  - **Viza sahifasi**: yo'nalish sahifasi boshidagi karta, 24px katakli nozik to'r (`--sirt-ikkinchi`), chap yuqorida davlat kodi ("UZ → TR", ko'k, 900), 2×2 maydon: Dastur, Daraja, Ariza oynasi, Manba.
+  - **MRZ qatori**: faqat sahifa oxiri blokida, `--fon-ikkinchi` lentada ikki qator `TAYANCH<<TOP<ADMISSION<<<…`, Figtree 700, harf oralig'i 0.22em, `aria-hidden`. Shaxsiy ma'lumot yo'q.
+  - **Savol progressi** (Topshirish yo'lidagi 3D zinapoya) va **Zina** (qavatlar orasidagi tekis kartalar) har xil ko'rinadi va har xil yozilgan; ularni adashtirmaslik kerak.
+  - Topshirish yo'lida asosiy yo'l kartasi qora (qorong'ida `--fon-ikkinchi` + 2px `--rang-havola` chegara); kartaning orqa yuzi pasport sahifasi (to'r fon, muhrli faktlar, "tekshirish kerak" yorliqlari).
 - **Menyu**: oq qator, logo chapda, havolalar o'ngda; bo'limlarga o'tish o'rniga lift. Telefonda ikkinchi qatorga o'tadi.
 - **Footer**: "Natija kafolatlanmaydi", Maxfiylik, Manba jurnali.
 - **Sahifa oxiri bloki** (har sahifada, T1): rasmiy manbalar, tekshirilgan sana, keyingi tekshiruv, tekshirilmagan joylar.
