@@ -1,5 +1,413 @@
 ---
-// Qavat qurilmoqda. Bo'lim dizayni tayyor bo'lganda almashtiriladi.
-import QavatQurilmoqda from '../../../components/QavatQurilmoqda.astro';
+// 2-qavat · Top Admission · bo'lim kirishi.
+// Dizayn: Claude Design "Tayanch Top Admission maketi", A artboard (Main, KirishTelefon):
+// https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF
+// Pasport/viza detallari (muhr, chipta, MRZ): DESIGN.md.
+// Muddatlar: deadline.ts (EY01, TB01). Stipendium Hungaricum: SH01. Muallif: muallif.ts (tasdiqlangan).
+// Hozircha Asosiy qolipi (Topshirish yo'li bilan bir xil); Top Admission yon paneli alohida vazifa.
+import Asosiy from '../../../layouts/Asosiy.astro';
+import Zina from '../../../components/Zina.astro';
+import { deadlinelar } from '../../../data/deadline';
+import { manbalar } from '../../../data/manbalar';
+import { qabulXatlari } from '../../../data/muallif';
+import { SAVOLLAR, KALIT } from '../../../data/topshirishYoli';
+import { yol } from '../../../lib/yol';
+
+const m = (id: string) => manbalar.find((x) => x.id === id)!;
+const d = (id: string) => deadlinelar.find((x) => x.id === id)!;
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+
+const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+const sanaMatn = (iso: string) => {
+  const [, oy, kun] = iso.split('-').map(Number);
+  return `${kun}-${OYLAR[oy - 1]}`;
+};
+
+const eyuf = d('eyuf-2026-2-hujjat');
+const tb = d('turkiye-burslari-2027-ariza');
+const chiptalar = [
+  {
+    ustki: "El-yurt umidi · 2026-yil 2-tanlov",
+    katta: sanaMatn(eyuf.sana),
+    matn: `Hujjat qabuli ${eyuf.soat} gacha`,
+    izoh: null as string | null,
+    manba: m('EY01'),
+    ochilish: null as string | null,
+    yopilish: eyuf.sana,
+    korishokKatta: sanaMatn(eyuf.sana),
+    korishokMatn: 'oxirgi kun',
+  },
+  {
+    ustki: "Türkiye Bursları · umumiy ariza",
+    katta: '10-yanvar – 20-fevral',
+    matn: 'Ariza oynasi',
+    izoh: "Har yilgi taqvim, 2027 e'loni kutilmoqda",
+    manba: m('TB01'),
+    // TB01: ariza har yili 10-yanvarda ochiladi; yil deadline.ts dagi yopilish yilidan olinadi.
+    ochilish: `${tb.sana.slice(0, 4)}-01-10`,
+    yopilish: tb.sana,
+    korishokKatta: sanaMatn(tb.sana),
+    korishokMatn: 'oxirgi kun',
+  },
+];
+
+const tezOrada = [
+  { kod: 'UZ → US', nomi: 'AQSH' },
+  { kod: 'UZ → GB', nomi: 'Buyuk Britaniya' },
+  { kod: 'UZ → AU', nomi: 'Avstraliya' },
+  { kod: 'UZ → KR', nomi: 'Janubiy Koreya' },
+];
+// "Mening yo'lim": Topshirish yo'li javoblari (faqat o'qiladi). Variant nomlari skriptga JSON bilan beriladi.
+const yolMalumot = {
+  KALIT,
+  nomlar: Object.fromEntries(
+    Object.entries(SAVOLLAR).map(([k, s]) => [k, Object.fromEntries(s.variantlar.map((v) => [v.id, v.nomi]))]),
+  ),
+};
+const savollar = [
+  { n: 1, nomi: 'Davlat', variantlar: ['AQSH', 'Buyuk Britaniya', 'Turkiya', '…'] },
+  { n: 2, nomi: 'Daraja', variantlar: ['Bakalavriat', 'Magistratura'] },
+  { n: 3, nomi: 'Grant', variantlar: ["To'liq", 'Qisman', "Yo'q"] },
+];
 ---
-<QavatQurilmoqda bolim="top-admission" />
+<Asosiy
+  title="Top Admission"
+  description="Chet el universitetiga ariza yo'lini rasmiy manbalar bilan ko'rsatadi. Natija kafolatlanmaydi."
+  turi="bolim-kirishi"
+  bolim="top-admission"
+  holat="qoralama"
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
+  manbalar={['EY01', 'TB01', 'SH01']}
+  tekshirilmagan={[
+    "Türkiye Bursları 2027-yil e'loni (taqvimda yil yozilmagan)",
+    "Stipendium Hungaricum 2027/28 e'loni va muddati (hali chiqmagan)",
+    "El-yurt umidi muddatining vaqt mintaqasi (Toshkent deb olindi)",
+    "Türkiye Bursları va boshqa yo'nalishlar sahifalari hali yozilmagan",
+  ]}
+>
+  <div class="ichki ta-sahifa">
+
+    <section class="kirish" aria-labelledby="ta-sarlavha">
+      <p class="ustki-qator"><span class="yorliq">Qoralama</span> <span class="sust kichik">Bo'lim kirishi</span></p>
+      <h1 id="ta-sarlavha">Top Admission</h1>
+      <p class="kirish-matn">Chet el universitetiga ariza yo'lini rasmiy manbalar bilan ko'rsatamiz. Natija kafolatlanmaydi.</p>
+    </section>
+
+    <section class="vosita-karta" aria-labelledby="vosita-sarlavha">
+      <div class="vosita-matn">
+        <p class="ustki">Vosita · 3 savol</p>
+        <h2 id="vosita-sarlavha">Topshirish yo'li</h2>
+        <p class="ikkinchi">Qaysi davlat, qaysi daraja, grant kerakmi. Javoblaringizga mos ariza yo'llari va ularning rasmiy manbalari chiqadi.</p>
+        <ol class="savollar">
+          {savollar.map((s) => (
+            <li>
+              <span class="raqam" aria-hidden="true">{s.n}</span>
+              <span class="savol-nom">{s.nomi}</span>
+              <span class="variantlar">{s.variantlar.map((v) => <span class="variant">{v}</span>)}</span>
+            </li>
+          ))}
+        </ol>
+        <div class="vosita-past">
+          <a class="tugma tugma-asosiy katta-tugma" href={vosita}>
+            Yo'limni topish
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
+          </a>
+          <span class="sust kichik">Qabul ehtimoli hisoblanmaydi</span>
+        </div>
+      </div>
+      <div class="sahna" aria-hidden="true">
+        <div class="savol-zinasi">
+          <div class="pog p1"><div class="old"></div><div class="yon"></div><div class="ust"><span>Davlat</span></div></div>
+          <div class="pog p2"><div class="old"></div><div class="yon"></div><div class="ust"><span>Daraja</span></div></div>
+          <div class="pog p3"><div class="old"></div><div class="yon"></div><div class="ust"><span>Grant</span></div></div>
+        </div>
+        <p class="sahna-izoh">Savol progressi</p>
+      </div>
+    </section>
+
+    <section class="blok" aria-labelledby="muddat-sarlavha">
+      <div class="blok-bosh">
+        <h2 id="muddat-sarlavha">Yaqin muddatlar</h2>
+        <a class="havola" href={yol('/uz/deadline/')}>Barcha muddatlar</a>
+      </div>
+      <div class="chiptalar">
+        {chiptalar.map((c) => (
+          <article class="chipta" data-yopilish={c.yopilish} data-ochilish={c.ochilish}>
+            <span class="teshik teshik-tepa" aria-hidden="true"></span>
+            <span class="teshik teshik-past" aria-hidden="true"></span>
+            <div class="chipta-asosiy">
+              <div class="chipta-matn">
+                <p class="ustki">{c.ustki}</p>
+                <p class="chipta-sana">{c.katta}</p>
+                <p class="chipta-qator">{c.matn}</p>
+                {c.izoh && <p class="ikkinchi kichik">{c.izoh}</p>}
+                <p class="sust kichik chipta-manba">Manba: <a href={c.manba.havola} rel="noopener">{c.manba.tashkilot}</a></p>
+              </div>
+              <span class="muhr" role="img" aria-label={`Rasmiy manbada tekshirilgan, ${c.manba.tekshirilganSana}`}>
+                <b>TEKSHIRILGAN</b><span>{c.manba.tekshirilganSana}</span>
+              </span>
+            </div>
+            <div class="korishok">
+              <span class="korishok-katta">{c.korishokKatta}</span>
+              <span class="korishok-matn">{c.korishokMatn}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="blok" aria-labelledby="yonalish-sarlavha">
+      <h2 id="yonalish-sarlavha">Yo'nalishlar</h2>
+      <div class="yonalishlar">
+        <article class="yonalish yonalish-katta">
+          <div class="yonalish-matn">
+            <p class="yorliqlar"><span class="yorliq yorliq-kok">Rasmiy taqvim bor</span> <span class="yorliq">UZ → TR</span></p>
+            <h3>Türkiye Bursları</h3>
+            <p class="ikkinchi">Turkiya hukumatining xalqaro talabalar uchun stipendiya dasturi. Umumiy ariza har yili 10-yanvar – 20-fevral.</p>
+            <p class="yonalish-past"><a class="havola" href={vosita}>Topshirish yo'lida ko'rish</a> <span class="yorliq">sahifa tez orada</span></p>
+          </div>
+          <span class="muhr" role="img" aria-label={`Rasmiy manbada tekshirilgan, ${m('TB01').tekshirilganSana}`}>
+            <b>TEKSHIRILGAN</b><span>{m('TB01').tekshirilganSana}</span>
+          </span>
+        </article>
+        <article class="yonalish">
+          <p class="yorliqlar"><span class="yorliq">tez orada</span> <span class="yorliq">UZ → HU</span></p>
+          <h3>Stipendium Hungaricum</h3>
+          <p class="fakt">
+            <span class="muhr muhr-kichik" role="img" aria-label={`Rasmiy manbada tekshirilgan, ${m('SH01').tekshirilganSana}`}>
+              <b>TEKSHIRILGAN</b><span>{m('SH01').tekshirilganSana}</span>
+            </span>
+            <span>O'zbekiston hamkor davlatlar ro'yxatida</span>
+          </p>
+          <span class="yorliq yorliq-ogoh">2027/28 e'loni hali chiqmagan</span>
+        </article>
+      </div>
+      <ul class="tez-orada">
+        {tezOrada.map((t) => (
+          <li><span class="sust kichik">{t.kod}</span><span class="tez-nom">{t.nomi}</span><span class="yorliq">tez orada</span></li>
+        ))}
+      </ul>
+    </section>
+
+    <div class="yol-qator">
+    <section class="mening-yolim" id="mening-yolim" aria-labelledby="mening-sarlavha" data-mening-yolim>
+      <h2 id="mening-sarlavha" class="ustki">Mening yo'lim</h2>
+      <div data-holat="bosh">
+        <p class="mening-asosiy">Hali yo'l tanlanmagan</p>
+        <p class="ikkinchi kichik">Topshirish yo'lida javob bersangiz, tanlovingiz shu yerda turadi. Faqat shu brauzerda.</p>
+        <a class="havola" href={vosita}>3 savolga javob berish</a>
+      </div>
+      <div data-holat="bor" hidden>
+        <p class="mening-asosiy" data-tanlov></p>
+        <p class="ikkinchi kichik">Faqat shu brauzerda saqlangan. Qabul ehtimoli hisoblanmaydi.</p>
+        <a class="havola" href={vosita}>Yo'limni ochish</a>
+      </div>
+    </section>
+    <script type="application/json" id="ta-yol-malumot" set:html={JSON.stringify(yolMalumot)} />
+
+    <section class="ishonch" aria-labelledby="ishonch-sarlavha">
+      <div class="ishonch-bosh">
+        <p id="ishonch-sarlavha" class="ustki">Muallif yo'li</p>
+        <a class="havola" href={yol('/uz/') + '#muallif-sarlavha'}>To'liq hikoya</a>
+      </div>
+      <p class="ishonch-son">{qabulXatlari.soni} ta qabul xati</p>
+      <p class="ikkinchi kichik">Hujjat bilan tasdiqlangan. Previewlarda shaxsiy ma'lumotlar yopilgan, original hujjat emas.</p>
+      <ul class="previewlar">
+        {qabulXatlari.previewlar.map((p) => (
+          <li>
+            <img src={yol(`/proof/${p.fayl}`)} width="960" height="540" loading="lazy" decoding="async"
+              alt={`${p.nomi}: ${p.izoh}. Shaxsiy ma'lumotlar yopilgan preview.`} />
+          </li>
+        ))}
+      </ul>
+    </section>
+    </div>
+
+    <Zina />
+
+    <div class="mrz" aria-hidden="true">
+      <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+      <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+    </div>
+  </div>
+</Asosiy>
+
+<script>
+  // 1) Chiptadagi qolgan kun: bugungi sana Toshkent bo'yicha. JS bo'lmasa sana va "oxirgi kun" qoladi.
+  const bugun = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tashkent' }).format(new Date());
+  const kunFarqi = (a: string, b: string) => {
+    const k = (s: string) => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+    return Math.round((k(b) - k(a)) / 864e5);
+  };
+  document.querySelectorAll<HTMLElement>('.chipta[data-yopilish]').forEach((ch) => {
+    const katta = ch.querySelector('.korishok-katta');
+    const matn = ch.querySelector('.korishok-matn');
+    const korishok = ch.querySelector('.korishok');
+    if (!katta || !matn || !korishok) return;
+    const { yopilish = '', ochilish } = ch.dataset;
+    if (ochilish && bugun < ochilish) {
+      katta.textContent = String(kunFarqi(bugun, ochilish));
+      matn.textContent = 'kun ochilishiga';
+    } else if (bugun <= yopilish) {
+      const n = kunFarqi(bugun, yopilish);
+      katta.textContent = n === 0 ? 'Bugun' : String(n);
+      matn.textContent = n === 0 ? 'oxirgi kun' : 'kun qoldi';
+    } else {
+      katta.textContent = "O'tgan";
+      matn.textContent = 'muddat tugagan';
+      korishok.classList.add('otgan');
+    }
+    korishok.classList.add('son');
+  });
+
+  // 2) Mening yo'lim: Topshirish yo'li javoblari, faqat o'qiladi (spetsifikatsiya 3-band).
+  const blok = document.querySelector<HTMLElement>('[data-mening-yolim]');
+  const malumotEl = document.getElementById('ta-yol-malumot');
+  if (blok && malumotEl) {
+    try {
+      const M = JSON.parse(malumotEl.textContent || '{}') as { KALIT: string; nomlar: Record<string, Record<string, string>> };
+      const s = JSON.parse(localStorage.getItem(M.KALIT) || 'null');
+      const tanlov = s && typeof s === 'object'
+        ? ['davlat', 'daraja', 'grant'].map((k) => M.nomlar[k]?.[s[k]]).filter(Boolean)
+        : [];
+      if (tanlov.length) {
+        blok.querySelector('[data-tanlov]')!.textContent = tanlov.join(' · ');
+        blok.querySelector<HTMLElement>('[data-holat="bosh"]')!.hidden = true;
+        blok.querySelector<HTMLElement>('[data-holat="bor"]')!.hidden = false;
+      }
+    } catch { /* o'qib bo'lmadi: bo'sh holat qoladi */ }
+  }
+</script>
+
+<style>
+  .ta-sahifa { display: grid; gap: var(--b-14); padding-bottom: var(--b-10); }
+  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: -0.5px; }
+  h2 { font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; }
+  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
+  a:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+
+  .kirish { display: grid; gap: var(--b-4); }
+  .ustki-qator { display: flex; align-items: center; gap: var(--b-3); }
+  .kirish-matn { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+
+  /* Eng katta blok: Topshirish yo'li. Sahifadagi yagona soya. */
+  .vosita-karta {
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya);
+    padding: var(--b-8); display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-8);
+  }
+  .vosita-matn { flex: 1 1 380px; display: grid; gap: var(--b-4); }
+  .savollar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-3); }
+  .savollar li { display: flex; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
+  .raqam { width: 28px; height: 28px; flex: none; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); display: grid; place-items: center; font-weight: 800; font-size: 13px; }
+  .savol-nom { font-weight: 700; width: 64px; }
+  .variantlar { display: flex; flex-wrap: wrap; gap: 6px; }
+  .variant { padding: 3px 12px; border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli); font-size: 13px; font-weight: 700; }
+  .vosita-past { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-4); padding-top: var(--b-1); }
+  .katta-tugma { min-height: 52px; padding-inline: 26px; font-weight: 800; }
+
+  /* Savol progressi (3D): saytdagi Zina emas */
+  .sahna { flex: 1 1 300px; perspective: 900px; display: grid; place-items: center; gap: var(--b-2); min-height: 260px; }
+  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
+  .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
+  .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; }
+  .pog .ust span { transform: rotateZ(38deg) rotateX(-58deg); font-weight: 800; font-size: 13px; }
+  .pog .old { position: absolute; left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); }
+  .pog .yon { position: absolute; right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); }
+  .p1 { left: 0; top: 128px; --h: 28px; }
+  .p2 { left: 104px; top: 64px; --h: 56px; }
+  .p3 { left: 208px; top: 0; --h: 84px; }
+  .sahna-izoh { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
+
+  .blok { display: grid; gap: var(--b-5); }
+  .blok-bosh { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--b-3); }
+
+  /* Muhr: faqat rasmiy manbada tekshirilgan faktda (DESIGN.md) */
+  .muhr {
+    width: 84px; height: 84px; flex: none; border-radius: 50%;
+    border: 2px dashed var(--rang-havola); outline: 1.5px solid var(--rang-havola); outline-offset: -8px;
+    color: var(--rang-havola); background: var(--fon);
+    display: grid; place-content: center; justify-items: center; gap: 2px; transform: rotate(-8deg); text-align: center;
+  }
+  .muhr b { font-size: 7.5px; letter-spacing: .03em; font-weight: 800; }
+  .muhr span { font-size: 10.5px; font-weight: 700; }
+  .muhr-kichik { width: 72px; height: 72px; outline-offset: -6px; }
+  .muhr-kichik b { font-size: 6.5px; letter-spacing: .02em; }
+  .muhr-kichik span { font-size: 9px; }
+
+  /* Chipta: faqat muddat kartalari */
+  .chiptalar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: var(--b-4); }
+  .chipta { --korishok: 140px; position: relative; overflow: hidden; display: flex; border: 1.5px solid var(--matn); border-radius: var(--r-orta); background: var(--fon); }
+  .teshik { position: absolute; right: calc(var(--korishok) - 11px); width: 22px; height: 22px; border-radius: 50%; background: var(--fon); border: 1.5px solid var(--matn); }
+  .teshik-tepa { top: -12px; }
+  .teshik-past { bottom: -12px; }
+  .chipta-asosiy { flex: 1; min-width: 0; padding: var(--b-5) var(--b-6); display: flex; justify-content: space-between; gap: var(--b-3); }
+  .chipta-matn { display: grid; gap: var(--b-1); align-content: start; }
+  .chipta-sana { font-size: 30px; font-weight: 800; line-height: 1.1; }
+  .chipta-qator { font-weight: 600; }
+  .chipta-manba { margin-top: var(--b-2); }
+  .chipta-manba a { color: var(--rang-havola); }
+  .korishok { width: var(--korishok); flex: none; border-left: 2px dashed var(--chiziq-kuchli); display: grid; place-content: center; justify-items: center; gap: 2px; padding: var(--b-4); text-align: center; }
+  .korishok-katta { font-size: 20px; font-weight: 800; line-height: 1.15; }
+  .korishok-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+
+  /* Yo'nalishlar: 1 katta + 1 o'rta + 4 kichik (uchta bir xil qator emas) */
+  .yonalishlar { display: grid; grid-template-columns: 2fr 1fr; gap: var(--b-4); }
+  .yonalish { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); }
+  .yonalish h3 { font-size: 22px; font-weight: 800; }
+  .yonalish-katta { flex-direction: row; justify-content: space-between; align-items: flex-start; gap: var(--b-5); }
+  .yonalish-katta h3 { font-size: 26px; }
+  .yonalish-matn { display: grid; gap: var(--b-3); max-width: 46ch; }
+  .yonalish-past { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .yorliq-kok { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .yorliq-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); align-self: flex-start; margin-top: auto; }
+  .fakt { display: flex; align-items: center; gap: var(--b-3); font-weight: 600; font-size: var(--matn-kichik); }
+  .tez-orada { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--b-3); }
+  .tez-orada li { border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4); display: grid; gap: var(--b-2); justify-items: start; }
+  .tez-nom { font-weight: 800; }
+
+  .yol-qator { display: flex; flex-wrap: wrap; gap: var(--b-4); align-items: stretch; }
+  .mening-yolim { flex: 1 1 260px; background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); }
+  .mening-yolim > div:not([hidden]) { display: grid; gap: var(--b-2); justify-items: start; }
+  .mening-yolim h2 { margin-bottom: var(--b-2); }
+  .mening-asosiy { font-size: var(--matn-katta); font-weight: 800; }
+  .korishok.son .korishok-katta { font-size: 40px; font-weight: 900; line-height: 1; }
+  .korishok.otgan .korishok-katta { font-size: 20px; color: var(--matn-sust); }
+  @media (max-width: 760px) { .korishok.son .korishok-katta { font-size: 28px; } .korishok.otgan .korishok-katta { font-size: 14px; } }
+  .ishonch { flex: 2 1 420px; min-width: 0; border: 1.5px solid var(--chiziq); border-radius: var(--r-katta); padding: var(--b-6); display: grid; gap: var(--b-3); }
+  .ishonch-bosh { display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
+  .ishonch-son { font-size: var(--matn-h3); font-weight: 800; }
+  .previewlar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--b-2); }
+  .previewlar img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r-kichik); border: 1px solid var(--chiziq); display: block; }
+
+  /* MRZ: pasport metaforasi, shaxsiy ma'lumot yo'q (DESIGN.md) */
+  .mrz { background: var(--fon-ikkinchi); border-radius: var(--r-orta) var(--r-orta) 0 0; padding: 14px var(--b-4); display: grid; gap: 2px; overflow: hidden; }
+  .mrz p { font-weight: 700; font-size: 16px; letter-spacing: .22em; color: var(--matn-ikkinchi); white-space: nowrap; overflow: hidden; }
+
+  @media (max-width: 760px) {
+    .vosita-karta { padding: var(--b-5); gap: var(--b-4); }
+    .sahna { order: -1; min-height: 190px; }
+    .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.7); }
+    .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.7); }
+    .katta-tugma { width: 100%; }
+    .chipta { --korishok: 96px; }
+    .chipta-asosiy { flex-direction: column; padding: var(--b-4); }
+    .chipta-sana { font-size: 24px; }
+    .korishok { padding: var(--b-2); }
+    .korishok-katta { font-size: 14px; white-space: nowrap; }
+    .yonalishlar { grid-template-columns: 1fr; }
+    .yonalish-katta .muhr { width: 72px; height: 72px; outline-offset: -6px; }
+    .yonalish-katta .muhr b { font-size: 6.5px; letter-spacing: .02em; }
+    .yonalish-katta .muhr span { font-size: 9px; }
+    .tez-orada { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .previewlar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mrz p { font-size: 13px; letter-spacing: .18em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .savol-zinasi { transition: none; }
+    .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); }
+  }
+</style>
