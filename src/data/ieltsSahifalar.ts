@@ -34,6 +34,12 @@ export const asos: IeltsBand = {
   ikonka: IKONKA.general,
 };
 
+/** Interaktiv darslar (standart: docs/interaktiv-dars-standarti.md) */
+export const darslar: IeltsBand[] = [
+  { nomi: 'True / False / Not Given', tavsif: "Dalil gapni topib, mos, zid yoki yo'qligini ajratish", qism: 'qollanma/reading/tfng/', ikonka: IKONKA.tahlil },
+  { nomi: 'Matching headings', tavsif: 'Paragrafning asosiy fikriga sarlavha tanlash', qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
+];
+
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
 ];
