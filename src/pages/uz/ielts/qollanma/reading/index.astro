@@ -127,6 +127,7 @@ const tuzoqlar = [
               <button type="button" class="chiziq-tugma" id="qayta">Qayta urinish</button>
             </div>
           </section>
+          <p class="dars-havolalar">Ko'proq mashq: <a href={yol('/uz/ielts/qollanma/reading/tfng/')}>True / False / Not Given darsi</a> va <a href={yol('/uz/ielts/qollanma/reading/sarlavhalar/')}>Matching headings darsi</a> (interaktiv, 5 tadan mashq).</p>
         </section>
 
         <section id="tuzoq" aria-labelledby="tuzoq-h">
@@ -308,6 +309,8 @@ const tuzoqlar = [
   .javob.j-togri { background: var(--rang-asosiy-och); border: 1.5px solid var(--rang-asosiy); }
   .j-sarlavha { font-size: 18px; font-weight: 800; }
   .javob p { line-height: 1.6; }
+  .dars-havolalar { line-height: 1.6; }
+  .dars-havolalar a { color: var(--rang-havola); font-weight: 700; }
   .chiziq-tugma { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
 
   .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }

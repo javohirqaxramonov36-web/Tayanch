@@ -84,8 +84,8 @@ export const manbalar: Manba[] = [
     tashkilot: 'IELTS (ielts.org)',
     havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-reading',
     tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-05',
-    izoh: "60 daqiqa, 40 savol, 3 bo'lim; matnlar jami 2150–2750 so'z.",
+    tekshirilganSana: '2026-11-06',
+    izoh: "60 daqiqa, 40 savol, 3 bo'lim; matnlar jami 2150–2750 so'z. 11 savol turi; 2-tur \"Identifying information (True/False/Not given)\": False = da'vo matndagi ma'lumotga zid, Not given = na mos, na zid; mavzu bo'yicha o'z bilimingdan foydalanilmaydi. 5-tur \"Matching headings\": sarlavha paragraf yoki bo'limning asosiy fikrini umumlashtiradi, sarlavhalar paragraflardan ko'p, bitta sarlavha bir martadan ortiq ishlatilmaydi. Sahifa 2026-11-06 da qayta tekshirildi.",
   },
   {
     id: 'IE03',

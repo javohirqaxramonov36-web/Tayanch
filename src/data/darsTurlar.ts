@@ -18,6 +18,8 @@ export interface DarsSavol<M extends string = string> {
   mavzu: string;
   qiyinlik: Qiyinlik;
   matn: string;
+  /** Ixtiyoriy: savol matni ustidagi parcha (IELTS Reading). Paragraflar bo'sh qator (\n\n) bilan ajratiladi. */
+  parcha?: string;
   variantlar: Variant[];
   /** variantlar indeksi */
   togri: number;

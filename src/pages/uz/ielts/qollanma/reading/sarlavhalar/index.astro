@@ -1,0 +1,290 @@
+---
+// IELTS Reading: "Matching headings" (IE02). Sahna: 3 paragrafli namuna matn va 4 sarlavha (bittasi ortiqcha).
+// Misol qadamida faqat A paragraf (namuna, IE02 dagi kabi oldindan moslangan): asosiy fikr gapi va mos sarlavha ko'rsatiladi.
+// Sinab ko'r qadamida A namuna bo'lib qoladi; foydalanuvchi B va C ni tanlaydi, keyin sarlavhani bosadi (bitta sarlavha bitta paragrafga); "Tekshirish" natijani beradi (saqlanmaydi).
+// Paragraflar belgilashGuruh (<button aria-pressed>, strelka, Home/End); sarlavhalar oddiy <button>. Mashqlar DarsQolip da.
+import { darsSavollari } from '../../../../../../data/ieltsDarslar';
+import { yol } from '../../../../../../lib/yol';
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+
+// Laboratoriya matni (o'ylab topilgan vaziyat, mashq emas)
+const paragraflar = [
+  {
+    harf: 'A',
+    gaplar: [
+      'For more than a century, the clock above the town hall told the time for everyone in the square.',
+      'Shopkeepers opened their doors by it, and buses left when its bell rang.',
+    ],
+    asosiy: [0],
+    togri: 2,
+    izoh: "Birinchi gap asosiy fikr: butun shahar soatga qarab yashagan. Ikkinchi gap buni misollar bilan ko'rsatadi.",
+  },
+  {
+    harf: 'B',
+    gaplar: [
+      'By the 1990s, however, almost everyone carried a watch or a phone.',
+      'The clock often ran slow, and nobody hurried to repair it.',
+    ],
+    asosiy: [0, 1],
+    togri: 3,
+    izoh: "\"However\" o'zgarishni bildiradi: soat endi kerak emas. Ikkala gap birga shu fikrni beradi.",
+  },
+  {
+    harf: 'C',
+    gaplar: [
+      'Last year, students from the technical college offered to restore it as a class project.',
+      'After months of work, the clock keeps perfect time again, and its bell rings every hour.',
+    ],
+    asosiy: [0, 1],
+    togri: 0,
+    izoh: "Kim (talabalar) va natija (soat yana ishlaydi): sarlavha ikkalasini qamrashi kerak.",
+  },
+];
+const sarlavhalar = [
+  'Students bring the clock back to life',
+  'How clocks are made',
+  'A clock the whole town relied on',
+  'A clock nobody needed any more',
+];
+const RIM = ['i', 'ii', 'iii', 'iv'];
+---
+<DarsQolip
+  bolim="ielts"
+  modul="ir-sarlavha"
+  savollar={darsSavollari['ir-sarlavha']}
+  yolBandlari={["Qo'llanmalar", 'Reading']}
+  darsTuri="Reading darsi"
+  imtihon="IELTS"
+  manbalar={['IE02']}
+  tekshirilgan="2026-11-06"
+  keyingiTekshiruv="2026-12-06"
+  title="Matching headings · IELTS"
+  description="IELTS Reading: paragrafning asosiy fikrini toping va unga mos sarlavhani tanlang. Detal, kalit so'z va juda keng sarlavha tuzoqlarini ajrating. 5 ta mashq."
+  yonalish="Matching headings"
+  sarlavha="Matching headings: paragraf nima haqida"
+  lead="Sarlavha paragrafdagi bitta detalni emas, butun asosiy fikrni umumlashtiradi. Sarlavhalar paragraflardan ko'p, shuning uchun bittasi ortiqcha qoladi. Paragrafni tanlang, keyin unga mos sarlavhani bosing."
+  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  savolTili="en"
+  savolKorsatma="Paragrafni o'qing va uning asosiy fikrini eng yaxshi umumlashtiradigan sarlavhani tanlang."
+  keyingi={{ nomi: 'True / False / Not Given', href: yol('/uz/ielts/qollanma/reading/tfng/') }}
+  maqsadlar={[
+    "Paragrafning asosiy fikrini qo'llab-quvvatlovchi detallardan ajratasiz.",
+    "Matndagi so'z sarlavhada takrorlangani uchun uni tanlamaysiz.",
+    "Juda keng yoki matnda yo'q fikrli sarlavhani chetga surasiz.",
+  ]}
+  xulosa={[
+    "Sarlavha paragrafning hamma qismini qamraydi: boshini ham, oxirini ham.",
+    "Misol va detal asosiy fikr emas: ular asosiy fikrni ko'rsatadi.",
+    "\"However\", \"in practice\" kabi so'zdan keyin ko'pincha asosiy fikr keladi.",
+    "Paragrafdagi so'z sarlavhada bor bo'lsa, bu tuzoq bo'lishi mumkin: ma'noni tekshiring.",
+    "Ishonchli juftlardan boshlang; qolgan sarlavhalar soni kamayadi.",
+  ]}
+  tekshirilmagan={[
+    "Paragraflar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "Tuzoq turlari (detal, kalit so'z, juda keng, rad etilgan qarash) Tayanch tavsiyasi, rasmiy tasnif emas.",
+    "Haqiqiy imtihonda bitta sarlavhalar ro'yxati bir nechta paragrafga beriladi; mashqlarda har savol bitta paragraf.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti ir-quti">
+      <p class="ir-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi">O'ylab topilgan matn</span></p>
+      <div class="ir-paragraflar" id="ir-paragraflar" role="group" aria-label="Paragraflar">
+        {paragraflar.map((p, k) => (
+          <button type="button" class="ir-paragraf" data-bolak={k} aria-pressed="false">
+            <span class="ir-p-bosh">
+              <span class="ir-harf" aria-hidden="true">{p.harf}</span>
+              <span class="ir-biriktirilgan" data-biriktirilgan={k}>Sarlavha: tanlanmagan</span>
+            </span>
+            <span class="ir-p-matn" lang="en">
+              {p.gaplar.map((g, j) => <span class="ir-gap" data-gap={j}>{g} </span>)}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div class="ir-sarlavhalar">
+        <p class="kichik ikkinchi">Sarlavhalar (bittasi ortiqcha)</p>
+        <ul class="ir-s-royxat">
+          {sarlavhalar.map((s, k) => (
+            <li><button type="button" class="ir-sarlavha" data-sarlavha={k} aria-pressed="false"><span class="ir-rim" aria-hidden="true">{RIM[k]}</span><span lang="en">{s}</span></button></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <p class="sahna-izoh" id="ir-holat" aria-live="polite"></p>
+    <script type="application/json" id="ir-data" set:html={JSON.stringify({ paragraflar, sarlavhalar, RIM })} />
+  </div>
+
+  <div slot="animatsiya">
+    <p>A paragraf namuna: imtihonda ham ba'zan bitta paragraf oldindan moslangan bo'ladi. Sahnada asosiy fikr gapi tagchiziq bilan, mos sarlavha ko'k fon bilan belgilangan.</p>
+    <div class="formula"><span class="kichik ikkinchi">Nega</span><span class="f-qiymat ir-qoida" id="ir-misol-izoh">{paragraflar[0].izoh}</span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim moslayman</button></div>
+  </div>
+
+  <div slot="formula">
+    <dl class="ir-qoidalar">
+      <div><dt>Asosiy fikr</dt><dd>Paragrafning hamma gapi shu fikrga xizmat qiladi. Sarlavha uni qamraydi.</dd></div>
+      <div><dt>Detal</dt><dd>Bitta misol, son yoki tafsilot. U asosiy fikrni ko'rsatadi, lekin o'zi sarlavha emas.</dd></div>
+      <div><dt>Kalit so'z tuzog'i</dt><dd>Paragrafdagi so'z sarlavhada bor, lekin ma'no boshqa.</dd></div>
+      <div><dt>Juda keng</dt><dd>Mavzu umumiy, paragraf esa uning bitta holati haqida.</dd></div>
+    </dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="vazifa">
+      <p><b>Vazifa.</b> A paragraf namuna. B va C uchun: sahnada paragrafni bosing, keyin unga mos sarlavhani bosing. Bitta sarlavha faqat bitta paragrafga beriladi. Hammasi tayyor bo'lsa, tekshiring.</p>
+      <p class="vazifa-holat" id="ir-sinab-holat" aria-live="polite">Hali biriktirilmagan.</p>
+    </div>
+    <div class="segment">
+      <button type="button" class="katta asosiy" id="ir-tekshir">Tekshirish</button>
+      <button type="button" class="kichik-tugma" id="ir-qayta">Qayta boshlash</button>
+    </div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { belgilashGuruhi } from '../../../../../../lib/belgilashGuruh';
+
+  type Paragraf = { harf: string; gaplar: string[]; asosiy: number[]; togri: number; izoh: string };
+  const { paragraflar, sarlavhalar, RIM } = JSON.parse(document.getElementById('ir-data')!.textContent || '{}') as { paragraflar: Paragraf[]; sarlavhalar: string[]; RIM: string[] };
+  const $ = (id: string) => document.getElementById(id)!;
+  const holat = $('ir-sinab-holat');
+  const sTugmalar = [...document.querySelectorAll<HTMLButtonElement>('[data-sarlavha]')];
+  let qadam = 'animatsiya';
+  const NAMUNA = 0;
+  let tekshirildi = false;
+  /** paragraf indeksi → sarlavha indeksi yoki -1 (namuna paragraf doim moslangan) */
+  const boshJuft = () => paragraflar.map((p, k) => (k === NAMUNA ? p.togri : -1));
+  let juft: number[] = boshJuft();
+
+  const g = belgilashGuruhi($('ir-paragraflar'), (k) => {
+    if (qadam !== 'sinab') return;
+    holat.textContent = k >= 0 ? `${paragraflar[k].harf} paragraf tanlandi. Endi sarlavhani bosing.` : holatMatni();
+    holat.dataset.ok = '';
+  });
+
+  const holatMatni = () => {
+    const n = juft.filter((x, k) => k !== NAMUNA && x >= 0).length;
+    return n ? `${n} / ${paragraflar.length - 1} paragrafga sarlavha berildi.` : 'Hali biriktirilmagan.';
+  };
+
+  function biriktirilganYoz() {
+    paragraflar.forEach((p, k) => {
+      const el = document.querySelector<HTMLElement>(`[data-biriktirilgan="${k}"]`)!;
+      el.textContent = juft[k] >= 0 ? `Sarlavha ${RIM[juft[k]]}${k === NAMUNA ? ' (namuna)' : ''}` : 'Sarlavha: tanlanmagan';
+    });
+    sTugmalar.forEach((t, j) => t.setAttribute('aria-pressed', String(juft.includes(j))));
+    sTugmalar[paragraflar[NAMUNA].togri].disabled = true;
+  }
+  function tozala() {
+    document.querySelectorAll('.ir-gap').forEach((x) => x.classList.remove('ir-asosiy'));
+    document.querySelectorAll('.ir-paragraf, .ir-sarlavha').forEach((x) => x.classList.remove('ir-togri', 'ir-xato'));
+  }
+
+  function chizMisol() {
+    tozala();
+    g.tanla(-1);
+    g.faol(false);
+    const p = paragraflar[NAMUNA];
+    juft = boshJuft();
+    biriktirilganYoz();
+    sTugmalar.forEach((t) => { t.disabled = true; });
+    g.tugmalar[NAMUNA].classList.add('ir-togri');
+    p.asosiy.forEach((j) => g.tugmalar[NAMUNA].querySelector(`[data-gap="${j}"]`)!.classList.add('ir-asosiy'));
+    sTugmalar[p.togri].classList.add('ir-togri');
+    $('ir-holat').textContent = `${p.harf} paragraf: sarlavha ${RIM[p.togri]}, «${sarlavhalar[p.togri]}». ${p.izoh}`;
+  }
+  function chizSinov() {
+    tozala();
+    tekshirildi = false;
+    juft = boshJuft();
+    g.faol(true);
+    g.tugmalar[NAMUNA].disabled = true;
+    g.tugmalar[NAMUNA].classList.add('ir-togri');
+    sTugmalar.forEach((t) => { t.disabled = false; });
+    biriktirilganYoz();
+    sTugmalar[paragraflar[NAMUNA].togri].classList.add('ir-togri');
+    const birinchi = paragraflar.findIndex((_, k) => k !== NAMUNA);
+    g.tanla(birinchi);
+    holat.textContent = 'Hali biriktirilmagan.'; holat.dataset.ok = '';
+    $('ir-holat').textContent = `A paragraf namuna. ${paragraflar[birinchi].harf} paragraf tanlangan: sarlavhani bosing.`;
+  }
+  function chiz() { if (qadam === 'sinab') chizSinov(); else chizMisol(); }
+
+  sTugmalar.forEach((t, j) => t.addEventListener('click', () => {
+    if (qadam !== 'sinab') return;
+    const k = g.tanlangan();
+    if (k < 0 || k === NAMUNA) { holat.textContent = 'Avval B yoki C paragrafni tanlang.'; holat.dataset.ok = ''; return; }
+    if (tekshirildi) { g.tugmalar.forEach((t, i) => { if (i !== NAMUNA) t.classList.remove('ir-togri', 'ir-xato'); }); tekshirildi = false; }
+    juft = juft.map((x) => (x === j ? -1 : x));
+    juft[k] = j;
+    biriktirilganYoz();
+    const keyingi = juft.findIndex((x, i) => i !== NAMUNA && x < 0);
+    holat.textContent = `${paragraflar[k].harf} paragrafga sarlavha ${RIM[j]} berildi. ${holatMatni()}`;
+    holat.dataset.ok = '';
+    if (keyingi >= 0) { g.tanla(keyingi); g.tugmalar[keyingi].focus(); } else g.tanla(-1);
+  }));
+
+  $('ir-tekshir').addEventListener('click', () => {
+    if (qadam !== 'sinab') return;
+    if (juft.some((x) => x < 0)) { holat.textContent = `Hamma paragrafga sarlavha bering. ${holatMatni()}`; holat.dataset.ok = ''; return; }
+    tekshirildi = true;
+    const xatolar: string[] = [];
+    paragraflar.forEach((p, k) => {
+      if (k === NAMUNA) return;
+      g.tugmalar[k].classList.remove('ir-togri', 'ir-xato');
+      const ok = juft[k] === p.togri;
+      g.tugmalar[k].classList.add(ok ? 'ir-togri' : 'ir-xato');
+      if (!ok) xatolar.push(`${p.harf} (siz ${RIM[juft[k]]}, to'g'ri ${RIM[p.togri]}): ${p.izoh}`);
+    });
+    const jami = paragraflar.length - 1;
+    if (!xatolar.length) {
+      holat.textContent = `Hammasi to'g'ri. Ortiqcha sarlavha: ${RIM[1]}, «${sarlavhalar[1]}»: "clock" so'zi bor, lekin matn soat yasash haqida emas.`;
+      holat.dataset.ok = '1';
+    } else {
+      holat.textContent = `${jami - xatolar.length} / ${jami} to'g'ri. ${xatolar.join(' ')} Sarlavhani almashtirib, qayta tekshiring.`;
+      holat.dataset.ok = '';
+    }
+  });
+  $('ir-qayta').addEventListener('click', () => { chizSinov(); g.tugmalar[g.tanlangan()]?.focus(); });
+  document.addEventListener('dars:qadam', (e) => { qadam = (e as CustomEvent).detail.qadam; chiz(); });
+  chiz();
+</script>
+
+<style is:global>
+  .ir-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
+  .ir-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .ir-paragraflar { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ir-paragraf {
+    display: flex; flex-direction: column; gap: var(--b-2); width: 100%; text-align: left;
+    padding: var(--b-3) var(--b-4); min-height: 48px;
+    background: var(--fon); color: var(--matn); font: inherit; cursor: pointer;
+    border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
+  }
+  .ir-paragraf:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  .ir-paragraf:focus-visible, .ir-sarlavha:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .ir-paragraf[aria-pressed='true'] { border-color: var(--rang-asosiy); box-shadow: inset 4px 0 0 var(--rang-asosiy); }
+  .ir-paragraf:disabled { cursor: default; }
+  .ir-paragraf.ir-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .ir-paragraf.ir-xato { border-style: dashed; border-color: var(--matn); }
+  .ir-p-bosh { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .ir-harf { width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--r-logo); background: var(--matn); color: var(--fon); font-weight: 800; font-size: var(--matn-kichik); }
+  .ir-biriktirilgan { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+  .ir-p-matn { line-height: 1.6; }
+  .ir-gap.ir-asosiy { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; font-weight: 600; }
+  .ir-s-royxat { list-style: none; margin: var(--b-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .ir-sarlavha {
+    display: flex; align-items: center; gap: var(--b-3); width: 100%; min-height: 48px; padding: var(--b-2) var(--b-4); text-align: left;
+    background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer;
+    border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq);
+  }
+  .ir-sarlavha:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  .ir-sarlavha[aria-pressed='true'] { border-color: var(--rang-asosiy); }
+  .ir-sarlavha:disabled { cursor: default; }
+  .ir-sarlavha.ir-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .ir-rim { min-width: 32px; font-weight: 800; color: var(--rang-havola); }
+  .dars .ir-qoida { font-size: 16px; font-weight: 600; line-height: 1.5; }
+  .ir-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .ir-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .ir-qoidalar dt { font-weight: 800; }
+  .ir-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+</style>

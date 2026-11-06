@@ -145,6 +145,11 @@ const qadamlar = [
             ) : (
               <>
                 {savolKorsatma && !s.belgilash && <p class="s-korsatma">{savolKorsatma}</p>}
+                {s.parcha && (
+                  <div class="parcha s-parcha" lang={savolTili}>
+                    {s.parcha.split('\n\n').map((x) => <p>{x}</p>)}
+                  </div>
+                )}
                 <p class="s-matn" lang={s.belgilash ? undefined : savolTili}>{s.matn}</p>
               </>
             )}
@@ -634,6 +639,7 @@ const qadamlar = [
   .dars .joy-holat { font-weight: 700; }
   .dars .joy-holat:empty { display: none; }
   .dars .variantlar[hidden] { display: none; }
+  .dars .parcha.s-parcha { font-size: 17px; line-height: 1.6; gap: var(--b-3); }
   .dars .parcha { display: flex; flex-direction: column; gap: var(--b-2); border-radius: var(--r-orta); background: var(--fon-ikkinchi); padding: var(--b-4); }
   .dars .gap-bolaklar { display: flex; flex-direction: column; gap: var(--b-1); }
   .dars .bolak.gap {
