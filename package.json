@@ -7,11 +7,14 @@
     "build": "astro build",
     "preview": "astro preview",
     "build:sat-test": "SAT_TEST_BANK=1 astro build --outDir dist-sat-test",
-    "build:sat-buzilgan": "SAT_TEST_BANK=buzilgan astro build --outDir dist-sat-test"
+    "build:sat-buzilgan": "SAT_TEST_BANK=buzilgan astro build --outDir dist-sat-test",
+    "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
+    "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
     "astro": "^7.4.5",
-    "katex": "^0.16.47"
+    "katex": "^0.16.47",
+    "three": "0.186.1"
   }
 }

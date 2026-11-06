@@ -1,0 +1,86 @@
+// Statistika: 5 ta mashq. Tayanch uchun yozilgan, rasmiy SAT savoli emas.
+// Standart og'ish shu darsda populatsiya formulasi bilan (n ga bo'linadi).
+import type { DarsSavol } from './turlar';
+
+export const statistikaSavollar: DarsSavol[] = [
+  {
+    id: 'statistika-1',
+    modul: 'statistika',
+    mavzu: "O'rtacha",
+    qiyinlik: 'oson',
+    matn: "4, 7, 7, 9, 13 sonlarining o'rtachasi nechaga teng?",
+    variantlar: [
+      { matn: '7', xato: "Mediana bilan adashtirilgan" },
+      { matn: '8' },
+      { matn: '9', xato: "Oraliq (13 − 4) bilan adashtirilgan" },
+      { matn: '10', xato: "Sonlar soni 5 emas, 4 deb olingan: 40 : 4" },
+    ],
+    togri: 1,
+    yechim: "Yig'indi: 4 + 7 + 7 + 9 + 13 = 40. O'rtacha: 40 : 5 = 8.",
+    verified: false,
+  },
+  {
+    id: 'statistika-2',
+    modul: 'statistika',
+    mavzu: 'Mediana',
+    qiyinlik: 'oson',
+    matn: "3, 9, 4, 18, 6, 8 sonlarining medianasi nechaga teng?",
+    variantlar: [
+      { matn: '11', xato: "Ro'yxat saralanmasdan o'rtadagi ikki son olingan: 4 va 18" },
+      { matn: '8', xato: "O'rtacha bilan adashtirilgan" },
+      { matn: '6', xato: "Juft sonli ro'yxatda faqat bitta o'rta son olingan" },
+      { matn: '7' },
+    ],
+    togri: 3,
+    yechim: "Saralaymiz: 3, 4, 6, 8, 9, 18. Sonlar soni juft, o'rtadagi ikkitasi 6 va 8. Mediana (6 + 8) : 2 = 7.",
+    verified: false,
+  },
+  {
+    id: 'statistika-3',
+    modul: 'statistika',
+    mavzu: "O'rtacha o'zgarishi",
+    qiyinlik: "o'rta",
+    matn: "10 ta sonning o'rtachasi 12. Ro'yxatga 23 qo'shildi. Yangi o'rtacha nechaga teng?",
+    variantlar: [
+      { matn: '13' },
+      { matn: '17,5', xato: "O'rtacha va yangi son o'rtachasi olingan: (12 + 23) : 2" },
+      { matn: '14,3', xato: "Sonlar soni oshirilmagan: 143 : 10" },
+      { matn: '12', xato: "Yangi son o'rtachani o'zgartirmaydi deb olingan" },
+    ],
+    togri: 0,
+    yechim: "Eski yig'indi: 10 · 12 = 120. Yangi yig'indi: 120 + 23 = 143, sonlar soni 11. 143 : 11 = 13.",
+    verified: false,
+  },
+  {
+    id: 'statistika-4',
+    modul: 'statistika',
+    mavzu: 'Chetga ketgan qiymat',
+    qiyinlik: "o'rta",
+    matn: "5, 6, 6, 7, 8 ro'yxatiga 40 qo'shildi. Quyidagilardan qaysi biri eng kam o'zgaradi?",
+    variantlar: [
+      { matn: "O'rtacha", xato: "Chetga ketgan qiymat o'rtachani o'ziga tortishi unutilgan" },
+      { matn: 'Oraliq', xato: "Oraliq eng katta qiymatga bog'liq: 3 dan 35 ga oshadi" },
+      { matn: 'Mediana' },
+      { matn: "Standart og'ish", xato: "Chetga ketgan qiymat tarqalishni keskin oshiradi" },
+    ],
+    togri: 2,
+    yechim: "Mediana 6 dan 6,5 ga o'zgaradi. O'rtacha 6,4 dan 12 ga, oraliq 3 dan 35 ga ko'tariladi, standart og'ish ham keskin oshadi.",
+    verified: false,
+  },
+  {
+    id: 'statistika-5',
+    modul: 'statistika',
+    mavzu: "Standart og'ish",
+    qiyinlik: 'qiyin',
+    matn: "A to'plam: 10, 10, 10, 10. B to'plam: 7, 9, 11, 13. Qaysi tasdiq to'g'ri?",
+    variantlar: [
+      { matn: "B ning o'rtachasi kattaroq", xato: "Katta sonlar bor deb o'rtacha ham katta deb olingan" },
+      { matn: "O'rtachalar teng, B ning standart og'ishi kattaroq" },
+      { matn: "Standart og'ishlar teng, chunki o'rtachalar teng", xato: "O'rtacha va tarqalish adashtirilgan" },
+      { matn: "A ning standart og'ishi kattaroq", xato: "Bir xil sonlar tarqalishni oshiradi deb olingan" },
+    ],
+    togri: 1,
+    yechim: "Ikkala o'rtacha 10. A da hamma son o'rtachaga teng: standart og'ish 0. B da sonlar 10 dan 1 va 3 ga uzoqlashgan: standart og'ish √5 ≈ 2,24.",
+    verified: false,
+  },
+];

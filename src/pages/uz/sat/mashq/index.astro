@@ -1,5 +1,5 @@
 ---
-// SAT mashq kirishi: ikki fan, domen va ko'nikmalar jadvali (rasmiy ro'yxat: CB04).
+// SAT mashq kirishi: ikki fan, domen va ko'nikmalar jadvali (rasmiy ro'yxat: CB08).
 // Natijalar faqat shu brauzerda (tayanch:sat:v1). Ball hisoblanmaydi: faqat to'g'ri javoblar soni va aniqlik.
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../components/ManbaBlok.astro';
@@ -16,7 +16,7 @@ const savolUrl = yol('/uz/sat/mashq/savol/');
 const fanlar: Fan[] = ['math', 'rw'];
 const son = (f: (s: (typeof meta)[number]) => boolean) => meta.filter(f).length;
 const TEKSHIRILMAGAN = [
-  "Yozma javoblar faqat aniq moslik bilan tekshiriladi: kasr va o'nlik ekvivalentligi qoidasi rasmiy manbada topilmadi (CB07).",
+  "Yozma javoblar faqat aniq moslik bilan tekshiriladi: kasr va o'nlik ekvivalentligi qoidasi rasmiy manbada topilmadi (CB11).",
   'Telegram kanal manzili hali berilmagan.',
 ];
 ---
@@ -29,7 +29,7 @@ const TEKSHIRILMAGAN = [
   holat="qoralama"
   tekshirilgan="2026-11-05"
   keyingiTekshiruv="2026-12-05"
-  manbalar={[...FORMAT_MANBALARI, 'CB07', 'KX01']}
+  manbalar={[...FORMAT_MANBALARI, 'CB11', 'KX01']}
   tekshirilmagan={TEKSHIRILMAGAN}
 >
   <script type="application/json" id="mashq-data" set:html={JSON.stringify(meta)} />
@@ -129,7 +129,7 @@ const TEKSHIRILMAGAN = [
     </dialog>
 
     <ManbaBlok
-      manbalar={[...FORMAT_MANBALARI, 'CB07', 'KX01']}
+      manbalar={[...FORMAT_MANBALARI, 'CB11', 'KX01']}
       tekshirilgan="2026-11-05"
       keyingiTekshiruv="2026-12-05"
       tekshirilmagan={TEKSHIRILMAGAN}

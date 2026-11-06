@@ -1,0 +1,384 @@
+---
+// SAT reja tuzgich. Kiritiladi: imtihon sanasi, hozirgi va maqsad ball, haftada nechta kun, e'tibor.
+// Natija: haftalik checklist. Saqlash: tayanch:sat-reja (faqat shu brauzer).
+// Ball bashorat qilinmaydi va kafolatlanmaydi. Ball oralig'i 400–1600: CB04.
+// Telefon: forma bir ustunda, hafta kartalari yig'iladigan (details); joriy hafta ochiq.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { yol } from '../../../../../lib/yol';
+
+const havolalar = {
+  hajm: yol('/uz/sat/qollanma/math/hajm/'),
+  grafik: yol('/uz/sat/qollanma/math/grafik/'),
+  aylana: yol('/uz/sat/qollanma/math/birlik-aylana/'),
+  statistika: yol('/uz/sat/qollanma/math/statistika/'),
+  bank: yol('/uz/sat/mashq/'),
+  test: yol('/uz/sat/mashq/'),
+  lugat: yol('/uz/sat/mashq/lugat/'),
+};
+---
+<BolimQobiq
+  title="Reja tuzgich · SAT"
+  description="SAT tayyorgarligi uchun haftalik reja: imtihon sanasi va maqsad balldan checklist. Ma'lumot faqat shu brauzerda. Ball kafolatlanmaydi."
+  turi="vosita"
+  yol={['Mashq']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki reja">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Vosita</span><span class="pill pill-chiziq">Qoralama</span></p>
+      <h1>SAT reja tuzgich</h1>
+      <p class="lead">Imtihon sanasi va maqsad ballingizni kiriting: vosita qolgan haftalarni bosqichlarga bo'lib, har haftaga bajariladigan ro'yxat tuzadi. Belgilaringiz shu brauzerda saqlanadi.</p>
+    </header>
+
+    <p class="ogoh" role="note"><b>Ball kafolatlanmaydi.</b> Bu reja tayyorgarlikni tartibga soladi, natijani bashorat qilmaydi. Haftalik vazifalar Tayanch tavsiyasi, rasmiy reja emas.</p>
+
+    <form class="forma" id="forma" novalidate>
+      <div class="maydon">
+        <label for="r-sana">Imtihon sanasi</label>
+        <input type="date" id="r-sana" required />
+        <p class="kichik ikkinchi">Sanani o'zingiz kiriting. Rasmiy sanalar ro'yxati: College Board sayti.</p>
+      </div>
+      <div class="maydon-qator">
+        <div class="maydon">
+          <label for="r-hozirgi">Hozirgi ball (ixtiyoriy)</label>
+          <input type="number" id="r-hozirgi" inputmode="numeric" min="400" max="1600" step="10" placeholder="masalan, 1150" />
+        </div>
+        <div class="maydon">
+          <label for="r-maqsad">Maqsad ball</label>
+          <input type="number" id="r-maqsad" inputmode="numeric" min="400" max="1600" step="10" required placeholder="masalan, 1350" />
+        </div>
+      </div>
+      <p class="kichik ikkinchi">SAT umumiy ball oralig'i: 400–1600 (College Board, CB04).</p>
+      <fieldset class="maydon">
+        <legend>Haftada necha kun shug'ullanasiz</legend>
+        <div class="segment" id="r-kunlar">
+          {[3, 4, 5, 6].map((k) => <button type="button" data-kun={k} aria-pressed={k === 4 ? 'true' : 'false'}>{k} kun</button>)}
+        </div>
+      </fieldset>
+      <fieldset class="maydon">
+        <legend>Ko'proq e'tibor</legend>
+        <div class="segment" id="r-fokus">
+          <button type="button" data-fokus="math" aria-pressed="false">Math</button>
+          <button type="button" data-fokus="rw" aria-pressed="false">Reading and Writing</button>
+          <button type="button" data-fokus="teng" aria-pressed="true">Teng</button>
+        </div>
+      </fieldset>
+      <p class="xato-xabar" id="r-xato" role="alert" hidden></p>
+      <div class="tugmalar">
+        <button type="submit" class="katta asosiy">Reja tuzish</button>
+        <span class="tasdiq" id="qayta-tasdiq" hidden>Yangi reja eski belgilarni o'chiradi.
+          <button type="button" class="matn-tugma" id="qayta-ha">Davom etish</button>
+          <button type="button" class="matn-tugma" id="qayta-yoq">Bekor qilish</button>
+        </span>
+      </div>
+    </form>
+
+    <section class="natija" id="natija" aria-labelledby="natija-h" hidden>
+      <div class="n-bosh">
+        <h2 id="natija-h" tabindex="-1">Sizning rejangiz</h2>
+        <dl class="qiymatlar" id="xulosa"></dl>
+        <div class="progress-qator">
+          <p class="kichik"><span id="bajarildi">0</span> / <span id="jami">0</span> vazifa bajarildi</p>
+          <div class="progress" aria-hidden="true"><span id="progress-chiziq"></span></div>
+        </div>
+        <p class="kichik ikkinchi" id="izoh-uzoq" hidden></p>
+      </div>
+      <ol class="haftalar" id="haftalar"></ol>
+      <div class="tugmalar">
+        <button type="button" class="matn-tugma" id="ochir">Rejani o'chirish</button>
+        <span class="tasdiq" id="ochir-tasdiq" hidden>O'chirilsinmi?
+          <button type="button" class="matn-tugma" id="ochir-ha">Ha, o'chirish</button>
+          <button type="button" class="matn-tugma" id="ochir-yoq">Bekor qilish</button>
+        </span>
+      </div>
+      <p class="kichik ikkinchi" id="saqlash-holat">Reja faqat shu brauzerda saqlanadi.</p>
+    </section>
+
+    <ManbaBlok
+      manbalar={['CB01', 'CB04']}
+      tekshirilgan="2026-11-05"
+      keyingiTekshiruv="2026-12-05"
+      tekshirilmagan={[
+        "Haftalik vazifalar va bosqichlar Tayanch tavsiyasi, rasmiy reja emas.",
+        "Ball qadami (10) rasmiy sahifada yozilmagan: maydonda qulaylik uchun olingan.",
+        "Imtihon sanalari bu sahifada berilmaydi: rasmiy ro'yxat College Board saytida.",
+      ]}
+    />
+  </div>
+  <script type="application/json" id="reja-havolalar" set:html={JSON.stringify(havolalar)} />
+</BolimQobiq>
+
+<script>
+  import { KALIT_REJA } from '../../../../../data/satDarslar/turlar';
+  import { oqi, yoz, bugun } from '../../../../../lib/darsSaqlash';
+
+  type Fokus = 'math' | 'rw' | 'teng';
+  interface Reja { sana: string; hozirgi: number | null; maqsad: number; kunlar: number; fokus: Fokus; belgilar: Record<string, boolean> }
+  interface Vazifa { matn: string; havola?: string; havolaMatn?: string }
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const H = JSON.parse($('reja-havolalar').textContent || '{}') as Record<string, string>;
+  const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+  const KUN = 86400000;
+  const MAKS_HAFTA = 16;
+
+  let tanlov = { kunlar: 4, fokus: 'teng' as Fokus };
+  let reja: Reja | null = oqi<Reja | null>(KALIT_REJA, null);
+  if (reja && (typeof reja.sana !== 'string' || typeof reja.maqsad !== 'number')) reja = null;
+
+  const sanaUTC = (s: string) => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+  const sanaMatn = (t: number) => { const d = new Date(t); return `${d.getUTCDate()}-${OYLAR[d.getUTCMonth()]}`; };
+
+  // ---------- Segment tugmalari ----------
+  const segment = (id: string, attr: string, qoy: (v: string) => void) => {
+    document.querySelectorAll<HTMLButtonElement>(`#${id} button`).forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll(`#${id} button`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      qoy(b.dataset[attr]!);
+    }));
+  };
+  segment('r-kunlar', 'kun', (v) => { tanlov.kunlar = Number(v); });
+  segment('r-fokus', 'fokus', (v) => { tanlov.fokus = v as Fokus; });
+  const segmentniQoy = (id: string, attr: string, v: string) => document.querySelectorAll<HTMLButtonElement>(`#${id} button`).forEach((x) => x.setAttribute('aria-pressed', String(x.dataset[attr] === v)));
+
+  // ---------- Reja yasash ----------
+  function haftalarSoni(sana: string) { return Math.ceil((sanaUTC(sana) - sanaUTC(bugun())) / KUN / 7); }
+
+  function vazifalar(r: Reja): { boshi: number; vazifa: Vazifa[]; bosqich: string }[] {
+    const N = Math.min(MAKS_HAFTA, Math.max(1, haftalarSoni(r.sana)));
+    const math: Vazifa[] = [
+      { matn: 'Hajm darsini o\'ting va 6 ta mashqni yeching', havola: H.hajm, havolaMatn: 'Hajm laboratoriyasi' },
+      { matn: 'Funksiya grafigi darsini o\'ting va 5 ta mashqni yeching', havola: H.grafik, havolaMatn: 'Funksiya grafigi' },
+      { matn: 'Birlik aylana darsini o\'ting va 5 ta mashqni yeching', havola: H.aylana, havolaMatn: 'Birlik aylana' },
+      { matn: 'Statistika darsini o\'ting va 5 ta mashqni yeching', havola: H.statistika, havolaMatn: 'Statistika' },
+    ];
+    const mathMashq: Vazifa = { matn: "Mashq bo'limidan Math savollari: zaif ko'nikma bo'yicha bitta to'plam", havola: H.bank, havolaMatn: 'Mashq' };
+    const rw: Vazifa[] = [
+      { matn: "Mashq bo'limidan Reading and Writing savollari: bitta to'plam", havola: H.bank, havolaMatn: 'Mashq' },
+      { matn: "Lug'at kartochkalari: 20 ta so'z", havola: H.lugat, havolaMatn: "Lug'at" },
+    ];
+    const xatoDaftar: Vazifa = { matn: 'Xato daftaridagi savollarni qayta yeching (har dars sahifasining oxirida)' };
+    const mock: Vazifa = { matn: "Bluebook'da to'liq practice test ishlang (CB01) va xatolarni yozib chiqing" };
+    const ulush = r.fokus === 'math' ? 0.65 : r.fokus === 'rw' ? 0.35 : 0.5;
+
+    const natija: { boshi: number; vazifa: Vazifa[]; bosqich: string }[] = [];
+    let mathI = 0, rwI = 0;
+    for (let k = 0; k < N; k++) {
+      const v: Vazifa[] = [];
+      let bosqich: string;
+      const oxirgi = k === N - 1;
+      if (k === 0 && N > 1) {
+        bosqich = 'Diagnostika';
+        v.push(mock, { matn: "Xatolarni Math va Reading and Writing bo'yicha ajrating, eng ko'p xato qilingan 3 mavzuni yozing" });
+      } else if (oxirgi) {
+        bosqich = 'Oxirgi hafta';
+        v.push(xatoDaftar, { matn: 'Yengil takrorlash: yangi mavzu boshlamang' }, { matn: "Imtihon kuni talablari va kerakli hujjatlarni College Board saytidan tekshiring" });
+      } else if (k / N < 0.6) {
+        bosqich = 'Asos';
+      } else {
+        bosqich = 'Mashq';
+        if ((k - Math.ceil(N * 0.6)) % 2 === 0) v.push(mock);
+        v.push(xatoDaftar);
+      }
+      // Qolgan kunlarni to'ldiramiz: Math vazifalari soni = kunlar × ulush (yaxlitlangan), qolgani R&W.
+      // Oxirgi hafta faqat takrorlash (3 vazifa).
+      if (!oxirgi) {
+        const bosh = v.length;
+        const qoldiq = Math.max(0, r.kunlar - bosh);
+        const mathSoni = Math.round(qoldiq * ulush);
+        for (let t = 0; t < qoldiq; t++) {
+          if (t < mathSoni) v.push(bosqich === 'Asos' && mathI < math.length ? math[mathI++] : mathMashq);
+          else v.push(rw[rwI++ % rw.length]);
+        }
+      }
+      natija.push({ boshi: sanaUTC(bugun()) + k * 7 * KUN, vazifa: v, bosqich });
+    }
+    return natija;
+  }
+
+  // ---------- Chizish ----------
+  function chiz() {
+    const natijaEl = $('natija');
+    if (!reja) { natijaEl.hidden = true; return; }
+    const r = reja;
+    const haftalar = vazifalar(r);
+    const qolganHafta = haftalarSoni(r.sana);
+    const dl = $('xulosa'); dl.replaceChildren();
+    const qator: [string, string][] = [
+      ['Imtihon', sanaMatn(sanaUTC(r.sana))],
+      ['Qolgan hafta', String(Math.max(0, qolganHafta))],
+      ['Maqsad ball', String(r.maqsad)],
+    ];
+    if (r.hozirgi) qator.push(['Farq', `${r.maqsad - r.hozirgi >= 0 ? '+' : '−'}${Math.abs(r.maqsad - r.hozirgi)} ball`]);
+    qator.forEach(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); dl.append(d); });
+    const uzoq = $('izoh-uzoq');
+    uzoq.hidden = qolganHafta <= MAKS_HAFTA;
+    uzoq.textContent = `Imtihongacha ${qolganHafta} hafta: reja birinchi ${MAKS_HAFTA} haftaga tuzildi. Tugagach, rejani qayta tuzing.`;
+
+    const ol = $('haftalar'); ol.replaceChildren();
+    let jami = 0, bajarildi = 0;
+    const bugunT = sanaUTC(bugun());
+    haftalar.forEach((h, k) => {
+      const li = document.createElement('li');
+      const det = document.createElement('details');
+      const joriy = bugunT >= h.boshi && bugunT < h.boshi + 7 * KUN;
+      det.open = joriy || k === 0;
+      const sum = document.createElement('summary');
+      const oxiri = Math.min(h.boshi + 6 * KUN, sanaUTC(r.sana));
+      const raqam = document.createElement('span'); raqam.className = 'h-raqam'; raqam.textContent = String(k + 1);
+      const nom = document.createElement('span'); nom.className = 'h-nom'; nom.textContent = `${k + 1}-hafta · ${sanaMatn(h.boshi)} – ${sanaMatn(oxiri)}`;
+      const bos = document.createElement('span'); bos.className = 'pill'; bos.textContent = h.bosqich;
+      const hisob = document.createElement('span'); hisob.className = 'kichik ikkinchi h-hisob';
+      sum.append(raqam, nom, bos, hisob);
+      const ul = document.createElement('ul'); ul.className = 'vazifalar';
+      let hb = 0;
+      h.vazifa.forEach((v, j) => {
+        const kalit = `${k}-${j}`;
+        const id = `v-${kalit}`;
+        const li2 = document.createElement('li');
+        const lab = document.createElement('label'); lab.className = 'check'; lab.htmlFor = id;
+        const inp = document.createElement('input'); inp.type = 'checkbox'; inp.id = id; inp.checked = !!r.belgilar[kalit];
+        if (inp.checked) { bajarildi++; hb++; }
+        jami++;
+        inp.addEventListener('change', () => { r.belgilar[kalit] = inp.checked; saqla(); chiz(); document.getElementById(id)?.focus(); });
+        const sp = document.createElement('span'); sp.textContent = v.matn;
+        lab.append(inp, sp);
+        li2.append(lab);
+        if (v.havola) { const a = document.createElement('a'); a.href = v.havola; a.className = 'v-havola'; a.textContent = v.havolaMatn ?? 'Ochish'; li2.append(a); }
+        ul.append(li2);
+      });
+      hisob.textContent = `${hb} / ${h.vazifa.length}`;
+      det.append(sum, ul); li.append(det); ol.append(li);
+    });
+    $('bajarildi').textContent = String(bajarildi); $('jami').textContent = String(jami);
+    $('progress-chiziq').style.width = `${jami ? (bajarildi / jami) * 100 : 0}%`;
+    natijaEl.hidden = false;
+  }
+
+  function saqla() {
+    const ok = yoz(KALIT_REJA, reja);
+    $('saqlash-holat').textContent = ok ? 'Reja faqat shu brauzerda saqlanadi.' : "Brauzer saqlashga ruxsat bermadi: reja sahifa yopilganda yo'qoladi.";
+  }
+
+  // ---------- Forma ----------
+  const xato = (t: string) => { const e = $('r-xato'); e.textContent = t; e.hidden = !t; };
+  let kutilayotgan: Reja | null = null;
+  function tekshir(): Reja | null {
+    const sana = $<HTMLInputElement>('r-sana').value;
+    const hozirgiS = $<HTMLInputElement>('r-hozirgi').value.trim();
+    const maqsad = Number($<HTMLInputElement>('r-maqsad').value);
+    if (!sana) { xato('Imtihon sanasini kiriting.'); $('r-sana').focus(); return null; }
+    if (sanaUTC(sana) <= sanaUTC(bugun())) { xato("Imtihon sanasi bugundan keyin bo'lishi kerak."); $('r-sana').focus(); return null; }
+    if (!Number.isFinite(maqsad) || maqsad < 400 || maqsad > 1600) { xato("Maqsad ballni 400 dan 1600 gacha kiriting."); $('r-maqsad').focus(); return null; }
+    let hozirgi: number | null = null;
+    if (hozirgiS) {
+      hozirgi = Number(hozirgiS);
+      if (!Number.isFinite(hozirgi) || hozirgi < 400 || hozirgi > 1600) { xato("Hozirgi ballni 400 dan 1600 gacha kiriting yoki bo'sh qoldiring."); $('r-hozirgi').focus(); return null; }
+    }
+    xato('');
+    return { sana, hozirgi, maqsad, kunlar: tanlov.kunlar, fokus: tanlov.fokus, belgilar: {} };
+  }
+  const qoyish = (r: Reja) => { reja = r; saqla(); chiz(); $('natija-h').focus(); };
+  $('forma').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const r = tekshir(); if (!r) return;
+    if (reja && Object.values(reja.belgilar).some(Boolean)) { kutilayotgan = r; $('qayta-tasdiq').hidden = false; $('qayta-ha').focus(); return; }
+    qoyish(r);
+  });
+  $('qayta-ha').addEventListener('click', () => { $('qayta-tasdiq').hidden = true; if (kutilayotgan) qoyish(kutilayotgan); kutilayotgan = null; });
+  $('qayta-yoq').addEventListener('click', () => { $('qayta-tasdiq').hidden = true; kutilayotgan = null; });
+
+  $('ochir').addEventListener('click', () => { $('ochir-tasdiq').hidden = false; $('ochir').hidden = true; $('ochir-yoq').focus(); });
+  $('ochir-yoq').addEventListener('click', () => { $('ochir-tasdiq').hidden = true; $('ochir').hidden = false; $('ochir').focus(); });
+  $('ochir-ha').addEventListener('click', () => {
+    try { localStorage.removeItem(KALIT_REJA); } catch { /* ruxsat yo'q */ }
+    reja = null; $('ochir-tasdiq').hidden = true; $('ochir').hidden = false; chiz(); $<HTMLInputElement>('r-sana').focus();
+  });
+
+  // Boshlang'ich holat: saqlangan reja bo'lsa formani to'ldiramiz
+  $<HTMLInputElement>('r-sana').min = new Date(sanaUTC(bugun()) + KUN).toISOString().slice(0, 10);
+  if (reja) {
+    $<HTMLInputElement>('r-sana').value = reja.sana;
+    $<HTMLInputElement>('r-hozirgi').value = reja.hozirgi ? String(reja.hozirgi) : '';
+    $<HTMLInputElement>('r-maqsad').value = String(reja.maqsad);
+    tanlov = { kunlar: reja.kunlar, fokus: reja.fokus };
+    segmentniQoy('r-kunlar', 'kun', String(reja.kunlar));
+    segmentniQoy('r-fokus', 'fokus', reja.fokus);
+    reja.belgilar = reja.belgilar ?? {};
+  }
+  chiz();
+</script>
+
+<style>
+  .reja { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  h2 { font-size: 32px; }
+  h2:focus { outline: none; }
+  .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6; }
+
+  .forma { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-5); }
+  .maydon { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .maydon label, .maydon legend { font-weight: 700; padding: 0; margin-bottom: var(--b-1); }
+  .maydon-qator { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--b-4); }
+  .forma input[type='date'], .forma input[type='number'] {
+    min-height: 48px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
+    background: var(--fon); color: var(--matn); font: inherit; font-size: 17px; max-width: 100%;
+  }
+  .forma input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .segment { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .segment button { min-height: 44px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .segment button:hover { border-color: var(--rang-asosiy); }
+  .segment button[aria-pressed='true'] { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .xato-xabar { font-weight: 700; color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .xato-xabar[hidden] { display: none; }
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .katta { min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
+  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+  .tasdiq[hidden], .matn-tugma[hidden] { display: none; }
+
+  .natija { display: flex; flex-direction: column; gap: var(--b-6); }
+  .natija[hidden] { display: none; }
+  .n-bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .qiymatlar { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--b-2); }
+  .qiymatlar :global(div) { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-2) var(--b-3); }
+  .qiymatlar :global(dt) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .qiymatlar :global(dd) { margin: 0; font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .progress-qator { display: flex; flex-direction: column; gap: var(--b-2); max-width: 420px; }
+  .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); }
+
+  .haftalar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .haftalar :global(details) { border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
+  .haftalar :global(summary) { min-height: 56px; padding: var(--b-3) var(--b-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); cursor: pointer; list-style: none; }
+  .haftalar :global(summary::-webkit-details-marker) { display: none; }
+  .haftalar :global(summary:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-orta); }
+  .haftalar :global(.h-raqam) { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-weight: 800; font-size: var(--matn-kichik); }
+  .haftalar :global(.h-nom) { font-weight: 800; flex: 1 1 200px; min-width: 0; }
+  .haftalar :global(.h-hisob) { font-variant-numeric: tabular-nums; }
+  .haftalar :global(.vazifalar) { list-style: none; margin: 0; padding: 0 var(--b-4) var(--b-3); display: flex; flex-direction: column; }
+  .haftalar :global(.vazifalar li) { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-2); border-top: 1px solid var(--chiziq); }
+  .haftalar :global(.check) { flex: 1 1 260px; min-width: 0; display: flex; align-items: flex-start; gap: var(--b-3); min-height: 48px; padding: var(--b-3) 0; cursor: pointer; }
+  .haftalar :global(.check input) { width: 22px; height: 22px; margin-top: 1px; flex: none; accent-color: var(--rang-asosiy); }
+  .haftalar :global(.check input:checked + span) { color: var(--matn-ikkinchi); text-decoration: line-through; }
+  .haftalar :global(.v-havola) { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
+
+  @media (max-width: 640px) {
+    .reja { padding-top: 28px; gap: var(--b-8); }
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .lead { font-size: 17px; }
+    .forma { padding: var(--b-5); }
+    .katta { width: 100%; }
+  }
+</style>

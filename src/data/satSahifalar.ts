@@ -28,7 +28,7 @@ export interface SatGuruh {
 
 const UMUMIY_TEKSHIRILMAGAN = "Sahifa mazmuni hali yozilmagan: hozircha faqat sarlavha va reja.";
 
-// Menyu guruhlari (2026-11-05, muallif tasdig'i): Mashq · Qo'llanmalar · Vositalar · Tayanch.
+// Menyu guruhlari (2026-11-06, muallif tasdig'i): Mashq · Math darslari (PR #15) · Qo'llanmalar · Vositalar · Tayanch.
 export const satGuruhlar: SatGuruh[] = [
   {
     nomi: 'Mashq',
@@ -39,7 +39,7 @@ export const satGuruhlar: SatGuruh[] = [
         nomi: 'Mashq',
         tavsif: "Rasmiy domen va ko'nikmalar bo'yicha SAT savollari, har javobdan keyin o'zbekcha izoh.",
         turi: 'mashq',
-        manbalar: ['CB04'],
+        manbalar: ['CB08'],
         tekshirilmagan: [],
       },
       {
@@ -59,6 +59,47 @@ export const satGuruhlar: SatGuruh[] = [
         turi: 'mashq',
         manbalar: [],
         tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "So'zlar ro'yxati manbasi hali belgilanmagan."],
+      },
+    ],
+  },
+  {
+    nomi: 'Math darslari',
+    sahifalar: [
+      {
+        qism: 'qollanma/math/hajm/',
+        tayyor: true,
+        nomi: 'Hajm laboratoriyasi',
+        tavsif: "Silindr, konus, shar va prizma hajmi 3D sahnada: o'lchamni o'zgartiring, formulani ko'ring, 6 ta mashq.",
+        turi: 'qollanma',
+        manbalar: ['CB05'],
+        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+      },
+      {
+        qism: 'qollanma/math/grafik/',
+        tayyor: true,
+        nomi: 'Funksiya grafigi',
+        tavsif: "To'g'ri chiziq, parabolaning uch shakli va ikki tenglama kesishishi: slayder bilan grafikni o'zgartiring, 5 ta mashq.",
+        turi: 'qollanma',
+        manbalar: ['CB05'],
+        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+      },
+      {
+        qism: 'qollanma/math/birlik-aylana/',
+        tayyor: true,
+        nomi: 'Birlik aylana',
+        tavsif: "Burchakni sudrab sin, cos va tan qiymatlarini ko'ring, gradus va radianni almashtiring, 5 ta mashq.",
+        turi: 'qollanma',
+        manbalar: ['CB05'],
+        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+      },
+      {
+        qism: 'qollanma/math/statistika/',
+        tayyor: true,
+        nomi: 'Statistika',
+        tavsif: "Nuqtalarni sudrab o'rtacha, mediana va standart og'ish qanday o'zgarishini ko'ring, 5 ta mashq.",
+        turi: 'qollanma',
+        manbalar: ['CB05'],
+        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan.", "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi)."],
       },
     ],
   },
@@ -115,7 +156,15 @@ export const satGuruhlar: SatGuruh[] = [
   {
     nomi: 'Vositalar',
     sahifalar: [
-      { qism: '', sahifasiz: true, tezOrada: true, nomi: 'Reja', tavsif: '', turi: 'vosita', manbalar: [], tekshirilmagan: [] },
+      {
+        qism: 'vosita/reja/',
+        tayyor: true,
+        nomi: 'Reja tuzgich',
+        tavsif: "Imtihon sanasi va maqsad ballingizdan haftalik tayyorgarlik ro'yxati. Ma'lumot faqat shu brauzerda saqlanadi. Ball kafolatlanmaydi.",
+        turi: 'vosita',
+        manbalar: ['CB01', 'CB04'],
+        tekshirilmagan: ["Haftalik vazifalar Tayanch tavsiyasi, rasmiy reja emas.", "Ball qadami (10) rasmiy sahifada yozilmagan: kiritish maydonida qulaylik uchun olingan."],
+      },
       { qism: '', sahifasiz: true, tezOrada: true, nomi: 'Mini-drill', tavsif: '', turi: 'vosita', manbalar: [], tekshirilmagan: [] },
     ],
   },

@@ -24,6 +24,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | #9 | Bo'limlar bitta saytga bog'landi (SAT va IELTS ochildi) |
 | #10 | **Tayanch binosi**: Lift (5 qavat tugmasi; telefonda pastki panel), Qavat yo'li ("3-qavat › Mashq › Test"), Zina (qo'shni qavatlar), 2- va 5-qavat "qurilmoqda" sahifalari |
 | #12, #14 | **Top Admission kirish sahifasi** (maket A): Topshirish yo'li kartasi, muddat chiptalari muhr bilan (EY01, TB01), yo'nalishlar (TB01, SH01), muallif bloki, Zina, MRZ. `Asosiy` qolipida (yon panelsiz). Chiptada qolgan kun (brauzer, Toshkent sanasi) va "Mening yo'lim" bloki (`tayanch-topshirish-yoli` dan faqat o'qiydi). `bolimlar.ts`: top-admission `tez-orada` (muallif qarori, 2026-11-05). #14: "Muallif yo'li" nomi `h2`. Sinalgan (2026-11-05): muddat holatlari (Bugun, kun ochilishiga, kun qoldi, O'tgan), 375px, qorong'i mavzu, Tab tartibi, a11y semantikasi, jonli sayt. Sinalmagan: haqiqiy VoiceOver |
+| #15 | **SAT Math interaktiv darslari, 1-bosqich** (branch `sat-interaktiv`): Hajm (3D, `three` npm, kechiktirib yuklanadi), Funksiya grafigi, Birlik aylana, Statistika (SVG), Reja tuzgich. 21 ta savol `src/data/satDarslar/` (`verified: false`); `npm run savollar:tekshir`, jadval `docs/sat-savollar-tekshiruv.md`. Keyingi: 2-bosqich Reading & Writing, 3-bosqich Xato daftari va takrorlash |
 | #11 | **Topshirish yo'li** (`/uz/top-admission/vosita/topshirish-yoli/`): 3 savol → mos ariza yo'llari, aylanadigan "pasport" kartalar, muhrli rasmiy faktlar. Holati: qoralama |
 
 ## 3. Nima qurilmagan (navbat taklifi)
@@ -71,7 +72,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - **Qoliplar**: `Asosiy` (1-qavat va qurilmoqda sahifalari), `BolimQobiq` (yon panelli bo'lim: `bolim="sat" | "ielts"`), `SatFokus` (yon panelsiz mashq ekrani).
 - **Ma'lumot**: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`, `satSahifalar.ts`, `satNamuna.ts`, `ieltsSahifalar.ts`, `topshirishYoli.ts`).
 - **Manba ID**: 2 harf + 2 raqam, tashkilot bo'yicha (CB = College Board, IE = ielts.org, ID = IDP, CA = Common App, UC = UCAS, SH = Stipendium Hungaricum, TB = Türkiye Bursları, CO = Coalition, EY = El-yurt umidi, LX = lex.uz).
-- **localStorage**: kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`; sessionStorage `tayanch:qavat`). Istisno: `tayanch-topshirish-yoli` (3-ochiq savol).
+- **localStorage**: kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`, `tayanch:sat-dars-progress`, `tayanch:sat-xato-daftari`, `tayanch:sat-reja`; sessionStorage `tayanch:qavat`). Istisno: `tayanch-topshirish-yoli` (3-ochiq savol).
 - **Dizayn fayllari** repo ildizida: `Tayanch-SAT-dizayn.md`, `Tayanch-IELTS-dizayn.md`. Top Admission maketi faqat Claude Design'da (havola yuqorida).
 - **Branch nomi**: o'zbekcha, defis bilan (`lift-navigatsiya`, `vosita-topshirish-yoli`).
 

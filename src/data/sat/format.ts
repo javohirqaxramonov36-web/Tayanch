@@ -1,5 +1,5 @@
 // Digital SAT domenlari va ko'nikmalari.
-// Manba: CB04 (Specifications Overview, Table 2 va Table 3), CB05, CB06. Tekshirilgan: 2026-11-05.
+// Manba: CB08 (Specifications Overview, Table 2 va Table 3), CB09, CB10. Tekshirilgan: 2026-11-05.
 // Nomlar hujjatdagidek inglizcha. O'zgartirish faqat rasmiy manba bilan.
 // "Command of Evidence" hujjatda ikki bandli (Textual, Quantitative), shuning uchun ikki ko'nikma.
 
@@ -63,4 +63,4 @@ export const domenlar: Record<Fan, Domen[]> = {
   ],
 };
 
-export const FORMAT_MANBALARI = ['CB04', 'CB05', 'CB06'];
+export const FORMAT_MANBALARI = ['CB08', 'CB09', 'CB10'];
