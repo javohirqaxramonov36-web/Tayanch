@@ -14,9 +14,10 @@ import { kartalar } from '../../../../../data/satNamuna';
 >
   <script type="application/json" id="kartalar-data" set:html={JSON.stringify(kartalar)} />
 
+  <h1 class="ekranda-yoq">Lug'at kartochkalari</h1>
   <div class="lugat">
     <div class="markaz">
-      <button type="button" class="karta" id="karta" aria-label="Kartani ag'darib tarjimani ko'rish" aria-live="polite">
+      <button type="button" class="karta" id="karta" aria-live="polite">
         <span class="yuz-yorliq" id="yuz-yorliq">English</span>
         <span class="oldi" id="oldi">
           <span class="soz" lang="en" id="soz">{kartalar[0].soz}</span>
@@ -95,7 +96,8 @@ import { kartalar } from '../../../../../data/satNamuna';
     $('turkum').textContent = k.turkum;
     $('tarjima').textContent = k.tarjima;
     $('misol').textContent = `“${k.misol}”`;
-    karta.setAttribute('aria-label', orqa ? "Kartani old tomonga ag'darish" : "Kartani ag'darib tarjimani ko'rish");
+    // Nom karta matnidan olinadi (so'z yoki tarjima eshitiladi); aria-label uni yashirib qo'yardi
+    karta.setAttribute('aria-pressed', String(orqa));
     $('fokus-progress-toldirish').style.width = Math.round(((i + 1) / n) * 100) + '%';
     const p = $('fokus-progress');
     p.setAttribute('aria-valuemax', String(n));
