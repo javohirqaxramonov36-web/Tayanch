@@ -3,11 +3,21 @@
 // Har nuqta role="slider": Tab bilan tanlanadi, strelkalar 1 ga suradi, Home/End chetga.
 // Standart og'ish populatsiya formulasi bilan (n ga bo'linadi), sahifada ham shunday yozilgan.
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
 const belgilar = [0, 5, 10, 15, 20];
 const X = (v: number) => 20 + 19 * v;
 ---
 <DarsQolip
+  bolim="sat"
   modul="statistika"
+  savollar={darsSavollari.statistika}
+  yolBandlari={['Math darslari']}
+  darsTuri="Math darsi"
+  imtihon="SAT"
+  manbalar={['CB05']}
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
   title="Statistika · SAT"
   description="SAT Math: nuqtalarni sudrab o'rtacha, mediana, standart og'ish va oraliq qanday o'zgarishini ko'ring. 5 ta mashq."
   yonalish="Problem-Solving and Data Analysis"
@@ -24,7 +34,7 @@ const X = (v: number) => 20 + 19 * v;
     "Oraliq = eng katta − eng kichik. Chetga ketgan qiymat oraliqni darhol o'zgartiradi.",
     "Standart og'ish: qiymatlar o'rtachadan o'rtacha qanchalik uzoq. Hamma qiymat teng bo'lsa, 0.",
   ]}
-  keyingi={{ nomi: 'Reja tuzgich', qism: 'vosita/reja/' }}
+  keyingi={{ nomi: 'Reja tuzgich', href: yol('/uz/sat/vosita/reja/') }}
   tekshirilmagan={[
     "Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
     "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi). SAT'da qaysi ta'rif ishlatilishi bu sahifada da'vo qilinmaydi.",

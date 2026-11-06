@@ -1,29 +1,43 @@
 ---
-// SAT Math interaktiv darsi qolipi.
+// Interaktiv dars qolipi (barcha bo'limlar). Standart: docs/interaktiv-dars-standarti.md.
 // Tuzilish: Maqsad → laboratoriya (sahna + 1 Animatsiya / 2 Formula / 3 Sinab ko'r) → Mashqlar → Xulosa va Xato daftari → Manbalar.
-// Saqlash: tayanch:sat-dars-progress, tayanch:sat-xato-daftari (faqat shu brauzer).
+// Saqlash: tayanch:<bolim>-dars-progress, tayanch:<bolim>-xato-daftari (faqat shu brauzer).
 // Sahna komponenti "dars:qadam" hodisasini tinglaydi (detail.qadam: 'animatsiya' | 'formula' | 'sinab').
 import BolimQobiq from '../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../ManbaBlok.astro';
-import { darsSavollari, type DarsModul } from '../../data/satDarslar';
-import { yol } from '../../lib/yol';
+import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
 
 interface Props {
-  modul: DarsModul;
+  bolim: DarsBolim;
+  modul: string;
+  savollar: DarsSavol[];
+  /** Qavat yo'lidagi oraliq bandlar, masalan ['Math darslari'] */
+  yolBandlari: string[];
+  /** Sarlavha ustidagi yorliq, masalan 'Math darsi' */
+  darsTuri: string;
+  /** "rasmiy <imtihon> savoli emas" yozuvi uchun, masalan 'SAT'. Bo'lmasa "rasmiy savol emas". */
+  imtihon?: string;
+  /** manbalar.ts dagi ID lar */
+  manbalar: string[];
+  tekshirilgan: string;
+  keyingiTekshiruv: string;
   title: string;
   description: string;
-  /** CB05 dagi Math yo'nalishi nomi */
+  /** Rasmiy manbadagi yo'nalish nomi (SAT: CB05) */
   yonalish: string;
   sarlavha: string;
   lead: string;
   maqsadlar: string[];
   xulosa: string[];
-  keyingi?: { nomi: string; qism: string };
+  /** href to'liq manzil, sahifada yol() bilan yasaladi */
+  keyingi?: { nomi: string; href: string };
   tekshirilmagan: string[];
 }
 
-const { modul, title, description, yonalish, sarlavha, lead, maqsadlar, xulosa, keyingi, tekshirilmagan } = Astro.props;
-const savollar = darsSavollari[modul];
+const {
+  bolim, modul, savollar, yolBandlari, darsTuri, imtihon, manbalar, tekshirilgan, keyingiTekshiruv,
+  title, description, yonalish, sarlavha, lead, maqsadlar, xulosa, keyingi, tekshirilmagan,
+} = Astro.props;
 const HARF = 'ABCD';
 const qadamlar = [
   { id: 'animatsiya', nomi: 'Animatsiya' },
@@ -35,14 +49,14 @@ const qadamlar = [
   title={title}
   description={description}
   turi="qollanma"
-  yol={['Math darslari']}
-  bolim="sat"
+  yol={yolBandlari}
+  bolim={bolim}
   holat="qoralama"
 >
   <div class="ichki dars" data-modul={modul}>
     <header class="bosh">
       <p class="pill-qator">
-        <span class="ustki-kok">Math darsi</span>
+        <span class="ustki-kok">{darsTuri}</span>
         <span class="pill">{yonalish}</span>
         <span class="pill pill-chiziq">Qoralama</span>
       </p>
@@ -89,7 +103,7 @@ const qadamlar = [
     <section class="mashqlar" aria-labelledby="mashq-h" id="mashqlar">
       <div class="m-bosh">
         <h2 id="mashq-h">Mashqlar</h2>
-        <p class="kichik ikkinchi">Tayanch uchun yozilgan namuna savollar, rasmiy SAT savoli emas. Ball hisoblanmaydi.</p>
+        <p class="kichik ikkinchi">Tayanch uchun yozilgan namuna savollar, {imtihon ? `rasmiy ${imtihon} savoli emas` : 'rasmiy savol emas'}. Ball hisoblanmaydi.</p>
       </div>
 
       <nav class="savol-nuqtalar" aria-label="Mashqlar ro'yxati">
@@ -156,27 +170,27 @@ const qadamlar = [
       </section>
 
       {keyingi && (
-        <a class="katta asosiy keyingi-dars" href={yol('/uz/sat/' + keyingi.qism)}>Keyingi dars: {keyingi.nomi}</a>
+        <a class="katta asosiy keyingi-dars" href={keyingi.href}>Keyingi dars: {keyingi.nomi}</a>
       )}
     </section>
 
     <ManbaBlok
-      manbalar={['CB05']}
-      tekshirilgan="2026-11-05"
-      keyingiTekshiruv="2026-12-05"
+      manbalar={manbalar}
+      tekshirilgan={tekshirilgan}
+      keyingiTekshiruv={keyingiTekshiruv}
       tekshirilmagan={tekshirilmagan}
     />
   </div>
 
-  <script type="application/json" id="dars-data" set:html={JSON.stringify({ modul, savollar })} />
+  <script type="application/json" id="dars-data" set:html={JSON.stringify({ bolim, modul, savollar })} />
 </BolimQobiq>
 
 <script>
-  import type { DarsSavol, DarsModul } from '../../data/satDarslar/turlar';
+  import type { DarsSavol, DarsBolim } from '../../data/darsTurlar';
   import { javobniYoz, progressniOqi, xatolarniOqi, modulniTozala } from '../../lib/darsSaqlash';
 
-  const data = JSON.parse(document.getElementById('dars-data')!.textContent || '{}') as { modul: DarsModul; savollar: DarsSavol[] };
-  const { modul, savollar } = data;
+  const data = JSON.parse(document.getElementById('dars-data')!.textContent || '{}') as { bolim: DarsBolim; modul: string; savollar: DarsSavol[] };
+  const { bolim, modul, savollar } = data;
 
   // ---------- Qadamlar (tablist) ----------
   const tablar = [...document.querySelectorAll<HTMLButtonElement>('.qadamlar [role="tab"]')];
@@ -212,7 +226,7 @@ const qadamlar = [
   let joriy = 0;
 
   const holatniChiz = () => {
-    const p = progressniOqi()[modul] ?? {};
+    const p = progressniOqi(bolim)[modul] ?? {};
     let togri = 0;
     nuqtalar.forEach((n, i) => {
       const h = p[savollar[i].id];
@@ -267,7 +281,7 @@ const qadamlar = [
       tekshir.hidden = true;
       f.querySelector<HTMLButtonElement>('.qayta')!.hidden = togrimi;
       f.querySelector<HTMLButtonElement>('.keyingi')!.hidden = false;
-      const saqlandi = javobniYoz(modul, s.id, togrimi, s.variantlar[j].matn);
+      const saqlandi = javobniYoz(bolim, modul, s.id, togrimi, s.variantlar[j].matn);
       document.getElementById('saqlash-holat')!.textContent = saqlandi
         ? 'Natijalar faqat shu brauzerda saqlanadi.'
         : "Brauzer saqlashga ruxsat bermadi: natijalar sahifa yopilganda yo'qoladi.";
@@ -285,7 +299,7 @@ const qadamlar = [
   function daftarniChiz() {
     const royxat = document.getElementById('daftar-royxat')!;
     const bosh = document.getElementById('daftar-bosh')!;
-    const xatolar = xatolarniOqi().filter((x) => x.modul === modul);
+    const xatolar = xatolarniOqi(bolim).filter((x) => x.modul === modul);
     royxat.replaceChildren();
     bosh.hidden = xatolar.length > 0;
     xatolar.forEach((x) => {
@@ -315,7 +329,7 @@ const qadamlar = [
   tozala.addEventListener('click', () => { tasdiq.hidden = false; tozala.hidden = true; document.getElementById('tasdiq-yoq')!.focus(); });
   document.getElementById('tasdiq-yoq')!.addEventListener('click', () => { tasdiq.hidden = true; tozala.hidden = false; tozala.focus(); });
   document.getElementById('tasdiq-ha')!.addEventListener('click', () => {
-    modulniTozala(modul);
+    modulniTozala(bolim, modul);
     fieldsetlar.forEach(tiklash);
     tasdiq.hidden = true; tozala.hidden = false;
     korsat(0);
@@ -324,7 +338,7 @@ const qadamlar = [
 
   holatniChiz();
   // Hali yechilmagan birinchi mashqdan boshlash
-  const p0 = progressniOqi()[modul] ?? {};
+  const p0 = progressniOqi(bolim)[modul] ?? {};
   const birinchi = savollar.findIndex((s) => p0[s.id] !== 'togri');
   korsat(birinchi >= 0 ? birinchi : 0);
 </script>
@@ -409,7 +423,7 @@ const qadamlar = [
   .dars .vazifa-holat { font-weight: 700; }
   .dars .vazifa-holat[data-ok='1'] { color: var(--rang-havola); }
 
-  /* Mashqlar (SAT Mashq testi uslubi) */
+  /* Mashqlar (SAT Mashq testi uslubidan olingan, barcha bo'limlarda bir xil) */
   .dars .mashqlar { display: flex; flex-direction: column; gap: var(--b-5); scroll-margin-top: var(--b-6); }
   .dars .m-bosh { display: flex; flex-direction: column; gap: var(--b-1); }
   .dars .savol-nuqtalar { display: flex; flex-wrap: wrap; gap: var(--b-2); }

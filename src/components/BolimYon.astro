@@ -9,9 +9,13 @@ import { qollanmalar, asos, vositalar } from '../data/ieltsSahifalar';
 import Lift from './Lift.astro';
 import { yol } from '../lib/yol';
 
-interface Props { bolim?: 'sat' | 'ielts' }
+import type { BolimSlug } from '../data/bolimlar';
+
+// Top Admission va EYUF: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va Lift.
+interface Props { bolim?: BolimSlug }
 const { bolim = 'sat' } = Astro.props;
-const NOM = bolim === 'ielts' ? 'IELTS' : 'SAT';
+const NOMLAR: Record<BolimSlug, string> = { sat: 'SAT', ielts: 'IELTS', 'top-admission': 'Top Admission', eyuf: 'EYUF' };
+const NOM = NOMLAR[bolim];
 const joriy = Astro.url.pathname;
 const b = (qism: string) => yol(`/uz/${bolim}/${qism}`);
 // SAT ikonkalari (Tayanch-SAT-dizayn.md, Main ekrani). Qo'llanmalar ikonkasiz, chapdan surilgan.
