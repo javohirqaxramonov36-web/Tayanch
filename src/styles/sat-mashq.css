@@ -1,0 +1,77 @@
+/* SAT mashq sahifalari (kirish, savol o'ynatgich, xato daftari) uchun umumiy uslub.
+   Qiymatlar faqat tokens.css dan. Tugma o'lchamlari DESIGN.md: katta tugma 52px, variant 56px. */
+
+.sm { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-8); }
+.sm .sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.sm-bosh { display: flex; flex-direction: column; gap: var(--b-3); max-width: 62ch; }
+.sm-bosh h1 { font-size: var(--matn-h1); line-height: 1.12; }
+.sm-lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+.sm-pillar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+.sm-pill {
+  display: inline-flex; align-items: center; gap: var(--b-1);
+  padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq);
+  background: var(--sirt-ikkinchi); color: var(--matn);
+  font-size: var(--matn-mayda); font-weight: 700; line-height: 1.4;
+}
+.sm-pill-chiziq { background: transparent; box-shadow: inset 0 0 0 1.5px var(--chiziq-kuchli); }
+.sm h2 { font-size: var(--matn-h3); line-height: 1.25; }
+
+.sm-tugma {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2);
+  min-height: calc(var(--b-10) + var(--b-3)); padding: 0 var(--b-6);
+  border: 0; border-radius: var(--r-toliq); cursor: pointer;
+  font: inherit; font-weight: 800; text-decoration: none; white-space: nowrap;
+  background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+}
+.sm-tugma:hover { background: var(--rang-asosiy-toq); }
+.sm-tugma[disabled] { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
+.sm-tugma-ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
+.sm-tugma-ikkinchi:hover { background: var(--chiziq); }
+.sm-tugma-chiziq { background: transparent; color: var(--matn); box-shadow: inset 0 0 0 1.5px var(--matn); }
+.sm-tugma-chiziq:hover { background: var(--fon-ikkinchi); }
+.sm-tugma[aria-pressed='true'].sm-tugma-ikkinchi { background: var(--matn); color: var(--fon); }
+
+.sm-chip {
+  min-height: 48px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
+  font: inherit; font-size: var(--matn-kichik); font-weight: 700; cursor: pointer;
+  background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
+  min-width: 48px;
+}
+.sm-chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
+
+.sm-havola { color: var(--rang-havola); font-weight: 700; }
+.sm-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); max-width: 62ch; }
+.sm-ogoh {
+  align-self: flex-start; padding: var(--b-2) var(--b-3); border-radius: var(--r-kichik);
+  background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-kichik); font-weight: 600;
+}
+.sm-ogoh[hidden] { display: none; }
+
+/* Bo'sh holat */
+.sm-bosh-holat {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
+  padding: var(--b-8); border-radius: var(--r-katta);
+  background: var(--fon-ikkinchi);
+}
+.sm-bosh-holat[hidden] { display: none; }
+.sm-bosh-holat p { color: var(--matn-ikkinchi); max-width: 56ch; }
+.sm-tez { color: var(--matn-sust); font-weight: 700; }
+
+/* Tasdiq oynasi */
+.sm-dialog {
+  max-width: min(440px, calc(100vw - 2 * var(--b-4))); padding: var(--b-6);
+  border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+  background: var(--fon); color: var(--matn); box-shadow: var(--soya);
+}
+.sm-dialog::backdrop { background: var(--parda); }
+.sm-dialog h2 { margin-bottom: var(--b-2); }
+.sm-dialog p { color: var(--matn-ikkinchi); }
+.sm-dialog-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-6); }
+
+@media (max-width: 640px) {
+  .sm { padding-top: var(--b-6); gap: var(--b-6); }
+  .sm-bosh-holat { padding: var(--b-6); }
+}

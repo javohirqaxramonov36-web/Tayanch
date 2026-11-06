@@ -9,4 +9,10 @@ export default defineConfig({
   base: '/Tayanch',
   trailingSlash: 'always',
   output: 'static',
+  // Eski SAT mashq sahifalari (PR #7) yangi mashq bo'limiga ko'chdi (2026-11-05).
+  redirects: {
+    '/uz/sat/mashq/test/': '/Tayanch/uz/sat/mashq/',
+    '/uz/sat/mashq/bank/': '/Tayanch/uz/sat/mashq/',
+    '/uz/sat/vosita/natijalar/': '/Tayanch/uz/sat/mashq/xatolar/',
+  },
 });

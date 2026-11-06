@@ -1,0 +1,110 @@
+---
+// Xato daftari: oxirgi javobi xato bo'lgan va saqlangan savollar (tayanch:sat:v1). Ma'lumot faqat shu brauzerda.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { tayyorSavollar } from '../../../../../lib/sat/bank';
+import { yol } from '../../../../../lib/yol';
+import 'katex/dist/katex.min.css';
+import '../../../../../styles/sat-mashq.css';
+
+const savollar = await tayyorSavollar();
+// Ro'yxatda savolning birinchi xatboshisi (KaTeX bilan chizilgan, build vaqtidagi ishonchli HTML), CSS bilan 2 qatorga qisqartiriladi.
+const birinchi = (html: string) => html.match(/^<p>[\s\S]*?<\/p>/)?.[0] ?? html;
+const meta = savollar.map((s, n) => ({ id: s.id, n: n + 1, fan: s.fan, domen: s.domen, qiyinlik: s.qiyinlik, qisqa: birinchi(s.matn) }));
+const savolUrl = yol('/uz/sat/mashq/savol/');
+---
+<BolimQobiq
+  title="Xato daftari · SAT"
+  description="Xato qilgan va saqlagan SAT savollaringiz. Ma'lumot faqat shu brauzerda saqlanadi."
+  turi="mashq"
+  yol={['Mashq']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <script type="application/json" id="xd-data" set:html={JSON.stringify(meta)} />
+  <div class="ichki sm xd" data-savol-url={savolUrl}>
+    <section class="sm-bosh" aria-labelledby="xd-h">
+      <p class="sm-pillar"><span class="sm-pill">Mashq</span><span class="sm-pill sm-pill-chiziq">Qoralama</span></p>
+      <h1 id="xd-h">Xato daftari</h1>
+      <p class="sm-lead">Oxirgi urinishda xato qilgan va o'zingiz saqlagan savollar. Qayta yechib, to'g'ri javob bersangiz, savol xatolar ro'yxatidan chiqadi.</p>
+      <p class="sm-ogoh" id="xd-saqlash-yoq" hidden>Bu brauzerda saqlash o'chiq: xato daftari to'planmaydi.</p>
+    </section>
+
+    <section class="sm-bosh-holat" id="xd-bosh" hidden aria-labelledby="xd-bosh-h">
+      <h2 id="xd-bosh-h">Daftar hozircha bo'sh</h2>
+      <p>Mashqda xato qilgan yoki "Saqlash" tugmasini bosgan savollaringiz shu yerda turadi.</p>
+      <a class="sm-tugma" href={yol('/uz/sat/mashq/')}>Mashqni boshlash</a>
+    </section>
+
+    <section class="xd-guruh" id="xd-xato-bolim" hidden aria-labelledby="xd-xato-h">
+      <h2 id="xd-xato-h">Xato qilinganlar <span class="xd-son" id="xd-xato-son"></span></h2>
+      <ul class="xd-royxat" id="xd-xato"></ul>
+    </section>
+    <section class="xd-guruh" id="xd-saqlangan-bolim" hidden aria-labelledby="xd-saqlangan-h">
+      <h2 id="xd-saqlangan-h">Saqlanganlar <span class="xd-son" id="xd-saqlangan-son"></span></h2>
+      <ul class="xd-royxat" id="xd-saqlangan"></ul>
+    </section>
+  </div>
+</BolimQobiq>
+
+<script>
+  import { oqi, saqlashIshlaydi, sessiyadanOl } from '../../../../../lib/sat/saqlash';
+  interface Meta { id: string; n: number; fan: string; domen: string; qiyinlik: string; qisqa: string }
+  const QNOMI: Record<string, string> = { oson: 'Oson', orta: "O'rta", qiyin: 'Qiyin' };
+  const FNOMI: Record<string, string> = { math: 'Math', rw: 'Reading and Writing' };
+  const meta: Meta[] = JSON.parse(document.getElementById('xd-data')!.textContent || '[]');
+  const savolUrl = document.querySelector<HTMLElement>('.xd')!.dataset.savolUrl!;
+  document.getElementById('xd-saqlash-yoq')!.hidden = saqlashIshlaydi();
+  const h = oqi();
+  const sana = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString('uz-UZ') : '');
+
+  const element = (s: Meta) => {
+    const y = h.savollar[s.id];
+    const li = document.createElement('li');
+    li.className = 'xd-qator';
+    li.innerHTML = `
+      <div class="xd-matn">
+        <p class="xd-yorliq"></p>
+        <div class="xd-qisqa" lang="en"></div>
+        <p class="xd-izoh"></p>
+      </div>
+      <a class="sm-tugma sm-tugma-ikkinchi xd-qayta">Qayta yechish</a>`;
+    li.querySelector('.xd-yorliq')!.textContent = `${FNOMI[s.fan]} · ${s.domen} · ${QNOMI[s.qiyinlik]}`;
+    li.querySelector('.xd-qisqa')!.innerHTML = s.qisqa;
+    const javob = y?.oxirgiJavob ? `Oxirgi javobingiz: ${y.oxirgiJavob}${y.togrimi ? " (to'g'ri)" : ' (xato)'}. ` : '';
+    li.querySelector('.xd-izoh')!.textContent = `${javob}Urinishlar: ${y?.urinishlar ?? 0}${y?.oxirgiSana ? `, oxirgisi ${sana(y.oxirgiSana)}` : ''}.`;
+    const a = li.querySelector<HTMLAnchorElement>('.xd-qayta')!;
+    a.href = `${savolUrl}?manba=xatolar&id=${encodeURIComponent(s.id)}`;
+    a.setAttribute('aria-label', `Qayta yechish: ${FNOMI[s.fan]}, ${s.domen}, savol ${s.n}`);
+    a.addEventListener('click', () => sessiyadanOl(s.id));
+    return li;
+  };
+
+  const xatolar = meta.filter((s) => h.savollar[s.id]?.togrimi === false);
+  const saqlangan = meta.filter((s) => h.savollar[s.id]?.saqlangan);
+  const toldir = (kalit: string, royxat: Meta[]) => {
+    document.getElementById(`xd-${kalit}-bolim`)!.hidden = royxat.length === 0;
+    document.getElementById(`xd-${kalit}-son`)!.textContent = `(${royxat.length})`;
+    document.getElementById(`xd-${kalit}`)!.append(...royxat.map(element));
+  };
+  toldir('xato', xatolar);
+  toldir('saqlangan', saqlangan);
+  document.getElementById('xd-bosh')!.hidden = xatolar.length + saqlangan.length > 0;
+</script>
+
+<style>
+  .xd-guruh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .xd-guruh[hidden] { display: none; }
+  .xd-son { color: var(--matn-sust); font-weight: 700; }
+  .xd-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .xd-royxat :global(.xd-qator) {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
+    padding: var(--b-5); border: 1.5px solid var(--matn); border-radius: var(--r-orta);
+  }
+  .xd-royxat :global(.xd-matn) { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; flex: 1 1 320px; }
+  .xd-royxat :global(.xd-yorliq) { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-sust); }
+  .xd-royxat :global(.xd-qisqa) { font-weight: 600; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .xd-royxat :global(.xd-izoh) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  @media (max-width: 640px) {
+    .xd-royxat :global(.xd-qayta) { width: 100%; }
+  }
+</style>

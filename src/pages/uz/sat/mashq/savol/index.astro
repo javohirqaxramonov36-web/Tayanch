@@ -1,0 +1,21 @@
+---
+// SAT savol o'ynatgichi: /uz/sat/mashq/savol/?id=...  (to'plam: fan, domen, konikma, qiyinlik yoki manba=xatolar)
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import SavolKartasi from '../../../../../components/sat/SavolKartasi.astro';
+import { tayyorSavollar } from '../../../../../lib/sat/bank';
+import '../../../../../styles/sat-mashq.css';
+
+const savollar = await tayyorSavollar();
+---
+<BolimQobiq
+  title="Savol · SAT"
+  description="SAT mashq savoli: javobdan keyin o'zbekcha yechim va har variant izohi."
+  turi="mashq"
+  yol={['Mashq']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki sm">
+    <SavolKartasi savollar={savollar} />
+  </div>
+</BolimQobiq>
