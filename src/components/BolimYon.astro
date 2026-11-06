@@ -1,17 +1,18 @@
 ---
-// Bo'lim yon paneli (sidebar): SAT yoki IELTS.
+// Bo'lim yon paneli (sidebar): SAT, IELTS yoki Top Admission (maket "LiftSidebar").
 // >= 1024px: chapda doimiy panel, yig'ish tugmasi bilan (holat localStorage "tayanch:sidebar").
 // < 1024px: ustki qatordagi hamburger tugmasi panelni chapdan chiqaradi.
 //   Esc yopadi, fokus panel ichida aylanadi, qolgan sahifa inert bo'ladi, aria-expanded yangilanadi.
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satGuruhlar } from '../data/satSahifalar';
 import { qollanmalar, asos, vositalar, darslar as ieltsDarslar } from '../data/ieltsSahifalar';
+import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import Lift from './Lift.astro';
 import { yol } from '../lib/yol';
 
 import type { BolimSlug } from '../data/bolimlar';
 
-// Top Admission va EYUF: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va Lift.
+// EYUF: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va Lift.
 interface Props { bolim?: BolimSlug }
 const { bolim = 'sat' } = Astro.props;
 const NOMLAR: Record<BolimSlug, string> = { sat: 'SAT', ielts: 'IELTS', 'top-admission': 'Top Admission', eyuf: 'EYUF' };
@@ -90,7 +91,7 @@ const ieltsGuruhlar = [
       <li>
         <a href={b('')} aria-current={joriymi(b('')) ? 'page' : undefined}>
           <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>
-          {NOM} bo'limi haqida
+          {bolim === 'top-admission' ? "Bo'lim haqida" : `${NOM} bo'limi haqida`}
         </a>
       </li>
     </ul>
@@ -125,6 +126,25 @@ const ieltsGuruhlar = [
               ) : (
                 <p class="nofaol">
                   <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={s.ikonka} />
+                  <span class="nofaol-nom">{s.nomi}</span>
+                  <span class="yorliq-tez">tez orada</span>
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+    {bolim === 'top-admission' && taGuruhlar.map((g, i) => (
+      <div class="guruh">
+        <h2 class="guruh-nom" id={`yon-guruh-${i}`}>{g.nomi}</h2>
+        <ul class="royxat" aria-labelledby={`yon-guruh-${i}`}>
+          {g.bandlar.map((s) => (
+            <li>
+              {s.href ? (
+                <a href={yol(`/uz/${s.href}`)} aria-current={joriymi(yol(`/uz/${s.href}`)) ? 'page' : undefined}>{s.nomi}</a>
+              ) : (
+                <p class="nofaol">
                   <span class="nofaol-nom">{s.nomi}</span>
                   <span class="yorliq-tez">tez orada</span>
                 </p>
@@ -275,6 +295,8 @@ const ieltsGuruhlar = [
   .logo-nom { font-weight: 800; font-size: 18px; white-space: nowrap; }
   .ustki-qator .logo-nom { font-size: 17px; }
   .logo-bolim { color: var(--rang-havola); }
+  /* Uzun bo'lim nomi ("Top Admission") yon panelda sig'maydi: ikki qatorga o'tadi */
+  .yon-bosh .logo-nom { white-space: normal; line-height: 1.15; }
 
   .belgi-tugma {
     flex: none;
