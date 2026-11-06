@@ -1,4 +1,4 @@
-# Tayanch: sessiyalar orasida holat (2026-11-05)
+# Tayanch: sessiyalar orasida holat (2026-11-06)
 
 Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://javohirqaxramonov36-web.github.io/Tayanch/uz/
 
@@ -25,6 +25,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | #10 | **Tayanch binosi**: Lift (5 qavat tugmasi; telefonda pastki panel), Qavat yo'li ("3-qavat › Mashq › Test"), Zina (qo'shni qavatlar), 2- va 5-qavat "qurilmoqda" sahifalari |
 | #12, #14 | **Top Admission kirish sahifasi** (maket A): Topshirish yo'li kartasi, muddat chiptalari muhr bilan (EY01, TB01), yo'nalishlar (TB01, SH01), muallif bloki, Zina, MRZ. `Asosiy` qolipida (yon panelsiz). Chiptada qolgan kun (brauzer, Toshkent sanasi) va "Mening yo'lim" bloki (`tayanch-topshirish-yoli` dan faqat o'qiydi). `bolimlar.ts`: top-admission `tez-orada` (muallif qarori, 2026-11-05). #14: "Muallif yo'li" nomi `h2`. Sinalgan (2026-11-05): muddat holatlari (Bugun, kun ochilishiga, kun qoldi, O'tgan), 375px, qorong'i mavzu, Tab tartibi, a11y semantikasi, jonli sayt. Sinalmagan: haqiqiy VoiceOver |
 | #15 | **SAT Math interaktiv darslari, 1-bosqich** (branch `sat-interaktiv`): Hajm (3D, `three` npm, kechiktirib yuklanadi), Funksiya grafigi, Birlik aylana, Statistika (SVG), Reja tuzgich. 21 ta savol `src/data/satDarslar/` (`verified: false`); `npm run savollar:tekshir`, jadval `docs/sat-savollar-tekshiruv.md`. Keyingi: 2-bosqich Reading & Writing, 3-bosqich Xato daftari va takrorlash |
+| dars-standarti (PR ochiladi, merge kutilmoqda) | **Interaktiv dars standarti** `docs/interaktiv-dars-standarti.md` (barcha qavatlar uchun qoidalar). `DarsQolip` umumlashtirildi: `bolim`, `savollar`, `yolBandlari`, `darsTuri`, `imtihon`, `manbalar`, sanalar, `keyingi.href` prop. Umumiy turlar `src/data/darsTurlar.ts`, saqlash kalitlari `tayanch:<bolim>-dars-progress` / `-xato-daftari`. `BolimYon`/`BolimQobiq` 4 bo'limni qabul qiladi (Top Admission va EYUF: minimal panel). Savol skripti `src/data/*Darslar/tekshiruv.ts` ni o'zi topadi, jadval `docs/<bolim>-savollar-tekshiruv.md` |
 | #11 | **Topshirish yo'li** (`/uz/top-admission/vosita/topshirish-yoli/`): 3 savol → mos ariza yo'llari, aylanadigan "pasport" kartalar, muhrli rasmiy faktlar. Holati: qoralama |
 
 ## 3. Nima qurilmagan (navbat taklifi)
@@ -63,6 +64,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 7. British Council'ning bepul mashq testlari sahifasiga bu mashinadan ulanib bo'lmadi: IELTS'dagi qatori "tekshirilmoqda".
 8. Telegram kanal manzili hali yo'q (hamma joyda "tez orada").
 9. 2-qavat Top Admission qachon `ochiq` bo'ladi (`bolimlar.ts`) va kirish sahifasi qachon "chop-etilgan" bo'ladi.
+10. `tayanch:sat-xato-daftari` kalitini PR #15 darslari ham, PR #17 (SAT mashq) ham ishlatadi. Ikkalasi bir xil shaklda yozadimi, tekshirish kerak (standart: "bitta kalit = bitta shakl"). PR #17 `BolimYon.astro` ni ham o'zgartiradi: `dars-standarti` bilan merge konflikti bo'lishi mumkin.
 
 ## 6. Fayl nomlash qoidalari
 
@@ -88,6 +90,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 
 ## 8. Texnik eslatmalar
 
+- **Interaktiv darslar**: yangi dars oldidan `docs/interaktiv-dars-standarti.md` o'qiladi. Yangi bo'lim savollari `src/data/<bolim>Darslar/` + `tekshiruv.ts`; `npm run savollar:tekshir` 0 farq.
 - **Node**: standart `node` (v22.23.2) Astro 7 uchun eski. Shunday ishga tushiring: `PATH=/opt/homebrew/bin:$PATH npm run build` (Homebrew Node 26).
 - **Lokal ko'rish**: `PATH=/opt/homebrew/bin:$PATH npx astro preview --port 4321` → http://localhost:4321/Tayanch/uz/
 - **Vizual tekshiruv**: Playwright Chromium bu mashinada o'rnatilmaydi (yuklanadi, lekin arxivdan chiqarishda to'xtaydi). Shuning uchun `korib-chiquvchi` agenti ishlamaydi. Tekshiruv ilova ichidagi brauzerda (Claude Browser) qilinadi.

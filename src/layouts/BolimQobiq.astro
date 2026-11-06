@@ -1,5 +1,5 @@
 ---
-// Bo'lim qobig'i (SAT, IELTS): chapda yon panel (BolimYon), o'ngda kontent.
+// Bo'lim qobig'i (SAT, IELTS; Top Admission va EYUF uchun hozircha minimal yon panel): chapda yon panel (BolimYon), o'ngda kontent.
 // Dizayn: Tayanch-SAT-dizayn.md (Main, Natijalar, Savol banki). Footer va sahifa oxiri bloki dizaynda yo'q.
 // Props = T1'dagi majburiy maydonlar (Asosiy bilan bir xil).
 import '../styles/global.css';
@@ -7,13 +7,14 @@ import BoshQism from '../components/BoshQism.astro';
 import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
+import type { BolimSlug } from '../data/bolimlar';
 
 export interface Props {
   title: string;
   description: string;
   til?: 'uz' | 'en';
   turi: 'bolim-kirishi' | 'mashq' | 'vosita' | 'qollanma';
-  bolim?: 'sat' | 'ielts';
+  bolim?: BolimSlug;
   holat: 'qoralama' | 'chop-etilgan';
   tekshirilgan?: string;
   keyingiTekshiruv?: string;

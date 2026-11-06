@@ -1,11 +1,21 @@
 ---
 // Birlik aylana (2D, SVG): P nuqtani aylana bo'ylab sudrash, sin/cos/tan, gradus va radian.
 // Klaviatura: burchak slayderi (strelka 1°), maxsus burchak tugmalari.
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
 ---
 <DarsQolip
+  bolim="sat"
   modul="aylana"
+  savollar={darsSavollari.aylana}
+  yolBandlari={['Math darslari']}
+  darsTuri="Math darsi"
+  imtihon="SAT"
+  manbalar={['CB05']}
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
   title="Birlik aylana · SAT"
   description="SAT Math: birlik aylanada burchakni sudrab sin, cos va tan qiymatlarini ko'ring, gradus va radianni almashtiring. 5 ta mashq."
   yonalish="Geometry and Trigonometry"
@@ -23,7 +33,7 @@ const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
     "sin x = cos(90° − x): to'ldiruvchi burchaklarning sin va cos qiymatlari almashadi.",
     "Kalkulyatorda radian bilan ishlasangiz, radian rejimini tekshiring.",
   ]}
-  keyingi={{ nomi: 'Statistika', qism: 'qollanma/math/statistika/' }}
+  keyingi={{ nomi: 'Statistika', href: yol('/uz/sat/qollanma/math/statistika/') }}
   tekshirilmagan={["Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan."]}
 >
   <div slot="sahna">

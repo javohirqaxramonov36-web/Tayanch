@@ -2,6 +2,8 @@
 // Funksiya grafigi (2D, SVG): to'g'ri chiziq, parabola (uch shakl), ikki chiziq kesishishi.
 // Sudrash: chiziqda (0; b) va (1; m + b) tutqichlari, parabolada uch, kesishishda ikki chiziqning (0; b) tutqichlari.
 // Klaviatura: hamma qiymat slayderlar bilan ham boshqariladi.
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 
 const panjara = Array.from({ length: 21 }, (_, i) => i - 10);
@@ -9,7 +11,15 @@ const X = (x: number) => 210 + 20 * x;
 const Y = (y: number) => 210 - 20 * y;
 ---
 <DarsQolip
+  bolim="sat"
   modul="grafik"
+  savollar={darsSavollari.grafik}
+  yolBandlari={['Math darslari']}
+  darsTuri="Math darsi"
+  imtihon="SAT"
+  manbalar={['CB05']}
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
   title="Funksiya grafigi · SAT"
   description="SAT Math: y = mx + b, parabolaning uch shakli, simmetriya o'qi va ikki tenglama kesishishi interaktiv grafikda. 5 ta mashq."
   yonalish="Algebra · Advanced Math"
@@ -26,7 +36,7 @@ const Y = (y: number) => 210 - 20 * y;
     "ax² + bx + c da uch x = −b / (2a), y o'qini kesish nuqtasi (0; c).",
     "Qiyaliklar teng, b har xil: chiziqlar parallel, yechim yo'q. Qiyalik ham, b ham teng: bir xil chiziq, cheksiz ko'p yechim.",
   ]}
-  keyingi={{ nomi: 'Birlik aylana', qism: 'qollanma/math/birlik-aylana/' }}
+  keyingi={{ nomi: 'Birlik aylana', href: yol('/uz/sat/qollanma/math/birlik-aylana/') }}
   tekshirilmagan={["Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan."]}
 >
   <div slot="sahna">

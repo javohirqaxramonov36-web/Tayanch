@@ -1,18 +1,22 @@
-// SAT darslari savollarini ikkinchi, mustaqil usul bilan tekshiradi va tekshirish jadvalini yozadi.
+// Interaktiv darslar savollarini ikkinchi, mustaqil usul bilan tekshiradi va tekshirish jadvalini yozadi.
 // Ishga tushirish: node scripts/savollarni-tekshir.ts            (faqat tekshiradi)
-//                  node scripts/savollarni-tekshir.ts --jadval   (docs/sat-savollar-tekshiruv.md ni ham yozadi)
-// Usul: savoldagi formula bilan emas, boshqa yo'l bilan hisoblanadi (disklar yig'indisi, sonli qidiruv,
-// teskari tekshiruv). Natija to'g'ri variantning son qiymatiga teng bo'lishi, noto'g'ri variantlardan
-// hech biri unga teng bo'lmasligi kerak. Farq bo'lsa skript xato bilan tugaydi.
-import { writeFileSync } from 'node:fs';
-import { hajmSavollar } from '../src/data/satDarslar/hajm.ts';
-import { grafikSavollar } from '../src/data/satDarslar/grafik.ts';
-import { aylanaSavollar } from '../src/data/satDarslar/aylana.ts';
-import { statistikaSavollar } from '../src/data/satDarslar/statistika.ts';
-import type { DarsSavol } from '../src/data/satDarslar/turlar.ts';
+//                  node scripts/savollarni-tekshir.ts --jadval   (docs/<bolim>-savollar-tekshiruv.md ni ham yozadi)
+// Bo'limlar: src/data/<bolim>Darslar/tekshiruv.ts (masalan satDarslar). Har biri `tekshiruv` ni eksport qiladi:
+// savollar, id bo'yicha ikkinchi usul va jadval izohlari (turlar: src/data/tekshiruvTurlar.ts).
+// Natija to'g'ri variantga teng bo'lishi, noto'g'ri variantlardan hech biri unga teng bo'lmasligi kerak.
+// Farq bo'lsa skript xato bilan tugaydi.
+import { existsSync, readdirSync, writeFileSync } from 'node:fs';
+import type { BolimTekshiruv } from '../src/data/tekshiruvTurlar.ts';
 
-const hamma: DarsSavol[] = [...hajmSavollar, ...grafikSavollar, ...aylanaSavollar, ...statistikaSavollar];
 const EPS = 1e-6;
+const dataPapka = new URL('../src/data/', import.meta.url);
+const bolimlar: { papka: string; t: BolimTekshiruv }[] = [];
+for (const papka of readdirSync(dataPapka).filter((x) => x.endsWith('Darslar')).sort()) {
+  const fayl = new URL(`${papka}/tekshiruv.ts`, dataPapka);
+  if (!existsSync(fayl)) { console.log(`  ✗ ${papka}: tekshiruv.ts yo'q`); process.exitCode = 1; continue; }
+  const { tekshiruv } = (await import(fayl.href)) as { tekshiruv: BolimTekshiruv };
+  bolimlar.push({ papka, t: tekshiruv });
+}
 
 // ---------- Variant matnini songa aylantirish ----------
 // "45π", "5π/6", "−1/2", "√3/2", "⅓", "17,5", "≈ 0,999", "x = 3", "(2; 5)" -> son yoki [x, y]
@@ -38,141 +42,72 @@ const teng = (a: unknown, b: unknown, eps = EPS): boolean => {
   return false;
 };
 
-// ---------- Ikkinchi usul vositalari ----------
-/** Aylanma jism hajmi: balandlik bo'yicha n ta yupqa disk yig'indisi (o'rta nuqta qoidasi). */
-function disklar(radius: (y: number) => number, h: number, n = 200000): number {
-  const dy = h / n;
-  let v = 0;
-  for (let i = 0; i < n; i++) { const r = radius((i + 0.5) * dy); v += Math.PI * r * r * dy; }
-  return v;
-}
-const ortacha = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
-const mediana = (a: number[]) => { const b = [...a].sort((x, y) => x - y); const n = b.length; return n % 2 ? b[(n - 1) / 2] : (b[n / 2 - 1] + b[n / 2]) / 2; };
-const sigma = (a: number[]) => { const o = ortacha(a); return Math.sqrt(ortacha(a.map((x) => (x - o) ** 2))); };
-const oraliq = (a: number[]) => Math.max(...a) - Math.min(...a);
-
-/** id -> [ikkinchi usul natijasi (son, juft yoki to'g'ri variant matni), usul tavsifi] */
-type Natija = { qiymat: number | [number, number] | string; usul: string };
-const ikkinchiUsul: Record<string, () => Natija> = {
-  'hajm-1': () => ({ qiymat: disklar(() => 3, 5), usul: `Disklar yig'indisi: ${(disklar(() => 3, 5) / Math.PI).toFixed(4)}π` }),
-  'hajm-2': () => { const v = disklar((y) => 6 * (1 - y / 4), 4); return { qiymat: v, usul: `Kichrayib boruvchi disklar yig'indisi: ${(v / Math.PI).toFixed(4)}π` }; },
-  'hajm-3': () => { const v = disklar((y) => Math.sqrt(Math.max(0, 9 - (y - 3) ** 2)), 6); return { qiymat: v, usul: `Shar kesimlari yig'indisi (r = 6 : 2): ${(v / Math.PI).toFixed(4)}π` }; },
-  'hajm-4': () => { let h = 0; for (let t = 1; t <= 1000; t++) if (5 * 4 * t === 120) h = t; return { qiymat: h, usul: `Teskari tekshiruv: 5 · 4 · h = 120 bo'ladigan butun h qidirildi → ${h}` }; },
-  'hajm-5': () => {
-    const r = 1.7, h = 3.1;
-    const k = disklar(() => 2 * r, h / 2) / disklar(() => r, h);
-    return { qiymat: Math.abs(k - 2) < 1e-6 ? '2 marta ortadi' : `nisbat ${k}`, usul: `Ixtiyoriy r = 1,7, h = 3,1 da disklar bilan: yangi/eski = ${k.toFixed(6)}` };
-  },
-  'hajm-6': () => { const k = disklar(() => 3, 10) / disklar((y) => 3 * (1 - y / 10), 10); return { qiymat: k, usul: `Disklar bilan: silindr/konus = ${k.toFixed(5)}` }; },
-
-  'grafik-1': () => { const y = [0].map((x) => 2 * x - 3)[0]; return { qiymat: [0, y], usul: `x = 0 qo'yildi: y = ${y}` }; },
-  'grafik-2': () => {
-    // Sonli qidiruv: ikki chiziq orasidagi farq ishora almashtiradigan joy
-    let x = 0; for (let t = -100; t <= 100; t += 0.001) if (Math.abs((2 * t + 1) - (-t + 7)) < 5e-4) { x = Math.round(t * 1000) / 1000; break; }
-    return { qiymat: [x, 2 * x + 1], usul: `Sonli qidiruv (qadam 0,001): x = ${x}, ikkala chiziqda y = ${2 * x + 1} va ${-x + 7}` };
-  },
-  'grafik-3': () => {
-    // f(3 + d) = f(3 − d) tekshiruvi orqali simmetriya o'qi qidiriladi
-    const f = (x: number) => 2 * (x - 3) ** 2 - 8;
-    let oq = NaN; for (let c = -10; c <= 10; c += 0.5) if ([1, 2.5, 7].every((d) => Math.abs(f(c + d) - f(c - d)) < EPS)) oq = c;
-    return { qiymat: oq, usul: `f(c + d) = f(c − d) bo'ladigan c qidirildi: c = ${oq}` };
-  },
-  'grafik-4': () => { let min = Infinity; for (let x = -20; x <= 20; x += 0.0005) min = Math.min(min, x * x - 6 * x + 5); return { qiymat: Math.round(min * 1e6) / 1e6, usul: `Sonli qidiruv [−20; 20], qadam 0,0005: eng kichik ${min.toFixed(6)}` }; },
-  'grafik-5': () => {
-    const det = 3 * 1 - 3 * 1; // −3x + y = 2, −3x + y = −4 sistemasi determinanti
-    const yechim = det !== 0 ? 'Bitta' : (2 === -4 ? "Cheksiz ko'p" : "Yechimi yo'q");
-    return { qiymat: yechim, usul: `Determinant = ${det}, ozod hadlar 2 ≠ −4 → ${yechim}` };
-  },
-
-  'aylana-1': () => { const r = 150 * Math.PI / 180; return { qiymat: r, usul: `150 · π/180 = ${r.toFixed(6)}; teskari: ${(r * 180 / Math.PI).toFixed(6)}°` }; },
-  'aylana-2': () => ({ qiymat: Math.sin(Math.PI / 6), usul: `Math.sin(π/6) = ${Math.sin(Math.PI / 6).toFixed(6)}` }),
-  'aylana-3': () => {
-    const v = Math.cos(2 * Math.PI / 3), gradusRejim = Math.cos((2 * Math.PI / 3) * Math.PI / 180);
-    return { qiymat: v, usul: `Math.cos(2π/3) = ${v.toFixed(6)}; gradus rejimidagi xato: cos(2,094°) = ${gradusRejim.toFixed(4)}` };
-  },
-  'aylana-4': () => { const t = Math.cos(20 * Math.PI / 180); let x = NaN; for (let g = 1; g < 90; g++) if (Math.abs(Math.sin(g * Math.PI / 180) - t) < 1e-9) x = g; return { qiymat: x, usul: `1° dan 89° gacha qidiruv: sin x = cos 20° (${t.toFixed(6)}) → x = ${x}` }; },
-  'aylana-5': () => { let g = Math.atan2(1 / 2, -Math.sqrt(3) / 2) * 180 / Math.PI; if (g < 0) g += 360; return { qiymat: Math.round(g * 1e6) / 1e6, usul: `atan2(1/2; −√3/2) = ${g.toFixed(6)}°` }; },
-
-  'statistika-1': () => { const a = [4, 7, 7, 9, 13]; return { qiymat: ortacha(a), usul: `O'rtacha ${ortacha(a)} (mediana ${mediana(a)}, oraliq ${oraliq(a)})` }; },
-  'statistika-2': () => { const a = [3, 9, 4, 18, 6, 8]; return { qiymat: mediana(a), usul: `Saralangan: ${[...a].sort((x, y) => x - y).join(', ')}; mediana ${mediana(a)}, o'rtacha ${ortacha(a)}` }; },
-  'statistika-3': () => {
-    // Aniq ro'yxat bilan tekshiruv: o'nta 12 va 23
-    const a = [...Array(10).fill(12), 23];
-    return { qiymat: ortacha(a), usul: `O'nta 12 va bitta 23: o'rtacha ${ortacha(a)}` };
-  },
-  'statistika-4': () => {
-    const a = [5, 6, 6, 7, 8], b = [...a, 40];
-    const ozgarish = { "O'rtacha": Math.abs(ortacha(b) - ortacha(a)), Oraliq: Math.abs(oraliq(b) - oraliq(a)), Mediana: Math.abs(mediana(b) - mediana(a)), "Standart og'ish": Math.abs(sigma(b) - sigma(a)) };
-    const eng = Object.entries(ozgarish).sort((x, y) => x[1] - y[1])[0][0];
-    return { qiymat: eng, usul: `O'zgarishlar: ${Object.entries(ozgarish).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', ')}` };
-  },
-  'statistika-5': () => {
-    const A = [10, 10, 10, 10], B = [7, 9, 11, 13];
-    const ok = ortacha(A) === ortacha(B) && sigma(B) > sigma(A);
-    return { qiymat: ok ? "O'rtachalar teng, B ning standart og'ishi kattaroq" : 'mos kelmadi', usul: `O'rtachalar ${ortacha(A)} va ${ortacha(B)}; σ(A) = ${sigma(A)}, σ(B) = ${sigma(B).toFixed(4)}` };
-  },
-};
-
 // ---------- Tekshiruv ----------
-const xatolar: string[] = [];
-const qatorlar: string[] = [];
 const idlar = new Set<string>();
+let jamiXato = 0;
 
-for (const s of hamma) {
-  const tekshir = ikkinchiUsul[s.id];
-  if (idlar.has(s.id)) xatolar.push(`${s.id}: id takrorlangan`);
-  idlar.add(s.id);
-  if (!tekshir) { xatolar.push(`${s.id}: ikkinchi usul yozilmagan`); continue; }
-  if (s.togri < 0 || s.togri >= s.variantlar.length) xatolar.push(`${s.id}: togri indeksi noto'g'ri`);
-  const matnlar = s.variantlar.map((v) => v.matn);
-  if (new Set(matnlar).size !== matnlar.length) xatolar.push(`${s.id}: variantlar takrorlangan`);
-  s.variantlar.forEach((v, i) => {
-    if (i !== s.togri && !v.xato) xatolar.push(`${s.id}: ${i + 1}-variantda xato nomi yo'q`);
-    if (i === s.togri && v.xato) xatolar.push(`${s.id}: to'g'ri variantda xato nomi turibdi`);
-  });
+for (const { papka, t } of bolimlar) {
+  const { savollar: hamma, ikkinchiUsul } = t;
+  const xatolar: string[] = [];
+  const qatorlar: string[] = [];
 
-  const { qiymat, usul } = tekshir();
-  const togriMatn = s.variantlar[s.togri].matn;
-  let mos: boolean;
-  if (typeof qiymat === 'string') {
-    mos = qiymat === togriMatn;
-    // Matnli javobda noto'g'ri variantlar ham boshqa bo'lishi kerak (yuqorida tekshirildi)
-  } else {
-    mos = teng(son(togriMatn), qiymat, 1e-4);
+  for (const s of hamma) {
+    const tekshir = ikkinchiUsul[s.id];
+    if (idlar.has(s.id)) xatolar.push(`${s.id}: id takrorlangan`);
+    idlar.add(s.id);
+    if (!tekshir) { xatolar.push(`${s.id}: ikkinchi usul yozilmagan`); continue; }
+    if (s.togri < 0 || s.togri >= s.variantlar.length) xatolar.push(`${s.id}: togri indeksi noto'g'ri`);
+    const matnlar = s.variantlar.map((v) => v.matn);
+    if (new Set(matnlar).size !== matnlar.length) xatolar.push(`${s.id}: variantlar takrorlangan`);
     s.variantlar.forEach((v, i) => {
-      if (i === s.togri) return;
-      const q = son(v.matn);
-      if (q !== null && teng(q, qiymat, 1e-4)) xatolar.push(`${s.id}: noto'g'ri variant "${v.matn}" ham to'g'ri javobga teng chiqdi`);
+      if (i !== s.togri && !v.xato) xatolar.push(`${s.id}: ${i + 1}-variantda xato nomi yo'q`);
+      if (i === s.togri && v.xato) xatolar.push(`${s.id}: to'g'ri variantda xato nomi turibdi`);
     });
+
+    const { qiymat, usul } = tekshir();
+    const togriMatn = s.variantlar[s.togri].matn;
+    let mos: boolean;
+    if (typeof qiymat === 'string') {
+      mos = qiymat === togriMatn;
+      // Matnli javobda noto'g'ri variantlar ham boshqa bo'lishi kerak (yuqorida tekshirildi)
+    } else {
+      mos = teng(son(togriMatn), qiymat, 1e-4);
+      s.variantlar.forEach((v, i) => {
+        if (i === s.togri) return;
+        const q = son(v.matn);
+        if (q !== null && teng(q, qiymat, 1e-4)) xatolar.push(`${s.id}: noto'g'ri variant "${v.matn}" ham to'g'ri javobga teng chiqdi`);
+      });
+    }
+    if (!mos) xatolar.push(`${s.id}: ikkinchi usul (${JSON.stringify(qiymat)}) to'g'ri variant "${togriMatn}" bilan mos emas`);
+
+    const harf = 'ABCD';
+    const variantlar = s.variantlar.map((v, i) => `${harf[i]}) ${v.matn}${i === s.togri ? ' **(to\'g\'ri)**' : ` — ${v.xato}`}`).join('<br>');
+    const q = (x: string) => x.replace(/\|/g, '\\|');
+    qatorlar.push(`| ${s.id} | ${q(s.mavzu)} | ${s.qiyinlik} | ${q(s.matn)} | ${q(variantlar)} | ${q(s.yechim)} | ${q(usul)} | ${mos ? 'mos' : '**FARQ**'} | ${s.verified ? 'ha' : "yo'q"} |`);
   }
-  if (!mos) xatolar.push(`${s.id}: ikkinchi usul (${JSON.stringify(qiymat)}) to'g'ri variant "${togriMatn}" bilan mos emas`);
 
-  const harf = 'ABCD';
-  const variantlar = s.variantlar.map((v, i) => `${harf[i]}) ${v.matn}${i === s.togri ? ' **(to\'g\'ri)**' : ` — ${v.xato}`}`).join('<br>');
-  const q = (x: string) => x.replace(/\|/g, '\\|');
-  qatorlar.push(`| ${s.id} | ${q(s.mavzu)} | ${s.qiyinlik} | ${q(s.matn)} | ${q(variantlar)} | ${q(s.yechim)} | ${q(usul)} | ${mos ? 'mos' : '**FARQ**'} | ${s.verified ? 'ha' : "yo'q"} |`);
-}
+  console.log(`${t.sarlavha}. Savollar: ${hamma.length}. Xatolar: ${xatolar.length}.`);
+  jamiXato += xatolar.length;
+  xatolar.forEach((x) => console.log('  ✗ ' + x));
 
-console.log(`Savollar: ${hamma.length}. Xatolar: ${xatolar.length}.`);
-xatolar.forEach((x) => console.log('  ✗ ' + x));
+  if (process.argv.includes('--jadval')) {
+    const bugun = new Date().toISOString().slice(0, 10);
+    const md = `# ${t.sarlavha}: savollar tekshirish ro'yxati
 
-if (process.argv.includes('--jadval')) {
-  const bugun = new Date().toISOString().slice(0, 10);
-  const md = `# SAT Math darslari: savollar tekshirish ro'yxati
-
-Bu fayl \`scripts/savollarni-tekshir.ts --jadval\` bilan yaratiladi, qo'lda tahrir qilinmaydi. Savollar: \`src/data/satDarslar/\`.
+Bu fayl \`scripts/savollarni-tekshir.ts --jadval\` bilan yaratiladi, qo'lda tahrir qilinmaydi. Savollar: \`src/data/${papka}/\`.
 Yaratilgan: ${bugun}. Savollar soni: ${hamma.length}. Skript topgan farqlar: ${xatolar.length}.
 
 Muallif uchun: savolni tekshirib bo'lgach, ma'lumot faylida \`verified: true\` qo'ying va skriptni qayta ishga tushiring.
-"Ikkinchi usul" ustunida javob savoldagi formulasiz, boshqa yo'l bilan qayta hisoblangan (disklar yig'indisi, sonli qidiruv, teskari tekshiruv).
-Standart og'ish populatsiya formulasi bilan (n ga bo'linadi).
+${t.izoh.join('\n')}
 
 | ID | Mavzu | Qiyinlik | Savol | Variantlar (noto'g'risida tipik xato) | Yechim | Ikkinchi usul | Natija | verified |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 ${qatorlar.join('\n')}
 `;
-  writeFileSync(new URL('../docs/sat-savollar-tekshiruv.md', import.meta.url), md);
-  console.log('Jadval yozildi: docs/sat-savollar-tekshiruv.md');
+    const nom = `docs/${t.bolim}-savollar-tekshiruv.md`;
+    writeFileSync(new URL(`../${nom}`, import.meta.url), md);
+    console.log(`Jadval yozildi: ${nom}`);
+  }
 }
 
-if (xatolar.length) process.exit(1);
+if (jamiXato) process.exit(1);

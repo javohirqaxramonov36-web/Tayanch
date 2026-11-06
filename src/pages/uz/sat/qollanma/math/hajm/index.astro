@@ -1,10 +1,20 @@
 ---
 // Hajm laboratoriyasi (3D). Three.js faqat sahna ekranga yaqinlashganda yuklanadi (src/lib/hajmSahna.ts).
 // Prototip: docs/prototip/tayanch-3d-laboratoriya.html (SAT bo'limi).
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 ---
 <DarsQolip
+  bolim="sat"
   modul="hajm"
+  savollar={darsSavollari.hajm}
+  yolBandlari={['Math darslari']}
+  darsTuri="Math darsi"
+  imtihon="SAT"
+  manbalar={['CB05']}
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
   title="Hajm laboratoriyasi · SAT"
   description="SAT Math: silindr, konus, shar va prizma hajmi 3D sahnada. Disklar animatsiyasi, formula, sinov va 6 ta mashq."
   yonalish="Geometry and Trigonometry"
@@ -21,7 +31,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
     "Shar faqat radiusga bog'liq: V = ⁴⁄₃πr³. Radius 2 marta oshsa, hajm 8 marta oshadi.",
     "Savolda diametr berilsa, avval uni 2 ga bo'ling.",
   ]}
-  keyingi={{ nomi: 'Funksiya grafigi', qism: 'qollanma/math/grafik/' }}
+  keyingi={{ nomi: 'Funksiya grafigi', href: yol('/uz/sat/qollanma/math/grafik/') }}
   tekshirilmagan={[
     "Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
     "Imtihonda formulalar varag'i berilishi bu sahifada da'vo qilinmaydi: rasmiy manba hali jurnalga qo'shilmagan.",
