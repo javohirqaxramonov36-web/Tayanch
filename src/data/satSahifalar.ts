@@ -63,6 +63,15 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: ['CB01', 'CB04'],
         tekshirilmagan: ["Haftalik vazifalar Tayanch tavsiyasi, rasmiy reja emas.", "Ball qadami (10) rasmiy sahifada yozilmagan: kiritish maydonida qulaylik uchun olingan."],
       },
+      {
+        qism: 'vosita/takrorlash/',
+        tayyor: true,
+        nomi: 'Xato daftari: takrorlash',
+        tavsif: "Darslarda xato qilingan mashqlarni oraliq bilan takrorlash: ertaga, keyin 3, 7 va 14 kundan so'ng. Ma'lumot faqat shu brauzerda. Ball hisoblanmaydi.",
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ["Takrorlash oraliqlari Tayanch tanlovi, rasmiy tavsiya emas."],
+      },
     ],
   },
   {
