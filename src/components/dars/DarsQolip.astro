@@ -35,12 +35,16 @@ interface Props {
   tekshirilmagan: string[];
   /** Laboratoriya qadamlari nomi. Bo'lmasa: Animatsiya, Formula, Sinab ko'r (R&W: Misol, Qoida, Sinab ko'r) */
   qadamNomlari?: [string, string, string];
+  /** Ixtiyoriy: savol matni va variantlar tili (R&W: 'en'). Bo'lmasa sahifa tili. */
+  savolTili?: string;
+  /** Ixtiyoriy: oddiy A–D savolda matn ustidagi ko'rsatma (o'zbekcha), masalan "Bo'sh joyga mos so'zni tanlang." */
+  savolKorsatma?: string;
 }
 
 const {
   bolim, modul, savollar, yolBandlari, darsTuri, imtihon, manbalar, tekshirilgan, keyingiTekshiruv,
   title, description, yonalish, sarlavha, lead, maqsadlar, xulosa, keyingi, tekshirilmagan,
-  qadamNomlari = ['Animatsiya', 'Formula', "Sinab ko'r"],
+  qadamNomlari = ['Animatsiya', 'Formula', "Sinab ko'r"], savolTili, savolKorsatma,
 } = Astro.props;
 const HARF = 'ABCD';
 const qadamlar = [
@@ -57,7 +61,7 @@ const qadamlar = [
   bolim={bolim}
   holat="qoralama"
 >
-  <div class="ichki dars" data-modul={modul}>
+  <div class="ichki dars" data-modul={modul} data-savol-tili={savolTili}>
     <header class="bosh">
       <p class="pill-qator">
         <span class="ustki-kok">{darsTuri}</span>
@@ -137,7 +141,10 @@ const qadamlar = [
                 <p class="joy-holat" aria-live="polite"></p>
               </>
             ) : (
-              <p class="s-matn">{s.matn}</p>
+              <>
+                {savolKorsatma && !s.belgilash && <p class="s-korsatma">{savolKorsatma}</p>}
+                <p class="s-matn" lang={s.belgilash ? undefined : savolTili}>{s.matn}</p>
+              </>
             )}
             {s.belgilash?.tur === 'gap' ? (
               <div class="parcha">
@@ -158,7 +165,7 @@ const qadamlar = [
                   <label class="variant">
                     <input type="radio" name={`v-${s.id}`} value={j} />
                     <span class="harf" aria-hidden="true">{HARF[j]}</span>
-                    <span class="v-matn" lang={s.belgilash ? 'en' : undefined}>{v.matn}</span>
+                    <span class="v-matn" lang={s.belgilash ? 'en' : savolTili}>{v.matn}</span>
                   </label>
                 ))}
               </div>
@@ -182,6 +189,7 @@ const qadamlar = [
     <section class="xulosa" aria-labelledby="xulosa-h" id="xulosa">
       <h2 id="xulosa-h">Xulosa</h2>
       <ul class="xulosa-royxat">{xulosa.map((x) => <li>{x}</li>)}</ul>
+      {Astro.slots.has('xulosa-oxiri') && <slot name="xulosa-oxiri" />}
 
       <section class="daftar" aria-labelledby="daftar-h">
         <div class="daftar-bosh">
@@ -224,6 +232,7 @@ const qadamlar = [
 
   const data = JSON.parse(document.getElementById('dars-data')!.textContent || '{}') as { bolim: DarsBolim; modul: string; savollar: DarsSavol[] };
   const { bolim, modul, savollar } = data;
+  const ildiz = document.querySelector<HTMLElement>('.dars')!;
 
   // ---------- Qadamlar (tablist) ----------
   const tablar = [...document.querySelectorAll<HTMLButtonElement>('.qadamlar [role="tab"]')];
@@ -424,7 +433,10 @@ const qadamlar = [
       const s = savollar[i];
       const li = document.createElement('li');
       const matn = document.createElement('div');
-      const b = document.createElement('p'); b.className = 'd-savol'; b.textContent = `${i + 1}-mashq. ${s.matn}`;
+      const b = document.createElement('p'); b.className = 'd-savol';
+      const til = ildiz.dataset.savolTili;
+      if (til && !s.belgilash) { const sp = document.createElement('span'); sp.lang = til; sp.textContent = s.matn; b.append(`${i + 1}-mashq. `, sp); }
+      else b.textContent = `${i + 1}-mashq. ${s.matn}`;
       const t = document.createElement('p'); t.className = 'kichik ikkinchi'; t.textContent = `Sizning javobingiz: ${x.tanlangan} · ${x.sana}`;
       matn.append(b, t);
       const tugma = document.createElement('button');

@@ -5,7 +5,7 @@
 import type { DarsSavol as UmumiySavol } from '../darsTurlar';
 
 export type { Qiyinlik, Variant } from '../darsTurlar';
-export type DarsModul = 'hajm' | 'grafik' | 'aylana' | 'statistika' | 'rw-xato' | 'rw-dalil';
+export type DarsModul = 'hajm' | 'grafik' | 'aylana' | 'statistika' | 'rw-xato' | 'rw-dalil' | 'rw-otish' | 'rw-lugat';
 export type DarsSavol = UmumiySavol<DarsModul>;
 
 export const KALIT_PROGRESS = 'tayanch:sat-dars-progress';
@@ -19,4 +19,6 @@ export const modulNomi: Record<DarsModul, string> = {
   statistika: 'Statistika',
   'rw-xato': 'Xatoni toping',
   'rw-dalil': 'Dalilni belgilang',
+  'rw-otish': "O'tish so'zlari",
+  'rw-lugat': "Lug'at kontekstda",
 };

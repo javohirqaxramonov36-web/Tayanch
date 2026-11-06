@@ -9,6 +9,8 @@ import { aylanaSavollar } from './aylana.ts';
 import { statistikaSavollar } from './statistika.ts';
 import { rwXatoSavollar } from './rw-xatoni-toping.ts';
 import { rwDalilSavollar } from './rw-dalil.ts';
+import { rwOtishSavollar } from './rw-otish.ts';
+import { rwLugatSavollar } from './rw-lugat.ts';
 import { rwIkkinchiUsul } from './rw-tekshiruv.ts';
 import type { BolimTekshiruv, Natija } from '../tekshiruvTurlar.ts';
 
@@ -91,11 +93,11 @@ const ikkinchiUsul: Record<string, () => Natija> = {
 export const tekshiruv: BolimTekshiruv = {
   bolim: 'sat',
   sarlavha: 'SAT darslari (Math, Reading & Writing)',
-  savollar: [...hajmSavollar, ...grafikSavollar, ...aylanaSavollar, ...statistikaSavollar, ...rwXatoSavollar, ...rwDalilSavollar],
+  savollar: [...hajmSavollar, ...grafikSavollar, ...aylanaSavollar, ...statistikaSavollar, ...rwXatoSavollar, ...rwDalilSavollar, ...rwOtishSavollar, ...rwLugatSavollar],
   ikkinchiUsul: { ...ikkinchiUsul, ...rwIkkinchiUsul },
   izoh: [
     `"Ikkinchi usul" ustunida javob savoldagi formulasiz, boshqa yo'l bilan qayta hisoblangan (disklar yig'indisi, sonli qidiruv, teskari tekshiruv).`,
     "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi).",
-    "Reading & Writing (rw-): sonli hisob yo'q. Har variant qoida jadvali (grammatika) yoki gap belgilari (dalil: kuzatuvmi, da'vo omiliga tegadimi, da'voni takrorlaydimi) bo'yicha alohida baholanadi; qoidadan faqat bitta variant o'tishi shart. Grammatikada xato joyi (bo'lak) ham tekshiriladi.",
+    "Reading & Writing (rw-): sonli hisob yo'q. Har variant qoida jadvali (grammatika) yoki gap belgilari (dalil: kuzatuvmi, da'vo omiliga tegadimi, da'voni takrorlaydimi) bo'yicha alohida baholanadi; qoidadan faqat bitta variant o'tishi shart. Grammatikada xato joyi (bo'lak) ham tekshiriladi. O'tish so'zlarida har variant munosabati alohida jadvaldan olinadi va kutilgan munosabat bilan solishtiriladi. Lug'atda kontekst ishorasi matnda borligi tekshiriladi, har variant ohang va ma'no belgilari bo'yicha baholanadi.",
   ],
 };

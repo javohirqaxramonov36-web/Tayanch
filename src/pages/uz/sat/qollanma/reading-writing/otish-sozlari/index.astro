@@ -1,0 +1,197 @@
+---
+// "O'tish so'zlari" (SAT R&W, Expression of Ideas): ikki gap orasidagi ma'no munosabatini topib, bog'lovchi so'zni tanlash.
+// Sahna: 4 ta misol juft gap (har munosabatga bittasi) va munosabat jadvali (4 ta <button aria-pressed>, strelka va Enter bilan).
+// Misol va Qoida qadamida bo'sh joy to'ldirilgan va to'g'ri munosabat ko'rsatiladi; Sinab ko'r qadamida foydalanuvchi o'zi tanlaydi (saqlanmaydi).
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+
+// Munosabat jadvali (Tayanch tasnifi, rasmiy ro'yxat emas)
+const munosabatlar = [
+  { id: 'zid', nomi: 'Qarama-qarshilik', sozlar: ['However,', 'In contrast,', 'Nevertheless,'], savol: "2-gap 1-gapga qarshi chiqadimi yoki kutilmagan narsani aytadimi?" },
+  { id: 'sabab', nomi: 'Sabab-natija', sozlar: ['Therefore,', 'As a result,', 'Consequently,'], savol: '2-gap 1-gapdan kelib chiqadimi?' },
+  { id: 'misol', nomi: 'Misol', sozlar: ['For example,', 'For instance,', 'Specifically,'], savol: "2-gap 1-gapdagi umumiy fikrning aniq holatimi?" },
+  { id: 'davom', nomi: 'Davom', sozlar: ['Moreover,', 'In addition,', 'Furthermore,'], savol: "2-gap shu yo'nalishda yangi fikr qo'shadimi?" },
+];
+
+// Laboratoriya misollari (o'ylab topilgan, mashq emas, natijasi saqlanmaydi)
+const misollar = [
+  { birinchi: "The museum's new wing was designed to hold large sculptures.", ikkinchi: 'most of the pieces shown there in its first year were small paintings.', munosabat: 'zid', sabab: "Qanot katta haykallar uchun qurilgan, lekin unda kichik rasmlar ko'rsatilgan: kutilganiga qarshi." },
+  { birinchi: "The bakery's only oven broke early on Friday morning.", ikkinchi: 'no fresh bread was sold that day.', munosabat: 'sabab', sabab: "Pech buzilgani sabab, non sotilmagani uning natijasi." },
+  { birinchi: 'Many desert animals avoid the midday heat.', ikkinchi: 'fennec foxes stay in cool burrows until the sun goes down.', munosabat: 'misol', sabab: "Fenek tulkilari 1-gapdagi \"ko'p cho'l hayvonlari\" ning aniq misoli." },
+  { birinchi: 'Walking to school saves the family money on bus fares.', ikkinchi: 'it gives the children a short morning workout.', munosabat: 'davom', sabab: "Ikkalasi piyoda yurishning foydasi: ikkinchi foyda birinchisiga qo'shiladi, undan kelib chiqmaydi." },
+];
+---
+<DarsQolip
+  bolim="sat"
+  modul="rw-otish"
+  savollar={darsSavollari['rw-otish']}
+  yolBandlari={['Reading & Writing darslari']}
+  darsTuri="Reading & Writing darsi"
+  imtihon="SAT"
+  manbalar={['CB06']}
+  tekshirilgan="2026-11-06"
+  keyingiTekshiruv="2026-12-06"
+  title="O'tish so'zlari · SAT"
+  description="SAT Reading & Writing: ikki gap orasidagi munosabatni (qarama-qarshilik, sabab-natija, misol, davom) topib, mos o'tish so'zini tanlang. 5 ta mashq."
+  yonalish="Expression of Ideas"
+  sarlavha="O'tish so'zlari: avval munosabat, keyin so'z"
+  lead="O'tish so'zi savolida variantlarning hammasi grammatik jihatdan to'g'ri. Farqi ma'noda: so'z ikki gap orasidagi munosabatni aytadi. Avval 2-gap 1-gapga nima qilishini aniqlang, keyin shu munosabat so'zini tanlang."
+  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  savolTili="en"
+  savolKorsatma="Bo'sh joyga eng mantiqiy o'tish so'zini tanlang."
+  maqsadlar={[
+    "Ikki gap orasidagi munosabatni to'rt turdan biriga ajratasiz.",
+    "Har munosabat uchun o'tish so'zlarini bilasiz va ularni aralashtirmaysiz.",
+    "Gap ichidagi boshqa bog'lovchi (masalan \"so\") tuzog'iga tushmaysiz.",
+  ]}
+  xulosa={[
+    "Bo'sh joyni yoping va so'ring: 2-gap 1-gapga nima qiladi?",
+    "Qarshi chiqsa: However, In contrast, Nevertheless. Kelib chiqsa: Therefore, As a result, Consequently.",
+    "Aniq holat bo'lsa: For example, For instance. Yangi fikr qo'shsa: Moreover, In addition, Furthermore.",
+    "Bir munosabatdagi so'zlar ko'pincha bir-birining o'rnini bosadi; javob variantlarida esa odatda har munosabatdan bittadan bo'ladi.",
+    "Ikkinchi foyda birinchisining natijasi emas: \"As a result\" faqat sabab bo'lsa.",
+  ]}
+  keyingi={{ nomi: "Lug'at kontekstda", href: yol('/uz/sat/qollanma/reading-writing/lugat-kontekstda/') }}
+  tekshirilmagan={[
+    "Matnlar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "To'rt munosabat jadvali va so'zlar ro'yxati Tayanch tavsiyasi, rasmiy tasnif emas. \"Transitions\" skill nomi rasmiy manbada tekshirilmagan; CB06 da faqat domen nomi (Expression of Ideas) bor.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti rw-quti">
+      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi" id="otish-tartib">1 / {misollar.length} misol</span></p>
+      <p class="otish-matn" lang="en">
+        <span id="otish-1">{misollar[0].birinchi}</span>{' '}<span class="otish-joy" id="otish-joy">______</span>{' '}<span id="otish-2">{misollar[0].ikkinchi}</span>
+      </p>
+      <div class="bolaklar gap-bolaklar" id="otish-jadval" role="group" aria-label="Ma'no munosabati: 2-gap 1-gapga nima qiladi">
+        {munosabatlar.map((m, k) => (
+          <button type="button" class="bolak gap mun-tugma" data-bolak={k} aria-pressed="false">
+            <span class="gap-matn"><b>{m.nomi}</b> <span class="mun-sozlar" lang="en">{m.sozlar.map((x) => x.replace(/,$/, '')).join(' · ')}</span></span>
+            <span class="gap-yorliq" hidden></span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <p class="sahna-izoh" id="otish-holat" aria-live="polite"></p>
+    <div class="segment otish-boshqaruv"><button type="button" class="kichik-tugma" id="otish-keyingi">Keyingi misol</button></div>
+    <script type="application/json" id="otish-data" set:html={JSON.stringify({ munosabatlar, misollar })} />
+  </div>
+
+  <div slot="animatsiya">
+    <p>Sahnadagi bo'sh joy to'ldirilgan, jadvalda shu juftning munosabati ko'k chegara bilan belgilangan. "Keyingi misol" bilan to'rt munosabatning har birini ko'ring.</p>
+    <div class="formula"><span class="kichik ikkinchi">Nega aynan shu munosabat</span><span class="f-qiymat rw-qoida" id="otish-sabab">{misollar[0].sabab}</span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+  </div>
+
+  <div slot="formula">
+    <dl class="rw-qoidalar">
+      {munosabatlar.map((m) => (
+        <div><dt>{m.nomi} <span class="mun-sozlar" lang="en">{m.sozlar.map((x) => x.replace(/,$/, '')).join(' · ')}</span></dt><dd>{m.savol}</dd></div>
+      ))}
+    </dl>
+    <p class="kichik ikkinchi">Usul: bo'sh joyni yoping, ikki gapni o'z so'zingiz bilan ulang ("lekin", "shuning uchun", "masalan", "yana"), keyin shu ma'nodagi variantni toping.</p>
+  </div>
+
+  <div slot="sinab">
+    <div class="vazifa">
+      <p><b>Vazifa.</b> Sahnadagi ikki gapni o'qing va jadvaldan ularning munosabatini tanlang. Klaviaturada: Tab bilan jadvalga kiring, strelkalar bilan yuring, Enter bilan tanlang.</p>
+      <p class="vazifa-holat" id="otish-sinab-holat" aria-live="polite">Hali tanlanmagan.</p>
+    </div>
+    <div class="segment"><button type="button" class="kichik-tugma" id="otish-qayta">Qayta urinish</button></div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { belgilashGuruhi } from '../../../../../../lib/belgilashGuruh';
+
+  type Mun = { id: string; nomi: string; sozlar: string[]; savol: string };
+  type Misol = { birinchi: string; ikkinchi: string; munosabat: string; sabab: string };
+  const { munosabatlar, misollar } = JSON.parse(document.getElementById('otish-data')!.textContent || '{}') as { munosabatlar: Mun[]; misollar: Misol[] };
+  const $ = (id: string) => document.getElementById(id)!;
+  const holat = $('otish-sinab-holat');
+  let qadam = 'animatsiya';
+  let joriy = 0;
+
+  const togriK = () => munosabatlar.findIndex((m) => m.id === misollar[joriy].munosabat);
+
+  const g = belgilashGuruhi($('otish-jadval'), (k) => {
+    if (qadam !== 'sinab') return;
+    tozala(false);
+    joyQoy(null);
+    if (k < 0) { holat.textContent = 'Hali tanlanmagan.'; holat.dataset.ok = ''; return; }
+    const m = misollar[joriy];
+    if (k === togriK()) {
+      g.faol(false);
+      yorliq(k, "To'g'ri", 'gap-togri');
+      joyQoy(munosabatlar[k].sozlar[0]);
+      holat.textContent = `To'g'ri: ${munosabatlar[k].nomi.toLowerCase()}. ${m.sabab}`;
+      holat.dataset.ok = '1';
+    } else {
+      yorliq(k, 'Siz tanlagan', 'gap-xato');
+      holat.textContent = `Bu munosabat mos emas. Savol: ${munosabatlar[k].savol} Bu juftda javob "yo'q". Yana urinib ko'ring.`;
+      holat.dataset.ok = '';
+    }
+  });
+
+  function joyQoy(soz: string | null) {
+    const joy = $('otish-joy');
+    joy.textContent = soz ?? '______';
+    joy.classList.toggle('toldi', !!soz);
+  }
+  function yorliq(k: number, matn: string, cls: string) {
+    const t = g.tugmalar[k];
+    t.classList.add(cls);
+    const y = t.querySelector<HTMLElement>('.gap-yorliq')!;
+    y.textContent = matn; y.hidden = false;
+  }
+  function tozala(tanlovniHam: boolean) {
+    g.tugmalar.forEach((t) => {
+      t.classList.remove('gap-togri', 'gap-xato');
+      const y = t.querySelector<HTMLElement>('.gap-yorliq')!;
+      y.hidden = true; y.textContent = '';
+    });
+    if (tanlovniHam) g.tanla(-1);
+  }
+  function chiz() {
+    const m = misollar[joriy];
+    $('otish-1').textContent = m.birinchi;
+    $('otish-2').textContent = m.ikkinchi;
+    $('otish-tartib').textContent = `${joriy + 1} / ${misollar.length} misol`;
+    $('otish-sabab').textContent = m.sabab;
+    tozala(true);
+    if (qadam === 'sinab') {
+      g.faol(true);
+      joyQoy(null);
+      holat.textContent = 'Hali tanlanmagan.'; holat.dataset.ok = '';
+      $('otish-holat').textContent = `${joriy + 1}-misol. Ikki gap orasidagi munosabatni tanlang.`;
+    } else {
+      g.faol(false);
+      const k = togriK();
+      yorliq(k, 'Shu juft', 'gap-togri');
+      joyQoy(munosabatlar[k].sozlar[0]);
+      $('otish-holat').textContent = `${joriy + 1}-misol. Munosabat: ${munosabatlar[k].nomi.toLowerCase()}, bo'sh joyda "${munosabatlar[k].sozlar[0]}".`;
+    }
+  }
+
+  $('otish-keyingi').addEventListener('click', () => { joriy = (joriy + 1) % misollar.length; chiz(); });
+  $('otish-qayta').addEventListener('click', () => { qadam = 'sinab'; chiz(); g.tugmalar[0].focus(); });
+  document.addEventListener('dars:qadam', (e) => { qadam = (e as CustomEvent).detail.qadam; chiz(); });
+  chiz();
+</script>
+
+<style is:global>
+  .rw-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
+  .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .otish-matn { font-size: var(--matn-katta); line-height: 1.6; }
+  .otish-joy { font-weight: 800; color: var(--matn-ikkinchi); }
+  .otish-joy.toldi { color: var(--rang-havola); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .mun-sozlar { display: block; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); font-weight: 500; }
+  .otish-boshqaruv { margin-top: var(--b-2); }
+  .dars .rw-qoida { font-size: var(--matn-asosiy); font-weight: 600; line-height: 1.5; }
+  .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .rw-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .rw-qoidalar dt { font-weight: 800; }
+  .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+  .dars[data-modul='rw-otish'] .s-matn { font-size: var(--matn-katta); font-weight: 500; line-height: 1.6; }
+</style>

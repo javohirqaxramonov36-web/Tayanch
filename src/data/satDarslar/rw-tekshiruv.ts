@@ -4,6 +4,8 @@
 // Fayl node bilan to'g'ridan-to'g'ri ishlaydi: qiymat importlari .ts kengaytmasi bilan.
 import { rwXatoSavollar } from './rw-xatoni-toping.ts';
 import { rwDalilSavollar } from './rw-dalil.ts';
+import { rwOtishSavollar } from './rw-otish.ts';
+import { rwLugatSavollar } from './rw-lugat.ts';
 import type { Natija } from '../tekshiruvTurlar.ts';
 import type { DarsSavol } from './turlar.ts';
 
@@ -29,7 +31,7 @@ function bolakTekshir(s: DarsSavol, kutilganBolak: string): string {
 }
 const farqmi = (n: Natija) => (typeof n.usul === 'string' && n.usul.includes('FARQ') ? { ...n, qiymat: `FARQ: ${n.usul}` } : n);
 
-const sv = (id: string) => [...rwXatoSavollar, ...rwDalilSavollar].find((s) => s.id === id)!;
+const sv = (id: string) => [...rwXatoSavollar, ...rwDalilSavollar, ...rwOtishSavollar, ...rwLugatSavollar].find((s) => s.id === id)!;
 
 /** Ikki so'z orasidagi belgi: "hours; students" -> ";" */
 const orasi = (matn: string, chap: string, ong: string) => matn.slice(chap.length, matn.length - ong.length).trim();
@@ -83,6 +85,65 @@ function dalil(id: string): Natija {
   );
 }
 
+// ---------- O'tish so'zlari: munosabat jadvali (savol faylidan mustaqil) ----------
+type Munosabat = 'zid' | 'sabab' | 'misol' | 'davom';
+const OTISH: Record<string, Munosabat> = {
+  'However,': 'zid', 'In contrast,': 'zid', 'Nevertheless,': 'zid', 'On the other hand,': 'zid',
+  'Therefore,': 'sabab', 'As a result,': 'sabab', 'Consequently,': 'sabab',
+  'For example,': 'misol', 'For instance,': 'misol', 'Specifically,': 'misol',
+  'Moreover,': 'davom', 'In addition,': 'davom', 'Furthermore,': 'davom',
+};
+// Har savol: 1- va 2-gap orasidagi munosabat, matnni qayta o'qib aniqlangan
+const OTISH_KUTILGAN: Record<string, { m: Munosabat; nega: string }> = {
+  'rw-otish-1': { m: 'zid', nega: "2-gap 1-gapdagi taxminni rad etadi" },
+  'rw-otish-2': { m: 'sabab', nega: "bozor ko'chirilishi yo'l ko'milishining oqibati" },
+  'rw-otish-3': { m: 'misol', nega: "qarg'alar 1-gapdagi umumiy fikrning aniq holati" },
+  'rw-otish-4': { m: 'davom', nega: "ikkinchi, mustaqil foyda; birinchisining oqibati emas" },
+  'rw-otish-5': { m: 'zid', nega: "kamchiliklarga qaramay yutuq" },
+};
+function otish(id: string): Natija {
+  const s = sv(id);
+  const k = OTISH_KUTILGAN[id];
+  const joylar = s.matn.split('______').length - 1;
+  const turlar = new Set(s.variantlar.map((v) => OTISH[v.matn]));
+  const qoshimcha = joylar !== 1 ? ` · FARQ: bo'sh joy ${joylar} ta` : turlar.size !== 4 ? ' · FARQ: variantlar 4 xil munosabatdan emas' : ' · Bitta bo\'sh joy, 4 variant 4 xil munosabatdan.';
+  return farqmi(yagona(s, (m) => {
+    const t = OTISH[m];
+    if (!t) return { ok: false, sabab: "jadvalda yo'q" };
+    return t === k.m ? { ok: true, sabab: '' } : { ok: false, sabab: `munosabati "${t}", kerak "${k.m}"` };
+  }, `Qoida: munosabat "${k.m}" (${k.nega})`, qoshimcha));
+}
+
+// ---------- Lug'at: kontekst ishorasi va variant belgilari ----------
+// ohang: so'zning baho yo'nalishi; maydon: ma'no sohasi. To'g'ri variant ikkalasiga mos bo'lishi shart.
+type Belgi = { ohang: 'ijobiy' | 'salbiy' | 'neytral'; maydon: string };
+const b = (ohang: Belgi['ohang'], maydon: string): Belgi => ({ ohang, maydon });
+const LUGAT: Record<string, { ishora: string; kerak: Belgi; variantlar: Record<string, Belgi> }> = {
+  'rw-lugat-1': { ishora: 'fallen branches covered the path', kerak: b('salbiy', 'xavf'), variantlar: {
+    scenic: b('ijobiy', 'manzara'), crowded: b('salbiy', "odam ko'pligi"), hazardous: b('salbiy', 'xavf'), familiar: b('neytral', 'tanishlik') } },
+  'rw-lugat-2': { ishora: 'starting with repairs to the old pipes', kerak: b('neytral', 'muammoni hal qilish'), variantlar: {
+    'write a location on': b('neytral', 'manzil yozish'), 'deal with': b('neytral', 'muammoni hal qilish'),
+    'give a speech to': b('neytral', "nutq so'zlash"), 'send a letter to': b('neytral', "xat jo'natish") } },
+  'rw-lugat-3': { ishora: 'he rarely spoke', kerak: b('neytral', 'kam gapirish'), variantlar: {
+    outspoken: b('neytral', 'ochiq gapirish'), careless: b('salbiy', "e'tiborsizlik"), curious: b('ijobiy', 'qiziquvchanlik'), reserved: b('neytral', 'kam gapirish') } },
+  'rw-lugat-4': { ishora: 'proved them wrong', kerak: b('ijobiy', 'yuqori baho'), variantlar: {
+    modest: b('neytral', 'kichik hajm'), remarkable: b('ijobiy', 'yuqori baho'), predictable: b('salbiy', 'kutilganlik'), expensive: b('neytral', 'narx') } },
+  'rw-lugat-5': { ishora: 'drop in the number', kerak: b('neytral', "o'zgarish tezligi"), variantlar: {
+    pointed: b('neytral', 'shakl'), intelligent: b('ijobiy', 'aql'), sudden: b('neytral', "o'zgarish tezligi"), 'harsh in tone': b('salbiy', 'ovoz ohangi') } },
+};
+function lugat(id: string): Natija {
+  const s = sv(id);
+  const l = LUGAT[id];
+  const qoshimcha = s.matn.includes(l.ishora) ? ` · Ishora matnda bor: "${l.ishora}".` : ` · FARQ: ishora "${l.ishora}" matnda yo'q`;
+  return farqmi(yagona(s, (m) => {
+    const x = l.variantlar[m];
+    if (!x) return { ok: false, sabab: "jadvalda yo'q" };
+    if (x.maydon !== l.kerak.maydon) return { ok: false, sabab: `ma'no "${x.maydon}", kerak "${l.kerak.maydon}"` };
+    if (x.ohang !== l.kerak.ohang) return { ok: false, sabab: `ohang ${x.ohang}, kerak ${l.kerak.ohang}` };
+    return { ok: true, sabab: '' };
+  }, `Qoida: ishora "${l.ishora}" → ${l.kerak.ohang}, "${l.kerak.maydon}"`, qoshimcha));
+}
+
 export const rwIkkinchiUsul: Record<string, () => Natija> = {
   'rw-xato-1': () => {
     const s = sv('rw-xato-1');
@@ -131,4 +192,14 @@ export const rwIkkinchiUsul: Record<string, () => Natija> = {
   'rw-dalil-3': () => dalil('rw-dalil-3'),
   'rw-dalil-4': () => dalil('rw-dalil-4'),
   'rw-dalil-5': () => dalil('rw-dalil-5'),
+  'rw-otish-1': () => otish('rw-otish-1'),
+  'rw-otish-2': () => otish('rw-otish-2'),
+  'rw-otish-3': () => otish('rw-otish-3'),
+  'rw-otish-4': () => otish('rw-otish-4'),
+  'rw-otish-5': () => otish('rw-otish-5'),
+  'rw-lugat-1': () => lugat('rw-lugat-1'),
+  'rw-lugat-2': () => lugat('rw-lugat-2'),
+  'rw-lugat-3': () => lugat('rw-lugat-3'),
+  'rw-lugat-4': () => lugat('rw-lugat-4'),
+  'rw-lugat-5': () => lugat('rw-lugat-5'),
 };

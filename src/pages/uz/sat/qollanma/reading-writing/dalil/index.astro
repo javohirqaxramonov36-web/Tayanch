@@ -3,6 +3,7 @@
 // Sahna: bitta namuna matn. Misol va Qoida qadamida har gapning roli (yorliq + chegara uslubi) ko'rsatiladi;
 // Sinab ko'r qadamida foydalanuvchi gapni o'zi tanlaydi (saqlanmaydi). Gaplar <button aria-pressed>, strelka va Enter bilan.
 import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 
 // Laboratoriya matni (o'ylab topilgan vaziyat, mashq emas)
@@ -31,6 +32,7 @@ const DALIL = 2;
   sarlavha="Dalilni belgilang: da'voni qaysi gap isbotlaydi"
   lead="Dalil savolida hamma gap mavzuga yaqin ko'rinadi. Farqi: dalil kuzatilgan fakt bo'ladi va aynan da'vodagi omilga tegadi. Matndagi gapni bosing, keyin nega u dalil ekanini yoki emasligini ko'ring."
   qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  keyingi={{ nomi: "O'tish so'zlari", href: yol('/uz/sat/qollanma/reading-writing/otish-sozlari/') }}
   maqsadlar={[
     "Da'voning asosiy omilini (nima, kim, qanday o'zgarish) bir qarashda ajratasiz.",
     "Kontekst, usul va xulosani takrorlovchi gapni dalildan farqlaysiz.",
