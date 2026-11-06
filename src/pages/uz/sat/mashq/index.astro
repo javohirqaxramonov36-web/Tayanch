@@ -1,0 +1,240 @@
+---
+// SAT mashq kirishi: ikki fan, domen va ko'nikmalar jadvali (rasmiy ro'yxat: CB08).
+// Natijalar faqat shu brauzerda (tayanch:sat:v1). Ball hisoblanmaydi: faqat to'g'ri javoblar soni va aniqlik.
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../components/ManbaBlok.astro';
+import TelegramHavola from '../../../../components/sat/TelegramHavola.astro';
+import { domenlar, fanNomi, FORMAT_MANBALARI, type Fan } from '../../../../data/sat/format';
+import { tayyorSavollar } from '../../../../lib/sat/bank';
+import { yol } from '../../../../lib/yol';
+import '../../../../styles/sat-mashq.css';
+
+const savollar = await tayyorSavollar();
+const meta = savollar.map(({ id, fan, domen, konikma, qiyinlik }) => ({ id, fan, domen, konikma, qiyinlik }));
+const bosh = savollar.length === 0;
+const savolUrl = yol('/uz/sat/mashq/savol/');
+const fanlar: Fan[] = ['math', 'rw'];
+const son = (f: (s: (typeof meta)[number]) => boolean) => meta.filter(f).length;
+const TEKSHIRILMAGAN = [
+  "Yozma javoblar faqat aniq moslik bilan tekshiriladi: kasr va o'nlik ekvivalentligi qoidasi rasmiy manbada topilmadi (CB11).",
+  'Telegram kanal manzili hali berilmagan.',
+];
+---
+<BolimQobiq
+  title="Mashq · SAT"
+  description="Digital SAT mashqi: rasmiy domen va ko'nikmalar bo'yicha savollar, har javobdan keyin o'zbekcha izoh."
+  turi="mashq"
+  yol={['Mashq']}
+  bolim="sat"
+  holat="qoralama"
+  tekshirilgan="2026-11-05"
+  keyingiTekshiruv="2026-12-05"
+  manbalar={[...FORMAT_MANBALARI, 'CB11', 'KX01']}
+  tekshirilmagan={TEKSHIRILMAGAN}
+>
+  <script type="application/json" id="mashq-data" set:html={JSON.stringify(meta)} />
+  <div class="ichki sm mashq" data-savol-url={savolUrl}>
+    <section class="sm-bosh" aria-labelledby="mashq-h">
+      <p class="sm-pillar"><span class="sm-pill">Mashq</span><span class="sm-pill sm-pill-chiziq">Qoralama</span></p>
+      <h1 id="mashq-h">SAT mashqi</h1>
+      <p class="sm-lead">Savollar Digital SAT'ning rasmiy domen va ko'nikmalari bo'yicha saralangan. Har javobdan keyin o'zbekcha yechim va har variant izohi chiqadi.</p>
+    </section>
+
+    {bosh ? (
+      <section class="sm-bosh-holat" aria-labelledby="bosh-h">
+        <h2 id="bosh-h">Savollar tez orada</h2>
+        <p>Savollar muallif tomonidan yozilyapti va tekshirilgach shu yerda chiqadi. Pastdagi jadvalda ular qaysi domen va ko'nikmalarga bo'linishini ko'rasiz.</p>
+        <p>Yangi savollar haqida: <TelegramHavola class="sm-havola" /></p>
+      </section>
+    ) : (
+      <section class="boshqaruv" aria-label="Mashqni boshlash">
+        <div class="qiyinlik" role="group" aria-labelledby="qiyinlik-nom">
+          <span class="qiyinlik-nom" id="qiyinlik-nom">Qiyinlik</span>
+          <button type="button" class="sm-chip" aria-pressed="true" data-qiyinlik="">Hammasi</button>
+          <button type="button" class="sm-chip" aria-pressed="false" data-qiyinlik="oson">Oson</button>
+          <button type="button" class="sm-chip" aria-pressed="false" data-qiyinlik="orta">O'rta</button>
+          <button type="button" class="sm-chip" aria-pressed="false" data-qiyinlik="qiyin">Qiyin</button>
+        </div>
+        <a class="sm-tugma" id="hammasi" href={savolUrl} data-toplam="">
+          Hammasidan boshlash
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
+        </a>
+        <p class="sm-izoh" id="toplam-izoh" aria-live="polite"></p>
+      </section>
+    )}
+
+    <div class="fanlar">
+      {fanlar.map((fan) => (
+        <section class="fan" aria-labelledby={`fan-${fan}`}>
+          <div class="fan-bosh">
+            <h2 id={`fan-${fan}`}>{fanNomi[fan]}</h2>
+            {!bosh && son((s) => s.fan === fan) > 0 && (
+              <a class="sm-havola" href={`${savolUrl}?fan=${fan}`} data-toplam={`fan=${fan}`}>Shu fandan boshlash</a>
+            )}
+          </div>
+          <div class="jadval-orami">
+            <table>
+              <caption class="sr">{fanNomi[fan]}: domen va ko'nikmalar bo'yicha savollar va natijalaringiz</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Ko'nikma</th>
+                  <th scope="col" class="raqam">Savollar</th>
+                  <th scope="col" class="raqam">Yechilgan</th>
+                  <th scope="col" class="raqam">Aniqlik</th>
+                </tr>
+              </thead>
+              {domenlar[fan].map((d) => (
+                <tbody>
+                  <tr class="domen">
+                    <th scope="rowgroup" colspan="4">{d.nomi}</th>
+                  </tr>
+                  {d.konikmalar.map((k) => {
+                    const n = son((s) => s.fan === fan && s.konikma === k);
+                    const q = `fan=${fan}&konikma=${encodeURIComponent(k)}`;
+                    return (
+                      <tr data-fan={fan} data-konikma={k}>
+                        <th scope="row" lang="en">
+                          {n > 0 ? <a href={`${savolUrl}?${q}`} data-toplam={q}>{k}</a> : <span>{k}</span>}
+                        </th>
+                        <td class="raqam" data-ustun="savollar">{n}</td>
+                        <td class="raqam" data-ustun="yechilgan">0</td>
+                        <td class="raqam" data-ustun="aniqlik">–</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              ))}
+            </table>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <section class="natija-boshqaruv" aria-label="Natijalar">
+      <p class="sm-izoh">Natijalar faqat shu brauzerda saqlanadi, hech qayerga yuborilmaydi. Aniqlik: yechilgan savollardan oxirgi javobi to'g'ri bo'lganlari ulushi. Bu SAT balli emas.</p>
+      <p class="sm-ogoh" id="saqlash-yoq" hidden>Bu brauzerda saqlash o'chiq: natijalar eslab qolinmaydi.</p>
+      <div class="natija-tugmalar" hidden={bosh}>
+        <a class="sm-tugma sm-tugma-ikkinchi" href={yol('/uz/sat/mashq/xatolar/')}>Xato daftari</a>
+        <button type="button" class="sm-tugma sm-tugma-chiziq" id="tozalash-och">Natijalarimni tozalash</button>
+      </div>
+    </section>
+
+    <dialog class="sm-dialog" id="tozalash-oyna" aria-labelledby="tozalash-h">
+      <h2 id="tozalash-h">Natijalar tozalansinmi?</h2>
+      <p>Shu brauzerdagi hamma javoblar, xatolar va saqlangan savollar o'chadi. Buni qaytarib bo'lmaydi.</p>
+      <div class="sm-dialog-tugmalar">
+        <button type="button" class="sm-tugma" id="tozalash-ha">Ha, tozalash</button>
+        <button type="button" class="sm-tugma sm-tugma-ikkinchi" id="tozalash-yoq">Bekor qilish</button>
+      </div>
+    </dialog>
+
+    <ManbaBlok
+      manbalar={[...FORMAT_MANBALARI, 'CB11', 'KX01']}
+      tekshirilgan="2026-11-05"
+      keyingiTekshiruv="2026-12-05"
+      tekshirilmagan={TEKSHIRILMAGAN}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { oqi, tozala, saqlashIshlaydi, KALIT_FILTR } from '../../../../lib/sat/saqlash';
+
+  interface Meta { id: string; fan: string; domen: string; konikma: string; qiyinlik: string }
+  const meta: Meta[] = JSON.parse(document.getElementById('mashq-data')!.textContent || '[]');
+  const ildiz = document.querySelector<HTMLElement>('.mashq')!;
+  const savolUrl = ildiz.dataset.savolUrl!;
+  const ishlaydi = saqlashIshlaydi();
+  document.getElementById('saqlash-yoq')!.hidden = ishlaydi;
+
+  let qiyinlik = '';
+  try { qiyinlik = localStorage.getItem(KALIT_FILTR) ?? ''; } catch { /* yo'q */ }
+  if (!['', 'oson', 'orta', 'qiyin'].includes(qiyinlik)) qiyinlik = '';
+
+  const chiz = () => {
+    const h = oqi();
+    const mos = meta.filter((s) => !qiyinlik || s.qiyinlik === qiyinlik);
+    document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.qiyinlik === qiyinlik)));
+    document.querySelectorAll<HTMLTableRowElement>('tr[data-konikma]').forEach((tr) => {
+      const ss = mos.filter((s) => s.fan === tr.dataset.fan && s.konikma === tr.dataset.konikma);
+      const yechilgan = ss.filter((s) => (h.savollar[s.id]?.urinishlar ?? 0) > 0);
+      const togri = yechilgan.filter((s) => h.savollar[s.id]?.togrimi).length;
+      tr.querySelector('[data-ustun="savollar"]')!.textContent = String(ss.length);
+      tr.querySelector('[data-ustun="yechilgan"]')!.textContent = String(yechilgan.length);
+      tr.querySelector('[data-ustun="aniqlik"]')!.textContent = yechilgan.length ? `${Math.round((togri / yechilgan.length) * 100)}%` : '–';
+    });
+    document.querySelectorAll<HTMLAnchorElement>('a[data-toplam]').forEach((a) => {
+      const p = new URLSearchParams(a.dataset.toplam);
+      if (qiyinlik) p.set('qiyinlik', qiyinlik);
+      const q = p.toString();
+      a.href = q ? `${savolUrl}?${q}` : savolUrl;
+    });
+    const izoh = document.getElementById('toplam-izoh');
+    const hammasi = document.getElementById('hammasi') as HTMLAnchorElement | null;
+    if (izoh && hammasi) {
+      izoh.textContent = mos.length ? `Tanlangan qiyinlikda ${mos.length} ta savol.` : "Bu qiyinlikda hozircha savol yo'q.";
+      hammasi.toggleAttribute('aria-disabled', mos.length === 0);
+      hammasi.classList.toggle('nofaol', mos.length === 0);
+    }
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) =>
+    b.addEventListener('click', () => {
+      qiyinlik = b.dataset.qiyinlik ?? '';
+      try { localStorage.setItem(KALIT_FILTR, qiyinlik); } catch { /* yo'q */ }
+      chiz();
+    }));
+  document.getElementById('hammasi')?.addEventListener('click', (e) => {
+    if ((e.currentTarget as HTMLElement).hasAttribute('aria-disabled')) e.preventDefault();
+  });
+
+  const oyna = document.getElementById('tozalash-oyna') as HTMLDialogElement;
+  const ochuvchi = document.getElementById('tozalash-och')!;
+  ochuvchi.addEventListener('click', () => oyna.showModal());
+  document.getElementById('tozalash-yoq')!.addEventListener('click', () => oyna.close());
+  document.getElementById('tozalash-ha')!.addEventListener('click', () => {
+    tozala();
+    oyna.close();
+    chiz();
+  });
+  oyna.addEventListener('close', () => ochuvchi.focus());
+  chiz();
+</script>
+
+<style>
+  .boshqaruv {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-4) var(--b-6);
+    padding-bottom: var(--b-6); border-bottom: 1px solid var(--chiziq);
+  }
+  .qiyinlik { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .qiyinlik-nom { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); margin-right: var(--b-1); }
+  .boshqaruv .sm-tugma { margin-left: auto; }
+  .boshqaruv .sm-izoh { flex-basis: 100%; }
+  .sm-tugma.nofaol { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
+
+  .fanlar { display: flex; flex-direction: column; gap: var(--b-6); }
+  .fan {
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+    padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4); min-width: 0;
+  }
+  .fan-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-2); }
+  .jadval-orami { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); }
+  thead th { text-align: left; font-weight: 700; color: var(--matn-sust); padding: 0 var(--b-2) var(--b-2); border-bottom: 1.5px solid var(--matn); }
+  thead th:first-child, tbody th { padding-left: 0; }
+  tbody th, td { padding: var(--b-2); border-bottom: 1px solid var(--chiziq); text-align: left; vertical-align: top; font-weight: 500; }
+  tr.domen th { padding-top: var(--b-4); font-weight: 800; font-size: var(--matn-asosiy); border-bottom: 1px solid var(--chiziq-kuchli); }
+  tbody th a { color: var(--rang-havola); font-weight: 700; display: flex; align-items: center; min-height: 48px; }
+  .fan-bosh .sm-havola { display: inline-flex; align-items: center; min-height: 48px; }
+  .natija-tugmalar[hidden] { display: none; }
+  .raqam { text-align: right !important; white-space: nowrap; font-variant-numeric: tabular-nums; width: 1%; }
+
+  .natija-boshqaruv { display: flex; flex-direction: column; gap: var(--b-3); }
+  .natija-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+
+  @media (max-width: 640px) {
+    .fan { padding: var(--b-4); }
+    .boshqaruv .sm-tugma, .natija-tugmalar > * { width: 100%; margin-left: 0; }
+  }
+</style>

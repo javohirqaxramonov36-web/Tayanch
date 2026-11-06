@@ -1,11 +1,11 @@
 ---
 // SAT bo'limining "tez orada" sahifalari. Ro'yxat: src/data/satSahifalar.ts
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
-import { satSahifalar, satGuruhlar, turiNomi, type SatSahifa } from '../../../data/satSahifalar';
+import { satIchkiSahifalar, satGuruhlar, turiNomi, type SatSahifa } from '../../../data/satSahifalar';
 import { yol } from '../../../lib/yol';
 
 export function getStaticPaths() {
-  return satSahifalar.filter((s) => !s.tayyor).map((s) => ({
+  return satIchkiSahifalar.filter((s) => !s.tayyor).map((s) => ({
     params: { qism: s.qism.replace(/\/$/, '') },
     props: { sahifa: s },
   }));

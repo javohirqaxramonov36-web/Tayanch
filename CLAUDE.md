@@ -2,7 +2,7 @@
 
 Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha.
 
-## Joriy holat (2026-11-05)
+## Joriy holat (2026-11-06)
 Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qarorlar, ochiq savollar, nomlash va texnik eslatmalar.
 - Qurilgan va saytda: 1-qavat (bosh sahifa), 3-qavat SAT (PR #7), 4-qavat IELTS (PR #8), Lift (PR #10), Topshirish yo'li vositasi (PR #11, qoralama).
 - Qilindi, merge kutilmoqda: PR #12, 2-qavat Top Admission kirish sahifasi (`/uz/top-admission/`, maket A, branch `top-admission-kirish`); `bolimlar.ts` da Top Admission `ochiq`.
@@ -11,6 +11,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
   2. "Mening yo'lim" bloki (Topshirish yo'li javobidan kirish sahifasida kichik blok): skript, avval spetsifikatsiya.
   3. Türkiye Bursları yo'nalish sahifasi (`/uz/top-admission/turkiye-burslari/`, maket B "Burslar*"). Kirish sahifasidagi kartada hozir "sahifa tez orada".
   4. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
+- Merge kutilmoqda: PR #17, SAT mashq 1-bosqich (`/uz/sat/mashq/`, savol o'ynatgich, xato daftari; branch `sat-mashq-oynatgich`). Savollar banki bo'sh, savollarni muallif beradi. Ochiq savollar: HANDOFF.md 5-bo'lim, 5-band.
 - Boshqa qurilmagan: 5-qavat EYUF (dizayn yo'q).
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
 

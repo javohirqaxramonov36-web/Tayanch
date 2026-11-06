@@ -1,4 +1,4 @@
-# Tayanch: sessiyalar orasida holat (2026-11-05)
+# Tayanch: sessiyalar orasida holat (2026-11-06)
 
 Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://javohirqaxramonov36-web.github.io/Tayanch/uz/
 
@@ -25,6 +25,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | #10 | **Tayanch binosi**: Lift (5 qavat tugmasi; telefonda pastki panel), Qavat yo'li ("3-qavat › Mashq › Test"), Zina (qo'shni qavatlar), 2- va 5-qavat "qurilmoqda" sahifalari |
 | #12, #14 | **Top Admission kirish sahifasi** (maket A): Topshirish yo'li kartasi, muddat chiptalari muhr bilan (EY01, TB01), yo'nalishlar (TB01, SH01), muallif bloki, Zina, MRZ. `Asosiy` qolipida (yon panelsiz). Chiptada qolgan kun (brauzer, Toshkent sanasi) va "Mening yo'lim" bloki (`tayanch-topshirish-yoli` dan faqat o'qiydi). `bolimlar.ts`: top-admission `tez-orada` (muallif qarori, 2026-11-05). #14: "Muallif yo'li" nomi `h2`. Sinalgan (2026-11-05): muddat holatlari (Bugun, kun ochilishiga, kun qoldi, O'tgan), 375px, qorong'i mavzu, Tab tartibi, a11y semantikasi, jonli sayt. Sinalmagan: haqiqiy VoiceOver |
 | #15 | **SAT Math interaktiv darslari, 1-bosqich** (branch `sat-interaktiv`): Hajm (3D, `three` npm, kechiktirib yuklanadi), Funksiya grafigi, Birlik aylana, Statistika (SVG), Reja tuzgich. 21 ta savol `src/data/satDarslar/` (`verified: false`); `npm run savollar:tekshir`, jadval `docs/sat-savollar-tekshiruv.md`. Keyingi: 2-bosqich Reading & Writing, 3-bosqich Xato daftari va takrorlash |
+| #17 (ochiq, merge kutilmoqda) | **SAT mashq, 1-bosqich** (branch `sat-mashq-oynatgich`): `/uz/sat/mashq/` (fanlar bo'yicha domen va ko'nikmalar jadvali, CB08–CB10), `/uz/sat/mashq/savol/?id=…` (`SavolKartasi`: 1–4/Enter/N, chizib qo'yish, yozma tur, KaTeX, "Nega X emas"), `/uz/sat/mashq/xatolar/`. Bank `src/data/sat/savollar.ts` **bo'sh**: savollarni muallif beradi; build tekshiruvi `src/lib/sat/bank.ts`; TEST savollar faqat `tests/sat/` (`npm run build:sat-test`, `build:sat-buzilgan`). Saqlash `tayanch:sat:v1`. Eski Test, Savol banki, Mening natijalarim yo'naltirilgan. `main` (PR #15) bilan birlashtirilgan |
 | #11 | **Topshirish yo'li** (`/uz/top-admission/vosita/topshirish-yoli/`): 3 savol → mos ariza yo'llari, aylanadigan "pasport" kartalar, muhrli rasmiy faktlar. Holati: qoralama |
 
 ## 3. Nima qurilmagan (navbat taklifi)
@@ -57,6 +58,11 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
    - sahifa qachon "chop-etilgan" bo'ladi.
 2. Pasport to'ri: maketda 20px va `--chiziq`, DESIGN.md'da 24px va `--sirt-ikkinchi`. Kod hozir maket bo'yicha. Qaysi biri to'g'ri?
 3. Saqlash kaliti: Topshirish yo'li `tayanch-topshirish-yoli` ishlatadi (prompt shunday degan), CLAUDE.md esa `tayanch:` prefiksini talab qiladi. `tayanch:topshirish-yoli` ga o'tkazilsinmi?
+5. SAT mashq (PR #17):
+   - Telegram kanal manzili (`src/data/sat/aloqa.ts`, hozir `null` va "tez orada");
+   - yozma javob ekvivalentligi (3.5 = 7/2): rasmiy qoida topilmadi, hozir faqat aniq moslik; Bluebook test directions PDF'ini o'qish kerak (`brew install poppler`);
+   - ikki xato daftari: darslar `tayanch:sat-xato-daftari`, mashq `tayanch:sat:v1`; birlashtirish darslarning 3-bosqichida;
+   - birinchi haqiqiy savollar (muallifdan) va ularni `holat: 'tekshirilgan'` ga o'tkazish.
 4. Manba izohida aniq yozilmagan ikki fakt: TB01 "tbbs.turkiyeburslari.gov.tr portali orqali" va CO01 "har qanday talaba uchun bepul". Ularni qayta tekshirish kerak.
 5. Eski ochiq PR #3 ("SAT kirish sahifasi", Jekyll davridan): yopilsinmi?
 6. IELTS va EYUF uchun "bog'liq emaslik" eslatmasi matni tekshirilmagan (IELTS'da "matn tekshiriladi" yorlig'i turibdi).
@@ -72,7 +78,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - **Qoliplar**: `Asosiy` (1-qavat va qurilmoqda sahifalari), `BolimQobiq` (yon panelli bo'lim: `bolim="sat" | "ielts"`), `SatFokus` (yon panelsiz mashq ekrani).
 - **Ma'lumot**: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`, `satSahifalar.ts`, `satNamuna.ts`, `ieltsSahifalar.ts`, `topshirishYoli.ts`).
 - **Manba ID**: 2 harf + 2 raqam, tashkilot bo'yicha (CB = College Board, IE = ielts.org, ID = IDP, CA = Common App, UC = UCAS, SH = Stipendium Hungaricum, TB = Türkiye Bursları, CO = Coalition, EY = El-yurt umidi, LX = lex.uz).
-- **localStorage**: kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`, `tayanch:sat-dars-progress`, `tayanch:sat-xato-daftari`, `tayanch:sat-reja`; sessionStorage `tayanch:qavat`). Istisno: `tayanch-topshirish-yoli` (3-ochiq savol).
+- **localStorage**: kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`, `tayanch:sat-dars-progress`, `tayanch:sat-xato-daftari`, `tayanch:sat-reja`, `tayanch:sat:v1`, `tayanch:sat:filtr`, `tayanch:sat:klaviatura`; sessionStorage `tayanch:sat:sessiya`; sessionStorage `tayanch:qavat`). Istisno: `tayanch-topshirish-yoli` (3-ochiq savol).
 - **Dizayn fayllari** repo ildizida: `Tayanch-SAT-dizayn.md`, `Tayanch-IELTS-dizayn.md`. Top Admission maketi faqat Claude Design'da (havola yuqorida).
 - **Branch nomi**: o'zbekcha, defis bilan (`lift-navigatsiya`, `vosita-topshirish-yoli`).
 

@@ -1,0 +1,11 @@
+---
+// Telegram kanal havolasi. Manzil src/data/sat/aloqa.ts da (TEKSHIRISH KERAK); yo'q bo'lsa havolasiz "tez orada".
+import { TELEGRAM_KANAL } from '../../data/sat/aloqa';
+interface Props { matn?: string; class?: string }
+const { matn = 'Telegram kanal', class: klass } = Astro.props;
+---
+{TELEGRAM_KANAL ? (
+  <a class={klass} href={TELEGRAM_KANAL} rel="noopener" target="_blank">{matn}<span class="sr"> (yangi oynada ochiladi)</span></a>
+) : (
+  <span class:list={[klass, 'sm-tez']}>{matn}: tez orada</span>
+)}
