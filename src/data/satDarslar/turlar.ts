@@ -1,30 +1,12 @@
-// SAT Math interaktiv darslari: umumiy turlar.
+// SAT Math interaktiv darslari: SAT ga xos turlar. Umumiy turlar: src/data/darsTurlar.ts.
 // Savollar Tayanch uchun yozilgan, College Board savollaridan ko'chirilmagan.
 // verified: muallif tekshirib bo'lgach true qo'yadi. false bo'lsa saytda "tekshirilmagan" yorlig'i chiqadi.
 // Har savol javobi scripts/savollarni-tekshir.ts da ikkinchi usul bilan qayta hisoblanadi.
+import type { DarsSavol as UmumiySavol } from '../darsTurlar';
 
+export type { Qiyinlik, Variant } from '../darsTurlar';
 export type DarsModul = 'hajm' | 'grafik' | 'aylana' | 'statistika';
-export type Qiyinlik = 'oson' | "o'rta" | 'qiyin';
-
-export interface Variant {
-  matn: string;
-  /** Faqat noto'g'ri variantda: bu javobga olib keladigan tipik xato nomi */
-  xato?: string;
-}
-
-export interface DarsSavol {
-  id: string;
-  modul: DarsModul;
-  mavzu: string;
-  qiyinlik: Qiyinlik;
-  matn: string;
-  variantlar: Variant[];
-  /** variantlar indeksi */
-  togri: number;
-  /** Qisqa yechim */
-  yechim: string;
-  verified: boolean;
-}
+export type DarsSavol = UmumiySavol<DarsModul>;
 
 export const KALIT_PROGRESS = 'tayanch:sat-dars-progress';
 export const KALIT_XATO_DAFTARI = 'tayanch:sat-xato-daftari';
