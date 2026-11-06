@@ -24,6 +24,26 @@ export interface DarsSavol<M extends string = string> {
   /** Qisqa yechim */
   yechim: string;
   verified: boolean;
+  /** Ixtiyoriy: javobni matndan belgilash (R&W). Bo'lmasa oddiy A–D variantlar. */
+  belgilash?: SozBelgilash | GapBelgilash;
+}
+
+/**
+ * "Xatoni toping": avval gapdagi xato bo'lak (so'z yoki tinish belgisi) belgilanadi, keyin variantlardan tuzatish tanlanadi.
+ * bolaklar tinish belgisi oldidan bo'shliqsiz qo'shilganda `matn` ga teng bo'ladi.
+ */
+export interface SozBelgilash {
+  tur: 'soz';
+  bolaklar: string[];
+  /** Xato bo'lak indeksi */
+  togriBolak: number;
+}
+
+/** "Dalilni belgilang": variantlar matndagi gaplar; ular bitta parcha bo'lib ko'rsatiladi va gap bosib tanlanadi. */
+export interface GapBelgilash {
+  tur: 'gap';
+  /** Parcha ustidagi qisqa ko'rsatma, masalan "Matn" */
+  sarlavha?: string;
 }
 
 /** localStorage kalitlari: tayanch:<bolim>-dars-progress va tayanch:<bolim>-xato-daftari */

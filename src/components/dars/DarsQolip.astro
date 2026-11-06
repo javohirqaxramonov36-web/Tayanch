@@ -6,6 +6,7 @@
 import BolimQobiq from '../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../ManbaBlok.astro';
 import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
+import { tinishmi } from '../../lib/belgilashGuruh';
 
 interface Props {
   bolim: DarsBolim;
@@ -32,17 +33,20 @@ interface Props {
   /** href to'liq manzil, sahifada yol() bilan yasaladi */
   keyingi?: { nomi: string; href: string };
   tekshirilmagan: string[];
+  /** Laboratoriya qadamlari nomi. Bo'lmasa: Animatsiya, Formula, Sinab ko'r (R&W: Misol, Qoida, Sinab ko'r) */
+  qadamNomlari?: [string, string, string];
 }
 
 const {
   bolim, modul, savollar, yolBandlari, darsTuri, imtihon, manbalar, tekshirilgan, keyingiTekshiruv,
   title, description, yonalish, sarlavha, lead, maqsadlar, xulosa, keyingi, tekshirilmagan,
+  qadamNomlari = ['Animatsiya', 'Formula', "Sinab ko'r"],
 } = Astro.props;
 const HARF = 'ABCD';
 const qadamlar = [
-  { id: 'animatsiya', nomi: 'Animatsiya' },
-  { id: 'formula', nomi: 'Formula' },
-  { id: 'sinab', nomi: "Sinab ko'r" },
+  { id: 'animatsiya', nomi: qadamNomlari[0] },
+  { id: 'formula', nomi: qadamNomlari[1] },
+  { id: 'sinab', nomi: qadamNomlari[2] },
 ];
 ---
 <BolimQobiq
@@ -122,23 +126,51 @@ const qadamlar = [
               <span class="kichik ikkinchi">{s.mavzu}</span>
               {!s.verified && <span class="pill pill-ogoh">tekshirilmagan</span>}
             </p>
-            <p class="s-matn">{s.matn}</p>
-            <div class="variantlar">
-              {s.variantlar.map((v, j) => (
-                <label class="variant">
-                  <input type="radio" name={`v-${s.id}`} value={j} />
-                  <span class="harf" aria-hidden="true">{HARF[j]}</span>
-                  <span class="v-matn">{v.matn}</span>
-                </label>
-              ))}
-            </div>
+            {s.belgilash?.tur === 'soz' ? (
+              <>
+                <p class="s-matn s-korsatma">1. Gapdagi xatoli so'z yoki belgini bosing.</p>
+                <div class="bolaklar soz-bolaklar" role="group" aria-label="Gap bo'laklari: xatoli bo'lakni belgilang" lang="en">
+                  {s.belgilash.bolaklar.map((b, k) => (
+                    <button type="button" class:list={['bolak', { 'bolak-tinish': tinishmi(b) }]} data-bolak={k} aria-pressed="false">{b}</button>
+                  ))}
+                </div>
+                <p class="joy-holat" aria-live="polite"></p>
+              </>
+            ) : (
+              <p class="s-matn">{s.matn}</p>
+            )}
+            {s.belgilash?.tur === 'gap' ? (
+              <div class="parcha">
+                <p class="kichik ikkinchi parcha-sarlavha">{s.belgilash.sarlavha ?? "Matn: dalil bo'ladigan gapni bosing"}</p>
+                <div class="bolaklar gap-bolaklar" role="group" aria-label="Matn gaplari: dalil gapni belgilang" lang="en">
+                  {s.variantlar.map((v, k) => (
+                    <button type="button" class="bolak gap" data-bolak={k} aria-pressed="false">
+                      <span class="gap-matn">{v.matn}</span>
+                      <span class="gap-yorliq" lang="uz" hidden></span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div class="variantlar" hidden={s.belgilash?.tur === 'soz'}>
+                {s.belgilash?.tur === 'soz' && <p class="s-korsatma">2. To'g'ri tuzatishni tanlang.</p>}
+                {s.variantlar.map((v, j) => (
+                  <label class="variant">
+                    <input type="radio" name={`v-${s.id}`} value={j} />
+                    <span class="harf" aria-hidden="true">{HARF[j]}</span>
+                    <span class="v-matn" lang={s.belgilash ? 'en' : undefined}>{v.matn}</span>
+                  </label>
+                ))}
+              </div>
+            )}
             <div class="izoh" aria-live="polite" hidden>
               <p class="izoh-sarlavha"></p>
               <p class="izoh-xato"></p>
               <p class="izoh-yechim"><b>Yechim.</b> {s.yechim}</p>
             </div>
             <div class="s-tugmalar">
-              <button type="button" class="katta asosiy tekshir" disabled>Tekshirish</button>
+              {s.belgilash?.tur === 'soz' && <button type="button" class="katta asosiy joy-tekshir" disabled>Joyni tekshirish</button>}
+              <button type="button" class="katta asosiy tekshir" disabled hidden={s.belgilash?.tur === 'soz'}>Tekshirish</button>
               <button type="button" class="katta ikkinchi qayta" hidden>Qayta yechish</button>
               <button type="button" class="katta qora keyingi" hidden>{i < savollar.length - 1 ? 'Keyingi mashq' : 'Xulosaga o\'tish'}</button>
             </div>
@@ -188,6 +220,7 @@ const qadamlar = [
 <script>
   import type { DarsSavol, DarsBolim } from '../../data/darsTurlar';
   import { javobniYoz, progressniOqi, xatolarniOqi, modulniTozala } from '../../lib/darsSaqlash';
+  import { belgilashGuruhi, type Guruh } from '../../lib/belgilashGuruh';
 
   const data = JSON.parse(document.getElementById('dars-data')!.textContent || '{}') as { bolim: DarsBolim; modul: string; savollar: DarsSavol[] };
   const { bolim, modul, savollar } = data;
@@ -247,11 +280,31 @@ const qadamlar = [
     if (fokus) fieldsetlar[i].querySelector<HTMLElement>('.s-matn')?.focus();
   };
 
+  // Belgilash guruhlari (R&W): har mashq uchun bittadan yoki null
+  const guruhlar: (Guruh | null)[] = [];
+  const joyHolati: { ok: boolean; tanlangan: string }[] = [];
+  const qisqa = (m: string) => { const s = m.split(' '); return s.length > 7 ? `${s.slice(0, 7).join(' ')}…` : m; };
+
   const tiklash = (f: HTMLFieldSetElement) => {
+    const i = fieldsetlar.indexOf(f);
+    const g = guruhlar[i];
+    const soz = savollar[i].belgilash?.tur === 'soz';
     f.querySelectorAll<HTMLInputElement>('input').forEach((x) => { x.checked = false; x.disabled = false; });
     f.querySelectorAll('.variant').forEach((v) => v.classList.remove('togri', 'xato'));
+    if (g) {
+      g.tanla(-1); g.faol(true);
+      g.tugmalar.forEach((t) => t.classList.remove('joy-togri', 'joy-xato', 'gap-togri', 'gap-xato'));
+      f.querySelectorAll<HTMLElement>('.gap-yorliq').forEach((y) => { y.hidden = true; y.textContent = ''; });
+      joyHolati[i] = { ok: true, tanlangan: '' };
+    }
+    if (soz) {
+      f.querySelector<HTMLElement>('.variantlar')!.hidden = true;
+      f.querySelector<HTMLElement>('.joy-holat')!.textContent = '';
+      const jt = f.querySelector<HTMLButtonElement>('.joy-tekshir')!;
+      jt.hidden = false; jt.disabled = true;
+    }
     f.querySelector<HTMLElement>('.izoh')!.hidden = true;
-    f.querySelector<HTMLButtonElement>('.tekshir')!.hidden = false;
+    f.querySelector<HTMLButtonElement>('.tekshir')!.hidden = soz;
     f.querySelector<HTMLButtonElement>('.tekshir')!.disabled = true;
     f.querySelector<HTMLButtonElement>('.qayta')!.hidden = true;
     f.querySelector<HTMLButtonElement>('.keyingi')!.hidden = true;
@@ -263,31 +316,92 @@ const qadamlar = [
     matn.tabIndex = -1;
     const inputlar = [...f.querySelectorAll<HTMLInputElement>('input')];
     const tekshir = f.querySelector<HTMLButtonElement>('.tekshir')!;
+    const b = s.belgilash;
+    joyHolati[i] = { ok: true, tanlangan: '' };
+    const joyTekshir = f.querySelector<HTMLButtonElement>('.joy-tekshir');
+    const g = b
+      ? belgilashGuruhi(f.querySelector<HTMLElement>('.bolaklar')!, (k) => {
+          if (b.tur === 'gap') tekshir.disabled = k < 0;
+          else if (joyTekshir) joyTekshir.disabled = k < 0;
+        })
+      : null;
+    guruhlar[i] = g;
     inputlar.forEach((x) => x.addEventListener('change', () => { tekshir.disabled = false; }));
+
+    // "Xatoni toping": 1-bosqich, xato joyini tekshirish
+    if (b?.tur === 'soz' && g && joyTekshir) {
+      joyTekshir.addEventListener('click', () => {
+        const k = g.tanlangan();
+        if (k < 0) return;
+        const ok = k === b.togriBolak;
+        joyHolati[i] = { ok, tanlangan: b.bolaklar[k] };
+        g.faol(false);
+        g.tugmalar[b.togriBolak].classList.add('joy-togri');
+        if (!ok) g.tugmalar[k].classList.add('joy-xato');
+        f.querySelector<HTMLElement>('.joy-holat')!.textContent = ok
+          ? "Joy to'g'ri topildi. Endi tuzatishni tanlang."
+          : `Xato bu yerda emas. Xato joyi: «${b.bolaklar[b.togriBolak]}». Endi tuzatishni tanlang.`;
+        f.querySelector<HTMLElement>('.variantlar')!.hidden = false;
+        joyTekshir.hidden = true;
+        tekshir.hidden = false;
+        inputlar[0]?.focus();
+      });
+    }
+
     tekshir.addEventListener('click', () => {
-      const tanlangan = inputlar.find((x) => x.checked);
-      if (!tanlangan) return;
-      const j = Number(tanlangan.value);
-      const togrimi = j === s.togri;
-      inputlar.forEach((x) => { x.disabled = true; });
-      const labellar = f.querySelectorAll('.variant');
-      labellar[s.togri].classList.add('togri');
-      if (!togrimi) labellar[j].classList.add('xato');
+      let j: number;
+      if (b?.tur === 'gap' && g) {
+        j = g.tanlangan();
+        if (j < 0) return;
+      } else {
+        const tanlangan = inputlar.find((x) => x.checked);
+        if (!tanlangan) return;
+        j = Number(tanlangan.value);
+      }
+      const joy = joyHolati[i];
+      const togrimi = j === s.togri && joy.ok;
       const izoh = f.querySelector<HTMLElement>('.izoh')!;
+      let sarlavha: string;
+      let saqlanadigan = s.variantlar[j].matn;
+      if (b?.tur === 'gap' && g) {
+        g.faol(false);
+        const belgila = (k: number, cls: string, yozuv: string) => {
+          g.tugmalar[k].classList.add(cls);
+          const y = g.tugmalar[k].querySelector<HTMLElement>('.gap-yorliq')!;
+          y.textContent = yozuv; y.hidden = false;
+        };
+        belgila(s.togri, 'gap-togri', "To'g'ri dalil");
+        if (j !== s.togri) belgila(j, 'gap-xato', 'Siz tanlagan');
+        sarlavha = togrimi ? "To'g'ri." : `Xato. To'g'ri dalil: «${s.variantlar[s.togri].matn}»`;
+        saqlanadigan = qisqa(s.variantlar[j].matn);
+      } else {
+        inputlar.forEach((x) => { x.disabled = true; });
+        const labellar = f.querySelectorAll('.variant');
+        labellar[s.togri].classList.add('togri');
+        if (j !== s.togri) labellar[j].classList.add('xato');
+        const togriJavob = `${'ABCD'[s.togri]}) ${s.variantlar[s.togri].matn}`;
+        if (!joy.ok) {
+          sarlavha = j === s.togri ? `Xato joyi topilmadi. Tuzatish to'g'ri: ${togriJavob}` : `Xato joyi topilmadi. To'g'ri tuzatish: ${togriJavob}`;
+          saqlanadigan = `joy: «${joy.tanlangan}»; ${s.variantlar[j].matn}`;
+        } else {
+          sarlavha = togrimi ? "To'g'ri." : `Xato. To'g'ri javob: ${togriJavob}`;
+        }
+      }
+      const tipik = [!joy.ok ? "xato joyi noto'g'ri topildi" : '', j !== s.togri ? s.variantlar[j].xato ?? '' : ''].filter(Boolean);
       izoh.classList.toggle('izoh-togri', togrimi);
-      izoh.querySelector('.izoh-sarlavha')!.textContent = togrimi ? "To'g'ri." : `Xato. To'g'ri javob: ${'ABCD'[s.togri]}) ${s.variantlar[s.togri].matn}`;
-      izoh.querySelector('.izoh-xato')!.textContent = togrimi ? '' : `Tipik xato: ${s.variantlar[j].xato ?? ''}.`;
+      izoh.querySelector('.izoh-sarlavha')!.textContent = sarlavha;
+      izoh.querySelector('.izoh-xato')!.textContent = tipik.length ? `Tipik xato: ${tipik.join('; ')}.` : '';
       izoh.hidden = false;
       tekshir.hidden = true;
       f.querySelector<HTMLButtonElement>('.qayta')!.hidden = togrimi;
       f.querySelector<HTMLButtonElement>('.keyingi')!.hidden = false;
-      const saqlandi = javobniYoz(bolim, modul, s.id, togrimi, s.variantlar[j].matn);
+      const saqlandi = javobniYoz(bolim, modul, s.id, togrimi, saqlanadigan);
       document.getElementById('saqlash-holat')!.textContent = saqlandi
         ? 'Natijalar faqat shu brauzerda saqlanadi.'
         : "Brauzer saqlashga ruxsat bermadi: natijalar sahifa yopilganda yo'qoladi.";
       holatniChiz();
     });
-    f.querySelector<HTMLButtonElement>('.qayta')!.addEventListener('click', () => { tiklash(f); inputlar[0].focus(); });
+    f.querySelector<HTMLButtonElement>('.qayta')!.addEventListener('click', () => { tiklash(f); (g ? g.tugmalar[0] : inputlar[0])?.focus(); });
     f.querySelector<HTMLButtonElement>('.keyingi')!.addEventListener('click', () => {
       if (i < fieldsetlar.length - 1) korsat(i + 1, true);
       else document.getElementById('xulosa-h')!.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -481,6 +595,40 @@ const qadamlar = [
   .dars .matn-tugma:hover { background: var(--sirt-ikkinchi); }
   .dars .kok-tugma { color: var(--rang-havola); }
 
+  /* Matndan belgilash (R&W): belgilangan bo'lak rang bilan bir qatorda tagchiziq, fon va chegara bilan ajraladi */
+  .dars .s-korsatma { font-size: 17px; font-weight: 700; line-height: 1.4; }
+  .dars .s-matn.s-korsatma { font-size: 17px; }
+  .dars .soz-bolaklar { display: flex; flex-wrap: wrap; gap: var(--b-1); font-size: 20px; line-height: 1.4; }
+  .dars .bolak {
+    min-height: 44px; min-width: 44px; padding: 0 var(--b-2);
+    border: 0; border-bottom: 2px dotted var(--chiziq-kuchli); border-radius: var(--r-kichik) var(--r-kichik) 0 0;
+    background: transparent; color: var(--matn); font: inherit; cursor: pointer;
+  }
+  .dars .bolak:hover:not(:disabled) { border-bottom-color: var(--rang-asosiy); background: var(--fon-ikkinchi); }
+  .dars .bolak:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .dars .bolak:disabled { cursor: default; }
+  .dars .bolak[aria-pressed='true'] { background: var(--rang-asosiy-och); border-bottom: 3px solid var(--matn); font-weight: 800; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .dars .bolak-tinish { font-weight: 800; }
+  .dars .bolak.joy-togri { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-bottom: 3px solid var(--rang-asosiy-toq); font-weight: 800; }
+  .dars .bolak.joy-xato { background: var(--fon-ikkinchi); color: var(--matn); border-bottom: 3px dashed var(--matn); text-decoration: line-through; }
+  .dars .joy-holat { font-weight: 700; }
+  .dars .joy-holat:empty { display: none; }
+  .dars .variantlar[hidden] { display: none; }
+  .dars .parcha { display: flex; flex-direction: column; gap: var(--b-2); border-radius: var(--r-orta); background: var(--fon-ikkinchi); padding: var(--b-4); }
+  .dars .gap-bolaklar { display: flex; flex-direction: column; gap: var(--b-1); }
+  .dars .bolak.gap {
+    width: 100%; padding: var(--b-2) var(--b-3); text-align: left; font-size: 17px; line-height: 1.6;
+    border: 0; border-left: 4px solid transparent; border-radius: 0 var(--r-kichik) var(--r-kichik) 0;
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-1);
+  }
+  .dars .bolak.gap:hover:not(:disabled) { background: var(--fon); border-left-color: var(--chiziq-kuchli); }
+  .dars .bolak.gap[aria-pressed='true'] { background: var(--rang-asosiy-och); border-left: 4px solid var(--matn); font-weight: 600; }
+  .dars .bolak.gap.gap-togri { background: var(--rang-asosiy-och); border-left: 4px solid var(--rang-asosiy); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .dars .bolak.gap.gap-xato { background: var(--fon); border-left: 4px dashed var(--matn); text-decoration: none; }
+  .dars .gap-yorliq { padding: 2px 10px; border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 800; background: var(--matn); color: var(--fon); text-decoration: none; }
+  .dars .gap-togri .gap-yorliq { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .dars .gap-yorliq[hidden] { display: none; }
+
   /* Xulosa va Xato daftari */
   .dars .xulosa { display: flex; flex-direction: column; gap: var(--b-5); align-items: flex-start; }
   .dars .xulosa-royxat { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); max-width: 62ch; }
@@ -504,5 +652,7 @@ const qadamlar = [
     .dars .s-tugmalar .katta { flex: 1 1 100%; }
     .dars .qadamlar button { font-size: 14px; padding: 0 var(--b-2); }
     .dars .slayder { grid-template-columns: 5ch minmax(0, 1fr) 5ch; gap: var(--b-2); }
+    .dars .soz-bolaklar { font-size: 18px; }
+    .dars .parcha { padding: var(--b-3); }
   }
 </style>
