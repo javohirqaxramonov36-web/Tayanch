@@ -107,6 +107,29 @@ export const satGuruhlar: SatGuruh[] = [
     ],
   },
   {
+    nomi: 'Reading & Writing darslari',
+    sahifalar: [
+      {
+        qism: 'qollanma/reading-writing/xatoni-toping/',
+        tayyor: true,
+        nomi: 'Xatoni toping',
+        tavsif: "Gapdagi xatoli so'z yoki belgini bosing, keyin tuzating: vergul, nuqtali vergul, ikki nuqta, ega va fe'l, zamon. 5 ta mashq.",
+        turi: 'qollanma',
+        manbalar: ['CB06'],
+        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+      },
+      {
+        qism: 'qollanma/reading-writing/dalil/',
+        tayyor: true,
+        nomi: 'Dalilni belgilang',
+        tavsif: "Qisqa matnda da'voni qo'llab-quvvatlaydigan gapni belgilang va tuzoq gaplarni ajrating. 5 ta mashq.",
+        turi: 'qollanma',
+        manbalar: ['CB06'],
+        tekshirilmagan: ["Matnlar va savollar Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+      },
+    ],
+  },
+  {
     nomi: "O'qish",
     sahifalar: [
       {

@@ -61,6 +61,15 @@ export const manbalar: Manba[] = [
     izoh: "Math to'rt yo'nalish: Algebra (13–15 savol), Advanced Math (13–15), Problem-Solving and Data Analysis (5–7), Geometry and Trigonometry (5–7). Mavzular ro'yxati bu sahifada yo'q.",
   },
   {
+    id: 'CB06',
+    nomi: 'SAT Reading and Writing: Overview',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/reading-writing',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-06',
+    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z. Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',

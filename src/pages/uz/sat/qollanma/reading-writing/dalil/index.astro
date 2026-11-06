@@ -1,0 +1,158 @@
+---
+// "Dalilni belgilang" (SAT R&W, Information and Ideas): qisqa matndagi da'voni qo'llab-quvvatlaydigan gapni belgilash.
+// Sahna: bitta namuna matn. Misol va Qoida qadamida har gapning roli (yorliq + chegara uslubi) ko'rsatiladi;
+// Sinab ko'r qadamida foydalanuvchi gapni o'zi tanlaydi (saqlanmaydi). Gaplar <button aria-pressed>, strelka va Enter bilan.
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+
+// Laboratoriya matni (o'ylab topilgan vaziyat, mashq emas)
+const davo = "Somon qatlami tuproqni namroq saqlashga yordam beradi.";
+const gaplar = [
+  { matn: 'The school garden club wanted to know whether a layer of straw helps soil stay moist.', rol: 'Savol', sabab: "Tadqiqot savoli: nima tekshirilganini aytadi, natijani emas." },
+  { matn: 'The members covered half of one garden bed with straw and left the other half bare.', rol: 'Usul', sabab: "Tajriba usuli: nima qilinganini aytadi, natijani emas." },
+  { matn: 'After a week without rain, the soil under the straw was still damp, while the bare soil had dried and cracked.', rol: 'Dalil', sabab: "Kuzatilgan natija va aynan da'vo omili (namlik): bu dalil." },
+  { matn: 'The club plans to plant tomatoes in the bed next spring.', rol: 'Aloqasiz', sabab: "Kelajak rejasi: mavzuga yaqin, lekin da'voga aloqasi yo'q." },
+];
+const DALIL = 2;
+---
+<DarsQolip
+  bolim="sat"
+  modul="rw-dalil"
+  savollar={darsSavollari['rw-dalil']}
+  yolBandlari={['Reading & Writing darslari']}
+  darsTuri="Reading & Writing darsi"
+  imtihon="SAT"
+  manbalar={['CB06']}
+  tekshirilgan="2026-11-06"
+  keyingiTekshiruv="2026-12-06"
+  title="Dalilni belgilang · SAT"
+  description="SAT Reading & Writing: qisqa matnda da'voni qo'llab-quvvatlaydigan gapni belgilang. Kontekst, usul, takror va mavzuga yaqin gaplarni dalildan ajrating. 5 ta mashq."
+  yonalish="Information and Ideas"
+  sarlavha="Dalilni belgilang: da'voni qaysi gap isbotlaydi"
+  lead="Dalil savolida hamma gap mavzuga yaqin ko'rinadi. Farqi: dalil kuzatilgan fakt bo'ladi va aynan da'vodagi omilga tegadi. Matndagi gapni bosing, keyin nega u dalil ekanini yoki emasligini ko'ring."
+  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  maqsadlar={[
+    "Da'voning asosiy omilini (nima, kim, qanday o'zgarish) bir qarashda ajratasiz.",
+    "Kontekst, usul va xulosani takrorlovchi gapni dalildan farqlaysiz.",
+    "Mavzuga yaqin, lekin da'voga aloqasi yo'q gap tuzog'iga tushmaysiz.",
+  ]}
+  xulosa={[
+    "Avval da'voni o'qing va uning omilini ajrating: aynan nima isbotlanishi kerak.",
+    "Dalil kuzatilgan fakt yoki natija bo'ladi. Savol, usul va kontekst gaplari dalil emas.",
+    "Da'voni boshqa so'zlar bilan takrorlagan gap dalil emas: u xulosaning o'zi.",
+    "Mavzuga yaqin gap tuzoq: da'vodagi omilga tegmasa, u dalil emas.",
+  ]}
+  tekshirilmagan={[
+    "Matnlar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "Tuzoq turlari (kontekst, usul, takror, mavzuga yaqin) Tayanch tavsiyasi, rasmiy tasnif emas.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti rw-quti">
+      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi">O'ylab topilgan vaziyat</span></p>
+      <p class="rw-davo"><span class="kichik ikkinchi">Da'vo</span> {davo}</p>
+      <div class="bolaklar gap-bolaklar" id="rw-matn" role="group" aria-label="Matn gaplari" lang="en">
+        {gaplar.map((g, k) => (
+          <button type="button" class="bolak gap" data-bolak={k} aria-pressed="false">
+            <span class="gap-matn">{g.matn}</span>
+            <span class="gap-yorliq" lang="uz" hidden></span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <p class="sahna-izoh" id="rw-holat" aria-live="polite"></p>
+    <script type="application/json" id="rw-gaplar" set:html={JSON.stringify({ gaplar, dalil: DALIL })} />
+  </div>
+
+  <div slot="animatsiya">
+    <p>Sahnadagi har gap rolini ko'rsatuvchi yorliq bilan belgilangan. Dalil gap ko'k chegara va tagchiziq bilan, qolganlari uzuq chegara bilan ajratilgan.</p>
+    <div class="formula"><span class="kichik ikkinchi">Nega aynan shu gap</span><span class="f-qiymat rw-qoida">{gaplar[DALIL].sabab}</span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+  </div>
+
+  <div slot="formula">
+    <dl class="rw-qoidalar">
+      <div><dt>Dalil</dt><dd>Kuzatilgan fakt yoki natija, va u da'vodagi omilga to'g'ridan-to'g'ri tegadi.</dd></div>
+      <div><dt>Kontekst, savol, usul</dt><dd>Vaziyatni yoki nima qilinganini aytadi, natijani emas.</dd></div>
+      <div><dt>Da'vo takrori</dt><dd>Xulosani boshqa so'zlar bilan aytadi. U isbot emas, isbotlanadigan narsa.</dd></div>
+      <div><dt>Mavzuga yaqin</dt><dd>Shu mavzuda, lekin da'vodagi omilga tegmaydi.</dd></div>
+      <div><dt>Teskari fikr</dt><dd>Muallif rad etayotgan qarash. U da'voga qarshi.</dd></div>
+    </dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="vazifa">
+      <p><b>Vazifa.</b> Da'voni o'qing va sahnadagi matnda uni qo'llab-quvvatlaydigan gapni bosing. Klaviaturada: Tab bilan matnga kiring, strelkalar bilan yuring, Enter bilan belgilang.</p>
+      <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Hali belgilanmagan.</p>
+    </div>
+    <div class="segment"><button type="button" class="kichik-tugma" id="rw-qayta">Qayta urinish</button></div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { belgilashGuruhi } from '../../../../../../lib/belgilashGuruh';
+
+  type Gap = { matn: string; rol: string; sabab: string };
+  const { gaplar, dalil } = JSON.parse(document.getElementById('rw-gaplar')!.textContent || '{}') as { gaplar: Gap[]; dalil: number };
+  const $ = (id: string) => document.getElementById(id)!;
+  const holat = $('rw-sinab-holat');
+  let qadam = 'animatsiya';
+
+  const g = belgilashGuruhi($('rw-matn'), (k) => {
+    if (qadam !== 'sinab') return;
+    tozala(false);
+    if (k < 0) { holat.textContent = 'Hali belgilanmagan.'; holat.dataset.ok = ''; return; }
+    if (k === dalil) {
+      g.faol(false);
+      yorliq(k, "To'g'ri dalil", 'gap-togri');
+      holat.textContent = `To'g'ri. ${gaplar[k].sabab}`;
+      holat.dataset.ok = '1';
+    } else {
+      yorliq(k, 'Siz tanlagan', 'gap-xato');
+      holat.textContent = `Bu dalil emas. ${gaplar[k].sabab} Yana urinib ko'ring.`;
+      holat.dataset.ok = '';
+    }
+  });
+
+  function yorliq(k: number, matn: string, cls: string) {
+    const t = g.tugmalar[k];
+    t.classList.add(cls);
+    const y = t.querySelector<HTMLElement>('.gap-yorliq')!;
+    y.textContent = matn; y.hidden = false;
+  }
+  function tozala(tanlovniHam: boolean) {
+    g.tugmalar.forEach((t) => {
+      t.classList.remove('gap-togri', 'gap-xato');
+      const y = t.querySelector<HTMLElement>('.gap-yorliq')!;
+      y.hidden = true; y.textContent = '';
+    });
+    if (tanlovniHam) g.tanla(-1);
+  }
+  function chiz() {
+    tozala(true);
+    if (qadam === 'sinab') {
+      g.faol(true);
+      holat.textContent = 'Hali belgilanmagan.'; holat.dataset.ok = '';
+      $('rw-holat').textContent = "Da'voni qo'llab-quvvatlaydigan gapni toping.";
+    } else {
+      g.faol(false);
+      gaplar.forEach((x, k) => yorliq(k, x.rol, k === dalil ? 'gap-togri' : 'gap-xato'));
+      $('rw-holat').textContent = `Dalil: ${dalil + 1}-gap. Qolganlari: ${gaplar.filter((_, k) => k !== dalil).map((x) => x.rol.toLowerCase()).join(', ')}.`;
+    }
+  }
+
+  $('rw-qayta').addEventListener('click', () => { qadam = 'sinab'; chiz(); g.tugmalar[0].focus(); });
+  document.addEventListener('dars:qadam', (e) => { qadam = (e as CustomEvent).detail.qadam; chiz(); });
+  chiz();
+</script>
+
+<style is:global>
+  .rw-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
+  .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .rw-davo { font-size: 18px; font-weight: 700; line-height: 1.5; display: flex; flex-direction: column; gap: var(--b-1); }
+  .dars .rw-qoida { font-size: 16px; font-weight: 600; line-height: 1.5; }
+  .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .rw-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .rw-qoidalar dt { font-weight: 800; }
+  .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+</style>

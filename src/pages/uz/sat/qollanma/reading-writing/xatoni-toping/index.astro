@@ -1,0 +1,185 @@
+---
+// "Xatoni toping" (SAT R&W, Standard English Conventions): gapdagi xatoli bo'lakni bosib belgilash, keyin tuzatish.
+// Sahna: 5 ta misol gap (har mavzuga bittasi). So'zlar <button aria-pressed>, strelka bilan o'tish, Enter bilan belgilash.
+// Misol va Qoida qadamida xato joyi va tuzatilgan gap ko'rsatiladi; Sinab ko'r qadamida foydalanuvchi o'zi topadi (saqlanmaydi).
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { yol } from '../../../../../../lib/yol';
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+
+// Laboratoriya misollari (mashq emas, natijasi saqlanmaydi). [..] ichida xato bo'lak.
+const misollar = [
+  { mavzu: 'Vergul', shablon: 'The storm knocked out the power[,] the whole street went dark.', tuzatish: ';', qoida: "Ikki mustaqil gap faqat vergul bilan ulanmaydi (comma splice). Nuqtali vergul, nuqta yoki \", and\" kerak." },
+  { mavzu: 'Nuqtali vergul', shablon: 'Although the road was icy[;] the driver stayed calm.', tuzatish: ',', qoida: "\"Although …\" tobe qism, mustaqil gap emas. Nuqtali vergulning ikki tomonida mustaqil gap bo'lishi kerak; bu yerda vergul." },
+  { mavzu: 'Ikki nuqta', shablon: 'The guide reminded us to bring[:] a map, water, and a jacket.', tuzatish: '', qoida: "Ikki nuqtadan oldin to'liq gap turadi. \"to bring\" to'ldiruvchini kutadi, shuning uchun belgi kerak emas." },
+  { mavzu: "Ega va fe'l", shablon: 'Each of the paintings in the hall [show] a different season.', tuzatish: 'shows', qoida: "Ega \"Each\" (birlik), \"of the paintings\" uni aniqlaydi xolos. Fe'l birlikda: shows." },
+  { mavzu: 'Zamon', shablon: 'Yesterday the team [finishes] the project and presented it to the class.', tuzatish: 'finished', qoida: "\"Yesterday\" va \"presented\" o'tgan zamonni ko'rsatadi. Ikkinchi fe'l ham o'tgan zamonda: finished." },
+];
+---
+<DarsQolip
+  bolim="sat"
+  modul="rw-xato"
+  savollar={darsSavollari['rw-xato']}
+  yolBandlari={['Reading & Writing darslari']}
+  darsTuri="Reading & Writing darsi"
+  imtihon="SAT"
+  manbalar={['CB06']}
+  tekshirilgan="2026-11-06"
+  keyingiTekshiruv="2026-12-06"
+  title="Xatoni toping · SAT"
+  description="SAT Reading & Writing: gapdagi xatoli so'z yoki tinish belgisini toping va tuzating. Vergul, nuqtali vergul, ikki nuqta, ega va fe'l, zamon. 5 ta mashq."
+  yonalish="Standard English Conventions"
+  sarlavha="Xatoni toping: avval joyini, keyin tuzatishni"
+  lead="Grammatika savolida birinchi ish: xato qayerda ekanini ko'rish. Gapdagi so'z yoki belgini bosing, keyin uni qaysi qoida bilan tuzatishni tanlang. Har noto'g'ri variant bitta tipik xatoni ko'rsatadi."
+  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  maqsadlar={[
+    "Ikki mustaqil gapni vergul, nuqtali vergul va ikki nuqta bilan to'g'ri ulaysiz.",
+    "Fe'lni yaqindagi otga emas, haqiqiy egaga moslaysiz.",
+    "Gapdagi vaqt so'zi va qo'shni fe'llardan to'g'ri zamonni tanlaysiz.",
+  ]}
+  xulosa={[
+    "Ikki mustaqil gap: nuqta, nuqtali vergul yoki \", and / but / so\". Faqat vergul: comma splice.",
+    "Nuqtali vergulning ikki tomonida ham mustaqil gap bo'ladi. Tobe qismdan (Because, Although …) keyin vergul.",
+    "Ikki nuqtadan oldin to'liq gap turadi. Fe'l va uning to'ldiruvchisi orasiga belgi qo'yilmaydi.",
+    "Ega va fe'l: \"of …\" qismini tashlab o'qing, fe'l qolgan egaga moslashadi.",
+    "Zamon: aniq o'tgan vaqt (last winter, yesterday) bilan Past Simple; qo'shni fe'llar zamonini kuzating.",
+  ]}
+  keyingi={{ nomi: 'Dalilni belgilang', href: yol('/uz/sat/qollanma/reading-writing/dalil/') }}
+  tekshirilmagan={[
+    "Mashq savollari va misollar Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "Mavzular tanlovi (vergul, nuqtali vergul, ikki nuqta, ega va fe'l, zamon) Tayanch tavsiyasi. Rasmiy sahifada domen tavsifi bor, mavzular ro'yxati yo'q.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti rw-quti">
+      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi" id="rw-mavzu"></span></p>
+      <div class="bolaklar soz-bolaklar" id="rw-gap" role="group" aria-label="Misol gap bo'laklari" lang="en"></div>
+      <div class="rw-tuzatilgan" id="rw-tuzatilgan">
+        <p class="kichik ikkinchi">Tuzatilgan gap</p>
+        <p class="rw-tuzatilgan-matn" id="rw-tuzatilgan-matn" lang="en"></p>
+      </div>
+    </div>
+    <div class="segment sahna-tugmalar" role="group" aria-label="Misol mavzusi">
+      {misollar.map((m, i) => <button type="button" data-misol={i} aria-pressed={i === 0 ? 'true' : 'false'}>{m.mavzu}</button>)}
+    </div>
+    <p class="sahna-izoh" id="rw-holat" aria-live="polite"></p>
+    <script type="application/json" id="rw-misollar" set:html={JSON.stringify(misollar)} />
+  </div>
+
+  <div slot="animatsiya">
+    <p>Sahnadagi gapda xatoli bo'lak uzuq tagchiziq va chiziq bilan, tuzatish esa ko'k fon bilan ko'rsatilgan. Mavzuni almashtirib, beshta tipik xatoni ko'ring.</p>
+    <div class="formula"><span class="kichik ikkinchi">Qoida</span><span class="f-qiymat rw-qoida" id="rw-qoida"></span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+  </div>
+
+  <div slot="formula">
+    <dl class="rw-qoidalar">
+      <div><dt>Vergul</dt><dd>Ikki mustaqil gap (ega + kesim) faqat vergul bilan ulanmaydi. Tipik xato: comma splice.</dd></div>
+      <div><dt>Nuqtali vergul</dt><dd>Ikki tomonida mustaqil gap. Tipik xato: tobe qismdan keyin nuqtali vergul.</dd></div>
+      <div><dt>Ikki nuqta</dt><dd>Oldida to'liq gap, keyin ro'yxat yoki izoh. Tipik xato: fe'l va to'ldiruvchi orasida ikki nuqta.</dd></div>
+      <div><dt>Ega va fe'l</dt><dd>Fe'l haqiqiy egaga moslashadi. Tipik xato: yaqindagi otga moslash (The collection of letters were …).</dd></div>
+      <div><dt>Zamon</dt><dd>Vaqt so'zi va qo'shni fe'llar zamonni belgilaydi. Tipik xato: aniq o'tgan vaqt bilan Present Perfect.</dd></div>
+    </dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="vazifa">
+      <p><b>Vazifa.</b> Sahnadagi gapda xatoli so'z yoki belgini bosing. Klaviaturada: Tab bilan gapga kiring, strelkalar bilan yuring, Enter bilan belgilang.</p>
+      <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Hali belgilanmagan.</p>
+    </div>
+    <div class="segment"><button type="button" class="kichik-tugma" id="rw-keyingi-misol">Keyingi misol</button></div>
+  </div>
+</DarsQolip>
+
+
+<script>
+  import { belgilashGuruhi, tinishmi } from '../../../../../../lib/belgilashGuruh';
+
+  type Misol = { mavzu: string; shablon: string; tuzatish: string; qoida: string };
+  const misollar = JSON.parse(document.getElementById('rw-misollar')!.textContent || '[]') as Misol[];
+  const $ = (id: string) => document.getElementById(id)!;
+  const gapQuti = $('rw-gap');
+  const segment = [...document.querySelectorAll<HTMLButtonElement>('[data-misol]')];
+  let joriy = 0;
+  let qadam = 'animatsiya';
+
+  const ajrat = (shablon: string) => {
+    const bolaklar: string[] = [];
+    let xato = -1;
+    for (const q of shablon.split(/(\[[^\]]+\])/)) {
+      if (!q) continue;
+      if (q.startsWith('[')) { xato = bolaklar.length; bolaklar.push(q.slice(1, -1)); continue; }
+      for (const m of q.matchAll(/[A-Za-z'’-]+|[,.;:!?]/g)) bolaklar.push(m[0]);
+    }
+    return { bolaklar, xato };
+  };
+  const qosh = (b: string[]) => b.filter((x) => x !== '').reduce((s, x, i) => (i === 0 ? x : tinishmi(x) ? s + x : `${s} ${x}`), '');
+
+  function chiz() {
+    const m = misollar[joriy];
+    const { bolaklar, xato } = ajrat(m.shablon);
+    const sinab = qadam === 'sinab';
+    $('rw-mavzu').textContent = m.mavzu;
+    $('rw-qoida').textContent = m.qoida;
+    gapQuti.replaceChildren(...bolaklar.map((b, k) => {
+      const t = document.createElement('button');
+      t.type = 'button'; t.className = `bolak${tinishmi(b) ? ' bolak-tinish' : ''}`;
+      t.dataset.bolak = String(k); t.setAttribute('aria-pressed', 'false'); t.textContent = b;
+      return t;
+    }));
+    // Tuzatilgan gap: tuzatilgan bo'lak <mark> bilan
+    const tuz = $('rw-tuzatilgan-matn');
+    const yangi = [...bolaklar]; yangi[xato] = m.tuzatish;
+    tuz.replaceChildren();
+    yangi.forEach((b, k) => {
+      if (b === '') return;
+      if (k > 0 && !tinishmi(b)) tuz.append(' ');
+      if (k === xato) { const mk = document.createElement('mark'); mk.textContent = b; tuz.append(mk); } else tuz.append(b);
+    });
+    if (m.tuzatish === '') tuz.setAttribute('aria-label', `${qosh(yangi)} (belgi olib tashlandi)`); else tuz.removeAttribute('aria-label');
+
+    const g = belgilashGuruhi(gapQuti, (k) => {
+      if (k < 0) { $('rw-sinab-holat').textContent = 'Hali belgilanmagan.'; return; }
+      if (k === xato) {
+        g.faol(false);
+        g.tugmalar[k].classList.add('joy-xato');
+        $('rw-tuzatilgan').hidden = false;
+        $('rw-sinab-holat').textContent = `Topdingiz: «${bolaklar[k]}» → «${m.tuzatish || 'belgisiz'}». ${m.qoida}`;
+        $('rw-sinab-holat').dataset.ok = '1';
+      } else {
+        $('rw-sinab-holat').textContent = `«${bolaklar[k]}» to'g'ri yozilgan. Yana urinib ko'ring.`;
+        $('rw-sinab-holat').dataset.ok = '';
+      }
+    });
+    if (sinab) {
+      $('rw-tuzatilgan').hidden = true;
+      $('rw-sinab-holat').textContent = 'Hali belgilanmagan.';
+      $('rw-sinab-holat').dataset.ok = '';
+      $('rw-holat').textContent = `${m.mavzu}: xatoli bo'lakni toping.`;
+    } else {
+      g.faol(false);
+      g.tugmalar[xato].classList.add('joy-xato');
+      $('rw-tuzatilgan').hidden = false;
+      $('rw-holat').textContent = `${m.mavzu}: xato «${bolaklar[xato]}», tuzatish «${m.tuzatish || 'belgisiz'}».`;
+    }
+    segment.forEach((s, i) => s.setAttribute('aria-pressed', String(i === joriy)));
+  }
+
+  segment.forEach((s, i) => s.addEventListener('click', () => { joriy = i; chiz(); }));
+  $('rw-keyingi-misol').addEventListener('click', () => { joriy = (joriy + 1) % misollar.length; chiz(); (gapQuti.querySelector('button') as HTMLButtonElement | null)?.focus(); });
+  document.addEventListener('dars:qadam', (e) => { qadam = (e as CustomEvent).detail.qadam; chiz(); });
+  chiz();
+</script>
+
+<style is:global>
+  .rw-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
+  .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .rw-tuzatilgan { border-top: 1px solid var(--chiziq); padding-top: var(--b-3); display: flex; flex-direction: column; gap: var(--b-1); }
+  .rw-tuzatilgan[hidden] { display: none; }
+  .rw-tuzatilgan-matn { font-size: 18px; line-height: 1.6; }
+  .rw-tuzatilgan-matn mark { background: var(--rang-asosiy-och); color: var(--matn); font-weight: 800; padding: 0 4px; border-radius: var(--r-kichik); border-bottom: 3px solid var(--rang-asosiy); }
+  .dars .rw-qoida { font-size: 16px; font-weight: 600; line-height: 1.5; }
+  .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .rw-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .rw-qoidalar dt { font-weight: 800; }
+  .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+</style>
