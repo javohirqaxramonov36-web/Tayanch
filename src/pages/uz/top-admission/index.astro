@@ -16,6 +16,7 @@ import { yol } from '../../../lib/yol';
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
 const d = (id: string) => deadlinelar.find((x) => x.id === id)!;
 const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+const zinapoya = yol('/uz/top-admission/qollanma/ariza-zinapoyasi/');
 
 const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
 const sanaMatn = (iso: string) => {
@@ -114,6 +115,7 @@ const savollar = [
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
           </a>
           <span class="sust kichik">Qabul ehtimoli hisoblanmaydi</span>
+          <a class="havola" href={zinapoya}>Ariza zinapoyasi: interaktiv dars</a>
         </div>
       </div>
       <div class="sahna" aria-hidden="true">

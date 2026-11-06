@@ -1,0 +1,347 @@
+---
+// Top Admission: "Ariza zinapoyasi". Sahna: 4 pog'onali zinapoya (pastdan tepaga) va aralash kartalar.
+// Misol qadamida Türkiye Bursları (TB01) zinapoyasi "Keyingi pog'ona" tugmasi bilan pog'onama-pog'ona to'ladi.
+// Qoida qadamida to'liq zinapoya va tartib qoidalari. Sinab ko'r qadamida yo'l tanlanadi (Common App, UCAS, Türkiye Bursları),
+// karta bosiladi, keyin pog'ona bosiladi; "Tekshirish" natijani beradi (saqlanmaydi).
+// Boshlang'ich yo'l: tayanch-topshirish-yoli dagi davlat javobi (faqat o'qiladi), bo'lmasa Common App.
+// Kartalar belgilashGuruh (<button aria-pressed>, strelka, Home/End); pog'onalar oddiy <button>. Mashqlar DarsQolip da.
+import { darsSavollari } from '../../../../../data/topAdmissionDarslar';
+import { zinapoyalar } from '../../../../../data/topAdmissionDarslar/zinapoyalar';
+import { KALIT } from '../../../../../data/topshirishYoli';
+import { yol } from '../../../../../lib/yol';
+import DarsQolip from '../../../../../components/dars/DarsQolip.astro';
+
+/** Kartalar aralash tartibi (pog'ona indekslari): hech bir karta o'z joyida turmaydi */
+const ARALASH = [2, 0, 3, 1];
+const MISOL = 'turkiye';
+---
+<DarsQolip
+  bolim="top-admission"
+  modul="ta-zinapoya"
+  savollar={darsSavollari['ta-zinapoya']}
+  yolBandlari={["Qo'llanmalar"]}
+  darsTuri="Ariza darsi"
+  manbalar={['TB01', 'UC01', 'CA02', 'CA01']}
+  tekshirilgan="2026-11-06"
+  keyingiTekshiruv="2026-12-06"
+  title="Ariza zinapoyasi · Top Admission"
+  description="Ariza qadamlarini to'g'ri tartibga qo'ying: Türkiye Bursları, Common App va UCAS. Har pog'ona oldingisiga tayanadi. 5 ta mashq."
+  yonalish="Ariza zinapoyasi"
+  sarlavha="Ariza zinapoyasi: qaysi qadam qachon"
+  lead="Ariza bir kunda yuborilmaydi: u pog'onama-pog'ona ko'tariladi. Har pog'ona oldingisiga tayanadi, bittasini tashlab ketsangiz, keyingisi ham qiyinlashadi. Kartani bosing, keyin uni zinapoyadagi o'z joyiga qo'ying."
+  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  savolKorsatma="Savolni o'qing va zinapoyaga qarab to'g'ri javobni tanlang."
+  keyingi={{ nomi: "Topshirish yo'li", href: yol('/uz/top-admission/vosita/topshirish-yoli/') }}
+  maqsadlar={[
+    "Türkiye Bursları kalendaridagi to'rt bosqichni tartib bilan aytasiz.",
+    "Common App va UCAS arizasida qaysi qadam qaysisiga tayanishini tushunasiz.",
+    "Muddat va fakt rasmiy manbada qaysi pog'onaga tegishli ekanini topasiz.",
+  ]}
+  xulosa={[
+    "Zinapoya pastdan boshlanadi: avval akkaunt yoki portal, oxirida yuborish yoki natija.",
+    "Har pog'ona oldingisiga tayanadi: hujjat yo'nalish yoki kurs aniq bo'lgach tayyorlanadi.",
+    "Muddat birinchi pog'onaga tegishli: Türkiye Bursları arizasi 10-yanvar – 20-fevral (TB01).",
+    "UCAS'da kurslar 5 tagacha (UC01); Common App fee waiver Profile bo'limida (CA02).",
+    "Kollej waiver'ni qabul qiladimi, har kollej sahifasida alohida tekshiriladi (CA01).",
+  ]}
+  tekshirilmagan={[
+    "Common App va UCAS pog'onalari tartibi Tayanch tavsiyasi, rasmiy ketma-ketlik emas. Rasmiy platformada ba'zi qadamlarni parallel qilish mumkin.",
+    "Türkiye Bursları sanalari TB01 kalendaridan, sahifada yil yozilmagan: 2027-yil e'loni chiqqach qayta tekshiriladi.",
+    "Savollar Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti zp-quti">
+      <p class="zp-bosh"><span class="pill">Namuna</span> <b id="zp-nomi">{zinapoyalar[0].nomi}</b></p>
+      <ol class="zp-zina" id="zp-zina" aria-label="Zinapoya, pastdan tepaga">
+        {[0, 1, 2, 3].map((k) => (
+          <li class="zp-qator" style={`--zp-k: ${k}`}>
+            <button type="button" class="zp-pogona" data-pogona={k} disabled>
+              <span class="zp-raqam" aria-hidden="true">{k + 1}</span>
+              <span class="zp-matn" data-pogona-matn={k}>Bo'sh pog'ona</span>
+              <span class="zp-baho" data-baho={k}></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <div class="zp-kartalar-quti">
+        <p class="kichik ikkinchi" id="zp-kartalar-h">Kartalar</p>
+        <div class="zp-kartalar" id="zp-kartalar" role="group" aria-labelledby="zp-kartalar-h">
+          {[0, 1, 2, 3].map((k) => (
+            <button type="button" class="zp-karta" data-bolak={k} aria-pressed="false">
+              <span class="zp-karta-matn" data-karta-matn={k}></span>
+              <span class="zp-karta-joy" data-karta-joy={k}></span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+    <p class="sahna-izoh" id="zp-holat" aria-live="polite"></p>
+    <script type="application/json" id="zp-data" set:html={JSON.stringify({ zinapoyalar, ARALASH, MISOL, KALIT })} />
+  </div>
+
+  <div slot="animatsiya">
+    <p>Türkiye Bursları kalendari (TB01) to'rt bosqichdan iborat. Tugmani bosing: zinapoya pog'onama-pog'ona to'ladi va har pog'ona nega o'sha joyda ekani yoziladi.</p>
+    <div class="formula"><span class="kichik ikkinchi">Shu pog'ona</span><span class="f-qiymat zp-qoida" id="zp-misol-izoh">Hali bo'sh.</span></div>
+    <div class="segment">
+      <button type="button" class="katta asosiy" id="zp-keyingi">Keyingi pog'ona</button>
+      <button type="button" class="kichik-tugma" id="zp-boshidan">Boshidan</button>
+      <button type="button" class="kichik-tugma" data-qadamga="sinab">O'zim teraman</button>
+    </div>
+  </div>
+
+  <div slot="formula">
+    <dl class="zp-qoidalar">
+      <div><dt>Pastdan boshlang</dt><dd>Birinchi pog'ona: akkaunt yoki portal. Unsiz keyingi qadamlar saqlanmaydi.</dd></div>
+      <div><dt>Tayanchni toping</dt><dd>Har qadam uchun so'rang: bu nimaga tayanadi? Esse kollej tanlangach, personal statement kurslar tanlangach yoziladi.</dd></div>
+      <div><dt>Muddat qaysi pog'onada</dt><dd>Ariza oynasi birinchi pog'onaga tegishli. Oyna yopilsa, qolgan pog'onalar shu yilga o'tmaydi.</dd></div>
+      <div><dt>Fakt manbadan</dt><dd>Son va sanani rasmiy sahifadan oling: UCAS'da 5 tagacha kurs (UC01), Türkiye Bursları sanalari (TB01).</dd></div>
+    </dl>
+  </div>
+
+  <div slot="sinab">
+    <div class="vazifa">
+      <p><b>Vazifa.</b> Yo'lni tanlang. Sahnada kartani bosing, keyin uni qo'yadigan pog'onani bosing. Karta boshqa pog'onaga ko'chirilishi mumkin. Hamma pog'ona to'lsa, tekshiring.</p>
+      <div class="segment" role="group" aria-label="Ariza yo'li">
+        {zinapoyalar.map((z) => (
+          <button type="button" data-zina={z.id} aria-pressed="false">{z.nomi}</button>
+        ))}
+      </div>
+      <p class="kichik ikkinchi" id="zp-yol-izoh" hidden>Topshirish yo'lidagi javobingizga qarab tanlandi.</p>
+      <p class="vazifa-holat" id="zp-sinab-holat" aria-live="polite">Hali joylanmagan.</p>
+    </div>
+    <div class="segment">
+      <button type="button" class="katta asosiy" id="zp-tekshir">Tekshirish</button>
+      <button type="button" class="kichik-tugma" id="zp-qayta">Qayta boshlash</button>
+    </div>
+  </div>
+</DarsQolip>
+
+<script>
+  import { belgilashGuruhi } from '../../../../../lib/belgilashGuruh';
+  import type { Zinapoya } from '../../../../../data/topAdmissionDarslar/zinapoyalar';
+
+  const { zinapoyalar, ARALASH, MISOL, KALIT } = JSON.parse(document.getElementById('zp-data')!.textContent || '{}') as {
+    zinapoyalar: Zinapoya[]; ARALASH: number[]; MISOL: string; KALIT: string;
+  };
+  const $ = (id: string) => document.getElementById(id)!;
+  const holat = $('zp-sinab-holat');
+  const sahnaHolat = $('zp-holat');
+  const pogonalar = [...document.querySelectorAll<HTMLButtonElement>('[data-pogona]')];
+  const yolTugmalar = [...document.querySelectorAll<HTMLButtonElement>('[data-zina]')];
+  const zina = (id: string) => zinapoyalar.find((z) => z.id === id)!;
+
+  // Boshlang'ich yo'l: Topshirish yo'li javobi (faqat o'qiladi)
+  let sinabYol = 'commonapp';
+  try {
+    const s = JSON.parse(localStorage.getItem(KALIT) || 'null');
+    const mos = s && typeof s === 'object' ? zinapoyalar.find((z) => z.davlat === s.davlat) : undefined;
+    if (mos) { sinabYol = mos.id; $('zp-yol-izoh').hidden = false; }
+  } catch { /* o'qib bo'lmadi: Common App qoladi */ }
+
+  let qadam = 'animatsiya';
+  let joriy: Zinapoya = zina(MISOL);
+  let misolN = 0;
+  let tekshirildi = false;
+  /** pog'ona indeksi → karta indeksi yoki -1. Karta k = joriy.pogonalar[ARALASH[k]] */
+  let joy: number[] = [-1, -1, -1, -1];
+  const kartaPogonasi = (k: number) => joriy.pogonalar[ARALASH[k]];
+
+  const g = belgilashGuruhi($('zp-kartalar'), (k) => {
+    if (qadam !== 'sinab') return;
+    holat.textContent = k >= 0 ? `«${kartaPogonasi(k).matn}» tanlandi. Endi pog'onani bosing.` : holatMatni();
+    holat.dataset.ok = '';
+  });
+
+  const holatMatni = () => {
+    const n = joy.filter((x) => x >= 0).length;
+    return n ? `${n} / 4 pog'ona to'ldi.` : 'Hali joylanmagan.';
+  };
+
+  function kartalarniYoz() {
+    g.tugmalar.forEach((t, k) => {
+      t.querySelector('[data-karta-matn]')!.textContent = kartaPogonasi(k).matn;
+      const p = joy.indexOf(k);
+      t.querySelector('[data-karta-joy]')!.textContent = p >= 0 ? `${p + 1}-pog'onada` : '';
+      t.classList.toggle('zp-joylandi', p >= 0);
+    });
+  }
+  function pogonalarniYoz(korsat: (p: number) => string | null) {
+    pogonalar.forEach((t, p) => {
+      const m = korsat(p);
+      t.querySelector('[data-pogona-matn]')!.textContent = m ?? "Bo'sh pog'ona";
+      t.classList.toggle('zp-tola', m !== null);
+    });
+  }
+  /** Tekshiruv bahosi matn bilan ham (faqat rang emas) */
+  const bahoYoz = (p: number, baho: string) => { pogonalar[p].querySelector('[data-baho]')!.textContent = baho; };
+  function tozala() {
+    pogonalar.forEach((t, p) => { t.classList.remove('zp-togri', 'zp-xato'); bahoYoz(p, ''); });
+  }
+
+  // ---------- Misol va Qoida: Türkiye Bursları ----------
+  function chizMisol(n: number) {
+    joriy = zina(MISOL);
+    misolN = n;
+    tozala();
+    $('zp-nomi').textContent = joriy.nomi;
+    $('zp-kartalar').parentElement!.hidden = true;
+    g.faol(false);
+    pogonalar.forEach((t) => { t.disabled = true; });
+    pogonalarniYoz((p) => (p < n ? joriy.pogonalar[p].matn : null));
+    pogonalar.forEach((t, p) => t.classList.toggle('zp-togri', p < n));
+    const oxirgi = joriy.pogonalar[n - 1];
+    $('zp-misol-izoh').textContent = oxirgi ? `${n}-pog'ona. ${oxirgi.sabab}` : "Hali bo'sh.";
+    ($('zp-keyingi') as HTMLButtonElement).disabled = n >= 4;
+    sahnaHolat.textContent = n === 0
+      ? `${joriy.nomi}: zinapoya bo'sh.`
+      : `${n}-pog'ona: ${oxirgi.matn}. ${oxirgi.sabab}${n === 4 ? ' Zinapoya to\'ldi.' : ''}`;
+  }
+
+  // ---------- Sinab ko'r ----------
+  function chizSinov(id = sinabYol) {
+    sinabYol = id;
+    joriy = zina(id);
+    tozala();
+    tekshirildi = false;
+    joy = [-1, -1, -1, -1];
+    $('zp-nomi').textContent = joriy.nomi;
+    $('zp-kartalar').parentElement!.hidden = false;
+    yolTugmalar.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.zina === id)));
+    g.faol(true);
+    pogonalar.forEach((t) => { t.disabled = false; });
+    kartalarniYoz();
+    pogonalarniYoz(() => null);
+    g.tanla(0);
+    holat.textContent = 'Hali joylanmagan.'; holat.dataset.ok = '';
+    sahnaHolat.textContent = `${joriy.nomi}: 4 ta karta aralash. Birinchi karta tanlangan: pog'onani bosing.`;
+  }
+  const yozJoy = () => {
+    kartalarniYoz();
+    pogonalarniYoz((p) => (joy[p] >= 0 ? kartaPogonasi(joy[p]).matn : null));
+  };
+
+  pogonalar.forEach((t, p) => t.addEventListener('click', () => {
+    if (qadam !== 'sinab') return;
+    if (tekshirildi) { tozala(); tekshirildi = false; }
+    const k = g.tanlangan();
+    if (k < 0) {
+      // Karta tanlanmagan: pog'onadagi kartani qo'lga olish
+      if (joy[p] >= 0) {
+        const olingan = joy[p];
+        g.tanla(olingan);
+        holat.textContent = `«${kartaPogonasi(olingan).matn}» tanlandi. Boshqa pog'onani bosing.`;
+      } else holat.textContent = "Avval kartani tanlang.";
+      holat.dataset.ok = '';
+      return;
+    }
+    const eski = joy.indexOf(k);
+    const almashadi = joy[p];
+    joy[p] = k;
+    if (eski >= 0 && eski !== p) joy[eski] = almashadi; // ikki karta o'rin almashadi
+    yozJoy();
+    const keyingi = g.tugmalar.findIndex((_, i) => !joy.includes(i));
+    holat.textContent = `«${kartaPogonasi(k).matn}» ${p + 1}-pog'onaga qo'yildi. ${holatMatni()}`;
+    holat.dataset.ok = '';
+    if (keyingi >= 0) { g.tanla(keyingi); g.tugmalar[keyingi].focus(); } else g.tanla(-1);
+  }));
+
+  yolTugmalar.forEach((t) => t.addEventListener('click', () => {
+    if (qadam !== 'sinab') return;
+    chizSinov(t.dataset.zina);
+  }));
+
+  $('zp-tekshir').addEventListener('click', () => {
+    if (qadam !== 'sinab') return;
+    if (joy.some((x) => x < 0)) { holat.textContent = `Hamma pog'onani to'ldiring. ${holatMatni()}`; holat.dataset.ok = ''; return; }
+    tekshirildi = true;
+    const xatolar: string[] = [];
+    pogonalar.forEach((t, p) => {
+      const ok = ARALASH[joy[p]] === p;
+      t.classList.add(ok ? 'zp-togri' : 'zp-xato');
+      bahoYoz(p, ok ? "to'g'ri" : 'xato');
+      if (!ok) {
+        const togri = joriy.pogonalar[p];
+        xatolar.push(`${p + 1}-pog'ona: «${togri.matn}». ${togri.sabab}`);
+      }
+    });
+    if (!xatolar.length) {
+      holat.textContent = `Hammasi to'g'ri: ${joriy.nomi} zinapoyasi tayyor.`;
+      holat.dataset.ok = '1';
+    } else {
+      holat.textContent = `${4 - xatolar.length} / 4 to'g'ri. ${xatolar.join(' ')} Kartalarni ko'chirib, qayta tekshiring.`;
+      holat.dataset.ok = '';
+    }
+    sahnaHolat.textContent = `${joriy.nomi}: tekshirildi, ${4 - xatolar.length} / 4 to'g'ri.`;
+  });
+  $('zp-qayta').addEventListener('click', () => { chizSinov(); g.tugmalar[0].focus(); });
+  $('zp-keyingi').addEventListener('click', () => { if (misolN < 4) chizMisol(misolN + 1); });
+  $('zp-boshidan').addEventListener('click', () => chizMisol(0));
+
+  function chiz() {
+    if (qadam === 'sinab') chizSinov();
+    else if (qadam === 'formula') chizMisol(4);
+    else chizMisol(misolN);
+  }
+  document.addEventListener('dars:qadam', (e) => { qadam = (e as CustomEvent).detail.qadam; chiz(); });
+  chiz();
+</script>
+
+<style is:global>
+  .zp-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-5); }
+  .zp-bosh { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+
+  /* Zinapoya: DOM tartibi 1→4 (ekran o'quvchi pastdan o'qiydi), ko'rinishda 1-pog'ona pastda.
+     Har pog'ona oldingisidan o'ngga suriladi: zinapoya silueti. */
+  .zp-zina { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: var(--b-2); }
+  .zp-qator { padding-left: calc(var(--zp-k) * var(--b-8)); }
+  .zp-pogona {
+    display: flex; align-items: center; gap: var(--b-3); width: 100%; min-height: 56px; padding: var(--b-2) var(--b-4);
+    text-align: left; font: inherit; font-weight: 700; cursor: pointer;
+    background: var(--fon); color: var(--matn-sust);
+    border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-orta);
+    transition: background-color .2s, border-color .2s;
+  }
+  .zp-pogona:disabled { cursor: default; }
+  .zp-pogona:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  .zp-pogona:focus-visible, .zp-karta:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .zp-pogona.zp-tola { border-style: solid; border-color: var(--matn); color: var(--matn); }
+  .zp-pogona.zp-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .zp-pogona.zp-xato { border-style: dashed; border-color: var(--matn); }
+  .zp-pogona.zp-xato .zp-raqam { background: var(--fon); color: var(--matn); box-shadow: inset 0 0 0 2px var(--matn); }
+  .zp-raqam {
+    flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: var(--r-logo);
+    background: var(--matn); color: var(--fon); font-weight: 800; font-size: var(--matn-kichik);
+  }
+  .zp-baho { margin-left: auto; font-size: var(--matn-mayda); color: var(--matn); }
+  .zp-baho:empty { display: none; }
+  .zp-pogona.zp-togri .zp-raqam { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+
+  .zp-kartalar-quti[hidden] { display: none; }
+  .zp-kartalar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-2); margin-top: var(--b-2); }
+  .zp-karta {
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--b-1);
+    min-height: 56px; padding: var(--b-2) var(--b-4); text-align: left; font: inherit; font-weight: 700; cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
+  }
+  .zp-karta:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  .zp-karta[aria-pressed='true'] { border-color: var(--rang-asosiy); box-shadow: inset 4px 0 0 var(--rang-asosiy); }
+  .zp-karta.zp-joylandi { background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
+  .zp-karta-joy { font-size: var(--matn-mayda); color: var(--matn-ikkinchi); }
+  .zp-karta-joy:empty { display: none; }
+
+  .dars .zp-qoida { font-size: var(--matn-asosiy); font-weight: 600; line-height: 1.5; }
+  .zp-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .zp-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .zp-qoidalar dt { font-weight: 800; }
+  .zp-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+
+  @media (max-width: 600px) {
+    .zp-quti { padding: var(--b-4); }
+    .zp-qator { padding-left: calc(var(--zp-k) * var(--b-4)); }
+    .zp-kartalar { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .zp-pogona { transition: none; }
+  }
+</style>
