@@ -2,16 +2,13 @@
 
 Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha.
 
-## Joriy holat (2026-11-05)
+## Joriy holat (2026-11-06)
 Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qarorlar, ochiq savollar, nomlash va texnik eslatmalar.
-- Qurilgan va saytda: 1-qavat (bosh sahifa), 3-qavat SAT (PR #7), 4-qavat IELTS (PR #8), Lift (PR #10), Topshirish yo'li vositasi (PR #11, qoralama).
-- Qilindi, merge kutilmoqda: PR #12, 2-qavat Top Admission kirish sahifasi (`/uz/top-admission/`, maket A, branch `top-admission-kirish`); `bolimlar.ts` da Top Admission `ochiq`.
+- Qurilgan va saytda: 1-qavat (bosh sahifa), 3-qavat SAT (PR #7), 4-qavat IELTS (PR #8), Lift (PR #10), Topshirish yo'li vositasi (PR #11, qoralama), 2-qavat Top Admission kirish sahifasi (PR #12, #14: qolgan kun, "Mening yo'lim"; `bolimlar.ts` da `tez-orada`).
 - Top Admission'da qolganlari (maket: https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF):
-  1. Chiptadagi qolgan kun (muddat kartalarida hozir "oxirgi kun"): skript, avval spetsifikatsiya.
-  2. "Mening yo'lim" bloki (Topshirish yo'li javobidan kirish sahifasida kichik blok): skript, avval spetsifikatsiya.
-  3. Türkiye Bursları yo'nalish sahifasi (`/uz/top-admission/turkiye-burslari/`, maket B "Burslar*"). Kirish sahifasidagi kartada hozir "sahifa tez orada".
-  4. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
-- Interaktiv darslar: 0-bosqich PR #18 merge qilingan, navbatda 1-bosqich (SAT Reading & Writing). Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
+  1. Türkiye Bursları yo'nalish sahifasi (`/uz/top-admission/turkiye-burslari/`, maket B "Burslar*"). Kirish sahifasidagi kartada hozir "sahifa tez orada".
+  2. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
+- Interaktiv darslar: 0-bosqich PR #18, SAT Math PR #15, SAT R&W 1–2-modul ("Xatoni toping", "Dalilni belgilang", `DarsQolip` belgilash rejimi) PR #20 merge qilingan. Navbatda R&W 3–4-modul ("O'tish so'zlari", "Lug'at kontekstda", branch `sat-rw-otish-lugat`). PR #17 (SAT mashq) alohida, unga tegilmaydi. Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
 - Boshqa qurilmagan: 5-qavat EYUF (dizayn yo'q).
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
 

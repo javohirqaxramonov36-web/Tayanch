@@ -1,0 +1,222 @@
+---
+// "Lug'at kontekstda" (SAT R&W, Craft and Structure): so'z ma'nosini gapdagi kontekst ishorasidan topish.
+// Sahna: Misol va Qoida qadamida bitta so'z ikki gapda ikki ma'noda; Sinab ko'r qadamida foydalanuvchi ishora so'zni bosadi
+// (so'zlar <button aria-pressed>, strelka va Enter bilan; natija saqlanmaydi).
+// Lug'at kartalari holati (tayanch:sat-lugat) faqat o'qiladi, unga yozilmaydi.
+import { darsSavollari } from '../../../../../../data/satDarslar';
+import { kartalar } from '../../../../../../data/satNamuna';
+import { yol } from '../../../../../../lib/yol';
+import { tinishmi } from '../../../../../../lib/belgilashGuruh';
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+
+// Misol: bitta so'z, ikki ma'no (o'ylab topilgan gaplar)
+const ikkiMano = {
+  soz: 'address',
+  gaplar: [
+    { oldi: 'Please write your home', keyin: 'on the form before you leave.', ishora: 'write … on the form', mano: "manzil (ot)" },
+    { oldi: 'The council met to', keyin: 'complaints about the noisy road.', ishora: 'complaints', mano: "hal qilishga kirishmoq (fe'l)" },
+  ],
+};
+
+// Sinab ko'r: gapdagi ishora so'zni topish. [..] ichida maqsad so'z, {..} ichida ishora bo'laklar.
+const sinovShablonlar = [
+  { shablon: 'The old bridge could no longer [bear] the {weight} of loaded trucks, so the city closed it to heavy traffic.', mano: "ko'tarmoq, ushlab turmoq", izoh: "\"weight\" (og'irlik): ko'prik og'irlikni ko'tara olmaydi. \"bear\" bu yerda ayiq emas." },
+  { shablon: 'Her argument was [sound]: every step {followed} {logically} from the evidence she presented.', mano: "asosli, mustahkam", izoh: "\"followed logically\": har qadam mantiqan kelib chiqadi. \"sound\" bu yerda ovoz emas." },
+];
+const sinovlar = sinovShablonlar.map((x) => {
+  const bolaklar: { m: string; maqsad?: boolean; ishora?: boolean }[] = [];
+  for (const t of x.shablon.matchAll(/\[([^\]]+)\]|\{([^}]+)\}|[A-Za-z'’-]+|[,.;:!?]/g)) {
+    if (t[1]) bolaklar.push({ m: t[1], maqsad: true });
+    else if (t[2]) bolaklar.push({ m: t[2], ishora: true });
+    else bolaklar.push({ m: t[0] });
+  }
+  return { ...x, bolaklar };
+});
+---
+<DarsQolip
+  bolim="sat"
+  modul="rw-lugat"
+  savollar={darsSavollari['rw-lugat']}
+  yolBandlari={['Reading & Writing darslari']}
+  darsTuri="Reading & Writing darsi"
+  imtihon="SAT"
+  manbalar={['CB06']}
+  tekshirilgan="2026-11-06"
+  keyingiTekshiruv="2026-12-06"
+  title="Lug'at kontekstda · SAT"
+  description="SAT Reading & Writing: so'z ma'nosini gapdagi kontekst ishorasidan toping. Ko'p ma'noli so'zlar, ohang va asosiy ma'no tuzog'i. 5 ta mashq."
+  yonalish="Craft and Structure"
+  sarlavha="Lug'at kontekstda: ma'noni gap aytadi"
+  lead="Bu savollarda so'zning eng tanish ma'nosi ko'pincha tuzoq bo'ladi. Javob gapning o'zida: atrofdagi so'zlar (kontekst ishorasi) qaysi ma'no kerakligini ko'rsatadi. Ishorani toping, keyin variantni gapga qo'yib tekshiring."
+  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  savolTili="en"
+  savolKorsatma="Gapni o'qing va eng mantiqiy, aniq so'z yoki ma'noni tanlang."
+  maqsadlar={[
+    "Gapdagi kontekst ishorasini (izoh, qarama-qarshilik, natija) topasiz.",
+    "Ko'p ma'noli so'zning gapdagi ma'nosini asosiy ma'nosidan ajratasiz.",
+    "Ohangi teskari yoki mavzuga yaqin, lekin ma'nosi boshqa variantni chetga surasiz.",
+  ]}
+  xulosa={[
+    "So'zni yoping va o'rniga o'z so'zingizni qo'ying, keyin variantlarga qarang.",
+    "Ishora izlang: ikki nuqtadan keyingi izoh, \"Unlike\", \"but\", natija yoki misol.",
+    "So'zning eng tanish ma'nosi ko'pincha tuzoq: gapga qo'yib tekshiring.",
+    "Ohangni aniqlang (ijobiy, salbiy, neytral) va teskari ohangli variantni chetga suring.",
+  ]}
+  tekshirilmagan={[
+    "Matnlar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
+    "Ishora turlari va tuzoq nomlari Tayanch tavsiyasi, rasmiy tasnif emas. \"Words in Context\" skill nomi rasmiy manbada tekshirilmagan; CB06 da faqat domen nomi (Craft and Structure) bor.",
+  ]}
+>
+  <div slot="sahna">
+    <div class="sahna-quti rw-quti">
+      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi" id="lug-tartib">Bitta so'z, ikki ma'no</span></p>
+      <div id="lug-misol" class="lug-misol">
+        {ikkiMano.gaplar.map((x, k) => (
+          <div class="lug-karta">
+            <p class="kichik ikkinchi">{k + 1}-gap</p>
+            <p class="lug-gap" lang="en">{x.oldi} <b class="lug-soz">{ikkiMano.soz}</b> {x.keyin}</p>
+            <p class="lug-izoh">Ishora: <span lang="en">{x.ishora}</span> → <b>{x.mano}</b></p>
+          </div>
+        ))}
+      </div>
+      <div id="lug-sinov" class="lug-sinov" hidden>
+        {sinovlar.map((x, s) => (
+          <div class="bolaklar soz-bolaklar lug-gap-bolaklar" data-sinov={s} role="group" aria-label="Gap so'zlari: ishora so'zni belgilang" lang="en" hidden={s !== 0}>
+            {x.bolaklar.map((b, k) => (
+              <button type="button" class:list={['bolak', { 'bolak-tinish': tinishmi(b.m), 'lug-maqsad': b.maqsad }]} data-bolak={k} aria-pressed="false">{b.m}</button>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+    <p class="sahna-izoh" id="lug-holat" aria-live="polite"></p>
+    <script type="application/json" id="lug-data" set:html={JSON.stringify({ sinovlar })} />
+  </div>
+
+  <div slot="animatsiya">
+    <p>Sahnada "{ikkiMano.soz}" ikki gapda ikki xil ma'noda. So'z bir xil, ma'noni atrofdagi so'zlar tanlaydi.</p>
+    <div class="formula"><span class="kichik ikkinchi">Asosiy fikr</span><span class="f-qiymat rw-qoida">Lug'atdagi birinchi ma'noni emas, gap talab qilgan ma'noni tanlang.</span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+  </div>
+
+  <div slot="formula">
+    <ol class="rw-qoidalar lug-qadamlar">
+      <li><b>So'zni yoping.</b> Gapni so'zsiz o'qing.</li>
+      <li><b>Ishorani toping.</b> Ikki nuqtadan keyingi izoh, "Unlike" yoki "but" dan keyingi qarama-qarshilik, natija yoki misol.</li>
+      <li><b>O'z so'zingizni qo'ying.</b> O'zbekcha bo'lsa ham bo'ladi: "xavfli", "hal qilmoq".</li>
+      <li><b>Variantni gapga qo'ying.</b> Ma'no va ohang mos kelsin; eng tanish ma'no tuzoq bo'lishi mumkin.</li>
+    </ol>
+  </div>
+
+  <div slot="sinab">
+    <div class="vazifa">
+      <p><b>Vazifa.</b> Sahnadagi gapda ajratilgan so'zning ma'nosini ko'rsatadigan ishora so'zni bosing. Klaviaturada: Tab bilan gapga kiring, strelkalar bilan yuring, Enter bilan belgilang.</p>
+      <p class="vazifa-holat" id="lug-sinab-holat" aria-live="polite">Hali belgilanmagan.</p>
+    </div>
+    <div class="segment">
+      <button type="button" class="kichik-tugma" id="lug-qayta">Qayta urinish</button>
+      <button type="button" class="kichik-tugma" id="lug-keyingi">Keyingi misol</button>
+    </div>
+  </div>
+
+  <section slot="xulosa-oxiri" class="lug-blok" aria-labelledby="lug-blok-h">
+    <h3 id="lug-blok-h">Lug'at kartalaringiz</h3>
+    <p id="lug-blok-matn" data-jami={kartalar.length} data-sozlar={JSON.stringify(kartalar.map((k) => k.soz))}>Lug'at kartalari holati shu brauzerdan o'qiladi.</p>
+    <a class="matn-tugma kok-tugma" href={yol('/uz/sat/mashq/lugat/')}>Lug'at kartalariga o'tish</a>
+  </section>
+</DarsQolip>
+
+<script>
+  import { belgilashGuruhi, type Guruh } from '../../../../../../lib/belgilashGuruh';
+  import { KALIT_LUGAT } from '../../../../../../data/satNamuna';
+
+  type Bolak = { m: string; maqsad?: boolean; ishora?: boolean };
+  type Sinov = { mano: string; izoh: string; bolaklar: Bolak[] };
+  const { sinovlar } = JSON.parse(document.getElementById('lug-data')!.textContent || '{}') as { sinovlar: Sinov[] };
+  const $ = (id: string) => document.getElementById(id)!;
+  const holat = $('lug-sinab-holat');
+  const qutilar = [...document.querySelectorAll<HTMLElement>('[data-sinov]')];
+  let qadam = 'animatsiya';
+  let joriy = 0;
+
+  const guruhlar: Guruh[] = qutilar.map((q, s) => {
+    const g: Guruh = belgilashGuruhi(q, (k) => {
+      g.tugmalar.forEach((t) => t.classList.remove('joy-togri', 'joy-xato'));
+      if (k < 0) { holat.textContent = 'Hali belgilanmagan.'; holat.dataset.ok = ''; return; }
+      const b = sinovlar[s].bolaklar[k];
+      const maqsad = sinovlar[s].bolaklar.find((x) => x.maqsad)!.m;
+      if (b.ishora) {
+        g.faol(false);
+        g.tugmalar[k].classList.add('joy-togri');
+        holat.textContent = `To'g'ri. ${sinovlar[s].izoh} Ma'nosi: ${sinovlar[s].mano}.`;
+        holat.dataset.ok = '1';
+      } else if (b.maqsad) {
+        holat.textContent = `Bu so'zning o'zi. Ishora uning atrofida: "${maqsad}" nimani qiladi yoki qanday?`;
+        holat.dataset.ok = '';
+      } else {
+        g.tugmalar[k].classList.add('joy-xato');
+        holat.textContent = `"${b.m}" so'zi "${maqsad}" ning ma'nosini aniqlamaydi. Yana urinib ko'ring.`;
+        holat.dataset.ok = '';
+      }
+    });
+    return g;
+  });
+
+  function chiz() {
+    const sinab = qadam === 'sinab';
+    $('lug-misol').hidden = sinab;
+    $('lug-sinov').hidden = !sinab;
+    qutilar.forEach((q, s) => { q.hidden = s !== joriy; });
+    const g = guruhlar[joriy];
+    g.tugmalar.forEach((t) => t.classList.remove('joy-togri', 'joy-xato'));
+    g.tanla(-1);
+    g.faol(sinab);
+    if (sinab) {
+      const maqsad = sinovlar[joriy].bolaklar.find((x) => x.maqsad)!.m;
+      $('lug-tartib').textContent = `${joriy + 1} / ${sinovlar.length} misol`;
+      $('lug-holat').textContent = `"${maqsad}" so'zining ma'nosini ko'rsatadigan so'zni bosing.`;
+      holat.textContent = 'Hali belgilanmagan.'; holat.dataset.ok = '';
+    } else {
+      $('lug-tartib').textContent = "Bitta so'z, ikki ma'no";
+      $('lug-holat').textContent = "1-gapda \"address\" manzil, 2-gapda hal qilishga kirishmoq.";
+    }
+  }
+
+  $('lug-qayta').addEventListener('click', () => { qadam = 'sinab'; chiz(); guruhlar[joriy].tugmalar[0].focus(); });
+  $('lug-keyingi').addEventListener('click', () => { joriy = (joriy + 1) % sinovlar.length; qadam = 'sinab'; chiz(); guruhlar[joriy].tugmalar[0].focus(); });
+  document.addEventListener('dars:qadam', (e) => { qadam = (e as CustomEvent).detail.qadam; chiz(); });
+  chiz();
+
+  // Lug'at kartalari holati: faqat o'qiladi (yozilmaydi). Shakl lug'at sahifasidagidek: { [soz]: 'bilaman' | 'organ' }.
+  const blok = $('lug-blok-matn');
+  try {
+    const sozlar: string[] = JSON.parse(blok.dataset.sozlar || '[]');
+    const holatlar = JSON.parse(localStorage.getItem(KALIT_LUGAT) || '{}') || {};
+    const bilaman = sozlar.filter((s) => holatlar[s] === 'bilaman').length;
+    const organ = sozlar.filter((s) => holatlar[s] === 'organ').length;
+    blok.textContent = bilaman + organ === 0
+      ? `Namuna lug'atdagi ${sozlar.length} ta so'zdan hali birortasini belgilamagansiz.`
+      : `Namuna lug'atdagi ${sozlar.length} ta so'zdan ${bilaman} tasini "bilaman", ${organ} tasini "o'rganyapman" deb belgilagansiz.`;
+  } catch {
+    blok.textContent = "Lug'at kartalari holatini o'qib bo'lmadi (brauzer saqlashga ruxsat bermagan bo'lishi mumkin).";
+  }
+</script>
+
+<style is:global>
+  .rw-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
+  .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .dars .rw-qoida { font-size: var(--matn-asosiy); font-weight: 600; line-height: 1.5; }
+  .rw-qoidalar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-2); }
+  .rw-qoidalar li { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); line-height: 1.5; }
+  .lug-misol { display: flex; flex-direction: column; gap: var(--b-3); }
+  .lug-karta { background: var(--fon); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); display: flex; flex-direction: column; gap: var(--b-1); }
+  .lug-gap { font-size: var(--matn-katta); line-height: 1.6; }
+  .lug-soz { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .lug-izoh { color: var(--matn-ikkinchi); line-height: 1.5; }
+  .dars .bolak.lug-maqsad { font-weight: 800; border-bottom: 3px solid var(--matn); }
+  .lug-blok { margin-top: var(--b-5); border: 1.5px solid var(--matn); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-2); align-items: flex-start; }
+  .lug-blok h3 { margin: 0; }
+  .lug-misol[hidden], .lug-sinov[hidden], .dars .lug-gap-bolaklar[hidden] { display: none; }
+  .lug-blok a { display: inline-flex; align-items: center; padding: 0; text-decoration: underline; text-underline-offset: 4px; }
+  .dars[data-modul='rw-lugat'] .s-matn { font-size: var(--matn-katta); font-weight: 500; line-height: 1.6; }
+</style>

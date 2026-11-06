@@ -18,6 +18,7 @@ Qolip: `src/components/dars/DarsQolip.astro`. Tartib o'zgarmaydi:
 
 Qolip prop'lari: `bolim`, `modul`, `savollar`, `yolBandlari`, `darsTuri`, `imtihon?`, `manbalar`, `tekshirilgan`,
 `keyingiTekshiruv`, `keyingi?: { nomi, href }` (`href` sahifada `yol()` bilan yasaladi), matn prop'lari.
+Ixtiyoriy: `qadamNomlari`, `savolTili` (savol matni va variantlar tili, R&W: `'en'`), `savolKorsatma` (oddiy A–D savol ustidagi o'zbekcha ko'rsatma), slot `xulosa-oxiri` (Xulosa ro'yxatidan keyingi blok).
 Bo'limga xos qiymat qolip ichida qattiq yozilmaydi.
 
 ## 2. Savol ma'lumoti
