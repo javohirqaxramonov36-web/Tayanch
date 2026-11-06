@@ -11,7 +11,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
   2. "Mening yo'lim" bloki (Topshirish yo'li javobidan kirish sahifasida kichik blok): skript, avval spetsifikatsiya.
   3. Türkiye Bursları yo'nalish sahifasi (`/uz/top-admission/turkiye-burslari/`, maket B "Burslar*"). Kirish sahifasidagi kartada hozir "sahifa tez orada".
   4. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
-- Merge kutilmoqda: `dars-standarti` (0-bosqich). Interaktiv darslar standarti: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
+- Interaktiv darslar: 0-bosqich PR #18 merge qilingan, navbatda 1-bosqich (SAT Reading & Writing). Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
 - Boshqa qurilmagan: 5-qavat EYUF (dizayn yo'q).
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
 
