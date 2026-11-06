@@ -7,6 +7,9 @@ import { hajmSavollar } from './hajm.ts';
 import { grafikSavollar } from './grafik.ts';
 import { aylanaSavollar } from './aylana.ts';
 import { statistikaSavollar } from './statistika.ts';
+import { rwXatoSavollar } from './rw-xatoni-toping.ts';
+import { rwDalilSavollar } from './rw-dalil.ts';
+import { rwIkkinchiUsul } from './rw-tekshiruv.ts';
 import type { BolimTekshiruv, Natija } from '../tekshiruvTurlar.ts';
 
 const EPS = 1e-6;
@@ -87,11 +90,12 @@ const ikkinchiUsul: Record<string, () => Natija> = {
 
 export const tekshiruv: BolimTekshiruv = {
   bolim: 'sat',
-  sarlavha: 'SAT Math darslari',
-  savollar: [...hajmSavollar, ...grafikSavollar, ...aylanaSavollar, ...statistikaSavollar],
-  ikkinchiUsul,
+  sarlavha: 'SAT darslari (Math, Reading & Writing)',
+  savollar: [...hajmSavollar, ...grafikSavollar, ...aylanaSavollar, ...statistikaSavollar, ...rwXatoSavollar, ...rwDalilSavollar],
+  ikkinchiUsul: { ...ikkinchiUsul, ...rwIkkinchiUsul },
   izoh: [
     `"Ikkinchi usul" ustunida javob savoldagi formulasiz, boshqa yo'l bilan qayta hisoblangan (disklar yig'indisi, sonli qidiruv, teskari tekshiruv).`,
     "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi).",
+    "Reading & Writing (rw-): sonli hisob yo'q. Har variant qoida jadvali (grammatika) yoki gap belgilari (dalil: kuzatuvmi, da'vo omiliga tegadimi, da'voni takrorlaydimi) bo'yicha alohida baholanadi; qoidadan faqat bitta variant o'tishi shart. Grammatikada xato joyi (bo'lak) ham tekshiriladi.",
   ],
 };
