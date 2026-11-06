@@ -15,6 +15,7 @@ const havolalar = {
   bank: yol('/uz/sat/mashq/bank/'),
   test: yol('/uz/sat/mashq/test/'),
   lugat: yol('/uz/sat/mashq/lugat/'),
+  takrorlash: yol('/uz/sat/vosita/takrorlash/'),
 };
 ---
 <BolimQobiq
@@ -158,7 +159,7 @@ const havolalar = {
       { matn: "Savol bankidan Reading and Writing savollari: bitta to'plam", havola: H.bank, havolaMatn: 'Savol banki' },
       { matn: "Lug'at kartochkalari: 20 ta so'z", havola: H.lugat, havolaMatn: "Lug'at" },
     ];
-    const xatoDaftar: Vazifa = { matn: 'Xato daftaridagi savollarni qayta yeching (har dars sahifasining oxirida)' };
+    const xatoDaftar: Vazifa = { matn: 'Xato daftaridagi bugungi savollarni takrorlang', havola: H.takrorlash, havolaMatn: 'Takrorlash' };
     const mock: Vazifa = { matn: "Bluebook'da to'liq practice test ishlang (CB01) va xatolarni yozib chiqing" };
     const ulush = r.fokus === 'math' ? 0.65 : r.fokus === 'rw' ? 0.35 : 0.5;
 
