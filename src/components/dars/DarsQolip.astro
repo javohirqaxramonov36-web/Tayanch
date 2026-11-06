@@ -347,7 +347,8 @@ const qadamlar = [
   /* Dars qolipi va modullar uchun umumiy uslublar. Qiymatlar tokens.css dan. */
   .dars { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-14); }
   .dars .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .dars h2 { font-size: 32px; line-height: 1.2; }
+  /* .manba h2 ham shu o'lchamda: ManbaBlok h2 qoidasi bilan spetsifiklik teng, natija CSS tartibiga bog'liq bo'lmasin (PR #15 dagi ko'rinish). */
+  .dars h2, .dars .manba h2 { font-size: 32px; line-height: 1.2; }
   .dars .kichik-h { font-size: 18px; }
   .dars .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
   .dars .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; }
@@ -496,7 +497,7 @@ const qadamlar = [
   @media (max-width: 640px) {
     .dars { padding-top: 28px; gap: var(--b-10); }
     .dars h1 { font-size: 34px; }
-    .dars h2 { font-size: 26px; }
+    .dars h2, .dars .manba h2 { font-size: 26px; }
     .dars .lead { font-size: 17px; }
     .dars .savol-karta { padding: var(--b-5); }
     .dars .s-matn { font-size: 19px; }
