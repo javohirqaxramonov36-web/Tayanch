@@ -1,11 +1,12 @@
 ---
 // 2-qavat · Top Admission · Vositalar · Topshirish yo'li.
 // Prototip: branch prototip-topshirish-yoli. Prototipdagi "Rasmiy manbalar" jadvali o'rniga SahifaOxiri.
-import Asosiy from '../../../../../layouts/Asosiy.astro';
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import SahifaOxiri from '../../../../../components/SahifaOxiri.astro';
 import TopshirishYoli from '../../../../../components/TopshirishYoli.astro';
 import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
 ---
-<Asosiy
+<BolimQobiq
   title="Topshirish yo'li"
   description="Davlat, daraja va grant bo'yicha mos ariza yo'llari."
   turi="vosita"
@@ -25,7 +26,13 @@ import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
       <div class="mrz" aria-hidden="true"><p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p><p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p></div>
     </footer>
   </div>
-</Asosiy>
+  <SahifaOxiri
+    manbalar={['CA01', 'CA02', 'CO01', 'UC01', 'TB01', 'SH01', 'EY01']}
+    tekshirilgan="2026-11-05"
+    keyingiTekshiruv="2026-12-05"
+    tekshirilmagan={[...hammaTekshirilmagan, "EYUF muddatining vaqt mintaqasi (Toshkent deb olindi)"]}
+  />
+</BolimQobiq>
 
 <style>
   .ty-sahifa { display: grid; gap: var(--b-14); }
