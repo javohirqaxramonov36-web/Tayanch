@@ -8,7 +8,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
 - Top Admission'da qolganlari (maket: https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF):
   1. Türkiye Bursları yo'nalish sahifasi (`/uz/top-admission/turkiye-burslari/`, maket B "Burslar*"). Kirish sahifasidagi kartada hozir "sahifa tez orada".
   2. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
-- Interaktiv darslar: 0-bosqich PR #18, SAT Math PR #15, SAT R&W 1–2-modul ("Xatoni toping", "Dalilni belgilang", `DarsQolip` belgilash rejimi) PR #20 merge qilingan. Navbatda R&W 3–4-modul ("O'tish so'zlari", "Lug'at kontekstda", branch `sat-rw-otish-lugat`). PR #17 (SAT mashq) alohida, unga tegilmaydi. Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
+- Interaktiv darslar: 0-bosqich PR #18, SAT Math PR #15, SAT R&W 1–2-modul ("Xatoni toping", "Dalilni belgilang", `DarsQolip` belgilash rejimi) PR #20, R&W 3–4-modul ("O'tish so'zlari", "Lug'at kontekstda") PR #21 da merge qilingan. Navbatda 2-bosqich: SAT Xato daftari va takrorlash (branch `sat-xato-daftari`). PR #17 (SAT mashq) alohida, unga tegilmaydi. Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
 - Boshqa qurilmagan: 5-qavat EYUF (dizayn yo'q).
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
 
