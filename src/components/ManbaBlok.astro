@@ -1,6 +1,7 @@
 ---
 // "Manbalar va tekshiruv" bloki, Tayanch-IELTS-dizayn.md uslubida.
 import { rasmiyManbalar } from '../data/manbalar';
+import { matn, yolTili } from '../data/umumiyMatn';
 
 interface Props {
   manbalar: string[];
@@ -10,12 +11,13 @@ interface Props {
 }
 const { manbalar, tekshirilgan, keyingiTekshiruv, tekshirilmagan } = Astro.props;
 const rasmiy = rasmiyManbalar(manbalar);
+const M = matn[yolTili(Astro.url.pathname)].manba;
 ---
 <section class="manba" aria-labelledby="manba-h">
-  <h2 id="manba-h">Manbalar va tekshiruv</h2>
+  <h2 id="manba-h">{M.sarlavha}</h2>
   <dl>
     <div>
-      <dt>Rasmiy manbalar</dt>
+      <dt>{M.rasmiy}</dt>
       <dd>
         {rasmiy.length > 0 ? (
           <ul>
@@ -23,15 +25,15 @@ const rasmiy = rasmiyManbalar(manbalar);
               <li><a href={m.havola} rel="noopener">{m.nomi}</a> ({m.tashkilot}, {m.id})</li>
             ))}
           </ul>
-        ) : "Yo'q"}
+        ) : M.yoq}
       </dd>
     </div>
-    <div><dt>Tekshirilgan sana</dt><dd>{tekshirilgan}</dd></div>
-    <div><dt>Keyingi tekshiruv</dt><dd>{keyingiTekshiruv}</dd></div>
+    <div><dt>{M.tekshirilgan}</dt><dd>{tekshirilgan}</dd></div>
+    <div><dt>{M.keyingi}</dt><dd>{keyingiTekshiruv}</dd></div>
     <div>
-      <dt>Tekshirilmagan joylar</dt>
+      <dt>{M.tekshirilmagan}</dt>
       <dd>
-        {tekshirilmagan.length > 0 ? <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul> : "Yo'q"}
+        {tekshirilmagan.length > 0 ? <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul> : M.yoq}
       </dd>
     </div>
   </dl>
