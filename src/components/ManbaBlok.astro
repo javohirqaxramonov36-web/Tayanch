@@ -2,20 +2,25 @@
 // "Manbalar va tekshiruv" bloki, Tayanch-IELTS-dizayn.md uslubida.
 import { rasmiyManbalar } from '../data/manbalar';
 
+// til="en": SAT bo'limidagi inglizcha sahifalar uchun yorliqlar (blok lang="en" bilan belgilanadi).
 interface Props {
   manbalar: string[];
   tekshirilgan: string;
   keyingiTekshiruv: string;
   tekshirilmagan: string[];
+  til?: 'uz' | 'en';
 }
-const { manbalar, tekshirilgan, keyingiTekshiruv, tekshirilmagan } = Astro.props;
+const { manbalar, tekshirilgan, keyingiTekshiruv, tekshirilmagan, til = 'uz' } = Astro.props;
 const rasmiy = rasmiyManbalar(manbalar);
+const Y = til === 'en'
+  ? { sarlavha: 'Sources and review', rasmiy: 'Official sources', yoq: 'None', tekshirilgan: 'Last checked', keyingi: 'Next check', tekshirilmagan: 'Not verified' }
+  : { sarlavha: 'Manbalar va tekshiruv', rasmiy: 'Rasmiy manbalar', yoq: "Yo'q", tekshirilgan: 'Tekshirilgan sana', keyingi: 'Keyingi tekshiruv', tekshirilmagan: 'Tekshirilmagan joylar' };
 ---
-<section class="manba" aria-labelledby="manba-h">
-  <h2 id="manba-h">Manbalar va tekshiruv</h2>
+<section class="manba" aria-labelledby="manba-h" lang={til === 'en' ? 'en' : undefined}>
+  <h2 id="manba-h">{Y.sarlavha}</h2>
   <dl>
     <div>
-      <dt>Rasmiy manbalar</dt>
+      <dt>{Y.rasmiy}</dt>
       <dd>
         {rasmiy.length > 0 ? (
           <ul>
@@ -23,15 +28,15 @@ const rasmiy = rasmiyManbalar(manbalar);
               <li><a href={m.havola} rel="noopener">{m.nomi}</a> ({m.tashkilot}, {m.id})</li>
             ))}
           </ul>
-        ) : "Yo'q"}
+        ) : Y.yoq}
       </dd>
     </div>
-    <div><dt>Tekshirilgan sana</dt><dd>{tekshirilgan}</dd></div>
-    <div><dt>Keyingi tekshiruv</dt><dd>{keyingiTekshiruv}</dd></div>
+    <div><dt>{Y.tekshirilgan}</dt><dd>{tekshirilgan}</dd></div>
+    <div><dt>{Y.keyingi}</dt><dd>{keyingiTekshiruv}</dd></div>
     <div>
-      <dt>Tekshirilmagan joylar</dt>
+      <dt>{Y.tekshirilmagan}</dt>
       <dd>
-        {tekshirilmagan.length > 0 ? <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul> : "Yo'q"}
+        {tekshirilmagan.length > 0 ? <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul> : Y.yoq}
       </dd>
     </div>
   </dl>

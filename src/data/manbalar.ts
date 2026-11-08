@@ -115,6 +115,15 @@ export const manbalar: Manba[] = [
     izoh: "Kontent siyosati uchun. 10-bo'lim: xizmatlar \"solely for your non-commercial use\", ularni pul ishlash yoki \"as part of any test prep or other business\" uchun ishlatib bo'lmaydi. 8-bo'lim: kontentni yozma ruxsatsiz tarqatish, yuklab olish, ko'paytirish, scrape yoki data-mine qilish taqiqlangan. \"non-commercial use\" va \"test prep\" iqtiboslari sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200); 8-bo'lim iqtiboslari faqat WebFetch xulosasidan. Sahifada kuchga kirish sanasi topilmadi.",
   },
   {
+    id: 'CB12',
+    nomi: 'SAT Calculator Policy',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/what-to-bring-do/calculator-policy',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-08',
+    izoh: "Kalkulyator vositasi (/uz/sat/vosita/kalkulyator/) va \"Math va Desmos\" qo'llanmasi uchun. Sahifada: \"Bluebook contains an embedded Desmos calculator with two options—graphing or scientific\"; \"Students can toggle between scientific and graphing options at any point in the Math section\". Mashq uchun havolalar: https://www.desmos.com/calculator va https://www.desmos.com/scientific. O'z ruxsat etilgan kalkulyatorini olib kelish ham mumkin. Iqtiboslar sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',

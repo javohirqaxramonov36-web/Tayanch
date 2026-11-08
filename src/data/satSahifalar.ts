@@ -72,6 +72,16 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: [],
         tekshirilmagan: ["Takrorlash oraliqlari Tayanch tanlovi, rasmiy tavsiya emas."],
       },
+      {
+        // SAT matni inglizcha (CLAUDE.md); qolgan bandlar hozircha o'zbekcha.
+        qism: 'vosita/kalkulyator/',
+        tayyor: true,
+        nomi: 'Graph sketcher',
+        tavsif: 'Sketch up to 3 lines or parabolas and see where they intersect. Links to the official Desmos calculators. Saved in this browser only.',
+        turi: 'vosita',
+        manbalar: ['CB12'],
+        tekshirilmagan: ['How the Desmos calculator looks and behaves inside Bluebook was not checked: this page relies only on the College Board calculator policy (CB12).'],
+      },
     ],
   },
   {
@@ -194,8 +204,8 @@ export const satGuruhlar: SatGuruh[] = [
         nomi: 'Math va Desmos',
         tavsif: "Math bo'limida Desmos kalkulyatori va formulalarni qo'llash usullari.",
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Imtihonda Desmos qanday berilishi haqida rasmiy manba hali jurnalga qo'shilmagan."],
+        manbalar: ['CB12'],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
       },
       {
         qism: 'qollanma/reading-writing/',
