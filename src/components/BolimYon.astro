@@ -9,6 +9,7 @@ import { qollanmalar, asos, vositalar, darslar as ieltsDarslar } from '../data/i
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import Lift from './Lift.astro';
 import { yol } from '../lib/yol';
+import { manbalar } from '../data/manbalar';
 
 import type { BolimSlug } from '../data/bolimlar';
 
@@ -36,6 +37,10 @@ const ikonkalar: Record<string, string> = {
   'mashq/kitoblar/': '<path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"/>',
   'mashq/lugat/': '<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/>',
 };
+// SAT: College Board rasmiy saytiga tashqi havola (CB07). Manba yo'q bo'lsa build to'xtaydi.
+const cbSayt = bolim === 'sat' ? manbalar.find((m) => m.id === 'CB07') : undefined;
+if (bolim === 'sat' && !cbSayt) throw new Error("BolimYon: manbalar.ts da CB07 (College Board SAT sahifasi) topilmadi");
+const cbNom = 'College Board rasmiy sayt (yangi tabda ochiladi)';
 const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/, '');
 const ieltsGuruhlar = [
   { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
@@ -157,6 +162,20 @@ const ieltsGuruhlar = [
   </nav>
 
   <div class="yon-past">
+    {cbSayt && (
+      <ul class="royxat tashqi" aria-label="Tashqi havolalar">
+        <li>
+          <a href={cbSayt.havola} target="_blank" rel="noopener noreferrer" aria-label={cbNom} title={cbNom}>
+            <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6" /><path d="M20 4l-9 9" /><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+            <span class="yon-matn tashqi-matn">
+              <span>College Board</span>
+              <span class="tashqi-izoh">rasmiy sayt</span>
+            </span>
+            <span class="ekranda-yoq">(yangi tabda ochiladi)</span>
+          </a>
+        </li>
+      </ul>
+    )}
     {bolim === 'ielts' && (
       <p class="past-tugma past-nofaol" title="Telegram kanal: tez orada">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" /></svg>
@@ -367,6 +386,9 @@ const ieltsGuruhlar = [
     text-decoration: none;
     cursor: pointer;
   }
+  /* SAT: tashqi havola (College Board). Qator .royxat a bilan bir xil; aria-current hech qachon yo'q. */
+  .tashqi-matn { display: flex; flex-direction: column; line-height: 1.2; }
+  .tashqi-izoh { font-size: var(--matn-mayda); font-weight: 500; color: var(--matn-sust); }
   #mavzu-tugma { background: var(--fon-ikkinchi); color: var(--matn); }
   .past-tugma svg { flex: none; width: 18px; height: 18px; }
   .past-tugma:hover { background: var(--fon-ikkinchi); color: var(--matn); }
@@ -440,7 +462,8 @@ const ieltsGuruhlar = [
       flex-direction: column; padding-inline: var(--b-3); gap: var(--b-3);
     }
     :global([data-sidebar='yigilgan']) .yon-past { margin-inline: var(--b-3); }
-    :global([data-sidebar='yigilgan']) .past-tugma { justify-content: center; padding-inline: 0; }
+    :global([data-sidebar='yigilgan']) .past-tugma,
+    :global([data-sidebar='yigilgan']) .tashqi a { justify-content: center; padding-inline: 0; }
     :global([data-sidebar='yigilgan']) .yigish-strelka { transform: rotate(180deg); transform-origin: 14px 12px; }
   }
 

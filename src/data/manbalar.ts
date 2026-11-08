@@ -70,6 +70,15 @@ export const manbalar: Manba[] = [
     izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z. Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
   },
   {
+    id: 'CB07',
+    nomi: 'The SAT (SAT Suite bosh sahifasi)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-08',
+    izoh: "SAT yon panelidagi tashqi havola. Sahifa sarlavhasi \"The SAT – SAT Suite | College Board\" (2026-11-08, HTTP 200). Havola faqat matn bilan: College Board trademark qoidalariga ko'ra uchinchi tomon saytida logo (acorn) ishlatilmaydi (privacy.collegeboard.org/copyright-trademark/guidelines). Manzilni muallif tasdiqladi (2026-11-08).",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',

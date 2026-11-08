@@ -23,7 +23,7 @@ SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pu
 - **Obuna**: tarif (free, pro, elite), qavat (`bolim`), boshlanish va tugash sanasi, inPAY to'lov identifikatori.
 - **Foydalanish**: kvota hisoblagichi, javoblar, xato daftari va progress (hozirgi `tayanch:sat-*` kalitlarining server nusxasi).
 - **Saqlanmaydi**: karta ma'lumoti, pasport va boshqa hujjatlar, College Board kontenti.
-- Minimal yosh va maxfiylik matni hali hal qilinmagan (HANDOFF §5, 12-savol).
+- Minimal yosh: 12 (muallif, 2026-11-08). Maxfiylik matni hali yozilmagan (HANDOFF §5, 12-savol).
 
 ## Kalit siyosati
 
@@ -36,8 +36,8 @@ SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pu
 
 - **To'lovni soxtalashtirish**: brauzer "to'landi" deb aytsa ishonilmaydi. Obuna faqat imzosi tekshirilgan webhook orqali yoziladi; webhook takror kelsa natija bir xil bo'lishi kerak (idempotent, IP01 README tavsiyasi).
 - **RLS xatosi**: RLS o'chiq jadval ochiq kalit bilan hammaga ochiq bo'ladi (SB03). Har migratsiyada RLS tekshiriladi.
-- **inPAY hujjati**: REST hujjati topilmagan, faqat SDK sahifalari bor (IP01, IP02). Takroriy to'lov noma'lum (HANDOFF §5, 13-savol). Integratsiyadan oldin inPAY'dan rasmiy hujjat so'raladi.
-- **Repo ochiq/yopiq**: repo yopilishi rejalashtirilgan; GitHub Pages yopiq repoda qaysi tarifda ishlashi tekshirish kerak (HANDOFF §5, 11-savol). Ochiq paytda ham kalitlar repoga tushmaydi.
+- **inPAY hujjati**: REST hujjati topilmagan, faqat SDK sahifalari bor (IP01, IP02). To'lov usullari Click va Payme (muallif, 2026-11-08). Takroriy to'lov noma'lum (HANDOFF §5, 13-savol). Integratsiyadan oldin inPAY'dan rasmiy hujjat so'raladi.
+- **Repo ochiq/yopiq**: hozircha ochiq qoladi (2026-11-08). Pages sayti yopiq repoda ham ochiq bo'ladi va pullik tarif talab qiladi, shuning uchun himoya repo yopilishiga emas, Supabase RLS va secrets'ga tayanadi (HANDOFF §5, 11-savol). Kalitlar repoga tushmaydi.
 - **Bog'liqlik**: Supabase yoki inPAY ishlamasa hisob va to'lov to'xtaydi. Hisobsiz bepul qism brauzerda ishlashda davom etishi kerak.
 - **Shaxsiy ma'lumot**: minimal yosh va maxfiylik siyosati hal bo'lmaguncha hisob sahifasi "chop-etilgan" qilinmaydi.
 - **Kontent huquqi**: savollar faqat original, muallif tasdig'i bilan (`verified_by`).
