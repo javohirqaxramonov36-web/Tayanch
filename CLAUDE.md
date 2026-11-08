@@ -2,13 +2,14 @@
 
 Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha. SAT bo'limining (3-qavat) HAMMA sahifa matni inglizcha (ilova va qo'llanma sahifalari); sahifa yo'llari (URL) va kod nomlari o'zbekcha lotin konventsiya bo'yicha qoladi. Inglizcha matnni muallif tekshiradi. Boshqa qavatlar matni o'zbekcha.
 
-## Joriy holat (2026-11-06)
+## Joriy holat (2026-11-08)
 Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qarorlar, ochiq savollar, nomlash va texnik eslatmalar.
 - Qurilgan va saytda: 1-qavat (bosh sahifa), 3-qavat SAT (PR #7), 4-qavat IELTS (PR #8), Lift (PR #10), Topshirish yo'li vositasi (PR #11, qoralama), 2-qavat Top Admission kirish sahifasi (PR #12, #14: qolgan kun, "Mening yo'lim"; `bolimlar.ts` da `tez-orada`).
 - Top Admission'da qolganlari (maket: https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF):
   1. Türkiye Bursları yo'nalish sahifasi (`/uz/top-admission/turkiye-burslari/`, maket B "Burslar*"). Kirish sahifasidagi kartada hozir "sahifa tez orada".
   2. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
 - Interaktiv darslar: 0-bosqich PR #18, SAT Math PR #15, SAT R&W 1–2-modul ("Xatoni toping", "Dalilni belgilang", `DarsQolip` belgilash rejimi) PR #20, R&W 3–4-modul ("O'tish so'zlari", "Lug'at kontekstda") PR #21 da merge qilingan. 2-bosqich SAT Xato daftari va takrorlash (`/uz/sat/vosita/takrorlash/`, kalit `tayanch:sat-takrorlash`) PR #22 da merge qilingan. 3-bosqich IELTS Reading darslari (`/uz/ielts/qollanma/reading/tfng/`, `/sarlavhalar/`, branch `ielts-interaktiv`) PR #23 da merge qilingan. 4-bosqich Top Admission "Ariza zinapoyasi" (`/uz/top-admission/qollanma/ariza-zinapoyasi/`, branch `top-admission-zinapoya`) PR #25 da merge qilingan. Navbatda 5-bosqich EYUF (dizayn yo'q); IELTS va Top Admission takrorlash alohida PR. PR #17 (SAT mashq) alohida, unga tegilmaydi. Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
+- SAT va College Board belgilari (merge qilingan): PR #30 yon panelda College Board rasmiy saytiga matnli havola (CB07), PR #31 har SAT sahifasi pastida `SatEslatma` (CB08, CB09), PR #32 SAT matnida ® / ™ (har sahifada eng ko'zga tashlanadigan joyda bir marta). Ochiq: `<title>` da ® (CB08 da qoida yo'q, muallif qarori), 1-qavatdagi SAT matni hozircha belgisiz (muallif: tegilmaydi), SAT sahifalari matni hali o'zbekcha (inglizchaga o'tkazish keyinroq, avval reja). Sinalmagan: axe, VoiceOver, haqiqiy telefon.
 - Boshqa qurilmagan: 5-qavat EYUF (dizayn yo'q).
 - Yangi qaror (2026-11-08): butun sayt uchun bitta hisob (Supabase), to'lov (inPAY) hozircha faqat SAT'da, SAT matni inglizcha, freemium (Free, Pro, Elite). Batafsil: `docs/qarorlar/001-hisob-tolov-server.md`, HANDOFF §4. Hali kod yozilmagan.
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
