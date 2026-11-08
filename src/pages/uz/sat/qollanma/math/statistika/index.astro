@@ -1,7 +1,7 @@
 ---
 // Statistika (2D, SVG): son o'qidagi nuqtalarni sudrab o'rtacha, mediana, standart og'ish va oraliqni kuzatish.
 // Har nuqta role="slider": Tab bilan tanlanadi, strelkalar 1 ga suradi, Home/End chetga.
-// Standart og'ish populatsiya formulasi bilan (n ga bo'linadi), sahifada ham shunday yozilgan.
+// Standart og'ish populatsiya formulasi bilan (n ga bo'linadi), sahifada ham shunday yozilgan. Matn inglizcha (CLAUDE.md).
 import { darsSavollari } from '../../../../../../data/satDarslar';
 import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
@@ -13,37 +13,37 @@ const X = (v: number) => 20 + 19 * v;
   takrorlashHref={yol('/uz/sat/vosita/takrorlash/')}
   modul="statistika"
   savollar={darsSavollari.statistika}
-  yolBandlari={['Math darslari']}
-  darsTuri="Math darsi"
+  yolBandlari={['Math lessons']}
+  darsTuri="Math lesson"
   imtihon="SAT"
   manbalar={['CB05']}
   tekshirilgan="2026-11-05"
   keyingiTekshiruv="2026-12-05"
-  title="Statistika · SAT"
-  description="SAT Math: nuqtalarni sudrab o'rtacha, mediana, standart og'ish va oraliq qanday o'zgarishini ko'ring. 5 ta mashq."
+  title="Statistics · SAT"
+  description="SAT Math: drag the points to see how the mean, median, standard deviation and range change. 5 exercises."
   yonalish="Problem-Solving and Data Analysis"
-  sarlavha="Statistika: o'rtacha qochadi, mediana turadi"
-  lead="Nuqtalar son o'qida turibdi. Bittasini uzoqqa sudrang: o'rtacha unga ergashadi, mediana deyarli joyida qoladi. Standart og'ish esa nuqtalar qanchalik tarqalganini ko'rsatadi."
+  sarlavha="Statistics: the mean runs, the median stays"
+  lead="The points sit on a number line. Drag one of them far away: the mean follows it, while the median stays almost where it was. The standard deviation shows how spread out the points are."
   maqsadlar={[
-    "O'rtacha, mediana va oraliqni ro'yxatdan tez hisoblaysiz.",
-    "Chetga ketgan qiymat qaysi ko'rsatkichni ko'proq o'zgartirishini ayta olasiz.",
-    "Standart og'ishni hisoblamasdan, ikki to'plamni tarqalishi bo'yicha solishtirasiz.",
+    "You quickly calculate the mean, median and range of a list.",
+    "You can tell which measure an outlier changes the most.",
+    "You compare the spread of two data sets without calculating the standard deviation.",
   ]}
   xulosa={[
-    "O'rtacha = yig'indi : sonlar soni. Bitta katta qiymat uni o'ziga tortadi.",
-    "Mediana: saralangan ro'yxatning o'rtasi; sonlar soni juft bo'lsa, o'rtadagi ikki sonning o'rtachasi.",
-    "Oraliq = eng katta − eng kichik. Chetga ketgan qiymat oraliqni darhol o'zgartiradi.",
-    "Standart og'ish: qiymatlar o'rtachadan o'rtacha qanchalik uzoq. Hamma qiymat teng bo'lsa, 0.",
+    "Mean = sum ÷ count. A single large value pulls it toward itself.",
+    "Median: the middle of the sorted list; if the count is even, the mean of the two middle numbers.",
+    "Range = largest − smallest. An outlier changes the range right away.",
+    "Standard deviation: how far the values are from the mean on average. If all values are equal, it is 0.",
   ]}
-  keyingi={{ nomi: 'Reja tuzgich', href: yol('/uz/sat/vosita/reja/') }}
+  keyingi={{ nomi: 'Study planner', href: yol('/uz/sat/vosita/reja/') }}
   tekshirilmagan={[
-    "Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-    "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi). SAT'da qaysi ta'rif ishlatilishi bu sahifada da'vo qilinmaydi.",
+    'The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".',
+    "Standard deviation uses the population formula (divided by n). This page makes no claim about which definition the SAT uses.",
   ]}
 >
   <div slot="sahna">
     <div class="sahna-quti stat-quti">
-      <p class="stat-namuna"><span class="pill">Namuna ma'lumot</span></p>
+      <p class="stat-namuna"><span class="pill">Sample data</span></p>
       <svg id="stat" viewBox="0 0 420 250" role="group" aria-labelledby="stat-tavsif">
         <g aria-hidden="true">
           <rect id="s-sigma" class="s-sigma" x="0" y="40" width="0" height="160" />
@@ -64,32 +64,32 @@ const X = (v: number) => 20 + 19 * v;
     </div>
     <p class="sr" id="stat-tavsif" aria-live="polite"></p>
     <div class="sahna-tugmalar">
-      <button type="button" class="kichik-tugma" id="s-chetga">Chetga ketgan nuqta</button>
-      <button type="button" class="kichik-tugma" id="s-qosh">Nuqta qo'shish</button>
-      <button type="button" class="kichik-tugma" id="s-ayir">Nuqta olib tashlash</button>
-      <button type="button" class="kichik-tugma" id="s-tikla">Namunani tiklash</button>
+      <button type="button" class="kichik-tugma" id="s-chetga">Outlier point</button>
+      <button type="button" class="kichik-tugma" id="s-qosh">Add a point</button>
+      <button type="button" class="kichik-tugma" id="s-ayir">Remove a point</button>
+      <button type="button" class="kichik-tugma" id="s-tikla">Reset the sample</button>
     </div>
-    <p class="sahna-izoh">Nuqtani sudrang yoki Tab bilan tanlab, strelkalar bilan suring. Ko'k chiziq va uchburchak: o'rtacha. Qora uzuq chiziq va romb: mediana. Uzuq chegarali kulrang soha: o'rtacha ± standart og'ish.</p>
+    <p class="sahna-izoh">Drag a point, or select it with Tab and move it with the arrow keys. Blue line and triangle: mean. Black dashed line and diamond: median. Gray area with dashed edges: mean ± standard deviation.</p>
   </div>
 
   <div slot="animatsiya">
-    <p>Eng katta nuqta asta-sekin 20 gacha suriladi. Kuzating: o'rtacha (ko'k) unga ergashadi, mediana (qora) joyida qoladi, kulrang soha kengayadi.</p>
-    <div class="segment"><button type="button" class="katta asosiy" id="anim-boshla">Ko'rsatish</button></div>
-    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Tugmani bosing.</span></div>
+    <p>The largest point slowly moves to 20. Watch: the mean (blue) follows it, the median (black) stays in place, and the gray area widens.</p>
+    <div class="segment"><button type="button" class="katta asosiy" id="anim-boshla">Show</button></div>
+    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Press the button.</span></div>
   </div>
 
   <div slot="formula">
     <div class="formula">
-      <span class="kichik ikkinchi">O'rtacha</span><span class="f-asosiy">x̄ = Σx : n</span><span class="f-qiymat" id="f-ortacha"></span>
-      <span class="kichik ikkinchi">Mediana</span><span class="f-qiymat" id="f-mediana"></span>
-      <span class="kichik ikkinchi">Standart og'ish (populatsiya, n ga bo'linadi)</span><span class="f-asosiy">σ = √( Σ(x − x̄)² : n )</span><span class="f-qiymat" id="f-sigma"></span>
+      <span class="kichik ikkinchi">Mean</span><span class="f-asosiy">x̄ = Σx ÷ n</span><span class="f-qiymat" id="f-ortacha"></span>
+      <span class="kichik ikkinchi">Median</span><span class="f-qiymat" id="f-mediana"></span>
+      <span class="kichik ikkinchi">Standard deviation (population, divided by n)</span><span class="f-asosiy">σ = √( Σ(x − x̄)² ÷ n )</span><span class="f-qiymat" id="f-sigma"></span>
     </div>
   </div>
 
   <div slot="sinab">
     <dl class="qiymatlar" id="s-qiymatlar"></dl>
     <div class="vazifa">
-      <p><b>Vazifa.</b> 9 ta nuqta bilan medianani 8 da qoldirib, o'rtachani aynan 10 ga yetkazing.</p>
+      <p><b>Task.</b> With 9 points, keep the median at 8 and bring the mean to exactly 10.</p>
       <p class="vazifa-holat" id="vazifa-holat" aria-live="polite"></p>
     </div>
   </div>
@@ -126,7 +126,7 @@ const X = (v: number) => 20 + 19 * v;
       g.setAttribute('tabindex', '0');
       g.setAttribute('role', 'slider');
       g.setAttribute('aria-valuemin', '0'); g.setAttribute('aria-valuemax', '20');
-      g.setAttribute('aria-label', `${i + 1}-nuqta`);
+      g.setAttribute('aria-label', `Point ${i + 1}`);
       const hit = document.createElementNS(NS, 'circle'); hit.setAttribute('class', 's-hit');
       const c = document.createElementNS(NS, 'circle'); c.setAttribute('class', 's-doira'); c.setAttribute('r', '9');
       g.append(hit, c);
@@ -160,36 +160,36 @@ const X = (v: number) => 20 + 19 * v;
     $('s-ortacha-belgi').setAttribute('d', `M${X(o) - 8} 30L${X(o) + 8} 30L${X(o)} 42Z`);
     $('s-mediana-belgi').setAttribute('d', `M${X(m)} 200l8 8l-8 8l-8-8Z`);
     const oy = $('s-ortacha-yozuv'), my = $('s-mediana-yozuv');
-    oy.textContent = `o'rtacha ${son(o)}`; my.textContent = `mediana ${son(m)}`;
+    oy.textContent = `mean ${son(o)}`; my.textContent = `median ${son(m)}`;
     oy.setAttribute('x', String(Math.min(370, Math.max(50, X(o))))); my.setAttribute('x', String(Math.min(370, Math.max(50, X(m)))));
     const chap = Math.max(X(0), X(o - s)), ong = Math.min(X(20), X(o + s));
     $('s-sigma').setAttribute('x', String(chap)); $('s-sigma').setAttribute('width', String(Math.max(0, ong - chap)));
     ['x1', 'x2'].forEach((k) => { $('s-sigma-chap').setAttribute(k, String(chap)); $('s-sigma-ong').setAttribute(k, String(ong)); });
 
     const dl = $('s-qiymatlar'); dl.replaceChildren();
-    ([['n', String(qiymat.length)], ["O'rtacha", son(o)], ['Mediana', son(m)], ["Standart og'ish", son(s)], ['Oraliq', son(oraliq(qiymat))]] as [string, string][])
+    ([['n', String(qiymat.length)], ['Mean', son(o)], ['Median', son(m)], ['Standard deviation', son(s)], ['Range', son(oraliq(qiymat))]] as [string, string][])
       .forEach(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); dl.append(d); });
 
     const yig = qiymat.reduce((a, b) => a + b, 0);
     const saralangan = [...qiymat].sort((a, b) => a - b);
-    $('f-ortacha').textContent = `${saralangan.join(' + ')} = ${yig}; ${yig} : ${qiymat.length} = ${son(o)}`;
+    $('f-ortacha').textContent = `${saralangan.join(' + ')} = ${yig}; ${yig} ÷ ${qiymat.length} = ${son(o)}`;
     const n = saralangan.length;
     $('f-mediana').textContent = n % 2
-      ? `Saralangan ro'yxatning ${(n + 1) / 2}-qiymati: ${son(m)}`
-      : `O'rtadagi ikkitasi ${saralangan[n / 2 - 1]} va ${saralangan[n / 2]}: (${saralangan[n / 2 - 1]} + ${saralangan[n / 2]}) : 2 = ${son(m)}`;
+      ? `Value number ${(n + 1) / 2} of the sorted list: ${son(m)}`
+      : `The two middle values are ${saralangan[n / 2 - 1]} and ${saralangan[n / 2]}: (${saralangan[n / 2 - 1]} + ${saralangan[n / 2]}) ÷ 2 = ${son(m)}`;
     $('f-sigma').textContent = `σ ≈ ${son(s)}`;
 
     const ok = qiymat.length === 9 && Math.abs(o - 10) < 1e-9 && m === 8;
     const vh = $('vazifa-holat');
     vh.dataset.ok = ok ? '1' : '0';
-    vh.textContent = ok ? "Topildi: mediana 8, o'rtacha 10. Katta qiymatlarni oshirdingiz, o'rtadagi nuqtaga tegmadingiz." : `Hali emas: o'rtacha ${son(o)}, mediana ${son(m)}. Maslahat: yig'indi 90 bo'lishi kerak, o'rtadagi 5-qiymat 8 da qolsin.`;
+    vh.textContent = ok ? 'Found: median 8, mean 10. You raised the large values and left the middle point alone.' : `Not yet: mean ${son(o)}, median ${son(m)}. Hint: the sum must be 90, and the 5th value in the middle should stay at 8.`;
     ($('s-qosh') as HTMLButtonElement).disabled = qiymat.length >= 12;
     ($('s-ayir') as HTMLButtonElement).disabled = qiymat.length <= 3;
   }
 
   function ozgarishniElon() {
     const o = ortacha(qiymat), m = mediana(qiymat);
-    const t = `O'rtacha ${son(oldingi.o)} dan ${son(o)} ga, mediana ${son(oldingi.m)} dan ${son(m)} ga o'zgardi. Standart og'ish ${son(sigma(qiymat))}.`;
+    const t = `The mean changed from ${son(oldingi.o)} to ${son(o)}, the median from ${son(oldingi.m)} to ${son(m)}. Standard deviation ${son(sigma(qiymat))}.`;
     oldingi = { o, m };
     elon(t);
   }
@@ -205,12 +205,12 @@ const X = (v: number) => 20 + 19 * v;
     clearInterval(animT);
     qiymat = [...NAMUNA]; nuqtalarniQur();
     const i = qiymat.length - 1, boshO = ortacha(qiymat), boshM = mediana(qiymat);
-    const holat = () => `Nuqta ${qiymat[i]} da: o'rtacha ${son(boshO)} → ${son(ortacha(qiymat))}, mediana ${son(boshM)} → ${son(mediana(qiymat))}.`;
+    const holat = () => `Point at ${qiymat[i]}: mean ${son(boshO)} → ${son(ortacha(qiymat))}, median ${son(boshM)} → ${son(mediana(qiymat))}.`;
     if (kamaytir) {
       animBosqich = (animBosqich + 1) % 2;
       qiymat[i] = animBosqich ? 20 : NAMUNA[i]; chiz();
       $('anim-holat').textContent = holat();
-      $('anim-boshla').textContent = animBosqich ? 'Qaytarish' : "Ko'rsatish";
+      $('anim-boshla').textContent = animBosqich ? 'Return' : 'Show';
       return;
     }
     chiz();

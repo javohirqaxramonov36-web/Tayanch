@@ -1,12 +1,13 @@
-// Sonlarni o'zbekcha yozish: o'nli kasr vergul bilan, manfiy belgi "−" (minus), ortiqcha nollarsiz.
+// Sonlarni yozish (faqat SAT Math darslari ishlatadi, matn inglizcha): o'nli kasr nuqta bilan (muallif qarori 2026-11-08),
+// manfiy belgi "−" (minus), ortiqcha nollarsiz. Boshqa qavatga kerak bo'lsa, vergulli variant alohida qo'shiladi.
 export function son(n: number, xona = 2): string {
   if (!Number.isFinite(n)) return '—';
   const yaxlit = Math.round(n * 10 ** xona) / 10 ** xona;
   const t = (Object.is(yaxlit, -0) ? 0 : yaxlit).toFixed(xona).replace(/\.?0+$/, '');
-  return t.replace('-', '−').replace('.', ',');
+  return t.replace('-', '−');
 }
 
-/** Koeffitsientli had: had(1, 'x') -> "x", had(-1, 'x') -> "−x", had(2.5, 'x') -> "2,5x" */
+/** Koeffitsientli had: had(1, 'x') -> "x", had(-1, 'x') -> "−x", had(2.5, 'x') -> "2.5x" */
 export function had(k: number, harf: string): string {
   if (k === 1) return harf;
   if (k === -1) return '−' + harf;
@@ -21,7 +22,7 @@ export function qosh(k: number, harf = ''): string {
   return (k < 0 ? ' − ' : ' + ') + tana;
 }
 
-/** Koordinata juftligi: (1,5; −2) */
+/** Koordinata juftligi: (1.5, −2) */
 export function nuqta(x: number, y: number): string {
-  return `(${son(x)}; ${son(y)})`;
+  return `(${son(x)}, ${son(y)})`;
 }
