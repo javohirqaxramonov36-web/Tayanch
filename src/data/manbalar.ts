@@ -85,7 +85,7 @@ export const manbalar: Manba[] = [
     havola: 'https://privacy.collegeboard.org/copyright-trademark/guidelines',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "SAT sahifalari pastidagi savdo belgisi eslatmasi (SatEslatma) uchun. Belgi yonida ® yoki ™ qo'yiladi; belgi sifatdosh sifatida ishlatiladi, ko'plik va qaratqich shaklida emas. Eslatma: belgi egasi College Board ekani va u sayt bilan aloqador emasligi, uni ma'qullamasligi. Saytda: bosh sahifada va belgi ishlatilgan har ichki sahifada, sahifa pastida; \"Terms and Conditions\" yoki \"Legal Notice\" bo'limi yetarli emas. Logo (acorn) yozma litsenziyasiz ishlatilmaydi, havola faqat matn. Sahifada oxirgi yangilanish sanasi yo'q (2026-11-08).",
+    izoh: "SAT sahifalari pastidagi savdo belgisi eslatmasi (SatEslatma) uchun. Belgi yonida ® yoki ™ qo'yiladi; belgi sifatdosh sifatida ishlatiladi, ko'plik va qaratqich shaklida emas. Eslatma: belgi egasi College Board ekani va u sayt bilan aloqador emasligi, uni ma'qullamasligi. Saytda: bosh sahifada va belgi ishlatilgan har ichki sahifada, sahifa pastida; \"Terms and Conditions\" yoki \"Legal Notice\" bo'limi yetarli emas. Logo (acorn) yozma litsenziyasiz ishlatilmaydi, havola faqat matn. Sahifada oxirgi yangilanish sanasi yo'q (2026-11-08). Qo'llanmada ® qoidasi faqat \"next to the mark\"; HTML <title>, brauzer tabi, alt matn va \"birinchi ishlatilish\" haqida qoida yo'q, \"meta tags\" faqat taqiqlar ro'yxatida (IMPROPER Use 3) tilga olinadi (2026-11-08; iqtiboslar brauzerda so'zma-so'z tekshirilmagan).",
   },
   {
     id: 'CB09',

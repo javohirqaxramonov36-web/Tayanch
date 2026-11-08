@@ -90,6 +90,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 14. Qo'llanma tili: hal qilindi (2026-11-08), SAT qo'llanmalari ham inglizcha.
 15. Tariflar: Free kvotasi, Pro va Elite farqi va narxlari hali yo'q (muallif, 2026-11-08: "narx hozircha bilmadim"). Uydirma raqam yozilmaydi; tarif sahifasi qurilishidan oldin hal qilinadi.
 16. SAT matnidagi belgilar (CB08): hal qilindi (2026-11-08, muallif tasdiqladi, PR #32). Belgi har sahifada eng ko'zga tashlanadigan joyda bir marta: SAT yon paneli logosida "SAT®", SAT kirish va Reja tuzgich h1 da "SAT®", Reja tuzgichda "Bluebook™". `<title>` va `aria-label`'ga qo'yilmaydi. SAT kirishidagi "Tayanch College Board bilan aloqador emas" jumlasi olib tashlandi. Ochiq qoldi: 1-qavatdagi SAT matni va tab nomi (tekshirish kerak).
+17. SAT `<title>` (brauzer tab nomi) da ®: CB08 da bu haqda qoida yo'q (faqat "next to the mark"; "meta tags" faqat taqiqlar ro'yxatida), tekshirildi 2026-11-08. Qo'yiladimi: muallif qarori. Shu bilan birga 1-qavatdagi SAT matni (bosh sahifa, MaqsadTesti, MuallifYoli, Lift) belgisiz qoladi (muallif 2026-11-08: hozircha tegilmaydi).
 
 ## 6. Fayl nomlash qoidalari
 
