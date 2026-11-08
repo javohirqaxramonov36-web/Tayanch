@@ -62,7 +62,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - **SAT bo'limi tili** (2026-11-08): HAMMA sahifa matni inglizcha (ilova va qo'llanma: yo'l xaritasi, muallif hikoyasi, strategiya, retake). URL va kod nomlari o'zbekcha lotin konventsiyada qoladi. Inglizcha matnni muallif tekshiradi. Muallif qo'llanma tilini ham inglizcha deb tasdiqladi.
 - **Tariflar** (2026-11-08): kvotali freemium, uch tarif Free, Pro, Elite. Kvota va narx raqamlari hali belgilanmagan (uydirma raqam yozilmaydi).
 - **Savollar faqat original** (2026-11-08): AI qoralama yozadi, muallif tekshirib tasdiqlaydi (`verified_by`). College Board materiallari saytga, repoga va bazaga qo'yilmaydi.
-- **Repo yopiladi** (2026-11-08, muallif javobi). Qachon va GitHub Pages yopiq repo bilan qaysi tarifda ishlashi: 5-bo'lim, 11-savol.
+- **Repo hozircha ochiq qoladi** (2026-11-08; avvalgi "yopiladi" javobi o'rniga, muallif qarorni Claude'ga topshirdi). Sabab va shart: 5-bo'lim, 11-savol.
 - **Yangi sahifa holati "qoralama"** (`noindex`). "chop-etilgan" ga faqat muallif aytganda o'tkaziladi.
 - **Ish tartibi**: har vazifa yangi branch'da → PR → muallif "merge qil" deganidan keyin merge. `main` ga to'g'ridan-to'g'ri yozilmaydi.
 
@@ -81,18 +81,18 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 8. Telegram kanal manzili hali yo'q (hamma joyda "tez orada").
 9. 2-qavat Top Admission qachon `ochiq` bo'ladi (`bolimlar.ts`) va kirish sahifasi qachon "chop-etilgan" bo'ladi.
 10. Hal qilindi (2026-11-06): PR #17 `tayanch:sat-xato-daftari` ni ishlatmaydi, uning kaliti `tayanch:sat:v1`. Daftarni faqat darslar yozadi, takrorlash sahifasi uni faqat o'qiydi. PR #17 `BolimYon.astro` ni ham o'zgartiradi: PR #18 merge bo'lgani uchun PR #17 da konflikt chiqishi mumkin, u branch'da hal qilinadi.
-11. Repo: muallif "yopiq bo'ladi" dedi (2026-11-08). Ochiq qolgani: qachon yopiladi; GitHub Pages yopiq repodan qaysi GitHub tarifida ishlaydi (tekshirish kerak). Yopilguncha repo ochiq deb ishlanadi.
-12. Hisob ochish uchun minimal yosh: **tasdiqlanmagan** (muallif hali bilmaydi). Raqam qo'yilmaydi; hisob sahifasi qurilishidan oldin hal qilinishi kerak (maxfiylik sahifasi ham shunga bog'liq).
-13. inPAY takroriy (oylik) to'lovni qo'llaydimi: noma'lum. `inpay-php` README'sida takroriy to'lov tilga olinmagan, REST hujjati topilmagan (IP01, IP02). Muallif inPAY'dan so'rashi kerak; javobgacha har oy yangi to'lov (qo'lda uzaytirish) deb rejalanadi.
+11. Repo: hal qilindi (2026-11-08, muallif qarorni Claude'ga topshirdi). **Repo hozircha ochiq qoladi.** Sabab: GitHub Pages sayti repo yopiq bo'lsa ham internetda ochiq bo'ladi, yopiq repodan Pages esa pullik tarif (GitHub Pro, Team yoki Enterprise) talab qiladi (docs.github.com, "Creating a GitHub Pages site" va "GitHub's plans", 2026-11-08). Demak yopish pullik kontentni himoya qilmaydi. Himoya qilinadigan narsalar (Pro/Elite savollari, foydalanuvchi ma'lumoti) repoga va statik build'ga yozilmaydi, faqat Supabase'da RLS bilan turadi; kalitlar faqat Supabase secrets va `.env` da. Qayta ko'rib chiqiladi: muallif kodni yashirmoqchi bo'lsa yoki pullik tarifga o'tsa.
+12. Hisob ochish uchun minimal yosh: **12** (muallif javobi, 2026-11-08). Maxfiylik sahifasi va ro'yxatdan o'tish formasi shunga qarab yoziladi; voyaga yetmaganlar ma'lumoti bo'yicha O'zbekiston qonunchiligini (lex.uz) tekshirish kerak, hisob sahifasi qurilishidan oldin.
+13. inPAY: to'lov usullari **Click va Payme** (muallif javobi, 2026-11-08). Muallifda inPAY merchant ID bor; uni muallif o'zi Supabase secrets ga qo'yadi (repoga, chatga yozilmaydi). Takroriy (oylik avtomatik) to'lov hali **noma'lum**: inPAY hujjatida topilmagan (IP01, IP02). Javobgacha har oy yangi to'lov (qo'lda uzaytirish) deb rejalanadi.
 14. Qo'llanma tili: hal qilindi (2026-11-08), SAT qo'llanmalari ham inglizcha.
-15. Tariflar: Free kvotasi, Pro va Elite farqi va narxlari hali yo'q.
+15. Tariflar: Free kvotasi, Pro va Elite farqi va narxlari hali yo'q (muallif, 2026-11-08: "narx hozircha bilmadim"). Uydirma raqam yozilmaydi; tarif sahifasi qurilishidan oldin hal qilinadi.
 
 ## 6. Fayl nomlash qoidalari
 
 - **Manzil**: `/uz/<bolim>/<qism>/<sahifa>/`. Kichik lotin harflar, defis, apostrofsiz (qo'llanma → `qollanma`, Türkiye → `turkiye`). Har manzil `/` bilan tugaydi (`trailingSlash: 'always'`).
 - **Sahifa fayli**: `src/pages/uz/<bolim>/<qism>/<sahifa>/index.astro`. Qismlar: `mashq/`, `vosita/`, `qollanma/`, `hisob/` (2026-11-08).
   - **Hisob sahifalari**: umumiy kirish va profil 1-qavatda, `src/pages/uz/hisob/<sahifa>/index.astro` (masalan `kirish/`, `profil/`), o'zbekcha. SAT'ga xos tarif va obuna sahifalari `src/pages/uz/sat/hisob/<sahifa>/index.astro` (masalan `tariflar/`), inglizcha. Aniq sahifa nomlari qurilish vazifasida belgilanadi.
-  - **SAT yon paneli**: yangi SAT sahifasi `src/data/satSahifalar.ts` dagi `satGuruhlar` ga `SatSahifa` yozuvi sifatida qo'shiladi (`qism`, `nomi`, `tavsif`, `turi`, `manbalar`, `tekshirilmagan`, `tayyor`). Qurilmagan yozuvlar `src/pages/uz/sat/[...qism].astro` orqali "tez orada" bo'lib chiqadi. Eslatma: `SatTuri` hozir `'mashq' | 'vosita' | 'qollanma'`; `hisob` uchun shu tur kengaytiriladi (kod vazifasi, bu hujjatda emas).
+  - **SAT yon paneli**: yangi SAT sahifasi `src/data/satSahifalar.ts` dagi `satGuruhlar` ga `SatSahifa` yozuvi sifatida qo'shiladi (`qism`, `nomi`, `tavsif`, `turi`, `manbalar`, `tekshirilmagan`, `tayyor`). Qurilmagan yozuvlar `src/pages/uz/sat/[...qism].astro` orqali "tez orada" bo'lib chiqadi. Pastki qismda (`yon-past`, mavzu tugmasi ustida) bitta tashqi havola: College Board rasmiy sayti (manba CB07, `target="_blank"`, logo yo'q; yig'ilgan panelda faqat ikonka). Nav emas, `yon-past` da, chunki yig'ilgan panelda nav yashiriladi. Eslatma: `SatTuri` hozir `'mashq' | 'vosita' | 'qollanma'`; `hisob` uchun shu tur kengaytiriladi (kod vazifasi, bu hujjatda emas).
 - **Kod nomlari o'zbekcha**: komponentlar PascalCase (`BolimYon`, `QavatYoli`, `TopshirishYoli`), ma'lumot va funksiyalar camelCase (`qavatlar`, `joriyQavat`, `yollarniTanla`), CSS klasslari kichik harf, defis bilan (`yon-past`, `savol-zinasi`).
 - **Qoliplar**: `Asosiy` (1-qavat va qurilmoqda sahifalari), `BolimQobiq` (yon panelli bo'lim: `bolim="sat" | "ielts" | "top-admission"`), `SatFokus` (yon panelsiz mashq ekrani).
 - **Ma'lumot**: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`, `satSahifalar.ts`, `satNamuna.ts`, `ieltsSahifalar.ts`, `topshirishYoli.ts`).

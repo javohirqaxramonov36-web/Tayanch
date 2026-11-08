@@ -23,7 +23,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
 - Server: Supabase (Auth, Postgres, Edge Functions). GitHub Pages faqat statik joylashtirish bo'lib qoladi. To'lov holati faqat server (Edge Function, inPAY webhook) orqali yoziladi, brauzer to'lovni "tasdiqlay" olmaydi.
 - Ma'lumot: hisob bilan kirganda Supabase'da (RLS yoqilgan jadvallarda), hisobsiz holatda faqat brauzerda, kalitlar `tayanch:` bilan boshlanadi. Hisob va to'lov formalaridan tashqari formalar yo'q.
 - Kalitlar: brauzerda faqat Supabase ochiq kaliti (publishable/anon) bo'lishi mumkin. service_role/secret kalit, Google client secret, inPAY merchant ma'lumotlari, bearer token va webhook secret faqat Supabase secrets va lokal `.env` da (muallif o'zi qo'yadi). Ularni so'rama, o'qima, repoga, logga yoki javobga yozma.
-- Repo hozir ochiq, muallif qarori bo'yicha yopiladi (2026-11-08, sanasi ochiq savol). Har holda `grants-qoralama.json`, `inbox/`, `.env`, token va parollarni repoga qo'shma.
+- Repo hozircha ochiq qoladi (2026-11-08, HANDOFF §5 11-savol): pullik kontent va foydalanuvchi ma'lumoti repoga va statik build'ga yozilmaydi, faqat Supabase'da. Har holda `grants-qoralama.json`, `inbox/`, `.env`, token va parollarni repoga qo'shma.
 - Savollar faqat original: AI qoralama yozadi, muallif tekshirib tasdiqlaydi (`verified_by`). College Board materiallari (PDF, JSON, savol, passage, tushuntirish matni) repoga, bazaga, promptga yoki ekranga qo'yilmaydi.
 - Natija kafolatlanmaydi. Qoida, talab va muddat faqat rasmiy manbadan, manba va sana bilan.
 
