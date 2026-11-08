@@ -7,6 +7,7 @@ import BoshQism from '../components/BoshQism.astro';
 import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
+import SatEslatma from '../components/SatEslatma.astro';
 import type { BolimSlug } from '../data/bolimlar';
 
 export interface Props {
@@ -40,6 +41,7 @@ const sahifaNomi = title.split(' · ')[0];
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
         <slot />
       </main>
+      {bolim === 'sat' && <SatEslatma />}
     </div>
     <Lift variant="pastki" />
   </body>

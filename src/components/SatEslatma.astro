@@ -1,0 +1,34 @@
+---
+// SAT bo'limi: har sahifa pastidagi savdo belgisi eslatmasi (BolimQobiq bolim="sat" va SatFokus).
+// Qoida: CB08 (College Board trademark guidelines), belgilar ro'yxati: CB09. Manba yo'q bo'lsa build to'xtaydi.
+// Matn Tayanch uchun yozilgan (College Board namunasidan ko'chirilmagan), inglizcha: SAT bo'limi qoidasi.
+// Logo, rasm, brend rangi yo'q.
+import { manbalar } from '../data/manbalar';
+
+for (const id of ['CB08', 'CB09']) {
+  if (!manbalar.some((m) => m.id === id)) throw new Error(`SatEslatma: manbalar.ts da ${id} topilmadi`);
+}
+---
+<footer class="sat-eslatma">
+  <p lang="en">
+    SAT® is a registered trademark and Bluebook™ is a trademark of the College Board.
+    Tayanch is an independent project: the College Board is not affiliated with this site and does not endorse it.
+  </p>
+</footer>
+
+<style>
+  .sat-eslatma {
+    border-top: 1px solid var(--chiziq);
+    padding: var(--b-5) var(--b-4) var(--b-6);
+  }
+  .sat-eslatma p {
+    margin: 0;
+    max-width: 62ch;
+    font-size: var(--matn-kichik);
+    line-height: 1.5;
+    color: var(--matn-sust);
+  }
+  @media (min-width: 1024px) {
+    .sat-eslatma { padding-inline: var(--b-10); }
+  }
+</style>
