@@ -1,7 +1,7 @@
 ---
 // Funksiya grafigi (2D, SVG): to'g'ri chiziq, parabola (uch shakl), ikki chiziq kesishishi.
 // Sudrash: chiziqda (0; b) va (1; m + b) tutqichlari, parabolada uch, kesishishda ikki chiziqning (0; b) tutqichlari.
-// Klaviatura: hamma qiymat slayderlar bilan ham boshqariladi.
+// Klaviatura: hamma qiymat slayderlar bilan ham boshqariladi. Matn inglizcha (CLAUDE.md), koordinatalar (x, y).
 import { darsSavollari } from '../../../../../../data/satDarslar';
 import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
@@ -12,36 +12,36 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
   takrorlashHref={yol('/uz/sat/vosita/takrorlash/')}
   modul="grafik"
   savollar={darsSavollari.grafik}
-  yolBandlari={['Math darslari']}
-  darsTuri="Math darsi"
+  yolBandlari={['Math lessons']}
+  darsTuri="Math lesson"
   imtihon="SAT"
   manbalar={['CB05']}
   tekshirilgan="2026-11-05"
   keyingiTekshiruv="2026-12-05"
-  title="Funksiya grafigi · SAT"
-  description="SAT Math: y = mx + b, parabolaning uch shakli, simmetriya o'qi va ikki tenglama kesishishi interaktiv grafikda. 5 ta mashq."
+  title="Function graphs · SAT"
+  description="SAT Math: y = mx + b, three forms of a parabola, the axis of symmetry and the intersection of two equations on an interactive graph. 5 exercises."
   yonalish="Algebra · Advanced Math"
-  sarlavha="Grafik: tenglama nimani chizadi"
-  lead="Har bir son grafikda biror narsani boshqaradi: m qiyalikni, b chiziq qayerdan o'tishini, h va k parabola uchini. Slayderni suring yoki nuqtani sudrang, tenglama shu zahoti o'zgaradi."
+  sarlavha="Graphs: what an equation draws"
+  lead="Every number controls something on the graph: m controls the slope, b where the line crosses, h and k the vertex of the parabola. Move a slider or drag a point, and the equation changes right away."
   maqsadlar={[
-    "y = mx + b dagi m va b ni grafikdan o'qiy olasiz.",
-    "Parabolaning uch shaklidan uchni, simmetriya o'qini va ildizlarni topasiz.",
-    "Ikki tenglama kesishishini, yechimi yo'q va cheksiz ko'p holatlarni ajratasiz.",
+    "You can read m and b in y = mx + b from a graph.",
+    "You find the vertex, the axis of symmetry and the roots from the three forms of a parabola.",
+    "You tell apart an intersection of two equations, no solution and infinitely many solutions.",
   ]}
   xulosa={[
-    "y = mx + b: m qiyalik (x 1 ga oshganda y qancha o'zgaradi), b y o'qini kesish nuqtasi (0; b).",
-    "a(x − h)² + k: uch (h; k), simmetriya o'qi x = h. a > 0 bo'lsa yuqoriga, a < 0 bo'lsa pastga ochiladi.",
-    "ax² + bx + c da uch x = −b / (2a), y o'qini kesish nuqtasi (0; c).",
-    "Qiyaliklar teng, b har xil: chiziqlar parallel, yechim yo'q. Qiyalik ham, b ham teng: bir xil chiziq, cheksiz ko'p yechim.",
+    "y = mx + b: m is the slope (how much y changes when x increases by 1), and b gives the y-intercept (0, b).",
+    "a(x − h)² + k: the vertex is (h, k), and the axis of symmetry is x = h. If a > 0 it opens upward, if a < 0 it opens downward.",
+    "In ax² + bx + c, the vertex is at x = −b / (2a), and the y-intercept is (0, c).",
+    "Equal slopes, different b: the lines are parallel and there is no solution. Equal slopes and equal b: the same line, infinitely many solutions.",
   ]}
-  keyingi={{ nomi: 'Birlik aylana', href: yol('/uz/sat/qollanma/math/birlik-aylana/') }}
-  tekshirilmagan={["Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan."]}
+  keyingi={{ nomi: 'Unit circle', href: yol('/uz/sat/qollanma/math/birlik-aylana/') }}
+  tekshirilmagan={['The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".']}
 >
   <div slot="sahna">
-    <div class="segment rejim-tanlov" role="group" aria-label="Grafik turi">
-      <button type="button" data-rejim="chiziq" aria-pressed="true">To'g'ri chiziq</button>
+    <div class="segment rejim-tanlov" role="group" aria-label="Graph type">
+      <button type="button" data-rejim="chiziq" aria-pressed="true">Straight line</button>
       <button type="button" data-rejim="parabola" aria-pressed="false">Parabola</button>
-      <button type="button" data-rejim="kesishish" aria-pressed="false">Kesishish</button>
+      <button type="button" data-rejim="kesishish" aria-pressed="false">Intersection</button>
     </div>
     <div class="sahna-quti grafik-quti">
       <svg id="grafik" viewBox="0 0 420 420" role="img" aria-labelledby="grafik-tavsif">
@@ -65,9 +65,9 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
   <div slot="animatsiya">
     <p id="anim-matn"></p>
     <div class="segment">
-      <button type="button" class="katta asosiy" id="anim-boshla">Ko'rsatish</button>
+      <button type="button" class="katta asosiy" id="anim-boshla">Show</button>
     </div>
-    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Tugmani bosing.</span></div>
+    <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Press the button.</span></div>
   </div>
 
   <div slot="formula">
@@ -184,7 +184,7 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
     } else if (h.rejim === 'parabola') {
       e1.setAttribute('d', egriYol((x) => h.a * (x - h.ph) ** 2 + h.pk));
       sim.setAttribute('x1', String(X(h.ph))); sim.setAttribute('x2', String(X(h.ph))); sim.setAttribute('visibility', 'visible');
-      belgi(h.ph, h.pk, `uch ${nuqta(h.ph, h.pk)}`);
+      belgi(h.ph, h.pk, `vertex ${nuqta(h.ph, h.pk)}`);
       const d = -h.pk / h.a;
       if (d >= 0) { const r = Math.sqrt(d); belgi(h.ph - r, 0, '', 'g-ikkinchi'); if (r > 0) belgi(h.ph + r, 0, '', 'g-ikkinchi'); }
     } else {
@@ -209,24 +209,24 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
     const standart = `y = ${had(a, 'x²')}${qosh(B, 'x')}${qosh(C)}`;
     const d = -pk / a;
     let ildiz: string;
-    if (d < 0) ildiz = "Haqiqiy ildiz yo'q: ko'paytuvchilarga ajralmaydi";
+    if (d < 0) ildiz = 'No real roots: it does not factor';
     else if (d === 0) ildiz = `y = ${koef(a)}${kop(ph)}²`;
     else {
       const r = Math.sqrt(d), p = ph - r, q = ph + r;
       const aniq = Math.abs(r * 100 - Math.round(r * 100)) < 1e-9;
-      ildiz = `y = ${koef(a)}${kop(Math.round(p * 100) / 100)}${kop(Math.round(q * 100) / 100)}${aniq ? '' : ' (taqriban)'}`;
+      ildiz = `y = ${koef(a)}${kop(Math.round(p * 100) / 100)}${kop(Math.round(q * 100) / 100)}${aniq ? '' : ' (approximately)'}`;
     }
     return { uch, standart, ildiz, B, C, d };
   }
   function tavsif(): string {
-    if (h.rejim === 'chiziq') return `To'g'ri chiziq ${chiziqTenglama(h.m, h.b)}. Qiyalik ${son(h.m)}, y o'qini ${nuqta(0, h.b)} da kesadi.`;
-    if (h.rejim === 'parabola') { const s = parabolaShakllari(); return `Parabola ${s.uch}. Uch ${nuqta(h.ph, h.pk)}, simmetriya o'qi x = ${son(h.ph)}.`; }
-    return `${chiziqTenglama(h.m1, h.b1)} va ${chiziqTenglama(h.m2, h.b2)}. ${kesishishMatni()}`;
+    if (h.rejim === 'chiziq') return `Straight line ${chiziqTenglama(h.m, h.b)}. Slope ${son(h.m)}, crosses the y-axis at ${nuqta(0, h.b)}.`;
+    if (h.rejim === 'parabola') { const s = parabolaShakllari(); return `Parabola ${s.uch}. Vertex ${nuqta(h.ph, h.pk)}, axis of symmetry x = ${son(h.ph)}.`; }
+    return `${chiziqTenglama(h.m1, h.b1)} and ${chiziqTenglama(h.m2, h.b2)}. ${kesishishMatni()}`;
   }
   function kesishishMatni() {
-    if (h.m1 === h.m2) return h.b1 === h.b2 ? "Bir xil chiziq: cheksiz ko'p yechim." : "Qiyaliklar teng, chiziqlar parallel: yechim yo'q.";
+    if (h.m1 === h.m2) return h.b1 === h.b2 ? 'The same line: infinitely many solutions.' : 'Equal slopes, the lines are parallel: no solution.';
     const x = (h.b2 - h.b1) / (h.m1 - h.m2);
-    return `Kesishish nuqtasi ${nuqta(x, h.m1 * x + h.b1)}.`;
+    return `Intersection point ${nuqta(x, h.m1 * x + h.b1)}.`;
   }
   const elon = kechikibElon($('grafik-tavsif'));
 
@@ -244,27 +244,27 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
     const v = $('vazifa-holat');
     let ok = false;
     if (h.rejim === 'chiziq') {
-      $('grafik-izoh').textContent = "Ko'k nuqtani yuqori-pastga sudrang: b o'zgaradi. Ikkinchi nuqta qiyalikni o'zgartiradi. Kulrang zinapoya: x 1 ga oshganda y m ga o'zgaradi.";
-      karta([['kichik ikkinchi', "To'g'ri chiziq"], ['f-asosiy', 'y = mx + b'], ['f-qiymat', chiziqTenglama(h.m, h.b)], ['kichik ikkinchi', 'm: qiyalik, b: y o\'qini kesish nuqtasi (0; b).']]);
-      qiymatlar([['Qiyalik m', son(h.m)], ["y o'qi bilan", nuqta(0, h.b)], ["x o'qi bilan", h.m === 0 ? (h.b === 0 ? 'butun o\'q' : "yo'q") : nuqta(-h.b / h.m, 0)]]);
-      $('vazifa-matn').innerHTML = "<b>Vazifa.</b> Qiyaligi 2 bo'lgan va (2; 7) nuqtadan o'tadigan chiziqni hosil qiling.";
+      $('grafik-izoh').textContent = 'Drag the blue point up and down: b changes. The second point changes the slope. The gray step: when x increases by 1, y changes by m.';
+      karta([['kichik ikkinchi', 'Straight line'], ['f-asosiy', 'y = mx + b'], ['f-qiymat', chiziqTenglama(h.m, h.b)], ['kichik ikkinchi', 'm: slope, b: y-intercept (0, b).']]);
+      qiymatlar([['Slope m', son(h.m)], ['y-intercept', nuqta(0, h.b)], ['x-intercept', h.m === 0 ? (h.b === 0 ? 'the whole axis' : 'none') : nuqta(-h.b / h.m, 0)]]);
+      $('vazifa-matn').innerHTML = '<b>Task.</b> Make a line with a slope of 2 that passes through the point (2, 7).';
       ok = h.m === 2 && h.b === 3;
-      v.textContent = ok ? "Topildi: y = 2x + 3. Tekshirish: 2 · 2 + 3 = 7." : "Hali emas. Maslahat: 7 = 2 · 2 + b.";
+      v.textContent = ok ? 'Found: y = 2x + 3. Check: 2 · 2 + 3 = 7.' : 'Not yet. Hint: 7 = 2 · 2 + b.';
     } else if (h.rejim === 'parabola') {
       const s = parabolaShakllari();
-      $('grafik-izoh').textContent = "Uchni sudrang: h va k o'zgaradi. Uzuq chiziq: simmetriya o'qi x = h. a ni slayderda o'zgartiring.";
-      karta([['kichik ikkinchi', 'Uch shakli'], ['f-qiymat', s.uch], ['kichik ikkinchi', 'Standart shakl'], ['f-qiymat', s.standart], ['kichik ikkinchi', "Ko'paytuvchilar shakli"], ['f-qiymat', s.ildiz]]);
-      qiymatlar([['Uch', nuqta(h.ph, h.pk)], ["Simmetriya o'qi", `x = ${son(h.ph)}`], ["y o'qi bilan", nuqta(0, s.C)], ['Ochilishi', h.a > 0 ? 'yuqoriga' : 'pastga']]);
-      $('vazifa-matn').innerHTML = "<b>Vazifa.</b> Uchi (−2; 1) bo'lgan va pastga ochiladigan parabolani hosil qiling.";
+      $('grafik-izoh').textContent = 'Drag the vertex: h and k change. The dashed line is the axis of symmetry x = h. Change a with the slider.';
+      karta([['kichik ikkinchi', 'Vertex form'], ['f-qiymat', s.uch], ['kichik ikkinchi', 'Standard form'], ['f-qiymat', s.standart], ['kichik ikkinchi', 'Factored form'], ['f-qiymat', s.ildiz]]);
+      qiymatlar([['Vertex', nuqta(h.ph, h.pk)], ['Axis of symmetry', `x = ${son(h.ph)}`], ['y-intercept', nuqta(0, s.C)], ['Opens', h.a > 0 ? 'upward' : 'downward']]);
+      $('vazifa-matn').innerHTML = '<b>Task.</b> Make a parabola with its vertex at (−2, 1) that opens downward.';
       ok = h.ph === -2 && h.pk === 1 && h.a < 0;
-      v.textContent = ok ? `Topildi: ${s.uch}.` : "Hali emas. Maslahat: uch (h; k), pastga ochilishi uchun a < 0.";
+      v.textContent = ok ? `Found: ${s.uch}.` : 'Not yet. Hint: the vertex is (h, k), and a < 0 makes it open downward.';
     } else {
-      $('grafik-izoh').textContent = "Ikkala chiziqning y o'qidagi nuqtasini sudrang. Ko'k chiziq birinchi, qora uzuq chiziq ikkinchi tenglama.";
-      karta([['kichik ikkinchi', 'Tenglamalar sistemasi'], ['f-qiymat', chiziqTenglama(h.m1, h.b1)], ['f-qiymat', chiziqTenglama(h.m2, h.b2)], ['f-asosiy', h.m1 !== h.m2 ? 'x = (b₂ − b₁) / (m₁ − m₂)' : 'm₁ = m₂'], ['kichik ikkinchi', kesishishMatni()]]);
-      qiymatlar([['Yechimlar soni', h.m1 !== h.m2 ? '1' : h.b1 === h.b2 ? "cheksiz ko'p" : "yo'q"], ['Kesishish', h.m1 !== h.m2 ? nuqta((h.b2 - h.b1) / (h.m1 - h.m2), h.m1 * (h.b2 - h.b1) / (h.m1 - h.m2) + h.b1) : '—']]);
-      $('vazifa-matn').innerHTML = "<b>Vazifa.</b> Ikki chiziq (1; 4) nuqtada kesishsin.";
+      $('grafik-izoh').textContent = 'Drag the point where each line crosses the y-axis. The blue line is the first equation, the black dashed line the second.';
+      karta([['kichik ikkinchi', 'System of equations'], ['f-qiymat', chiziqTenglama(h.m1, h.b1)], ['f-qiymat', chiziqTenglama(h.m2, h.b2)], ['f-asosiy', h.m1 !== h.m2 ? 'x = (b₂ − b₁) / (m₁ − m₂)' : 'm₁ = m₂'], ['kichik ikkinchi', kesishishMatni()]]);
+      qiymatlar([['Number of solutions', h.m1 !== h.m2 ? '1' : h.b1 === h.b2 ? 'infinitely many' : 'none'], ['Intersection', h.m1 !== h.m2 ? nuqta((h.b2 - h.b1) / (h.m1 - h.m2), h.m1 * (h.b2 - h.b1) / (h.m1 - h.m2) + h.b1) : '—']]);
+      $('vazifa-matn').innerHTML = '<b>Task.</b> Make the two lines intersect at the point (1, 4).';
       ok = h.m1 !== h.m2 && h.m1 + h.b1 === 4 && h.m2 + h.b2 === 4;
-      v.textContent = ok ? "Topildi: ikkala chiziq x = 1 da y = 4 beradi." : "Hali emas. Maslahat: har bir chiziq uchun m + b = 4 bo'lsin, qiyaliklar har xil.";
+      v.textContent = ok ? 'Found: both lines give y = 4 at x = 1.' : 'Not yet. Hint: make m + b = 4 for each line, with different slopes.';
     }
     v.dataset.ok = ok ? '1' : '0';
     animMatni();
@@ -272,9 +272,9 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
 
   // ---------- Animatsiya ----------
   const ANIM: Record<Rejim, { matn: string; kalit: keyof typeof h; qiymatlar: number[] }> = {
-    chiziq: { matn: "b o'zgarmaydi, m −3 dan 3 gacha o'sadi: chiziq (0; b) atrofida aylanadi. m > 0 da chiziq ko'tariladi, m < 0 da tushadi, m = 0 da gorizontal.", kalit: 'm', qiymatlar: [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3] },
-    parabola: { matn: "a va k o'zgarmaydi, h −4 dan 4 gacha suriladi: parabola va uning simmetriya o'qi birga yonga siljiydi, shakli o'zgarmaydi.", kalit: 'ph', qiymatlar: [-4, -3, -2, -1, 0, 1, 2, 3, 4] },
-    kesishish: { matn: "Ikkinchi chiziqning qiyaligi birinchisinikiga yaqinlashadi: kesishish nuqtasi uzoqlashadi, qiyaliklar tenglashganda chiziqlar parallel bo'lib, yechim yo'qoladi.", kalit: 'm2', qiymatlar: [-2, -1, 0, 1, 1.5, 2] },
+    chiziq: { matn: 'b stays the same while m grows from −3 to 3: the line turns around (0, b). When m > 0 the line rises, when m < 0 it falls, and when m = 0 it is horizontal.', kalit: 'm', qiymatlar: [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3] },
+    parabola: { matn: 'a and k stay the same while h moves from −4 to 4: the parabola and its axis of symmetry shift sideways together, and the shape does not change.', kalit: 'ph', qiymatlar: [-4, -3, -2, -1, 0, 1, 2, 3, 4] },
+    kesishish: { matn: 'The slope of the second line approaches the slope of the first: the intersection point moves away, and when the slopes become equal the lines are parallel and the solution disappears.', kalit: 'm2', qiymatlar: [-2, -1, 0, 1, 1.5, 2] },
   };
   function animMatni() { $('anim-matn').textContent = ANIM[h.rejim].matn; }
   let animT = 0, animQadam = 0;
@@ -285,7 +285,7 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
       animQadam = (animQadam + 1) % a.qiymatlar.length;
       (h as Record<string, unknown>)[a.kalit] = a.qiymatlar[animQadam]; chiz();
       $('anim-holat').textContent = `${animQadam + 1} / ${a.qiymatlar.length}: ${tavsif()}`;
-      $('anim-boshla').textContent = 'Keyingi holat';
+      $('anim-boshla').textContent = 'Next state';
       return;
     }
     clearInterval(animT); let i = 0;
@@ -299,7 +299,7 @@ import GrafikPanjara from '../../../../../../components/GrafikPanjara.astro';
 
   // ---------- Rejim ----------
   document.querySelectorAll<HTMLButtonElement>('[data-rejim]').forEach((b) => b.addEventListener('click', () => {
-    clearInterval(animT); animQadam = 0; $('anim-boshla').textContent = kamaytir ? 'Keyingi holat' : "Ko'rsatish";
+    clearInterval(animT); animQadam = 0; $('anim-boshla').textContent = kamaytir ? 'Next state' : 'Show';
     h.rejim = b.dataset.rejim as Rejim;
     document.querySelectorAll('[data-rejim]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     slayderlarniQur(); tutqichlarniQur(); chiz();
