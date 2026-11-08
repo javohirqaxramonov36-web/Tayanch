@@ -18,6 +18,8 @@ interface Props { bolim?: BolimSlug }
 const { bolim = 'sat' } = Astro.props;
 const NOMLAR: Record<BolimSlug, string> = { sat: 'SAT', ielts: 'IELTS', 'top-admission': 'Top Admission', eyuf: 'EYUF' };
 const NOM = NOMLAR[bolim];
+// Ko'rinadigan logo nomi: SAT yonida ® (CB08, belgi har sahifada bir marta). aria-label'larda belgisiz.
+const LOGO_NOM = bolim === 'sat' ? 'SAT®' : NOM;
 const joriy = Astro.url.pathname;
 const b = (qism: string) => yol(`/uz/${bolim}/${qism}`);
 // SAT ikonkalari (Tayanch-SAT-dizayn.md, Main ekrani). Qo'llanmalar ikonkasiz, chapdan surilgan.
@@ -51,7 +53,7 @@ const ieltsGuruhlar = [
 <header class="ustki-qator" data-bolim={bolim}>
   <a class="logo" href={b('')}>
     <span class="logo-belgi" aria-hidden="true">T</span>
-    <span class="logo-nom">Tayanch <span class="logo-bolim">{NOM}</span></span>
+    <span class="logo-nom">Tayanch <span class="logo-bolim">{LOGO_NOM}</span></span>
   </a>
   <button
     type="button"
@@ -71,7 +73,7 @@ const ieltsGuruhlar = [
   <div class="yon-bosh">
     <a class="logo" href={b('')}>
       <span class="logo-belgi" aria-hidden="true">T</span>
-      <span class="logo-nom yon-matn">Tayanch <span class="logo-bolim">{NOM}</span></span>
+      <span class="logo-nom yon-matn">Tayanch <span class="logo-bolim">{LOGO_NOM}</span></span>
     </a>
     <button
       type="button"
