@@ -24,6 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # Taqiqlangan fayl yoki kalit qiymati repoda bo'lsa, build va joylash to'xtaydi (docs/kontent-siyosati.md).
+      - name: Repo tekshiruvi
+        run: node scripts/repo-tekshir.mjs
       - uses: withastro/action@v6
 
   deploy:
