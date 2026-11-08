@@ -1,5 +1,5 @@
 ---
-// SAT bo'limining "tez orada" sahifalari. Ro'yxat: src/data/satSahifalar.ts
+// SAT bo'limining "tez orada" sahifalari. Ro'yxat: src/data/satSahifalar.ts. Matn inglizcha (CLAUDE.md).
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import { satSahifalar, satGuruhlar, turiNomi, type SatSahifa } from '../../../data/satSahifalar';
 import { yol } from '../../../lib/yol';
@@ -33,7 +33,7 @@ const KEYINGI = '2026-12-04';
     <div class="bosh">
       <p class="pill-qator">
         <span class="pill">{turiNomi[sahifa.turi]}</span>
-        <span class="pill pill-chiziq">Qoralama</span>
+        <span class="pill pill-chiziq">Draft</span>
       </p>
       <h1 id="sarlavha">{sahifa.nomi}</h1>
       <p class="tavsif">{sahifa.tavsif}</p>
@@ -42,21 +42,21 @@ const KEYINGI = '2026-12-04';
     <div class="tez-orada" role="note">
       <span class="tez-belgi" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg></span>
       <div>
-        <p class="tez-sarlavha">Tez orada</p>
-        <p class="tez-matn">Bu sahifa hali tayyor emas. Hozircha faqat reja bor.</p>
+        <p class="tez-sarlavha">Coming soon</p>
+        <p class="tez-matn">This page is not ready yet. For now there is only a plan.</p>
       </div>
     </div>
 
     <dl class="maydonlar">
-      <div><dt>Til</dt><dd>O'zbekcha</dd></div>
-      <div><dt>Sahifa turi</dt><dd>{turiNomi[sahifa.turi]}</dd></div>
-      <div><dt>Bo'lim</dt><dd>SAT</dd></div>
-      <div><dt>Holat</dt><dd>Qoralama</dd></div>
+      <div><dt>Language</dt><dd>English</dd></div>
+      <div><dt>Page type</dt><dd>{turiNomi[sahifa.turi]}</dd></div>
+      <div><dt>Section</dt><dd>SAT</dd></div>
+      <div><dt>Status</dt><dd>Draft</dd></div>
     </dl>
 
     <p><a class="qaytish" href={yol('/uz/sat/')}>
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-      SAT bo'limiga qaytish</a></p>
+      Back to the SAT section</a></p>
   </section>
 </BolimQobiq>
 

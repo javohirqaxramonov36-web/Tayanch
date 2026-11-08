@@ -3,6 +3,7 @@
 // 1-qavat bosh sahifasida ko'rsatilmaydi.
 import { joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
+import { matn, yolTili } from '../data/umumiyMatn';
 
 interface Props {
   /** Qavat va sahifa nomi orasidagi bandlar: ["Mashq"] */
@@ -15,11 +16,12 @@ const n = joriyQavat(pathname);
 const q = qavatI(n);
 const qavatKirishi = pathname === yol(q.manzil);
 const boshSahifa = n === 1 && qavatKirishi;
+const M = matn[yolTili(pathname)];
 ---
 {!boshSahifa && (
-  <nav class="qavat-yoli" aria-label="Qayerdaman">
+  <nav class="qavat-yoli" aria-label={M.qavatYoli}>
     <ol>
-      <li>{qavatKirishi ? <span>{n}-qavat</span> : <a href={yol(q.manzil)}>{n}-qavat</a>}</li>
+      <li>{qavatKirishi ? <span>{M.qavat(n)}</span> : <a href={yol(q.manzil)}>{M.qavat(n)}</a>}</li>
       {bandlar.map((b) => <li><span>{b}</span></li>)}
       <li><span aria-current="page">{qavatKirishi ? q.nomi : sahifaNomi}</span></li>
     </ol>

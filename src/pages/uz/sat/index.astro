@@ -1,7 +1,7 @@
 ---
 // SAT bo'limi kirishi (T1, 2-tur).
 // Dizayn: Tayanch-SAT-dizayn.md, "Main" (kompyuter) va "Telefon" ekranlari.
-// Matnlar dizayndan. Imtihon tuzilmasi raqamlari: CB03 (College Board, rasmiy).
+// Matnlar dizayndan, inglizcha (SAT bo'limi qoidasi, CLAUDE.md). Imtihon tuzilmasi raqamlari: CB03 (College Board, rasmiy).
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import { satGuruhlar } from '../../../data/satSahifalar';
 import { manbalar } from '../../../data/manbalar';
@@ -11,14 +11,14 @@ import Zina from '../../../components/Zina.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 const qadamlar = [
-  { yorliq: 'TUSHUNISH', nomi: 'Strategiya', tavsif: 'Tayyorgarlikni qayerdan boshlash va qanday rejalashtirish.', havola: "Qo'llanmani ochish", qism: 'qollanma/strategiya/' },
-  { yorliq: 'MASHQ', nomi: 'Test va savol banki', tavsif: "Mavzu bo'yicha qisqa testlar, javobdan keyin darhol izoh.", havola: 'Mashq qilish', qism: 'mashq/test/' },
-  { yorliq: 'TAHLIL', nomi: 'Mening natijalarim', tavsif: "Xatolar ro'yxati, faqat shu brauzerda saqlanadi. Ball hisoblanmaydi.", havola: "Natijalarni ko'rish", qism: 'vosita/natijalar/' },
+  { yorliq: 'UNDERSTAND', nomi: 'Strategy', tavsif: 'Where to start your prep and how to plan it.', havola: 'Open the guide', qism: 'qollanma/strategiya/' },
+  { yorliq: 'PRACTICE', nomi: 'Tests and question bank', tavsif: 'Short tests by topic, with an explanation right after each answer.', havola: 'Start practicing', qism: 'mashq/test/' },
+  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'A list of your mistakes, saved only in this browser. No score is calculated.', havola: 'See your results', qism: 'vosita/natijalar/' },
 ];
 ---
 <BolimQobiq
   title="SAT"
-  description="Digital SAT tayyorgarligi: English (Reading & Writing) va Math. Mustaqil, qimmat kurslarsiz reja."
+  description="Digital SAT prep: English (Reading & Writing) and Math. An independent plan, without expensive courses."
   turi="bolim-kirishi"
   bolim="sat"
   holat="qoralama"
@@ -29,39 +29,39 @@ const qadamlar = [
   <div class="ichki sat-kirish">
     <section class="hero" aria-labelledby="sat-h">
       <div class="hero-matn">
-        <p class="pill-qator"><span class="pill">Qoralama</span><span class="pill-izoh">Bo'lim kirishi</span></p>
-        <h1 id="sat-h">Digital SAT®,<br /><span class="kok">qimmat kurslarsiz.</span></h1>
-        <p class="lead">English (Reading &amp; Writing) va Math bir xil e'tibor bilan. Reja muallifning SAT 1420 natijasiga olib kelgan mustaqil tayyorgarligiga asoslanadi: Desmos va formulalar, vaqtni boshqarish, xatolar tahlili.</p>
-        <p class="lead lead-telefon">English va Math bir xil e'tibor bilan. Muallifning mustaqil tayyorgarligiga asoslangan reja.</p>
+        <p class="pill-qator"><span class="pill">Draft</span><span class="pill-izoh">Section home</span></p>
+        <h1 id="sat-h">Digital SAT®,<br /><span class="kok">without expensive courses.</span></h1>
+        <p class="lead">English (Reading &amp; Writing) and Math, with equal attention. The plan is based on the independent prep that led the author to an SAT score of 1420: Desmos and formulas, time management, mistake analysis.</p>
+        <p class="lead lead-telefon">English and Math, with equal attention. A plan based on the author's independent prep.</p>
         <div class="cta">
           <a class="katta-tugma asosiy" href={sat('mashq/test/')}>
-            Mashq testini boshlash
+            Start a practice test
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
           </a>
-          <a class="katta-tugma ikkinchi" href={sat('qollanma/strategiya/')}>Strategiyani o'qish</a>
+          <a class="katta-tugma ikkinchi" href={sat('qollanma/strategiya/')}>Read the strategy</a>
         </div>
       </div>
 
       <div class="tuzilma" aria-labelledby="tuzilma-h">
-        <h2 id="tuzilma-h" class="ustki-yorliq">Imtihon tuzilmasi</h2>
+        <h2 id="tuzilma-h" class="ustki-yorliq">Test structure</h2>
         <ul>
           <li>
             <span class="tuzilma-belgi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" /></svg></span>
-            <span><strong>Reading &amp; Writing</strong><span class="tuzilma-izoh">2 modul, har biri 32 daqiqa · 54 savol</span></span>
+            <span><strong>Reading &amp; Writing</strong><span class="tuzilma-izoh">2 modules, 32 minutes each · 54 questions</span></span>
           </li>
           <li>
             <span class="tuzilma-belgi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></span>
-            <span><strong>Math</strong><span class="tuzilma-izoh">2 modul, har biri 35 daqiqa · 44 savol</span></span>
+            <span><strong>Math</strong><span class="tuzilma-izoh">2 modules, 35 minutes each · 44 questions</span></span>
           </li>
         </ul>
-        <p class="tuzilma-izoh">Manba: <a href={cb03.havola} rel="noopener">{cb03.tashkilot}</a>, tekshirilgan {cb03.tekshirilganSana}.</p>
+        <p class="tuzilma-izoh">Source: <a href={cb03.havola} rel="noopener">{cb03.tashkilot}</a>, checked {cb03.tekshirilganSana}.</p>
       </div>
     </section>
 
     <section class="yol" aria-labelledby="yol-h">
       <div class="bosh-qator">
-        <h2 id="yol-h">Qayerdan boshlaysiz?</h2>
-        <p class="sust kichik">Uch qadam, istalgan tartibda</p>
+        <h2 id="yol-h">Where will you start?</h2>
+        <p class="sust kichik">Three steps, in any order</p>
       </div>
       <ol class="qadamlar">
         {qadamlar.map((q, i) => (
@@ -81,9 +81,9 @@ const qadamlar = [
     </section>
 
     <section class="sahifalar" aria-labelledby="sahifa-h">
-      <h2 id="sahifa-h">Bo'limdagi barcha sahifalar</h2>
+      <h2 id="sahifa-h">All pages in this section</h2>
       <div class="guruhlar">
-        {satGuruhlar.filter((g) => g.nomi !== 'Mashq').map((g, i) => (
+        {satGuruhlar.filter((g) => g.nomi !== 'Practice').map((g, i) => (
           <div class="guruh">
             <h3 id={`kirish-guruh-${i}`} class="ustki-yorliq">{g.nomi}</h3>
             <ul aria-labelledby={`kirish-guruh-${i}`}>
@@ -91,7 +91,7 @@ const qadamlar = [
                 <li>
                   <a href={sat(s.qism)}>
                     <span class="s-nom">{s.nomi}</span>
-                    {!s.tayyor && <span class="pill pill-kichik">tez orada</span>}
+                    {!s.tayyor && <span class="pill pill-kichik">coming soon</span>}
                   </a>
                 </li>
               ))}
@@ -103,9 +103,9 @@ const qadamlar = [
 
     <Zina />
 
-    <section class="pastki" aria-label="Aloqa va eslatma">
-      <p class="telegram">Telegram kanal <span class="pill pill-kichik">tez orada</span></p>
-      <p class="eslatma">Natija kafolatlanmaydi.</p>
+    <section class="pastki" aria-label="Contact and note">
+      <p class="telegram">Telegram channel <span class="pill pill-kichik">coming soon</span></p>
+      <p class="eslatma">Results are not guaranteed.</p>
     </section>
   </div>
 </BolimQobiq>
