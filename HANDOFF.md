@@ -1,4 +1,4 @@
-# Tayanch: sessiyalar orasida holat (2026-11-06)
+# Tayanch: sessiyalar orasida holat (2026-11-08)
 
 Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://javohirqaxramonov36-web.github.io/Tayanch/uz/
 
@@ -53,7 +53,16 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - **Qorong'i mavzu**: tokenlar `:root[data-mavzu='qorongi']` da. Boshlang'ich holat `prefers-color-scheme` dan, tanlov `localStorage` da, `<head>` dagi inline skript miltillashni oldini oladi.
 - **Faktlar**: faqat `manbalar.ts` dagi `tekshiruvDarajasi: 'rasmiy'` manba bilan. Topshirish yo'lida ID topilmasa yoki rasmiy bo'lmasa build xato beradi.
 - **Namuna ma'lumot** (SAT savollari, so'zlar, savol banki raqamlari, natijalar namunasi) ekranda "Namuna" deb belgilangan. Muallif SAT uchun buni "to'liq qo'lla" deb tasdiqlagan.
-- **Ball, qabul yoki grant ehtimoli hisoblanmaydi.** Login, to'lov va narx yo'q.
+- **Ball, qabul yoki grant ehtimoli hisoblanmaydi.** (Login, to'lov va narx haqidagi eski "yo'q" qarori 2026-11-08 da pastdagi qarorlar bilan almashtirildi.)
+- **Hisob, to'lov, server** (2026-11-08, muallif qarori; ADR: `docs/qarorlar/001-hisob-tolov-server.md`):
+  - **Bitta hisob butun sayt uchun** ("bir bino, bitta kalit"): email va Google bilan login, Supabase Auth. Kirish va profil sahifalari 1-qavatda, `/uz/hisob/`, o'zbekcha. Har qavatga alohida login yo'q.
+  - **To'lov hozircha faqat SAT'da**: inPAY (Click, Payme, UzCard/HUMO). Obuna qavatga bog'lanadi (`bolim` maydoni), SAT obunasi boshqa qavatni ochmaydi. 2, 4, 5-qavatlar hozircha o'zgarmaydi.
+  - **Backend**: Supabase (Auth, Postgres, Edge Functions). GitHub Pages faqat statik joylashtirish bo'lib qoladi. inPAY kassa ma'lumotlarini (merchant_id, bearer token, webhook secret) muallif o'zi Supabase secrets ga qo'yadi.
+  - **Ma'lumot**: hisob bilan kirganda Supabase'da, hisobsiz holatda brauzerda (`tayanch:` kalitlari).
+- **SAT bo'limi tili** (2026-11-08): HAMMA sahifa matni inglizcha (ilova va qo'llanma: yo'l xaritasi, muallif hikoyasi, strategiya, retake). URL va kod nomlari o'zbekcha lotin konventsiyada qoladi. Inglizcha matnni muallif tekshiradi. Muallif qo'llanma tilini ham inglizcha deb tasdiqladi.
+- **Tariflar** (2026-11-08): kvotali freemium, uch tarif Free, Pro, Elite. Kvota va narx raqamlari hali belgilanmagan (uydirma raqam yozilmaydi).
+- **Savollar faqat original** (2026-11-08): AI qoralama yozadi, muallif tekshirib tasdiqlaydi (`verified_by`). College Board materiallari saytga, repoga va bazaga qo'yilmaydi.
+- **Repo yopiladi** (2026-11-08, muallif javobi). Qachon va GitHub Pages yopiq repo bilan qaysi tarifda ishlashi: 5-bo'lim, 11-savol.
 - **Yangi sahifa holati "qoralama"** (`noindex`). "chop-etilgan" ga faqat muallif aytganda o'tkaziladi.
 - **Ish tartibi**: har vazifa yangi branch'da → PR → muallif "merge qil" deganidan keyin merge. `main` ga to'g'ridan-to'g'ri yozilmaydi.
 
@@ -72,15 +81,22 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 8. Telegram kanal manzili hali yo'q (hamma joyda "tez orada").
 9. 2-qavat Top Admission qachon `ochiq` bo'ladi (`bolimlar.ts`) va kirish sahifasi qachon "chop-etilgan" bo'ladi.
 10. Hal qilindi (2026-11-06): PR #17 `tayanch:sat-xato-daftari` ni ishlatmaydi, uning kaliti `tayanch:sat:v1`. Daftarni faqat darslar yozadi, takrorlash sahifasi uni faqat o'qiydi. PR #17 `BolimYon.astro` ni ham o'zgartiradi: PR #18 merge bo'lgani uchun PR #17 da konflikt chiqishi mumkin, u branch'da hal qilinadi.
+11. Repo: muallif "yopiq bo'ladi" dedi (2026-11-08). Ochiq qolgani: qachon yopiladi; GitHub Pages yopiq repodan qaysi GitHub tarifida ishlaydi (tekshirish kerak). Yopilguncha repo ochiq deb ishlanadi.
+12. Hisob ochish uchun minimal yosh: **tasdiqlanmagan** (muallif hali bilmaydi). Raqam qo'yilmaydi; hisob sahifasi qurilishidan oldin hal qilinishi kerak (maxfiylik sahifasi ham shunga bog'liq).
+13. inPAY takroriy (oylik) to'lovni qo'llaydimi: noma'lum. `inpay-php` README'sida takroriy to'lov tilga olinmagan, REST hujjati topilmagan (IP01, IP02). Muallif inPAY'dan so'rashi kerak; javobgacha har oy yangi to'lov (qo'lda uzaytirish) deb rejalanadi.
+14. Qo'llanma tili: hal qilindi (2026-11-08), SAT qo'llanmalari ham inglizcha.
+15. Tariflar: Free kvotasi, Pro va Elite farqi va narxlari hali yo'q.
 
 ## 6. Fayl nomlash qoidalari
 
 - **Manzil**: `/uz/<bolim>/<qism>/<sahifa>/`. Kichik lotin harflar, defis, apostrofsiz (qo'llanma → `qollanma`, Türkiye → `turkiye`). Har manzil `/` bilan tugaydi (`trailingSlash: 'always'`).
-- **Sahifa fayli**: `src/pages/uz/<bolim>/<qism>/<sahifa>/index.astro`. Qismlar: `mashq/`, `vosita/`, `qollanma/`.
+- **Sahifa fayli**: `src/pages/uz/<bolim>/<qism>/<sahifa>/index.astro`. Qismlar: `mashq/`, `vosita/`, `qollanma/`, `hisob/` (2026-11-08).
+  - **Hisob sahifalari**: umumiy kirish va profil 1-qavatda, `src/pages/uz/hisob/<sahifa>/index.astro` (masalan `kirish/`, `profil/`), o'zbekcha. SAT'ga xos tarif va obuna sahifalari `src/pages/uz/sat/hisob/<sahifa>/index.astro` (masalan `tariflar/`), inglizcha. Aniq sahifa nomlari qurilish vazifasida belgilanadi.
+  - **SAT yon paneli**: yangi SAT sahifasi `src/data/satSahifalar.ts` dagi `satGuruhlar` ga `SatSahifa` yozuvi sifatida qo'shiladi (`qism`, `nomi`, `tavsif`, `turi`, `manbalar`, `tekshirilmagan`, `tayyor`). Qurilmagan yozuvlar `src/pages/uz/sat/[...qism].astro` orqali "tez orada" bo'lib chiqadi. Eslatma: `SatTuri` hozir `'mashq' | 'vosita' | 'qollanma'`; `hisob` uchun shu tur kengaytiriladi (kod vazifasi, bu hujjatda emas).
 - **Kod nomlari o'zbekcha**: komponentlar PascalCase (`BolimYon`, `QavatYoli`, `TopshirishYoli`), ma'lumot va funksiyalar camelCase (`qavatlar`, `joriyQavat`, `yollarniTanla`), CSS klasslari kichik harf, defis bilan (`yon-past`, `savol-zinasi`).
 - **Qoliplar**: `Asosiy` (1-qavat va qurilmoqda sahifalari), `BolimQobiq` (yon panelli bo'lim: `bolim="sat" | "ielts"`), `SatFokus` (yon panelsiz mashq ekrani).
 - **Ma'lumot**: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`, `satSahifalar.ts`, `satNamuna.ts`, `ieltsSahifalar.ts`, `topshirishYoli.ts`).
-- **Manba ID**: 2 harf + 2 raqam, tashkilot bo'yicha (CB = College Board, IE = ielts.org, ID = IDP, CA = Common App, UC = UCAS, SH = Stipendium Hungaricum, TB = Türkiye Bursları, CO = Coalition, EY = El-yurt umidi, LX = lex.uz).
+- **Manba ID**: 2 harf + 2 raqam, tashkilot bo'yicha (CB = College Board, IE = ielts.org, ID = IDP, CA = Common App, UC = UCAS, SH = Stipendium Hungaricum, TB = Türkiye Bursları, CO = Coalition, EY = El-yurt umidi, LX = lex.uz, SB = Supabase, IP = inPAY). Google OAuth uchun alohida ID yo'q: Supabase qo'llanmasi SB04.
 - **localStorage**: kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`, `tayanch:sat-dars-progress`, `tayanch:sat-xato-daftari`, `tayanch:sat-takrorlash`, `tayanch:sat-reja`, `tayanch:ielts-dars-progress`, `tayanch:ielts-xato-daftari`, `tayanch:top-admission-dars-progress`, `tayanch:top-admission-xato-daftari`; sessionStorage `tayanch:qavat`). Istisno: `tayanch-topshirish-yoli` (3-ochiq savol).
 - **Dizayn fayllari** repo ildizida: `Tayanch-SAT-dizayn.md`, `Tayanch-IELTS-dizayn.md`. Top Admission maketi faqat Claude Design'da (havola yuqorida).
 - **Branch nomi**: o'zbekcha, defis bilan (`lift-navigatsiya`, `vosita-topshirish-yoli`).
@@ -93,7 +109,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - Har sahifa 390px va 1280px da, yorug' va qorong'i mavzuda ishlashi kerak. Gorizontal scroll yo'q. Telefonda pastki lift kontentni yopmaydi (`body` pastki bo'shlig'i va `scroll-padding-bottom` global.css'da).
 - Har sahifa tepasida Qavat yo'li, qavat kirish sahifasi pastida Zina, oxirida manbalar va tekshiruv bloki (`SahifaOxiri` yoki `ManbaBlok`).
 - Animatsiyalar `prefers-reduced-motion` da o'chadi.
-- Taqiqlar: gradient fon, glassmorphism, qizil ta'kid, uydirma raqam, sharh yoki ism, "kafolat" ("Natija kafolatlanmaydi" inkoridan tashqari), "Official", "100% grant".
+- Taqiqlar: gradient fon, glassmorphism, qizil ta'kid, uydirma raqam, sharh yoki ism, "kafolat" ("Natija kafolatlanmaydi" / SAT'da "Results are not guaranteed" inkoridan tashqari), "Official", "100% grant".
 
 ## 8. Texnik eslatmalar
 

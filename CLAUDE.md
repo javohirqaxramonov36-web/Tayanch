@@ -1,6 +1,6 @@
 # Tayanch: ish qoidalari
 
-Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha.
+Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha. SAT bo'limining (3-qavat) HAMMA sahifa matni inglizcha (ilova va qo'llanma sahifalari); sahifa yo'llari (URL) va kod nomlari o'zbekcha lotin konventsiya bo'yicha qoladi. Inglizcha matnni muallif tekshiradi. Boshqa qavatlar matni o'zbekcha.
 
 ## Joriy holat (2026-11-06)
 Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qarorlar, ochiq savollar, nomlash va texnik eslatmalar.
@@ -10,6 +10,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
   2. Top Admission yon paneli: `BolimYon` ga `bolim="top-admission"` (maket "LiftSidebar"); shundan keyin kirish va vosita `BolimQobiq` ga o'tadi.
 - Interaktiv darslar: 0-bosqich PR #18, SAT Math PR #15, SAT R&W 1–2-modul ("Xatoni toping", "Dalilni belgilang", `DarsQolip` belgilash rejimi) PR #20, R&W 3–4-modul ("O'tish so'zlari", "Lug'at kontekstda") PR #21 da merge qilingan. 2-bosqich SAT Xato daftari va takrorlash (`/uz/sat/vosita/takrorlash/`, kalit `tayanch:sat-takrorlash`) PR #22 da merge qilingan. 3-bosqich IELTS Reading darslari (`/uz/ielts/qollanma/reading/tfng/`, `/sarlavhalar/`, branch `ielts-interaktiv`) PR #23 da merge qilingan. 4-bosqich Top Admission "Ariza zinapoyasi" (`/uz/top-admission/qollanma/ariza-zinapoyasi/`, branch `top-admission-zinapoya`) PR #25 da merge qilingan. Navbatda 5-bosqich EYUF (dizayn yo'q); IELTS va Top Admission takrorlash alohida PR. PR #17 (SAT mashq) alohida, unga tegilmaydi. Standart: `docs/interaktiv-dars-standarti.md` (har yangi dars oldidan o'qiladi), umumiy qolip `DarsQolip`.
 - Boshqa qurilmagan: 5-qavat EYUF (dizayn yo'q).
+- Yangi qaror (2026-11-08): butun sayt uchun bitta hisob (Supabase), to'lov (inPAY) hozircha faqat SAT'da, SAT matni inglizcha, freemium (Free, Pro, Elite). Batafsil: `docs/qarorlar/001-hisob-tolov-server.md`, HANDOFF §4. Hali kod yozilmagan.
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
 
 ## Loyiha
@@ -17,8 +18,13 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
 - Sayt 5 qavatli bino: 1 Navigator, 2 Top Admission, 3 SAT prep, 4 IELTS prep, 5 EYUF prep. Sahifalar `src/pages/uz/<bolim>/`, qolip `BolimQobiq`.
 - Dizayn: `DESIGN.md` (tokenlar, komponentlar, "Taqiqlar" bo'limi). Qiymatlar faqat `src/styles/tokens.css` dan, xom rang/o'lcham yozilmaydi.
 - Ichki havola faqat `yol()` orqali (`src/lib/yol.ts`). Ma'lumotlar: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`).
-- Formalar, to'lov, hisob yo'q. Foydalanuvchi ma'lumoti faqat brauzerda, kalitlar `tayanch:` bilan boshlanadi.
-- Repo ochiq: `grants-qoralama.json`, `inbox/`, `.env`, token va parollarni repoga qo'shma.
+- Hisob butun sayt uchun bitta (bir bino, bitta kalit): login email va Google bilan, Supabase Auth. Kirish va profil sahifalari 1-qavatda (`/uz/hisob/`, o'zbekcha). Har qavatga alohida login yo'q.
+- To'lov va tariflar (Free, Pro, Elite; kvotali freemium) hozircha faqat SAT'da (`/uz/sat/hisob/`, inglizcha), inPAY orqali. Obuna qavatga bog'lanadi (`bolim` maydoni). 2, 4, 5-qavatlarda pullik qism yo'q, ular hozircha o'zgarmaydi.
+- Server: Supabase (Auth, Postgres, Edge Functions). GitHub Pages faqat statik joylashtirish bo'lib qoladi. To'lov holati faqat server (Edge Function, inPAY webhook) orqali yoziladi, brauzer to'lovni "tasdiqlay" olmaydi.
+- Ma'lumot: hisob bilan kirganda Supabase'da (RLS yoqilgan jadvallarda), hisobsiz holatda faqat brauzerda, kalitlar `tayanch:` bilan boshlanadi. Hisob va to'lov formalaridan tashqari formalar yo'q.
+- Kalitlar: brauzerda faqat Supabase ochiq kaliti (publishable/anon) bo'lishi mumkin. service_role/secret kalit, Google client secret, inPAY merchant ma'lumotlari, bearer token va webhook secret faqat Supabase secrets va lokal `.env` da (muallif o'zi qo'yadi). Ularni so'rama, o'qima, repoga, logga yoki javobga yozma.
+- Repo hozir ochiq, muallif qarori bo'yicha yopiladi (2026-11-08, sanasi ochiq savol). Har holda `grants-qoralama.json`, `inbox/`, `.env`, token va parollarni repoga qo'shma.
+- Savollar faqat original: AI qoralama yozadi, muallif tekshirib tasdiqlaydi (`verified_by`). College Board materiallari (PDF, JSON, savol, passage, tushuntirish matni) repoga, bazaga, promptga yoki ekranga qo'yilmaydi.
 - Natija kafolatlanmaydi. Qoida, talab va muddat faqat rasmiy manbadan, manba va sana bilan.
 
 ## Har vazifada tartib (majburiy, men skill nomini yozmasam ham)

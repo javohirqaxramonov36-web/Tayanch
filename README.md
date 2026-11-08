@@ -46,8 +46,12 @@ npm run build    # dist/ ga qurish
 
 - Ichki havolalar faqat `yol()` orqali yoziladi (`src/lib/yol.ts`).
 - Saytda qoida, talab yoki muddat faqat "rasmiy" darajadagi manba bilan chiqadi.
-- Repo ochiq: ichki qoralamalar (`grants-qoralama.json`), `inbox/`, `.env` bu yerga qo'yilmaydi.
-- Foydalanuvchi kiritgan narsa faqat uning brauzerida saqlanadi. Formalar va to'lov yo'q.
+- Ichki qoralamalar (`grants-qoralama.json`), `inbox/`, `.env`, kalit va tokenlar repoga qo'yilmaydi. Repo hozir ochiq, keyin yopiladi.
+- Hisob butun sayt uchun bitta (Supabase Auth: email va Google). To'lov (inPAY) va tariflar (Free, Pro, Elite) hozircha faqat SAT bo'limida. Batafsil: `docs/qarorlar/001-hisob-tolov-server.md`.
+- Hisob bilan kirgan foydalanuvchi ma'lumoti Supabase'da, hisobsiz holatda faqat brauzerda (`tayanch:` kalitlari). Hisob va to'lov formalaridan boshqa forma yo'q.
+- Brauzerda faqat Supabase ochiq (publishable/anon) kaliti bo'lishi mumkin; qolgan hamma kalit Supabase secrets va lokal `.env` da.
+- SAT bo'limi matni inglizcha, URL va kod nomlari o'zbekcha.
+- Savollar faqat original; College Board materiallari saytga qo'yilmaydi.
 - Natija kafolatlanmaydi.
 
 ## Har sahifaning maydonlari (T1)
