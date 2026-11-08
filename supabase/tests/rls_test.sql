@@ -2,6 +2,8 @@
 -- Hammasi bitta tranzaksiyada, oxirida ROLLBACK: bazada hech narsa qolmaydi.
 -- Har tekshiruv o'tsa "OK ..." xabari chiqadi; birortasi o'tmasa "FAIL ..." xatosi bilan to'xtaydi.
 -- Sinov savollari faqat "SINOV" matnli soxta yozuvlar (haqiqiy savol mazmuni emas).
+-- Faqat psql bilan (\set, \gset meta-buyruqlari SQL Editor'da ishlamaydi). Haqiqiy loyihada ishga tushirish:
+-- supabase/README.md, 6-bo'lim (session pooler, parol psql so'raganda kiritiladi).
 \set ON_ERROR_STOP on
 \set QUIET on
 
