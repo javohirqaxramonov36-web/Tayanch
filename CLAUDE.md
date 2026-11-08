@@ -26,6 +26,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
 - Kalitlar: brauzerda faqat Supabase ochiq kaliti (publishable/anon) bo'lishi mumkin. service_role/secret kalit, Google client secret, inPAY merchant ma'lumotlari, bearer token va webhook secret faqat Supabase secrets va lokal `.env` da (muallif o'zi qo'yadi). Ularni so'rama, o'qima, repoga, logga yoki javobga yozma.
 - Repo hozircha ochiq qoladi (2026-11-08, HANDOFF §5 11-savol): pullik kontent va foydalanuvchi ma'lumoti repoga va statik build'ga yozilmaydi, faqat Supabase'da. Har holda `grants-qoralama.json`, `inbox/`, `.env`, token va parollarni repoga qo'shma.
 - Savollar faqat original: AI qoralama yozadi, muallif tekshirib tasdiqlaydi (`verified_by`). College Board materiallari (PDF, JSON, savol, passage, tushuntirish matni) repoga, bazaga, promptga yoki ekranga qo'yilmaydi.
+- Kontent siyosati: `docs/kontent-siyosati.md` (CB10, CB11; "o'zgartirib" qayta yozish va "prediction"/sizdirilgan materiallar ham taqiq); commit oldidan `npm run repo:tekshir`, lokal CB fayllari faqat shaxsiy (`docs/lokal-ish-tartibi.md`).
 - Natija kafolatlanmaydi. Qoida, talab va muddat faqat rasmiy manbadan, manba va sana bilan.
 
 ## Har vazifada tartib (majburiy, men skill nomini yozmasam ham)
