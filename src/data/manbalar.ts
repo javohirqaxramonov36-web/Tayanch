@@ -76,7 +76,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "SAT yon panelidagi tashqi havola. Sahifa sarlavhasi \"The SAT – SAT Suite | College Board\" (2026-11-08, HTTP 200). Havola faqat matn bilan: College Board trademark qoidalariga ko'ra uchinchi tomon saytida logo (acorn) ishlatilmaydi (privacy.collegeboard.org/copyright-trademark/guidelines). Manzilni muallif tasdiqlashi kerak.",
+    izoh: "SAT yon panelidagi tashqi havola. Sahifa sarlavhasi \"The SAT – SAT Suite | College Board\" (2026-11-08, HTTP 200). Havola faqat matn bilan: College Board trademark qoidalariga ko'ra uchinchi tomon saytida logo (acorn) ishlatilmaydi (privacy.collegeboard.org/copyright-trademark/guidelines). Manzilni muallif tasdiqladi (2026-11-08).",
   },
   {
     id: 'IE01',
