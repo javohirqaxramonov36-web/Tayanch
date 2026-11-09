@@ -1,6 +1,6 @@
 # 001. Hisob, to'lov va server
 
-- **Holat**: qabul qilingan (muallif, 2026-11-08). Kod: sxema (PR #38, #57), inPAY to'lovi Edge Function'lari (branch `claude/inpay-tolov-9a605d`, 2026-11-09); sayt sahifalari hali yo'q.
+- **Holat**: qabul qilingan (muallif, 2026-11-08). Kod: sxema (PR #38, #57), inPAY to'lovi Edge Function'lari (PR #62, 2026-11-09); sayt sahifalari hali yo'q.
 - **Almashtiradi**: "Formalar, to'lov, hisob yo'q" va "Foydalanuvchi ma'lumoti faqat brauzerda" qoidalari (CLAUDE.md, HANDOFF §4).
 
 ## Nima uchun
