@@ -1,0 +1,66 @@
+---
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { yol } from '../../../../../lib/yol';
+import '../../../../../styles/ielts.css';
+---
+<BolimQobiq title="Mashq natijalari · IELTS" description="IELTS mashq natijalari va o‘zini tekshirish." turi="vosita" bolim="ielts" holat="chop-etilgan" yol={['Mashq']}>
+  <div class="ichki ielts-sahifa">
+    <header class="ielts-oqim"><h1>Mashq natijalari</h1><p class="ielts-izoh">Tayanch mashqlari. Band taxminiy bo‘lib, test variantiga qarab farq qilishi mumkin.</p></header>
+    <p role="status" data-natija-holat></p>
+    <div class="ielts-oqim" data-natija></div>
+    <section class="ielts-yuza ielts-oqim" data-urinishlar>
+      <h2>Oldingi urinishlar</h2>
+      <p>Mashqni topshirganingizda natija shu yerda ko‘rinadi.</p>
+      <a class="ielts-havola" href={yol('/uz/ielts/mashq/')}>Mashqlarga qaytish</a>
+    </section>
+    <details class="ielts-yuza ielts-ochiladigan">
+      <summary>Taxminiy band manbasi</summary>
+      <div class="ielts-ochiladigan-ichki">
+        <p>40 savollik mashqlarda IDP IELTS e’lon qilgan taxminiy band jadvali ishlatiladi.</p>
+        <a class="ielts-havola" href="https://ielts.idp.com/thailand/results/how-ielts-is-marked">IDP IELTS band jadvali</a>
+      </div>
+    </details>
+  </div>
+</BolimQobiq>
+<script>
+  import { el, havola, top } from '../../../../../lib/ielts/dom';
+  import { modulNomi, type BallTest } from '../../../../../lib/ielts/test';
+  import { mezonniYoz, urinishlar } from '../../../../../lib/ielts/storage';
+  import { ochiqModulChiz } from '../../../../../lib/ielts/yozishGapirish';
+  import { natijaChiz } from '../../../../../lib/ielts/natija';
+  import { testniYukla } from '../../../../../lib/ielts/testEkrani';
+  import { natijaYoli } from '../../../../../lib/ielts/yollar';
+
+  const id = new URLSearchParams(location.search).get('urinish');
+  const barchasi = urinishlar().filter((u) => u.topshirilgan && !u.qayta);
+  const tarix = top(document, '[data-urinishlar]');
+  if (barchasi.length) {
+    const royxat = el('ul', '', 'ielts-qatorlar');
+    barchasi.forEach((u) => {
+      const li = el('li');
+      const sana = new Intl.DateTimeFormat('uz', { dateStyle: 'short', timeStyle: 'short' }).format(u.topshirilgan);
+      const nom = u.test === 'namuna' ? 'Namuna' : 'Sinov testi ' + u.test.slice(-2);
+      const a = havola(`${modulNomi[u.modul]} · ${nom} · ${sana}`, natijaYoli(u.id));
+      if (u.id === id) a.setAttribute('aria-current', 'page');
+      li.append(a);
+      royxat.append(li);
+    });
+    tarix.replaceChildren(el('h2', 'Oldingi urinishlar'), royxat);
+  }
+  if (id) {
+    const u = barchasi.find((attempt) => attempt.id === id);
+    const holat = top(document, '[data-natija-holat]');
+    if (!u) holat.textContent = 'Bu urinish shu brauzerda topilmadi.';
+    else {
+      holat.textContent = 'Natija yuklanmoqda…';
+      void testniYukla(u.modul, u.test).then((test) => {
+        holat.textContent = '';
+        const root = top(document, '[data-natija]');
+        if (test.module === 'writing' || test.module === 'speaking') {
+          let urinish = u;
+          ochiqModulChiz(root, test, () => urinish, (amal) => (urinish = mezonniYoz(urinish, amal)), true);
+        } else natijaChiz(root, test as BallTest, u);
+      }).catch(() => { holat.textContent = 'Test fayli topilmadi. Natijani ochib bo‘lmadi.'; });
+    }
+  }
+</script>

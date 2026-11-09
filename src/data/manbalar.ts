@@ -151,6 +151,15 @@ export const manbalar: Manba[] = [
     izoh: "\"Free Practice tests\": Listening, Reading, Writing familiarisation testlari va Speaking Part 1.",
   },
   {
+    id: 'ID02',
+    nomi: 'How is the IELTS test marked? (Listening va Academic Reading)',
+    tashkilot: 'IDP IELTS',
+    havola: 'https://ielts.idp.com/thailand/results/how-ielts-is-marked',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "Listening va Academic Reading uchun 40 javobdan taxminiy yarim band jadvali. Jadval 4 dan 9 gacha bo‘lgan bandlarni beradi, variantlar bo‘yicha chegaralar farq qilishi mumkin.",
+  },
+  {
     id: 'CA01',
     nomi: 'Understanding application fees & fee waivers (2026-yil sentabr)',
     tashkilot: 'Common App',

@@ -1,0 +1,100 @@
+---
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { turNomi } from '../../../../../lib/ielts/test';
+import { yol } from '../../../../../lib/yol';
+import '../../../../../styles/ielts.css';
+---
+<BolimQobiq title="Xato daftari · IELTS" description="Dars va test xatolarini saqlash va qayta ishlash." turi="vosita" bolim="ielts" holat="chop-etilgan" yol={['Mashq']}>
+  <div class="ichki ielts-sahifa">
+    <header class="ielts-oqim">
+      <h1>Xato daftari</h1>
+      <p class="ielts-izoh">Dars va testdagi xatolarni qayta ishlang.</p>
+    </header>
+    <section class="ielts-yuza ielts-oqim">
+      <h2 class="ielts-kichik-sarlavha">Xatolarni saralash</h2>
+      <div class="ielts-ish-tor">
+        <div><label for="daftar-modul">Bo‘lim</label>
+          <select class="ielts-maydon" id="daftar-modul">
+            <option value="">Barcha bo‘limlar</option>
+            <option value="reading" lang="en">Reading</option>
+            <option value="listening" lang="en">Listening</option>
+          </select>
+        </div>
+        <div><label for="daftar-tur">Savol turi</label>
+          <select class="ielts-maydon" id="daftar-tur">
+            <option value="">Barcha turlar</option>
+            {Object.entries(turNomi).map(([id, nom]) => <option value={id} lang="en">{nom}</option>)}
+          </select>
+        </div>
+      </div>
+    </section>
+    <section class="ielts-yuza ielts-oqim">
+      <div class="ielts-satr ielts-satr-oraliq">
+        <h2 class="ielts-kichik-sarlavha">Saqlangan xatolar</h2>
+        <span class="yorliq" role="status" data-daftar-soni>0 ta</span>
+      </div>
+      <div class="ielts-oqim" data-daftar-royxat>
+        <p>Saqlangan xato yo‘q. Test natijasidan savollarni daftarga qo‘shing.</p>
+      </div>
+    </section>
+    <a class="ielts-havola" href={yol('/uz/ielts/mashq/')}>Mashqlarga qaytish</a>
+  </div>
+</BolimQobiq>
+<script>
+  import { el, havola, top } from '../../../../../lib/ielts/dom';
+  import { darsXatolari, testXatolari } from '../../../../../lib/ielts/storage';
+  import { modulNomi, turNomi, type SavolTuri } from '../../../../../lib/ielts/test';
+  import { modulYoli } from '../../../../../lib/ielts/yollar';
+  import { yol } from '../../../../../lib/yol';
+
+  const modul = top<HTMLSelectElement>(document, '#daftar-modul');
+  const tur = top<HTMLSelectElement>(document, '#daftar-tur');
+  const soni = top(document, '[data-daftar-soni]');
+  const royal = top(document, '[data-daftar-royxat]');
+  const darslar = {
+    'ir-tfng': { tur: 'tfng', qism: 'tfng' },
+    'ir-sarlavha': { tur: 'matching-headings', qism: 'sarlavhalar' },
+  } as const;
+  const entries = [
+    ...testXatolari().map((x) => ({
+      modul: x.modul, tur: x.tur, matn: x.matn, manba: x.test === 'namuna' ? 'Namuna testi' : 'Sinov testi ' + x.test.slice(-2),
+      href: modulYoli(x.modul, x.test, x.savol),
+    })),
+    ...darsXatolari().flatMap((x) => {
+      const dars = darslar[x.modul as keyof typeof darslar];
+      if (!dars) return [];
+      return [{
+        modul: 'reading' as const, tur: dars.tur, matn: x.tanlangan, manba: 'Reading darsi',
+        href: yol(`/uz/ielts/qollanma/reading/${dars.qism}/`),
+      }];
+    }),
+  ];
+
+  function chiz() {
+    const filtered = entries.filter((x) => (!modul.value || x.modul === modul.value) && (!tur.value || x.tur === tur.value));
+    soni.textContent = filtered.length + ' ta';
+    if (!filtered.length) {
+      royal.replaceChildren(el('p', entries.length ? 'Bu filtrlarga mos xato topilmadi.' : 'Saqlangan xato yo‘q. Test natijasidan savollarni daftarga qo‘shing.'));
+      return;
+    }
+    const list = el('ul', '', 'ielts-qatorlar');
+    filtered.forEach((x) => {
+      const li = el('li', '', 'ielts-oqim');
+      const meta = el('p', `${modulNomi[x.modul]} · ${x.manba}`, 'ielts-izoh');
+      const nom = el('h3', turNomi[x.tur as SavolTuri]);
+      nom.lang = 'en';
+      const savol = el('p', x.matn);
+      savol.lang = 'en';
+      li.append(meta, nom, savol, havola('Qayta ishlash', x.href, 'tugma tugma-ikkinchi'));
+      list.append(li);
+    });
+    royal.replaceChildren(list);
+  }
+  modul.addEventListener('change', chiz);
+  tur.addEventListener('change', chiz);
+  chiz();
+</script>
+<style>
+  [data-daftar-royxat] li { gap: var(--space-2); padding-block: var(--space-4); }
+  [data-daftar-royxat] .tugma { justify-self: start; }
+</style>

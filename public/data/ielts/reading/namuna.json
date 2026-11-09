@@ -1,0 +1,222 @@
+{
+  "id": "namuna",
+  "module": "reading",
+  "title": "Reading engine sample: Rainwater at the garden shed",
+  "durationSeconds": 480,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "Rainwater at the garden shed",
+      "paragraphs": [
+        "Rain barrels on the garden shed collect water that would otherwise run straight into the drain. The first flow from the roof can carry dust and leaves. The garden team diverts that first flow into a separate container and stores the cleaner water that follows. A mesh cover keeps insects out of the barrel. The stored water is used for watering, while drinking water comes from the tap inside the shed.",
+        "A full barrel can overflow during a storm. The team connects the overflow pipe to a shallow planted hollow rather than to the path. The hollow holds water temporarily while it soaks into the soil. Plants in the hollow tolerate both short wet periods and dry weather. In the team's view, the barrel and the hollow work best as a pair, because they handle different amounts of water.",
+        "The first design had no way to show the level inside the barrel. A transparent tube beside the barrel solved that problem. Volunteers read the height of the water in the tube without lifting the lid. The team argues that this simple indicator is more useful than an electronic sensor at this site, where battery replacement would add another job."
+      ],
+      "questions": [
+        {
+          "id": "namuna-01",
+          "type": "tfng",
+          "text": "The first water from the roof goes straight into the storage barrel.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "The garden team diverts that first flow into a separate container and stores the cleaner water that follows."
+            }
+          ],
+          "explanation_uz": "Dastlabki oqim boshqa idishga yo‘naltiriladi. Keyingi suv bochkaga yig‘iladi.",
+          "explanation_en": "The first flow is diverted. The water that follows is stored.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "False"
+        },
+        {
+          "id": "namuna-02",
+          "type": "tfng",
+          "text": "Volunteers tested the acidity of the collected rainwater.",
+          "evidence": [
+            {
+              "ref": "A–C (whole passage)",
+              "quote": ""
+            }
+          ],
+          "explanation_uz": "Matnda suvning ishlatilishi va sathini kuzatish bor, kislotalik o‘lchovi haqida ma’lumot berilmagan.",
+          "explanation_en": "The passage describes water use and level monitoring. It does not mention acidity testing.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "Not Given"
+        },
+        {
+          "id": "namuna-03",
+          "type": "ynng",
+          "text": "The garden team believes the barrel and the planted hollow should be used together.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "In the team's view, the barrel and the hollow work best as a pair, because they handle different amounts of water."
+            }
+          ],
+          "explanation_uz": "Jamoaning fikricha, ikkala vosita turli miqdordagi suvni boshqaradi va birga samaraliroq ishlaydi.",
+          "explanation_en": "The team explicitly favours using the two structures as a pair.",
+          "difficulty": 1,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "Yes"
+        },
+        {
+          "id": "namuna-04",
+          "type": "choice-single",
+          "text": "What keeps insects out of the barrel?",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "A mesh cover keeps insects out of the barrel."
+            }
+          ],
+          "explanation_uz": "Hasharotlar kirishiga to‘r qopqoq to‘sqinlik qiladi.",
+          "explanation_en": "The cover is the barrier mentioned in paragraph A.",
+          "difficulty": 1,
+          "options": [
+            "A mesh cover",
+            "A planted hollow",
+            "A transparent tube"
+          ],
+          "correct": "A mesh cover"
+        },
+        {
+          "id": "namuna-05",
+          "type": "choice-multiple",
+          "text": "Which TWO features help volunteers deal with the water after it reaches the storage barrel?",
+          "evidence": [
+            {
+              "ref": "B–C",
+              "quote": "The team connects the overflow pipe to a shallow planted hollow rather than to the path."
+            },
+            {
+              "ref": "C",
+              "quote": "A transparent tube beside the barrel solved that problem."
+            }
+          ],
+          "explanation_uz": "Quvur ortiqcha suvni chiqaradi, shaffof naycha sathni ko‘rsatadi. Birinchi oqimni ajratish esa suv bochkaga tushishidan oldin sodir bo‘ladi.",
+          "explanation_en": "The pipe handles excess stored water and the tube shows its level. Diverting the first flow happens before storage.",
+          "difficulty": 1,
+          "options": [
+            "A separate first-flow container",
+            "An overflow pipe",
+            "A transparent tube",
+            "An electronic sensor"
+          ],
+          "correct": [
+            "An overflow pipe",
+            "A transparent tube"
+          ]
+        },
+        {
+          "id": "namuna-06",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph C.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "Volunteers read the height of the water in the tube without lifting the lid."
+            }
+          ],
+          "explanation_uz": "C xatboshi suv sathini bochkani ochmay turib ko‘rishga qaratilgan.",
+          "explanation_en": "The paragraph describes the need for a water-level indicator and the solution.",
+          "difficulty": 1,
+          "options": [
+            "Choosing plants for wet soil",
+            "A visible water-level indicator",
+            "Making stored water safe to drink"
+          ],
+          "correct": "A visible water-level indicator"
+        },
+        {
+          "id": "namuna-07",
+          "type": "matching-information",
+          "text": "Which paragraph describes where excess water goes?",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "The team connects the overflow pipe to a shallow planted hollow rather than to the path."
+            }
+          ],
+          "explanation_uz": "Ortiqcha suvning qayerga yuborilishi B xatboshida berilgan.",
+          "explanation_en": "Paragraph B gives the destination of the overflow.",
+          "difficulty": 1,
+          "options": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": "B"
+        },
+        {
+          "id": "namuna-08",
+          "type": "sentence-completion",
+          "text": "Drinking water comes from the ___ inside the shed.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "The stored water is used for watering, while drinking water comes from the tap inside the shed."
+            }
+          ],
+          "explanation_uz": "Ichimlik suvi krandan olinadi.",
+          "explanation_en": "The passage identifies the tap as the source.",
+          "difficulty": 1,
+          "accepted": [
+            "tap"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "namuna-09",
+          "type": "summary-completion",
+          "text": "In a storm, the pipe directs extra water away from the ___ and into the planted hollow.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "The team connects the overflow pipe to a shallow planted hollow rather than to the path."
+            }
+          ],
+          "explanation_uz": "Suv yo‘lakka emas, o‘simlikli chuqurchaga yo‘naltiriladi.",
+          "explanation_en": "The planted hollow is used instead of the path.",
+          "difficulty": 1,
+          "accepted": [
+            "path"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "namuna-10",
+          "type": "short-answer",
+          "text": "What would an electronic sensor need the team to replace?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "The team argues that this simple indicator is more useful than an electronic sensor at this site, where battery replacement would add another job."
+            }
+          ],
+          "explanation_uz": "Matn batareyani almashtirish qo‘shimcha ish bo‘lishini aytadi.",
+          "explanation_en": "Battery replacement is the extra job mentioned.",
+          "difficulty": 1,
+          "accepted": [
+            "batteries",
+            "battery"
+          ],
+          "maxWords": 1
+        }
+      ]
+    }
+  ]
+}

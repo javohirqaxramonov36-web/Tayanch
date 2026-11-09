@@ -19,7 +19,7 @@ const { nom, tavsif, vaqt } = Astro.props;
 <!doctype html>
 <html lang="uz" data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
-    <BoshQism title={`${nom} · IELTS`} description={tavsif} holat="qoralama" />
+    <BoshQism title={`${nom} · IELTS`} description={tavsif} holat="chop-etilgan" />
   </head>
   <body class="ielts-fokus">
     <a class="otish" href="#asosiy">{matn.uz.otish}</a>
@@ -33,19 +33,15 @@ const { nom, tavsif, vaqt } = Astro.props;
           <h1 lang="en">{nom}</h1>
         </div>
         {vaqt && (
-          <div class="ielts-soat" aria-label={`Qolgan vaqt, namuna: ${vaqt}`}>
+          <div class="ielts-soat" role="timer" aria-label="Qolgan vaqt">
             <Belgi nom="vaqt" />
-            <span>{vaqt}</span>
+            <span data-test-vaqt>{vaqt}</span>
           </div>
         )}
         <Lift variant="fokus" />
       </div>
     </header>
     <main class="ielts-test-kontent" id="asosiy" tabindex="-1">
-      <div class="ielts-namuna-qator">
-        <span class="yorliq">Namuna</span>
-        <p>Bu ekranda mashq interfeysini ko‘rishingiz mumkin.</p>
-      </div>
       <slot />
     </main>
     <Lift variant="pastki" />

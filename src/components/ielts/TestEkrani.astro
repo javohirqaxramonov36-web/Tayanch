@@ -1,0 +1,95 @@
+---
+import IeltsFokus from '../../layouts/IeltsFokus.astro';
+import { katalog } from '../../data/ielts/katalog';
+import { ballModulmi, modulNomi, type Modul } from '../../lib/ielts/test';
+import { modulYoli } from '../../lib/ielts/yollar';
+interface Props { modul: Modul }
+const { modul } = Astro.props;
+const testlar = katalog([modul]);
+---
+<IeltsFokus nom={modulNomi[modul]} tavsif={`IELTS Academic ${modulNomi[modul]} mashqlari.`} vaqt={modul === 'speaking' ? undefined : '––:––'}>
+  <div class="ielts-oqim" data-ielts-test={modul}>
+    <section class="ielts-yuza ielts-oqim" data-tanlov>
+      <h2>Tayanch mashqlari</h2>
+      <p class="ielts-izoh">IELTS Academic formatidagi original mashqlar. Kontent muallif tekshiruvi navbatida.</p>
+      {testlar.length ? (
+        <ul class="ielts-qatorlar">
+          {testlar.map((test) => <li><a class="ielts-havola" href={modulYoli(modul, test.id)}><span lang="en">{test.title}</span></a></li>)}
+        </ul>
+      ) : <p>Bu bo‘lim uchun testlar tayyorlanmoqda.</p>}
+    </section>
+    <section class="ielts-yuza ielts-oqim" data-boshlash hidden>
+      <h2 data-test-nom tabindex="-1"></h2>
+      <p data-test-izoh></p>
+      <div class="ielts-amallar"><button class="tugma tugma-asosiy" type="button" data-start>Mashqni boshlash</button></div>
+    </section>
+    <p class="ielts-izoh" role="status" data-holat></p>
+    <div class="ielts-oqim ielts-ish" data-ish hidden>
+      {ballModulmi(modul) ? (
+        <>
+          <div class="ielts-satr ielts-satr-oraliq">
+            <div class="ielts-satr" data-qismlar></div>
+            <p class="ielts-izoh" data-hisob></p>
+          </div>
+          {modul === 'listening' && <section class="ielts-yuza ielts-oqim" data-audio></section>}
+          <div class:list={{ 'ielts-ish-tor': modul === 'reading', 'ielts-oqim': modul !== 'reading' }}>
+            {modul === 'reading' && (
+              <section class="ielts-yuza ielts-oqim" aria-labelledby="parcha-h">
+                <div class="ielts-satr ielts-satr-oraliq">
+                  <h2 id="parcha-h" class="ielts-kichik-sarlavha">O‘qish matni</h2>
+                  <a class="ielts-havola" href="#savol-joyi">Savolga o‘tish</a>
+                </div>
+                <div class="ielts-amallar">
+                  <button class="tugma tugma-ikkinchi" data-ajrat type="button">Matnni ajratish</button>
+                  <button class="tugma tugma-ikkinchi" data-ajrat-ochir type="button">Ajratmalarni tozalash</button>
+                </div>
+                <article class="ielts-oqim ielts-parcha" data-parcha lang="en"></article>
+                <details class="ielts-yuza ielts-ochiladigan">
+                  <summary>Eslatma</summary>
+                  <div class="ielts-ochiladigan-ichki ielts-oqim">
+                    <label for="ielts-eslatma">Eslatma matni</label>
+                    <textarea class="ielts-maydon" id="ielts-eslatma" rows="3" maxlength="4000" data-eslatma></textarea>
+                  </div>
+                </details>
+              </section>
+            )}
+            <section class="ielts-yuza ielts-oqim" id="savol-joyi" aria-labelledby="savol-bosh" tabindex="-1">
+              <div class="ielts-satr ielts-satr-oraliq">
+                <h2 class="ielts-kichik-sarlavha" id="savol-bosh">Savol</h2>
+                <button class="tugma tugma-ikkinchi" type="button" data-bayroq aria-pressed="false">Bayroq qo‘yish</button>
+              </div>
+              <div class="ielts-oqim" data-savol></div>
+              <div class="ielts-amallar">
+                <button class="tugma tugma-ikkinchi" type="button" data-oldin>Oldingi</button>
+                <button class="tugma tugma-ikkinchi" type="button" data-keyin>Keyingi</button>
+              </div>
+            </section>
+          </div>
+          <nav class="ielts-yuza ielts-oqim" aria-labelledby="xarita-h">
+            <h2 class="ielts-kichik-sarlavha" id="xarita-h">Savollar xaritasi</h2>
+            <div class="ielts-satr" data-xarita></div>
+            <p class="ielts-izoh">✓ Javob berilgan · ⚑ Bayroq · Ajratilgan katak joriy savolni bildiradi.</p>
+          </nav>
+        </>
+      ) : <div data-ochiq-modul></div>}
+      {modul !== 'speaking' && (
+        <div class="ielts-amallar"><button class="tugma tugma-asosiy" type="button" data-topshir>Mashqni topshirish</button></div>
+      )}
+    </div>
+    <div class="ielts-oqim" data-joriy-natija hidden></div>
+    <dialog class="ielts-modal" data-tasdiq aria-labelledby="tasdiq-h">
+      <h2 class="ielts-kichik-sarlavha" id="tasdiq-h">Mashqni yakunlaysizmi?</h2>
+      <p data-tasdiq-matni></p>
+      <form method="dialog" class="ielts-amallar">
+        <button class="tugma tugma-ikkinchi" autofocus>Mashqqa qaytish</button>
+        <button class="tugma tugma-asosiy" type="button" data-yakunla>Topshirish</button>
+      </form>
+    </dialog>
+    <noscript>Interaktiv mashqni ishlatish uchun brauzerda JavaScript’ni yoqing.</noscript>
+  </div>
+</IeltsFokus>
+<script>
+  import { ishgaTushir } from '../../lib/ielts/testEkrani';
+  const root = document.querySelector<HTMLElement>('[data-ielts-test]');
+  if (root) void ishgaTushir(root);
+</script>
