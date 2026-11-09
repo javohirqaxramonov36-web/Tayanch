@@ -261,12 +261,12 @@ export const manbalar: Manba[] = [
   },
   {
     id: 'IP01',
-    nomi: 'inpayuz/inpay-php (rasmiy PHP SDK)',
+    nomi: 'inpayuz/inpay-php (rasmiy PHP SDK, API v1)',
     tashkilot: 'inPAY',
     havola: 'https://packagist.org/packages/inpayuz/inpay-php',
     tekshiruvDarajasi: 'rasmiy-parcha',
-    tekshirilganSana: '2026-11-08',
-    izoh: "README: bitta inPAY shartnomasi orqali Click, Payme, UzCard/HUMO; so'rovlarda merchant_id va bearer_token; payment.success webhook'i callback_url ga, X-InPAY-Signature (HMAC-SHA256) imzosi webhook_secret bilan tekshiriladi; handler idempotent bo'lishi tavsiya etilgan. Takroriy to'lov tilga olinmagan. Rasmiy REST hujjati topilmagan: tekshirilmoqda.",
+    tekshirilganSana: '2026-11-09',
+    izoh: "API v1 uchun SDK (GitHub: inpayuz/inpay-php, inpay-js, inpay-python, 2026-07-12). README: bitta inPAY shartnomasi orqali Click, Payme, UzCard/HUMO; webhook X-InPAY-Signature (HMAC-SHA256). Bu imzo v1 REST hujjatida (IP04) yo'q, shuning uchun Tayanch v2 (IP03) ni ishlatadi.",
   },
   {
     id: 'IP02',
@@ -276,6 +276,24 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-08',
     izoh: "Tekshirilmoqda: sahifa 2026-11-08 da bu mashinadan to'liq ochilmadi. REST hujjati topilmagan.",
+  },
+  {
+    id: 'IP03',
+    nomi: 'inPAY API v2: hujjatlar',
+    tashkilot: 'inPAY',
+    havola: 'https://inpay.uz/api/v2/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "Tayanch ishlatadigan API. POST /payments/ (summa butun so'm, kamida 1000; Idempotency-Key 24 soat), checkout_url. Kalitlar sk_test_ (sinov, simulyator va test kartalar) va sk_live_; v1 kaliti v2'da ishlamaydi. Webhook: payment.succeeded/failed/canceled va subscription.*, X-Inpay-Signature t=…,v1=… = HMAC-SHA256(\"{t}.{xom tana}\", whsec_…), 5 daqiqa; 2xx bo'lmasa 8 martagacha qayta yuboriladi, takror kelishi mumkin (evt_ id). Obunalar (avto to'lov) bo'limi bor. return_url/webhook_url domeni kassaga biriktirilgan yoki oq ro'yxatda bo'lishi kerak.",
+  },
+  {
+    id: 'IP04',
+    nomi: 'inPAY REST API v1: hujjatlar',
+    tashkilot: 'inPAY',
+    havola: 'https://inpay.uz/api/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "GET /authorization/ (merchant_id, merchant_token) 24 soatlik bearer token, POST /create/, GET /transactions/. Webhook tanasi (amount, status, order_id, transaction_id, created_at) imzosiz tavsiflangan; sinov rejimi hujjatlanmagan. Tayanch ishlatmaydi.",
   },
 ];
 

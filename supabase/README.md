@@ -11,6 +11,8 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | Fayl | Nima |
 | --- | --- |
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
+| `migrations/20261109000010_tolov_inpay.sql` | To'lov SQL funksiyalari (`payment_create`, `payment_set_invoice`, `payment_apply_event`), faqat service_role. Jadvallarga tegmaydi. 10-bo'lim. |
+| `functions/tolov-yaratish/`, `functions/inpay-webhook/` | Edge Function'lar: inPAY to'lovi va webhook (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
 | `tests/loyiha_tekshir.sql` | Loyiha holatini tekshirish, **faqat o'qiydi**: RLS, RPC va ularning huquqlari, jadval huquqlari lokal sinov bilan bir xilligi, bucket, trigger, SPR, sinov qoldig'i. SQL Editor'da ham, `psql` da ham ishlaydi. |
@@ -150,7 +152,7 @@ Dashboard'da ko'z bilan: Table Editor'da "RLS enabled", Storage'da bucket "Publi
 | `service_role` / secret kalit | Faqat Supabase Edge Functions muhiti (avtomatik) va lokal `supabase/functions/.env` |
 | Google client secret | Dashboard → Authentication → Providers → Google |
 | Baza paroli | Parol menejeri; CLI yoki `psql` so'raganda terminalga |
-| inPAY `merchant_id`, `bearer_token`, `webhook_secret` | `supabase secrets set ...` (SB02) va lokal `supabase/functions/.env` |
+| inPAY `INPAY_SECRET_KEY` (`sk_test_…` / `sk_live_…`), `INPAY_WEBHOOK_SECRET` (`whsec_…`) | Dashboard → Edge Functions → Secrets (SB02), muallif o'zi qo'yadi. Merchant ID v2'da kerak emas (10-bo'lim) |
 
 `.env` fayllari va `supabase/.temp/` `.gitignore` da. Kalit oshkor bo'lsa: darhol rotate.
 
@@ -225,3 +227,67 @@ select public.admin_hide_question('<external_id>', 'sabab', 'muallif');
 ## 9. Savol qo'shish
 
 Savollar migratsiyaga yozilmaydi. Ular alohida (keyingi vazifa) service role bilan `questions` ga yuklanadi: `status = 'draft'`, muallif tekshirgach `verified` va `verified_by`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+
+## 10. To'lov: inPAY Edge Function'lari
+
+inPAY **API v2** (IP03, 2026-11-09). v1 (IP04) ishlatilmaydi: uning hujjatida webhook imzosi va sinov rejimi yo'q. Oqim va holatlar: `docs/ma'lumotlar-modeli.md`, "To'lov".
+
+```
+brauzer (hisobga kirgan) ── POST tolov-yaratish {"plan": "pro"} ─> payment_create (narx va muddat plans dan) ─> payments: created
+                                                                ─> inPAY POST /payments/ (Idempotency-Key = payment id)
+                                                                ─> payment_set_invoice ─> payments: pending, brauzerga checkout_url
+inPAY ── POST inpay-webhook (X-Inpay-Signature) ─> imzo, 5 daqiqa ─> payment_apply_event (bitta tranzaksiya):
+           payment_events (evt_ id unique) ─> summa, UZS, livemode, metadata.payment_id ─> payments: paid ─> subscriptions ─> audit_log
+```
+
+- **Brauzer to'lovni tasdiqlay olmaydi**: `paid` va obunani faqat imzosi tekshirilgan webhook yozadi. `return_url` (`/uz/sat/hisob/tolov/?tolov=<id>`, sahifa hali yo'q) faqat `payments.status` ni o'qiydi.
+- **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. Hozir ikkalasi `null` va `pro`/`elite` faol emas (P19), shuning uchun `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
+- **Obuna muddati**: to'lov yaratilgan paytdagi `period_days` (`payments.raw.tayanch`). Shu tarifda faol obuna bo'lsa, yangisi uning oxiridan boshlanadi. Takroriy (avto) to'lov yo'q: har davr yangi to'lov. v2'da "Obunalar" bo'limi bor (IP03), keyingi vazifa.
+- **Holatlar**: `created → pending → paid | failed | canceled`. `failed` yoki `canceled` dan keyin `payment.succeeded` kelsa `paid` bo'ladi (pul olingan). `paid` yakuniy.
+- **Webhook javobi**: qayta ishlansa yoki xato bilan saqlansa 200; imzo yo'q yoki eskirgan bo'lsa 400, noto'g'ri bo'lsa 401 (bazaga yozilmaydi); baza xatosi 500 (inPAY 8 martagacha qayta yuboradi). Xato bilan saqlangan hodisalar (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) obuna bermaydi va qo'lda ko'riladi:
+
+```sql
+select received_at, event_id, provider_order_id, error from public.payment_events
+ where error is not null order by received_at desc;
+```
+
+- **Chegara**: bir foydalanuvchida 1 soatda 5 tadan ortiq ochiq (`created`/`pending`) to'lov yaratilmaydi (`429`). Tayanch tanlovi.
+
+### Secret'lar (muallif qo'yadi, qiymatlari repoga, chatga va logga yozilmaydi)
+
+| Nom | Qayerdan | Izoh |
+| --- | --- | --- |
+| `INPAY_SECRET_KEY` | inPAY kabineti → Kassa → API v2 kalitlari | `sk_test_…` sinov, `sk_live_…` jonli. To'liq faqat yaratilganda bir marta ko'rsatiladi |
+| `INPAY_WEBHOOK_SECRET` | `GET /webhooks/secret/` (faqat `sk_live_` bilan) yoki kabinet (tekshirish kerak) | `whsec_…`, sinov va jonli xabarlar uchun bitta |
+| `SAYT_URL` (ixtiyoriy, maxfiy emas) | | Standart `https://javohirqaxramonov36-web.github.io/Tayanch` |
+| `TOLOV_ORIGINLAR` (ixtiyoriy, maxfiy emas) | | Vergul bilan. Standart: GitHub Pages va `localhost:4321` |
+
+`SUPABASE_URL` va service kaliti (`SUPABASE_SECRET_KEYS` yoki eski `SUPABASE_SERVICE_ROLE_KEY`) Supabase o'zi beradi. Funksiya sozlama yetishmasa `500 server_not_configured` qaytaradi va logga faqat NOMINI yozadi.
+
+### inPAY kabinetida (muallif, deploy'dan oldin)
+
+1. Kassa → API v2 kalitlari: kalit yaratish (avval `sk_test_`).
+2. Oq ro'yxat (https://inpay.uz/merchant/whitelist/): `javohirqaxramonov36-web.github.io` (return_url) va `uvwejvjrsswssgydwevm.supabase.co` (webhook_url). Aks holda inPAY `domain_not_whitelisted` qaytaradi.
+3. IP cheklovi o'chiq: Edge Function'ning chiquvchi IP manzili doimiy ekani tasdiqlanmagan (tekshirish kerak).
+
+### Deploy (faqat muallif "ha" deganidan keyin)
+
+```bash
+supabase db push --remote
+supabase functions deploy tolov-yaratish --no-verify-jwt --use-api
+supabase functions deploy inpay-webhook --no-verify-jwt --use-api
+```
+
+`--no-verify-jwt`: `inpay-webhook` ga inPAY Supabase JWT yubormaydi (imzo bilan tekshiriladi); `tolov-yaratish` foydalanuvchini kod ichida `auth.getUser` bilan tekshiradi. `--use-api`: Docker kerak emas. Manzillar: `https://uvwejvjrsswssgydwevm.supabase.co/functions/v1/<nom>`.
+
+**Sinov rejimi xavfi**: `INPAY_SECRET_KEY` `sk_test_` bo'lganda test karta (`8600 0000 0000 0001`) bilan to'lov "o'tadi" va obuna beriladi. Shuning uchun sinov paytida tarif faqat sinov uchun faol qilinadi va oxirida yana yashiriladi (`is_active = false`), jonli rejimga `sk_live_` bilan o'tiladi. Jonli kalit bilan yaratilgan to'lovga sinov hodisasi (`livemode: false`) obuna bermaydi (`livemode_mismatch`).
+
+### Sinov
+
+```bash
+npm run db:tekshir        # SQL: OK 16-20 (huquqlar, payment_create, webhook oqimi, takror hodisa, current_plan)
+npm run funksiyalar:tekshir   # Deno: imzo, inPAY mijozi, ikkala funksiya oqimi; index.ts tur tekshiruvi
+```
+
+- **Sinalgan (2026-11-09, lokal)**: SQL sinovlari (OK 16–20) va 3 ta ataylab buzish (summa tekshiruvi, takror hodisa, huquq) ushlandi; Deno testlari 29/29; `index.ts` supabase-js 2.118.0 bilan tur tekshiruvidan o'tdi; handler'lar vaqtinchalik Postgres'dagi haqiqiy SQL funksiyalari bilan birga (inPAY soxta): created → pending → paid, 30 kunlik obuna, takror webhook, soxta imzo.
+- **Sinalmagan (tekshirish kerak)**: Supabase'ga deploy, PostgREST orqali `rpc()` (lokal sinovda psql), haqiqiy inPAY (sinov kaliti bilan to'lov, webhook kelishi va imzo formati), `SUPABASE_SECRET_KEYS` tuzilishi, brauzerdan CORS, `/uz/sat/hisob/tolov/` sahifasi (hali yo'q).

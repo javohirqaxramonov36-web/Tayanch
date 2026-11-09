@@ -114,15 +114,21 @@ review sessiyada to'g'ri: 1→2 (+3 kun), 2→3 (+7), 3→4 (+14), 4→5 (o'zlas
 
 Oraliqlar Tayanch tanlovi, rasmiy qoida emas.
 
-### To'lov (keyingi vazifa: Edge Function)
+### To'lov (inPAY API v2, IP03; migratsiya 0010, Edge Function'lar `tolov-yaratish`, `inpay-webhook`)
 
 ```
-Brauzer ── Edge Function create-invoice (JWT) ──> payments (created) ──> inPAY
-inPAY ── webhook ──> Edge Function: imzo tekshiruvi ─> payment_events (provider, event_id unique: takror = e'tiborsiz)
-                                                     └─ payments.status = paid ─> subscriptions (payment_id unique)
+Brauzer ── tolov-yaratish (JWT, {"plan"}) ─> payment_create ─> payments (created, provider_order_id = 'tayanch:<id>')
+                                          ─> inPAY POST /payments/ (Idempotency-Key = payments.id, metadata.payment_id)
+                                          ─> payment_set_invoice ─> payments (pending, provider_order_id = inPAY id) | (failed)
+inPAY ── inpay-webhook: imzo (X-Inpay-Signature, 5 daqiqa) ─> payment_apply_event, bitta tranzaksiya:
+           payment_events (provider, event_id unique: takror = 'duplicate')
+           └─ payment.succeeded: summa, UZS, livemode, metadata mos ─> payments (paid) ─> subscriptions (payment_id unique) ─> audit_log
+           └─ payment.failed / payment.canceled ─> payments (failed / canceled); boshqa hodisa ─> 'ignored'
 ```
 
-Brauzer to'lovni "tasdiqlay" olmaydi: `payments`, `subscriptions`, `payment_events` ga mijozda yozish huquqi yo'q.
+Holatlar: `created → pending → paid | failed | canceled`; `failed`/`canceled` dan keyin `succeeded` kelsa `paid`, `paid` yakuniy. Xato hodisa (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) `payment_events.error` bilan saqlanadi, obuna bermaydi. Obuna muddati `payments.raw.tayanch.period_days` (to'lov paytidagi tarif), shu tarifda faol obuna bo'lsa uning oxiridan boshlanadi.
+
+Brauzer to'lovni "tasdiqlay" olmaydi: `payments`, `subscriptions`, `payment_events` ga mijozda yozish huquqi yo'q, `payment_*` funksiyalarini faqat service_role chaqiradi. Batafsil: `supabase/README.md`, 10-bo'lim.
 
 ### Kvota
 
