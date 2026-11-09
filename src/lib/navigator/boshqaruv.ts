@@ -9,6 +9,7 @@ import { mahalliySana, muddatHolati, qolganKun } from './qolganKun.ts';
 import { yolXaritasiTuz, type RoyxatSahifa } from './yolXaritasi.ts';
 import { KEYINGI_QADAM_HODISA, KEYINGI_QADAM_KALITI, oqiKeyingiQadam, tanlaKeyingiQadam } from './keyingiQadam.ts';
 import { salomMatni } from './salom.ts';
+import { serverga, sinxronla } from './sinxronMijoz.ts';
 import { kirganFoydalanuvchi } from '../hisobHolat.ts';
 import { yol } from '../yol.ts';
 
@@ -17,6 +18,9 @@ type Qoralama = Pick<YolProfil, 'goals' | 'primaryGoal' | 'timeLeft' | 'examDate
 
 const m = navigatorMatni('uz');
 const JAMI_QADAM = 3;
+
+/** Max wait for the account sync before showing first-run onboarding to a signed-in user. */
+const SINXRON_KUTISH_MS = 2500;
 
 const FOKUSLANADI = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -167,6 +171,7 @@ export function navigatorniIshgaTushir(): void {
       if (rejim === 'birinchi' && !profil) {
         profil = otkazilganProfil(new Date());
         profilniYoz(ombor, profil);
+        yuborish();
       }
       yopishSababi = rejim === 'birinchi' ? 'otkazildi' : 'bekor';
     }
@@ -180,13 +185,23 @@ export function navigatorniIshgaTushir(): void {
     const q = qoralama();
     profil = { v: 1, ...q, skipped: false, updatedAt: new Date().toISOString() };
     profilniYoz(ombor, profil);
+    yuborish();
     yop('saqlandi');
+  }
+
+  /** Push the saved profile to the account (signed-in users only); adopt the server copy if newer. */
+  function yuborish() {
+    if (!profil) return;
+    void serverga(profil, ombor).then((yangi) => {
+      if (yangi) { profil = yangi; if (!dialog!.open) chiz(); }
+    });
   }
 
   function otkaz() {
     if (rejim === 'qayta') return yop('bekor');
     profil = otkazilganProfil(new Date());
     profilniYoz(ombor, profil);
+    yuborish();
     yop('otkazildi');
   }
 
@@ -329,7 +344,17 @@ export function navigatorniIshgaTushir(): void {
 
   // ---------- start ----------
   chiz();
-  if (!profil) och('birinchi');
+  void (async () => {
+    // Signed-in user: pull/push the account copy first. Without a local profile we wait (bounded) so a
+    // returning user on a new device does not see onboarding flash before their roadmap arrives.
+    if (kirganFoydalanuvchi()) {
+      const sinxron = sinxronla(ombor).then((yangi) => {
+        if (yangi) { profil = yangi; if (!dialog.open) chiz(); }
+      });
+      if (!profil) await Promise.race([sinxron, new Promise((r) => setTimeout(r, SINXRON_KUTISH_MS))]);
+    }
+    if (!profil && !dialog.open) och('birinchi');
+  })();
 
   // Re-render when another tab/module changes the profile or the override, and when the tab
   // becomes visible again (greeting and days-left depend on the current time).

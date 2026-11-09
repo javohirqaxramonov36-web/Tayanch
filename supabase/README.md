@@ -68,3 +68,17 @@ Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov f
 - P03B: Google bilan kirish (Google provider, client ID/secret faqat dashboard'da; Redirect URL'lar shu ro'yxatda).
 - P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Hozircha `display_name`, `nickname` Supabase `user_metadata` da.
 - P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
+
+## 6. Navigator onboarding (`onboarding_profiles`)
+
+Migratsiya: `migrations/20261109130000_onboarding_profiles.sql` (mustaqil, boshqa ochiq PR migratsiyalariga bog'liq emas). Hali `db push` qilinmagan: muallif ko'rib chiqib o'zi qo'llaydi.
+
+Lokal sinov (Docker kerak emas, oddiy Postgres):
+
+```bash
+psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_shim.sql
+psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261109130000_onboarding_profiles.sql
+psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
+```
+
+Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
