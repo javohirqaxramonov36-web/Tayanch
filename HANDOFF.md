@@ -1,4 +1,4 @@
-# Tayanch: sessiyalar orasida holat (2026-11-08)
+# Tayanch: sessiyalar orasida holat (2026-11-09)
 
 Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://javohirqaxramonov36-web.github.io/Tayanch/uz/
 
@@ -49,6 +49,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 4. **SAT R&W 3- va 4-modul**: PR #21 da merge qilingan (2-bo'limga qarang). Eslatma: 3 "O'tish so'zlari" (transitions; ma'no munosabati jadvali: qarama-qarshilik, sabab, misol, davom). Domen "Expression of Ideas" CB06 da bor; "Transitions" skill nomi faqat Student Question Bank sahifasida (taklif: CB07, brauzerda aynan yozilishi tekshirilmagan). 4 "Lug'at kontekstda" (Craft and Structure): mavjud `mashq/lugat/` va `tayanch:sat-lugat` ni faqat o'qiydi, buzmaydi.
 5. **Interaktiv darslar rejasi** (har biri alohida branch va PR, standart: `docs/interaktiv-dars-standarti.md`): 1 SAT Reading & Writing (`sat-reading-writing`), 2 SAT Xato daftari va takrorlash, 3 IELTS interaktiv, 4 Top Admission ariza zinapoyasi, 5 EYUF dizayn va suhbat simulyatori, 6 yakuniy sifat tekshiruvi. 0-bosqich (PR #18), 1-bosqich (R&W, PR #20, #21) va 2-bosqich (Xato daftari, PR #22 da merge qilingan) tugagan; 3-bosqich IELTS interaktiv (Reading: TFNG, Matching headings) PR #23 da, 4-bosqich Top Admission ariza zinapoyasi PR #25 da merge qilingan. 5-bosqich EYUF muallif qarori bilan qoldirildi (2026-11-06; dizayn fayli yo'q), 6-bosqich yakuniy sifat tekshiruvi (branch `yakuniy-sifat`) PR #27 da merge qilingan (2026-11-06: qorong'i kontrast, Lug'at sarlavhasi va karta nomi, Top Admission yon logo). Keyingi IELTS qadamlari: takrorlash (`tayanch:ielts-takrorlash`, `takrorlash.ts` ni umumlashtirish), Listening (audio kerak). PR #17 merge bo'lgach: mashq xatolarini (`tayanch:sat:v1`) takrorlash navbatiga qo'shish alohida PR'da.
 6. Tez-oradagi sahifalar: SAT (Kitoblar, Strategiya, Math va Desmos, Reading & Writing, Vaqt va retake), IELTS (Listening, Writing Task 2, Speaking, General English).
+7. **Tayanch Design System**: joriy qilingan, branch `dizayn-tizimi` (2026-11-09), PR kutilmoqda. Onest, DS tokenlari (eski o'zbekcha nomlar DS ga ulangan), qavat ranglari (`<html data-floor>`), shisha ustki qatorlar va Lift paneli, DS link kartalar, bosh sahifada shisha bino (`Bino.astro`). Manba `docs/ds/`, qoidalar DESIGN.md. Sinalmagan: Safari, haqiqiy telefon, VoiceOver.
 
 Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF. Artboard'lar: Main/Kirish (A, qurilgan), Burslar (B), Vosita (C, qurilgan), Lift* (D, qurilgan). Har birining yorug', qorong'i va telefon varianti bor.
 
@@ -57,7 +58,15 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - **Bitta sayt, 5 qavat.** Qavatlar `src/data/qavatlar.ts` da; 2–5 holati `bolimlar.ts` dan olinadi, qo'lda takrorlanmaydi.
 - **Navigatsiya**: bo'limlar orasida faqat Lift; menyuda "Muddatlar" va "Manbalar" qoladi. "Tez orada" qavatga kirsa bo'ladi ("qavat qurilmoqda" sahifasi).
 - **Dizayn manbasi**: har bo'lim uchun Claude Design maketi. Maket ko'rinish uchun, prototip yoki prompt mantiq va matn uchun. Ziddiyat bo'lsa to'xtab muallifdan so'raladi.
-- **Palitra**: oq, qora, ko'k (`#4255ff`). Yagona istisno: ogohlik juftligi (yorug' `#fff4e5`/`#8a3b0a`, qorong'i `#33240f`/`#ffc98a`).
+- **Dizayn tizimi: Tayanch DS** (2026-11-09, muallif qarori; avvalgi "oq, qora, ko'k" palitrasi o'rniga). Manba `docs/ds/` (DS artifact https://claude.ai/artifact/VDa6kEFnybraLAMiR1JhP9), qoidalar DESIGN.md:
+  1. DESIGN.md DS asosida qayta yozildi.
+  2. Liquid Glass faqat ustki qatorlar, sticky panellar, Lift telefon paneli va binoda; faqat tokenlar orqali, zaxirasi bilan. Qiymatlar (muallif tasdiqlagan): blur 14px, chrome yorug' oq 88% / qorong'i neutral-900 92%, karta oq 62% / 6%.
+  3. Gradient fon faqat studio fonida (`--gradient-studio`).
+  4. Shrift: Onest.
+  5. Tugma 48px (DS `md`), eng kichik bosiladigan joy 44px.
+  6. Besh qavat bir xil ko'rinadi, har qavat faqat o'z urg'u rangi (`--floor-*`) bilan farqlanadi. CTA hamma qavatda bir xil (`btn-primary`).
+  7. Bosh sahifa hero'sida DS shisha binosi (bezak, `aria-hidden`), sochilgan yorliqlar uning atrofida.
+  8. Radius: `--r-orta` → md 12, `--r-katta` → lg 20; qavat urg'usining to'q variantlari `--floor-ui-toq` / `--floor-ui-chuqur` (sayt qo'shimchasi).
 - **Qorong'i mavzu**: tokenlar `:root[data-mavzu='qorongi']` da. Boshlang'ich holat `prefers-color-scheme` dan, tanlov `localStorage` da, `<head>` dagi inline skript miltillashni oldini oladi.
 - **Faktlar**: faqat `manbalar.ts` dagi `tekshiruvDarajasi: 'rasmiy'` manba bilan. Topshirish yo'lida ID topilmasa yoki rasmiy bo'lmasa build xato beradi.
 - **Namuna ma'lumot** (SAT savollari, so'zlar, savol banki raqamlari, natijalar namunasi) ekranda "Namuna" deb belgilangan. Muallif SAT uchun buni "to'liq qo'lla" deb tasdiqlagan.
@@ -114,13 +123,15 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 
 ## 7. Dizayn qoidalari (qisqa; to'liq: DESIGN.md)
 
-- Qiymatlar faqat `src/styles/tokens.css` dan: rang, bo'shliq (`--b-*`), radius (`--r-*`), matn (`--matn-*`). Yangi rang yoki token faqat muallif ruxsati bilan va DESIGN.md jadvaliga yoziladi.
-- Shrift: Figtree (`--shrift`, saytning o'zidan yuklanadi, Google Fonts havolasi yo'q).
-- Tugma kamida 48px (yon panel qatorlari 44px, SAT dizayni bo'yicha istisno). Fokus: 3px ko'k chegara. Tugma faqat `<button>` yoki `<a>`, ikonka inline SVG, emoji emas.
+- Asos: Tayanch DS (`docs/ds/`). Qiymatlar faqat `src/styles/tokens.css` dan; yangi kodda DS nomlari (`--color-*`, `--space-*`, `--radius-*`, `--text-*`, `--floor-*`, `--btn-*`), eski `--rang-*`, `--b-*`, `--r-*`, `--matn-*` DS ga ulangan. Yangi rang yoki token faqat muallif ruxsati bilan va DESIGN.md jadvaliga yoziladi.
+- Shrift: Onest (`@fontsource-variable/onest`, saytning o'zidan yuklanadi, Google Fonts havolasi yo'q).
+- Qavat rangi `<html data-floor>` dan (`joriyQavat`); CTA hamma qavatda `btn-primary`. Qavat matn rangi shisha ustiga qo'yilmaydi.
+- Shisha (`backdrop-filter`) faqat ustki qator, sticky panel, Lift telefon paneli; bir ekranda ko'pi bilan 3 qatlam; zaxira `@supports not` va `prefers-reduced-transparency`.
+- Tugma 48px, eng kichik bosiladigan joy 44px. Fokus: DS fokus halqasi (2px + 2px oraliq). Tugma faqat `<button>` yoki `<a>`, ikonka inline SVG, emoji emas.
 - Har sahifa 390px va 1280px da, yorug' va qorong'i mavzuda ishlashi kerak. Gorizontal scroll yo'q. Telefonda pastki lift kontentni yopmaydi (`body` pastki bo'shlig'i va `scroll-padding-bottom` global.css'da).
 - Har sahifa tepasida Qavat yo'li, qavat kirish sahifasi pastida Zina, oxirida manbalar va tekshiruv bloki (`SahifaOxiri` yoki `ManbaBlok`).
 - Animatsiyalar `prefers-reduced-motion` da o'chadi.
-- Taqiqlar: gradient fon, glassmorphism, qizil ta'kid, uydirma raqam, sharh yoki ism, "kafolat" ("Natija kafolatlanmaydi" / SAT'da "Results are not guaranteed" inkoridan tashqari), "Official", "100% grant".
+- Taqiqlar: studio fonidan boshqa gradient, belgilangan joylardan tashqarida shisha, qavat rangini CTA yoki holat ma'nosida ishlatish, uydirma raqam, sharh yoki ism, "kafolat" ("Natija kafolatlanmaydi" / SAT'da "Results are not guaranteed" inkoridan tashqari), "Official", "100% grant".
 
 ## 8. Texnik eslatmalar
 

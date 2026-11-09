@@ -18,7 +18,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
 ## Loyiha
 - Astro, statik sayt, GitHub Pages. `astro.config.mjs`: base "/Tayanch" (harf katta-kichikligiga sezgir), `trailingSlash: 'always'`.
 - Sayt 5 qavatli bino: 1 Navigator, 2 Top Admission, 3 SAT prep, 4 IELTS prep, 5 EYUF prep. Sahifalar `src/pages/uz/<bolim>/`, qolip `BolimQobiq`.
-- Dizayn: `DESIGN.md` (tokenlar, komponentlar, "Taqiqlar" bo'limi). Qiymatlar faqat `src/styles/tokens.css` dan, xom rang/o'lcham yozilmaydi.
+- Dizayn: Tayanch Design System (2026-11-09; manba `docs/ds/`), qoidalar `DESIGN.md` (tokenlar, qavat ranglari, shisha, komponentlar, "Taqiqlar"). Qiymatlar faqat `src/styles/tokens.css` dan, xom rang/o'lcham yozilmaydi; yangi kodda DS nomlari. Shrift Onest.
 - Ichki havola faqat `yol()` orqali (`src/lib/yol.ts`). Ma'lumotlar: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`).
 - Hisob butun sayt uchun bitta (bir bino, bitta kalit): login email va Google bilan, Supabase Auth. Kirish va profil sahifalari hozircha SAT ichida (`/uz/sat/hisob/`, inglizcha, P03, 2026-11-09); 1-qavatdagi `/uz/hisob/` keyinroq. Har qavatga alohida login yo'q. Supabase sessiya kaliti `tayanch:auth`.
 - To'lov va tariflar (Free, Pro, Elite; kvotali freemium) hozircha faqat SAT'da (`/uz/sat/hisob/`, inglizcha), inPAY orqali. Obuna qavatga bog'lanadi (`bolim` maydoni). 2, 4, 5-qavatlarda pullik qism yo'q, ular hozircha o'zgarmaydi.
@@ -53,7 +53,7 @@ Bir vazifada bitta asosiy skill. Bir nechta dizayn skillini aralashtirma. Mos sk
 | Joylashdan oldin | `deploy-checklist` |
 | Limit sarfi diagnostikasi | `token-doctor`, `inspect-context`, `find-bloat`: faqat men so'raganimda |
 
-Ishlatma (loyihaga mos emas yoki DESIGN.md bilan zid): `liquid-glass`, `code-to-figma`, `figma-to-code`, `handoff-to-code`, `chrome-*`, PDF Viewer, Productivity, `standup`, `incident-response`. Dizayn uslubi faqat DESIGN.md dan olinadi: gradient, glassmorphism yo'q.
+Ishlatma (loyihaga mos emas yoki DESIGN.md bilan zid): `code-to-figma`, `figma-to-code`, `handoff-to-code`, `chrome-*`, PDF Viewer, Productivity, `standup`, `incident-response`. Dizayn uslubi faqat DESIGN.md (Tayanch DS) dan olinadi: gradient faqat studio fonida, shisha (Liquid Glass) faqat ustki qator, sticky panel va Lift panelida, DS tokenlari orqali.
 
 ## Limitni tejash
 - Fayllarni to'liq o'qima: avval qidir (Grep), keyin kerakli qismini o'qi.
