@@ -13,12 +13,12 @@ export const KALIT_XATO_DAFTARI = 'tayanch:sat-xato-daftari';
 export const KALIT_REJA = 'tayanch:sat-reja';
 
 export const modulNomi: Record<DarsModul, string> = {
-  hajm: 'Hajm laboratoriyasi',
-  grafik: 'Funksiya grafigi',
-  aylana: 'Birlik aylana',
-  statistika: 'Statistika',
-  'rw-xato': 'Xatoni toping',
-  'rw-dalil': 'Dalilni belgilang',
-  'rw-otish': "O'tish so'zlari",
-  'rw-lugat': "Lug'at kontekstda",
+  hajm: 'Volume lab',
+  grafik: 'Function graphs',
+  aylana: 'Unit circle',
+  statistika: 'Statistics',
+  'rw-xato': 'Find the error',
+  'rw-dalil': 'Mark the evidence',
+  'rw-otish': 'Transition words',
+  'rw-lugat': 'Vocabulary in context',
 };
