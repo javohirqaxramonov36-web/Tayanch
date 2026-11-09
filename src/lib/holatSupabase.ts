@@ -1,24 +1,17 @@
 // holat.ts uchun Supabase serveri: public.user_state jadvali (RLS: faqat o'z qatorlari).
-// supabase-js'ga bog'liq emas: hisob moduli (P03) o'z mijozini beradi:
-//   ulash(supabaseServer(hisobMijoz(), session.user.id), session.user.id)
+// Mijozni hisob moduli (P03, hisobMijoz) beradi; ulash: holatHisob.ts.
 // Xato matni va qiymatlar console'ga yozilmaydi.
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { SinxronServer } from './holat.ts';
 
-interface Javob<T> { data: T | null; error: unknown }
-/** Supabase mijozining shu yerda ishlatiladigan qismi */
-export interface SupabaseMijoz {
-  from(jadval: 'user_state'): {
-    select(ustunlar: string): { in(ustun: string, qiymatlar: string[]): PromiseLike<Javob<{ key: string; value: unknown }[]>> };
-    upsert(qatorlar: { user_id: string; key: string; value: unknown }[], s: { onConflict: string }): PromiseLike<Javob<unknown>>;
-  };
-}
+type SupabaseMijoz = Pick<SupabaseClient, 'from'>;
 
 export function supabaseServer(mijoz: SupabaseMijoz, foydalanuvchiId: string): SinxronServer {
   return {
     async oqi(kalitlar) {
       const { data, error } = await mijoz.from('user_state').select('key,value').in('key', kalitlar);
       if (error) throw new Error('user_state: o\'qib bo\'lmadi');
-      return Object.fromEntries((data ?? []).map((q) => [q.key, q.value]));
+      return Object.fromEntries(((data ?? []) as { key: string; value: unknown }[]).map((q) => [q.key, q.value]));
     },
     async yoz(yozuvlar) {
       if (!yozuvlar.length) return;

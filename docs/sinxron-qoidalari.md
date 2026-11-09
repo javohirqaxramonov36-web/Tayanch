@@ -1,6 +1,6 @@
 # SAT progressini sinxronlash qoidalari
 
-Holat: kod `sat-progress-sinxron` branch'ida (P04). Hisob moduli (P03) va Supabase sxemasi (P02) hali `main` da emas, shuning uchun adapter serverga hali ulanmagan: hisobsiz foydalanuvchi uchun hamma narsa avvalgidek ishlaydi.
+Holat: kod `sat-progress-sinxron` branch'ida (P04). Adapter hisob moduliga (P03, `hisob.ts`) `holatHisob.ts` orqali ulangan. Hisobsiz foydalanuvchi uchun hamma narsa avvalgidek ishlaydi: supabase-js yuklanmaydi, serverga hech narsa ketmaydi.
 
 ## Fayllar
 
@@ -9,6 +9,7 @@ Holat: kod `sat-progress-sinxron` branch'ida (P04). Hisob moduli (P03) va Supaba
 | `src/lib/holat.ts` | Saqlash adapteri: `holatOqi`, `holatYoz`, `holatOchir`; hisob bilan ulash (`ulash`, `uzish`), import, navbat |
 | `src/lib/holatBirlashtir.ts` | Kalitlar ro'yxati va sof birlashtirish funksiyalari (brauzer API'si yo'q) |
 | `src/lib/holatSupabase.ts` | `user_state` jadvali bilan ishlovchi server (supabase-js mijozini hisob moduli beradi) |
+| `src/lib/holatHisob.ts` | Hisobga ulash: Supabase sozlangan build'da va brauzerda sessiya kaliti (`tayanch:auth`) bo'lsa supabase-js'ni yuklaydi, sessiya bo'yicha `ulash`, chiqishda (`SIGNED_OUT`, boshqa tabda chiqish) `uzish` |
 | `src/components/SatSinxron.astro` | "Import this device's progress?" dialogi (BolimQobiq `bolim="sat"` va SatFokus) |
 | `scripts/sinxron-test.ts` | Soxta server bilan sinov: `npm run sinxron:tekshir` |
 
@@ -79,15 +80,14 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 - Qurilma soatlari farq qilsa "yangiroq" noto'g'ri tanlanishi mumkin (vaqt brauzer soatidan olinadi).
 - Bir vaqtda ikki tab: har biri o'z navbatini yuboradi, birlashtirish idempotent bo'lgani uchun ma'lumot yo'qolmaydi, lekin ortiqcha so'rov bo'lishi mumkin.
 - `user_state` qatori 256 KB bilan cheklangan; hozirgi chegaralar (500 javob, 300 xato, 1000 tombstone) bilan bu yetarli bo'lishi kerak, haqiqiy hajm tekshirilmagan.
-- Hisob ulanmaguncha (P03 merge) server qismi faqat soxta server bilan sinalgan.
+- Server qismi faqat soxta server bilan sinalgan; haqiqiy Supabase (upsert, RLS) bilan hali sinalmagan.
 
-## P03 bilan ulash (keyingi qadam)
+## Hisob bilan ulash
 
-Hisob moduli sessiya bo'lganda chaqiradi:
+`SatSinxron.astro` (har SAT sahifasi) `hisobniUla()` ni chaqiradi:
 
-```ts
-import { ulash, uzish } from '../lib/holat';
-import { supabaseServer } from '../lib/holatSupabase';
-// sessiya bor: ulash(supabaseServer(hisobMijoz(), session.user.id), session.user.id);
-// chiqish (SIGNED_OUT): uzish();
-```
+1. Build'da `PUBLIC_SUPABASE_URL` yoki ochiq kalit yo'q → hech narsa.
+2. Brauzerda `tayanch:auth` kaliti yo'q (kirilmagan) → supabase-js yuklanmaydi.
+3. Sessiya bor → `ulash(supabaseServer(mijoz, user.id), user.id)`; keyin yuqoridagi "Rozilik" qoidalari.
+4. `SIGNED_OUT` yoki boshqa tabda sessiya kaliti o'chsa → `uzish()`; brauzerdagi nusxa qoladi.
+5. Kirish sahifasidan keyin foydalanuvchi SAT sahifasiga (yoki profilga) qaytadi, dialog o'sha sahifada chiqadi.

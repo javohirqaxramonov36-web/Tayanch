@@ -48,6 +48,7 @@
 
 <script>
   import { sinxronSoroviniKut, importQil, keyinroq, soramaslik, mahalliyNusxaniTozala, type Sanoq } from '../lib/holat';
+  import { hisobniUla } from '../lib/holatHisob';
 
   const NOMLAR: Record<string, [string, string]> = {
     'tayanch:sat-javoblar': ['practice answer', 'practice answers'],
@@ -159,6 +160,9 @@
       qadam('sorov');
     });
   }
+
+  // Dialog tinglovchisi qo'yilgandan keyin hisobga ulanadi (sessiya bo'lmasa hech narsa yuklanmaydi)
+  void hisobniUla().catch(() => { /* hisob ishlamasa sahifa avvalgidek ishlaydi */ });
 </script>
 
 <style>
