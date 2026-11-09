@@ -17,7 +17,8 @@ Qolip: `src/components/dars/DarsQolip.astro`. Tartib o'zgarmaydi:
 5. **Keyingi dars** havolasi (ixtiyoriy) va **ManbaBlok** (rasmiy manba ID, tekshirilgan sana, keyingi tekshiruv, tekshirilmagan bandlar).
 
 Qolip prop'lari: `bolim`, `modul`, `savollar`, `yolBandlari`, `darsTuri`, `imtihon?`, `manbalar`, `tekshirilgan`,
-`keyingiTekshiruv`, `keyingi?: { nomi, href }` (`href` sahifada `yol()` bilan yasaladi), matn prop'lari.
+`keyingiTekshiruv`, `keyingi?: { nomi, href, turi? }` (`href` sahifada `yol()` bilan yasaladi; `turi: 'qadam'` keyingisi dars bo'lmasa: "Keyingi qadam"), matn prop'lari.
+Dars oxirida boshqa qavatdagi qadam: `src/data/qavatlarAro.ts` ga `modul` bo'yicha yoziladi (`QavatlarAro`).
 Ixtiyoriy: `qadamNomlari`, `savolTili` (savol matni va variantlar tili, R&W: `'en'`), `savolKorsatma` (oddiy A–D savol ustidagi o'zbekcha ko'rsatma), slot `xulosa-oxiri` (Xulosa ro'yxatidan keyingi blok).
 Savolda ixtiyoriy `parcha` maydoni (IELTS Reading): savol matni ustida `savolTili` tilida chiqadi, paragraflar `\n\n` bilan.
 Bo'limga xos qiymat qolip ichida qattiq yozilmaydi.

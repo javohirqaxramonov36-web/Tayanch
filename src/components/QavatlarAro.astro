@@ -1,0 +1,65 @@
+---
+// "Boshqa qavatda": dars yoki vosita oxirida boshqa qavatdagi keyingi qadam (Zina uslubida karta).
+// Ma'lumot: src/data/qavatlarAro.ts. Kartalar bo'lmasa hech narsa chizilmaydi.
+import { qavatI, joriyQavat } from '../data/qavatlar';
+import { matn, yolTili } from '../data/umumiyMatn';
+import type { QavatlarAroKarta } from '../data/qavatlarAro';
+
+interface Props {
+  kartalar: QavatlarAroKarta[];
+  /** Sarlavha darajasi: sahifadagi o'rniga qarab */
+  daraja?: 'h2' | 'h3';
+}
+const { kartalar, daraja = 'h2' } = Astro.props;
+const pathname = Astro.url.pathname;
+const M = matn[yolTili(pathname)];
+const joriy = joriyQavat(pathname);
+const Sarlavha = daraja;
+// Sahifada bitta bo'ladi
+const id = 'qavatlar-aro-h';
+---
+{kartalar.length > 0 && (
+  <nav class="qavatlar-aro" aria-labelledby={id}>
+    <Sarlavha id={id} class="qa-sarlavha">{M.qavatlarAro}</Sarlavha>
+    <ul>
+      {kartalar.map((k) => {
+        const q = qavatI(k.qavat);
+        const yuqori = k.qavat > joriy;
+        return (
+          <li>
+            <a class="qa-karta" href={k.href}>
+              <span class="qa-yorliq">
+                {yuqori
+                  ? <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+                  : <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6" /></svg>}
+                {M.qavat(q.raqam)} · {q.nomi}
+              </span>
+              <span class="qa-nom" lang={k.nomiTili}>{k.nomi}</span>
+              <span class="qa-izoh">{k.izoh}</span>
+              {q.holat === 'tez-orada' && <span class="qa-pill">{M.zina.qurilmoqda}</span>}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .qavatlar-aro { align-self: stretch; display: flex; flex-direction: column; gap: var(--b-3); }
+  .qa-sarlavha { font-size: var(--matn-asosiy); font-weight: 800; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: var(--b-4); }
+  .qa-karta {
+    height: 100%; box-sizing: border-box;
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+    padding: var(--b-5) var(--b-6); min-height: 96px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-1);
+    color: var(--matn); text-decoration: none;
+  }
+  .qa-karta:hover { background: var(--fon-ikkinchi); }
+  .qa-yorliq { display: inline-flex; align-items: center; gap: var(--b-1); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .qa-nom { font-size: 20px; font-weight: 800; }
+  .qa-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .qa-pill { padding: 3px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: 12px; font-weight: 700; }
+  @media (max-width: 640px) { .qa-nom { font-size: 18px; } }
+</style>

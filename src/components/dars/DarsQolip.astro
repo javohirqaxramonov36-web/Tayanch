@@ -5,6 +5,8 @@
 // Sahna komponenti "dars:qadam" hodisasini tinglaydi (detail.qadam: 'animatsiya' | 'formula' | 'sinab').
 import BolimQobiq from '../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../ManbaBlok.astro';
+import QavatlarAro from '../QavatlarAro.astro';
+import { darsQavatlarAro } from '../../data/qavatlarAro';
 import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
 import { tinishmi } from '../../lib/belgilashGuruh';
 import { bolimTili, matn } from '../../data/umumiyMatn';
@@ -31,8 +33,8 @@ interface Props {
   lead: string;
   maqsadlar: string[];
   xulosa: string[];
-  /** href to'liq manzil, sahifada yol() bilan yasaladi */
-  keyingi?: { nomi: string; href: string };
+  /** href to'liq manzil, sahifada yol() bilan yasaladi. turi 'qadam': dars emas (vosita, mashq), "Keyingi qadam" deb yoziladi */
+  keyingi?: { nomi: string; href: string; turi?: 'dars' | 'qadam' };
   tekshirilmagan: string[];
   /** Laboratoriya qadamlari nomi. Bo'lmasa: Animatsiya, Formula, Sinab ko'r (R&W: Misol, Qoida, Sinab ko'r) */
   qadamNomlari?: [string, string, string];
@@ -225,8 +227,9 @@ const qadamlar = [
       </section>
 
       {keyingi && (
-        <a class="katta asosiy keyingi-dars" href={keyingi.href}>{M.keyingiDars(keyingi.nomi)}</a>
+        <a class="katta asosiy keyingi-dars" href={keyingi.href}>{keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi)}</a>
       )}
+      <QavatlarAro kartalar={darsQavatlarAro[modul] ?? []} daraja="h3" />
     </section>
 
     <ManbaBlok
