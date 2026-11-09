@@ -176,7 +176,7 @@ export function sahnaYarat(quti: HTMLElement, canvas: HTMLCanvasElement): HajmSa
       const kq = new LineSegments(new EdgesGeometry(kontur, 20), new LineBasicMaterial({ color: ranglar.chiziq, transparent: true, opacity: 0.6 }));
       kq.position.y = h / 2; guruh.add(kq); kontur.dispose();
       guruh.add(chiziq([[0, 0.02, 0], [r, 0.02, 0]])); belgi(`r = ${r}`, [r / 2, 0.55, 0]);
-      guruh.add(chiziq([[r + 0.7, 0, 0], [r + 0.7, n, 0]])); belgi(`${n} qatlam`, [r + 1.9, Math.max(0.6, n / 2), 0]);
+      guruh.add(chiziq([[r + 0.7, 0, 0], [r + 0.7, n, 0]])); belgi(`${n} ${n === 1 ? 'layer' : 'layers'}`, [r + 1.9, Math.max(0.6, n / 2), 0]);
       chiz();
       return;
     }

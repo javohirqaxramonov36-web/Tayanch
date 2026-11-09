@@ -3,6 +3,8 @@
 // teskari tekshiruv). Natija to'g'ri variantning son qiymatiga teng bo'lishi, noto'g'ri variantlardan
 // hech biri unga teng bo'lmasligi kerak.
 // Fayl node bilan to'g'ridan-to'g'ri ishlaydi: qiymat importlari .ts kengaytmasi bilan yoziladi.
+// Savol matni inglizcha (SAT bo'limi qoidasi): matnli qiymatlar to'g'ri variant matniga aynan teng bo'lishi kerak.
+// Usul tavsiflari ichki hujjat uchun, o'zbekcha qoladi.
 import { hajmSavollar } from './hajm.ts';
 import { grafikSavollar } from './grafik.ts';
 import { aylanaSavollar } from './aylana.ts';
@@ -37,7 +39,7 @@ const ikkinchiUsul: Record<string, () => Natija> = {
   'hajm-5': () => {
     const r = 1.7, h = 3.1;
     const k = disklar(() => 2 * r, h / 2) / disklar(() => r, h);
-    return { qiymat: Math.abs(k - 2) < 1e-6 ? '2 marta ortadi' : `nisbat ${k}`, usul: `Ixtiyoriy r = 1,7, h = 3,1 da disklar bilan: yangi/eski = ${k.toFixed(6)}` };
+    return { qiymat: Math.abs(k - 2) < 1e-6 ? 'It doubles' : `nisbat ${k}`, usul: `Ixtiyoriy r = 1,7, h = 3,1 da disklar bilan: yangi/eski = ${k.toFixed(6)}` };
   },
   'hajm-6': () => { const k = disklar(() => 3, 10) / disklar((y) => 3 * (1 - y / 10), 10); return { qiymat: k, usul: `Disklar bilan: silindr/konus = ${k.toFixed(5)}` }; },
 
@@ -56,7 +58,7 @@ const ikkinchiUsul: Record<string, () => Natija> = {
   'grafik-4': () => { let min = Infinity; for (let x = -20; x <= 20; x += 0.0005) min = Math.min(min, x * x - 6 * x + 5); return { qiymat: Math.round(min * 1e6) / 1e6, usul: `Sonli qidiruv [−20; 20], qadam 0,0005: eng kichik ${min.toFixed(6)}` }; },
   'grafik-5': () => {
     const det = 3 * 1 - 3 * 1; // −3x + y = 2, −3x + y = −4 sistemasi determinanti
-    const yechim = det !== 0 ? 'Bitta' : (2 === -4 ? "Cheksiz ko'p" : "Yechimi yo'q");
+    const yechim = det !== 0 ? 'One' : (2 === -4 ? 'Infinitely many' : 'No solution');
     return { qiymat: yechim, usul: `Determinant = ${det}, ozod hadlar 2 ≠ −4 → ${yechim}` };
   },
 
@@ -78,14 +80,14 @@ const ikkinchiUsul: Record<string, () => Natija> = {
   },
   'statistika-4': () => {
     const a = [5, 6, 6, 7, 8], b = [...a, 40];
-    const ozgarish = { "O'rtacha": Math.abs(ortacha(b) - ortacha(a)), Oraliq: Math.abs(oraliq(b) - oraliq(a)), Mediana: Math.abs(mediana(b) - mediana(a)), "Standart og'ish": Math.abs(sigma(b) - sigma(a)) };
+    const ozgarish = { Mean: Math.abs(ortacha(b) - ortacha(a)), Range: Math.abs(oraliq(b) - oraliq(a)), Median: Math.abs(mediana(b) - mediana(a)), 'Standard deviation': Math.abs(sigma(b) - sigma(a)) };
     const eng = Object.entries(ozgarish).sort((x, y) => x[1] - y[1])[0][0];
     return { qiymat: eng, usul: `O'zgarishlar: ${Object.entries(ozgarish).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', ')}` };
   },
   'statistika-5': () => {
     const A = [10, 10, 10, 10], B = [7, 9, 11, 13];
     const ok = ortacha(A) === ortacha(B) && sigma(B) > sigma(A);
-    return { qiymat: ok ? "O'rtachalar teng, B ning standart og'ishi kattaroq" : 'mos kelmadi', usul: `O'rtachalar ${ortacha(A)} va ${ortacha(B)}; σ(A) = ${sigma(A)}, σ(B) = ${sigma(B).toFixed(4)}` };
+    return { qiymat: ok ? 'The means are equal, and the standard deviation of B is greater' : 'mos kelmadi', usul: `O'rtachalar ${ortacha(A)} va ${ortacha(B)}; σ(A) = ${sigma(A)}, σ(B) = ${sigma(B).toFixed(4)}` };
   },
 };
 

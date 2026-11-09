@@ -1,0 +1,95 @@
+---
+// 1-qavat · Hisob · Hisobim (profil). Himoyalangan sahifa: HisobQorovul.
+// display_name va nickname (reyting uchun, ixtiyoriy) hozircha Supabase user_metadata'da.
+// profiles jadvali (RLS bilan), maqsad ball va imtihon sanasi: P12.
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import HisobQorovul from '../../../../components/hisob/HisobQorovul.astro';
+import Maydon from '../../../../components/hisob/Maydon.astro';
+import { hisobSahifalar } from '../../../../data/hisobSahifalar';
+---
+<HisobKarta sahifa={hisobSahifalar.profil}>
+  <HisobQorovul>
+    <div class="profil">
+      <section class="hisob-karta" aria-labelledby="hisob-malumot">
+        <h2 id="hisob-malumot">Hisob</h2>
+        <p>Siz <strong id="profil-email"></strong> bilan kirgansiz.</p>
+        <p class="hisob-sust">Dars va mashqlardagi natijalaringiz hozircha faqat shu brauzerda saqlanadi. Ularni hisobga sinxronlash keyinroq qo'shiladi.</p>
+      </section>
+
+      <section class="hisob-karta" aria-labelledby="profil-sarlavha">
+        <h2 id="profil-sarlavha">Ma'lumotlaringiz</h2>
+        <form class="hisob-forma" id="profil-forma" novalidate aria-labelledby="profil-sarlavha">
+          <p class="hisob-alert" id="profil-xato" role="alert" hidden></p>
+          <p class="hisob-holat" id="profil-holat" role="status" hidden></p>
+          <Maydon id="profil-ism" nomi="Ism" autocomplete="name" maxlength={60} izoh="Saytda sizga shu ism bilan murojaat qilamiz." />
+          <Maydon id="profil-taxallus" nomi="Taxallus" autocomplete="nickname" maxlength={20} ixtiyoriy izoh="Reytinglarda ko'rinadi. 3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_)." />
+          <button type="submit" class="tugma tugma-asosiy" id="profil-tugma">Saqlash</button>
+        </form>
+      </section>
+
+      <section class="hisob-karta" aria-labelledby="chiqish-sarlavha">
+        <h2 id="chiqish-sarlavha">Hisobdan chiqish</h2>
+        <p class="hisob-sust">Shu qurilmada hisobdan chiqasiz. Brauzerda saqlangan natijalar shu yerda qoladi.</p>
+        <button type="button" class="tugma tugma-ikkinchi" id="chiqish-tugma">Chiqish</button>
+      </section>
+    </div>
+  </HisobQorovul>
+</HisobKarta>
+
+<style>
+  .profil { display: flex; flex-direction: column; gap: var(--b-5); }
+  .profil strong { overflow-wrap: anywhere; }
+</style>
+
+<script>
+  import { hisobMijoz, hisobQorovul, hisobYoli, xatoMatni, maydonXatosi, yuklanish, xabar } from '../../../../lib/hisob';
+  import { hisobSozlama } from '../../../../data/hisobSozlama';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const ism = $<HTMLInputElement>('profil-ism');
+  const taxallus = $<HTMLInputElement>('profil-taxallus');
+  const tugma = $<HTMLButtonElement>('profil-tugma');
+  const naqsh = new RegExp(`^${hisobSozlama.taxallusNaqsh}$`);
+
+  hisobQorovul().then((sessiya) => {
+    if (!sessiya) return;
+    const u = sessiya.user;
+    $('profil-email').textContent = u.email ?? '';
+    ism.value = String(u.user_metadata?.display_name ?? '');
+    taxallus.value = String(u.user_metadata?.nickname ?? '');
+  });
+
+  $<HTMLFormElement>('profil-forma').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    xabar($('profil-xato'), null);
+    xabar($('profil-holat'), null);
+    const i = ism.value.trim();
+    const t = taxallus.value.trim();
+    const iXato = i ? null : 'Ismingizni kiriting.';
+    const tXato = !t || naqsh.test(t) ? null : '3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_) ishlating.';
+    maydonXatosi(ism, iXato);
+    maydonXatosi(taxallus, tXato);
+    if (iXato) return ism.focus();
+    if (tXato) return taxallus.focus();
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(tugma, true, 'Saqlanmoqda…');
+    const { error } = await c.auth.updateUser({ data: { display_name: i, nickname: t || null } });
+    yuklanish(tugma, false);
+    if (error) return xabar($('profil-xato'), xatoMatni(error, 'profil'));
+    xabar($('profil-holat'), 'Saqlandi.');
+  });
+  [ism, taxallus].forEach((el) => el.addEventListener('input', () => maydonXatosi(el, null)));
+
+  const chiqish = $<HTMLButtonElement>('chiqish-tugma');
+  chiqish.addEventListener('click', async () => {
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(chiqish, true, 'Chiqilmoqda…');
+    // scope 'local': faqat shu qurilmadagi sessiya tugaydi. Server javob bermasa ham (tarmoq yo'q)
+    // supabase-js mahalliy sessiyani o'chiradi (sinaldi), shuning uchun natijadan qat'i nazar chiqiladi.
+    await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
+    location.assign(`${hisobYoli('kirish')}?chiqdi=1`);
+  });
+</script>
