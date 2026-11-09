@@ -8,18 +8,18 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 
 // Munosabat jadvali (Tayanch tasnifi, rasmiy ro'yxat emas)
 const munosabatlar = [
-  { id: 'zid', nomi: 'Qarama-qarshilik', sozlar: ['However,', 'In contrast,', 'Nevertheless,'], savol: "2-gap 1-gapga qarshi chiqadimi yoki kutilmagan narsani aytadimi?" },
-  { id: 'sabab', nomi: 'Sabab-natija', sozlar: ['Therefore,', 'As a result,', 'Consequently,'], savol: '2-gap 1-gapdan kelib chiqadimi?' },
-  { id: 'misol', nomi: 'Misol', sozlar: ['For example,', 'For instance,', 'Specifically,'], savol: "2-gap 1-gapdagi umumiy fikrning aniq holatimi?" },
-  { id: 'davom', nomi: 'Davom', sozlar: ['Moreover,', 'In addition,', 'Furthermore,'], savol: "2-gap shu yo'nalishda yangi fikr qo'shadimi?" },
+  { id: 'zid', nomi: 'Contrast', sozlar: ['However,', 'In contrast,', 'Nevertheless,'], savol: 'Does sentence 2 go against sentence 1 or say something unexpected?' },
+  { id: 'sabab', nomi: 'Cause and effect', sozlar: ['Therefore,', 'As a result,', 'Consequently,'], savol: 'Does sentence 2 follow from sentence 1?' },
+  { id: 'misol', nomi: 'Example', sozlar: ['For example,', 'For instance,', 'Specifically,'], savol: 'Is sentence 2 a specific case of the general idea in sentence 1?' },
+  { id: 'davom', nomi: 'Addition', sozlar: ['Moreover,', 'In addition,', 'Furthermore,'], savol: 'Does sentence 2 add a new idea in the same direction?' },
 ];
 
 // Laboratoriya misollari (o'ylab topilgan, mashq emas, natijasi saqlanmaydi)
 const misollar = [
-  { birinchi: "The museum's new wing was designed to hold large sculptures.", ikkinchi: 'most of the pieces shown there in its first year were small paintings.', munosabat: 'zid', sabab: "Qanot katta haykallar uchun qurilgan, lekin unda kichik rasmlar ko'rsatilgan: kutilganiga qarshi." },
-  { birinchi: "The bakery's only oven broke early on Friday morning.", ikkinchi: 'no fresh bread was sold that day.', munosabat: 'sabab', sabab: "Pech buzilgani sabab, non sotilmagani uning natijasi." },
-  { birinchi: 'Many desert animals avoid the midday heat.', ikkinchi: 'fennec foxes stay in cool burrows until the sun goes down.', munosabat: 'misol', sabab: "Fenek tulkilari 1-gapdagi \"ko'p cho'l hayvonlari\" ning aniq misoli." },
-  { birinchi: 'Walking to school saves the family money on bus fares.', ikkinchi: 'it gives the children a short morning workout.', munosabat: 'davom', sabab: "Ikkalasi piyoda yurishning foydasi: ikkinchi foyda birinchisiga qo'shiladi, undan kelib chiqmaydi." },
+  { birinchi: "The museum's new wing was designed to hold large sculptures.", ikkinchi: 'most of the pieces shown there in its first year were small paintings.', munosabat: 'zid', sabab: 'The wing was built for large sculptures, but small paintings were shown in it: the opposite of what was expected.' },
+  { birinchi: "The bakery's only oven broke early on Friday morning.", ikkinchi: 'no fresh bread was sold that day.', munosabat: 'sabab', sabab: 'The broken oven is the cause; no bread being sold is its result.' },
+  { birinchi: 'Many desert animals avoid the midday heat.', ikkinchi: 'fennec foxes stay in cool burrows until the sun goes down.', munosabat: 'misol', sabab: 'Fennec foxes are a specific example of the "many desert animals" in sentence 1.' },
+  { birinchi: 'Walking to school saves the family money on bus fares.', ikkinchi: 'it gives the children a short morning workout.', munosabat: 'davom', sabab: 'Both are benefits of walking: the second benefit is added to the first and does not follow from it.' },
 ];
 ---
 <DarsQolip
@@ -27,79 +27,78 @@ const misollar = [
   takrorlashHref={yol('/uz/sat/vosita/takrorlash/')}
   modul="rw-otish"
   savollar={darsSavollari['rw-otish']}
-  yolBandlari={['Reading & Writing darslari']}
-  darsTuri="Reading & Writing darsi"
+  yolBandlari={['Reading & Writing lessons']}
+  darsTuri="Reading & Writing lesson"
   imtihon="SAT"
   manbalar={['CB06']}
   tekshirilgan="2026-11-06"
   keyingiTekshiruv="2026-12-06"
-  title="O'tish so'zlari · SAT"
-  description="SAT Reading & Writing: ikki gap orasidagi munosabatni (qarama-qarshilik, sabab-natija, misol, davom) topib, mos o'tish so'zini tanlang. 5 ta mashq."
+  title="Transition words · SAT"
+  description="SAT Reading & Writing: find the relationship between two sentences (contrast, cause and effect, example, addition) and choose the right transition word. 5 exercises."
   yonalish="Expression of Ideas"
-  sarlavha="O'tish so'zlari: avval munosabat, keyin so'z"
-  lead="O'tish so'zi savolida variantlarning hammasi grammatik jihatdan to'g'ri. Farqi ma'noda: so'z ikki gap orasidagi munosabatni aytadi. Avval 2-gap 1-gapga nima qilishini aniqlang, keyin shu munosabat so'zini tanlang."
-  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
-  savolTili="en"
-  savolKorsatma="Bo'sh joyga eng mantiqiy o'tish so'zini tanlang."
+  sarlavha="Transition words: first the relationship, then the word"
+  lead="In a transition question, all the options are grammatically correct. The difference is in meaning: the word states the relationship between the two sentences. First decide what sentence 2 does to sentence 1, then choose a word for that relationship."
+  qadamNomlari={['Example', 'Rule', 'Try it']}
+  savolKorsatma="Choose the most logical transition word for the blank."
   maqsadlar={[
-    "Ikki gap orasidagi munosabatni to'rt turdan biriga ajratasiz.",
-    "Har munosabat uchun o'tish so'zlarini bilasiz va ularni aralashtirmaysiz.",
-    "Gap ichidagi boshqa bog'lovchi (masalan \"so\") tuzog'iga tushmaysiz.",
+    'You sort the relationship between two sentences into one of four types.',
+    'You know the transition words for each relationship and do not mix them up.',
+    'You do not fall for the trap of another connecting word inside the sentence (for example, "so").',
   ]}
   xulosa={[
-    "Bo'sh joyni yoping va so'ring: 2-gap 1-gapga nima qiladi?",
-    "Qarshi chiqsa: However, In contrast, Nevertheless. Kelib chiqsa: Therefore, As a result, Consequently.",
-    "Aniq holat bo'lsa: For example, For instance. Yangi fikr qo'shsa: Moreover, In addition, Furthermore.",
-    "Bir munosabatdagi so'zlar ko'pincha bir-birining o'rnini bosadi; javob variantlarida esa odatda har munosabatdan bittadan bo'ladi.",
-    "Ikkinchi foyda birinchisining natijasi emas: \"As a result\" faqat sabab bo'lsa.",
+    'Cover the blank and ask: what does sentence 2 do to sentence 1?',
+    'If it goes against it: However, In contrast, Nevertheless. If it follows from it: Therefore, As a result, Consequently.',
+    'If it is a specific case: For example, For instance. If it adds a new idea: Moreover, In addition, Furthermore.',
+    'Words for the same relationship can often replace each other; the answer options, though, usually have one word from each relationship.',
+    'A second benefit is not a result of the first: use "As a result" only when there is a cause.',
   ]}
-  keyingi={{ nomi: "Lug'at kontekstda", href: yol('/uz/sat/qollanma/reading-writing/lugat-kontekstda/') }}
+  keyingi={{ nomi: 'Vocabulary in context', href: yol('/uz/sat/qollanma/reading-writing/lugat-kontekstda/') }}
   tekshirilmagan={[
-    "Matnlar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-    "To'rt munosabat jadvali va so'zlar ro'yxati Tayanch tavsiyasi, rasmiy tasnif emas. \"Transitions\" skill nomi rasmiy manbada tekshirilmagan; CB06 da faqat domen nomi (Expression of Ideas) bor.",
+    'The texts and questions were written for Tayanch, and the situations are made up; those not yet reviewed by the author are marked "not verified".',
+    'The four-relationship table and the word lists are a Tayanch recommendation, not an official classification. The skill name "Transitions" has not been checked in an official source; CB06 has only the domain name (Expression of Ideas).',
   ]}
 >
   <div slot="sahna">
     <div class="sahna-quti rw-quti">
-      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi" id="otish-tartib">1 / {misollar.length} misol</span></p>
-      <p class="otish-matn" lang="en">
+      <p class="rw-namuna"><span class="pill">Sample</span> <span class="kichik ikkinchi" id="otish-tartib">Example 1 of {misollar.length}</span></p>
+      <p class="otish-matn">
         <span id="otish-1">{misollar[0].birinchi}</span>{' '}<span class="otish-joy" id="otish-joy">______</span>{' '}<span id="otish-2">{misollar[0].ikkinchi}</span>
       </p>
-      <div class="bolaklar gap-bolaklar" id="otish-jadval" role="group" aria-label="Ma'no munosabati: 2-gap 1-gapga nima qiladi">
+      <div class="bolaklar gap-bolaklar" id="otish-jadval" role="group" aria-label="Relationship in meaning: what sentence 2 does to sentence 1">
         {munosabatlar.map((m, k) => (
           <button type="button" class="bolak gap mun-tugma" data-bolak={k} aria-pressed="false">
-            <span class="gap-matn"><b>{m.nomi}</b> <span class="mun-sozlar" lang="en">{m.sozlar.map((x) => x.replace(/,$/, '')).join(' · ')}</span></span>
+            <span class="gap-matn"><b>{m.nomi}</b> <span class="mun-sozlar">{m.sozlar.map((x) => x.replace(/,$/, '')).join(' · ')}</span></span>
             <span class="gap-yorliq" hidden></span>
           </button>
         ))}
       </div>
     </div>
     <p class="sahna-izoh" id="otish-holat" aria-live="polite"></p>
-    <div class="segment otish-boshqaruv"><button type="button" class="kichik-tugma" id="otish-keyingi">Keyingi misol</button></div>
+    <div class="segment otish-boshqaruv"><button type="button" class="kichik-tugma" id="otish-keyingi">Next example</button></div>
     <script type="application/json" id="otish-data" set:html={JSON.stringify({ munosabatlar, misollar })} />
   </div>
 
   <div slot="animatsiya">
-    <p>Sahnadagi bo'sh joy to'ldirilgan, jadvalda shu juftning munosabati ko'k chegara bilan belgilangan. "Keyingi misol" bilan to'rt munosabatning har birini ko'ring.</p>
-    <div class="formula"><span class="kichik ikkinchi">Nega aynan shu munosabat</span><span class="f-qiymat rw-qoida" id="otish-sabab">{misollar[0].sabab}</span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+    <p>The blank in the scene is filled in, and the table marks the relationship for this pair with a blue border. Use "Next example" to see each of the four relationships.</p>
+    <div class="formula"><span class="kichik ikkinchi">Why this relationship</span><span class="f-qiymat rw-qoida" id="otish-sabab">{misollar[0].sabab}</span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
     <dl class="rw-qoidalar">
       {munosabatlar.map((m) => (
-        <div><dt>{m.nomi} <span class="mun-sozlar" lang="en">{m.sozlar.map((x) => x.replace(/,$/, '')).join(' · ')}</span></dt><dd>{m.savol}</dd></div>
+        <div><dt>{m.nomi} <span class="mun-sozlar">{m.sozlar.map((x) => x.replace(/,$/, '')).join(' · ')}</span></dt><dd>{m.savol}</dd></div>
       ))}
     </dl>
-    <p class="kichik ikkinchi">Usul: bo'sh joyni yoping, ikki gapni o'z so'zingiz bilan ulang ("lekin", "shuning uchun", "masalan", "yana"), keyin shu ma'nodagi variantni toping.</p>
+    <p class="kichik ikkinchi">Method: cover the blank, connect the two sentences in your own words ("but", "so", "for example", "also"), then find the option with that meaning.</p>
   </div>
 
   <div slot="sinab">
     <div class="vazifa">
-      <p><b>Vazifa.</b> Sahnadagi ikki gapni o'qing va jadvaldan ularning munosabatini tanlang. Klaviaturada: Tab bilan jadvalga kiring, strelkalar bilan yuring, Enter bilan tanlang.</p>
-      <p class="vazifa-holat" id="otish-sinab-holat" aria-live="polite">Hali tanlanmagan.</p>
+      <p><b>Task.</b> Read the two sentences in the scene and choose their relationship from the table. With a keyboard: press Tab to enter the table, move with the arrow keys, press Enter to choose.</p>
+      <p class="vazifa-holat" id="otish-sinab-holat" aria-live="polite">Nothing chosen yet.</p>
     </div>
-    <div class="segment"><button type="button" class="kichik-tugma" id="otish-qayta">Qayta urinish</button></div>
+    <div class="segment"><button type="button" class="kichik-tugma" id="otish-qayta">Try again</button></div>
   </div>
 </DarsQolip>
 
@@ -120,17 +119,17 @@ const misollar = [
     if (qadam !== 'sinab') return;
     tozala(false);
     joyQoy(null);
-    if (k < 0) { holat.textContent = 'Hali tanlanmagan.'; holat.dataset.ok = ''; return; }
+    if (k < 0) { holat.textContent = 'Nothing chosen yet.'; holat.dataset.ok = ''; return; }
     const m = misollar[joriy];
     if (k === togriK()) {
       g.faol(false);
-      yorliq(k, "To'g'ri", 'gap-togri');
+      yorliq(k, 'Correct', 'gap-togri');
       joyQoy(munosabatlar[k].sozlar[0]);
-      holat.textContent = `To'g'ri: ${munosabatlar[k].nomi.toLowerCase()}. ${m.sabab}`;
+      holat.textContent = `Correct: ${munosabatlar[k].nomi.toLowerCase()}. ${m.sabab}`;
       holat.dataset.ok = '1';
     } else {
-      yorliq(k, 'Siz tanlagan', 'gap-xato');
-      holat.textContent = `Bu munosabat mos emas. Savol: ${munosabatlar[k].savol} Bu juftda javob "yo'q". Yana urinib ko'ring.`;
+      yorliq(k, 'Your choice', 'gap-xato');
+      holat.textContent = `This relationship does not fit. Question: ${munosabatlar[k].savol} For this pair, the answer is "no". Try again.`;
       holat.dataset.ok = '';
     }
   });
@@ -158,20 +157,20 @@ const misollar = [
     const m = misollar[joriy];
     $('otish-1').textContent = m.birinchi;
     $('otish-2').textContent = m.ikkinchi;
-    $('otish-tartib').textContent = `${joriy + 1} / ${misollar.length} misol`;
+    $('otish-tartib').textContent = `Example ${joriy + 1} of ${misollar.length}`;
     $('otish-sabab').textContent = m.sabab;
     tozala(true);
     if (qadam === 'sinab') {
       g.faol(true);
       joyQoy(null);
-      holat.textContent = 'Hali tanlanmagan.'; holat.dataset.ok = '';
-      $('otish-holat').textContent = `${joriy + 1}-misol. Ikki gap orasidagi munosabatni tanlang.`;
+      holat.textContent = 'Nothing chosen yet.'; holat.dataset.ok = '';
+      $('otish-holat').textContent = `Example ${joriy + 1}. Choose the relationship between the two sentences.`;
     } else {
       g.faol(false);
       const k = togriK();
-      yorliq(k, 'Shu juft', 'gap-togri');
+      yorliq(k, 'This pair', 'gap-togri');
       joyQoy(munosabatlar[k].sozlar[0]);
-      $('otish-holat').textContent = `${joriy + 1}-misol. Munosabat: ${munosabatlar[k].nomi.toLowerCase()}, bo'sh joyda "${munosabatlar[k].sozlar[0]}".`;
+      $('otish-holat').textContent = `Example ${joriy + 1}. Relationship: ${munosabatlar[k].nomi.toLowerCase()}, with "${munosabatlar[k].sozlar[0]}" in the blank.`;
     }
   }
 
