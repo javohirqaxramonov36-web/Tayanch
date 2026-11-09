@@ -12,7 +12,7 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | --- | --- |
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
-| `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. Faqat `psql` bilan (6-bo'lim). |
+| `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
 | `tests/loyiha_tekshir.sql` | Loyiha holatini tekshirish, **faqat o'qiydi**: RLS, RPC va ularning huquqlari, jadval huquqlari lokal sinov bilan bir xilligi, bucket, trigger, SPR, sinov qoldig'i. SQL Editor'da ham, `psql` da ham ishlaydi. |
 | `../scripts/rls-tekshir.sh` | Lokal sinov: vaqtinchalik klaster, migratsiyalar 2 marta, testlar. `npm run db:tekshir` |
 
@@ -164,24 +164,42 @@ Postgres 15+ kerak (masalan `brew install postgresql@17`):
 npm run db:tekshir
 ```
 
-Natija: migratsiyalar 2 marta xatosiz, RLS hamma jadvalda, `OK 01` … `OK 15`, `HAMMASI O'TDI`.
+Natija: migratsiyalar 2 marta xatosiz, RLS hamma jadvalda, `OK 01`, `OK 02`, `OK 04` … `OK 15`, `HAMMASI O'TDI`.
+
+`OK 03` xabari yo'q, bu xato emas: 3-tekshiruv (A `questions` jadvalini to'g'ridan-to'g'ri o'qiy olmaydi) 4-blok ichida turadi va alohida xabar chiqarmaydi. U o'tmasa test `FAIL 03` bilan to'xtaydi.
 
 ### Haqiqiy loyihada (`rls_test.sql`)
 
 Test 3 ta sinov foydalanuvchisini `auth.users` ga, 4 ta "SINOV" savolni `questions` ga, 2 ta yozuvni `storage.objects` ga yozadi, rollar bilan tekshiradi va oxirida `ROLLBACK` qiladi: bazada hech narsa qolmaydi. Xato bo'lsa `ON_ERROR_STOP` psql'ni to'xtatadi, tranzaksiya commit bo'lmaydi.
 
-1. Shart: 4-bo'lim hamma qatori `ok`. Eng yaxshi vaqt: haqiqiy foydalanuvchilar hali yo'q (hozir).
-2. **Faqat `psql`**: faylda psql meta-buyruqlari (`\set`, `\gset`) bor, SQL Editor ularni bajarmaydi.
+**Natija (2026-11-09, `uvwejvjrsswssgydwevm`, Postgres 17.11):** `OK 01`, `OK 02`, `OK 04` … `OK 15`, `HAMMASI O'TDI`. `postgres` rolida `auth.users` va `storage.objects` ga to'g'ridan-to'g'ri yozish ishladi (`permission denied` chiqmadi), test moslanmadi. Keyin `loyiha_tekshir.sql`: hamma qator `ok` yoki `info`, 92-qator `ok` (auth.users 0, questions 0, storage 0).
+
+#### Qanday ishga tushirildi: `supabase db query` (parol kerak emas)
+
+psql uchun baza paroli kerak edi va u hal bo'lmadi (pastda), shuning uchun test CLI 3 orqali ishga tushirildi. CLI login'i yetadi, baza paroli so'ralmaydi.
+
+- CLI faylni Management API orqali bitta so'rov va bitta tranzaksiyada bajaradi. Oldindan zararsiz sinov bilan tekshirildi: `begin … rollback` undan oldingi hamma narsani bekor qiladi (vaqtinchalik jadval ham, `set_config` ham). Rol: `postgres` (superuser emas), psql bilan session pooler orqali ulangandagi rol bilan bir xil.
+- CLI `\set`/`\gset` ni bilmaydi va `notice` xabarlarini ko'rsatmaydi. Shuning uchun repodagi fayl emas, uning vaqtinchalik nusxasi ishlatildi (repoga qo'shilmagan): `\set` qatorlari olib tashlandi, `\gset` o'rniga `;`, har `raise notice 'OK NN …'` o'rniga `test.ok` sozlamasiga `OK NN` qo'shish, oxirgi `HAMMASI O'TDI` xabari o'rniga ataylab `raise exception 'NATIJA:% | HAMMASI O''TDI …'`. Tekshiruvlar va `FAIL` xatolari o'zgarmadi.
+- Ataylab xato tranzaksiyani bekor qiladi (ROLLBACK bilan bir xil), CLI uni xato matnida qaytaradi: `ERROR: P0001: NATIJA: OK 01 OK 02 OK 04 OK 05 … OK 15 | HAMMASI O'TDI`. Birorta tekshiruv o'tmasa, shu joyda `FAIL NN` xatosi chiqadi.
+
+#### Muqobil: psql (baza paroli kerak)
+
+1. Shart: 4-bo'lim hamma qatori `ok`. Eng yaxshi vaqt: haqiqiy foydalanuvchilar hali yo'q.
+2. `psql` (SQL Editor emas): faylda psql meta-buyruqlari (`\set`, `\gset`) bor, SQL Editor ularni bajarmaydi.
 3. Ulanish: Dashboard → **Connect** → **Session pooler** (port 5432, IPv4). Bepul rejada direct connection faqat IPv6; transaction pooler (6543) sessiya holatini saqlamaydi. Manzildan `:[YOUR-PASSWORD]` qismini olib tashlang: psql parolni o'zi so'raydi (parol buyruqlar tarixiga tushmaydi).
-4. Repo ildizidan (Homebrew `psql` 17):
+4. Repo ildizidan (Homebrew `psql` 17), **macOS Terminal ilovasida**:
 
 ```bash
 psql "postgresql://postgres.<loyiha-ref>@<pooler-host>:5432/postgres" -X -v ON_ERROR_STOP=1 -f supabase/tests/rls_test.sql
 ```
 
-5. Kutilgan: `OK 01` … `OK 15`, `HAMMASI O'TDI`, oxirida `ROLLBACK`.
+5. Kutilgan: `OK 01`, `OK 02`, `OK 04` … `OK 15`, `HAMMASI O'TDI`, oxirida `ROLLBACK`.
 6. Keyin `loyiha_tekshir.sql` ni qayta ishga tushiring: 92-qator (sinov qoldig'i) `ok`.
-7. 0-qadamda `permission denied` (`auth.users` yoki `storage.objects` ga to'g'ridan-to'g'ri yozish) chiqsa: xato qatorini Claude'ga ko'rsating, test moslanadi (masalan sinov foydalanuvchilari Dashboard → Authentication → Add user orqali). Supabase 2025-04-21 dan `auth`/`storage` da jadval va funksiya yaratishni cheklagan; trigger va RLS siyosati ruxsat etilgan, oddiy yozish (DML) cheklovlar ro'yxatida yo'q (changelog 34270). Real yozish ishlashi: **tekshirish kerak**.
+
+Parol haqida (2026-11-09):
+- Bu baza paroli (loyiha yaratilganda berilgan), Supabase hisobi yoki GitHub paroli emas. Esdan chiqsa: Dashboard → Project Settings → Database → **Reset database password**.
+- Claude Code ilovasining Terminal panelida psql parol kiritishni qabul qilmadi (3 urinish, kirish psql'ga yetmadi). macOS Terminal ilovasida parol so'rovi ishladi, lekin `FATAL: password authentication failed for user "postgres"` (parol noto'g'ri). psql yo'li oxirigacha sinalmagan.
+- `permission denied` (`auth.users` yoki `storage.objects` ga yozish) haqiqiy loyihada chiqmadi (yuqoridagi natija). Supabase 2025-04-21 dan `auth`/`storage` da jadval va funksiya yaratishni cheklagan; trigger va RLS siyosati ruxsat etilgan, oddiy yozish (DML) cheklovlar ro'yxatida yo'q (changelog 34270) va haqiqiy loyihada ishladi.
 
 ## 7. Kvota va tariflar
 
