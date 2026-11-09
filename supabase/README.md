@@ -66,5 +66,5 @@ Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov f
 ## 5. Keyingi vazifalar
 
 - P03B: Google bilan kirish (Google provider, client ID/secret faqat dashboard'da; Redirect URL'lar shu ro'yxatda).
-- P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Hozircha `display_name`, `nickname` Supabase `user_metadata` da.
+- P12: profil sahifasi `public.profiles` jadvalidan o'qiydi va unga yozadi (2026-11-09): ism, taxallus (unique, band bo'lsa 23505 xatosi), SAT maqsad ball (400–1600, CB04), imtihon sanasi. Jadval va RLS: PR #38/#57 migratsiyasi `20261108000002_profiles.sql` (loyihada qo'llangan, 2026-11-09 da foydalanuvchi 0 ta, eski qatorlarni ko'chirish kerak emas).
 - P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).

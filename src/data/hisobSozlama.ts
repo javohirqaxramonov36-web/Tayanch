@@ -26,3 +26,6 @@ export const hisobSozlama = {
    */
   sessiyaKaliti: 'tayanch:auth',
 } as const;
+
+/** SAT umumiy ball oralig'i (CB04, College Board "SAT Suite Score Structure"). profiles.target_score check bilan bir xil. */
+export const satBall = { min: 400, max: 1600, manba: 'CB04' } as const;
