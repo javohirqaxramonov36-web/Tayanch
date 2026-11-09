@@ -40,6 +40,12 @@ export const darslar: IeltsBand[] = [
   { nomi: 'Matching headings', tavsif: 'Paragrafning asosiy fikriga sarlavha tanlash', qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
 ];
 
+export const mashqSahifalari: IeltsBand[] = [
+  { nomi: 'Sinov testlari', tavsif: 'To‘rt ko‘nikma bo‘yicha IELTS mashqlari', qism: 'mashq/', ikonka: IKONKA.namuna },
+  { nomi: 'Mashq natijalari', tavsif: 'Urinishlar va taxminiy band', qism: 'vosita/natijalar/', ikonka: IKONKA.tahlil },
+  { nomi: 'Xato daftari', tavsif: 'Dars va test xatolarini qayta ishlash', qism: 'vosita/xato-daftari/', ikonka: IKONKA.takror },
+];
+
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
 ];

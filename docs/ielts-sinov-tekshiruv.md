@@ -3,7 +3,7 @@
 Ishga tushirish
 
 ```sh
-PATH=/opt/homebrew/bin:$PATH node scripts/ielts-tekshir.mjs
+PATH=/opt/homebrew/bin:$PATH node scripts/ielts-tekshir.mjs --toliq
 ```
 
 Skript matn uzunligini, savollar sonini, variant va javob shaklini, dalil iqtiboslarining matn yoki skriptda borligini va ball hisobini tekshiradi. Savolni mazmunan qayta yechish natijalari quyida. Muallif tasdig‘i uchun JSON fayllarida `verified_by` maydoni bo‘sh.
@@ -197,3 +197,28 @@ Matnlar 747, 756 va 763 so‘z. Savollar 13, 13 va 14 ta.
 ## Writing 01–10
 
 Har to‘plamda ikkita original topshiriq bor. Task 1 grafiklaridagi raqamlar uydirma. Grafikning ko‘rinishi va jadvali bir xil JSON qiymatlaridan olinadi. Task 2 savollari ochiq javobli va o‘zini tekshirish mezonlari bilan beriladi. [IELTS Academic Writing formati](https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-writing)
+
+## Listening 01–10
+
+Har bir to‘plamda to‘rtta to‘liq skript va 40 ta savol bor. Quyidagi javoblar skriptdagi satrlar, yo‘nalishlar va xaritadagi harflardan qayta yechib yozildi. Qismlar ketma-ketligi savollar tartibiga mos.
+
+| To‘plam | 1-qism | 2-qism | 3-qism | 4-qism |
+| --- | --- | --- | --- | --- |
+| 01 | Harlow · Thursday · 2:30 · identification · furniture · side · A clamp · Send a message · three · The staffed desk | D · A · B · C · Sorting shed · Demonstration tent · Timber store · shoes · bell · gate | Time taken to find a room · During the morning · The entrance · Dana · Robin · Leena · Run a trial with one visitor · stopwatch · map · number | grain · bends · edge · water · interval · To reduce differences in starting moisture · flat · outline · photograph · temperature |
+| 02 | First Bowl · Monday · 6:15 · four · apron · bakery · Willow · Friday · initials · November | D · C · B · A · stamp · six · rack · eight · yellow · notebook | Change in width · On the bench · Use a cutting template · Isabel · Drew · Marta · pencil · water · minutes · envelopes | friction · board · slide · mass · dust · tape · water · support · rubber · direction |
+| 03 | Benson · Saturday · M42 · paper · five · coats · ground · 10:45 · purple · desk | C · D · A · B · small · pencil · crate · break · seeds · trolley | Speaking turns · Ordering picture cards · Sit apart from the group · Noor · Jamie · Ellis · table · letter · column · blue | post · edge · sketch · position · scale · leaves · base · rain · shore · log |
+| 04 | The Orchard · G · navy · key · Tuesday · 4:20 · receipt · west · P17 · fourteen | A · D · C · B · model · gate · glass · twelve · jars · exit | Volume collected · The angle of the roof · To check whether the result is consistent · Chloe · Samir · Jo · height · minute · tray · number | tear · gap · stiff · clip · pull · weights · movement · repair · edge · test |
+| 05 | Reed · medium · 28 · Wednesday · reception · twelve · orange · August · food · envelope | B · A · D · C · seven · cones · lowest · shelf · whistle · fence | Correct first choice of exit · Above the corridor entrance · To make the two versions easier to compare · Asha · Rowan · Hettie · lighting · exit · timer · box | box · left · pad · speed · floor · place · shake · volume · fan · supported |
+| 06 | Brook Loop · Sunday · 8:40 · bridge · Finch · twelve · water · red · meadow · minibus | A · D · C · B · thick · wool · label · tray · three · gate | At desk height · Just before lunch · Whether the blinds are open · Leo · Mina · Vic · sticker · three · setting · table | window · frost · line · background · strip · angle · frosted · sun · cloudy · doorway |
+| 07 | Saturday · B19 · stationery · 7:50 · south · grey · two · bin · Lake · alley | C · B · A · D · strip · board · blue · number · basket · five | How easily seedlings can be removed · The amount of soil · Use them for a rehearsal · Tariq · Lena · Amy · scale · tray · mat · ruler | wall · height · sunlight · direction · colour · sunset · side · dry · clock · plan |
+| 08 | Patel · Wednesday · forty · 16 · stand · desk · shelf · closed · 5:10 · white | D · A · B · C · silent · speech · drawer · light · lobby · card | The correct instructions · The script · To make the response method clear · Meera · Owen · Tal · tape · code · headphones · recording | clap · directly · path · wall · stand · floor · waveform · noise · echo · distance |
+| 09 | Nolan · Sunday · 11:20 · Cedar · container · small · cheese · fifteen · bucket · entrance | B · C · D · A · sample · frame · nine · card · lamp · basket | The month with the highest use · The figures shown · Write it down before discussing it · Fiona · Marc · Ada · board · folder · prompt · note | level · jug · opened · interval · diameter · tape · level · mass · closed · table |
+| 10 | H24 · Friday · 9:35 · fountain · Sutton · cream · market · fifty · pencil · arch | B · C · D · A · trays · log · pump · gloves · junction · two | Air speed behind the barrier · The fan setting · At the centre of the marked line · Jules · Sana · Nia · ruler · height · ten · letter | size · edge · stake · strings · label · stem · water · side · ruler · wind |
+
+Qayta yechilgan 400 javob va JSON kaliti orasida farq topilmadi. Brauzer skriptni mahalliy inglizcha ovozda o‘qiydi. Ovoz va tabiiy pauzalar qurilmaga bog‘liq. Bu skriptlar 30 daqiqalik tabiiy yozuv davomiyligini takrorlamaydi.
+
+Listening qismlari, bir marta ijro va savollar tartibi [IELTS Academic Listening formati](https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-listening) asosida tekshirildi. Yakuniy ikki daqiqalik tekshiruv [British Council yo‘riqnomasi](https://takeielts.britishcouncil.org/sites/default/files/listening_part_3_matching-classifying_questions_.pdf) asosida tanlandi.
+
+## Speaking 01–10
+
+Har to‘plamda Part 1 uchun to‘rtta qisqa savol, Part 2 uchun bitta cue card va to‘rtta yo‘naltiruvchi band hamda Part 3 uchun to‘rtta muhokama savoli mavjud. Part 2 tayyorlanish vaqti bir daqiqa. [IELTS Speaking qismlari](https://ielts.org/news-and-insights/three-parts-of-ielts-speaking-and-what-to-look-out-for)

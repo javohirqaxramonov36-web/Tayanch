@@ -7,6 +7,7 @@ const listening = new Set(['form-completion', 'note-completion', 'choice-single'
 const idlar = new Set();
 const matnlar = new Set();
 const hisobot = [];
+const fullIds = new Map(modullar.map((modul) => [modul, new Set()]));
 
 for (const modul of modullar) {
   const papka = new URL(`../public/data/ielts/${modul}/`, import.meta.url);
@@ -17,6 +18,7 @@ for (const modul of modullar) {
     const belgi = modul + '/' + fayl;
     assert.ok(testIdMi(test.id) && fayl === test.id + '.json' && test.module === modul, belgi);
     assert.ok(test.title && Number.isInteger(test.durationSeconds) && test.durationSeconds > 0, belgi);
+    if (test.id !== 'namuna') fullIds.get(modul).add(test.id);
     assert.ok(test.verified_by === null || typeof test.verified_by === 'string', belgi);
     if (modul === 'writing') {
       assert.equal(test.tasks.length, 2, belgi);
@@ -70,8 +72,16 @@ for (const modul of modullar) {
         const notGiven = q.correct === 'Not Given' && ['tfng', 'ynng'].includes(q.type);
         for (const { ref, quote } of q.evidence) {
           assert.ok(ref, savol);
-          if (notGiven) assert.equal(quote, '', savol);
-          else assert.ok(quote && text.some((p) => p.includes(quote)), savol + ' dalil iqtibosi');
+          if (notGiven) {
+            assert.equal(quote, '', savol);
+          } else if (modul === 'reading') {
+            const index = /^[A-Z]$/.test(ref) ? ref.charCodeAt(0) - 65 : -1;
+            assert.ok(quote && text[index]?.includes(quote), savol + ' dalil xatboshisi');
+          } else {
+            const line = /^Part (\d+), line (\d+) \((.+)\)$/.exec(ref);
+            const evidence = line ? part.script[Number(line[2]) - 1] : undefined;
+            assert.ok(quote && line && Number(line[1]) === i + 1 && evidence?.speaker === line[3] && evidence.text.includes(quote), savol + ' dalil satri');
+          }
         }
         if (q.options) {
           const options = q.options.map(norm);
@@ -97,6 +107,12 @@ for (const modul of modullar) {
     assert.equal(natijala(test, key).togri, all, belgi);
     assert.equal(natijala(test, {}).togri, 0, belgi);
     hisobot.push(`${belgi} · ${all} savol${counts.length ? ' · ' + counts.join(' / ') + ' so‘z' : ''}`);
+  }
+}
+
+if (process.argv.includes('--toliq')) {
+  for (const [modul, ids] of fullIds) {
+    for (let i = 1; i <= 10; i++) assert.ok(ids.has('mock-' + String(i).padStart(2, '0')), modul + ' · ' + i);
   }
 }
 

@@ -54,7 +54,7 @@ const modullar = [
       <section class="ielts-yuza ielts-oqim band-karta" aria-labelledby="band-sarlavha">
         <h2 id="band-sarlavha" class="ielts-kichik-sarlavha">Band maqsadi</h2>
         <dl class="band-qiymat">
-          <div><dt>So‘nggi band (taxminiy)</dt><dd data-band>–</dd><p class="ielts-izoh" data-band-modul></p></div>
+          <div><dt>So‘nggi band (taxminiy)</dt><dd><span data-band>–</span><span class="ielts-izoh band-modul" data-band-modul></span></dd></div>
           <div>
             <dt><label for="ielts-maqsad">Maqsad bandi</label></dt>
             <dd>
@@ -136,8 +136,7 @@ const modullar = [
   const status = document.querySelector<HTMLElement>('[data-dashboard-holat]')!;
   target.value = String(maqsadniOqi() ?? '');
   target.addEventListener('change', () => {
-    if (!target.value) return;
-    status.textContent = maqsadniYoz(Number(target.value)) ? 'Maqsad bandi saqlandi.' : 'Brauzerda saqlab bo‘lmadi.';
+    status.textContent = maqsadniYoz(target.value ? Number(target.value) : null) ? 'Maqsad bandi saqlandi.' : 'Brauzerda saqlab bo‘lmadi.';
   });
 
   const finished = new Set(completed.map((u) => u.modul)).size;
@@ -198,6 +197,7 @@ const modullar = [
     font-weight: var(--text-h1-weight);
     font-variant-numeric: tabular-nums;
   }
+  .band-modul { display: block; font-weight: var(--text-body-weight); }
   .jarayon { gap: var(--space-2); }
   .modul-tori { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); list-style: none; padding: 0; margin: 0; }
   .modul-karta { display: grid; align-content: start; gap: var(--space-1); height: 100%; padding: var(--space-3); }

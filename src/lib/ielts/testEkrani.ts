@@ -1,6 +1,6 @@
 import { el, havola, progress, soniyaMatni, top, tugma } from './dom';
 import { natijaChiz } from './natija';
-import { mezonniYoz, urinishOch, urinishniYoz, xatoniYechildi, type Urinish } from './storage';
+import { mezonniYoz, ochiqUrinishniOqi, urinishOch, urinishniYoz, xatoniYechildi, type Urinish } from './storage';
 import { audioIjro } from './tinglash';
 import { bahola, ballModulmi, javobBormi, javobMatni, savollar, testIdMi, turNomi, type BallTest, type Diagram, type Javob, type Modul, type Savol, type Test } from './test';
 import { daftarYoli, jsonYoli, natijaYoli } from './yollar';
@@ -42,9 +42,12 @@ export async function ishgaTushir(root: HTMLElement) {
   top(root, '[data-test-izoh]').textContent = qaytaSavol ? 'Xato daftaridan bitta savolni qayta ishlaysiz.'
     : test.module === 'speaking' ? 'Savollarni ovoz chiqarib mashq qiling.'
     : `Vaqt · ${Math.ceil(test.durationSeconds / 60)} daqiqa. Boshlagandan keyin javoblar shu brauzerda saqlanadi.`;
+  const start = top<HTMLButtonElement>(root, '[data-start]');
+  const draft = ochiqUrinishniOqi(test.module, test.id, qaytaSavol?.id);
+  if (draft) start.textContent = 'Mashqni davom ettirish';
   boshlash.hidden = false;
 
-  top(root, '[data-start]').addEventListener('click', () => {
+  start.addEventListener('click', () => {
     boshlash.hidden = true;
     const yangi = urinishOch(test.module, test.id, qaytaSavol ? 300 : test.durationSeconds, qaytaSavol?.id);
     let urinish = yangi.urinish;
@@ -120,6 +123,7 @@ export async function ishgaTushir(root: HTMLElement) {
       if (fokus) { fokus.tabIndex = -1; fokus.focus(); }
     }
     window.addEventListener('pagehide', () => yop(), { once: true });
+    window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
   }, { once: true });
 }
 
@@ -128,6 +132,7 @@ function diagramChiz(diagram: Diagram) {
   const nom = el('figcaption', diagram.title);
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 100 75');
+  svg.setAttribute('class', 'ielts-xarita-sxema');
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', diagram.alt);
   const yolak = document.createElementNS(svg.namespaceURI, 'path');
@@ -135,12 +140,17 @@ function diagramChiz(diagram: Diagram) {
   yolak.setAttribute('class', 'ielts-diagram-yolak');
   svg.append(yolak);
   for (const joy of diagram.places) {
+    const nuqta = document.createElementNS(svg.namespaceURI, 'circle');
+    nuqta.setAttribute('cx', String(joy.x));
+    nuqta.setAttribute('cy', String(joy.y));
+    nuqta.setAttribute('r', '6');
     const t = document.createElementNS(svg.namespaceURI, 'text');
     t.setAttribute('x', String(joy.x));
     t.setAttribute('y', String(joy.y));
     t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('dominant-baseline', 'central');
     t.textContent = joy.label;
-    svg.append(t);
+    svg.append(nuqta, t);
   }
   rasm.append(nom, svg);
   return rasm;

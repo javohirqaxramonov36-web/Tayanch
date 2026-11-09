@@ -66,7 +66,7 @@ function royxat<T>(prefiks: string): T[] {
 export const urinishniOqi = (id: string) => oqi<Urinish>(URINISH + id);
 export const urinishlar = () => royxat<Urinish>(URINISH).sort((a, b) => b.boshlangan - a.boshlangan);
 export const maqsadniOqi = () => oqi<number>(MAQSAD);
-export const maqsadniYoz = (band: number) => yoz(MAQSAD, band);
+export const maqsadniYoz = (band: number | null) => yoz(MAQSAD, band);
 export const testXatolari = () => royxat<Xato>(DAFTAR).sort((a, b) => b.sana - a.sana);
 export const darsXatolari = () => xatolarniOqi('ielts');
 export const xatoniSaqla = (xato: Xato) => yoz(DAFTAR + xato.id, xato);
@@ -74,11 +74,19 @@ export function xatoniYechildi(id: string) {
   try { localStorage.removeItem(DAFTAR + id); } catch { /* Saqlash bloklangan. */ }
 }
 
+function juftKaliti(modul: Modul, test: string, qayta?: string) {
+  return JUFTLIK + modul + ':' + test + (qayta ? ':' + qayta : '');
+}
+
+export function ochiqUrinishniOqi(modul: Modul, test: string, qayta?: string) {
+  const id = oqi<string>(juftKaliti(modul, test, qayta));
+  const eski = id ? urinishniOqi(id) : undefined;
+  return eski && !eski.topshirilgan ? eski : undefined;
+}
+
 export function urinishOch(modul: Modul, test: string, soniya: number, qayta?: string) {
-  const kalit = JUFTLIK + modul + ':' + test;
-  const id = qayta ? undefined : oqi<string>(kalit);
-  const eski = id && urinishniOqi(id);
-  if (eski && !eski.topshirilgan) return { urinish: eski, saqlandi: true };
+  const eski = ochiqUrinishniOqi(modul, test, qayta);
+  if (eski) return { urinish: eski, saqlandi: true };
 
   const hozir = Date.now();
   const urinish: Urinish = {
@@ -87,7 +95,7 @@ export function urinishOch(modul: Modul, test: string, soniya: number, qayta?: s
     audio: [], audioTugagan: [], belgi: {}, qayta,
   };
   const saqlandi = yoz(URINISH + urinish.id, urinish);
-  if (!qayta && saqlandi) yoz(kalit, urinish.id);
+  if (saqlandi) yoz(juftKaliti(modul, test, qayta), urinish.id);
   return { urinish, saqlandi };
 }
 

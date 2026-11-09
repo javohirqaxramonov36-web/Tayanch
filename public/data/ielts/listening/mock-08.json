@@ -1,0 +1,1052 @@
+{
+  "id": "mock-08",
+  "module": "listening",
+  "title": "Listening · Set 08",
+  "durationSeconds": 1800,
+  "reviewSeconds": 120,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "Booking an instrument practice room",
+      "script": [
+        {
+          "speaker": "Receptionist",
+          "text": "The practice rooms can be reserved for individual work. I can confirm the room, explain how to collect the key and check which equipment you need."
+        },
+        {
+          "speaker": "Musician",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Musician",
+          "text": "Could you confirm the reservation name?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "The reservation is under Patel. That is the surname on the room list."
+        },
+        {
+          "speaker": "Musician",
+          "text": "What have you put down for the practice day?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "The room is available on Wednesday. The hall is being used for an assessment on Thursday."
+        },
+        {
+          "speaker": "Musician",
+          "text": "What should I write for the practice length?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "Your session lasts forty minutes. We leave a short gap before the next person arrives."
+        },
+        {
+          "speaker": "Musician",
+          "text": "And what is the room number?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "You are in room 16. Room 60 is in a separate part of the building, so check both digits."
+        },
+        {
+          "speaker": "Musician",
+          "text": "Could you confirm the equipment requested?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "I have included a music stand in the booking. There is already a chair in the room."
+        },
+        {
+          "speaker": "Musician",
+          "text": "What have you put down for the key collection point?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "Collect your key from the desk at the end of the entrance hall. It will be ready before the session."
+        },
+        {
+          "speaker": "Musician",
+          "text": "What should I write for the case stored on a?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "Use the shelf beside the door for your case. The floor needs to remain clear."
+        },
+        {
+          "speaker": "Musician",
+          "text": "And what is the window kept?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "The window must stay closed while you practise. The rooms have separate ventilation."
+        },
+        {
+          "speaker": "Musician",
+          "text": "Could you confirm the time to leave by?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "Please leave by 5:10 p.m. That gives us time to check the room before the next booking."
+        },
+        {
+          "speaker": "Musician",
+          "text": "What have you put down for the return tag colour?"
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "The key has a white return tag. The black tags belong to rooms used by groups."
+        },
+        {
+          "speaker": "Receptionist",
+          "text": "I have put the booking through. Please leave the room ready for the next person and return the key to the desk."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l08-01",
+          "text": "Reservation name: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 4 (Receptionist)",
+              "quote": "The reservation is under Patel. That is the surname on the room list."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Patel"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Patel mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Patel."
+        },
+        {
+          "id": "l08-02",
+          "text": "Practice day: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 6 (Receptionist)",
+              "quote": "The room is available on Wednesday. The hall is being used for an assessment on Thursday."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Wednesday"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Wednesday mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Wednesday."
+        },
+        {
+          "id": "l08-03",
+          "text": "Practice length: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 8 (Receptionist)",
+              "quote": "Your session lasts forty minutes. We leave a short gap before the next person arrives."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "forty",
+            "40"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi forty mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is forty."
+        },
+        {
+          "id": "l08-04",
+          "text": "Room number: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 10 (Receptionist)",
+              "quote": "You are in room 16. Room 60 is in a separate part of the building, so check both digits."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "16",
+            "sixteen"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi 16 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is 16."
+        },
+        {
+          "id": "l08-05",
+          "text": "Equipment requested: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 12 (Receptionist)",
+              "quote": "I have included a music stand in the booking. There is already a chair in the room."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "stand"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi stand mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is stand."
+        },
+        {
+          "id": "l08-06",
+          "text": "Key collection point: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 14 (Receptionist)",
+              "quote": "Collect your key from the desk at the end of the entrance hall. It will be ready before the session."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "desk"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi desk mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is desk."
+        },
+        {
+          "id": "l08-07",
+          "text": "Case stored on a: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 16 (Receptionist)",
+              "quote": "Use the shelf beside the door for your case. The floor needs to remain clear."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "shelf"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi shelf mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is shelf."
+        },
+        {
+          "id": "l08-08",
+          "text": "Window kept: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 18 (Receptionist)",
+              "quote": "The window must stay closed while you practise. The rooms have separate ventilation."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "closed"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi closed mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is closed."
+        },
+        {
+          "id": "l08-09",
+          "text": "Time to leave by: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 20 (Receptionist)",
+              "quote": "Please leave by 5:10 p.m. That gives us time to check the room before the next booking."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "5:10",
+            "5.10",
+            "five ten"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi 5:10 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is 5:10."
+        },
+        {
+          "id": "l08-10",
+          "text": "Return tag colour: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 22 (Receptionist)",
+              "quote": "The key has a white return tag. The black tags belong to rooms used by groups."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "white"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi white mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is white."
+        }
+      ]
+    },
+    {
+      "title": "A visit to a community recording studio",
+      "script": [
+        {
+          "speaker": "Guide",
+          "text": "The plan shows the recording studio from above. The central junction is marked with a cross, and north is at the top. Walk quietly, as some rooms are in use."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The control room is north of the junction. The top path ends at a wide window where you can see the equipment."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The voice booth is east of the junction, off the right-hand path. Its heavy door is kept closed between sessions."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The equipment store is south of the junction. At the bottom of the plan you will see a small square room."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The listening room is west of the junction. The left-hand passage leads directly to its entrance."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Put phones in silent mode before entering. The recording in the main booth may continue while we look through the window."
+        },
+        {
+          "speaker": "Guide",
+          "text": "We will use a short piece of speech for the first demonstration. Music will be recorded in the following session."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Clean headphones are in the drawer. The items on top of the bench have already been used."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The red light beside a door shows that the room is in use. Wait until it goes out before entering."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The evening group meets in the lobby. There is no need to go straight to a booth."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Leave your feedback on a card. The cards are next to the schedule at the entrance."
+        },
+        {
+          "speaker": "Guide",
+          "text": "That completes the visit. If you want to return as a participant, pick up a schedule at the entrance."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l08-11",
+          "text": "Where is the control room?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 2 (Guide)",
+              "quote": "The control room is north of the junction. The top path ends at a wide window where you can see the equipment."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "D",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy shimol tomonda ekani aytiladi. Xaritada bu D nuqta.",
+          "explanation_en": "The speaker places the feature to the north of the junction. That position is D on the map."
+        },
+        {
+          "id": "l08-12",
+          "text": "Where is the voice booth?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 3 (Guide)",
+              "quote": "The voice booth is east of the junction, off the right-hand path. Its heavy door is kept closed between sessions."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "A",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy sharq tomonda ekani aytiladi. Xaritada bu A nuqta.",
+          "explanation_en": "The speaker places the feature to the east of the junction. That position is A on the map."
+        },
+        {
+          "id": "l08-13",
+          "text": "Where is the equipment store?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 4 (Guide)",
+              "quote": "The equipment store is south of the junction. At the bottom of the plan you will see a small square room."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "B",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy janub tomonda ekani aytiladi. Xaritada bu B nuqta.",
+          "explanation_en": "The speaker places the feature to the south of the junction. That position is B on the map."
+        },
+        {
+          "id": "l08-14",
+          "text": "Where is the listening room?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 5 (Guide)",
+              "quote": "The listening room is west of the junction. The left-hand passage leads directly to its entrance."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "C",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy g‘arb tomonda ekani aytiladi. Xaritada bu C nuqta.",
+          "explanation_en": "The speaker places the feature to the west of the junction. That position is C on the map."
+        },
+        {
+          "id": "l08-15",
+          "text": "Visitors should turn their phones to ___ mode.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 6 (Guide)",
+              "quote": "Put phones in silent mode before entering. The recording in the main booth may continue while we look through the window."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "silent"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi silent mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is silent."
+        },
+        {
+          "id": "l08-16",
+          "text": "The first demonstration uses a short piece of ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 7 (Guide)",
+              "quote": "We will use a short piece of speech for the first demonstration. Music will be recorded in the following session."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "speech"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi speech mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is speech."
+        },
+        {
+          "id": "l08-17",
+          "text": "Clean headphones are placed in a ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 8 (Guide)",
+              "quote": "Clean headphones are in the drawer. The items on top of the bench have already been used."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "drawer"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi drawer mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is drawer."
+        },
+        {
+          "id": "l08-18",
+          "text": "A red ___ shows that a room is in use.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 9 (Guide)",
+              "quote": "The red light beside a door shows that the room is in use. Wait until it goes out before entering."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "light"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi light mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is light."
+        },
+        {
+          "id": "l08-19",
+          "text": "The evening group will meet in the ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 10 (Guide)",
+              "quote": "The evening group meets in the lobby. There is no need to go straight to a booth."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "lobby"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi lobby mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is lobby."
+        },
+        {
+          "id": "l08-20",
+          "text": "Write feedback on a ___ before you leave.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 11 (Guide)",
+              "quote": "Leave your feedback on a card. The cards are next to the schedule at the entrance."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "card"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi card mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is card."
+        }
+      ],
+      "diagram": {
+        "title": "A visit to a community recording studio site plan",
+        "alt": "Map centred on the junction. C is west of the junction, D is north of the junction, A is east of the junction, B is south of the junction.",
+        "places": [
+          {
+            "label": "C",
+            "x": 18,
+            "y": 38
+          },
+          {
+            "label": "D",
+            "x": 50,
+            "y": 15
+          },
+          {
+            "label": "A",
+            "x": 82,
+            "y": 38
+          },
+          {
+            "label": "B",
+            "x": 50,
+            "y": 61
+          }
+        ]
+      }
+    },
+    {
+      "title": "Preparing a comparison of recorded speech",
+      "script": [
+        {
+          "speaker": "Meera",
+          "text": "The project looks at how clearly listeners can understand instructions recorded in different places. We want the voice and the words to stay the same."
+        },
+        {
+          "speaker": "Owen",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Meera",
+          "text": "Ask them to identify the correct instructions. We are not asking who spoke or whether the recording was pleasant to hear."
+        },
+        {
+          "speaker": "Owen",
+          "text": "Keep the script identical. The room will change and the final scores can differ, but the words must stay the same."
+        },
+        {
+          "speaker": "Meera",
+          "text": "The practice item makes the response method clear. It should not be added to the final score or used to choose the best room."
+        },
+        {
+          "speaker": "Owen",
+          "text": "Meera will record the instructions. Owen will reserve the rooms, and Tal will check the answer sheet."
+        },
+        {
+          "speaker": "Meera",
+          "text": "Owen will reserve the rooms. Both will be available during the same part of the day."
+        },
+        {
+          "speaker": "Owen",
+          "text": "Tal will check the answer sheet for wording that might reveal the instruction before it is heard."
+        },
+        {
+          "speaker": "Meera",
+          "text": "Use a strip of tape to mark the position on the floor. We will put the stand in the equivalent place in the second room."
+        },
+        {
+          "speaker": "Owen",
+          "text": "Use the room code in each filename. Do not put an expected score in the name."
+        },
+        {
+          "speaker": "Meera",
+          "text": "Use the same headphones for both recordings. Keep the playback level unchanged."
+        },
+        {
+          "speaker": "Owen",
+          "text": "Collect comments after the second recording. We do not want the first discussion to guide the second response."
+        },
+        {
+          "speaker": "Meera",
+          "text": "We should report which sentences were hard to understand and where they were recorded. Keep the listening scores separate until the comparison is complete."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l08-21",
+          "text": "What will the participants try to identify?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 3 (Meera)",
+              "quote": "Ask them to identify the correct instructions. We are not asking who spoke or whether the recording was pleasant to hear."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "The correct instructions",
+          "options": [
+            "The correct instructions",
+            "Who spoke",
+            "Whether the voice was pleasant"
+          ],
+          "explanation_uz": "Tinglovchilar ko‘rsatmaning mazmunini aniqlaydi.",
+          "explanation_en": "The relevant line identifies The correct instructions as the answer to this item."
+        },
+        {
+          "id": "l08-22",
+          "text": "What will be identical in the two versions?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 4 (Owen)",
+              "quote": "Keep the script identical. The room will change and the final scores can differ, but the words must stay the same."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "The script",
+          "options": [
+            "The room",
+            "The script",
+            "The final scores"
+          ],
+          "explanation_uz": "Har ikkala yozuvda aynan bir matn ishlatiladi.",
+          "explanation_en": "The relevant line identifies The script as the answer to this item."
+        },
+        {
+          "id": "l08-23",
+          "text": "Why use a short practice item first?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 5 (Meera)",
+              "quote": "The practice item makes the response method clear. It should not be added to the final score or used to choose the best room."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "To make the response method clear",
+          "options": [
+            "To add an extra mark to the score",
+            "To choose the recording location",
+            "To make the response method clear"
+          ],
+          "explanation_uz": "Dastlabki mashq javob berish usulini tushuntiradi.",
+          "explanation_en": "The relevant line identifies To make the response method clear as the answer to this item."
+        },
+        {
+          "id": "l08-24",
+          "text": "Who will record the instructions?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 6 (Owen)",
+              "quote": "Meera will record the instructions. Owen will reserve the rooms, and Tal will check the answer sheet."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Meera",
+          "options": [
+            "Meera",
+            "Owen",
+            "Tal"
+          ],
+          "explanation_uz": "Ko‘rsatmalarni Meera yozib oladi.",
+          "explanation_en": "The relevant line identifies Meera as the answer to this item."
+        },
+        {
+          "id": "l08-25",
+          "text": "Who will reserve the rooms?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 7 (Meera)",
+              "quote": "Owen will reserve the rooms. Both will be available during the same part of the day."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Owen",
+          "options": [
+            "Meera",
+            "Owen",
+            "Tal"
+          ],
+          "explanation_uz": "Xonalarni Owen band qiladi.",
+          "explanation_en": "The relevant line identifies Owen as the answer to this item."
+        },
+        {
+          "id": "l08-26",
+          "text": "Who will check the answer sheet?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 8 (Owen)",
+              "quote": "Tal will check the answer sheet for wording that might reveal the instruction before it is heard."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Tal",
+          "options": [
+            "Meera",
+            "Owen",
+            "Tal"
+          ],
+          "explanation_uz": "Javob varag‘ini Tal tekshiradi.",
+          "explanation_en": "The relevant line identifies Tal as the answer to this item."
+        },
+        {
+          "id": "l08-27",
+          "text": "Mark the recording position with a strip of ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 9 (Meera)",
+              "quote": "Use a strip of tape to mark the position on the floor. We will put the stand in the equivalent place in the second room."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "tape"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi tape mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is tape."
+        },
+        {
+          "id": "l08-28",
+          "text": "Save both audio files with the room ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 10 (Owen)",
+              "quote": "Use the room code in each filename. Do not put an expected score in the name."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "code"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi code mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is code."
+        },
+        {
+          "id": "l08-29",
+          "text": "Ask the listener to wear the same pair of ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 11 (Meera)",
+              "quote": "Use the same headphones for both recordings. Keep the playback level unchanged."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "headphones"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi headphones mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is headphones."
+        },
+        {
+          "id": "l08-30",
+          "text": "Collect written comments after the second ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 12 (Owen)",
+              "quote": "Collect comments after the second recording. We do not want the first discussion to guide the second response."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "recording"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi recording mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is recording."
+        }
+      ]
+    },
+    {
+      "title": "How an echo gives information about distance",
+      "script": [
+        {
+          "speaker": "Lecturer",
+          "text": "When a sound reaches a surface and returns, its delay can tell us something about the path it followed. We will observe the difference between a direct sound and a return."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "A clap gives a short starting sound. It is easier to separate from a later return than a long sound."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The first sound reaches the microphone directly. The next sound may have travelled farther before reaching it."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The echo has a longer path. It goes from the source to a reflecting surface and then back towards the microphone."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Try a large flat wall for the first comparison. A complex surface may send the sound in several directions."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Leave the microphone on the same stand while you move the source. This keeps one position fixed."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Make a small mark on the floor for the source. You can then return to the same position later."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Look at the recorded waveform. It can show a gap that is hard to measure simply by listening."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "If nearby noise hides the return, repeat the recording when the room is quieter."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "A long sound can continue while its echo arrives. That overlap makes the delay harder to see."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Record the distance from the source to the wall. You will need it when comparing two arrangements."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The timing gives one clue about the route of the sound. Report where the source and microphone were placed before drawing a conclusion about distance."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l08-31",
+          "text": "Start with a short sound made by a ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 2 (Lecturer)",
+              "quote": "A clap gives a short starting sound. It is easier to separate from a later return than a long sound."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "clap"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi clap mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is clap."
+        },
+        {
+          "id": "l08-32",
+          "text": "The first sound travels ___ to the microphone.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 3 (Lecturer)",
+              "quote": "The first sound reaches the microphone directly. The next sound may have travelled farther before reaching it."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "directly"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi directly mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is directly."
+        },
+        {
+          "id": "l08-33",
+          "text": "An echo takes a longer ___ than the direct sound.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 4 (Lecturer)",
+              "quote": "The echo has a longer path. It goes from the source to a reflecting surface and then back towards the microphone."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "path"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi path mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is path."
+        },
+        {
+          "id": "l08-34",
+          "text": "Use a large flat ___ to produce an obvious reflection.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 5 (Lecturer)",
+              "quote": "Try a large flat wall for the first comparison. A complex surface may send the sound in several directions."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "wall"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi wall mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is wall."
+        },
+        {
+          "id": "l08-35",
+          "text": "Keep the microphone on the same ___ during a comparison.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 6 (Lecturer)",
+              "quote": "Leave the microphone on the same stand while you move the source. This keeps one position fixed."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "stand"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi stand mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is stand."
+        },
+        {
+          "id": "l08-36",
+          "text": "Mark the starting point on the ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 7 (Lecturer)",
+              "quote": "Make a small mark on the floor for the source. You can then return to the same position later."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "floor"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi floor mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is floor."
+        },
+        {
+          "id": "l08-37",
+          "text": "The delay can be examined on the recorded ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 8 (Lecturer)",
+              "quote": "Look at the recorded waveform. It can show a gap that is hard to measure simply by listening."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "waveform"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi waveform mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is waveform."
+        },
+        {
+          "id": "l08-38",
+          "text": "Do a repeat when nearby ___ is lower.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 9 (Lecturer)",
+              "quote": "If nearby noise hides the return, repeat the recording when the room is quieter."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "noise"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi noise mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is noise."
+        },
+        {
+          "id": "l08-39",
+          "text": "A long sound can overlap with its own ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 10 (Lecturer)",
+              "quote": "A long sound can continue while its echo arrives. That overlap makes the delay harder to see."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "echo"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi echo mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is echo."
+        },
+        {
+          "id": "l08-40",
+          "text": "The report should show the ___ between the source and the wall.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 11 (Lecturer)",
+              "quote": "Record the distance from the source to the wall. You will need it when comparing two arrangements."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "distance"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi distance mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is distance."
+        }
+      ]
+    }
+  ]
+}

@@ -24,12 +24,12 @@ import '../../../../../styles/ielts.css';
 </BolimQobiq>
 <script>
   import { el, havola, top } from '../../../../../lib/ielts/dom';
-  import { modulNomi, type BallTest } from '../../../../../lib/ielts/test';
+  import { modullar, modulNomi, type BallTest } from '../../../../../lib/ielts/test';
   import { mezonniYoz, urinishlar } from '../../../../../lib/ielts/storage';
   import { ochiqModulChiz } from '../../../../../lib/ielts/yozishGapirish';
   import { natijaChiz } from '../../../../../lib/ielts/natija';
   import { testniYukla } from '../../../../../lib/ielts/testEkrani';
-  import { natijaYoli } from '../../../../../lib/ielts/yollar';
+  import { modulYoli, natijaYoli } from '../../../../../lib/ielts/yollar';
 
   const id = new URLSearchParams(location.search).get('urinish');
   const barchasi = urinishlar().filter((u) => u.topshirilgan && !u.qayta);
@@ -60,6 +60,14 @@ import '../../../../../styles/ielts.css';
           let urinish = u;
           ochiqModulChiz(root, test, () => urinish, (amal) => (urinish = mezonniYoz(urinish, amal)), true);
         } else natijaChiz(root, test as BallTest, u);
+        const index = modullar.indexOf(test.module);
+        const keyingi = index >= 0 ? modullar[index + 1] : undefined;
+        if (keyingi && test.id !== 'namuna') {
+          const link = havola(`Keyingi bo‘lim · ${modulNomi[keyingi]}`, modulYoli(keyingi, test.id), 'tugma tugma-asosiy');
+          const qator = el('div', '', 'ielts-amallar');
+          qator.append(link);
+          root.append(qator);
+        }
       }).catch(() => { holat.textContent = 'Test fayli topilmadi. Natijani ochib bo‘lmadi.'; });
     }
   }

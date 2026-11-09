@@ -1,0 +1,1055 @@
+{
+  "id": "mock-10",
+  "module": "listening",
+  "title": "Listening · Set 10",
+  "durationSeconds": 1800,
+  "reviewSeconds": 120,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "Booking a local history walking tour",
+      "script": [
+        {
+          "speaker": "Tour assistant",
+          "text": "I can reserve your place on the short history walk. This route looks at the way the streets were used before the new buildings went up."
+        },
+        {
+          "speaker": "Caller",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Caller",
+          "text": "What should I write for the tour code?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "Your booking code is H24. It is H followed by two four."
+        },
+        {
+          "speaker": "Caller",
+          "text": "And what is the day of the walk?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "The walk is on Friday. The weekend tours visit a different part of the town."
+        },
+        {
+          "speaker": "Caller",
+          "text": "Could you confirm the meeting time?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "We will meet at 9:35, or twenty-five to ten. The guide will start checking the list a few minutes earlier."
+        },
+        {
+          "speaker": "Caller",
+          "text": "What have you put down for the meeting point beside the?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "Meet by the fountain. The steps outside the hall are used by the longer tour."
+        },
+        {
+          "speaker": "Caller",
+          "text": "What should I write for the guide’s surname?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "Your guide is Sutton. The name on the notice is spelled with two Ts."
+        },
+        {
+          "speaker": "Caller",
+          "text": "And what is the route leaflet colour?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "Collect the cream leaflet. The green one gives a route for people walking without a guide."
+        },
+        {
+          "speaker": "Caller",
+          "text": "Could you confirm the first stop at the old?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "The first stop is at the old market. We will pass the library later, on the way back."
+        },
+        {
+          "speaker": "Caller",
+          "text": "What have you put down for the walk duration?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "The route takes about fifty minutes. That includes a short stop to look at a street plan."
+        },
+        {
+          "speaker": "Caller",
+          "text": "What should I write for the additional item to bring?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "Bring a pencil if you would like to mark the old street names on the leaflet."
+        },
+        {
+          "speaker": "Caller",
+          "text": "And what is the end point near the?"
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "The walk ends near the arch. From there, you can return to the meeting point in a few minutes."
+        },
+        {
+          "speaker": "Tour assistant",
+          "text": "Your confirmation gives the meeting point and the route code. Let us know if you need to cancel so we can offer the place to someone else."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l10-01",
+          "text": "Tour code: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 4 (Tour assistant)",
+              "quote": "Your booking code is H24. It is H followed by two four."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "H24",
+            "H 24"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi H24 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is H24."
+        },
+        {
+          "id": "l10-02",
+          "text": "Day of the walk: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 6 (Tour assistant)",
+              "quote": "The walk is on Friday. The weekend tours visit a different part of the town."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Friday"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Friday mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Friday."
+        },
+        {
+          "id": "l10-03",
+          "text": "Meeting time: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 8 (Tour assistant)",
+              "quote": "We will meet at 9:35, or twenty-five to ten. The guide will start checking the list a few minutes earlier."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "9:35",
+            "9.35",
+            "nine thirty-five",
+            "twenty-five to ten"
+          ],
+          "maxWords": 3,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi 9:35 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is 9:35."
+        },
+        {
+          "id": "l10-04",
+          "text": "Meeting point beside the: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 10 (Tour assistant)",
+              "quote": "Meet by the fountain. The steps outside the hall are used by the longer tour."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "fountain"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi fountain mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is fountain."
+        },
+        {
+          "id": "l10-05",
+          "text": "Guide’s surname: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 12 (Tour assistant)",
+              "quote": "Your guide is Sutton. The name on the notice is spelled with two Ts."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Sutton"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Sutton mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Sutton."
+        },
+        {
+          "id": "l10-06",
+          "text": "Route leaflet colour: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 14 (Tour assistant)",
+              "quote": "Collect the cream leaflet. The green one gives a route for people walking without a guide."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "cream"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi cream mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is cream."
+        },
+        {
+          "id": "l10-07",
+          "text": "First stop at the old: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 16 (Tour assistant)",
+              "quote": "The first stop is at the old market. We will pass the library later, on the way back."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "market"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi market mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is market."
+        },
+        {
+          "id": "l10-08",
+          "text": "Walk duration: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 18 (Tour assistant)",
+              "quote": "The route takes about fifty minutes. That includes a short stop to look at a street plan."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "fifty",
+            "50"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi fifty mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is fifty."
+        },
+        {
+          "id": "l10-09",
+          "text": "Additional item to bring: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 20 (Tour assistant)",
+              "quote": "Bring a pencil if you would like to mark the old street names on the leaflet."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "pencil"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi pencil mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is pencil."
+        },
+        {
+          "id": "l10-10",
+          "text": "End point near the: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 22 (Tour assistant)",
+              "quote": "The walk ends near the arch. From there, you can return to the meeting point in a few minutes."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "arch"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi arch mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is arch."
+        }
+      ]
+    },
+    {
+      "title": "A route through a field study centre",
+      "script": [
+        {
+          "speaker": "Guide",
+          "text": "Welcome to the field study centre. The path junction in the middle is your reference point. North is at the top, and all the marked routes return to this point."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The weather station is north of the junction, beyond the top path. It stands on an open patch of ground."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The stream table is east of the junction. The right-hand path leads to the covered bench where it is set out."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The soil shelter is south of the junction, close to the bottom of the plan. It contains samples from different parts of the site."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The tool store is west of the junction, behind the gate on the left. Keep the doorway clear when you collect equipment."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Keep the soil in its trays. The labels can be read without lifting material from them."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Put each observation in the log. Write the time beside the reading before going to the next station."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The water is moved by a small pump. Ask the instructor before changing the speed."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Gloves are available in the tool store. Choose a pair that fits before starting the activity."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Eat lunch beside the central junction. Food should be kept away from the sample trays."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The discussion starts at two o’clock. Return a little earlier if you have equipment to hand in."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The last group will come back to the junction for a short discussion. Return the borrowed equipment before you leave the centre."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l10-11",
+          "text": "Where is the weather station?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 2 (Guide)",
+              "quote": "The weather station is north of the junction, beyond the top path. It stands on an open patch of ground."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "B",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy shimol tomonda ekani aytiladi. Xaritada bu B nuqta.",
+          "explanation_en": "The speaker places the feature to the north of the junction. That position is B on the map."
+        },
+        {
+          "id": "l10-12",
+          "text": "Where is the stream table?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 3 (Guide)",
+              "quote": "The stream table is east of the junction. The right-hand path leads to the covered bench where it is set out."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "C",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy sharq tomonda ekani aytiladi. Xaritada bu C nuqta.",
+          "explanation_en": "The speaker places the feature to the east of the junction. That position is C on the map."
+        },
+        {
+          "id": "l10-13",
+          "text": "Where is the soil shelter?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 4 (Guide)",
+              "quote": "The soil shelter is south of the junction, close to the bottom of the plan. It contains samples from different parts of the site."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "D",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy janub tomonda ekani aytiladi. Xaritada bu D nuqta.",
+          "explanation_en": "The speaker places the feature to the south of the junction. That position is D on the map."
+        },
+        {
+          "id": "l10-14",
+          "text": "Where is the tool store?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 5 (Guide)",
+              "quote": "The tool store is west of the junction, behind the gate on the left. Keep the doorway clear when you collect equipment."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "A",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy g‘arb tomonda ekani aytiladi. Xaritada bu A nuqta.",
+          "explanation_en": "The speaker places the feature to the west of the junction. That position is A on the map."
+        },
+        {
+          "id": "l10-15",
+          "text": "The soil samples should stay inside their ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 6 (Guide)",
+              "quote": "Keep the soil in its trays. The labels can be read without lifting material from them."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "trays"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi trays mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is trays."
+        },
+        {
+          "id": "l10-16",
+          "text": "Record the time of each weather observation in a ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 7 (Guide)",
+              "quote": "Put each observation in the log. Write the time beside the reading before going to the next station."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "log"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi log mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is log."
+        },
+        {
+          "id": "l10-17",
+          "text": "The model stream uses a small ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 8 (Guide)",
+              "quote": "The water is moved by a small pump. Ask the instructor before changing the speed."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "pump"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi pump mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is pump."
+        },
+        {
+          "id": "l10-18",
+          "text": "Visitors may borrow ___ from the tool store.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 9 (Guide)",
+              "quote": "Gloves are available in the tool store. Choose a pair that fits before starting the activity."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "gloves"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi gloves mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is gloves."
+        },
+        {
+          "id": "l10-19",
+          "text": "Lunch is eaten beside the central ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 10 (Guide)",
+              "quote": "Eat lunch beside the central junction. Food should be kept away from the sample trays."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "junction"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi junction mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is junction."
+        },
+        {
+          "id": "l10-20",
+          "text": "The afternoon discussion begins at ___ o’clock.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 11 (Guide)",
+              "quote": "The discussion starts at two o’clock. Return a little earlier if you have equipment to hand in."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "two",
+            "2"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi two mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is two."
+        }
+      ],
+      "diagram": {
+        "title": "A route through a field study centre site plan",
+        "alt": "Map centred on the junction. A is west of the junction, B is north of the junction, C is east of the junction, D is south of the junction.",
+        "places": [
+          {
+            "label": "A",
+            "x": 18,
+            "y": 38
+          },
+          {
+            "label": "B",
+            "x": 50,
+            "y": 15
+          },
+          {
+            "label": "C",
+            "x": 82,
+            "y": 38
+          },
+          {
+            "label": "D",
+            "x": 50,
+            "y": 61
+          }
+        ]
+      }
+    },
+    {
+      "title": "Designing a trial of wind barriers",
+      "script": [
+        {
+          "speaker": "Jules",
+          "text": "The group has built two small wind barriers for a class demonstration. We want to observe how the position of the barrier changes the movement of air behind it."
+        },
+        {
+          "speaker": "Sana",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Jules",
+          "text": "Start by comparing air speed behind the barrier. We will note the shape of the supports, but the main outcome is not the colour or the weight of the model."
+        },
+        {
+          "speaker": "Sana",
+          "text": "Keep the fan setting the same. The barrier position will change and the readings can differ."
+        },
+        {
+          "speaker": "Jules",
+          "text": "Put the first sensor at the centre of the marked line. The left end and the right end will be used for later readings."
+        },
+        {
+          "speaker": "Sana",
+          "text": "Jules will prepare the supports. Sana will mark the measuring points, and Nia will check the record."
+        },
+        {
+          "speaker": "Jules",
+          "text": "Sana will mark the measuring points on the bench. The sensor should return to each mark in the same position."
+        },
+        {
+          "speaker": "Sana",
+          "text": "Nia will check the first record before we change the arrangement. She can ask for a repeat if an entry is unclear."
+        },
+        {
+          "speaker": "Jules",
+          "text": "Use a ruler for the distance from the fan. Estimate the position only after the marks have been put down."
+        },
+        {
+          "speaker": "Sana",
+          "text": "Keep the sensor at the same height. Air can move differently near the bench and higher up."
+        },
+        {
+          "speaker": "Jules",
+          "text": "Wait ten seconds after switching on the fan, then take the first reading."
+        },
+        {
+          "speaker": "Sana",
+          "text": "Use a different letter for each barrier. That makes the results easier to find when the models are put away."
+        },
+        {
+          "speaker": "Jules",
+          "text": "Keep both sets of readings. If one position looks unusual, we can repeat it before saying which arrangement gives better shelter."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l10-21",
+          "text": "What will the group compare first?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 3 (Jules)",
+              "quote": "Start by comparing air speed behind the barrier. We will note the shape of the supports, but the main outcome is not the colour or the weight of the model."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "Air speed behind the barrier",
+          "options": [
+            "Colour of the barrier",
+            "Weight of the model",
+            "Air speed behind the barrier"
+          ],
+          "explanation_uz": "Avval to‘siq orqasidagi havo tezligi qiyoslanadi.",
+          "explanation_en": "The relevant line identifies Air speed behind the barrier as the answer to this item."
+        },
+        {
+          "id": "l10-22",
+          "text": "What will be kept the same between trials?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 4 (Sana)",
+              "quote": "Keep the fan setting the same. The barrier position will change and the readings can differ."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "The fan setting",
+          "options": [
+            "The fan setting",
+            "Barrier position",
+            "The readings"
+          ],
+          "explanation_uz": "Ventilyator sozlamasi o‘zgarmaydi.",
+          "explanation_en": "The relevant line identifies The fan setting as the answer to this item."
+        },
+        {
+          "id": "l10-23",
+          "text": "Where will the first sensor be placed?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 5 (Jules)",
+              "quote": "Put the first sensor at the centre of the marked line. The left end and the right end will be used for later readings."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "At the centre of the marked line",
+          "options": [
+            "At the left end",
+            "At the centre of the marked line",
+            "At the right end"
+          ],
+          "explanation_uz": "Birinchi sensor chiziq o‘rtasida bo‘ladi.",
+          "explanation_en": "The relevant line identifies At the centre of the marked line as the answer to this item."
+        },
+        {
+          "id": "l10-24",
+          "text": "Who will prepare the barrier supports?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 6 (Sana)",
+              "quote": "Jules will prepare the supports. Sana will mark the measuring points, and Nia will check the record."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Jules",
+          "options": [
+            "Sana",
+            "Nia",
+            "Jules"
+          ],
+          "explanation_uz": "Tayanchlarni Jules tayyorlaydi.",
+          "explanation_en": "The relevant line identifies Jules as the answer to this item."
+        },
+        {
+          "id": "l10-25",
+          "text": "Who will mark the measuring points?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 7 (Jules)",
+              "quote": "Sana will mark the measuring points on the bench. The sensor should return to each mark in the same position."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Sana",
+          "options": [
+            "Sana",
+            "Jules",
+            "Nia"
+          ],
+          "explanation_uz": "O‘lchov joylarini Sana belgilaydi.",
+          "explanation_en": "The relevant line identifies Sana as the answer to this item."
+        },
+        {
+          "id": "l10-26",
+          "text": "Who will check the first record?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 8 (Sana)",
+              "quote": "Nia will check the first record before we change the arrangement. She can ask for a repeat if an entry is unclear."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Nia",
+          "options": [
+            "Jules",
+            "Nia",
+            "Sana"
+          ],
+          "explanation_uz": "Birinchi qaydni Nia ko‘rib chiqadi.",
+          "explanation_en": "The relevant line identifies Nia as the answer to this item."
+        },
+        {
+          "id": "l10-27",
+          "text": "Use a ___ to check the distance from the fan.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 9 (Jules)",
+              "quote": "Use a ruler for the distance from the fan. Estimate the position only after the marks have been put down."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "ruler"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi ruler mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is ruler."
+        },
+        {
+          "id": "l10-28",
+          "text": "Take readings at the same ___ above the bench.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 10 (Sana)",
+              "quote": "Keep the sensor at the same height. Air can move differently near the bench and higher up."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "height"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi height mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is height."
+        },
+        {
+          "id": "l10-29",
+          "text": "Wait ___ seconds after switching on the fan.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 11 (Jules)",
+              "quote": "Wait ten seconds after switching on the fan, then take the first reading."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "ten",
+            "10"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi ten mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is ten."
+        },
+        {
+          "id": "l10-30",
+          "text": "Give each barrier a different ___ in the table.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 12 (Sana)",
+              "quote": "Use a different letter for each barrier. That makes the results easier to find when the models are put away."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "letter"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi letter mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is letter."
+        }
+      ]
+    },
+    {
+      "title": "How a plant support affects growth",
+      "script": [
+        {
+          "speaker": "Lecturer",
+          "text": "A climbing plant can use a support to reach a new part of the space around it. Today we will compare two supports and decide what observations would make their effects clear."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Choose plants of a similar size at the start. Keep a photograph so that you can compare them later."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Measure from the pot’s edge when placing a support. Use the same starting position for the two arrangements."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The first support is a wooden stake. It gives the plant a single upright line."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The other support has several horizontal strings. Record when the plant first reaches one."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Use a removable label to mark a fixed reference point. Do not attach it to a part that grows."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Note the direction of the main stem at each visit. The plant may grow sideways before it grows higher."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Give the same amount of water to each pot. The aim is to compare the supports rather than water supply."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Take each photograph from the same side. Mark the position so you can find it again."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Hold a ruler beside any stem extending beyond the support. This gives a scale for the photograph."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Record damage caused by strong wind if it occurs. It can change the appearance of growth without being an effect of the support."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "A single measurement of final height is only one piece of evidence. Include the shape of the support, the position of the plant and what happened over time."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l10-31",
+          "text": "Start with plants of a similar ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 2 (Lecturer)",
+              "quote": "Choose plants of a similar size at the start. Keep a photograph so that you can compare them later."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "size"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi size mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is size."
+        },
+        {
+          "id": "l10-32",
+          "text": "Place the supports the same distance from the pot’s ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 3 (Lecturer)",
+              "quote": "Measure from the pot’s edge when placing a support. Use the same starting position for the two arrangements."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "edge"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi edge mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is edge."
+        },
+        {
+          "id": "l10-33",
+          "text": "The first support is made from a wooden ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 4 (Lecturer)",
+              "quote": "The first support is a wooden stake. It gives the plant a single upright line."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "stake"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi stake mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is stake."
+        },
+        {
+          "id": "l10-34",
+          "text": "The second support uses several horizontal ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 5 (Lecturer)",
+              "quote": "The other support has several horizontal strings. Record when the plant first reaches one."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "strings"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi strings mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is strings."
+        },
+        {
+          "id": "l10-35",
+          "text": "Mark a fixed point with a removable ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 6 (Lecturer)",
+              "quote": "Use a removable label to mark a fixed reference point. Do not attach it to a part that grows."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "label"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi label mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is label."
+        },
+        {
+          "id": "l10-36",
+          "text": "Record changes in the direction of the main ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 7 (Lecturer)",
+              "quote": "Note the direction of the main stem at each visit. The plant may grow sideways before it grows higher."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "stem"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi stem mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is stem."
+        },
+        {
+          "id": "l10-37",
+          "text": "Use the same amount of ___ in each pot.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 8 (Lecturer)",
+              "quote": "Give the same amount of water to each pot. The aim is to compare the supports rather than water supply."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "water"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi water mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is water."
+        },
+        {
+          "id": "l10-38",
+          "text": "Take photographs from the same ___ each week.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 9 (Lecturer)",
+              "quote": "Take each photograph from the same side. Mark the position so you can find it again."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "side"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi side mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is side."
+        },
+        {
+          "id": "l10-39",
+          "text": "A ___ can show how far a stem extends beyond a support.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 10 (Lecturer)",
+              "quote": "Hold a ruler beside any stem extending beyond the support. This gives a scale for the photograph."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "ruler"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi ruler mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is ruler."
+        },
+        {
+          "id": "l10-40",
+          "text": "Write down any damage caused by strong ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 11 (Lecturer)",
+              "quote": "Record damage caused by strong wind if it occurs. It can change the appearance of growth without being an effect of the support."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "wind"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi wind mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is wind."
+        }
+      ]
+    }
+  ]
+}

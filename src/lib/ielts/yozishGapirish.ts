@@ -45,9 +45,14 @@ function chartChiz(chart: Chart) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 320 160');
   svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'ielts-chart');
   const max = Math.max(1, ...chart.series.flatMap((s) => s.values));
   const group = 280 / chart.labels.length;
-  const wide = group / (chart.series.length + 1);
+  const wide = group / chart.series.length;
+  const axis = document.createElementNS(svg.namespaceURI, 'path');
+  axis.setAttribute('d', 'M16 16V130H305');
+  axis.setAttribute('class', 'ielts-diagram-yolak');
+  svg.append(axis);
   chart.labels.forEach((label, i) => {
     chart.series.forEach((s, seriesIndex) => {
       const n = s.values[i];

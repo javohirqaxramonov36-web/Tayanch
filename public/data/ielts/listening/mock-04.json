@@ -1,0 +1,1055 @@
+{
+  "id": "mock-04",
+  "module": "listening",
+  "title": "Listening · Set 04",
+  "durationSeconds": 1800,
+  "reviewSeconds": 120,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "Retrieving a bag from a theatre",
+      "script": [
+        {
+          "speaker": "Desk clerk",
+          "text": "You have reached the lost property desk at Harbour Theatre. I can look through the items from the weekend and arrange a time for you to check the bag."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "Could you confirm the performance title?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "I have your visit listed under The Orchard. The other performance in the building that evening was a concert."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "What have you put down for the seat row?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "You were in row G. That is the letter after F, so I will check the items from that area first."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "What should I write for the bag colour?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "The bag found near the aisle is navy. There was also a bright green bag, but its description is different."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "And what is the outside pocket contains a?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "There is a key in the outside pocket. I will leave it there so you can recognise the bag when you see it."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "Could you confirm the collection day?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "You can come on Tuesday. The building is closed to visitors on Monday while the next show is prepared."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "What have you put down for the collection time?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "Your collection time is 4:20 p.m. The main ticket counter opens later than that."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "What should I write for the required document?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "Bring the receipt for your theatre booking. It can be on a phone; we do not need a printed copy."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "And what is the collection entrance?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "Use the west entrance. The doors on the east side remain locked until the evening performance."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "Could you confirm the desk reference?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "Your reference is P17. That is P followed by one seven, rather than the number printed on the seat receipt."
+        },
+        {
+          "speaker": "Visitor",
+          "text": "What have you put down for the number of days the desk holds items?"
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "The desk keeps items for fourteen days after they are found. Let us know if you cannot come within that period."
+        },
+        {
+          "speaker": "Desk clerk",
+          "text": "Show the message at the desk when you arrive. If the item is not yours, we will check the remaining list with you."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l04-01",
+          "text": "Performance title: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 4 (Desk clerk)",
+              "quote": "I have your visit listed under The Orchard. The other performance in the building that evening was a concert."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "The Orchard"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi The Orchard mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is The Orchard."
+        },
+        {
+          "id": "l04-02",
+          "text": "Seat row: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 6 (Desk clerk)",
+              "quote": "You were in row G. That is the letter after F, so I will check the items from that area first."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "G",
+            "row G"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi G mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is G."
+        },
+        {
+          "id": "l04-03",
+          "text": "Bag colour: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 8 (Desk clerk)",
+              "quote": "The bag found near the aisle is navy. There was also a bright green bag, but its description is different."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "navy",
+            "navy blue"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi navy mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is navy."
+        },
+        {
+          "id": "l04-04",
+          "text": "Outside pocket contains a: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 10 (Desk clerk)",
+              "quote": "There is a key in the outside pocket. I will leave it there so you can recognise the bag when you see it."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "key"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi key mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is key."
+        },
+        {
+          "id": "l04-05",
+          "text": "Collection day: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 12 (Desk clerk)",
+              "quote": "You can come on Tuesday. The building is closed to visitors on Monday while the next show is prepared."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Tuesday"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Tuesday mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Tuesday."
+        },
+        {
+          "id": "l04-06",
+          "text": "Collection time: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 14 (Desk clerk)",
+              "quote": "Your collection time is 4:20 p.m. The main ticket counter opens later than that."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "4:20",
+            "4.20",
+            "four twenty"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi 4:20 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is 4:20."
+        },
+        {
+          "id": "l04-07",
+          "text": "Required document: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 16 (Desk clerk)",
+              "quote": "Bring the receipt for your theatre booking. It can be on a phone; we do not need a printed copy."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "receipt"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi receipt mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is receipt."
+        },
+        {
+          "id": "l04-08",
+          "text": "Collection entrance: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 18 (Desk clerk)",
+              "quote": "Use the west entrance. The doors on the east side remain locked until the evening performance."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "west"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi west mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is west."
+        },
+        {
+          "id": "l04-09",
+          "text": "Desk reference: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 20 (Desk clerk)",
+              "quote": "Your reference is P17. That is P followed by one seven, rather than the number printed on the seat receipt."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "P17",
+            "P 17"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi P17 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is P17."
+        },
+        {
+          "id": "l04-10",
+          "text": "Number of days the desk holds items: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 22 (Desk clerk)",
+              "quote": "The desk keeps items for fourteen days after they are found. Let us know if you cannot come within that period."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "fourteen",
+            "14"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi fourteen mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is fourteen."
+        }
+      ]
+    },
+    {
+      "title": "Following the route through a watermill",
+      "script": [
+        {
+          "speaker": "Guide",
+          "text": "Begin on the central cross shown on the mill site plan. North is at the top. The river is close to the buildings, so stay on the marked paths."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The wheel house is east of the junction, along the path on the right. It is the building closest to the moving water."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The grain loft is north of the junction, at the top of your plan. The path rises gently before the entrance."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The stone workshop is west of the junction. The left-hand path ends at its wide wooden door."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The tea shelter stands south of the junction. You will recognise it as the open structure at the bottom of the plan."
+        },
+        {
+          "speaker": "Guide",
+          "text": "We will start with a model. It shows the parts of the mechanism without having to stand next to the moving wheel."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Leave the safety gate closed until the guide reaches it. It separates visitors from the work area."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The older sacks are behind glass. The bag on the bench is a recent copy that you may touch."
+        },
+        {
+          "speaker": "Guide",
+          "text": "The talk lasts twelve minutes. After it finishes we will have a short pause before walking back."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Look at the small jars on the workshop table. Each contains a different type of grain."
+        },
+        {
+          "speaker": "Guide",
+          "text": "Collect the activity sheet at the exit. A volunteer will give you a pencil there as well."
+        },
+        {
+          "speaker": "Guide",
+          "text": "We finish at the junction, where the group can collect its bags. The paths must remain clear for the next tour."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l04-11",
+          "text": "Where is the wheel house?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 2 (Guide)",
+              "quote": "The wheel house is east of the junction, along the path on the right. It is the building closest to the moving water."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "A",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy sharq tomonda ekani aytiladi. Xaritada bu A nuqta.",
+          "explanation_en": "The speaker places the feature to the east of the junction. That position is A on the map."
+        },
+        {
+          "id": "l04-12",
+          "text": "Where is the grain loft?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 3 (Guide)",
+              "quote": "The grain loft is north of the junction, at the top of your plan. The path rises gently before the entrance."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "D",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy shimol tomonda ekani aytiladi. Xaritada bu D nuqta.",
+          "explanation_en": "The speaker places the feature to the north of the junction. That position is D on the map."
+        },
+        {
+          "id": "l04-13",
+          "text": "Where is the stone workshop?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 4 (Guide)",
+              "quote": "The stone workshop is west of the junction. The left-hand path ends at its wide wooden door."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "C",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy g‘arb tomonda ekani aytiladi. Xaritada bu C nuqta.",
+          "explanation_en": "The speaker places the feature to the west of the junction. That position is C on the map."
+        },
+        {
+          "id": "l04-14",
+          "text": "Where is the tea shelter?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 5 (Guide)",
+              "quote": "The tea shelter stands south of the junction. You will recognise it as the open structure at the bottom of the plan."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "B",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy janub tomonda ekani aytiladi. Xaritada bu B nuqta.",
+          "explanation_en": "The speaker places the feature to the south of the junction. That position is B on the map."
+        },
+        {
+          "id": "l04-15",
+          "text": "The first demonstration uses a small ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 6 (Guide)",
+              "quote": "We will start with a model. It shows the parts of the mechanism without having to stand next to the moving wheel."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "model"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi model mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is model."
+        },
+        {
+          "id": "l04-16",
+          "text": "Only the guide may open the safety ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 7 (Guide)",
+              "quote": "Leave the safety gate closed until the guide reaches it. It separates visitors from the work area."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "gate"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi gate mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is gate."
+        },
+        {
+          "id": "l04-17",
+          "text": "The oldest sacks are displayed behind ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 8 (Guide)",
+              "quote": "The older sacks are behind glass. The bag on the bench is a recent copy that you may touch."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "glass"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi glass mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is glass."
+        },
+        {
+          "id": "l04-18",
+          "text": "The talk in the workshop lasts ___ minutes.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 9 (Guide)",
+              "quote": "The talk lasts twelve minutes. After it finishes we will have a short pause before walking back."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "twelve",
+            "12"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi twelve mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is twelve."
+        },
+        {
+          "id": "l04-19",
+          "text": "Samples of grain are held in small ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 10 (Guide)",
+              "quote": "Look at the small jars on the workshop table. Each contains a different type of grain."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "jars"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi jars mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is jars."
+        },
+        {
+          "id": "l04-20",
+          "text": "Children’s activity sheets are collected at the ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 11 (Guide)",
+              "quote": "Collect the activity sheet at the exit. A volunteer will give you a pencil there as well."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "exit"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi exit mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is exit."
+        }
+      ],
+      "diagram": {
+        "title": "Following the route through a watermill site plan",
+        "alt": "Map centred on the junction. C is west of the junction, D is north of the junction, A is east of the junction, B is south of the junction.",
+        "places": [
+          {
+            "label": "C",
+            "x": 18,
+            "y": 38
+          },
+          {
+            "label": "D",
+            "x": 50,
+            "y": 15
+          },
+          {
+            "label": "A",
+            "x": 82,
+            "y": 38
+          },
+          {
+            "label": "B",
+            "x": 50,
+            "y": 61
+          }
+        ]
+      }
+    },
+    {
+      "title": "Organising a study of water use",
+      "script": [
+        {
+          "speaker": "Chloe",
+          "text": "For our design class, we are comparing two ways of collecting water from a small roof model. We need to choose the same conditions for the two trials."
+        },
+        {
+          "speaker": "Samir",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Chloe",
+          "text": "Compare the volume collected. We considered measuring the colour of the water, but our project is about collection rather than water quality."
+        },
+        {
+          "speaker": "Samir",
+          "text": "Keep the roof angle the same. The material of the collection channel will vary, and we will not use the same container for both samples."
+        },
+        {
+          "speaker": "Chloe",
+          "text": "Repeating each trial will show whether the result is consistent. It is not intended to increase the water pressure or to improve the appearance of the model."
+        },
+        {
+          "speaker": "Samir",
+          "text": "Chloe will make the collection channels. Samir will bring the containers and Jo will photograph the set-up."
+        },
+        {
+          "speaker": "Chloe",
+          "text": "Samir will bring the containers. We need two of the same size so the volumes can be checked easily."
+        },
+        {
+          "speaker": "Samir",
+          "text": "Jo will photograph the set-up at the start. The pictures should include the angle of the roof and the position of the channel."
+        },
+        {
+          "speaker": "Chloe",
+          "text": "Pour from the same height in every trial. Changing it could affect how much water splashes away."
+        },
+        {
+          "speaker": "Samir",
+          "text": "Leave the channel for one minute before measuring the water. That allows the last drops to run down."
+        },
+        {
+          "speaker": "Chloe",
+          "text": "Set a separate tray under the model for splashes. That water should not be counted as collected."
+        },
+        {
+          "speaker": "Samir",
+          "text": "Put the trial number next to each volume in the table. We want to keep the repetitions separate until the analysis."
+        },
+        {
+          "speaker": "Chloe",
+          "text": "Record each test as it is done. Once we know whether the measurements are reliable, we can decide which part of the model to alter next."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l04-21",
+          "text": "Which outcome will be compared?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 3 (Chloe)",
+              "quote": "Compare the volume collected. We considered measuring the colour of the water, but our project is about collection rather than water quality."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "Volume collected",
+          "options": [
+            "Colour of the water",
+            "Weight of the model roof",
+            "Volume collected"
+          ],
+          "explanation_uz": "Yig‘ilgan suv hajmi qiyoslanadi.",
+          "explanation_en": "The relevant line identifies Volume collected as the answer to this item."
+        },
+        {
+          "id": "l04-22",
+          "text": "What will remain the same in both trials?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 4 (Samir)",
+              "quote": "Keep the roof angle the same. The material of the collection channel will vary, and we will not use the same container for both samples."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "The angle of the roof",
+          "options": [
+            "The angle of the roof",
+            "Channel material",
+            "Collection container"
+          ],
+          "explanation_uz": "Ikkala tajribada tomning burchagi o‘zgarmaydi.",
+          "explanation_en": "The relevant line identifies The angle of the roof as the answer to this item."
+        },
+        {
+          "id": "l04-23",
+          "text": "Why will the group repeat each trial?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 5 (Chloe)",
+              "quote": "Repeating each trial will show whether the result is consistent. It is not intended to increase the water pressure or to improve the appearance of the model."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "To check whether the result is consistent",
+          "options": [
+            "To increase water pressure",
+            "To check whether the result is consistent",
+            "To improve the model’s appearance"
+          ],
+          "explanation_uz": "Takrorlash natija izchilligini ko‘rsatadi.",
+          "explanation_en": "The relevant line identifies To check whether the result is consistent as the answer to this item."
+        },
+        {
+          "id": "l04-24",
+          "text": "Who will make the collection channels?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 6 (Samir)",
+              "quote": "Chloe will make the collection channels. Samir will bring the containers and Jo will photograph the set-up."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Chloe",
+          "options": [
+            "Samir",
+            "Jo",
+            "Chloe"
+          ],
+          "explanation_uz": "Kanallarni Chloe yasaydi.",
+          "explanation_en": "The relevant line identifies Chloe as the answer to this item."
+        },
+        {
+          "id": "l04-25",
+          "text": "Who will bring the containers?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 7 (Chloe)",
+              "quote": "Samir will bring the containers. We need two of the same size so the volumes can be checked easily."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Samir",
+          "options": [
+            "Samir",
+            "Chloe",
+            "Jo"
+          ],
+          "explanation_uz": "Idishlarni Samir olib keladi.",
+          "explanation_en": "The relevant line identifies Samir as the answer to this item."
+        },
+        {
+          "id": "l04-26",
+          "text": "Who will photograph the set-up?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 8 (Samir)",
+              "quote": "Jo will photograph the set-up at the start. The pictures should include the angle of the roof and the position of the channel."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Jo",
+          "options": [
+            "Chloe",
+            "Jo",
+            "Samir"
+          ],
+          "explanation_uz": "Tajriba tuzilishini Jo suratga oladi.",
+          "explanation_en": "The relevant line identifies Jo as the answer to this item."
+        },
+        {
+          "id": "l04-27",
+          "text": "Pour the water from the same ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 9 (Chloe)",
+              "quote": "Pour from the same height in every trial. Changing it could affect how much water splashes away."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "height"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi height mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is height."
+        },
+        {
+          "id": "l04-28",
+          "text": "Leave the channel to drain for one ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 10 (Samir)",
+              "quote": "Leave the channel for one minute before measuring the water. That allows the last drops to run down."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "minute"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi minute mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is minute."
+        },
+        {
+          "id": "l04-29",
+          "text": "Use a separate ___ for water that misses the channel.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 11 (Chloe)",
+              "quote": "Set a separate tray under the model for splashes. That water should not be counted as collected."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "tray"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi tray mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is tray."
+        },
+        {
+          "id": "l04-30",
+          "text": "Mark each run with its trial ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 12 (Samir)",
+              "quote": "Put the trial number next to each volume in the table. We want to keep the repetitions separate until the analysis."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "number"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi number mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is number."
+        }
+      ]
+    },
+    {
+      "title": "Why a repair can change a material’s behaviour",
+      "script": [
+        {
+          "speaker": "Lecturer",
+          "text": "Today we will look at a damaged strip of material and a simple repair. A successful join needs to carry a load and allow the strip to move as required."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Begin by recording the position of the tear. Take this observation before you add any new material."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The new strip needs to cross the gap. It helps transfer force from one side to the other."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "A very stiff strip can prevent the repaired area from bending smoothly. Check the flexibility as well as whether it stays attached."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Use a clip to keep the pieces in place while the join sets. Remove the clip before testing the strip."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Draw an arrow for the expected pull. This keeps the direction of the test clear when you compare several samples."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Add the small weights one at a time. This gives you a record of when the join begins to move."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Record the load when you first see movement. Complete failure is not the only outcome worth noting."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Use a second strip with no repair for comparison. Its behaviour will help you interpret what changed in the first strip."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Inspect the edge of the new strip after loading. Damage can start there before the centre shows a change."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Take one image before and one after the test. Use the same distance so the positions can be compared directly."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "The strongest repair in one direction may not be the best for another use. Your report should describe how the strip was supported and what it needed to do."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l04-31",
+          "text": "Record the position of the original ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 2 (Lecturer)",
+              "quote": "Begin by recording the position of the tear. Take this observation before you add any new material."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "tear"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi tear mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is tear."
+        },
+        {
+          "id": "l04-32",
+          "text": "The repair strip must cross the ___ in the material.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 3 (Lecturer)",
+              "quote": "The new strip needs to cross the gap. It helps transfer force from one side to the other."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "gap"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi gap mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is gap."
+        },
+        {
+          "id": "l04-33",
+          "text": "A strip that is too ___ can prevent smooth bending.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 4 (Lecturer)",
+              "quote": "A very stiff strip can prevent the repaired area from bending smoothly. Check the flexibility as well as whether it stays attached."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "stiff"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi stiff mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is stiff."
+        },
+        {
+          "id": "l04-34",
+          "text": "Use a ___ to hold the pieces while the join sets.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 5 (Lecturer)",
+              "quote": "Use a clip to keep the pieces in place while the join sets. Remove the clip before testing the strip."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "clip"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi clip mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is clip."
+        },
+        {
+          "id": "l04-35",
+          "text": "Mark the direction of the expected ___ on the sample.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 6 (Lecturer)",
+              "quote": "Draw an arrow for the expected pull. This keeps the direction of the test clear when you compare several samples."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "pull"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi pull mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is pull."
+        },
+        {
+          "id": "l04-36",
+          "text": "The first load is applied gradually using small ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 7 (Lecturer)",
+              "quote": "Add the small weights one at a time. This gives you a record of when the join begins to move."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "weights"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi weights mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is weights."
+        },
+        {
+          "id": "l04-37",
+          "text": "Record the result at the first sign of ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 8 (Lecturer)",
+              "quote": "Record the load when you first see movement. Complete failure is not the only outcome worth noting."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "movement"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi movement mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is movement."
+        },
+        {
+          "id": "l04-38",
+          "text": "Compare the join with a second sample that has no ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 9 (Lecturer)",
+              "quote": "Use a second strip with no repair for comparison. Its behaviour will help you interpret what changed in the first strip."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "repair"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi repair mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is repair."
+        },
+        {
+          "id": "l04-39",
+          "text": "After testing, inspect the ___ of the added strip.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 10 (Lecturer)",
+              "quote": "Inspect the edge of the new strip after loading. Damage can start there before the centre shows a change."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "edge"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi edge mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is edge."
+        },
+        {
+          "id": "l04-40",
+          "text": "Include an image taken before and after the ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 11 (Lecturer)",
+              "quote": "Take one image before and one after the test. Use the same distance so the positions can be compared directly."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "test"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi test mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is test."
+        }
+      ]
+    }
+  ]
+}

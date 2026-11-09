@@ -1,0 +1,1052 @@
+{
+  "id": "mock-05",
+  "module": "listening",
+  "title": "Listening · Set 05",
+  "durationSeconds": 1800,
+  "reviewSeconds": 120,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "Reserving a locker at the swimming pool",
+      "script": [
+        {
+          "speaker": "Attendant",
+          "text": "I can book a long-term locker for you at the pool. It will stay assigned to you between sessions, unlike the small lockers by the showers."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "What have you put down for the booking surname?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "I have put Reed on the record. That is the spelling with two Es."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "What should I write for the locker size?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "The medium size will fit your bag. All the large lockers are taken this week."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "And what is the locker number?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "Your locker number is 28. The row starts beside the lift and continues towards the showers."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "Could you confirm the collection day?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "The key will be ready on Wednesday. We do not issue new keys during the Tuesday cleaning session."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "What have you put down for the collection desk?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "Collect the key from reception. The small kiosk by the pool only sells refreshments."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "What should I write for the refundable deposit?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "The deposit is twelve pounds. We return it when you bring back the key in working condition."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "And what is the card colour?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "We will give you an orange card. It identifies this type of locker rather than a swimming lesson."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "Could you confirm the renewal month?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "The booking can be renewed in August. You will receive a reminder near the end of July."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "What have you put down for the item prohibited in locker?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "Do not leave food inside. We have had trouble keeping the lockers clean when items are left overnight."
+        },
+        {
+          "speaker": "Swimmer",
+          "text": "What should I write for the key returned in an?"
+        },
+        {
+          "speaker": "Attendant",
+          "text": "Return the key in an envelope with the locker number written on the outside."
+        },
+        {
+          "speaker": "Attendant",
+          "text": "Keep the reference until you receive the key. The new lockers are clearly marked, but ask at the desk if you cannot find yours."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l05-01",
+          "text": "Booking surname: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 4 (Attendant)",
+              "quote": "I have put Reed on the record. That is the spelling with two Es."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Reed"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Reed mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Reed."
+        },
+        {
+          "id": "l05-02",
+          "text": "Locker size: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 6 (Attendant)",
+              "quote": "The medium size will fit your bag. All the large lockers are taken this week."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "medium"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi medium mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is medium."
+        },
+        {
+          "id": "l05-03",
+          "text": "Locker number: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 8 (Attendant)",
+              "quote": "Your locker number is 28. The row starts beside the lift and continues towards the showers."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "28",
+            "twenty-eight",
+            "twenty eight"
+          ],
+          "maxWords": 2,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi 28 mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is 28."
+        },
+        {
+          "id": "l05-04",
+          "text": "Collection day: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 10 (Attendant)",
+              "quote": "The key will be ready on Wednesday. We do not issue new keys during the Tuesday cleaning session."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "Wednesday"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi Wednesday mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is Wednesday."
+        },
+        {
+          "id": "l05-05",
+          "text": "Collection desk: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 12 (Attendant)",
+              "quote": "Collect the key from reception. The small kiosk by the pool only sells refreshments."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "reception"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi reception mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is reception."
+        },
+        {
+          "id": "l05-06",
+          "text": "Refundable deposit: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 14 (Attendant)",
+              "quote": "The deposit is twelve pounds. We return it when you bring back the key in working condition."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "twelve",
+            "12"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi twelve mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is twelve."
+        },
+        {
+          "id": "l05-07",
+          "text": "Card colour: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 16 (Attendant)",
+              "quote": "We will give you an orange card. It identifies this type of locker rather than a swimming lesson."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "orange"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi orange mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is orange."
+        },
+        {
+          "id": "l05-08",
+          "text": "Renewal month: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 18 (Attendant)",
+              "quote": "The booking can be renewed in August. You will receive a reminder near the end of July."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "August"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi August mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is August."
+        },
+        {
+          "id": "l05-09",
+          "text": "Item prohibited in locker: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 20 (Attendant)",
+              "quote": "Do not leave food inside. We have had trouble keeping the lockers clean when items are left overnight."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "food"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi food mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is food."
+        },
+        {
+          "id": "l05-10",
+          "text": "Key returned in an: ___",
+          "evidence": [
+            {
+              "ref": "Part 1, line 22 (Attendant)",
+              "quote": "Return the key in an envelope with the locker number written on the outside."
+            }
+          ],
+          "difficulty": 1,
+          "type": "form-completion",
+          "accepted": [
+            "envelope"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi envelope mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is envelope."
+        }
+      ]
+    },
+    {
+      "title": "A short route through the bicycle park",
+      "script": [
+        {
+          "speaker": "Trainer",
+          "text": "The site plan shows our junction in the centre, with north at the top. This park is for practising slow, controlled movement, so walk between the stations."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The balance lane is east of the junction, along the path to the right. It is marked by a low white line."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The brake slope is north of the junction. It is the short ramp shown at the top."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The helmet stand is west of the junction, on the left. You can collect the equipment before walking to the next station."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The rest shelter is south of the junction, towards the bottom of the plan. Please leave the entrance clear."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The safety briefing lasts seven minutes. We will practise stopping after everyone has heard it."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "I will set out cones along the practice boundary. Stay within that line when you are on a bicycle."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "Use the lowest gear for the first run. We are practising balance and will not ask you to ride fast."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "After use, put borrowed helmets on the shelf. A volunteer checks them before they go back on the stand."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "When you hear the whistle, finish the movement and stop. It is the signal to end practice."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The drinking tap is beside the fence. Use it before you return to the street."
+        },
+        {
+          "speaker": "Trainer",
+          "text": "The session ends here. Bring borrowed equipment back before leaving, even if you plan to return later in the day."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l05-11",
+          "text": "Where is the balance lane?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 2 (Trainer)",
+              "quote": "The balance lane is east of the junction, along the path to the right. It is marked by a low white line."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "B",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy sharq tomonda ekani aytiladi. Xaritada bu B nuqta.",
+          "explanation_en": "The speaker places the feature to the east of the junction. That position is B on the map."
+        },
+        {
+          "id": "l05-12",
+          "text": "Where is the brake slope?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 3 (Trainer)",
+              "quote": "The brake slope is north of the junction. It is the short ramp shown at the top."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "A",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy shimol tomonda ekani aytiladi. Xaritada bu A nuqta.",
+          "explanation_en": "The speaker places the feature to the north of the junction. That position is A on the map."
+        },
+        {
+          "id": "l05-13",
+          "text": "Where is the helmet stand?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 4 (Trainer)",
+              "quote": "The helmet stand is west of the junction, on the left. You can collect the equipment before walking to the next station."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "D",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy g‘arb tomonda ekani aytiladi. Xaritada bu D nuqta.",
+          "explanation_en": "The speaker places the feature to the west of the junction. That position is D on the map."
+        },
+        {
+          "id": "l05-14",
+          "text": "Where is the rest shelter?",
+          "evidence": [
+            {
+              "ref": "Part 2, line 5 (Trainer)",
+              "quote": "The rest shelter is south of the junction, towards the bottom of the plan. Please leave the entrance clear."
+            }
+          ],
+          "difficulty": 2,
+          "type": "map-labelling",
+          "correct": "C",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "explanation_uz": "Ovozda joy janub tomonda ekani aytiladi. Xaritada bu C nuqta.",
+          "explanation_en": "The speaker places the feature to the south of the junction. That position is C on the map."
+        },
+        {
+          "id": "l05-15",
+          "text": "The safety briefing lasts ___ minutes.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 6 (Trainer)",
+              "quote": "The safety briefing lasts seven minutes. We will practise stopping after everyone has heard it."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "seven",
+            "7"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi seven mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is seven."
+        },
+        {
+          "id": "l05-16",
+          "text": "The instructor will mark a boundary using ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 7 (Trainer)",
+              "quote": "I will set out cones along the practice boundary. Stay within that line when you are on a bicycle."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "cones"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi cones mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is cones."
+        },
+        {
+          "id": "l05-17",
+          "text": "Beginners should use the ___ gear on the first run.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 8 (Trainer)",
+              "quote": "Use the lowest gear for the first run. We are practising balance and will not ask you to ride fast."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "lowest"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi lowest mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is lowest."
+        },
+        {
+          "id": "l05-18",
+          "text": "Borrowed helmets are placed on a ___ after use.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 9 (Trainer)",
+              "quote": "After use, put borrowed helmets on the shelf. A volunteer checks them before they go back on the stand."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "shelf"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi shelf mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is shelf."
+        },
+        {
+          "id": "l05-19",
+          "text": "A ___ marks the end of practice.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 10 (Trainer)",
+              "quote": "When you hear the whistle, finish the movement and stop. It is the signal to end practice."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "whistle"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi whistle mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is whistle."
+        },
+        {
+          "id": "l05-20",
+          "text": "There is a drinking tap next to the ___.",
+          "evidence": [
+            {
+              "ref": "Part 2, line 11 (Trainer)",
+              "quote": "The drinking tap is beside the fence. Use it before you return to the street."
+            }
+          ],
+          "difficulty": 2,
+          "type": "sentence-completion",
+          "accepted": [
+            "fence"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi fence mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is fence."
+        }
+      ],
+      "diagram": {
+        "title": "A short route through the bicycle park site plan",
+        "alt": "Map centred on the junction. D is west of the junction, A is north of the junction, B is east of the junction, C is south of the junction.",
+        "places": [
+          {
+            "label": "D",
+            "x": 18,
+            "y": 38
+          },
+          {
+            "label": "A",
+            "x": 50,
+            "y": 15
+          },
+          {
+            "label": "B",
+            "x": 82,
+            "y": 38
+          },
+          {
+            "label": "C",
+            "x": 50,
+            "y": 61
+          }
+        ]
+      }
+    },
+    {
+      "title": "Comparing two public signs",
+      "script": [
+        {
+          "speaker": "Asha",
+          "text": "The design project needs a small test of our signs. We want people to find the correct exit without another person pointing it out."
+        },
+        {
+          "speaker": "Rowan",
+          "text": "All right. Let’s go through the details."
+        },
+        {
+          "speaker": "Asha",
+          "text": "Measure the correct first choice of exit. We do not need visitors to rate the typeface or remember every word."
+        },
+        {
+          "speaker": "Rowan",
+          "text": "Put the first sign above the corridor entrance. The stairwell is too dark and the desk is used for another display."
+        },
+        {
+          "speaker": "Asha",
+          "text": "Keep the viewing distance the same to make the versions easier to compare. Our aim is not to reproduce every viewing position in the building."
+        },
+        {
+          "speaker": "Rowan",
+          "text": "Asha will draw both versions. Rowan will find the mounting materials, and Hettie will check the written instructions."
+        },
+        {
+          "speaker": "Asha",
+          "text": "Rowan will find the mounting materials. We should avoid anything that leaves marks on the wall."
+        },
+        {
+          "speaker": "Rowan",
+          "text": "Hettie will check the written instructions. She can spot a word that might suggest the intended answer."
+        },
+        {
+          "speaker": "Asha",
+          "text": "Keep the lighting constant for both trials. Use the same part of the corridor at the same time of day."
+        },
+        {
+          "speaker": "Rowan",
+          "text": "Ask the visitor to point to an exit, then write down that first choice before saying anything else."
+        },
+        {
+          "speaker": "Asha",
+          "text": "Use a timer on the desk. A phone notification could interrupt a measurement."
+        },
+        {
+          "speaker": "Rowan",
+          "text": "There is a box for comments below the result. Do not mix the comments with the recorded choices."
+        },
+        {
+          "speaker": "Asha",
+          "text": "Let’s record the first response separately from any later correction. That will help us decide what each version actually communicates."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l05-21",
+          "text": "What is the main outcome?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 3 (Asha)",
+              "quote": "Measure the correct first choice of exit. We do not need visitors to rate the typeface or remember every word."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "Correct first choice of exit",
+          "options": [
+            "Correct first choice of exit",
+            "Rating of the typeface",
+            "Recall of every word"
+          ],
+          "explanation_uz": "Avval qaysi chiqish tanlangani o‘lchanadi.",
+          "explanation_en": "The relevant line identifies Correct first choice of exit as the answer to this item."
+        },
+        {
+          "id": "l05-22",
+          "text": "Where will the first sign be installed?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 4 (Rowan)",
+              "quote": "Put the first sign above the corridor entrance. The stairwell is too dark and the desk is used for another display."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "Above the corridor entrance",
+          "options": [
+            "In the stairwell",
+            "Above the corridor entrance",
+            "On the desk"
+          ],
+          "explanation_uz": "Birinchi belgi yo‘lak kirishi ustida bo‘ladi.",
+          "explanation_en": "The relevant line identifies Above the corridor entrance as the answer to this item."
+        },
+        {
+          "id": "l05-23",
+          "text": "Why should the sign be shown at the same distance?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 5 (Asha)",
+              "quote": "Keep the viewing distance the same to make the versions easier to compare. Our aim is not to reproduce every viewing position in the building."
+            }
+          ],
+          "difficulty": 3,
+          "type": "choice-single",
+          "correct": "To make the two versions easier to compare",
+          "options": [
+            "To stop people reading the sign",
+            "To test all positions in the building",
+            "To make the two versions easier to compare"
+          ],
+          "explanation_uz": "Bir xil masofa ikki belgini qiyoslashga yordam beradi.",
+          "explanation_en": "The relevant line identifies To make the two versions easier to compare as the answer to this item."
+        },
+        {
+          "id": "l05-24",
+          "text": "Who will draw the two versions?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 6 (Rowan)",
+              "quote": "Asha will draw both versions. Rowan will find the mounting materials, and Hettie will check the written instructions."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Asha",
+          "options": [
+            "Asha",
+            "Rowan",
+            "Hettie"
+          ],
+          "explanation_uz": "Ikki variantni Asha chizadi.",
+          "explanation_en": "The relevant line identifies Asha as the answer to this item."
+        },
+        {
+          "id": "l05-25",
+          "text": "Who will find the mounting materials?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 7 (Asha)",
+              "quote": "Rowan will find the mounting materials. We should avoid anything that leaves marks on the wall."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Rowan",
+          "options": [
+            "Asha",
+            "Rowan",
+            "Hettie"
+          ],
+          "explanation_uz": "Mahkamlash vositalarini Rowan topadi.",
+          "explanation_en": "The relevant line identifies Rowan as the answer to this item."
+        },
+        {
+          "id": "l05-26",
+          "text": "Who will check the written instructions?",
+          "evidence": [
+            {
+              "ref": "Part 3, line 8 (Rowan)",
+              "quote": "Hettie will check the written instructions. She can spot a word that might suggest the intended answer."
+            }
+          ],
+          "difficulty": 3,
+          "type": "matching",
+          "correct": "Hettie",
+          "options": [
+            "Asha",
+            "Rowan",
+            "Hettie"
+          ],
+          "explanation_uz": "Ko‘rsatmalarni Hettie tekshiradi.",
+          "explanation_en": "The relevant line identifies Hettie as the answer to this item."
+        },
+        {
+          "id": "l05-27",
+          "text": "Keep the ___ constant during both trials.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 9 (Asha)",
+              "quote": "Keep the lighting constant for both trials. Use the same part of the corridor at the same time of day."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "lighting"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi lighting mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is lighting."
+        },
+        {
+          "id": "l05-28",
+          "text": "Ask each visitor to point to an ___.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 10 (Rowan)",
+              "quote": "Ask the visitor to point to an exit, then write down that first choice before saying anything else."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "exit"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi exit mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is exit."
+        },
+        {
+          "id": "l05-29",
+          "text": "Write down the time using a ___ on the desk.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 11 (Asha)",
+              "quote": "Use a timer on the desk. A phone notification could interrupt a measurement."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "timer"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi timer mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is timer."
+        },
+        {
+          "id": "l05-30",
+          "text": "Put comments in a separate ___ below the result.",
+          "evidence": [
+            {
+              "ref": "Part 3, line 12 (Rowan)",
+              "quote": "There is a box for comments below the result. Do not mix the comments with the recorded choices."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "box"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi box mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is box."
+        }
+      ]
+    },
+    {
+      "title": "Understanding the sound of a loose part",
+      "script": [
+        {
+          "speaker": "Lecturer",
+          "text": "A loose part can make a sound when a structure is shaken. We will use a simple model to distinguish a repeated contact from sound caused by the material vibrating as a whole."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Our model is a wooden box with a loose piece inside. The lid stays closed during the first comparison."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "When the box is tilted this way, the piece first strikes the left wall. You can hear that contact after the movement starts."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "A thin pad against the wall can reduce the contact sound. We will add it without changing the shape of the box."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Try to keep the speed of movement the same. Shaking faster would affect the strength of the contact."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Mark the microphone position on the floor. If it moves closer, a change in loudness could be misleading."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "In the second comparison, hold the piece in place. This helps us check which sounds are still present without the repeated contact."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Record how many separate contacts you hear during each shake. Counting the contacts is different from rating their loudness."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Play both recordings at the same volume. Changing it between them would make a loudness comparison unreliable."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Switch off the background fan if possible. It can cover the quieter contact sounds in the recording."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "Keep a note of how the box was supported. Holding it against the bench can change which parts vibrate."
+        },
+        {
+          "speaker": "Lecturer",
+          "text": "When you write up the test, say exactly what changed. A sound by itself is rarely enough to diagnose the condition of a real object."
+        }
+      ],
+      "questions": [
+        {
+          "id": "l05-31",
+          "text": "The model has a loose piece inside a wooden ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 2 (Lecturer)",
+              "quote": "Our model is a wooden box with a loose piece inside. The lid stays closed during the first comparison."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "box"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi box mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is box."
+        },
+        {
+          "id": "l05-32",
+          "text": "The loose piece first strikes the ___ wall.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 3 (Lecturer)",
+              "quote": "When the box is tilted this way, the piece first strikes the left wall. You can hear that contact after the movement starts."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "left"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi left mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is left."
+        },
+        {
+          "id": "l05-33",
+          "text": "A thin ___ can reduce the sound of contact.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 4 (Lecturer)",
+              "quote": "A thin pad against the wall can reduce the contact sound. We will add it without changing the shape of the box."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "pad"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi pad mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is pad."
+        },
+        {
+          "id": "l05-34",
+          "text": "Keep the same ___ of movement during both trials.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 5 (Lecturer)",
+              "quote": "Try to keep the speed of movement the same. Shaking faster would affect the strength of the contact."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "speed"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi speed mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is speed."
+        },
+        {
+          "id": "l05-35",
+          "text": "Mark the microphone position on the ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 6 (Lecturer)",
+              "quote": "Mark the microphone position on the floor. If it moves closer, a change in loudness could be misleading."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "floor"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi floor mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is floor."
+        },
+        {
+          "id": "l05-36",
+          "text": "Do a comparison with the piece held in ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 7 (Lecturer)",
+              "quote": "In the second comparison, hold the piece in place. This helps us check which sounds are still present without the repeated contact."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "place"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi place mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is place."
+        },
+        {
+          "id": "l05-37",
+          "text": "Record the number of contacts during each ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 8 (Lecturer)",
+              "quote": "Record how many separate contacts you hear during each shake. Counting the contacts is different from rating their loudness."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "shake"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi shake mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is shake."
+        },
+        {
+          "id": "l05-38",
+          "text": "Use the same ___ to compare recordings.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 9 (Lecturer)",
+              "quote": "Play both recordings at the same volume. Changing it between them would make a loudness comparison unreliable."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "volume"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi volume mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is volume."
+        },
+        {
+          "id": "l05-39",
+          "text": "A background ___ can make quiet sounds difficult to hear.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 10 (Lecturer)",
+              "quote": "Switch off the background fan if possible. It can cover the quieter contact sounds in the recording."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "fan"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi fan mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is fan."
+        },
+        {
+          "id": "l05-40",
+          "text": "Keep a note of how the box was ___.",
+          "evidence": [
+            {
+              "ref": "Part 4, line 11 (Lecturer)",
+              "quote": "Keep a note of how the box was supported. Holding it against the bench can change which parts vibrate."
+            }
+          ],
+          "difficulty": 3,
+          "type": "note-completion",
+          "accepted": [
+            "supported"
+          ],
+          "maxWords": 1,
+          "explanation_uz": "Gapdagi bo‘sh joyga audio matnidagi supported mos keladi.",
+          "explanation_en": "The spoken detail that completes this item is supported."
+        }
+      ]
+    }
+  ]
+}

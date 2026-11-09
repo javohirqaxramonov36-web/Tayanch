@@ -7,7 +7,7 @@ interface Props { modul: Modul }
 const { modul } = Astro.props;
 const testlar = katalog([modul]);
 ---
-<IeltsFokus nom={modulNomi[modul]} tavsif={`IELTS Academic ${modulNomi[modul]} mashqlari.`} vaqt={modul === 'speaking' ? undefined : '––:––'}>
+<IeltsFokus nom={modulNomi[modul]} tavsif={`IELTS Academic ${modulNomi[modul]} mashqlari.`} vaqt="––:––">
   <div class="ielts-oqim" data-ielts-test={modul}>
     <section class="ielts-yuza ielts-oqim" data-tanlov>
       <h2>Tayanch mashqlari</h2>
@@ -36,7 +36,7 @@ const testlar = katalog([modul]);
             {modul === 'reading' && (
               <section class="ielts-yuza ielts-oqim" aria-labelledby="parcha-h">
                 <div class="ielts-satr ielts-satr-oraliq">
-                  <h2 id="parcha-h" class="ielts-kichik-sarlavha">O‘qish matni</h2>
+                  <h2 id="parcha-h" class="ielts-kichik-sarlavha" tabindex="-1">O‘qish matni</h2>
                   <a class="ielts-havola" href="#savol-joyi">Savolga o‘tish</a>
                 </div>
                 <div class="ielts-amallar">
@@ -58,6 +58,7 @@ const testlar = katalog([modul]);
                 <h2 class="ielts-kichik-sarlavha" id="savol-bosh">Savol</h2>
                 <button class="tugma tugma-ikkinchi" type="button" data-bayroq aria-pressed="false">Bayroq qo‘yish</button>
               </div>
+              {modul === 'reading' && <a class="ielts-havola ielts-matnga" href="#parcha-h">Matnga qaytish</a>}
               <div class="ielts-oqim" data-savol></div>
               <div class="ielts-amallar">
                 <button class="tugma tugma-ikkinchi" type="button" data-oldin>Oldingi</button>
