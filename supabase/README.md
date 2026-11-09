@@ -9,6 +9,7 @@ Bu qadamlarni **muallif** bajaradi. Claude kalitlarni so'ramaydi, ko'rmaydi va y
 | Fayl | Nima |
 | --- | --- |
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
+| `migrations/20261109120000_questions_p05.sql` | 0010: `questions` ni P05 savol formatiga moslash (ADR 002). |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. |
 | `../scripts/rls-tekshir.sh` | Lokal sinov: vaqtinchalik klaster, migratsiyalar 2 marta, testlar. `npm run db:tekshir` |
@@ -69,7 +70,7 @@ Lokal (Postgres 15+ kerak, masalan `brew install postgresql@17`):
 npm run db:tekshir
 ```
 
-Natija: migratsiyalar 2 marta xatosiz, RLS hamma jadvalda, `OK 01` … `OK 15`, `HAMMASI O'TDI`.
+Natija: migratsiyalar 2 marta xatosiz, RLS hamma jadvalda, `OK 01` … `OK 16`, `HAMMASI O'TDI`.
 
 Haqiqiy loyihada: `tests/rls_test.sql` ni SQL Editor yoki `psql` bilan ishga tushirish mumkin (u sinov foydalanuvchilarini `auth.users` ga yozadi va oxirida `ROLLBACK` qiladi). Real `auth.users` va `storage.objects` ga to'g'ridan-to'g'ri yozish lokal o'xshatmadagidek ishlashi: **tekshirish kerak**. Avval sinov (branch yoki alohida) loyihada sinang.
 
@@ -96,4 +97,15 @@ select public.admin_hide_question('<external_id>', 'sabab', 'muallif');
 
 ## 7. Savol qo'shish
 
-Savollar migratsiyaga yozilmaydi. Ular alohida (keyingi vazifa) service role bilan `questions` ga yuklanadi: `status = 'draft'`, muallif tekshirgach `verified` va `verified_by`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+Savollar migratsiyaga yozilmaydi. Ular P05 importi bilan service role orqali `questions` ga yuklanadi (`docs/savol-formati.md` §7, ADR 002): `external_id` bo'yicha upsert, tasdiqlanmagani `draft`, muallif tasdiqlagani (`verified_by` ≠ `author`, `verified_at`) `verified`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+
+**0010 holati (2026-11-09):** repoda, Tayanch loyihasiga **qo'llanmagan** (muallifning alohida "qo'lla" tasdig'i bilan). Avval `supabase migration list --remote=<ref>`: 0001–0009 masofada bor, faqat `20261109120000` qo'llanmagan bo'lishi kerak; so'ng `supabase db push --remote=<ref> --dry-run`, keyin `supabase db push --remote=<ref>`. Tekshirish (SQL Editor):
+
+```sql
+select column_name from information_schema.columns
+ where table_schema = 'public' and table_name = 'questions'
+   and column_name in ('drafted_by', 'verified_at', 'tags', 'content_hash');          -- 4 qator
+select conname from pg_constraint where conrelid = 'public.questions'::regclass
+   and conname in ('questions_verified_rule', 'questions_draft_rule', 'questions_figure_alt',
+                   'questions_source_original', 'questions_drafted_by');               -- 5 qator
+```
