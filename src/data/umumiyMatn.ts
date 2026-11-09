@@ -30,6 +30,7 @@ const uz = {
     rasmiySayt: 'rasmiy sayt',
     yangiTab: '(yangi tabda ochiladi)',
     mavzu: "Qorong'i mavzu",
+    tezOrada: 'tez orada',
   },
   manba: {
     sarlavha: 'Manbalar va tekshiruv',
@@ -118,6 +119,7 @@ const en: Matn = {
     rasmiySayt: 'official site',
     yangiTab: '(opens in a new tab)',
     mavzu: 'Dark mode',
+    tezOrada: 'soon',
   },
   manba: {
     sarlavha: 'Sources and review',
