@@ -146,6 +146,7 @@ const malumot = {
 
 <script>
   import { javobniYoz, bugun } from '../../../../../lib/darsSaqlash';
+  import { holatOchir } from '../../../../../lib/holat';
   import { sinxronla, guruhla, javobdanKeyin, holatniYoz, takrorKalit, type TakrorHolat } from '../../../../../lib/takrorlash';
 
   interface S {
@@ -323,7 +324,7 @@ const malumot = {
   tozala.addEventListener('click', () => { $('tasdiq').hidden = false; tozala.hidden = true; $('tasdiq-yoq').focus(); });
   $('tasdiq-yoq').addEventListener('click', () => { $('tasdiq').hidden = true; tozala.hidden = false; tozala.focus(); });
   $('tasdiq-ha').addEventListener('click', () => {
-    try { localStorage.removeItem(takrorKalit(BOLIM)); } catch { /* ruxsat yo'q */ }
+    holatOchir(takrorKalit(BOLIM));
     holat = sinxronla(BOLIM, new Set(savol.keys()));
     $('tasdiq').hidden = true; tozala.hidden = false;
     if (!$('sessiya').hidden) royxatgaQayt(); else royxatniChiz();

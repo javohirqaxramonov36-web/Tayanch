@@ -114,6 +114,7 @@ const havolalar = {
 <script>
   import { KALIT_REJA } from '../../../../../data/satDarslar/turlar';
   import { oqi, yoz, bugun } from '../../../../../lib/darsSaqlash';
+  import { holatOchir } from '../../../../../lib/holat';
 
   type Fokus = 'math' | 'rw' | 'teng';
   interface Reja { sana: string; hozirgi: number | null; maqsad: number; kunlar: number; fokus: Fokus; belgilar: Record<string, boolean> }
@@ -293,7 +294,7 @@ const havolalar = {
   $('ochir').addEventListener('click', () => { $('ochir-tasdiq').hidden = false; $('ochir').hidden = true; $('ochir-yoq').focus(); });
   $('ochir-yoq').addEventListener('click', () => { $('ochir-tasdiq').hidden = true; $('ochir').hidden = false; $('ochir').focus(); });
   $('ochir-ha').addEventListener('click', () => {
-    try { localStorage.removeItem(KALIT_REJA); } catch { /* ruxsat yo'q */ }
+    holatOchir(KALIT_REJA);
     reja = null; $('ochir-tasdiq').hidden = true; $('ochir').hidden = false; chiz(); $<HTMLInputElement>('r-sana').focus();
   });
 

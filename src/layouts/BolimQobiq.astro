@@ -8,6 +8,7 @@ import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
 import SatEslatma from '../components/SatEslatma.astro';
+import SatSinxron from '../components/SatSinxron.astro';
 import type { BolimSlug } from '../data/bolimlar';
 import { bolimTili, matn } from '../data/umumiyMatn';
 
@@ -45,6 +46,7 @@ const sahifaNomi = title.split(' · ')[0];
         <slot />
       </main>
       {bolim === 'sat' && <SatEslatma />}
+      {bolim === 'sat' && <SatSinxron />}
     </div>
     <Lift variant="pastki" />
   </body>

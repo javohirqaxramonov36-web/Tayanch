@@ -1,0 +1,200 @@
+---
+// SAT: brauzerdagi progressni hisobga ko'chirish dialogi (BolimQobiq bolim="sat" va SatFokus).
+// Faqat holat.ts so'rov yuborganda ochiladi: hisob bilan kirilgan, brauzerda SAT ma'lumoti bor va shu qurilma
+// hali javob bermagan. Hisobsiz foydalanuvchida hech qachon ochilmaydi. Foydalanuvchi "Import" ni bosmaguncha
+// serverga hech narsa yuborilmaydi. Qoidalar: docs/sinxron-qoidalari.md. Matn inglizcha (SAT bo'limi qoidasi).
+// Klaviatura: showModal fokusni dialog ichida ushlaydi, Esc = "Not now", yopilganda fokus avvalgi joyiga qaytadi.
+---
+<dialog class="sinxron" id="sinxron-oyna" aria-labelledby="sinxron-sarlavha" aria-describedby="sinxron-tavsif" lang="en">
+  <div class="qadam" data-qadam="sorov">
+    <h2 id="sinxron-sarlavha" tabindex="-1">Import this device's progress?</h2>
+    <p id="sinxron-tavsif">
+      This browser has SAT progress saved from before you signed in. Import it to your account to keep it on all
+      your devices. Nothing is sent until you choose Import.
+    </p>
+    <ul class="sanoq" id="sinxron-sanoq"></ul>
+    <p class="xato" id="sinxron-xato" role="alert" hidden></p>
+    <div class="tugmalar">
+      <button type="button" class="tugma tugma-asosiy" data-amal="import">Import</button>
+      <button type="button" class="tugma tugma-ikkinchi" data-amal="keyin">Not now</button>
+      <button type="button" class="tugma chiziq" data-amal="sorama">Don't ask again</button>
+    </div>
+  </div>
+
+  <div class="qadam" data-qadam="tayyor" hidden>
+    <h2 id="sinxron-tayyor-sarlavha" tabindex="-1">Progress imported</h2>
+    <p id="sinxron-tayyor-tavsif">
+      Your progress is saved to your account and will sync across your devices. A copy also stays in this browser.
+    </p>
+    <p class="holat-xabar" id="sinxron-tozalash-xabar" role="status"></p>
+    <div class="tugmalar">
+      <button type="button" class="tugma tugma-asosiy" data-amal="yop">Done</button>
+      <button type="button" class="tugma chiziq" data-amal="tozala-sorov">Clear local copy</button>
+    </div>
+  </div>
+
+  <div class="qadam" data-qadam="tasdiq" hidden>
+    <h2 id="sinxron-tasdiq-sarlavha" tabindex="-1">Clear the copy in this browser?</h2>
+    <p id="sinxron-tasdiq-tavsif">
+      SAT progress stored in this browser will be removed. The copy in your account is not affected. While you are
+      signed in, it is downloaded again when you open a SAT page.
+    </p>
+    <div class="tugmalar">
+      <button type="button" class="tugma tugma-ikkinchi" data-amal="bekor">Cancel</button>
+      <button type="button" class="tugma tugma-asosiy" data-amal="tozala">Clear local copy</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { sinxronSoroviniKut, importQil, keyinroq, soramaslik, mahalliyNusxaniTozala, type Sanoq } from '../lib/holat';
+
+  const NOMLAR: Record<string, [string, string]> = {
+    'tayanch:sat-javoblar': ['practice answer', 'practice answers'],
+    'tayanch:sat-dars-progress': ['lesson answer', 'lesson answers'],
+    'tayanch:sat-xato-daftari': ['mistake notebook entry', 'mistake notebook entries'],
+    'tayanch:sat-takrorlash': ['review card', 'review cards'],
+    'tayanch:sat-reja': ['study plan', 'study plans'],
+    'tayanch:sat-lugat': ['vocabulary card', 'vocabulary cards'],
+  };
+
+  const oyna = document.getElementById('sinxron-oyna') as HTMLDialogElement | null;
+  if (oyna) {
+    const $ = <T extends HTMLElement>(s: string) => oyna.querySelector(s) as T;
+    const xato = $<HTMLParagraphElement>('#sinxron-xato');
+    const importTugma = $<HTMLButtonElement>('[data-amal="import"]');
+    const tozalashXabar = $<HTMLParagraphElement>('#sinxron-tozalash-xabar');
+    const tozalaSorov = $<HTMLButtonElement>('[data-amal="tozala-sorov"]');
+    let oldingi: Element | null = null;
+    let band = false;
+
+    const qadam = (nomi: 'sorov' | 'tayyor' | 'tasdiq') => {
+      oyna.querySelectorAll<HTMLElement>('[data-qadam]').forEach((q) => { q.hidden = q.dataset.qadam !== nomi; });
+      const id = { sorov: 'sinxron', tayyor: 'sinxron-tayyor', tasdiq: 'sinxron-tasdiq' }[nomi];
+      oyna.setAttribute('aria-labelledby', `${id}-sarlavha`);
+      oyna.setAttribute('aria-describedby', nomi === 'sorov' ? 'sinxron-tavsif' : `${id}-tavsif`);
+      $<HTMLElement>(`#${id}-sarlavha`).focus();
+    };
+
+    const bandlik = (b: boolean) => {
+      band = b;
+      oyna.setAttribute('aria-busy', String(b));
+      oyna.querySelectorAll<HTMLButtonElement>('button').forEach((t) => { t.disabled = b; });
+    };
+
+    const yop = () => oyna.close();
+
+    oyna.addEventListener('close', () => {
+      const f = oldingi instanceof HTMLElement && oldingi.isConnected ? oldingi : document.querySelector<HTMLElement>('main h1');
+      if (f) { if (!f.matches('a, button, input, select, textarea, [tabindex]')) f.setAttribute('tabindex', '-1'); f.focus(); }
+    });
+
+    // Esc: import paytida yopilmaydi; so'rov qadamida "Not now" bilan teng
+    oyna.addEventListener('cancel', (e) => {
+      if (band) { e.preventDefault(); return; }
+      if (!$<HTMLElement>('[data-qadam="sorov"]').hidden) keyinroq();
+    });
+
+    oyna.addEventListener('click', async (e) => {
+      const t = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-amal]');
+      if (!t || band) return;
+      switch (t.dataset.amal) {
+        case 'import': {
+          xato.hidden = true;
+          bandlik(true);
+          importTugma.textContent = 'Importing…';
+          try {
+            await importQil();
+            bandlik(false);
+            qadam('tayyor');
+          } catch {
+            bandlik(false);
+            importTugma.textContent = 'Try again';
+            xato.textContent = 'Could not reach your account. Check your connection and try again. The progress in this browser has not changed.';
+            xato.hidden = false;
+            importTugma.focus();
+          }
+          break;
+        }
+        case 'keyin': keyinroq(); yop(); break;
+        case 'sorama': soramaslik(); yop(); break;
+        case 'yop': yop(); break;
+        case 'tozala-sorov': qadam('tasdiq'); break;
+        case 'bekor': qadam('tayyor'); tozalaSorov.focus(); break;
+        case 'tozala': {
+          bandlik(true);
+          const ok = await mahalliyNusxaniTozala();
+          bandlik(false);
+          qadam('tayyor');
+          if (ok) {
+            tozalaSorov.hidden = true;
+            tozalashXabar.textContent = 'The copy in this browser was cleared. Your account still has your progress.';
+          } else {
+            tozalashXabar.textContent = 'Some changes have not reached your account yet, so the copy in this browser was kept. Try again later.';
+          }
+          break;
+        }
+      }
+    });
+
+    sinxronSoroviniKut((s: Sanoq) => {
+      if (oyna.open) return;
+      const ul = $<HTMLUListElement>('#sinxron-sanoq');
+      ul.replaceChildren(
+        ...Object.entries(s)
+          .filter(([, n]) => n > 0)
+          .map(([k, n]) => {
+            const li = document.createElement('li');
+            const [bir, kop] = NOMLAR[k] ?? [k, k];
+            li.textContent = `${n} ${n === 1 ? bir : kop}`;
+            return li;
+          }),
+      );
+      xato.hidden = true;
+      importTugma.textContent = 'Import';
+      tozalaSorov.hidden = false;
+      tozalashXabar.textContent = '';
+      oldingi = document.activeElement;
+      oyna.showModal();
+      qadam('sorov');
+    });
+  }
+</script>
+
+<style>
+  .sinxron {
+    border: 1px solid var(--chiziq);
+    border-radius: var(--r-katta);
+    padding: var(--b-6);
+    width: min(480px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    background: var(--fon);
+    color: var(--matn);
+    box-shadow: var(--soya);
+  }
+  .sinxron::backdrop { background: var(--parda); }
+  .qadam { display: flex; flex-direction: column; gap: var(--b-4); }
+  .qadam[hidden] { display: none; }
+  .sinxron h2 { margin: 0; font-size: var(--matn-h3); line-height: 1.25; }
+  .sinxron h2:focus { outline: none; }
+  .sinxron p { margin: 0; color: var(--matn-ikkinchi); line-height: 1.5; }
+  .sanoq { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); font-weight: 700; }
+  .xato {
+    padding: var(--b-3) var(--b-4);
+    border-radius: var(--r-orta);
+    background: var(--rang-ogoh-fon);
+    color: var(--rang-ogoh-matn) !important;
+  }
+  .xato[hidden] { display: none; }
+  .holat-xabar:empty { display: none; }
+  .tugmalar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--b-2); }
+  .tugmalar .tugma[hidden] { display: none; }
+  .chiziq { background: var(--fon); color: var(--matn); box-shadow: inset 0 0 0 1.5px var(--matn); }
+  .chiziq:hover { background: var(--sirt-ikkinchi); }
+  .tugma:disabled { cursor: progress; opacity: 0.7; }
+  @media (max-width: 480px) {
+    .tugmalar { flex-direction: column; align-items: stretch; }
+    .tugmalar .tugma { width: 100%; }
+  }
+</style>

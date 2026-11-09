@@ -68,6 +68,7 @@ import { yol } from '../../../../../lib/yol';
 
 <script>
   import { KALIT_JAVOBLAR, type Savol, type Javob } from '../../../../../data/satNamuna';
+  import { holatYoz } from '../../../../../lib/holat';
 
   const hamma: Savol[] = JSON.parse(document.getElementById('savollar-data')!.textContent || '[]');
   const tanlanganMavzular = new URLSearchParams(location.search).get('mavzular')?.split('|').filter(Boolean) ?? [];
@@ -86,7 +87,7 @@ import { yol } from '../../../../../lib/yol';
     try {
       const eski: Javob[] = JSON.parse(localStorage.getItem(KALIT_JAVOBLAR) || '[]');
       eski.unshift(j);
-      localStorage.setItem(KALIT_JAVOBLAR, JSON.stringify(eski.slice(0, 500)));
+      holatYoz(KALIT_JAVOBLAR, eski.slice(0, 500));
     } catch { /* brauzer saqlashga ruxsat bermadi */ }
   };
 

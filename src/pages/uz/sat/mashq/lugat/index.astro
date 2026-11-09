@@ -73,6 +73,7 @@ import { kartalar } from '../../../../../data/satNamuna';
 
 <script>
   import { KALIT_LUGAT, type Karta } from '../../../../../data/satNamuna';
+  import { holatYoz } from '../../../../../lib/holat';
 
   const kartalar: Karta[] = JSON.parse(document.getElementById('kartalar-data')!.textContent || '[]');
   const n = kartalar.length;
@@ -83,7 +84,7 @@ import { kartalar } from '../../../../../data/satNamuna';
   let i = 0;
   let orqa = false;
 
-  const saqla = () => { try { localStorage.setItem(KALIT_LUGAT, JSON.stringify(holat)); } catch { /* saqlanmadi */ } };
+  const saqla = () => { holatYoz(KALIT_LUGAT, holat); };
 
   const chiz = () => {
     const k = kartalar[i];
