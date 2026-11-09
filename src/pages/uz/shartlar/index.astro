@@ -1,0 +1,67 @@
+---
+// 1-qavat · Foydalanish shartlari (P23, 2026-11-09). Hisob butun sayt uchun bitta; to'lov hali yo'q.
+// Yosh qoidasi: src/data/hisobSozlama.ts (LX02, LX03). Yangi sahifa: holat "qoralama".
+import Asosiy from '../../../layouts/Asosiy.astro';
+import { hisobSozlama } from '../../../data/hisobSozlama';
+import { yol } from '../../../lib/yol';
+
+const { minYosh, voyagaYetmaganQoida: vq } = hisobSozlama;
+---
+<Asosiy
+  title="Foydalanish shartlari"
+  description="Tayanch saytidan va hisobdan foydalanish qoidalari."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="qoralama"
+  tekshirilgan="2026-11-09"
+  keyingiTekshiruv="2026-12-09"
+  manbalar={['LX02', 'LX03']}
+>
+  <section class="ichki sahifa">
+    <h1>Foydalanish shartlari</h1>
+    <p class="ikkinchi">Kuchga kirgan sana: 2026-yil 9-noyabr. Saytdan foydalanib yoki hisob ochib, shu shartlarga rozi bo'lasiz.</p>
+
+    <h2>Tayanch nima</h2>
+    <p>Tayanch: SAT, IELTS va xorijda o'qishga tayyorlanish uchun mustaqil sayt. U College Board, IELTS egalari, universitetlar yoki grant beruvchi tashkilotlar bilan bog'liq emas va ular nomidan gapirmaydi.</p>
+
+    <h2>Natija kafolatlanmaydi</h2>
+    <ul>
+      <li>Tayanch ball, qabul yoki grant olishingizni kafolatlamaydi va ularning ehtimolini hisoblamaydi.</li>
+      <li>Qoida, talab va muddatlar rasmiy manbadan, manba va tekshirilgan sana bilan yoziladi. Ular o'zgarishi mumkin: qaror qilishdan oldin rasmiy saytni tekshiring. Farq bo'lsa, rasmiy sayt to'g'ri.</li>
+      <li>Savol va mashqlar Tayanch'ning o'zi yozgan original materiallar. Ular rasmiy imtihon savollari emas.</li>
+    </ul>
+
+    <h2>Hisob</h2>
+    <ul>
+      <li>Hisob ixtiyoriy. Bitta hisob butun sayt uchun ishlaydi.</li>
+      <li>Hisobni {minYosh} yoshdan ochish mumkin.{vq && <> {vq.yoshgacha} yoshgacha bo'lsangiz, ota-ona yoki vasiyingiz rozilik beradi (<a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>).</>}</li>
+      <li>O'zingizga tegishli, ishlaydigan email kiriting va parolni hech kimga bermang.</li>
+      <li>Hisobingizni istalgan vaqtda profil sahifasidan o'chirishingiz mumkin.</li>
+    </ul>
+
+    <h2>Mumkin emas</h2>
+    <ul>
+      <li>Boshqa odamning hisobiga kirish yoki uning nomidan hisob ochish.</li>
+      <li>Saytni yoki uning serverini buzishga, cheklovlarni chetlab o'tishga urinish.</li>
+      <li>Saytga avtomatik dastur bilan ommaviy so'rov yuborish.</li>
+      <li>Taxallusda haqoratli so'z yoki boshqa odamning shaxsiy ma'lumotini ishlatish.</li>
+    </ul>
+    <p>Bu qoidalar buzilsa, hisob to'xtatilishi yoki o'chirilishi mumkin.</p>
+
+    <h2>To'lov</h2>
+    <p>Hozir saytda pullik qism yo'q. Pullik tariflar qo'shilganda ularning shartlari (narx, muddat, qaytarish) to'lovdan oldin alohida yoziladi.</p>
+
+    <h2>Shaxsiy ma'lumot</h2>
+    <p>Qanday ma'lumot saqlanishi, qayerda turishi va qanday o'chirilishi <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>da yozilgan.</p>
+
+    <h2>O'zgarishlar</h2>
+    <p>Shartlar o'zgarsa, yangi sana shu sahifa boshida yoziladi.</p>
+  </section>
+</Asosiy>
+
+<style>
+  .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-4); max-width: 820px; }
+  .sahifa h2 { font-size: 24px; margin-top: var(--b-4); }
+  ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+</style>

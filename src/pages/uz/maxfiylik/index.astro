@@ -1,36 +1,100 @@
 ---
+// 1-qavat · Maxfiylik siyosati (P23, 2026-11-09). Hisob (Supabase Auth) qo'shilgani uchun qayta yozildi.
+// Qonun talablari: LX02 ("Shaxsga doir ma'lumotlar to'g'risida"gi Qonun), LX03 (voyaga yetish 18 yosh), LX04 (teng himoya ro'yxati).
 import Asosiy from '../../../layouts/Asosiy.astro';
+import { hisobSozlama } from '../../../data/hisobSozlama';
+import { yol } from '../../../lib/yol';
+
+const { minYosh, voyagaYetmaganQoida: vq } = hisobSozlama;
+const brauzerKalitlari: [string, string][] = [
+  ['tayanch:auth', "hisobga kirganingizda sessiya (Supabase o'zi yozadi). Chiqqaningizda o'chadi."],
+  ['tayanch:mavzu, tayanch:sidebar', "yorug' yoki qorong'i mavzu va yon panel holati."],
+  ['tayanch:sat-…, tayanch:ielts-…, tayanch:top-admission-…', "javoblar, dars progressi, xato daftari, takrorlash, lug'at va reja."],
+  ['tayanch-topshirish-yoli', "Topshirish yo'li vositasidagi belgilaringiz."],
+  ['tayanch:qavat', "qaysi qavatda ekaningiz (faqat shu oyna yopilguncha, sessionStorage)."],
+];
 ---
 <Asosiy
-  title="Maxfiylik"
-  description="Tayanch qanday ma'lumot to'playdi va qanday to'plamaydi."
+  title="Maxfiylik siyosati"
+  description="Tayanch qanday ma'lumot to'playdi, qayerda saqlaydi va uni qanday o'chirish mumkin."
   turi="umumiy"
   bolim="umumiy"
   holat="chop-etilgan"
-  tekshirilgan="2026-11-04"
-  keyingiTekshiruv="2026-12-04"
-  tekshirilmagan={["GitHub Pages xostingi tashrif buyuruvchilar haqida qanday texnik ma'lumot (masalan, IP manzil) yozishi: GitHub'ning rasmiy hujjatida tekshirish kerak"]}
+  tekshirilgan="2026-11-09"
+  keyingiTekshiruv="2026-12-09"
+  manbalar={['LX02', 'LX03', 'LX04']}
+  tekshirilmagan={[
+    "GitHub Pages xostingi tashrif buyuruvchilar haqida qanday texnik ma'lumot (masalan, IP manzil) yozishi: GitHub'ning rasmiy hujjatida tekshirish kerak",
+    "Supabase o'z jurnallarida (masalan, kirish jurnali) qanday texnik ma'lumot va qancha muddat saqlashi: Supabase hujjatida tekshirish kerak",
+    "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: huquqshunos fikri kerak",
+  ]}
 >
   <section class="ichki sahifa">
-    <h1>Maxfiylik</h1>
+    <h1>Maxfiylik siyosati</h1>
+    <p class="ikkinchi">Kuchga kirgan sana: 2026-yil 9-noyabr. Hisob ixtiyoriy: saytning hamma bepul qismi hisobsiz ham ishlaydi.</p>
 
-    <h2>Tayanch nimani to'plamaydi</h2>
+    <h2>Hisob ochsangiz nima saqlanadi</h2>
     <ul>
-      <li>Saytda ro'yxatdan o'tish, akkaunt va forma yo'q.</li>
+      <li><strong>Email</strong>: kirish, tasdiqlash va parolni tiklash xatlari uchun.</li>
+      <li><strong>Parol</strong>: uni Supabase Auth tekshiradi. Tayanch o'z jadvallarida parol saqlamaydi.</li>
+      <li><strong>Ism va taxallus</strong> (ixtiyoriy): profil sahifasida o'zingiz yozasiz. Taxallus keyinchalik reytinglarda ko'rinishi mumkin.</li>
+      <li><strong>Rozilik belgilari</strong>: shu siyosat va Foydalanish shartlariga rozi bo'lgan vaqt (<code>terms_accepted_at</code>), yoshingiz {minYosh} da yoki undan kattaligi (<code>min_age_confirmed</code>) va yosh guruhi.</li>
+      {vq && <li><strong>{vq.yoshgacha} yoshgacha bo'lsangiz</strong>: ota-ona yoki vasiyning ismi va u rozilik bergan vaqt.</li>}
+      <li><strong>Texnik sanalar</strong>: hisob ochilgan, email tasdiqlangan va oxirgi kirgan vaqt (Supabase Auth o'zi yozadi).</li>
+    </ul>
+    <p>Dars va mashq natijalari hozircha faqat brauzeringizda. Ular hisobga ko'chirilganda shu sahifa yangilanadi. Google bilan kirish hali ishlamaydi; qo'shilganda Google beradigan ma'lumot (ism va email) shu yerda yoziladi.</p>
+
+    <h2>Nima uchun ishlatiladi</h2>
+    <p>Faqat hisobingiz ishlashi uchun: kirish, profilingizni ko'rsatish va kerakli xatlarni yuborish. Ma'lumotingiz sotilmaydi, reklama uchun ishlatilmaydi va qonunda nazarda tutilgan holatlardan tashqari uchinchi shaxsga berilmaydi.</p>
+
+    <h2>Qayerda saqlanadi</h2>
+    <p>Hisob ma'lumotlari <strong>Supabase</strong> xizmatida, <strong>Frankfurt (Germaniya)</strong> serverida saqlanadi. Xatlar ham Supabase orqali yuboriladi. Germaniya Vazirlar Mahkamasi tasdiqlagan, shaxsga doir ma'lumotlar bir xil himoya qilinadigan davlatlar ro'yxatida bor (LX04). Shuning uchun Qonun ma'lumotni u yerda saqlashga ruxsat beradi (15 va 27¹-moddalar, LX02). Tayanch biometrik yoki genetik ma'lumot yig'maydi.</p>
+
+    <h2>{vq ? `${vq.yoshgacha} yoshgacha bo'lganlar` : 'Yosh'}</h2>
+    <p>Hisobni {minYosh} yoshdan ochish mumkin.{vq && <> Qonun bo'yicha voyaga yetmaganlar ({vq.yoshgacha} yoshgacha, LX03) ma'lumotiga ishlov berish uchun ota-ona yoki vasiy yozma, shu jumladan elektron shaklda rozilik beradi (21-modda, LX02). Shuning uchun ro'yxatdan o'tish formasida ota-ona yoki vasiy o'z ismini yozib, rozilik belgisini qo'yadi.</>}</p>
+
+    <h2>Brauzeringizda saqlanadigan narsa</h2>
+    <p>Hisob bilan ham, hisobsiz ham ba'zi narsalar faqat brauzeringizda, <code>tayanch</code> bilan boshlanadigan kalitlarda saqlanadi. Ular serverga yuborilmaydi (sessiya kaliti faqat Supabase'ga kirish uchun ishlatiladi):</p>
+    <ul>
+      {brauzerKalitlari.map(([kalit, nima]) => <li><code>{kalit}</code>: {nima}</li>)}
+    </ul>
+    <p>Ularni o'chirish uchun brauzer sozlamalarida shu sayt ma'lumotlarini tozalang.</p>
+
+    <h2>Huquqlaringiz</h2>
+    <ul>
+      <li>Qanday ma'lumotingiz borligini bilish: email va ismingiz <a href={yol('/uz/hisob/profil/')}>profil sahifasida</a> ko'rinadi.</li>
+      <li>Ma'lumotni o'zgartirish: ism va taxallusni profil sahifasida, parolni "Parolni tiklash" orqali.</li>
+      <li>Rozilikni chaqirib olish va ma'lumotni o'chirish: pastdagi "Hisobni qanday o'chirish mumkin" bo'limi.</li>
+      <li>Huquqingiz buzilgan deb hisoblasangiz, vakolatli davlat organiga yoki sudga murojaat qilish (30-modda, LX02).</li>
+    </ul>
+
+    <h2 id="ochirish">Hisobni qanday o'chirish mumkin</h2>
+    <ol>
+      <li>Hisobingizga kiring va <a href={yol('/uz/hisob/profil/')}>profil sahifasini</a> oching.</li>
+      <li>"Hisobni o'chirish" tugmasini bosing va tasdiqlang.</li>
+    </ol>
+    <p>Hisob, ism, taxallus va rozilik belgilari serverdan darhol o'chiriladi. Brauzerdagi natijalar o'zingizda qoladi: ularni yuqoridagi usul bilan tozalang.</p>
+
+    <h2>Nima to'planmaydi</h2>
+    <ul>
       <li>Hujjat (pasport, sertifikat) yoki insho yuklash imkoniyati yo'q.</li>
+      <li>Karta ma'lumoti saytda so'ralmaydi.</li>
       <li>Tayanch o'z analitika yoki reklama kodini ishlatmaydi. Shrift ham saytning o'zidan yuklanadi.</li>
     </ul>
 
-    <h2>Brauzeringizda saqlanadigan narsa</h2>
-    <p>Ba'zi vositalar (masalan, so'z kartochkalari yoki tayyorgarlik rejasi) siz kiritgan narsani faqat sizning brauzeringizda saqlaydi. Bu ma'lumot hech qayerga yuborilmaydi va boshqa qurilmada ko'rinmaydi. O'chirish uchun brauzer sozlamalarida shu sayt ma'lumotlarini tozalang.</p>
-
     <h2>Xosting</h2>
     <p>Sayt GitHub Pages'da joylashgan. Sahifa ochilganda so'rov GitHub serverlariga boradi.</p>
+
+    <h2>O'zgarishlar va murojaat</h2>
+    <p>Siyosat o'zgarsa, yangi sana shu sahifa boshida yoziladi. Murojaat uchun aloqa manzili tez orada shu yerda bo'ladi.</p>
+    <p>Yana qarang: <a href={yol('/uz/shartlar/')}>Foydalanish shartlari</a>.</p>
   </section>
 </Asosiy>
 
 <style>
   .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-4); max-width: 820px; }
   .sahifa h2 { font-size: 24px; margin-top: var(--b-4); }
-  ul { margin: 0; padding-left: 1.2em; }
+  ul, ol { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+  code { overflow-wrap: anywhere; }
 </style>

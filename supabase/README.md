@@ -67,4 +67,4 @@ Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov f
 
 - P03B: Google bilan kirish (Google provider, client ID/secret faqat dashboard'da; Redirect URL'lar shu ro'yxatda).
 - P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Hozircha `display_name`, `nickname` Supabase `user_metadata` da.
-- P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
+- P23: Maxfiylik va Shartlar sahifalari yozildi (2026-11-09). Migratsiya `20261109130000_hisobni_ochirish.sql` (`delete_own_account`) PR merge qilingandan keyin qo'llanadi: avval `supabase migration list --remote=<ref>` (farqni ko'rsatadi), so'ng `supabase migration up --remote=<ref>`. Shart: PR #38 va #57 migratsiyalari avval main'da bo'lishi kerak (ular loyihada allaqachon qo'llangan; papkada bo'lmasa CLI tarix farqi bilan to'xtaydi).
