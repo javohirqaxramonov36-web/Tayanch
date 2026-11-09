@@ -6,10 +6,10 @@ import { bankMavzular } from '../../../../../data/satNamuna';
 import { yol } from '../../../../../lib/yol';
 ---
 <BolimQobiq
-  title="Savol banki · SAT"
-  description="Mavzuni tanlang va faqat shu mavzudagi savollarni yeching. Har javobdan keyin izoh chiqadi."
+  title="Question bank · SAT"
+  description="Choose a topic and solve questions on that topic only. An explanation appears after each answer."
   turi="mashq"
-  yol={["Mashq"]}
+  yol={['Practice']}
   bolim="sat"
   holat="qoralama"
 >
@@ -17,49 +17,49 @@ import { yol } from '../../../../../lib/yol';
   <div class="ichki bank" data-test-url={yol('/uz/sat/mashq/test/')}>
     <section class="bosh" aria-labelledby="bank-h">
       <div class="bosh-matn">
-        <p class="pill-qator"><span class="pill">Mashq</span><span class="pill pill-chiziq">Namuna ma'lumot</span></p>
-        <h1 id="bank-h">Savol banki</h1>
-        <p class="lead">Mavzuni tanlang va faqat shu mavzudagi savollarni yeching. Har javobdan keyin izoh chiqadi.</p>
+        <p class="pill-qator"><span class="pill">Practice</span><span class="pill pill-chiziq">Sample data</span></p>
+        <h1 id="bank-h">Question bank</h1>
+        <p class="lead">Choose a topic and solve questions on that topic only. An explanation appears after each answer.</p>
       </div>
       <a class="katta-tugma asosiy" href={yol('/uz/sat/mashq/test/')}>
-        Aralash savollar
+        Mixed questions
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
       </a>
     </section>
 
-    <section class="filtrlar" aria-label="Filtrlar">
-      <div class="segment" role="tablist" aria-label="Bo'lim">
+    <section class="filtrlar" aria-label="Filters">
+      <div class="segment" role="tablist" aria-label="Section">
         <button type="button" role="tab" aria-selected="true" data-bolim="rw">Reading &amp; Writing</button>
         <button type="button" role="tab" aria-selected="false" data-bolim="math">Math</button>
       </div>
       <div class="qator">
-        <span class="qator-nom">Qiyinlik:</span>
-        <button type="button" class="chip" aria-pressed="true" data-qiyinlik="hammasi">Hammasi</button>
-        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="oson">Oson</button>
-        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="orta">O'rta</button>
-        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="qiyin">Qiyin</button>
+        <span class="qator-nom">Difficulty:</span>
+        <button type="button" class="chip" aria-pressed="true" data-qiyinlik="hammasi">All</button>
+        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="oson">Easy</button>
+        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="orta">Medium</button>
+        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="qiyin">Hard</button>
         <label class="belgi-qutisi">
           <input type="checkbox" id="yechilmagan" />
-          Faqat yechilmaganlar
+          Unsolved only
         </label>
       </div>
     </section>
 
     <section class="mavzular" aria-labelledby="mavzu-h" role="tabpanel">
-      <h2 id="mavzu-h" class="ustki-yorliq">Reading &amp; Writing mavzulari</h2>
+      <h2 id="mavzu-h" class="ustki-yorliq">Reading &amp; Writing topics</h2>
       <ul id="mavzu-royxat"></ul>
     </section>
 
-    <section class="tanlov" aria-label="Tanlov" aria-live="polite">
+    <section class="tanlov" aria-label="Selection" aria-live="polite">
       <div>
-        <p class="ustki-yorliq kok-yorliq">Tanlangan</p>
-        <p class="tanlov-matn" id="tanlov-matn">Mavzu tanlanmagan</p>
-        <p class="tanlov-izoh" id="tanlov-izoh">Yuqoridan bir yoki bir nechta mavzuni bosing.</p>
+        <p class="ustki-yorliq kok-yorliq">Selected</p>
+        <p class="tanlov-matn" id="tanlov-matn">No topic selected</p>
+        <p class="tanlov-izoh" id="tanlov-izoh">Tap one or more topics above.</p>
       </div>
-      <a class="katta-tugma oq" id="boshlash" href={yol('/uz/sat/mashq/test/')}>Yechishni boshlash</a>
+      <a class="katta-tugma oq" id="boshlash" href={yol('/uz/sat/mashq/test/')}>Start solving</a>
     </section>
 
-    <p class="eslatma">Savollar Tayanch uchun alohida tuziladi, boshqa saytlardan ko'chirilmaydi. Mavzular holati namuna: hozircha har mavzuda savollar soni kam.</p>
+    <p class="eslatma">Questions are written separately for Tayanch and are not copied from other sites. The topic progress is sample data: for now, each topic has only a few questions.</p>
   </div>
 </BolimQobiq>
 
@@ -68,12 +68,12 @@ import { yol } from '../../../../../lib/yol';
 
   const data: Record<'rw' | 'math', BankMavzu[]> = JSON.parse(document.getElementById('bank-data')!.textContent || '{}');
   const testUrl = (document.querySelector('.bank') as HTMLElement).dataset.testUrl!;
-  const QNOMI: Record<string, string> = { hammasi: 'barcha qiyinlikda', oson: 'oson', orta: "o'rta", qiyin: 'qiyin' };
+  const QNOMI: Record<string, string> = { hammasi: 'all levels', oson: 'easy', orta: 'medium', qiyin: 'hard' };
   const s = {
     bolim: 'rw' as 'rw' | 'math',
     qiyinlik: 'hammasi',
     yechilmagan: false,
-    tanlangan: { rw: ["Matndagi asosiy g'oya"], math: ['Chiziqli tenglamalar'] } as Record<string, string[]>,
+    tanlangan: { rw: ['Main idea of a text'], math: ['Linear equations'] } as Record<string, string[]>,
   };
   const royxat = document.getElementById('mavzu-royxat')!;
 
@@ -82,7 +82,7 @@ import { yol } from '../../../../../lib/yol';
       b.setAttribute('aria-selected', String(b.dataset.bolim === s.bolim)));
     document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.qiyinlik === s.qiyinlik)));
-    document.getElementById('mavzu-h')!.textContent = `${s.bolim === 'rw' ? 'Reading & Writing' : 'Math'} mavzulari`;
+    document.getElementById('mavzu-h')!.textContent = `${s.bolim === 'rw' ? 'Reading & Writing' : 'Math'} topics`;
 
     const tanlanganlar = s.tanlangan[s.bolim];
     royxat.replaceChildren();
@@ -99,7 +99,7 @@ import { yol } from '../../../../../lib/yol';
         b.innerHTML = `
           <span class="m-bosh"><span class="m-nom"></span><span class="m-belgi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span></span>
           <span class="m-past">
-            <span class="m-izoh"><span>${m.yechilgan} / ${m.jami} yechilgan</span><span>${m.jami - m.yechilgan} ta qoldi</span></span>
+            <span class="m-izoh"><span>${m.yechilgan} / ${m.jami} solved</span><span>${m.jami - m.yechilgan} left</span></span>
             <span class="m-iz" aria-hidden="true"><span class="m-toldirish" style="width:${foiz}%"></span></span>
           </span>`;
         b.querySelector('.m-nom')!.textContent = m.nomi;
@@ -116,11 +116,11 @@ import { yol } from '../../../../../lib/yol';
     const tanlanganData = data[s.bolim].filter((m) => tanlanganlar.includes(m.nomi));
     const qolgan = tanlanganData.reduce((a, m) => a + (m.jami - m.yechilgan), 0);
     document.getElementById('tanlov-matn')!.textContent = tanlanganData.length === 0
-      ? 'Mavzu tanlanmagan'
-      : `${tanlanganData.length} ta mavzu, ${qolgan} ta yechilmagan savol`;
+      ? 'No topic selected'
+      : `${tanlanganData.length} ${tanlanganData.length === 1 ? 'topic' : 'topics'}, ${qolgan} unsolved ${qolgan === 1 ? 'question' : 'questions'}`;
     document.getElementById('tanlov-izoh')!.textContent = tanlanganData.length === 0
-      ? 'Yuqoridan bir yoki bir nechta mavzuni bosing.'
-      : `Qiyinlik: ${QNOMI[s.qiyinlik]}. ${tanlanganData.map((m) => m.nomi).join(', ')}`;
+      ? 'Tap one or more topics above.'
+      : `Difficulty: ${QNOMI[s.qiyinlik]}. ${tanlanganData.map((m) => m.nomi).join(', ')}`;
     const boshlash = document.getElementById('boshlash') as HTMLAnchorElement;
     boshlash.href = tanlanganlar.length ? `${testUrl}?mavzular=${encodeURIComponent(tanlanganlar.join('|'))}` : testUrl;
   };

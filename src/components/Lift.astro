@@ -10,18 +10,20 @@
 // Oldingi qavat sessionStorage "tayanch:qavat" da; qavat o'zgarsa qisqa "2 → 3" ko'rsatkichi.
 import { qavatlar, joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
+import { matn, yolTili } from '../data/umumiyMatn';
 
 interface Props { variant: 'yon' | 'menyu' | 'fokus' | 'pastki' }
 const { variant } = Astro.props;
 const joriy = joriyQavat(Astro.url.pathname);
 const jq = qavatI(joriy);
+const M = matn[yolTili(Astro.url.pathname)];
 // Yorliq ko'rinadigan matn bilan boshlanadi (WCAG 2.5.3): telefonda "3 SAT", boshqa joyda "3".
 const yorliq = (q: (typeof qavatlar)[number]) =>
-  `${variant === 'pastki' ? `${q.raqam} ${q.qisqaNom}, ` : ''}${q.raqam}-qavat, ${q.nomi}${q.holat === 'tez-orada' ? ', tez orada' : ''}`;
+  `${variant === 'pastki' ? `${q.raqam} ${q.qisqaNom}, ` : ''}${M.qavat(q.raqam)}, ${q.nomi}${q.holat === 'tez-orada' ? M.lift.tezOrada : ''}`;
 ---
 <nav
   class={`lift lift-${variant}`}
-  aria-label="Qavatlar (lift)"
+  aria-label={M.lift.nomi}
   data-joriy={joriy}
   data-panel-tashqari={variant === 'pastki' ? '' : undefined}
 >
@@ -44,7 +46,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
   </ol>
   {variant === 'yon' ? (
     <p class="lift-yozuv">
-      <span class="lift-joriy">{joriy}-qavat · {jq.nomi}</span>
+      <span class="lift-joriy">{M.qavat(joriy)} · {jq.nomi}</span>
       <span class="lift-harakat" aria-hidden="true" hidden></span>
     </p>
   ) : (

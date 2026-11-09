@@ -7,6 +7,7 @@ import BolimQobiq from '../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../ManbaBlok.astro';
 import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
 import { tinishmi } from '../../lib/belgilashGuruh';
+import { bolimTili, matn } from '../../data/umumiyMatn';
 
 interface Props {
   bolim: DarsBolim;
@@ -46,8 +47,12 @@ interface Props {
 const {
   bolim, modul, savollar, yolBandlari, darsTuri, imtihon, manbalar, tekshirilgan, keyingiTekshiruv,
   title, description, yonalish, sarlavha, lead, maqsadlar, xulosa, keyingi, tekshirilmagan,
-  qadamNomlari = ['Animatsiya', 'Formula', "Sinab ko'r"], savolTili, savolKorsatma, takrorlashHref,
+  savolTili, savolKorsatma, takrorlashHref,
 } = Astro.props;
+// Qolip matni bo'lim tilida (SAT: inglizcha). Lug'at: src/data/umumiyMatn.ts
+const til = bolimTili(bolim);
+const M = matn[til].dars;
+const qadamNomlari = Astro.props.qadamNomlari ?? M.qadamNomlari;
 const HARF = 'ABCD';
 const qadamlar = [
   { id: 'animatsiya', nomi: qadamNomlari[0] },
@@ -68,7 +73,7 @@ const qadamlar = [
       <p class="pill-qator">
         <span class="ustki-kok">{darsTuri}</span>
         <span class="pill">{yonalish}</span>
-        <span class="pill pill-chiziq">Qoralama</span>
+        <span class="pill pill-chiziq">{M.qoralama}</span>
       </p>
       <h1>{sarlavha}</h1>
       <p class="lead">{lead}</p>
@@ -76,21 +81,21 @@ const qadamlar = [
 
     <section class="maqsad" aria-labelledby="maqsad-h">
       <div class="maqsad-matn">
-        <h2 id="maqsad-h" class="kichik-h">Bu darsdan keyin</h2>
+        <h2 id="maqsad-h" class="kichik-h">{M.maqsad}</h2>
         <ul>{maqsadlar.map((m) => <li>{m}</li>)}</ul>
       </div>
       <div class="maqsad-progress">
-        <p class="kichik"><span id="progress-son">0</span> / {savollar.length} mashq to'g'ri yechilgan</p>
+        <p class="kichik"><span id="progress-son">0</span> / {savollar.length} {M.progress}</p>
         <div class="progress" aria-hidden="true"><span id="progress-chiziq"></span></div>
       </div>
     </section>
 
     <section class="lab" aria-labelledby="lab-h">
-      <h2 id="lab-h" class="sr">Laboratoriya</h2>
+      <h2 id="lab-h" class="sr">{M.laboratoriya}</h2>
       <div class="lab-ichki">
         <div class="lab-sahna"><slot name="sahna" /></div>
         <div class="lab-panel">
-          <div class="qadamlar" role="tablist" aria-label="Dars qadamlari">
+          <div class="qadamlar" role="tablist" aria-label={M.qadamlar}>
             {qadamlar.map((q, i) => (
               <button
                 type="button"
@@ -112,30 +117,30 @@ const qadamlar = [
 
     <section class="mashqlar" aria-labelledby="mashq-h" id="mashqlar">
       <div class="m-bosh">
-        <h2 id="mashq-h">Mashqlar</h2>
-        <p class="kichik ikkinchi">Tayanch uchun yozilgan namuna savollar, {imtihon ? `rasmiy ${imtihon} savoli emas` : 'rasmiy savol emas'}. Ball hisoblanmaydi.</p>
+        <h2 id="mashq-h">{M.mashqlar}</h2>
+        <p class="kichik ikkinchi">{M.mashqIzoh(imtihon)}</p>
       </div>
 
-      <nav class="savol-nuqtalar" aria-label="Mashqlar ro'yxati">
+      <nav class="savol-nuqtalar" aria-label={M.mashqRoyxati}>
         {savollar.map((s, i) => (
-          <button type="button" class="nuqta" data-i={i} aria-label={`${i + 1}-mashq`}>{i + 1}</button>
+          <button type="button" class="nuqta" data-i={i} aria-label={M.mashq(i + 1)}>{i + 1}</button>
         ))}
       </nav>
 
       <div class="savol-karta">
         {savollar.map((s, i) => (
           <fieldset class="savol" data-i={i} data-id={s.id} hidden={i !== 0}>
-            <legend class="sr">{i + 1}-mashq</legend>
+            <legend class="sr">{M.mashq(i + 1)}</legend>
             <p class="s-meta">
-              <span class="pill">Namuna</span>
-              <span class="pill">{s.qiyinlik}</span>
+              <span class="pill">{M.namuna}</span>
+              <span class="pill">{M.qiyinlik[s.qiyinlik]}</span>
               <span class="kichik ikkinchi">{s.mavzu}</span>
-              {!s.verified && <span class="pill pill-ogoh">tekshirilmagan</span>}
+              {!s.verified && <span class="pill pill-ogoh">{M.tekshirilmagan}</span>}
             </p>
             {s.belgilash?.tur === 'soz' ? (
               <>
-                <p class="s-matn s-korsatma">1. Gapdagi xatoli so'z yoki belgini bosing.</p>
-                <div class="bolaklar soz-bolaklar" role="group" aria-label="Gap bo'laklari: xatoli bo'lakni belgilang" lang="en">
+                <p class="s-matn s-korsatma">{M.sozKorsatma}</p>
+                <div class="bolaklar soz-bolaklar" role="group" aria-label={M.sozGuruh} lang="en">
                   {s.belgilash.bolaklar.map((b, k) => (
                     <button type="button" class:list={['bolak', { 'bolak-tinish': tinishmi(b) }]} data-bolak={k} aria-pressed="false">{b}</button>
                   ))}
@@ -155,19 +160,19 @@ const qadamlar = [
             )}
             {s.belgilash?.tur === 'gap' ? (
               <div class="parcha">
-                <p class="kichik ikkinchi parcha-sarlavha">{s.belgilash.sarlavha ?? "Matn: dalil bo'ladigan gapni bosing"}</p>
-                <div class="bolaklar gap-bolaklar" role="group" aria-label="Matn gaplari: dalil gapni belgilang" lang="en">
+                <p class="kichik ikkinchi parcha-sarlavha">{s.belgilash.sarlavha ?? M.gapSarlavha}</p>
+                <div class="bolaklar gap-bolaklar" role="group" aria-label={M.gapGuruh} lang="en">
                   {s.variantlar.map((v, k) => (
                     <button type="button" class="bolak gap" data-bolak={k} aria-pressed="false">
                       <span class="gap-matn">{v.matn}</span>
-                      <span class="gap-yorliq" lang="uz" hidden></span>
+                      <span class="gap-yorliq" lang={til === 'uz' ? 'uz' : undefined} hidden></span>
                     </button>
                   ))}
                 </div>
               </div>
             ) : (
               <div class="variantlar" hidden={s.belgilash?.tur === 'soz'}>
-                {s.belgilash?.tur === 'soz' && <p class="s-korsatma">2. To'g'ri tuzatishni tanlang.</p>}
+                {s.belgilash?.tur === 'soz' && <p class="s-korsatma">{M.tuzatishKorsatma}</p>}
                 {s.variantlar.map((v, j) => (
                   <label class="variant">
                     <input type="radio" name={`v-${s.id}`} value={j} />
@@ -180,13 +185,13 @@ const qadamlar = [
             <div class="izoh" aria-live="polite" hidden>
               <p class="izoh-sarlavha"></p>
               <p class="izoh-xato"></p>
-              <p class="izoh-yechim"><b>Yechim.</b> {s.yechim}</p>
+              <p class="izoh-yechim"><b>{M.yechim}</b> {s.yechim}</p>
             </div>
             <div class="s-tugmalar">
-              {s.belgilash?.tur === 'soz' && <button type="button" class="katta asosiy joy-tekshir" disabled>Joyni tekshirish</button>}
-              <button type="button" class="katta asosiy tekshir" disabled hidden={s.belgilash?.tur === 'soz'}>Tekshirish</button>
-              <button type="button" class="katta ikkinchi qayta" hidden>Qayta yechish</button>
-              <button type="button" class="katta qora keyingi" hidden>{i < savollar.length - 1 ? 'Keyingi mashq' : 'Xulosaga o\'tish'}</button>
+              {s.belgilash?.tur === 'soz' && <button type="button" class="katta asosiy joy-tekshir" disabled>{M.joyTekshirish}</button>}
+              <button type="button" class="katta asosiy tekshir" disabled hidden={s.belgilash?.tur === 'soz'}>{M.tekshirish}</button>
+              <button type="button" class="katta ikkinchi qayta" hidden>{M.qaytaYechish}</button>
+              <button type="button" class="katta qora keyingi" hidden>{i < savollar.length - 1 ? M.keyingiMashq : M.xulosagaOtish}</button>
             </div>
           </fieldset>
         ))}
@@ -194,33 +199,33 @@ const qadamlar = [
     </section>
 
     <section class="xulosa" aria-labelledby="xulosa-h" id="xulosa">
-      <h2 id="xulosa-h">Xulosa</h2>
+      <h2 id="xulosa-h">{M.xulosa}</h2>
       <ul class="xulosa-royxat">{xulosa.map((x) => <li>{x}</li>)}</ul>
       {Astro.slots.has('xulosa-oxiri') && <slot name="xulosa-oxiri" />}
 
       <section class="daftar" aria-labelledby="daftar-h">
         <div class="daftar-bosh">
-          <h3 id="daftar-h">Xato daftari</h3>
-          <p class="kichik ikkinchi">Shu darsda xato qilingan mashqlar. To'g'ri yechsangiz ro'yxatdan chiqadi.</p>
+          <h3 id="daftar-h">{M.daftar}</h3>
+          <p class="kichik ikkinchi">{M.daftarIzoh}</p>
         </div>
-        <p class="daftar-bosh-holat" id="daftar-bosh">Hozircha xato yo'q.</p>
+        <p class="daftar-bosh-holat" id="daftar-bosh">{M.daftarBosh}</p>
         <ul class="daftar-royxat" id="daftar-royxat"></ul>
         {takrorlashHref && (
-          <p class="daftar-takror"><a class="kok-tugma" href={takrorlashHref}>Hamma darslardagi xatolarni takrorlash</a></p>
+          <p class="daftar-takror"><a class="kok-tugma" href={takrorlashHref}>{M.takrorlash}</a></p>
         )}
         <div class="daftar-tozala">
-          <button type="button" class="matn-tugma" id="tozala">Shu dars natijalarini o'chirish</button>
+          <button type="button" class="matn-tugma" id="tozala">{M.tozala}</button>
           <span class="tasdiq" id="tasdiq" hidden>
-            O'chirilsinmi?
-            <button type="button" class="matn-tugma" id="tasdiq-ha">Ha, o'chirish</button>
-            <button type="button" class="matn-tugma" id="tasdiq-yoq">Bekor qilish</button>
+            {M.tasdiq}
+            <button type="button" class="matn-tugma" id="tasdiq-ha">{M.tasdiqHa}</button>
+            <button type="button" class="matn-tugma" id="tasdiq-yoq">{M.tasdiqYoq}</button>
           </span>
         </div>
-        <p class="kichik ikkinchi" id="saqlash-holat">Natijalar faqat shu brauzerda saqlanadi.</p>
+        <p class="kichik ikkinchi" id="saqlash-holat">{M.saqlash}</p>
       </section>
 
       {keyingi && (
-        <a class="katta asosiy keyingi-dars" href={keyingi.href}>Keyingi dars: {keyingi.nomi}</a>
+        <a class="katta asosiy keyingi-dars" href={keyingi.href}>{M.keyingiDars(keyingi.nomi)}</a>
       )}
     </section>
 
@@ -239,6 +244,8 @@ const qadamlar = [
   import type { DarsSavol, DarsBolim } from '../../data/darsTurlar';
   import { javobniYoz, progressniOqi, xatolarniOqi, modulniTozala } from '../../lib/darsSaqlash';
   import { belgilashGuruhi, type Guruh } from '../../lib/belgilashGuruh';
+  import { matn } from '../../data/umumiyMatn';
+  const M = matn[document.documentElement.lang === 'en' ? 'en' : 'uz'].dars;
 
   const data = JSON.parse(document.getElementById('dars-data')!.textContent || '{}') as { bolim: DarsBolim; modul: string; savollar: DarsSavol[] };
   const { bolim, modul, savollar } = data;
@@ -284,7 +291,7 @@ const qadamlar = [
       const h = p[savollar[i].id];
       if (h === 'togri') togri++;
       n.dataset.holat = h ?? '';
-      n.setAttribute('aria-label', `${i + 1}-mashq${h === 'togri' ? ", to'g'ri yechilgan" : h === 'xato' ? ', xato' : ''}`);
+      n.setAttribute('aria-label', `${M.mashq(i + 1)}${h === 'togri' ? M.nuqtaTogri : h === 'xato' ? M.nuqtaXato : ''}`);
       n.toggleAttribute('aria-current', i === joriy);
     });
     document.getElementById('progress-son')!.textContent = String(togri);
@@ -358,8 +365,8 @@ const qadamlar = [
         g.tugmalar[b.togriBolak].classList.add('joy-togri');
         if (!ok) g.tugmalar[k].classList.add('joy-xato');
         f.querySelector<HTMLElement>('.joy-holat')!.textContent = ok
-          ? "Joy to'g'ri topildi. Endi tuzatishni tanlang."
-          : `Xato bu yerda emas. Xato joyi: «${b.bolaklar[b.togriBolak]}». Endi tuzatishni tanlang.`;
+          ? M.joyTogri
+          : M.joyXato(b.bolaklar[b.togriBolak]);
         f.querySelector<HTMLElement>('.variantlar')!.hidden = false;
         joyTekshir.hidden = true;
         tekshir.hidden = false;
@@ -389,9 +396,9 @@ const qadamlar = [
           const y = g.tugmalar[k].querySelector<HTMLElement>('.gap-yorliq')!;
           y.textContent = yozuv; y.hidden = false;
         };
-        belgila(s.togri, 'gap-togri', "To'g'ri dalil");
-        if (j !== s.togri) belgila(j, 'gap-xato', 'Siz tanlagan');
-        sarlavha = togrimi ? "To'g'ri." : `Xato. To'g'ri dalil: «${s.variantlar[s.togri].matn}»`;
+        belgila(s.togri, 'gap-togri', M.togriDalil);
+        if (j !== s.togri) belgila(j, 'gap-xato', M.sizTanlagan);
+        sarlavha = togrimi ? M.togri : M.xatoDalil(s.variantlar[s.togri].matn);
         saqlanadigan = qisqa(s.variantlar[j].matn);
       } else {
         inputlar.forEach((x) => { x.disabled = true; });
@@ -400,16 +407,16 @@ const qadamlar = [
         if (j !== s.togri) labellar[j].classList.add('xato');
         const togriJavob = `${'ABCD'[s.togri]}) ${s.variantlar[s.togri].matn}`;
         if (!joy.ok) {
-          sarlavha = j === s.togri ? `Xato joyi topilmadi. Tuzatish to'g'ri: ${togriJavob}` : `Xato joyi topilmadi. To'g'ri tuzatish: ${togriJavob}`;
-          saqlanadigan = `joy: «${joy.tanlangan}»; ${s.variantlar[j].matn}`;
+          sarlavha = j === s.togri ? M.joyTopilmadiTogri(togriJavob) : M.joyTopilmadiXato(togriJavob);
+          saqlanadigan = M.joySaqlash(joy.tanlangan, s.variantlar[j].matn);
         } else {
-          sarlavha = togrimi ? "To'g'ri." : `Xato. To'g'ri javob: ${togriJavob}`;
+          sarlavha = togrimi ? M.togri : M.xatoJavob(togriJavob);
         }
       }
-      const tipik = [!joy.ok ? "xato joyi noto'g'ri topildi" : '', j !== s.togri ? s.variantlar[j].xato ?? '' : ''].filter(Boolean);
+      const tipik = [!joy.ok ? M.joyNotogri : '', j !== s.togri ? s.variantlar[j].xato ?? '' : ''].filter(Boolean);
       izoh.classList.toggle('izoh-togri', togrimi);
       izoh.querySelector('.izoh-sarlavha')!.textContent = sarlavha;
-      izoh.querySelector('.izoh-xato')!.textContent = tipik.length ? `Tipik xato: ${tipik.join('; ')}.` : '';
+      izoh.querySelector('.izoh-xato')!.textContent = tipik.length ? M.tipik(tipik.join('; ')) : '';
       izoh.hidden = false;
       tekshir.hidden = true;
       f.querySelector<HTMLButtonElement>('.qayta')!.hidden = togrimi;
@@ -418,8 +425,8 @@ const qadamlar = [
       f.querySelector<HTMLButtonElement>('.keyingi')!.focus({ preventScroll: true });
       const saqlandi = javobniYoz(bolim, modul, s.id, togrimi, saqlanadigan);
       document.getElementById('saqlash-holat')!.textContent = saqlandi
-        ? 'Natijalar faqat shu brauzerda saqlanadi.'
-        : "Brauzer saqlashga ruxsat bermadi: natijalar sahifa yopilganda yo'qoladi.";
+        ? M.saqlash
+        : M.saqlanmadi;
       holatniChiz();
     });
     f.querySelector<HTMLButtonElement>('.qayta')!.addEventListener('click', () => { tiklash(f); (g ? g.tugmalar[0] : inputlar[0])?.focus(); });
@@ -445,12 +452,12 @@ const qadamlar = [
       const matn = document.createElement('div');
       const b = document.createElement('p'); b.className = 'd-savol';
       const til = ildiz.dataset.savolTili;
-      if (til && !s.belgilash) { const sp = document.createElement('span'); sp.lang = til; sp.textContent = s.matn; b.append(`${i + 1}-mashq. `, sp); }
-      else b.textContent = `${i + 1}-mashq. ${s.matn}`;
-      const t = document.createElement('p'); t.className = 'kichik ikkinchi'; t.textContent = `Sizning javobingiz: ${x.tanlangan} · ${x.sana}`;
+      if (til && !s.belgilash) { const sp = document.createElement('span'); sp.lang = til; sp.textContent = s.matn; b.append(`${M.mashq(i + 1)}. `, sp); }
+      else b.textContent = `${M.mashq(i + 1)}. ${s.matn}`;
+      const t = document.createElement('p'); t.className = 'kichik ikkinchi'; t.textContent = M.javobingiz(x.tanlangan, x.sana);
       matn.append(b, t);
       const tugma = document.createElement('button');
-      tugma.type = 'button'; tugma.className = 'matn-tugma kok-tugma'; tugma.textContent = 'Qayta yechish';
+      tugma.type = 'button'; tugma.className = 'matn-tugma kok-tugma'; tugma.textContent = M.qaytaYechish;
       tugma.addEventListener('click', () => {
         tiklash(fieldsetlar[i]);
         korsat(i, true);
@@ -471,7 +478,7 @@ const qadamlar = [
     fieldsetlar.forEach(tiklash);
     tasdiq.hidden = true; tozala.hidden = false;
     korsat(0);
-    document.getElementById('saqlash-holat')!.textContent = "Shu dars natijalari o'chirildi.";
+    document.getElementById('saqlash-holat')!.textContent = M.ochirildi;
   });
 
   holatniChiz();

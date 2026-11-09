@@ -6,16 +6,16 @@ import { savollar } from '../../../../../data/satNamuna';
 import { yol } from '../../../../../lib/yol';
 ---
 <SatFokus
-  title="Mashq testi · SAT"
-  description="Reading & Writing va Math bo'yicha qisqa namuna mashq: javobdan keyin darhol izoh."
-  ustki={`${savollar[0].bolim} · Namuna`}
+  title="Practice test · SAT"
+  description="A short sample practice set in Reading & Writing and Math: an explanation right after each answer."
+  ustki={`${savollar[0].bolim} · Sample`}
   nomi={savollar[0].mavzu}
-  progressNomi="Mashq jarayoni"
-  yol={["Mashq"]}
+  progressNomi="Practice progress"
+  yol={['Practice']}
 >
   <a slot="amal" class="desmos" href="https://www.desmos.com/calculator" target="_blank" rel="noopener">
     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" /><path d="M8 6h8" /><path d="M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2" /></svg>
-    Desmos<span class="sr">(yangi oynada ochiladi)</span>
+    Desmos<span class="sr">(opens in a new tab)</span>
   </a>
 
   <script type="application/json" id="savollar-data" set:html={JSON.stringify(savollar)} />
@@ -23,10 +23,10 @@ import { yol } from '../../../../../lib/yol';
   <div class="ustun" id="mashq">
     <section class="savol-karta" aria-labelledby="savol">
       <div class="karta-bosh">
-        <span class="pill" id="savol-raqam">Savol 1</span>
+        <span class="pill" id="savol-raqam">Question 1</span>
         <button type="button" class="bayroq" id="bayroq" aria-pressed="false">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4" /><path d="M4 4h13l-2 4 2 4H4" /></svg>
-          Keyinroq qaytish
+          Come back later
         </button>
       </div>
       <h1 id="savol">{savollar[0].matn}</h1>
@@ -49,19 +49,19 @@ import { yol } from '../../../../../lib/yol';
     </section>
 
     <div class="pastki">
-      <button type="button" class="matn-tugma" id="otkazish">O'tkazib yuborish</button>
-      <button type="button" class="katta asosiy" id="tekshir" disabled>Tekshirish</button>
-      <button type="button" class="katta qora" id="keyingi" hidden>Keyingi savol</button>
+      <button type="button" class="matn-tugma" id="otkazish">Skip</button>
+      <button type="button" class="katta asosiy" id="tekshir" disabled>Check</button>
+      <button type="button" class="katta qora" id="keyingi" hidden>Next question</button>
     </div>
   </div>
 
   <section class="tugadi" id="tugadi" aria-labelledby="tugadi-h" hidden>
-    <p class="pill">To'plam tugadi</p>
-    <h1 id="tugadi-h" tabindex="-1">Namuna to'plam tugadi</h1>
+    <p class="pill">Set complete</p>
+    <h1 id="tugadi-h" tabindex="-1">Sample set complete</h1>
     <p class="tugadi-matn" id="tugadi-matn"></p>
     <div class="tugadi-tugmalar">
-      <a class="katta asosiy" href={yol('/uz/sat/vosita/natijalar/')}>Natijalarni ko'rish</a>
-      <button type="button" class="katta ikkinchi" id="qayta">Qaytadan boshlash</button>
+      <a class="katta asosiy" href={yol('/uz/sat/vosita/natijalar/')}>See results</a>
+      <button type="button" class="katta ikkinchi" id="qayta">Start over</button>
     </div>
   </section>
 </SatFokus>
@@ -75,7 +75,7 @@ import { yol } from '../../../../../lib/yol';
   const toplam = filtrlangan.length > 0 ? filtrlangan : hamma;
 
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
-  const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+  const OYLAR = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const HARF = 'ABCD';
 
   let i = 0;
@@ -107,9 +107,9 @@ import { yol } from '../../../../../lib/yol';
   const chiz = () => {
     const s = toplam[i];
     tekshirildi = false;
-    $('fokus-ustki').textContent = `${s.bolim} · Namuna`;
+    $('fokus-ustki').textContent = `${s.bolim} · Sample`;
     $('fokus-nomi').textContent = s.mavzu;
-    $('savol-raqam').textContent = `Savol ${i + 1}`;
+    $('savol-raqam').textContent = `Question ${i + 1}`;
     $('savol').textContent = s.matn;
     const bayroq = $('bayroq');
     bayroq.setAttribute('aria-pressed', 'false');
@@ -151,7 +151,7 @@ import { yol } from '../../../../../lib/yol';
     });
     const izoh = $('izoh');
     izoh.classList.toggle('izoh-togri', togrimi);
-    $('izoh-sarlavha').textContent = togrimi ? `To'g'ri! Javob: ${HARF[s.togri]}` : `Bu safar emas. To'g'ri javob: ${HARF[s.togri]}`;
+    $('izoh-sarlavha').textContent = togrimi ? `Correct! Answer: ${HARF[s.togri]}` : `Not this time. Correct answer: ${HARF[s.togri]}`;
     $('izoh-matn').textContent = s.izoh;
     izoh.hidden = false;
     $('tekshir').hidden = true;
@@ -162,7 +162,7 @@ import { yol } from '../../../../../lib/yol';
     const d = new Date();
     saqla({
       id: `${s.id}-${d.getTime()}`, mavzu: s.mavzu, bolim: s.bolim,
-      sana: `${d.getDate()}-${OYLAR[d.getMonth()]}`,
+      sana: `${OYLAR[d.getMonth()]} ${d.getDate()}`,
       javob: HARF[t], togriJavob: HARF[s.togri], togri: togrimi,
     });
   });
@@ -172,7 +172,7 @@ import { yol } from '../../../../../lib/yol';
     if (i >= toplam.length) {
       $('mashq').hidden = true;
       $('tugadi').hidden = false;
-      $('tugadi-matn').textContent = `${toplam.length} ta savoldan ${togrilar} tasiga to'g'ri javob berdingiz. Javoblar "Mening natijalarim" sahifasida, faqat shu brauzerda saqlandi.`;
+      $('tugadi-matn').textContent = `You answered ${togrilar} of ${toplam.length} questions correctly. Your answers are on the "My results" page and were saved only in this browser.`;
       $('fokus-progress-matn').textContent = `${toplam.length} / ${toplam.length}`;
       $('tugadi-h').focus();
       return;
