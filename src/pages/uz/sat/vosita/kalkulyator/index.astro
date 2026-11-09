@@ -221,6 +221,7 @@ const vb = `0 0 ${SAHNA} ${SAHNA}`;
   function maydonlarniQur(f: Fn, quti: HTMLElement) {
     quti.replaceChildren();
     const tor = document.createElement('div'); tor.className = 'maydonlar';
+    const izohId = `k-${f.id}-izoh`;
     MAYDON[f.tur].forEach(({ kalit, yorliq }) => {
       const id = `k-${f.id}-${kalit}`;
       const m = document.createElement('div'); m.className = 'maydon';
@@ -228,11 +229,12 @@ const vb = `0 0 ${SAHNA} ${SAHNA}`;
       const inp = document.createElement('input');
       Object.assign(inp, { type: 'number', id, step: 'any', min: String(-MAKS), max: String(MAKS), value: f.q[kalit] });
       inp.setAttribute('inputmode', 'decimal');
+      inp.setAttribute('aria-describedby', izohId);
       inp.dataset.kalit = kalit;
       inp.addEventListener('input', () => { f.q[kalit] = inp.value; yangila(); });
       m.append(l, inp); tor.append(m);
     });
-    const iz = document.createElement('p'); iz.className = 'kichik ikkinchi'; iz.textContent = IZOH[f.tur];
+    const iz = document.createElement('p'); iz.className = 'kichik ikkinchi'; iz.id = izohId; iz.textContent = IZOH[f.tur];
     quti.append(tor, iz);
   }
 
@@ -256,6 +258,8 @@ const vb = `0 0 ${SAHNA} ${SAHNA}`;
       const pastki = document.createElement('div'); pastki.className = 'q-pastki';
       const out = document.createElement('output'); out.className = 'q-tenglama'; out.id = `k-${f.id}-out`;
       const xt = document.createElement('p'); xt.className = 'q-xato'; xt.id = `k-${f.id}-xato`; xt.hidden = true;
+      // Ogohlik ikonkasi (DESIGN.md "Xato xabari"): xato faqat rang bilan ko'rsatilmaydi
+      xt.innerHTML = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 7v6" /><path d="M12 17h.01" /></svg><span class="q-xato-matn"></span>';
       const ol = document.createElement('button'); ol.type = 'button'; ol.className = 'matn-tugma';
       ol.innerHTML = `Remove<span class="sr"> function ${i + 1}</span>`;
       ol.addEventListener('click', () => olibTashla(f.id));
@@ -300,11 +304,13 @@ const vb = `0 0 ${SAHNA} ${SAHNA}`;
       const fs = qatorlar.querySelector<HTMLElement>(`[data-id="${f.id}"]`);
       if (fs) {
         const xt = fs.querySelector<HTMLElement>('.q-xato')!;
-        xt.hidden = !xato; xt.textContent = xato?.matn ?? '';
+        xt.hidden = !xato; xt.querySelector('.q-xato-matn')!.textContent = xato?.matn ?? '';
+        // Yordamchi matn doim bog'langan; xato bo'lsa xato matni birinchi o'qiladi
+        const izohId = `k-${f.id}-izoh`;
         fs.querySelectorAll<HTMLInputElement>('input').forEach((inp) => {
           const yomon = !!xato && inp.dataset.kalit === xato.kalit;
-          if (yomon) { inp.setAttribute('aria-invalid', 'true'); inp.setAttribute('aria-describedby', xt.id); }
-          else { inp.removeAttribute('aria-invalid'); inp.removeAttribute('aria-describedby'); }
+          if (yomon) { inp.setAttribute('aria-invalid', 'true'); inp.setAttribute('aria-describedby', `${xt.id} ${izohId}`); }
+          else { inp.removeAttribute('aria-invalid'); inp.setAttribute('aria-describedby', izohId); }
         });
         fs.querySelector('output')!.textContent = xato ? '—' : tenglama(f);
       }
@@ -424,11 +430,12 @@ const vb = `0 0 ${SAHNA} ${SAHNA}`;
   .qatorlar :global(label) { font-weight: 700; font-size: var(--matn-kichik); }
   .qatorlar :global(.maydonlar) { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: var(--b-3); margin-bottom: var(--b-2); }
   .qatorlar :global(select), .qatorlar :global(input) {
-    min-height: 48px; width: 100%; padding: 0 var(--b-3); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-yon);
-    background: var(--fon); color: var(--matn); font: inherit; font-variant-numeric: tabular-nums;
+    min-height: 48px; width: 100%; padding: 0 var(--b-3); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    background: var(--sirt); color: var(--matn); font: inherit; font-variant-numeric: tabular-nums;
   }
   .qatorlar :global(input[aria-invalid='true']) { border-color: var(--rang-ogoh-matn); }
-  .qatorlar :global(.q-xato) { margin: 0; font-weight: 700; font-size: var(--matn-kichik); color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-yon); padding: var(--b-2) var(--b-3); }
+  .qatorlar :global(.q-xato) { margin: 0; display: flex; align-items: center; gap: var(--b-2); font-weight: 700; font-size: var(--matn-kichik); color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-kichik); padding: var(--b-2) var(--b-3); }
+  .qatorlar :global(.q-xato svg) { flex: none; }
   .qatorlar :global(.q-xato[hidden]) { display: none; }
   .qatorlar :global(.q-pastki) { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-2); }
   .qatorlar :global(.q-tenglama) { font-weight: 800; font-size: var(--matn-katta); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
