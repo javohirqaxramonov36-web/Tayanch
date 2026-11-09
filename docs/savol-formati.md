@@ -44,7 +44,7 @@ Rasmlar savol fayli yonida (nisbiy yo'l bilan). `korib-chiqish/` papkasini `savo
 
 Boshqa maydon bo'lsa xato (imlo xatosini ushlash uchun).
 
-**Boshlang'ich sxemaga qo'shilganlar** (muallif tasdig'i kerak):
+**Boshlang'ich sxemaga qo'shilganlar** (muallif tasdiqladi, 2026-11-09):
 
 - `figure.alt`: ekran o'quvchi uchun.
 - `verified_at` va `verified_hash`: tasdiqdan keyin savol o'zgarsa, u avtomatik draft'ga qaytadi.
@@ -109,6 +109,12 @@ Rad etiladi:
 - `drafted_by: "ai"` savol faqat inson `verified_by` bilan `verified` bo'ladi. Ungacha tekshiruvchi ogohlantiradi, import `draft` qilib yuklaydi.
 - Tasdiqdan keyin mazmun o'zgarsa (`verified_hash` mos kelmasa), tekshiruvchi xato beradi va import `draft` qiladi. Yechim: `version` ni oshirib qayta tasdiqlash.
 - `author ≠ verified_by`: muallif o'zi yozgan (`drafted_by: "human"`, `author` = muallif) savolni o'zi tasdiqlay olmaydi. Uni boshqa inson tasdiqlashi kerak.
+
+### Qarorlar (2026-11-09; muallif qarorlarni Claude'ga topshirdi)
+
+- **`author ≠ verified_by` qoladi.** Asosiy yo'l: AI qoralama yozadi (`author` = AI nomi), muallif tasdiqlaydi. Muallif o'zi yozgan savolni boshqa inson tasdiqlaydi; bunday odam bo'lmasa, savol draft bo'lib qoladi. Sabab: har savolni kamida bitta boshqa ko'z tekshiradi, bu javob xatosidan himoya qiladi.
+- **Savollar papkasi:** `~/Tayanch-savollar` (repodan tashqarida, zaxira nusxasi muallifda). Skriptlarda qattiq yozilmagan, faqat `TAYANCH_SAVOLLAR_DIR` orqali beriladi.
+- **Birinchi bosqich maqsadi:** har 30 ko'nikmada kamida 3 ta tasdiqlangan savol (qiyinlik 2, 3 va 4), jami kamida 90 ta. Bu ish rejasi maqsadi, saytda ko'rsatiladigan raqam emas. Qamrov `savol:tekshir` jadvalida kuzatiladi.
 
 ## 7. Import (Supabase)
 
