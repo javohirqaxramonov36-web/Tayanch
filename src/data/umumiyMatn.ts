@@ -18,6 +18,7 @@ const uz = {
   qavatYoli: 'Qayerdaman',
   lift: { nomi: 'Qavatlar (lift)', tezOrada: ', tez orada' },
   zina: { nomi: "Zina: qo'shni qavatlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'qurilmoqda' },
+  qavatlarAro: 'Boshqa qavatda',
   yon: {
     menyuOchish: 'Menyuni ochish',
     menyuYopish: 'Menyuni yopish',
@@ -80,6 +81,7 @@ const uz = {
     saqlanmadi: "Brauzer saqlashga ruxsat bermadi: natijalar sahifa yopilganda yo'qoladi.",
     ochirildi: "Shu dars natijalari o'chirildi.",
     keyingiDars: (nomi: string) => `Keyingi dars: ${nomi}`,
+    keyingiQadam: (nomi: string) => `Keyingi qadam: ${nomi}`,
     // Skript (brauzer) matnlari
     nuqtaTogri: ", to'g'ri yechilgan",
     nuqtaXato: ', xato',
@@ -107,6 +109,7 @@ const en: Matn = {
   qavatYoli: 'You are here',
   lift: { nomi: 'Floors (lift)', tezOrada: ', coming soon' },
   zina: { nomi: 'Stairs: neighboring floors', past: 'Down', yuqori: 'Up', qurilmoqda: 'under construction' },
+  qavatlarAro: 'On another floor',
   yon: {
     menyuOchish: 'Open menu',
     menyuYopish: 'Close menu',
@@ -169,6 +172,7 @@ const en: Matn = {
     saqlanmadi: 'The browser did not allow saving: results will be lost when the page is closed.',
     ochirildi: 'Results for this lesson were deleted.',
     keyingiDars: (nomi) => `Next lesson: ${nomi}`,
+    keyingiQadam: (nomi) => `Next step: ${nomi}`,
     nuqtaTogri: ', solved correctly',
     nuqtaXato: ', wrong',
     joyTogri: 'You found the right location. Now choose the revision.',

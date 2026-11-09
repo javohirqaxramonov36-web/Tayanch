@@ -5,6 +5,8 @@ import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import SahifaOxiri from '../../../../../components/SahifaOxiri.astro';
 import TopshirishYoli from '../../../../../components/TopshirishYoli.astro';
 import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
+import QavatlarAro from '../../../../../components/QavatlarAro.astro';
+import { topshirishYoliQavatlarAro } from '../../../../../data/qavatlarAro';
 ---
 <BolimQobiq
   title="Topshirish yo'li"
@@ -20,6 +22,7 @@ import { hammaTekshirilmagan } from '../../../../../data/topshirishYoli';
 >
   <div class="ichki ty-sahifa">
     <TopshirishYoli />
+    <QavatlarAro kartalar={topshirishYoliQavatlarAro} />
     <footer class="ty-oxir">
       <p><strong>Natija kafolatlanmaydi.</strong> Vosita qabul yoki grant ehtimolini hisoblamaydi.</p>
       <p>Tayanch Common App, UCAS, Coalition, Türkiye Bursları, Stipendium Hungaricum va El-yurt umidi jamg'armasi bilan bog'liq emas.</p>
