@@ -11,6 +11,7 @@ import Lift from './Lift.astro';
 import { yol } from '../lib/yol';
 import { manbalar } from '../data/manbalar';
 import { bolimTili, matn } from '../data/umumiyMatn';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
 
 import type { BolimSlug } from '../data/bolimlar';
 
@@ -46,6 +47,10 @@ const ikonkalar: Record<string, string> = {
 const cbSayt = bolim === 'sat' ? manbalar.find((m) => m.id === 'CB07') : undefined;
 if (bolim === 'sat' && !cbSayt) throw new Error("BolimYon: manbalar.ts da CB07 (College Board SAT sahifasi) topilmadi");
 const cbNom = `College Board ${M.rasmiySayt} ${M.yangiTab}`;
+// SAT: hisob bandi (P03). Faqat Supabase sozlangan build'da chiqadi; holatni pastdagi skript yangilaydi.
+const hisobBand = bolim === 'sat' && Boolean(PUBLIC_SUPABASE_URL && PUBLIC_SUPABASE_ANON_KEY);
+const hisobKirish = yol('/uz/sat/hisob/kirish/');
+const hisobProfil = yol('/uz/sat/hisob/profil/');
 const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/, '');
 const ieltsGuruhlar = [
   { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
@@ -177,6 +182,19 @@ const ieltsGuruhlar = [
   </nav>
 
   <div class="yon-past">
+    {hisobBand && (
+      <ul class="royxat tashqi hisob-band" aria-label="Account">
+        <li>
+          <a href={hisobKirish} id="hisob-band" data-kirish={hisobKirish} data-profil={hisobProfil} aria-label="Sign in" title="Sign in">
+            <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" /></svg>
+            <span class="yon-matn tashqi-matn">
+              <span id="hisob-band-nom">Sign in</span>
+              <span class="tashqi-izoh" id="hisob-band-izoh">Optional account</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    )}
     {cbSayt && (
       <ul class="royxat tashqi" aria-label={M.tashqi}>
         <li>
@@ -488,5 +506,35 @@ const ieltsGuruhlar = [
     :global([data-sidebar='yigilgan']) .tashqi a { justify-content: center; padding-inline: 0; }
     :global([data-sidebar='yigilgan']) .yigish-strelka { transform: rotate(180deg); transform-origin: 14px 12px; }
   }
+  .hisob-band .tashqi-izoh { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px; }
 
 </style>
+
+<script>
+  // SAT hisob bandi: kirgan/kirmagan holat. supabase-js yuklanmaydi (har sahifada og'ir bo'lardi):
+  // Supabase sessiyasi saqlanadigan localStorage kaliti (hisobSozlama.sessiyaKaliti) faqat o'qiladi.
+  // Saqlash formati Supabase'ning ichki ishi (tekshirish kerak): o'qib bo'lmasa "Sign in" qoladi.
+  import { hisobSozlama } from '../data/hisobSozlama';
+
+  function bandniYangila() {
+    const a = document.getElementById('hisob-band') as HTMLAnchorElement | null;
+    if (!a) return;
+    let foydalanuvchi: { email?: string; user_metadata?: { display_name?: string } } | undefined;
+    try {
+      foydalanuvchi = JSON.parse(localStorage.getItem(hisobSozlama.sessiyaKaliti) ?? 'null')?.user;
+    } catch { foydalanuvchi = undefined; }
+    const nom = document.getElementById('hisob-band-nom');
+    const izoh = document.getElementById('hisob-band-izoh');
+    const kirgan = Boolean(foydalanuvchi?.email);
+    const kim = foydalanuvchi?.user_metadata?.display_name || foydalanuvchi?.email || '';
+    a.href = (kirgan ? a.dataset.profil : a.dataset.kirish) ?? a.href;
+    if (nom) nom.textContent = kirgan ? 'Your account' : 'Sign in';
+    if (izoh) izoh.textContent = kirgan ? kim : 'Optional account';
+    const yorliq = kirgan ? `Your account, ${kim}` : 'Sign in';
+    a.setAttribute('aria-label', yorliq);
+    a.title = yorliq;
+  }
+  bandniYangila();
+  // Boshqa tabda kirish yoki chiqish bo'lsa ham yangilanadi.
+  window.addEventListener('storage', (e) => { if (e.key === hisobSozlama.sessiyaKaliti) bandniYangila(); });
+</script>

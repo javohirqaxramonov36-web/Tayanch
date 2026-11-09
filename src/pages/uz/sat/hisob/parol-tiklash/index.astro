@@ -1,0 +1,115 @@
+---
+// SAT · Hisob · Parolni tiklash (P03). Ikki holat:
+// 1) So'rov: email kiritiladi, havola yuboriladi. Javob har doim bir xil (email borligi oshkor qilinmaydi).
+// 2) Yangi parol: xatdagi havoladan kelganda (#type=recovery, Supabase vaqtinchalik sessiya beradi).
+// Havola eskirgan yoki ishlatilgan bo'lsa: xabar va yana 1-holat.
+import HisobKarta from '../../../../../components/hisob/HisobKarta.astro';
+import Maydon from '../../../../../components/hisob/Maydon.astro';
+import ParolMaydon from '../../../../../components/hisob/ParolMaydon.astro';
+import { hisobSahifa } from '../../../../../data/satSahifalar';
+import { hisobSozlama } from '../../../../../data/hisobSozlama';
+import { yol } from '../../../../../lib/yol';
+
+const sahifa = hisobSahifa('hisob/parol-tiklash/');
+---
+<HisobKarta sahifa={sahifa}>
+  <p class="hisob-alert" id="tiklash-havola-xato" role="alert" hidden></p>
+
+  <div class="hisob-karta" id="sorov-karta" data-hisob-bor>
+    <form class="hisob-forma" id="sorov-forma" novalidate aria-labelledby="hisob-sarlavha">
+      <p class="hisob-sust">Enter the email you used for your account. We will send you a link to set a new password.</p>
+      <p class="hisob-alert" id="sorov-xato" role="alert" hidden></p>
+      <p class="hisob-holat" id="sorov-holat" role="status" hidden></p>
+      <Maydon id="sorov-email" nomi="Email" turi="email" autocomplete="email" />
+      <button type="submit" class="tugma tugma-asosiy" id="sorov-tugma">Send reset link</button>
+    </form>
+  </div>
+
+  <section class="hisob-karta" id="yangi-karta" aria-labelledby="yangi-sarlavha" hidden>
+    <h2 id="yangi-sarlavha" tabindex="-1">Set a new password</h2>
+    <form class="hisob-forma" id="yangi-forma" novalidate aria-labelledby="yangi-sarlavha">
+      <p class="hisob-alert" id="yangi-xato" role="alert" hidden></p>
+      <ParolMaydon id="yangi-parol" nomi="New password" autocomplete="new-password" izoh={`At least ${hisobSozlama.parolMinUzunlik} characters.`} />
+      <button type="submit" class="tugma tugma-asosiy" id="yangi-tugma">Save new password</button>
+    </form>
+  </section>
+
+  <section class="hisob-karta" id="tayyor-karta" aria-labelledby="tayyor-sarlavha" hidden>
+    <h2 id="tayyor-sarlavha" tabindex="-1">Your password has been changed</h2>
+    <p class="hisob-sust">You are signed in with your new password.</p>
+    <a class="tugma tugma-asosiy" href={yol('/uz/sat/hisob/profil/')}>Go to your profile</a>
+  </section>
+
+  <p class="hisob-past" data-hisob-bor>
+    Remembered it? <a class="hisob-havola" href={yol('/uz/sat/hisob/kirish/')}>Sign in</a>
+  </p>
+</HisobKarta>
+
+<script>
+  import {
+    hisobMijoz, hisobYoqBolsa, hisobYoli, toliqManzil, havolaHolati, havolaXatoMatni,
+    xatoMatni, maydonXatosi, yuklanish, xabar, emailTogrimi,
+  } from '../../../../../lib/hisob';
+  import { hisobSozlama } from '../../../../../data/hisobSozlama';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  function korsat(qism: 'sorov' | 'yangi' | 'tayyor') {
+    $('sorov-karta').hidden = qism !== 'sorov';
+    $('yangi-karta').hidden = qism !== 'yangi';
+    $('tayyor-karta').hidden = qism !== 'tayyor';
+    document.querySelectorAll<HTMLElement>('.hisob-past[data-hisob-bor]').forEach((el) => (el.hidden = qism !== 'sorov'));
+    if (qism !== 'sorov') $(`${qism}-sarlavha`).focus();
+  }
+
+  async function boshla() {
+    if (hisobYoqBolsa()) return;
+    const { data } = await hisobMijoz()!.auth.getSession();
+    if (havolaHolati.xato) xabar($('tiklash-havola-xato'), havolaXatoMatni);
+    else if (havolaHolati.tur === 'recovery' && data.session) korsat('yangi');
+  }
+
+  // 1) So'rov
+  const sEmail = $<HTMLInputElement>('sorov-email');
+  const sTugma = $<HTMLButtonElement>('sorov-tugma');
+  $<HTMLFormElement>('sorov-forma').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    xabar($('sorov-xato'), null);
+    xabar($('sorov-holat'), null);
+    const e = sEmail.value.trim();
+    const m = !e ? 'Enter your email.' : !emailTogrimi(e) ? 'Enter an email like name@example.com.' : null;
+    maydonXatosi(sEmail, m);
+    if (m) return sEmail.focus();
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(sTugma, true, 'Sending…');
+    const { error } = await c.auth.resetPasswordForEmail(e, { redirectTo: toliqManzil(hisobYoli('parol-tiklash')) });
+    yuklanish(sTugma, false);
+    if (error) return xabar($('sorov-xato'), xatoMatni(error, 'tiklash'));
+    xabar($('sorov-holat'), `If an account exists for ${e}, we sent a link to reset the password. Check your inbox and spam folder.`);
+  });
+  sEmail.addEventListener('input', () => maydonXatosi(sEmail, null));
+
+  // 2) Yangi parol
+  const yParol = $<HTMLInputElement>('yangi-parol');
+  const yTugma = $<HTMLButtonElement>('yangi-tugma');
+  $<HTMLFormElement>('yangi-forma').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    xabar($('yangi-xato'), null);
+    const min = hisobSozlama.parolMinUzunlik;
+    const m = !yParol.value ? 'Enter a new password.' : yParol.value.length < min ? `Use at least ${min} characters.` : null;
+    maydonXatosi(yParol, m);
+    if (m) return yParol.focus();
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(yTugma, true, 'Saving…');
+    const { error } = await c.auth.updateUser({ password: yParol.value });
+    yuklanish(yTugma, false);
+    if (error) return xabar($('yangi-xato'), xatoMatni(error, 'yangilash'));
+    yParol.value = '';
+    korsat('tayyor');
+  });
+  yParol.addEventListener('input', () => maydonXatosi(yParol, null));
+
+  boshla();
+</script>

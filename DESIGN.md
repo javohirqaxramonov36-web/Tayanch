@@ -45,7 +45,7 @@ Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`).
 
 Boshlang'ich holat `prefers-color-scheme` dan. Tanlov `localStorage` da (`tayanch:mavzu`), `<head>` dagi inline skript sahifa chizilishidan oldin `data-mavzu` qo'yadi, shuning uchun rang miltillamaydi. Tanlov tugmasi hozircha faqat SAT yon panelida.
 
-Brauzerda saqlanadigan hamma kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`). Natijalar sahifasidagi "Natijalarni o'chirish" tugmasi faqat `tayanch:sat-javoblar` ni o'chiradi.
+Brauzerda saqlanadigan hamma kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`, `tayanch:sidebar`, `tayanch:sat-javoblar`, `tayanch:sat-lugat`, `tayanch:ielts-reja`). Supabase sessiyasi ham shu qoidaga bo'ysunadi: `storageKey` = `tayanch:auth` (`src/data/hisobSozlama.ts`), shuning uchun istisno yo'q; uni Supabase o'zi yozadi va yangilaydi, Tayanch kodi faqat o'qiydi (yon paneldagi hisob bandi). Natijalar sahifasidagi "Natijalarni o'chirish" tugmasi faqat `tayanch:sat-javoblar` ni o'chiradi.
 
 ## Tipografiya
 
