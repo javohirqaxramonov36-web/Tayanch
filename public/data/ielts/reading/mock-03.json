@@ -1,0 +1,877 @@
+{
+  "id": "mock-03",
+  "module": "reading",
+  "title": "Academic Reading · Set 03",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "How a pedestrian bridge moves",
+      "paragraphs": [
+        "A person standing on a bridge usually thinks of the structure as still. In engineering, however, a bridge is expected to move a small amount as it carries a load. When someone walks across it, the deck bends slightly and returns towards its earlier position after the person leaves. This return is a useful distinction. A material that changes shape permanently has behaved differently from one that springs back. The fact that movement occurs is therefore not enough to identify damage. An inspection considers how large the movement is, where it takes place and whether the bridge returns to its earlier shape under the conditions for which it was designed.",
+        "The deck needs to carry weight towards the supports. A beam can do this while spanning a gap, although its upper and lower surfaces do not behave in the same way when it bends. In a simple span carrying a downward load near its middle, the upper surface tends to shorten while the lower one tends to stretch. The material has to resist both actions. This difference helps explain why a beam can use material efficiently when some of it is placed farther from the middle of the section. The engineer chooses the shape according to the forces it must resist rather than treating every part of its thickness as equally useful.",
+        "The bridge must also cope with changes in temperature. A long deck can become slightly longer as it warms, then contract as it cools. If both ends were prevented from moving, expansion could produce additional forces in the bridge and its supports. Some bridges therefore have an expansion joint that provides a space for movement. The gap is not evidence that a piece of the bridge is missing. It is a feature whose size and position have been chosen. During an inspection, debris in the gap matters because it can prevent a part intended to move from performing that job. A joint can be in place and still be unable to function properly.",
+        "Walking adds a different kind of movement. The force of a step arrives and then diminishes, and a series of steps can repeat at a fairly regular rhythm. A bridge has certain patterns in which it can vibrate more readily. If a repeated force matches one of those patterns closely, the movement can become more noticeable. Engineers use the word resonance for a strong response to a force repeated at a suitable rate. The presence of vibration does not automatically establish that the structure is weak. People can feel movement at levels well below those required to damage it. Comfort and strength are related design concerns but call for separate checks.",
+        "One way to reduce an unwanted movement is to increase stiffness, so that the bridge deforms less readily in the relevant direction. Another is to provide damping, which allows energy associated with the movement to be dissipated. The two changes are not identical. A stiffer structure can still vibrate, and a device that damps vibration need not make the whole bridge much stiffer. The best response depends on the movement that has been observed. For example, if the troublesome motion is sideways, a modification that only changes vertical stiffness may miss its target. Measuring the direction as well as the size of motion helps narrow the possible solutions.",
+        "A bridge can be monitored without closing it for a full physical inspection on every visit. A sensor can record acceleration as people walk across, and measurements taken over time can show whether a familiar pattern has changed. The comparison needs context. A calm day with a few pedestrians is not equivalent to a windy day with a group crossing together. A new record should therefore be read alongside information about the conditions. Instruments also require checking: a loose sensor can generate a reading that looks unusual even though the structure has not changed. An unusual signal is a reason to investigate, rather than a diagnosis on its own.",
+        "From this perspective, maintenance is partly a process of preserving intended movement. A dirty joint may need clearing, a worn bearing may need examination and an unexpected vibration may need measurement. None of these tasks can be understood solely by asking whether the bridge is rigid. Designers allow some parts to move and constrain others because both responses have a purpose. What matters over time is whether each part still moves in the way expected, and whether the users experience the deck as safe and comfortable. A record that distinguishes planned changes from unexpected ones gives future inspectors a much clearer place to begin."
+      ],
+      "questions": [
+        {
+          "id": "r03-01",
+          "type": "tfng",
+          "text": "Engineers allow for some movement when a bridge carries a load.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "In engineering, however, a bridge is expected to move a small amount as it carries a load."
+            }
+          ],
+          "explanation_uz": "Yuk ostidagi ozgina siljish kutiladi.",
+          "explanation_en": "Some movement under a load is expected in the design.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "True"
+        },
+        {
+          "id": "r03-02",
+          "type": "tfng",
+          "text": "Under the downward load described, the top of the beam stretches.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "In a simple span carrying a downward load near its middle, the upper surface tends to shorten while the lower one tends to stretch."
+            }
+          ],
+          "explanation_uz": "Matn yuqori yuzaning qisqarishini aytadi.",
+          "explanation_en": "It is the lower surface that tends to stretch in this example.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "False"
+        },
+        {
+          "id": "r03-03",
+          "type": "tfng",
+          "text": "The expansion joints described in the passage are replaced every winter.",
+          "evidence": [
+            {
+              "ref": "A–G (whole passage)",
+              "quote": ""
+            }
+          ],
+          "explanation_uz": "Almashtirish mavsumi yoki oralig‘i ko‘rsatilmagan.",
+          "explanation_en": "No replacement schedule is mentioned.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "Not Given"
+        },
+        {
+          "id": "r03-04",
+          "type": "tfng",
+          "text": "People can notice vibration before it is large enough to damage the bridge.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "People can feel movement at levels well below those required to damage it."
+            }
+          ],
+          "explanation_uz": "Seziladigan siljish zarar yetkazish darajasidan past bo‘lishi mumkin.",
+          "explanation_en": "Perceptible motion can be below the level that would damage the structure.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "True"
+        },
+        {
+          "id": "r03-05",
+          "type": "tfng",
+          "text": "A modification that changes only vertical stiffness necessarily solves sideways vibration.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "For example, if the troublesome motion is sideways, a modification that only changes vertical stiffness may miss its target."
+            }
+          ],
+          "explanation_uz": "Vertikal o‘zgarish yonlama muammoni hal qilmasligi mumkin.",
+          "explanation_en": "Changing vertical stiffness may miss the sideways motion entirely.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "False"
+        },
+        {
+          "id": "r03-06",
+          "type": "sentence-completion",
+          "text": "The ___ bends a little as someone crosses the bridge.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "When someone walks across it, the deck bends slightly and returns towards its earlier position after the person leaves."
+            }
+          ],
+          "explanation_uz": "Ko‘prikning ustki qismi yuk ta’sirida biroz egiladi.",
+          "explanation_en": "The passage names the deck as the bending part.",
+          "difficulty": 1,
+          "accepted": [
+            "deck"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-07",
+          "type": "sentence-completion",
+          "text": "In the example of a downward load, the lower surface tends to ___.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "In a simple span carrying a downward load near its middle, the upper surface tends to shorten while the lower one tends to stretch."
+            }
+          ],
+          "explanation_uz": "Pastki yuza cho‘ziladi.",
+          "explanation_en": "The lower surface is described as stretching.",
+          "difficulty": 1,
+          "accepted": [
+            "stretch"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-08",
+          "type": "sentence-completion",
+          "text": "A long deck can become ___ as it warms.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "A long deck can become slightly longer as it warms, then contract as it cools."
+            }
+          ],
+          "explanation_uz": "Qiziganda uzunlik biroz ortadi.",
+          "explanation_en": "The passage describes the deck becoming longer when warmed.",
+          "difficulty": 1,
+          "accepted": [
+            "longer"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-09",
+          "type": "sentence-completion",
+          "text": "The strong response to a suitably repeated force is called ___.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "Engineers use the word resonance for a strong response to a force repeated at a suitable rate."
+            }
+          ],
+          "explanation_uz": "Mos takrorlanishdagi kuchli javob rezonans deyiladi.",
+          "explanation_en": "Resonance is the term the text assigns to the response.",
+          "difficulty": 1,
+          "accepted": [
+            "resonance"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-10",
+          "type": "short-answer",
+          "text": "What can stop an expansion gap from working as intended?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "During an inspection, debris in the gap matters because it can prevent a part intended to move from performing that job."
+            }
+          ],
+          "explanation_uz": "Oraliqda yig‘ilgan qoldiq uning harakatiga xalaqit beradi.",
+          "explanation_en": "Debris can obstruct the intended movement at the joint.",
+          "difficulty": 1,
+          "accepted": [
+            "debris"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-11",
+          "type": "choice-single",
+          "text": "What does damping do in this context?",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "Another is to provide damping, which allows energy associated with the movement to be dissipated."
+            }
+          ],
+          "explanation_uz": "Damping harakat energiyasining so‘nishiga yo‘l ochadi.",
+          "explanation_en": "Damping dissipates energy associated with movement.",
+          "difficulty": 1,
+          "options": [
+            "Makes all bridge parts equally rigid",
+            "Lets energy from movement dissipate",
+            "Stops the deck expanding in heat",
+            "Increases the force of each step"
+          ],
+          "correct": "Lets energy from movement dissipate"
+        },
+        {
+          "id": "r03-12",
+          "type": "choice-single",
+          "text": "Why can an unusual signal require a check of the instrument itself?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "Instruments also require checking: a loose sensor can generate a reading that looks unusual even though the structure has not changed."
+            }
+          ],
+          "explanation_uz": "Bo‘shagan sensor haqiqiy o‘zgarishsiz g‘alati natija berishi mumkin.",
+          "explanation_en": "The sensor can be at fault even if the bridge has not changed.",
+          "difficulty": 1,
+          "options": [
+            "A windy day always damages the sensor.",
+            "A loose sensor can give an unusual reading.",
+            "Acceleration is impossible to measure.",
+            "Instruments make pedestrians walk faster."
+          ],
+          "correct": "A loose sensor can give an unusual reading."
+        },
+        {
+          "id": "r03-13",
+          "type": "short-answer",
+          "text": "Which worn part is mentioned as potentially needing examination?",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "A dirty joint may need clearing, a worn bearing may need examination and an unexpected vibration may need measurement."
+            }
+          ],
+          "explanation_uz": "Yeyilgan tayanch elementi bearing deb ataladi.",
+          "explanation_en": "The final paragraph mentions examining a worn bearing.",
+          "difficulty": 1,
+          "accepted": [
+            "bearing",
+            "a bearing"
+          ],
+          "maxWords": 2
+        }
+      ]
+    },
+    {
+      "title": "What can a recording tell us about a room?",
+      "paragraphs": [
+        "A clap sounds different in a furnished room and in a bare one. The listener hears a direct sound from the hands, then sound that has travelled to a surface and returned. Many returns can overlap so closely that they are perceived as a tail rather than as separate echoes. This tail can make a room sound spacious, but it can also cover quiet speech that follows a loud sound. The aim of examining a room is often to understand which effect matters for its intended use. A space where music benefits from a lingering sound may pose difficulties for someone listening to spoken instructions.",
+        "A recording made in one place cannot describe every position in the room. Moving a microphone changes its distances from the source and from reflecting surfaces. A sound that reaches a microphone clearly near the speaker may be less distinct farther away, where reflected sound can make up a larger share of what is recorded. The height of the microphone matters too, particularly if the source is close to a floor or table. Recording positions should therefore be described alongside the file. Without that information, two recordings may seem to show a change to the room when the difference is mainly the place from which it was heard.",
+        "Some surfaces let sound energy return to the room readily. Others absorb more of it. A soft curtain can reduce certain reflections because sound can set its material into motion and lose energy within it. The effect need not be the same at every frequency. A thin material may affect higher sounds more readily than lower ones. A room can therefore sound less sharp after a curtain is hung while still having a noticeable low sound that persists. Evaluating a change requires listening to the frequencies relevant to the problem rather than assuming that one material will affect all parts of the sound equally.",
+        "The geometry of the space can also influence where sound is strong. If sound repeatedly travels between hard parallel surfaces, some reflections can reach a listener as a repeated pattern. Changing the angle of a surface or using an irregular surface can spread the reflected sound in different directions. Spreading and absorbing sound are different actions. A surface may scatter a return without removing much energy from the room. This can help where a concentrated reflection is the problem, but it is not guaranteed to shorten the overall tail of the sound. The distinction is important when choosing between making a reflection less prominent and making the room quieter after a sound.",
+        "The recording device introduces limits of its own. If a loud clap exceeds the level a recorder can represent, the highest parts of the signal can be cut off. This effect is called clipping. A clipped recording may sound harsh even if the original sound was not. Increasing the volume of that file afterwards cannot restore information that the device failed to capture. Before comparing changes in a room, it is worth checking that the recording system can handle both the loud direct sound and the softer part that follows. Otherwise, an apparent acoustic difference may reflect the instrument rather than the place.",
+        "A sound test also depends on the background. A ventilation fan or traffic outside may keep the recorded level from dropping below a certain point. If the tail from the clap becomes as quiet as that background, the recording cannot clearly separate the two. Repeating a measurement when the background is lower can reveal more of the decay. Alternatively, a report can state that only the earlier part of the tail was measured with confidence. This is more informative than extending a smooth curve through the indistinguishable part of the recording and then presenting the extension as if it had been directly observed.",
+        "A useful assessment starts by stating what a person needs to hear. In a discussion room, the important test may be whether speech remains clear at the seats farthest from the speaker. In a practice space for musicians, the concern may be how the sound changes when the players face different directions. A clap is easy to repeat, but it does not represent all the properties of either speech or music. It can be one piece of evidence within a larger observation plan. The best choice of source, microphone position and analysis depends on the listening experience that the assessment is meant to explain."
+      ],
+      "questions": [
+        {
+          "id": "r03-14",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph B.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "A recording made in one place cannot describe every position in the room. Moving a microphone changes its distances from the source and from reflecting surfaces. A sound that reaches a microphone clearly near the speaker may be less distinct farther away, where reflected sound can make up a larger share of what is recorded. The height of the microphone matters too, particularly if the source is close to a floor or table. Recording positions should therefore be described alongside the file. Without that information, two recordings may seem to show a change to the room when the difference is mainly the place from which it was heard."
+            }
+          ],
+          "explanation_uz": "Xatboshi mikrofon joyi va balandligi yozuvga ta’sir qilishini tushuntiradi.",
+          "explanation_en": "The paragraph relates recordings to microphone placement.",
+          "difficulty": 2,
+          "options": [
+            "Recording a signal that is too loud",
+            "The choice of a test for a listening goal",
+            "Why the position of the microphone matters",
+            "The effect of background sound",
+            "Frequency differences in absorption"
+          ],
+          "correct": "Why the position of the microphone matters"
+        },
+        {
+          "id": "r03-15",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph C.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "Some surfaces let sound energy return to the room readily. Others absorb more of it. A soft curtain can reduce certain reflections because sound can set its material into motion and lose energy within it. The effect need not be the same at every frequency. A thin material may affect higher sounds more readily than lower ones. A room can therefore sound less sharp after a curtain is hung while still having a noticeable low sound that persists. Evaluating a change requires listening to the frequencies relevant to the problem rather than assuming that one material will affect all parts of the sound equally."
+            }
+          ],
+          "explanation_uz": "Yupqa parda yuqori va past tovushlarga bir xil ta’sir qilmaydi.",
+          "explanation_en": "Absorption depends on frequency, as the curtain example illustrates.",
+          "difficulty": 2,
+          "options": [
+            "Frequency differences in absorption",
+            "The effect of background sound",
+            "The choice of a test for a listening goal",
+            "Why the position of the microphone matters",
+            "Recording a signal that is too loud"
+          ],
+          "correct": "Frequency differences in absorption"
+        },
+        {
+          "id": "r03-16",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph E.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "The recording device introduces limits of its own. If a loud clap exceeds the level a recorder can represent, the highest parts of the signal can be cut off. This effect is called clipping. A clipped recording may sound harsh even if the original sound was not. Increasing the volume of that file afterwards cannot restore information that the device failed to capture. Before comparing changes in a room, it is worth checking that the recording system can handle both the loud direct sound and the softer part that follows. Otherwise, an apparent acoustic difference may reflect the instrument rather than the place."
+            }
+          ],
+          "explanation_uz": "Yozuv qurilmasi kuchli tovush cho‘qqilarini kesib yuborishi mumkin.",
+          "explanation_en": "The paragraph explains clipping and what it removes from a recording.",
+          "difficulty": 2,
+          "options": [
+            "Why the position of the microphone matters",
+            "The choice of a test for a listening goal",
+            "Recording a signal that is too loud",
+            "Frequency differences in absorption",
+            "The effect of background sound"
+          ],
+          "correct": "Recording a signal that is too loud"
+        },
+        {
+          "id": "r03-17",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph F.",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "A sound test also depends on the background. A ventilation fan or traffic outside may keep the recorded level from dropping below a certain point. If the tail from the clap becomes as quiet as that background, the recording cannot clearly separate the two. Repeating a measurement when the background is lower can reveal more of the decay. Alternatively, a report can state that only the earlier part of the tail was measured with confidence. This is more informative than extending a smooth curve through the indistinguishable part of the recording and then presenting the extension as if it had been directly observed."
+            }
+          ],
+          "explanation_uz": "Fon shovqini aks-sadoning oxirini ajratishga xalaqit beradi.",
+          "explanation_en": "Background noise limits how much of the tail can be observed.",
+          "difficulty": 2,
+          "options": [
+            "The choice of a test for a listening goal",
+            "The effect of background sound",
+            "Frequency differences in absorption",
+            "Recording a signal that is too loud",
+            "Why the position of the microphone matters"
+          ],
+          "correct": "The effect of background sound"
+        },
+        {
+          "id": "r03-18",
+          "type": "matching-information",
+          "text": "Which paragraph contrasts the needs of music and spoken instructions?",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "A space where music benefits from a lingering sound may pose difficulties for someone listening to spoken instructions."
+            }
+          ],
+          "explanation_uz": "A xatboshisi cho‘zilgan tovush musiqa uchun foydali, nutq uchun noqulay bo‘lishi mumkinligini aytadi.",
+          "explanation_en": "The first paragraph compares those uses.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "A"
+        },
+        {
+          "id": "r03-19",
+          "type": "matching-information",
+          "text": "Which paragraph distinguishes redirecting reflected sound from removing its energy?",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "A surface may scatter a return without removing much energy from the room."
+            }
+          ],
+          "explanation_uz": "D xatboshisi tovushni tarqatish va yutish orasidagi farqni ko‘rsatadi.",
+          "explanation_en": "The paragraph contrasts scattering with absorption.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "D"
+        },
+        {
+          "id": "r03-20",
+          "type": "matching-information",
+          "text": "Which paragraph advises reporting when only part of the sound decay was measured reliably?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "Alternatively, a report can state that only the earlier part of the tail was measured with confidence."
+            }
+          ],
+          "explanation_uz": "Ishonchli o‘lchov quyruqning boshigagina tegishli bo‘lsa, bu aytilishi kerak.",
+          "explanation_en": "The paragraph recommends stating the limit of reliable measurement.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "F"
+        },
+        {
+          "id": "r03-21",
+          "type": "matching-information",
+          "text": "Which paragraph suggests a test at the seats farthest from a speaker?",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "In a discussion room, the important test may be whether speech remains clear at the seats farthest from the speaker."
+            }
+          ],
+          "explanation_uz": "Eng uzoq o‘rindiqlarda nutq aniqligi G xatboshisida misol bo‘ladi.",
+          "explanation_en": "The final paragraph gives this discussion-room example.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "G"
+        },
+        {
+          "id": "r03-22",
+          "type": "summary-completion",
+          "text": "Closely overlapping sound returns can be heard as one ___.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "Many returns can overlap so closely that they are perceived as a tail rather than as separate echoes."
+            }
+          ],
+          "explanation_uz": "Yaqin akslar bitta cho‘zilgan quyruqdek eshitilishi mumkin.",
+          "explanation_en": "The word tail describes the combined impression.",
+          "difficulty": 2,
+          "accepted": [
+            "tail"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-23",
+          "type": "summary-completion",
+          "text": "The microphone's ___ is relevant if the sound source is near the floor.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "The height of the microphone matters too, particularly if the source is close to a floor or table."
+            }
+          ],
+          "explanation_uz": "Manba polga yaqin bo‘lsa, mikrofon balandligi ahamiyatli.",
+          "explanation_en": "Microphone height is the condition singled out.",
+          "difficulty": 2,
+          "accepted": [
+            "height"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-24",
+          "type": "summary-completion",
+          "text": "A soft ___ is given as one way to reduce certain reflections.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "A soft curtain can reduce certain reflections because sound can set its material into motion and lose energy within it."
+            }
+          ],
+          "explanation_uz": "Yumshoq parda ayrim akslarni kamaytirishi mumkin.",
+          "explanation_en": "The curtain is the material example in the paragraph.",
+          "difficulty": 2,
+          "accepted": [
+            "curtain"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-25",
+          "type": "summary-completion",
+          "text": "Repeated reflections can occur between hard ___ surfaces.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "If sound repeatedly travels between hard parallel surfaces, some reflections can reach a listener as a repeated pattern."
+            }
+          ],
+          "explanation_uz": "Misolda sirtlar bir-biriga parallel.",
+          "explanation_en": "The paragraph specifies hard parallel surfaces.",
+          "difficulty": 2,
+          "accepted": [
+            "parallel"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r03-26",
+          "type": "summary-completion",
+          "text": "When the highest parts of a signal are cut off, this is called ___.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "This effect is called clipping."
+            }
+          ],
+          "explanation_uz": "Signal cho‘qqilari kesilishi clipping deyiladi.",
+          "explanation_en": "The passage names the recording distortion.",
+          "difficulty": 2,
+          "accepted": [
+            "clipping"
+          ],
+          "maxWords": 1
+        }
+      ]
+    },
+    {
+      "title": "The uses and limits of averaging",
+      "paragraphs": [
+        "An average can describe a collection of observations with one value, allowing comparisons that would be difficult if every observation had to be read separately. The usefulness of that value depends on what the comparison is supposed to reveal. Suppose a workshop records the time required to finish a series of tasks. The mean time gives a basis for estimating the total time for a similar collection. It may give poor guidance to someone who wants to know how long the slowest task could take. The same summary can therefore be appropriate for planning total work and inadequate for protecting a deadline that depends on one unusually long task.",
+        "The way an average is formed is especially important when two groups have very different sizes. Suppose one class of ten learners completes an exercise in an average of four minutes and another class of thirty completes it in an average of eight. Treating the two classes as equal units would give six minutes. Giving equal weight to each learner instead would produce seven minutes. Neither calculation is intrinsically wrong: the two results answer different questions. The danger comes from using the first when describing all learners, or the second when deliberately comparing an average class regardless of its size. The calculation must state what counts as one unit.",
+        "A distribution can also make the mean an unusual observation. Imagine that a service is usually completed quickly but occasionally requires a long investigation. A small number of exceptionally long cases can pull the mean above the time experienced in most cases. The median, which separates the ordered observations into two halves, is less sensitive to the exact size of those extremes. It can give a clearer picture of a typical visit. It still says little about the unusual delays themselves. Reporting both a typical value and information about long waits may therefore be more useful than searching for a single measure that can do both jobs.",
+        "Changes in the membership of a group can complicate comparisons over time. If a workshop takes on a greater proportion of difficult jobs, its average time can rise even while it finishes each type of job more quickly than before. This does not require any mistake in measurement. The difficulty is that the observations being combined are different in composition. Separating the results by job type can help reveal the two effects. One effect concerns a change within a type, and the other concerns a shift in how common each type is. The overall mean does not identify which effect contributed to the change.",
+        "An average across space can introduce a similar issue. Consider a sound reading taken at several positions in a hall. The combined result may be suitable for comparing the hall broadly with another, but it can conceal the experience of someone who always sits in a location with an unusual reading. If the question is whether every seat offers a usable listening experience, the range and the locations of the extremes matter. The writer therefore favours retaining information about where observations were taken when location is part of the problem. Averages can complement such information without replacing it as the only description of conditions.",
+        "The same considerations apply when reports are condensed for a public audience. A clear headline figure is useful if it can be interpreted correctly. Readers should be able to discover which observations were included and what was excluded. For instance, a report on time spent waiting may omit people who left before being served. That choice can substantially change the meaning of the summary, because it changes whose experience the number represents. The writer does not argue that every report should include all its original data. A short note about coverage and a small set of complementary figures can make a summary much less ambiguous.",
+        "Rather than asking whether an average is generally good or bad, a reader can ask what changes would leave the number untouched. Two groups with the same mean may have very different ranges, and a stable mean can hide changes in who experiences the highest values. This question leads naturally to checks that the summary alone cannot supply. It also clarifies why comparisons should be designed before selecting the statistic. If the important question concerns typical experience, extremes or differences among groups, the evidence needed for each can be planned. The resulting report can still be concise because each selected figure has a specific role."
+      ],
+      "questions": [
+        {
+          "id": "r03-27",
+          "type": "ynng",
+          "text": "The writer believes the mean task time can reliably show how long the slowest task will take.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "It may give poor guidance to someone who wants to know how long the slowest task could take."
+            }
+          ],
+          "explanation_uz": "O‘rtacha qiymat eng sekin vazifa haqida yaxshi ma’lumot bermasligi mumkin.",
+          "explanation_en": "The text explicitly distinguishes the mean from the longest time.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "No"
+        },
+        {
+          "id": "r03-28",
+          "type": "ynng",
+          "text": "The writer accepts that equal weight for each class can be appropriate for some comparisons.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "Neither calculation is intrinsically wrong: the two results answer different questions."
+            }
+          ],
+          "explanation_uz": "Har sinfga teng og‘irlik berish maqsadga qarab to‘g‘ri bo‘lishi mumkin.",
+          "explanation_en": "Both weighting schemes can be valid for the question they answer.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "Yes"
+        },
+        {
+          "id": "r03-29",
+          "type": "ynng",
+          "text": "The writer argues that a median alone fully describes unusually long waits.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "It still says little about the unusual delays themselves."
+            }
+          ],
+          "explanation_uz": "Mediana noodatiy kechikishlarning o‘zini kam yoritadi.",
+          "explanation_en": "The writer recommends supplementary information about long waits.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "No"
+        },
+        {
+          "id": "r03-30",
+          "type": "ynng",
+          "text": "The writer claims most workshops introduced job categories after adopting digital clocks.",
+          "evidence": [
+            {
+              "ref": "A–G (whole passage)",
+              "quote": ""
+            }
+          ],
+          "explanation_uz": "Raqamli soat va toifalarni qachon joriy etish matnda yo‘q.",
+          "explanation_en": "No history of digital clocks or workshop classification is given.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "Not Given"
+        },
+        {
+          "id": "r03-31",
+          "type": "ynng",
+          "text": "The writer insists that every public report reproduce all its original observations.",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "The writer does not argue that every report should include all its original data."
+            }
+          ],
+          "explanation_uz": "Muallif har bir hisobotga barcha dastlabki ma’lumotni kiritishni talab qilmaydi.",
+          "explanation_en": "A note on coverage and complementary figures can suffice.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "No"
+        },
+        {
+          "id": "r03-32",
+          "type": "choice-single",
+          "text": "What average is obtained by weighting each learner equally in the example?",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "Giving equal weight to each learner instead would produce seven minutes."
+            }
+          ],
+          "explanation_uz": "O‘n kishining 4 daqiqasi va o‘ttiz kishining 8 daqiqasi jami 280, 40 kishiga bo‘linsa 7 chiqadi.",
+          "explanation_en": "The weighted mean is (10 × 4 + 30 × 8) ÷ 40 = 7.",
+          "difficulty": 3,
+          "options": [
+            "Four minutes",
+            "Six minutes",
+            "Seven minutes",
+            "Eight minutes"
+          ],
+          "correct": "Seven minutes"
+        },
+        {
+          "id": "r03-33",
+          "type": "choice-single",
+          "text": "Why can the median describe a typical visit when a few investigations take a very long time?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "The median, which separates the ordered observations into two halves, is less sensitive to the exact size of those extremes."
+            }
+          ],
+          "explanation_uz": "Juda uzoq kutishlar medianaga o‘rtachadagidan kamroq ta’sir qiladi.",
+          "explanation_en": "The median depends on order rather than the exact size of extremes.",
+          "difficulty": 3,
+          "options": [
+            "It always equals the shortest wait.",
+            "The precise size of extreme waits has less influence on it.",
+            "It removes all the shortest visits.",
+            "It measures how many investigations occurred."
+          ],
+          "correct": "The precise size of extreme waits has less influence on it."
+        },
+        {
+          "id": "r03-34",
+          "type": "choice-multiple",
+          "text": "Which TWO effects can be separated by reporting workshop results by job type?",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "One effect concerns a change within a type, and the other concerns a shift in how common each type is."
+            },
+            {
+              "ref": "D",
+              "quote": "One effect concerns a change within a type, and the other concerns a shift in how common each type is."
+            }
+          ],
+          "explanation_uz": "Bir xil ish turidagi tezlik o‘zgarishi va ish turlarining ulushi alohida ko‘rinadi.",
+          "explanation_en": "The paragraph distinguishes within-type performance from changes in the mix of jobs.",
+          "difficulty": 3,
+          "options": [
+            "Changes in speed within a job type",
+            "Changes in the proportion of each job type",
+            "Differences in the accuracy of the clocks",
+            "The price charged for each job",
+            "Whether customers approve of the job"
+          ],
+          "correct": [
+            "Changes in speed within a job type",
+            "Changes in the proportion of each job type"
+          ]
+        },
+        {
+          "id": "r03-35",
+          "type": "choice-single",
+          "text": "What extra information matters when every seat needs a usable listening experience?",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "If the question is whether every seat offers a usable listening experience, the range and the locations of the extremes matter."
+            }
+          ],
+          "explanation_uz": "Barcha o‘rindiqlar baholansa, oraliq va eng chet qiymatlar joyi kerak.",
+          "explanation_en": "A single average can conceal unusual seats, so the range and locations matter.",
+          "difficulty": 3,
+          "options": [
+            "The mean from a different hall only",
+            "The year the hall opened",
+            "The range of readings and where the extremes occurred",
+            "The average number of people in the hall"
+          ],
+          "correct": "The range of readings and where the extremes occurred"
+        },
+        {
+          "id": "r03-36",
+          "type": "matching-information",
+          "text": "Which paragraph shows how a changing mix can move the mean in the opposite direction to every category?",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "The difficulty is that the observations being combined are different in composition."
+            }
+          ],
+          "explanation_uz": "D xatboshisida murakkab ishlar ko‘payib, har tur tezlashsa ham jami o‘rtacha oshishi misoli bor.",
+          "explanation_en": "The workshop example shows a composition effect.",
+          "difficulty": 3,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "D"
+        },
+        {
+          "id": "r03-37",
+          "type": "matching-information",
+          "text": "Which paragraph gives an example of people who may be omitted from a waiting-time figure?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "For instance, a report on time spent waiting may omit people who left before being served."
+            }
+          ],
+          "explanation_uz": "Xizmatdan oldin ketgan odamlar F xatboshisida misol bo‘ladi.",
+          "explanation_en": "The example concerns people who left before service.",
+          "difficulty": 3,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "F"
+        },
+        {
+          "id": "r03-38",
+          "type": "matching-information",
+          "text": "Which paragraph asks what could change while a summary value remains constant?",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "Two groups with the same mean may have very different ranges, and a stable mean can hide changes in who experiences the highest values."
+            }
+          ],
+          "explanation_uz": "G xatboshisi bir xil o‘rtacha turli oraliqlarni yashirishi mumkinligini so‘raydi.",
+          "explanation_en": "The final paragraph uses this question to motivate additional checks.",
+          "difficulty": 3,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "G"
+        },
+        {
+          "id": "r03-39",
+          "type": "short-answer",
+          "text": "Which statistic divides ordered observations into two halves?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "The median, which separates the ordered observations into two halves, is less sensitive to the exact size of those extremes."
+            }
+          ],
+          "explanation_uz": "Tartiblangan kuzatuvlarning o‘rtasini mediana ajratadi.",
+          "explanation_en": "The definition given is that of the median.",
+          "difficulty": 3,
+          "accepted": [
+            "median",
+            "the median"
+          ],
+          "maxWords": 2
+        },
+        {
+          "id": "r03-40",
+          "type": "short-answer",
+          "text": "What should a short note describe to make a public summary less ambiguous?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "A short note about coverage and a small set of complementary figures can make a summary much less ambiguous."
+            }
+          ],
+          "explanation_uz": "Qamrov qaydi kim va qaysi kuzatuvlar kiritilganini tushuntiradi.",
+          "explanation_en": "The passage suggests a note explaining coverage.",
+          "difficulty": 3,
+          "accepted": [
+            "coverage"
+          ],
+          "maxWords": 1
+        }
+      ]
+    }
+  ]
+}
