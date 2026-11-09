@@ -120,3 +120,30 @@ export const namunaJavoblar: Javob[] = [
 // localStorage kalitlari (hammasi "tayanch:" bilan)
 export const KALIT_JAVOBLAR = 'tayanch:sat-javoblar';
 export const KALIT_LUGAT = 'tayanch:sat-lugat';
+
+// PR #47 dan oldin brauzerda saqlangan javoblarda mavzu va sana o'zbekcha.
+// O'qishda yangi (inglizcha) shaklga moslanadi; saqlangan ma'lumot qayta yozilmaydi.
+const ESKI_MAVZU: Record<string, string> = {
+  'Chiziqli tenglamalar': 'Linear equations',
+  'Foizlar va nisbatlar': 'Percentages and ratios',
+  'Kvadrat tenglamalar': 'Quadratic equations',
+  'Funksiyalar': 'Functions',
+  'Tinish belgilari': 'Punctuation',
+  "So'zning kontekstdagi ma'nosi": 'Meaning of a word in context',
+};
+const ESKI_OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+const OYLAR_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/** Eski o'zbekcha mavzu nomini yangisiga moslaydi; noma'lum nom o'zicha qaytadi. */
+export const mavzuNomi = (nom: string): string =>
+  Object.prototype.hasOwnProperty.call(ESKI_MAVZU, nom) ? ESKI_MAVZU[nom] : nom;
+
+/** "3-noyabr" → "November 3"; boshqa shakl o'zicha qaytadi. */
+export const sanaYozuvi = (sana: string): string => {
+  const m = /^(\d{1,2})-([a-z]+)$/.exec(sana);
+  const oy = m ? ESKI_OYLAR.indexOf(m[2]) : -1;
+  return m && oy >= 0 ? `${OYLAR_EN[oy]} ${Number(m[1])}` : sana;
+};
+
+/** Saqlangan javobni ko'rsatish uchun moslaydi (yangi nusxa, asl obyekt o'zgarmaydi). */
+export const javobniMosla = (j: Javob): Javob => ({ ...j, mavzu: mavzuNomi(j.mavzu), sana: sanaYozuvi(j.sana) });

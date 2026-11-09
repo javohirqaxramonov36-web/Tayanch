@@ -79,14 +79,15 @@ import { yol } from '../../../../../lib/yol';
 </BolimQobiq>
 
 <script>
-  import { KALIT_JAVOBLAR, type Javob } from '../../../../../data/satNamuna';
+  import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
 
   const namuna: Javob[] = JSON.parse(document.getElementById('namuna-data')!.textContent || '[]');
   const testUrl = (document.querySelector('.chiziq-blok a') as HTMLAnchorElement).href;
   const oqi = (): Javob[] => {
     try {
       const x = JSON.parse(localStorage.getItem(KALIT_JAVOBLAR) || '[]');
-      return Array.isArray(x) ? x : [];
+      // Eski (o'zbekcha) mavzu va sana faqat ko'rsatishda moslanadi, saqlangani o'zgarmaydi.
+      return Array.isArray(x) ? x.map(javobniMosla) : [];
     } catch { return []; }
   };
   let filtr = 'hammasi';

@@ -67,10 +67,10 @@ import { yol } from '../../../../../lib/yol';
 </SatFokus>
 
 <script>
-  import { KALIT_JAVOBLAR, type Savol, type Javob } from '../../../../../data/satNamuna';
+  import { KALIT_JAVOBLAR, mavzuNomi, type Savol, type Javob } from '../../../../../data/satNamuna';
 
   const hamma: Savol[] = JSON.parse(document.getElementById('savollar-data')!.textContent || '[]');
-  const tanlanganMavzular = new URLSearchParams(location.search).get('mavzular')?.split('|').filter(Boolean) ?? [];
+  const tanlanganMavzular = new URLSearchParams(location.search).get('mavzular')?.split('|').filter(Boolean).map(mavzuNomi) ?? [];
   const filtrlangan = hamma.filter((s) => tanlanganMavzular.includes(s.mavzu));
   const toplam = filtrlangan.length > 0 ? filtrlangan : hamma;
 
