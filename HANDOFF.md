@@ -41,7 +41,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 
 ## 3. Nima qurilmagan (navbat taklifi)
 
-1. **Türkiye Burslari sahifasi**: maket bor ("Burslar*" artboard'lari). Viza sahifasi va chipta detallari DESIGN.md'da tavsiflangan.
+1. **Türkiye Bursları sahifasi**: qurilgan (branch `turkiye-burslari`, 2026-11-09, holat `qoralama`): `/uz/top-admission/turkiye-burslari/`, maket B ("Burslar*"). Faktlar TB01–TB05 (rasmiy sahifalar 2026-11-09 da o'qildi; TB02 shartlar, TB03 qamrov va stipendiya, TB04 hujjatlar va imtihon, TB05 turk tili). Chiptada qolgan kun (kirish sahifasi mantig'i), desktopda yopishqoq mundarija (`aria-current="location"`), telefonda `<details>`. Maketdan farq: "Keyingi qadam" qora emas (DESIGN.md: qora sahna faqat bosh sahifada; muallif tasdig'i kerak), manbalar/sana/tekshirilmagan joylar `SahifaOxiri` blokida. Yon panel va kirish kartasi havolasi qo'shildi. Sinalgan: build, axe (yorug' va qorong'i, 0 xato), 1280 yorug', 375 yorug' va qorong'i. Sinalmagan: VoiceOver, haqiqiy telefon. Stipendiya summalari (TL) tez eskiradi: keyingi tekshiruv 2026-12-09.
 2. **Top Admission yon paneli**: qurilgan (branch `yagona-navigatsiya`, dizayn rejasi B 1-bosqich). `BolimYon` `bolim="top-admission"`: maket "LiftSidebar" (Yo'nalishlar: Türkiye Bursları, Stipendium Hungaricum, AQSH "tez orada"; Vositalar: Topshirish yo'li, Muddatlar) + "Qo'llanmalar: Ariza zinapoyasi". Ma'lumot `src/data/topAdmissionSahifalar.ts`. Kirish va vosita `BolimQobiq` ga o'tdi, manbalar bloki (`SahifaOxiri`) sahifaning o'zida. Türkiye Bursları sahifasi qurilganda shu faylda `href` qo'shiladi.
 3. **5-qavat EYUF**: dizayn fayli hali yo'q.
 4. **SAT R&W 3- va 4-modul**: PR #21 da merge qilingan (2-bo'limga qarang). Eslatma: 3 "O'tish so'zlari" (transitions; ma'no munosabati jadvali: qarama-qarshilik, sabab, misol, davom). Domen "Expression of Ideas" CB06 da bor; "Transitions" skill nomi faqat Student Question Bank sahifasida (taklif: CB07, brauzerda aynan yozilishi tekshirilmagan). 4 "Lug'at kontekstda" (Craft and Structure): mavjud `mashq/lugat/` va `tayanch:sat-lugat` ni faqat o'qiydi, buzmaydi.
@@ -80,7 +80,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
    - sahifa qachon "chop-etilgan" bo'ladi.
 2. Pasport to'ri: maketda 20px va `--chiziq`, DESIGN.md'da 24px va `--sirt-ikkinchi`. Kod hozir maket bo'yicha. Qaysi biri to'g'ri?
 3. Saqlash kaliti: Topshirish yo'li `tayanch-topshirish-yoli` ishlatadi (prompt shunday degan), CLAUDE.md esa `tayanch:` prefiksini talab qiladi. `tayanch:topshirish-yoli` ga o'tkazilsinmi?
-4. Manba izohida aniq yozilmagan ikki fakt: TB01 "tbbs.turkiyeburslari.gov.tr portali orqali" va CO01 "har qanday talaba uchun bepul". Ularni qayta tekshirish kerak.
+4. Manba izohida aniq yozilmagan fakt: CO01 "har qanday talaba uchun bepul" (qayta tekshirish kerak). TB01 portali hal qilindi (2026-11-09): taqvim sahifasidagi "Application/Login" havolasi tbbs.turkiyeburslari.gov.tr ga olib boradi.
 5. Eski ochiq PR #3 ("SAT kirish sahifasi", Jekyll davridan): yopilsinmi?
 6. IELTS va EYUF uchun "bog'liq emaslik" eslatmasi matni tekshirilmagan (IELTS'da "matn tekshiriladi" yorlig'i turibdi).
 7. British Council'ning bepul mashq testlari sahifasiga bu mashinadan ulanib bo'lmadi: IELTS'dagi qatori "tekshirilmoqda".
