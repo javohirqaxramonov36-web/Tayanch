@@ -108,6 +108,27 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   box-shadow: var(--glass-edge);
 }
 
+/* DS link karta: blursiz shisha (faqat studio foni ustida). Qavat urg'usi kartaning data-floor'idan
+   (borilayotgan qavat): .ds-karta-belgi doirasi --floor-ui. Qavat matn rangi karta ustida 4.5:1 ga
+   yetmasligi mumkin, shuning uchun matn neytral, urg'u faqat belgi va ikonkada. */
+.ds-karta {
+  background: var(--glass-card-bg);
+  border: var(--border-width-1) solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow), var(--glass-edge);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: box-shadow var(--duration-base) var(--ease-state), transform var(--duration-base) var(--ease-state);
+}
+a.ds-karta:hover { box-shadow: var(--card-shadow-hover), var(--glass-edge); transform: translateY(var(--card-lift)); }
+.ds-karta-belgi {
+  flex: none;
+  width: var(--size-indicator-md); height: var(--size-indicator-md);
+  padding: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--floor-ui); color: var(--floor-ui-text);
+}
+
 .sust { color: var(--matn-sust); }
 .ikkinchi { color: var(--matn-ikkinchi); }
 .kichik { font-size: var(--matn-kichik); }

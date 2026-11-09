@@ -148,12 +148,12 @@ import { yol } from '../../../../../lib/yol';
 
   .katta-tugma {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    min-height: 52px; padding: 0 26px; border-radius: var(--r-toliq);
+    min-height: var(--control-height-md); padding: 0 26px; border-radius: var(--r-toliq);
     text-decoration: none; font-weight: 800; font-size: 16px; white-space: nowrap;
   }
-  .katta-tugma.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta-tugma.asosiy:hover { background: var(--rang-asosiy-toq); }
-  .katta-tugma.oq { background: var(--rang-asosiy-matn); color: var(--qora); }
+  .katta-tugma.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta-tugma.asosiy:hover { background: var(--btn-primary-bg-hover); }
+  .katta-tugma.oq { background: var(--qora-matn); color: var(--qora); }
 
   .filtrlar { display: flex; flex-direction: column; gap: var(--b-4); border-bottom: 1px solid var(--chiziq); padding-bottom: var(--b-6); }
   .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); align-self: flex-start; }
@@ -182,7 +182,7 @@ import { yol } from '../../../../../lib/yol';
     display: flex; flex-direction: column; justify-content: space-between; gap: var(--b-4);
     background: var(--fon); color: var(--matn); border: 1.5px solid var(--matn);
   }
-  #mavzu-royxat :global(.mavzu.faol) { background: var(--qora); color: var(--rang-asosiy-matn); border-color: var(--qora); }
+  #mavzu-royxat :global(.mavzu.faol) { background: var(--qora); color: var(--qora-matn); border-color: var(--qora); }
   :global([data-mavzu='qorongi']) #mavzu-royxat :global(.mavzu.faol) { background: var(--sirt-ikkinchi); border-color: var(--rang-asosiy); }
   #mavzu-royxat :global(.m-bosh) { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); width: 100%; }
   #mavzu-royxat :global(.m-nom) { font-size: 17px; font-weight: 800; }
@@ -202,7 +202,7 @@ import { yol } from '../../../../../lib/yol';
 
   .tanlov {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta); padding: 24px 28px;
   }

@@ -370,9 +370,9 @@ const malumot = {
 
   .tugmalar, .s-tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .s-tugmalar { justify-content: flex-end; }
-  .katta { min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
-  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta { min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
   .katta.qora { background: var(--matn); color: var(--fon); }
@@ -410,7 +410,7 @@ const malumot = {
   .variantlar :global(.variant.togri), .variantlar :global(.variant.togri:hover) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
   .variantlar :global(.variant.xato), .variantlar :global(.variant.xato:hover) { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
   .variantlar :global(.variant.xato .harf) { background: var(--matn); color: var(--fon); }
-  .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--rang-asosiy-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
+  .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
   .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
   .izoh-sarlavha { font-size: 18px; font-weight: 800; }
   .izoh-keyingi { font-weight: 700; }

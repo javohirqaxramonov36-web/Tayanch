@@ -44,7 +44,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
         <ul>
           {qavatlar.slice(1).map((q) => (
             <li>
-              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} href={yol(q.manzil)}>
+              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} data-floor={q.raqam} href={yol(q.manzil)}>
                 <span class="qq-raqam" aria-hidden="true">{q.raqam}</span>
                 <span class="qq-nom"><span class="sr">{q.raqam}-qavat: </span>{q.nomi}</span>
                 {q.holat === 'tez-orada' && <span class="qq-pill">qurilmoqda</span>}
@@ -101,11 +101,10 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
       {bolimlar.map((b) => {
         // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
         const ochiq = b.holat === 'ochiq';
-        const qora = b.slug === 'sat';
         return (
           <li>
-            <a class:list={['karta', { 'qora-karta': qora, tez: !ochiq }]} href={yol(`/uz/${b.slug}/`)}>
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka">
+            <a class:list={['ds-karta', 'karta', { tez: !ochiq }]} data-floor={qavatlar.find((q) => q.slug === b.slug)?.raqam} href={yol(`/uz/${b.slug}/`)}>
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka ds-karta-belgi">
                 {b.ikonka === 'qalpoq' && <><path d="M3 10l9-5 9 5-9 5z" /><path d="M7 12v5c3 2 7 2 10 0v-5" /></>}
                 {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
                 {b.ikonka === 'varaq' && <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h4" /></>}
@@ -169,7 +168,6 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
     display: flex; align-items: center; justify-content: center; font-weight: 800;
     background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
   }
-  .qq-tugma.tez .qq-raqam { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
   .qq-pill { padding: 3px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: 12px; font-weight: 700; }
   .qq-test { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--rang-havola); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -196,22 +194,17 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   /* 5. Harakat */
   .harakat { padding-top: var(--b-6); }
   .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--b-4); }
+  /* DS link karta (global .ds-karta), urg'u borilayotgan qavatdan (data-floor) */
   .karta {
     height: 100%; box-sizing: border-box;
     display: flex; flex-direction: column; gap: 14px;
-    background: var(--sirt); color: var(--matn);
-    border: 1.5px solid var(--qora); border-radius: var(--r-katta); padding: 22px;
-    text-decoration: none;
+    padding: 22px;
   }
-  .karta .ikonka { color: var(--rang-asosiy); }
+  .karta .ikonka { width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3); }
   .karta-nom { font-weight: 900; font-size: var(--matn-h3); }
   .karta-tavsif { font-size: 15px; line-height: 1.5; color: var(--matn-ikkinchi); }
   .karta-holat { margin-top: auto; font-weight: 700; color: var(--rang-havola); }
   .karta.tez .karta-holat { color: var(--matn-sust); }
-  a.karta:hover { box-shadow: 4px 4px 0 var(--qora); transform: translate(-2px, -2px); }
-  .qora-karta { background: var(--qora); color: #ffffff; }
-  .qora-karta .ikonka, .qora-karta .karta-holat { color: #ffffff; }
-  .qora-karta .karta-tavsif, .qora-karta.tez .karta-holat { color: var(--qora-matn-ikkinchi); }
 
   .muddatlar { padding-top: 0; gap: var(--b-5); }
   .kichik-h2 { font-size: 1.75rem; }

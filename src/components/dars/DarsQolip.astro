@@ -608,20 +608,20 @@ const qadamlar = [
   .dars .variant.togri, .dars .variant.togri:hover { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
   .dars .variant.xato, .dars .variant.xato:hover { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
   .dars .variant.xato .harf { background: var(--matn); color: var(--fon); }
-  .dars .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--rang-asosiy-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
+  .dars .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
   .dars .izoh[hidden] { display: none; }
   .dars .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
   .dars .izoh-sarlavha { font-size: 18px; font-weight: 800; }
   .dars .izoh-xato:empty { display: none; }
   .dars .s-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
   .dars .katta {
-    min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq);
+    min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq);
     font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; text-decoration: none;
     display: inline-flex; align-items: center; justify-content: center;
   }
   .dars .katta[hidden] { display: none; }
-  .dars .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .dars .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .dars .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .dars .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .dars .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .dars .katta.qora { background: var(--matn); color: var(--fon); }
   .dars .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
