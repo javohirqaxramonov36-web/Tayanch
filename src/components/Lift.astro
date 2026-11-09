@@ -177,7 +177,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
        64px tugma + 2 x 4px = 72px: global.css dagi body pastki bo'shlig'iga mos. */
     background: var(--glass-sheen), var(--glass-chrome-bg);
     -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop);
-    box-shadow: var(--glass-edge);
+    box-shadow: var(--glass-edge), var(--glass-shadow);
     padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
   }
   .lift-pastki { transition: transform 0.25s ease; }

@@ -4,6 +4,8 @@ Asos: **Tayanch Design System (DS)**, 2026-11-09. Manba fayllar: `docs/ds/tayanc
 
 G'oya: besh qavatli bino. Besh qavat bir xil ko'rinadi, har qavat faqat o'z urg'u rangi bilan farqlanadi. Mobile-first, auditoriya 16–19 yosh. Yorug' studio foni, Onest shrifti, yumaloq tugmalar, ustki qatorlarda yengil shisha (Liquid Glass).
 
+**A yo'nalish "Toza"** (2026-11-09, muallif tanladi; Claude Design maketi https://claude.ai/artifact/JXU8mCvXymmu3enj6NvubQ, artboard "A · Toza"): asos qora-oq, ranglar kam. Neytral shkala sovuq kulrang (`#F5F5F7` … `#111114`), havola va fokus alohida ko'k urg'u (`--color-accent-*`), asosiy tugma qora (qorong'ida oq), shisha kuchliroq xiralashgan va chetida ingichka yorug' chiziq. Qavatlarning 5 rangi o'zgarmagan, ular faqat belgi, chip va bezakda. DS manba faylidagi (`docs/ds/`) neytral va brand qiymatlari endi faqat tarix uchun; amaldagi qiymatlar `tokens.css` da.
+
 Kodda xom qiymat yozilmaydi: komponent CSS'ida faqat `var(--...)`, qiymatlar faqat `src/styles/tokens.css` da.
 
 ## Tokenlar
@@ -49,12 +51,13 @@ Qoidalar:
 
 | Token | Yorug' | Qorong'i | Roli |
 | --- | --- | --- | --- |
-| `--color-bg` / `--color-bg-deep` | neutral-50 / 300 | neutral-900 / 950 | Studio foni gradienti |
-| `--color-surface` | oq | neutral-850 | Zich yuza (Lift tugmasi, forma maydoni, shisha zaxirasi) |
+| `--color-bg` / `--color-bg-deep` | neutral-50 `#F5F5F7` / 150 `#E6E6EC` | neutral-925 `#0E0E12` / 950 `#050507` | Studio foni gradienti |
+| `--color-surface` | oq | neutral-850 `#17171C` | Zich yuza (Lift tugmasi, forma maydoni, shisha zaxirasi) |
 | `--color-surface-sunken` | neutral-100 | neutral-950 | Ichki kartalar, tinch sahna |
-| `--color-border` | neutral-200 | neutral-800 | Ajratuvchi |
-| `--color-text-primary` / `-secondary` | neutral-900 / 600 | neutral-50 / 400 | Matn |
-| `--color-link` | brand-600 | brand-300 | Havola, ta'kid |
+| `--color-border` | neutral-200 `#DADAE1` | neutral-800 `#26262E` | Ajratuvchi |
+| `--color-text-primary` / `-secondary` | neutral-900 `#111114` / 600 `#5C5C66` | neutral-50 `#F5F5F7` / 400 `#A3A3AE` | Matn |
+| `--color-link` | accent-700 `#264CD0` | accent-300 `#93B2FF` | Havola, ta'kid. Maketda `#2F5BEA` edi: shisha ostida eng yomon holatda 4.48:1 bo'lgani uchun to'qroq |
+| `--color-focus-ring` | accent-500 `#2F86FF` | accent-400 `#7FB0FF` | Fokus halqasi |
 | `--color-warning-subtle` / `-text` | | | "Tekshirish kerak" yorlig'i, forma xatosi (ogohlik juftligi) |
 | `--qora`, `--qora-sirt`, `--qora-chiziq` | neutral-900 / 850 / 800 | xuddi shu | Qora sahna (ikkala mavzuda bir xil) |
 | `--qora-matn` / `--qora-matn-ikkinchi` | oq / neutral-400 | xuddi shu | Qora sahna ustidagi matn |
@@ -98,11 +101,14 @@ Muallif tasdiqlagan qiymatlar (DS dagi eski panel qiymatlari emas):
 
 | Token | Yorug' | Qorong'i |
 | --- | --- | --- |
-| `--glass-blur` | 14px | 14px |
-| `--glass-saturate` | 1.5 | 1.3 |
-| `--glass-chrome-bg` (topbar, sticky, Lift paneli) | oq 88% | neutral-900 92% |
-| `--glass-card-bg` (kartalar, blursiz) | oq 62% | oq 6% |
-| `--glass-edge` | ichki 1px oq 70% | ichki 1px oq 14% |
+| `--glass-blur` | 20px | 20px |
+| `--glass-saturate` | 1.8 | 1.4 |
+| `--glass-chrome-bg` (topbar, sticky, Lift paneli) | oq 84% | neutral-925 84% |
+| `--glass-card-bg` (kartalar, blursiz) | oq 72% | oq 5% |
+| `--card-line` (karta chegarasi, `--card-border`) | neutral-900 8% | oq 9% |
+| `--glass-edge` | ichki 1px oq 78% + `--glass-highlight` | ichki 1px oq 12% + `--glass-highlight` |
+| `--glass-highlight` (ichki yuqori chiziq) | 0 1px 0 oq 95% | 0 1px 0 oq 16% |
+| `--glass-shadow` (Menyu, Lift paneli, `.shisha`) | 0 12px 32px neutral-900 10% | 0 12px 32px neutral-950 45% |
 | `--glass-sheen` (statik) | yuqoridan oq 35% → 0 (50% gacha) | oq 4% → 0 |
 
 Qoidalar:
@@ -112,7 +118,7 @@ Qoidalar:
 - Aks (sheen) statik, animatsiyasiz.
 - Kartalar blursiz (`--glass-card-bg`, `.ds-karta`) va faqat studio foni ustida.
 - Bino SVG blursiz, shaffof to'ldirish bilan.
-- Shisha ustidagi matn: oddiy matn ≥ 4.5:1, katta matn va UI ≥ 3:1, ikkala mavzuda. Past bo'lsa fon zichlashtiriladi. Eng yomon holat (blur hisobga olinmagan): yorug' matn 5.12:1; qorong'i matn 5.50:1, UI 3.21:1. Qiymat o'zgarsa qayta hisoblanadi.
+- Shisha ustidagi matn: oddiy matn ≥ 4.5:1, katta matn va UI ≥ 3:1, ikkala mavzuda. Past bo'lsa fon zichlashtiriladi. A yo'nalishda fon 84%: bu ikkinchi darajali matn (neutral-600 / 400) eng yomon holatda (ostida qora yoki oq kontent, blur hisobga olinmagan) 4.5:1 ni saqlaydigan eng kichik qiymat. Maketdagi 56% / 55% bunga yetmaydi. Tekshiruv `scripts/kontrast-brauzer.js`: 38 sahifa × 2 mavzu × 1280/360, 0 buzilish (2026-11-09). Qiymat o'zgarsa qayta hisoblanadi.
 - **Zaxira.** Asosiysi: `@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))` bo'lsa, zich fon (`--color-surface`) va `backdrop-filter: none`. Qo'shimcha: `prefers-reduced-transparency: reduce` bo'lsa, shisha va kartalar zich fonga o'tadi, aks yo'q.
 
 ## Harakat
@@ -125,12 +131,13 @@ Qoidalar:
 
 - **Fokus halqasi** (DS): `--focus-ring-width` 2px `--color-focus-ring` + 2px `--color-focus-gap` oraliq. Global `a`, `button`, `summary` da `outline` + oraliq `box-shadow` (outline forced-colors rejimida ham ko'rinadi). Komponentlardagi maxsus fokus ham `outline: var(--focus-ring-width) solid var(--color-focus-ring)`.
 - **Tugma** (`.tugma`): 48px (`--control-height-md`), pill (`--btn-radius`), `--text-button-*`. Bosilganda 1px pastga (`--btn-press-shift`, reduced motion'da 0).
-  - Asosiy (`.tugma-asosiy`, sahifalardagi `.katta.asosiy`, `.katta-tugma.asosiy`, `.tugma-l.kok`, menyudagi "Boshlash"): `--btn-primary-*`, hamma qavatda bir xil.
-  - Ikkinchi darajali (`.tugma-ikkinchi`): `--btn-secondary-*`, 1px chegara.
-  - **Qora karta ichidagi CTA**: oq pill (`--qora-matn` fon, `--qora` matn). `btn-primary` (brand-900) qora fonga qo'shilib ketadi.
+  - Asosiy (`.tugma-asosiy`, sahifalardagi `.katta.asosiy`, `.katta-tugma.asosiy`, `.tugma-l.kok`, menyudagi "Boshlash"): `--btn-primary-*`, hamma qavatda bir xil. Yorug'da neutral-900 `#111114` (hover 800, bosilgan 950), qorong'ida neutral-50 (hover oq, bosilgan 250 `#D4D4DC`), matn teskari. `--btn-primary-shadow`: ichki yuqori yorug' chiziq + 0 1px 2px soya (`global.css` da shu klasslarning hammasiga); fokusda soya o'rniga fokus oralig'i.
+  - Ikkinchi darajali (`.tugma-ikkinchi`): `--btn-secondary-*`. Yorug'da oq, 1px neutral-300 `#C9C9D2` chegara, hover 100, bosilgan 150. Qorong'ida oq 6% / 11% / 16%, chegara oq 22%.
+  - O'chiq: `--btn-disabled-*` (`--color-surface-sunken` fon, `--color-text-disabled`).
+  - **Qora karta ichidagi CTA**: oq pill (`--qora-matn` fon, `--qora` matn). `btn-primary` (neutral-900) qora fonga qo'shilib ketadi.
   - Telefonda katta tugmalar to'liq kenglik. Tugma faqat `<button>` yoki `<a>`.
 - **Variant tugmasi** (test javobi): 2px chegara, `--r-orta`, chapga tekislangan matn, balandlik 56px. Tanlangani `--floor-subtle` fon va `--floor-ui` chegara.
-- **DS link karta** (`.ds-karta`, `global.css`): `--glass-card-bg`, 1px `--card-border`, `--card-radius`, `--card-shadow` + `--glass-edge`. Hover: `--card-shadow-hover` va `--card-lift` (reduced motion'da siljishsiz). Kartada `data-floor` = **borilayotgan qavat**; urg'u `.ds-karta-belgi` (ikonka yoki strelka `--floor-ui` doirada). Ishlatilgan: bosh sahifa bo'lim kartalari, `Zina`, `QavatlarAro`. Besh bo'lim kartasi bir xil (alohida qora karta yo'q).
+- **DS link karta** (`.ds-karta`, `global.css`): `--glass-card-bg`, 1px `--card-border`, `--card-radius`, `--card-shadow` + `--glass-highlight`. Hover: `--card-shadow-hover` va `--card-lift` (reduced motion'da siljishsiz). Kartada `data-floor` = **borilayotgan qavat**; urg'u `.ds-karta-belgi` (ikonka yoki strelka `--floor-ui` doirada). Ishlatilgan: bosh sahifa bo'lim kartalari, `Zina`, `QavatlarAro`. Besh bo'lim kartasi bir xil (alohida qora karta yo'q).
 - **Yorliq (pill)** (`.yorliq`, DS badge): 24px, `--radius-full`, `--text-caption-*`. "Tez orada" = `--sirt-ikkinchi`.
 - **Progress**: 8px (`--progress-height`), `--radius-full`, to'ldirish `--floor-ui`.
 - **Qora sahna**: `--qora` fon, matn `--qora-matn` (ikkala mavzuda oq), ikkinchi matn `--qora-matn-ikkinchi`. Ichidagi ko'k ta'kid `--rang-asosiy-qorada` (brand-300).

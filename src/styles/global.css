@@ -80,6 +80,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .tugma-asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
 .tugma-asosiy:hover { background: var(--btn-primary-bg-hover); }
 .tugma-asosiy:active { background: var(--btn-primary-bg-pressed); }
+/* Asosiy tugma (A yo'nalish): ichki yuqori yorug' chiziq va kichik soya, bosilganda 1px pastga.
+   Sahifalardagi o'z klasslari ham shu yerda; fokusda soya o'rniga fokus oralig'i qoladi. */
+:is(.tugma-asosiy, .katta.asosiy, .katta-tugma.asosiy, .tugma-l.kok, a.boshlash) { box-shadow: var(--btn-primary-shadow); }
+:is(.katta.asosiy, .katta-tugma.asosiy, .tugma-l.kok, a.boshlash):active { background: var(--btn-primary-bg-pressed); transform: translateY(var(--btn-press-shift)); }
+:is(.tugma-asosiy, .katta.asosiy, .katta-tugma.asosiy, .tugma-l.kok, a.boshlash):focus-visible { box-shadow: 0 0 0 var(--focus-ring-gap) var(--color-focus-gap); }
 .tugma-ikkinchi { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); border-color: var(--btn-secondary-border); }
 .tugma-ikkinchi:hover { background: var(--btn-secondary-bg-hover); }
 .tugma-ikkinchi:active { background: var(--btn-secondary-bg-pressed); }
@@ -105,7 +110,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   background: var(--glass-sheen), var(--glass-chrome-bg);
   -webkit-backdrop-filter: var(--glass-backdrop);
   backdrop-filter: var(--glass-backdrop);
-  box-shadow: var(--glass-edge);
+  box-shadow: var(--glass-edge), var(--glass-shadow);
 }
 
 /* DS link karta: blursiz shisha (faqat studio foni ustida). Qavat urg'usi kartaning data-floor'idan
@@ -115,12 +120,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   background: var(--glass-card-bg);
   border: var(--border-width-1) solid var(--card-border);
   border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow), var(--glass-edge);
+  box-shadow: var(--card-shadow), var(--glass-highlight);
   color: var(--color-text-primary);
   text-decoration: none;
   transition: box-shadow var(--duration-base) var(--ease-state), transform var(--duration-base) var(--ease-state);
 }
-a.ds-karta:hover { box-shadow: var(--card-shadow-hover), var(--glass-edge); transform: translateY(var(--card-lift)); }
+a.ds-karta:hover { box-shadow: var(--card-shadow-hover), var(--glass-highlight); transform: translateY(var(--card-lift)); }
 .ds-karta-belgi {
   flex: none;
   width: var(--size-indicator-md); height: var(--size-indicator-md);
