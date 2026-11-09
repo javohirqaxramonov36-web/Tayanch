@@ -226,3 +226,40 @@ export const turiNomi: Record<SatTuri | 'bolim-kirishi', string> = {
   vosita: 'Tool',
   qollanma: 'Guide',
 };
+
+/** Yon panel guruhlari (dizayn rejasi B, 3-bosqich, muallif tanlovi 2026-11-09).
+ *  SAT kirish sahifasi va sahifa yo'li `satGuruhlar` dan foydalanadi, u o'zgarmaydi.
+ *  "Coming soon": hali yozilmagan sahifalar (tayyor emas) yon panelda havola emas. */
+export interface SatYonGuruh {
+  nomi: string;
+  qismlar: { nomi?: string; sahifalar: SatSahifa[] }[];
+  tezOrada?: boolean;
+}
+
+const s = (qism: string) => {
+  const t = satSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satYonGuruhlar: ${qism} topilmadi`);
+  return t;
+};
+
+export const satYonGuruhlar: SatYonGuruh[] = [
+  {
+    nomi: 'Lessons',
+    qismlar: [
+      { nomi: 'Math', sahifalar: ['hajm', 'grafik', 'birlik-aylana', 'statistika'].map((q) => s(`qollanma/math/${q}/`)) },
+      { nomi: 'Reading & Writing', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
+    ],
+  },
+  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
+];
+
+// Har tayyor sahifa yon panelda aynan bir marta bo'lishi kerak (yangi sahifa qo'shilsa build eslatadi).
+{
+  const yonda = satYonGuruhlar.flatMap((g) => g.qismlar.flatMap((q) => q.sahifalar));
+  const yoq = satSahifalar.filter((x) => !yonda.includes(x));
+  if (yoq.length || new Set(yonda).size !== yonda.length) {
+    throw new Error(`satYonGuruhlar: yon panelda yo'q yoki takroriy sahifa: ${yoq.map((x) => x.qism).join(', ')}`);
+  }
+}
