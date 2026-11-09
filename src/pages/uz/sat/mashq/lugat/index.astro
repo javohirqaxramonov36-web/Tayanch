@@ -5,58 +5,58 @@ import SatFokus from '../../../../../layouts/SatFokus.astro';
 import { kartalar } from '../../../../../data/satNamuna';
 ---
 <SatFokus
-  title="Lug'at kartochkalari · SAT"
-  description="Reading & Writing matnlarida uchraydigan so'zlar uchun kartochkalar."
-  ustki="Lug'at · Namuna to'plam"
-  nomi="Reading & Writing so'zlari"
-  progressNomi="To'plam jarayoni"
-  yol={["O'qish"]}
+  title="Vocabulary cards · SAT"
+  description="Cards for words that appear in Reading & Writing texts."
+  ustki="Vocabulary · Sample set"
+  nomi="Reading & Writing words"
+  progressNomi="Set progress"
+  yol={['Reading']}
 >
   <script type="application/json" id="kartalar-data" set:html={JSON.stringify(kartalar)} />
 
-  <h1 class="ekranda-yoq">Lug'at kartochkalari</h1>
+  <h1 class="ekranda-yoq">Vocabulary cards</h1>
   <div class="lugat">
     <div class="markaz">
       <button type="button" class="karta" id="karta" aria-live="polite">
         <span class="yuz-yorliq" id="yuz-yorliq">English</span>
         <span class="oldi" id="oldi">
-          <span class="soz" lang="en" id="soz">{kartalar[0].soz}</span>
+          <span class="soz" id="soz">{kartalar[0].soz}</span>
           <span class="turkum" id="turkum">{kartalar[0].turkum}</span>
         </span>
         <span class="orqasi" id="orqasi" hidden>
-          <span class="tarjima" id="tarjima"></span>
-          <span class="misol" lang="en" id="misol"></span>
+          <span class="tarjima" lang="uz" id="tarjima"></span>
+          <span class="misol" id="misol"></span>
         </span>
-        <span class="maslahat">Ag'darish uchun bosing</span>
+        <span class="maslahat">Tap to flip</span>
       </button>
 
       <div class="boshqaruv">
-        <button type="button" class="dumaloq" id="oldingi" aria-label="Oldingi karta">
+        <button type="button" class="dumaloq" id="oldingi" aria-label="Previous card">
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
         </button>
-        <button type="button" class="tugma-l chiziqli" id="bilmayman">Hali o'rganyapman</button>
-        <button type="button" class="tugma-l kok" id="bilaman">Bilaman</button>
-        <button type="button" class="dumaloq" id="keyingi" aria-label="Keyingi karta">
+        <button type="button" class="tugma-l chiziqli" id="bilmayman">Still learning</button>
+        <button type="button" class="tugma-l kok" id="bilaman">I know it</button>
+        <button type="button" class="dumaloq" id="keyingi" aria-label="Next card">
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
         </button>
       </div>
     </div>
 
-    <aside class="holat" aria-label="To'plam holati">
+    <aside class="holat" aria-label="Set status">
       <div class="oq-blok">
-        <p class="ustki-yorliq">Shu to'plamda</p>
+        <p class="ustki-yorliq">In this set</p>
         <div class="sonlar">
-          <div class="son kok-son"><span class="raqam" id="bilgan-soni">0</span><span>Bilaman</span></div>
-          <div class="son chiziq-son"><span class="raqam" id="organ-soni">0</span><span>O'rganyapman</span></div>
+          <div class="son kok-son"><span class="raqam" id="bilgan-soni">0</span><span>I know it</span></div>
+          <div class="son chiziq-son"><span class="raqam" id="organ-soni">0</span><span>Still learning</span></div>
         </div>
       </div>
       <div class="oq-blok royxat-blok">
-        <p class="ustki-yorliq">So'zlar</p>
+        <p class="ustki-yorliq">Words</p>
         <ul id="sozlar">
           {kartalar.map((k, idx) => (
             <li>
               <button type="button" data-idx={idx}>
-                <span lang="en">{k.soz}</span>
+                <span>{k.soz}</span>
                 <span class="s-holat">—</span>
               </button>
             </li>
@@ -65,7 +65,7 @@ import { kartalar } from '../../../../../data/satNamuna';
       </div>
       <button type="button" class="tugma-l ikkinchi" id="bilmaganga">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></svg>
-        Bilmaganimga o'tish
+        Go to a word I don't know
       </button>
     </aside>
   </div>
@@ -89,7 +89,7 @@ import { kartalar } from '../../../../../data/satNamuna';
     const k = kartalar[i];
     const karta = $('karta');
     karta.classList.toggle('orqa', orqa);
-    $('yuz-yorliq').textContent = orqa ? "O'zbekcha" : 'English';
+    $('yuz-yorliq').textContent = orqa ? 'Uzbek:' : 'English';
     $('oldi').hidden = orqa;
     $('orqasi').hidden = !orqa;
     $('soz').textContent = k.soz;
@@ -108,7 +108,7 @@ import { kartalar } from '../../../../../data/satNamuna';
     document.querySelectorAll<HTMLButtonElement>('#sozlar button').forEach((b, idx) => {
       const h = holat[kartalar[idx].soz];
       const s = b.querySelector('.s-holat') as HTMLElement;
-      s.textContent = h === 'bilaman' ? 'bilaman' : h === 'organ' ? "o'rganyapman" : '—';
+      s.textContent = h === 'bilaman' ? 'I know it' : h === 'organ' ? 'still learning' : '—';
       s.dataset.holat = h ?? '';
       if (idx === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
     });

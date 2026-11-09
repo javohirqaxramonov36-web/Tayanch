@@ -7,25 +7,25 @@ import { namunaJavoblar } from '../../../../../data/satNamuna';
 import { yol } from '../../../../../lib/yol';
 ---
 <BolimQobiq
-  title="Mening natijalarim · SAT"
-  description="Mashqlardagi javoblaringiz va xatolaringiz. Ma'lumot faqat shu brauzerda saqlanadi. Ball hisoblanmaydi."
+  title="My results · SAT"
+  description="Your answers and mistakes in practice. The data is saved only in this browser. No score is calculated."
   turi="vosita"
-  yol={["Mashq"]}
+  yol={['Practice']}
   bolim="sat"
   holat="qoralama"
 >
   <script type="application/json" id="namuna-data" set:html={JSON.stringify(namunaJavoblar)} />
   <div class="ichki natija">
     <section class="bosh" aria-labelledby="nat-h">
-      <p class="pill-qator"><span class="pill">Vosita</span><span class="pill pill-chiziq" id="namuna-pill">Namuna ma'lumot</span></p>
-      <h1 id="nat-h">Mening natijalarim</h1>
-      <p class="lead">Mashqlardagi javoblaringiz va xatolaringiz. Ma'lumot faqat shu brauzerda saqlanadi, hech qayerga yuborilmaydi. Ball hisoblanmaydi: bu SAT balli emas.</p>
-      <p class="namuna-izoh" id="namuna-izoh">Siz hali mashq yechmagansiz, shuning uchun pastda namuna ko'rsatilgan. <a href={yol('/uz/sat/mashq/test/')}>Mashq testini boshlang</a>, javoblaringiz shu yerda chiqadi.</p>
+      <p class="pill-qator"><span class="pill">Tool</span><span class="pill pill-chiziq" id="namuna-pill">Sample data</span></p>
+      <h1 id="nat-h">My results</h1>
+      <p class="lead">Your answers and mistakes in practice. The data is saved only in this browser and is not sent anywhere. No score is calculated: this is not an SAT score.</p>
+      <p class="namuna-izoh" id="namuna-izoh">You have not solved any practice questions yet, so a sample is shown below. <a href={yol('/uz/sat/mashq/test/')}>Start the practice test</a>, and your answers will appear here.</p>
     </section>
 
-    <section class="korsatkich" aria-label="Umumiy ko'rsatkichlar">
+    <section class="korsatkich" aria-label="Summary">
       <div class="qora-blok">
-        <p class="ustki-yorliq kok-yorliq">Bo'limlar bo'yicha</p>
+        <p class="ustki-yorliq kok-yorliq">By section</p>
         <div class="bolim-qator" data-bolim="Reading & Writing">
           <div class="bq-bosh"><span>Reading &amp; Writing</span><span class="bq-son"></span></div>
           <div class="bq-iz" aria-hidden="true"><div class="bq-toldirish"></div></div>
@@ -36,43 +36,43 @@ import { yol } from '../../../../../lib/yol';
         </div>
       </div>
       <div class="chiziq-blok">
-        <p class="kb-nom">Takrorlash kerak</p>
+        <p class="kb-nom">Needs review</p>
         <p class="kb-son" id="xato-soni">0</p>
-        <p class="kb-izoh">xato javob</p>
-        <a href={yol('/uz/sat/mashq/test/')}>Xatolarni qayta ishlash</a>
+        <p class="kb-izoh">wrong answers</p>
+        <a href={yol('/uz/sat/mashq/test/')}>Work on mistakes</a>
       </div>
     </section>
 
     <section class="tarix" aria-labelledby="royxat-h">
       <div class="tarix-bosh">
-        <h2 id="royxat-h">Javoblar tarixi</h2>
-        <div class="segment" role="group" aria-label="Filtr">
-          <button type="button" aria-pressed="true" data-filtr="hammasi">Hammasi <span class="soni"></span></button>
-          <button type="button" aria-pressed="false" data-filtr="xato">Xatolar <span class="soni"></span></button>
-          <button type="button" aria-pressed="false" data-filtr="togri">To'g'ri <span class="soni"></span></button>
+        <h2 id="royxat-h">Answer history</h2>
+        <div class="segment" role="group" aria-label="Filter">
+          <button type="button" aria-pressed="true" data-filtr="hammasi">All <span class="soni"></span></button>
+          <button type="button" aria-pressed="false" data-filtr="xato">Mistakes <span class="soni"></span></button>
+          <button type="button" aria-pressed="false" data-filtr="togri">Correct <span class="soni"></span></button>
         </div>
       </div>
       <ul class="qatorlar" id="qatorlar"></ul>
-      <p class="bosh-holat" id="bosh-holat" hidden>Bu filtrda javob yo'q.</p>
+      <p class="bosh-holat" id="bosh-holat" hidden>No answers for this filter.</p>
     </section>
 
-    <section class="malumot" aria-label="Ma'lumot">
+    <section class="malumot" aria-label="Data">
       <div>
-        <p class="m-sarlavha">Ma'lumot faqat shu brauzerda</p>
-        <p class="m-matn">Boshqa qurilma yoki brauzerda bu ro'yxat ko'rinmaydi. O'chirsangiz, qaytarib bo'lmaydi.</p>
+        <p class="m-sarlavha">Data stays in this browser</p>
+        <p class="m-matn">This list is not visible on another device or browser. If you delete it, it cannot be restored.</p>
         <p class="m-matn" id="ochirish-xabar" role="status"></p>
       </div>
-      <button type="button" class="chiziq-tugma" id="ochirish">Natijalarni o'chirish</button>
+      <button type="button" class="chiziq-tugma" id="ochirish">Delete results</button>
     </section>
   </div>
 
   <dialog class="tasdiq" id="ochirish-oyna" aria-labelledby="ochirish-sarlavha">
     <form method="dialog">
-      <h2 id="ochirish-sarlavha">Natijalarni o'chirasizmi?</h2>
-      <p>Shu brauzerdagi mashq javoblaringiz o'chadi. Buni qaytarib bo'lmaydi.</p>
+      <h2 id="ochirish-sarlavha">Delete your results?</h2>
+      <p>Your practice answers in this browser will be deleted. This cannot be undone.</p>
       <div class="tasdiq-tugmalar">
-        <button type="submit" value="bekor" class="chiziq-tugma" autofocus>Bekor qilish</button>
-        <button type="submit" value="ochir" class="asosiy-tugma">Ha, o'chirish</button>
+        <button type="submit" value="bekor" class="chiziq-tugma" autofocus>Cancel</button>
+        <button type="submit" value="ochir" class="asosiy-tugma">Yes, delete</button>
       </div>
     </form>
   </dialog>
@@ -106,7 +106,7 @@ import { yol } from '../../../../../lib/yol';
     document.querySelectorAll<HTMLElement>('.bolim-qator').forEach((q) => {
       const b = hammasi.filter((x) => x.bolim === q.dataset.bolim);
       const t = b.filter((x) => x.togri).length;
-      q.querySelector('.bq-son')!.textContent = `${t} / ${b.length} to'g'ri`;
+      q.querySelector('.bq-son')!.textContent = `${t} / ${b.length} correct`;
       (q.querySelector('.bq-toldirish') as HTMLElement).style.width = b.length ? `${Math.round((t / b.length) * 100)}%` : '0';
     });
 
@@ -122,19 +122,19 @@ import { yol } from '../../../../../lib/yol';
     tanlangan.forEach((q) => {
       const li = document.createElement('li');
       li.innerHTML = `
-        <span class="q-belgi ${q.togri ? 'togri' : 'xato'}" role="img" aria-label="${q.togri ? "To'g'ri" : 'Xato'}">
+        <span class="q-belgi ${q.togri ? 'togri' : 'xato'}" role="img" aria-label="${q.togri ? 'Correct' : 'Wrong'}">
           ${q.togri
             ? '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'
             : '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'}
         </span>
         <div class="q-matn"><span class="q-mavzu"></span><span class="q-izoh"></span></div>`;
       li.querySelector('.q-mavzu')!.textContent = q.mavzu;
-      li.querySelector('.q-izoh')!.textContent = `${q.bolim} · ${q.sana} · javobingiz ${q.javob}, to'g'risi ${q.togriJavob}`;
+      li.querySelector('.q-izoh')!.textContent = `${q.bolim} · ${q.sana} · your answer ${q.javob}, correct ${q.togriJavob}`;
       if (!q.togri) {
         const a = document.createElement('a');
         a.className = 'qayta';
         a.href = `${testUrl}?mavzular=${encodeURIComponent(q.mavzu)}`;
-        a.textContent = 'Qayta yechish';
+        a.textContent = 'Solve again';
         li.append(a);
       }
       ul.append(li);
@@ -152,7 +152,7 @@ import { yol } from '../../../../../lib/yol';
   oyna.addEventListener('close', () => {
     if (oyna.returnValue === 'ochir') {
       try { localStorage.removeItem(KALIT_JAVOBLAR); } catch { /* ruxsat yo'q */ }
-      document.getElementById('ochirish-xabar')!.textContent = "Natijalar o'chirildi.";
+      document.getElementById('ochirish-xabar')!.textContent = 'Results deleted.';
       chiz();
       (document.getElementById('nat-h') as HTMLElement).focus();
     } else {
