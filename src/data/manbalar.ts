@@ -313,6 +313,42 @@ export const manbalar: Manba[] = [
     tekshirilganSana: '2026-11-08',
     izoh: "Tekshirilmoqda: sahifa 2026-11-08 da bu mashinadan to'liq ochilmadi. REST hujjati topilmagan.",
   },
+  {
+    id: 'HV01',
+    nomi: 'Application Requirements (Harvard College)',
+    tashkilot: 'Harvard College',
+    havola: 'https://college.harvard.edu/admissions/apply/application-requirements',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "SAT yoki ACT talab qilinadi, xalqaro va mahalliy abituriyent uchun bir xil. Test imkonsiz bo'lgan istisno holda AP, IB, GCSE/A-Level yoki milliy bitiruv imtihoni natijasi qabul qilinadi. Restrictive Early Action 1-noyabr, Regular Decision 1-yanvar. Minimal ball yo'q.",
+  },
+  {
+    id: 'NY01',
+    nomi: 'Entry Requirements (NYU Abu Dhabi)',
+    tashkilot: 'NYU Abu Dhabi',
+    havola: 'https://nyuad.nyu.edu/en/apply/undergraduate/apply/entry-requirements.html',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "NYU \"test-optional through the 2027–2028 application cycle\" (barcha NYU kampuslari). Yuborilgan test natijasi baholashda hisobga olinadi. Ingliz tili sertifikati odatda talab qilinadi (istisnolar sahifada).",
+  },
+  {
+    id: 'MT01',
+    nomi: 'Application Requirements (METU, International Students Office)',
+    tashkilot: 'Middle East Technical University (METU)',
+    havola: 'https://iso.metu.edu.tr/en/application-requirements',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "SAT asosiy ariza hujjati bo'la oladigan imtihonlar qatorida (TR-YÖS, QUDURAT, TQDK va boshqalar bilan), natija 2 yil amal qiladi. Talabni bajarish qabulni kafolatlamaydi. Minimal ball odtu_iso_requirements.pdf da: tekshirilmagan.",
+  },
+  {
+    id: 'KY01',
+    nomi: 'Application Guidelines for October 2027 Enrollment (Kyoto iUP)',
+    tashkilot: 'Kyoto University International Undergraduate Program (Kyoto iUP)',
+    havola: 'https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "Appendix 1: kamida bitta standart test natijasi majburiy; SAT \"A. International Tests\" ro'yxatida, faqat 2026-11-07 gacha topshirilgan test hisoblanadi. Engineering: matematika + fizika + kimyo natijasi. Minimal ball yo'q (FAQ). Ariza muddati 2026-12-03, 17:00 JST (iup.kyoto-u.ac.jp/apply/).",
+  },
 ];
 
 export function rasmiyManbalar(idlar: string[] = []): Manba[] {
