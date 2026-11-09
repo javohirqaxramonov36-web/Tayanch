@@ -142,6 +142,15 @@ export const manbalar: Manba[] = [
     izoh: "To'rt ko'nikma bo'yicha namuna topshiriqlar; Listening va Reading uchun javob kalitlari PDF. Sahifada bepulligi yozilmagan.",
   },
   {
+    id: 'IE04',
+    nomi: 'IELTS Academic: Writing test format',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-writing',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: 'Writing 60 daqiqa, ikki topshiriq. Task 1 kamida 150 so‘z, Task 2 kamida 250 so‘z. O‘zini tekshirish ro‘yxati uchun baholash mezonlari ham ko‘rib chiqildi.',
+  },
+  {
     id: 'ID01',
     nomi: 'Free IELTS practice tests',
     tashkilot: 'IDP IELTS',

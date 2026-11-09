@@ -1,0 +1,56 @@
+{
+  "id": "mock-02",
+  "module": "writing",
+  "title": "Academic Writing · Set 02",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w02-1",
+      "type": "data-description",
+      "text": "The bars show how many repairs a bicycle kiosk completed in its morning and afternoon sessions during one week. Give an overview and compare the sessions on the most informative days.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Bicycle repair kiosk activity",
+        "unit": "repairs completed",
+        "labels": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "series": [
+          {
+            "name": "Morning",
+            "values": [
+              12,
+              16,
+              15,
+              24,
+              18
+            ]
+          },
+          {
+            "name": "Afternoon",
+            "values": [
+              19,
+              14,
+              21,
+              17,
+              29
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w02-2",
+      "type": "essay",
+      "text": "A town plans to make basic bicycle maintenance classes available to residents. Should the classes focus on people who already cycle regularly or on people who rarely use a bicycle? Develop an argument with examples.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

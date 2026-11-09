@@ -1,0 +1,53 @@
+{
+  "id": "mock-06",
+  "module": "writing",
+  "title": "Academic Writing · Set 06",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w06-1",
+      "type": "data-description",
+      "text": "The chart compares planned and actual spending in four categories for a fictional student club. Describe the overall allocation and highlight where actual spending differed most from the plan.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Student club allocation",
+        "unit": "budget units",
+        "labels": [
+          "Events",
+          "Print",
+          "Travel",
+          "Training"
+        ],
+        "series": [
+          {
+            "name": "Plan",
+            "values": [
+              38,
+              17,
+              31,
+              14
+            ]
+          },
+          {
+            "name": "Actual",
+            "values": [
+              29,
+              12,
+              24,
+              35
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w06-2",
+      "type": "essay",
+      "text": "Student clubs often have to choose between organising one large event and supporting several smaller activities. Compare the two approaches and explain which circumstances would favour each one.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

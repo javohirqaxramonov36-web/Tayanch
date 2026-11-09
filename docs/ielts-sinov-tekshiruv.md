@@ -157,3 +157,43 @@ Matnlar 749, 748 va 750 so‘z. Savollar 13, 13 va 14 ta.
 | 37–40 | A · G · wood · heading |
 
 3-savolda xarita siyohi haqida gap yo‘q. 29-savolda audio yozuv yoki uni yozuvchi shaxs haqida fikr berilmagan. 33-savolning ikkala javobi C xatboshisida asoslangan. Kalit bilan farq: 0.
+
+## Reading 09
+
+Matnlar 719, 752 va 735 so‘z. Savollar 13, 13 va 14 ta.
+
+| Savollar | Matnga qarab qayta yechilgan javoblar |
+| --- | --- |
+| 1–5 | True · False · Not Given · True · False |
+| 6–9 | direction · level · local solar noon · marks |
+| 10–13 | The Sun’s position also depends on the place of observation · As a gap in observation · G · visibility |
+| 14–17 | Arranging the fibres before they join · Estimating the change in size · Using a barrier to form a hollow object · Recording the process for later comparisons |
+| 18–21 | B · D · E · F |
+| 22–26 | woven · water · shrink · surface · soap |
+| 27–31 | Yes · No · Yes · Not Given · No |
+| 32–36 | Another change may explain part or all of the result · Decrease the input + Hold another condition fixed · A record of the procedure · It explains any result only after the result occurs · It can help design a better next comparison |
+| 37–40 | C · E · period of observation · resolution |
+
+3-savoldagi eski ta’rif muallifining kasbi, 30-savoldagi tajriba ma’lumotlari yig‘iladigan kun vaqti aytilmagan. 33-savolning ikki tajriba o‘zgarishi D xatboshisida keltirilgan. Kalit bilan farq: 0.
+
+## Reading 10
+
+Matnlar 747, 756 va 763 so‘z. Savollar 13, 13 va 14 ta.
+
+| Savollar | Matnga qarab qayta yechilgan javoblar |
+| --- | --- |
+| 1–5 | True · False · Not Given · True · False |
+| 6–9 | conduction · convection · radiation · volume |
+| 10–13 | Either difference could contribute to the result · Preventing liquid from leaking · ice · G |
+| 14–17 | Shelter over an area rather than at one point · Comparing the influence of barrier height · How ends and wind direction change the protected area · Maintaining a structure that changes over time |
+| 18–21 | B · C · F · G |
+| 22–26 | moisture · openings · angle · tree · height |
+| 27–31 | Yes · No · No · Not Given · Yes |
+| 32–36 | Other commitments may be unrecorded · Fewer exchanges of messages + Proposals that rely only on apparently open spaces · Who wanted to join but repeatedly could not · It can move work into preparation or follow-up time · Marking a time as unavailable without giving a reason |
+| 37–40 | A · G · continuous interval · follow-up |
+
+3-savolda qaytaruvchi qoplama materiali aytilmagan. 30-savolda xodimlar va ko‘ngillilar qatnashuvi taqqoslanmagan. 33-savoldagi ijobiy ta’sir va ehtimoliy cheklov C xatboshisida birga berilgan. Kalit bilan farq: 0.
+
+## Writing 01–10
+
+Har to‘plamda ikkita original topshiriq bor. Task 1 grafiklaridagi raqamlar uydirma. Grafikning ko‘rinishi va jadvali bir xil JSON qiymatlaridan olinadi. Task 2 savollari ochiq javobli va o‘zini tekshirish mezonlari bilan beriladi. [IELTS Academic Writing formati](https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-writing)

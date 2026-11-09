@@ -1,0 +1,53 @@
+{
+  "id": "mock-08",
+  "module": "writing",
+  "title": "Academic Writing · Set 08",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w08-1",
+      "type": "data-description",
+      "text": "The bars show reusable cups returned at four locations in two weeks of a fictional trial. Describe what changed and use selected comparisons to show where the changes were greatest.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Reusable cup returns",
+        "unit": "cups returned",
+        "labels": [
+          "Site A",
+          "Site B",
+          "Site C",
+          "Site D"
+        ],
+        "series": [
+          {
+            "name": "Week 1",
+            "values": [
+              58,
+              84,
+              70,
+              44
+            ]
+          },
+          {
+            "name": "Week 4",
+            "values": [
+              102,
+              93,
+              78,
+              89
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w08-2",
+      "type": "essay",
+      "text": "A campus can encourage reusable containers through a refundable deposit or through voluntary reminders. Which approach is likely to work better, and what might change your answer?",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

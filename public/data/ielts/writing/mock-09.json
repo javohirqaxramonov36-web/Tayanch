@@ -1,0 +1,53 @@
+{
+  "id": "mock-09",
+  "module": "writing",
+  "title": "Academic Writing · Set 09",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w09-1",
+      "type": "data-description",
+      "text": "The chart compares monthly numbers of seedlings and cuttings ready for sale at an imaginary nursery. Give an overview and explain how the relationship between the two categories changed.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Plant nursery output",
+        "unit": "plants ready for sale",
+        "labels": [
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "series": [
+          {
+            "name": "Seedlings",
+            "values": [
+              78,
+              124,
+              171,
+              138
+            ]
+          },
+          {
+            "name": "Cuttings",
+            "values": [
+              51,
+              65,
+              96,
+              116
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w09-2",
+      "type": "essay",
+      "text": "Community gardens can use their space to grow food, teach gardening or provide a place for people to meet. Should one of these purposes take priority? Give reasons and a practical example.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "mock-05",
+  "module": "writing",
+  "title": "Academic Writing · Set 05",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w05-1",
+      "type": "data-description",
+      "text": "The chart shows loans of hand tools and power tools at a fictional sharing station. Summarise the changes over the period and compare the scale and direction of the two patterns.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Tool-sharing station activity",
+        "unit": "loans per month",
+        "labels": [
+          "May",
+          "Jun",
+          "Jul",
+          "Aug"
+        ],
+        "series": [
+          {
+            "name": "Hand tools",
+            "values": [
+              65,
+              88,
+              80,
+              73
+            ]
+          },
+          {
+            "name": "Power tools",
+            "values": [
+              39,
+              47,
+              60,
+              58
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w05-2",
+      "type": "essay",
+      "text": "In some neighbourhoods, residents prefer to borrow equipment they seldom use, while others prefer to own it. What factors shape this choice, and how could a borrowing scheme become more useful?",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

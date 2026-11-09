@@ -1,0 +1,53 @@
+{
+  "id": "mock-07",
+  "module": "writing",
+  "title": "Academic Writing · Set 07",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w07-1",
+      "type": "data-description",
+      "text": "The chart shows completed repairs and deliveries of new pieces at an invented textile studio. Describe the two trends and compare the categories across the period.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Textile studio deliveries",
+        "unit": "orders delivered",
+        "labels": [
+          "2021",
+          "2022",
+          "2023",
+          "2024"
+        ],
+        "series": [
+          {
+            "name": "Repairs",
+            "values": [
+              108,
+              127,
+              153,
+              145
+            ]
+          },
+          {
+            "name": "New pieces",
+            "values": [
+              135,
+              132,
+              120,
+              112
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w07-2",
+      "type": "essay",
+      "text": "Some people say repair skills should be taught during ordinary school lessons. Others think such skills are better learned through optional clubs or community workshops. Explain both views and give your own.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

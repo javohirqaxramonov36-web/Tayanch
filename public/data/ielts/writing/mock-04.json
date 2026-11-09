@@ -1,0 +1,53 @@
+{
+  "id": "mock-04",
+  "module": "writing",
+  "title": "Academic Writing · Set 04",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w04-1",
+      "type": "data-description",
+      "text": "The chart gives entry counts at two trail gates during four parts of a day. Describe the overall pattern at each gate and compare the main differences.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Trail entry counts",
+        "unit": "people entering",
+        "labels": [
+          "06–09",
+          "09–12",
+          "12–15",
+          "15–18"
+        ],
+        "series": [
+          {
+            "name": "Riverside",
+            "values": [
+              36,
+              73,
+              68,
+              49
+            ]
+          },
+          {
+            "name": "Hill gate",
+            "values": [
+              58,
+              62,
+              40,
+              29
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w04-2",
+      "type": "essay",
+      "text": "A nature reserve can limit busy periods by asking visitors to book arrival times. Discuss one benefit and one drawback of this approach, and explain whether you would support it.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

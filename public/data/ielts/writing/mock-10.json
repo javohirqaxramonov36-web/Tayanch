@@ -1,0 +1,53 @@
+{
+  "id": "mock-10",
+  "module": "writing",
+  "title": "Academic Writing · Set 10",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w10-1",
+      "type": "data-description",
+      "text": "The chart compares occupied study tables in two rooms at four times on a fictional weekday. Describe the overall patterns and compare how the gap between the rooms changed.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Study tables in use",
+        "unit": "tables occupied",
+        "labels": [
+          "09:00",
+          "12:00",
+          "15:00",
+          "18:00"
+        ],
+        "series": [
+          {
+            "name": "Main room",
+            "values": [
+              27,
+              44,
+              51,
+              39
+            ]
+          },
+          {
+            "name": "Annex",
+            "values": [
+              10,
+              29,
+              43,
+              41
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w10-2",
+      "type": "essay",
+      "text": "Some learning centres reserve desks in advance; others leave all desks available to people who arrive first. Discuss the strengths of both systems and suggest a fair arrangement during busy periods.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

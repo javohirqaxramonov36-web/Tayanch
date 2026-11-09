@@ -1,0 +1,53 @@
+{
+  "id": "mock-01",
+  "module": "writing",
+  "title": "Academic Writing · Set 01",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w01-1",
+      "type": "data-description",
+      "text": "The chart compares borrowing of printed and audio guides at Brookbank Library over four months. Describe the main trends, identify where the patterns differ and support your account with selected figures.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Brookbank Library loans",
+        "unit": "items borrowed",
+        "labels": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr"
+        ],
+        "series": [
+          {
+            "name": "Printed guides",
+            "values": [
+              84,
+              72,
+              63,
+              58
+            ]
+          },
+          {
+            "name": "Audio guides",
+            "values": [
+              32,
+              41,
+              61,
+              75
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w01-2",
+      "type": "essay",
+      "text": "Some local libraries are setting aside more space for group activities, while others are retaining quiet areas for individual work. Explain the reasons for each approach and give your own view on how a library should decide.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}

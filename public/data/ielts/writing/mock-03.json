@@ -1,0 +1,53 @@
+{
+  "id": "mock-03",
+  "module": "writing",
+  "title": "Academic Writing · Set 03",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "tasks": [
+    {
+      "id": "w03-1",
+      "type": "data-description",
+      "text": "The chart shows weekly hall reservations at four fictional centres. Describe how study and community groups used the halls, comparing the centres and noting the strongest contrasts.",
+      "minWords": 150,
+      "difficulty": 2,
+      "chart": {
+        "title": "Shared hall reservations",
+        "unit": "hours reserved",
+        "labels": [
+          "North",
+          "East",
+          "South",
+          "West"
+        ],
+        "series": [
+          {
+            "name": "Study groups",
+            "values": [
+              44,
+              31,
+              39,
+              25
+            ]
+          },
+          {
+            "name": "Community groups",
+            "values": [
+              26,
+              48,
+              33,
+              45
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "w03-2",
+      "type": "essay",
+      "text": "Schools sometimes let neighbourhood groups use their buildings outside school hours. What benefits could this bring, and what practical difficulties should schools prepare for? Explain your reasoning.",
+      "minWords": 250,
+      "difficulty": 3
+    }
+  ]
+}
