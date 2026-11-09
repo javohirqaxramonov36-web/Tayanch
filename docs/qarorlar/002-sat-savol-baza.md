@@ -1,6 +1,7 @@
 # 002. Original SAT savollari bazasi: `public.questions` va P05 formati
 
 - **Holat**: qabul qilingan (muallif "moslashtir" dedi, 2026-11-09; tafsilotlar Claude qarori, muallif ochiq qarorlarni Claude'ga topshirgan).
+- **Qo'llangan**: Tayanch loyihasiga 2026-11-09 (muallif `supabase db push` bilan).
 - **Fayl**: `supabase/migrations/20261109120000_questions_p05.sql` (0010). Sinov: `supabase/tests/rls_test.sql`, 16-blok; `npm run db:tekshir`.
 - **Bog'liq**: P02 sxemasi (PR #38: `questions`, RPC, `question-figures`), P05 format va import (PR #63: `docs/savol-formati.md`, `scripts/savol-import.mjs`).
 
@@ -33,5 +34,6 @@ P05 importi alohida `sat_questions` jadvalini va `savol-rasmlar` bucket'ini kutg
 ## Nima sinalgan, nima sinalmagan (2026-11-09)
 
 - **Sinalgan (lokal Postgres 17, `npm run db:tekshir`):** 10 migratsiya ikki marta xatosiz; PR #38 ning 1–15 sinovlari (sinov savollari yangi qoidaga moslandi: `verified_by` `author` dan farqli, `verified_at` bor) va yangi 16-sinov: har yangi CHECK rad etadi, import shaklidagi upsert `on conflict (external_id)` ishlaydi, import versiyasi (3) saqlanadi, versiyasiz tahrirda +1.
-- **Sinalmagan:** Tayanch loyihasiga `supabase db push`; P05 import `--apply` haqiqiy bazada.
+- **Masofada (2026-11-09):** `supabase migration list` da 0010 local va remote'da; `supabase gen types` da `drafted_by`, `verified_at`, `tags`, `content_hash` ustunlari bor. CHECK va trigger masofada SQL bilan alohida o'qilmadi (Docker yo'q, `db dump` ishlamadi); aniq ko'rish uchun README §7 dagi SQL.
+- **Sinalmagan:** P05 import `--apply` haqiqiy bazada; publishable kalit bilan `questions` o'qilmasligi masofada (0010 RLS'ga tegmaydi, PR #38 dagi holat).
 - **Diqqat:** PR #38 bazaga qo'llangan, lekin `main` ga merge qilinmagan (va `main` bilan konfliktda). Bu PR #38 ustiga qurilgan; `main` da migratsiyalar bo'lmaguncha boshqa branch'dan `db push` "remote migration not found locally" bilan to'xtaydi.

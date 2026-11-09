@@ -99,7 +99,7 @@ select public.admin_hide_question('<external_id>', 'sabab', 'muallif');
 
 Savollar migratsiyaga yozilmaydi. Ular P05 importi bilan service role orqali `questions` ga yuklanadi (`docs/savol-formati.md` §7, ADR 002): `external_id` bo'yicha upsert, tasdiqlanmagani `draft`, muallif tasdiqlagani (`verified_by` ≠ `author`, `verified_at`) `verified`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
 
-**0010 holati (2026-11-09):** repoda, Tayanch loyihasiga **qo'llanmagan** (muallifning alohida "qo'lla" tasdig'i bilan). Avval `supabase migration list --remote=<ref>`: 0001–0009 masofada bor, faqat `20261109120000` qo'llanmagan bo'lishi kerak; so'ng `supabase db push --remote=<ref> --dry-run`, keyin `supabase db push --remote=<ref>`. Tekshirish (SQL Editor):
+**0010 holati (2026-11-09):** Tayanch loyihasiga **qo'llangan** (muallif ishga tushirdi; `migration list` da 0001–0010 local = remote, yangi ustunlar `gen types` da ko'rindi). Keyingi migratsiyalar uchun tartib: `supabase --workdir "$PWD" migration list --remote=<ref>`, so'ng `db push --remote=<ref> --dry-run`, keyin `db push --remote=<ref>`. Bu branch'da `supabase/config.toml` yo'q: `--workdir` siz CLI yuqoridagi papkaga chiqib ketadi va "remote migration not found locally" deydi. Tekshirish (SQL Editor):
 
 ```sql
 select column_name from information_schema.columns
