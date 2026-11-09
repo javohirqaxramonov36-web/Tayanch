@@ -302,6 +302,39 @@ export function savolHolati(s) {
 }
 
 /**
+ * Savolni public.questions qatoriga aylantiradi (P02 sxemasi, PR #38 + 0010; ADR 002).
+ * answer -> correct: mcq {"choice": "B"}, spr {"accepted": [...]} (RPC check_answer shu shaklni o'qiydi).
+ * figure -> {path, alt, type}: path bucket ichidagi yo'l (can_read_question_figure shu bilan solishtiradi).
+ * id yuborilmaydi: baza yaratadi, upsert external_id bo'yicha.
+ */
+export function bazaQatori(s, { hash, figureYol = null, status = savolHolati(s) } = {}) {
+  const tasdiqlangan = status === 'verified';
+  return {
+    external_id: s.external_id,
+    section: s.section,
+    domain: s.domain,
+    skill: s.skill,
+    difficulty: s.difficulty,
+    format: s.format,
+    passage: s.passage ?? null,
+    stem: s.stem,
+    options: s.format === 'mcq' ? s.options : null,
+    correct: s.format === 'mcq' ? { choice: s.answer } : { accepted: s.answer },
+    explanation: s.explanation,
+    figure: s.figure ? { path: figureYol, alt: s.figure.alt, type: s.figure.type } : null,
+    tags: s.tags,
+    source: s.source,
+    drafted_by: s.drafted_by,
+    author: s.author,
+    verified_by: tasdiqlangan ? s.verified_by : null,
+    verified_at: tasdiqlangan ? s.verified_at : null,
+    version: s.version,
+    status,
+    content_hash: hash ?? mazmunHash(s),
+  };
+}
+
+/**
  * Bir nechta fayldagi savollarni o'qib tekshiradi: alohida tekshiruv + ID va matn dublikati.
  * Natija: { natijalar: [{ fayl, joy, savol, xatolar, ogohlar }], faylXatolari }.
  */

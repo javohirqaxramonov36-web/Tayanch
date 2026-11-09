@@ -132,38 +132,12 @@ Rad etiladi:
   - `SUPABASE_SERVICE_ROLE_KEY`.
 
   Qiymatlar logga chiqmaydi. Publishable/anon kalit berilsa, skript to'xtaydi.
-- **Jadval va bucket nomlari** env'dan olinadi: `TAYANCH_SAVOL_JADVAL` (standart `sat_questions`), `TAYANCH_SAVOL_BUCKET` (standart `savol-rasmlar`).
+- **Jadval va bucket nomlari** env'dan olinadi: `TAYANCH_SAVOL_JADVAL` (standart `questions`), `TAYANCH_SAVOL_BUCKET` (standart `question-figures`).
+- **Baza shakli** (`bazaQatori`, `scripts/savol/umumiy.mjs`): jadval `public.questions` (P02, PR #38 + 0010 migratsiyasi; qarorlar `docs/qarorlar/002-sat-savol-baza.md`).
+  - `answer` → `correct`: mcq `{"choice": "B"}`, spr `{"accepted": [...]}` (server `submit_answer` shu bilan tekshiradi);
+  - `figure` → `{path, alt, type}`, `path` = bucket ichidagi yo'l;
+  - `id` yuborilmaydi (baza yaratadi), upsert `external_id` bo'yicha;
+  - bazada `hidden` (admin yashirgan) savol import bilan qayta ochilmaydi;
+  - mazmun o'zgarsa baza versiyani `greatest(fayldagi, eski + 1)` qiladi.
 
-**P02 holati (2026-11-09):** jadval va bucket repoda hali yo'q, shuning uchun `--apply` **sinalmagan**. Import kutadigan ustunlar (P02 uchun taklif, muallif tasdiqlaydi):
-
-```sql
-create table public.sat_questions (
-  external_id text primary key,
-  section text not null check (section in ('rw','math')),
-  domain text not null,
-  skill text not null,
-  difficulty smallint not null check (difficulty between 1 and 5),
-  format text not null check (format in ('mcq','spr')),
-  passage text,
-  stem text not null,
-  options jsonb,
-  answer jsonb not null,
-  explanation text not null,
-  figure jsonb,
-  tags text[] not null default '{}',
-  source text not null check (source = 'original'),
-  drafted_by text not null check (drafted_by in ('ai','human')),
-  author text not null,
-  verified_by text,
-  verified_at timestamptz,
-  version integer not null check (version >= 1),
-  status text not null check (status in ('draft','verified')),
-  content_hash text not null,
-  updated_at timestamptz not null default now(),
-  check (status = 'draft' or (verified_by is not null and verified_by <> author))
-);
-alter table public.sat_questions enable row level security;
--- Brauzer uchun siyosat P02 da: draft savollar va javob/tushuntirish ochiq kalit bilan o'qilmasligi kerak.
-```
-
-Bucket: `savol-rasmlar`, private (yoki faqat `verified` savollar rasmlari uchun public). Bu P02 qarori.
+**P02 holati (2026-11-09):** jadval `public.questions` va private bucket `question-figures` PR #38 da (Tayanch loyihasiga qo'llangan); P05 maydonlari (`drafted_by`, `verified_at`, `tags`, `content_hash`) va `author ≠ verified_by` tekshiruvi 0010 migratsiyasida (PR #65), loyihaga **hali qo'llanmagan**. Brauzer (publishable kalit, kirgan foydalanuvchi) jadvalni to'g'ridan-to'g'ri o'qiy olmaydi: savollar RPC orqali, `correct` va `explanation` siz. Import qatorlari lokal Postgres'da shu sxemaga yozib sinalgan; `--apply` haqiqiy bazada **sinalmagan**.

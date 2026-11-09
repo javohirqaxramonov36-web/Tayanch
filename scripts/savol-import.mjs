@@ -5,19 +5,20 @@
 //   npm run savol:import -- --fayl docs/namuna-savol.json                    (dry-run, alohida fayl)
 // Kalitlar faqat lokal .env dan (npm skripti --env-file-if-exists=.env bilan ishga tushiradi):
 //   SUPABASE_URL (yoki PUBLIC_SUPABASE_URL), SUPABASE_SERVICE_ROLE_KEY. Qiymatlar hech qachon chiqarilmaydi.
-// Jadval va bucket: TAYANCH_SAVOL_JADVAL (standart sat_questions), TAYANCH_SAVOL_BUCKET (standart savol-rasmlar).
+// Jadval va bucket: TAYANCH_SAVOL_JADVAL (standart questions), TAYANCH_SAVOL_BUCKET (standart question-figures).
+// Qator shakli: bazaQatori (umumiy.mjs), sxema docs/qarorlar/002-sat-savol-baza.md. Bazada hidden savol import bilan ochilmaydi.
 // Qoidalar: external_id bo'yicha upsert; verified_by bo'lmasa (yoki hash mos kelmasa) status=draft, aks holda verified.
 // "namuna" tegli savol bazaga yuklanmaydi. Bazadagi mazmun o'zgargan, lekin version oshmagan savol rad etiladi.
 import { readFileSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
-import { argumentlar, hammasiniTekshir, joyNomi, mazmunHash, namunaTeg, savolFayllari, savolHolati, savollarPapkasi, xatoBilanChiq } from './savol/umumiy.mjs';
+import { argumentlar, bazaQatori, hammasiniTekshir, joyNomi, mazmunHash, namunaTeg, savolFayllari, savollarPapkasi, xatoBilanChiq } from './savol/umumiy.mjs';
 
 const a = argumentlar();
 const apply = a.apply === true;
 const fayllar = a.fayl ? String(a.fayl).split(',').map((x) => x.trim()).filter(Boolean) : savolFayllari(savollarPapkasi(a));
-const JADVAL = process.env.TAYANCH_SAVOL_JADVAL || 'sat_questions';
-const BUCKET = process.env.TAYANCH_SAVOL_BUCKET || 'savol-rasmlar';
+const JADVAL = process.env.TAYANCH_SAVOL_JADVAL || 'questions';
+const BUCKET = process.env.TAYANCH_SAVOL_BUCKET || 'question-figures';
 
 const url = process.env.SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
 const kalit = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -46,42 +47,13 @@ for (const n of natijalar) {
 const qatorlar = tayyor.map((n) => {
   const s = n.savol;
   const hash = mazmunHash(s);
-  let figure = null;
   let rasm = null;
   if (s.figure) {
     const manba = resolve(dirname(n.fayl), s.figure.src);
     const yol = `${s.section}/${s.external_id}/${hash.slice(0, 12)}${extname(manba).toLowerCase()}`;
-    figure = { type: s.figure.type, src: yol, alt: s.figure.alt };
     rasm = { manba, yol, turi: s.figure.type === 'svg' ? 'image/svg+xml' : 'image/png' };
   }
-  const status = savolHolati(s);
-  return {
-    n,
-    rasm,
-    qator: {
-      external_id: s.external_id,
-      section: s.section,
-      domain: s.domain,
-      skill: s.skill,
-      difficulty: s.difficulty,
-      format: s.format,
-      passage: s.passage ?? null,
-      stem: s.stem,
-      options: s.format === 'mcq' ? s.options : null,
-      answer: s.answer,
-      explanation: s.explanation,
-      figure,
-      tags: s.tags,
-      source: s.source,
-      drafted_by: s.drafted_by,
-      author: s.author,
-      verified_by: status === 'verified' ? s.verified_by : null,
-      verified_at: status === 'verified' ? s.verified_at : null,
-      version: s.version,
-      status,
-      content_hash: hash,
-    },
-  };
+  return { n, rasm, qator: bazaQatori(s, { hash, figureYol: rasm?.yol ?? null }) };
 });
 
 // ---------- 3. Bazadagi holat (kalit bo'lsa; dry-run'da faqat o'qiladi) ----------
@@ -91,7 +63,7 @@ if (url && kalit) {
   supabase = createClient(url, kalit, { auth: { persistSession: false, autoRefreshToken: false } });
   const idlar = qatorlar.map((q) => q.qator.external_id);
   for (let i = 0; i < idlar.length; i += 200) {
-    const { data, error } = await supabase.from(JADVAL).select('external_id, version, content_hash').in('external_id', idlar.slice(i, i + 200));
+    const { data, error } = await supabase.from(JADVAL).select('external_id, version, content_hash, status').in('external_id', idlar.slice(i, i + 200));
     if (error) xatoBilanChiq(`"${JADVAL}" jadvalini o'qib bo'lmadi: ${error.message}`);
     for (const r of data) bazada.set(r.external_id, r);
   }
@@ -102,6 +74,8 @@ const yangilangan = [];
 const ozgarishsiz = [];
 for (const q of qatorlar) {
   const eski = bazada.get(q.qator.external_id);
+  // Admin yashirgan savol (admin_hide_question, audit_log bilan) import bilan qayta ochilmaydi.
+  if (eski?.status === 'hidden') q.qator.status = 'hidden';
   if (!eski) yangi.push(q);
   else if (eski.content_hash === q.qator.content_hash) {
     // Mazmun bir xil: faqat holat yoki meta o'zgargan bo'lishi mumkin, baribir yangilanadi (tasdiqlash shu yo'l bilan yetadi).

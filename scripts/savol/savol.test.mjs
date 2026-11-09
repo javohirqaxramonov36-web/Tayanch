@@ -6,7 +6,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'n
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, describe, it } from 'node:test';
-import { REPO, mazmunHash, savolHolati, savolniTekshir, sprSon } from './umumiy.mjs';
+import { REPO, bazaQatori, mazmunHash, savolHolati, savolniTekshir, sprSon } from './umumiy.mjs';
 
 const namunalar = JSON.parse(readFileSync(join(REPO, 'docs/namuna-savol.json'), 'utf8'));
 const nusxa = (i = 1) => structuredClone(namunalar[i]);
@@ -196,5 +196,38 @@ describe('skriptlar (vaqtinchalik papka)', () => {
   it('repo:tekshir original savol faylini ushlaydi (namuna fayli bundan mustasno)', () => {
     const r = execFileSync(process.execPath, [join(REPO, 'scripts/repo-tekshir.mjs')], { cwd: REPO, encoding: 'utf8' });
     assert.match(r, /muammo yo'q/);
+  });
+});
+
+describe('baza qatori (public.questions, ADR 002)', () => {
+  it('mcq: answer -> correct.choice, answer ustuni yo\'q, draft izsiz', () => {
+    const s = namunalar.find((x) => x.format === 'mcq');
+    const q = bazaQatori(s);
+    assert.deepEqual(q.correct, { choice: s.answer });
+    assert.equal('answer' in q, false);
+    assert.equal('id' in q, false);
+    assert.equal(q.status, 'draft');
+    assert.equal(q.verified_by, null);
+    assert.equal(q.verified_at, null);
+    assert.equal(q.content_hash, mazmunHash(s));
+  });
+  it('spr: answer -> correct.accepted, options null', () => {
+    const s = namunalar.find((x) => x.format === 'spr');
+    if (!s) return;
+    const q = bazaQatori(s);
+    assert.deepEqual(q.correct, { accepted: s.answer });
+    assert.equal(q.options, null);
+  });
+  it('figure: src o\'rniga bucket yo\'li path da, alt va type saqlanadi', () => {
+    const s = nusxa();
+    s.figure = { type: 'svg', src: 'rasm.svg', alt: 'Namuna rasm' };
+    const q = bazaQatori(s, { figureYol: 'math/x/abc.svg' });
+    assert.deepEqual(q.figure, { path: 'math/x/abc.svg', alt: 'Namuna rasm', type: 'svg' });
+  });
+  it('verified: verified_by va verified_at yoziladi', () => {
+    const s = nusxa();
+    const q = bazaQatori({ ...s, verified_by: 'Sinov Inson', verified_at: '2026-11-09T00:00:00Z' }, { status: 'verified' });
+    assert.equal(q.verified_by, 'Sinov Inson');
+    assert.equal(q.verified_at, '2026-11-09T00:00:00Z');
   });
 });
