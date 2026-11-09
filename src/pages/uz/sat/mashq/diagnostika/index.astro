@@ -1,0 +1,840 @@
+---
+// SAT diagnostikasi: 10 savollik bepul taxminiy diagnostika va natija ekrani.
+// Savollar: src/data/sat-diagnostic.json. Prod build'da faqat reviewed: true savollar sahifaga tushadi,
+// dev rejimida hammasi. Yetmasa "The diagnostic is being prepared".
+// Hisob: src/lib/diagnostika.ts (ball 400–1600 va persentil yo'q; tavsiya ko'pi bilan TAVSIYA_SONI ta domen).
+// Saqlash: src/lib/progressStore.ts (kalit tayanch:sat-diagnostika).
+// Matn: hamma UI matni pastdagi MATN obyektida, inglizcha (SAT bo'limi qoidasi, CLAUDE.md; muallif tekshiradi).
+// Savollar mazmuni o'zgarmaydi: Math savollari va R&W ko'rsatmalari o'zbekcha, explanation_uz va desmos_tip
+// o'zbekcha qoladi va "(Uzbek)" deb belgilanadi, lang="uz" bilan.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import hamma from '../../../../../data/sat-diagnostic.json';
+import { tanlaSavollar, type DiagSavol } from '../../../../../lib/diagnostika';
+import { satGuruhlar } from '../../../../../data/satSahifalar';
+import { bolimlar } from '../../../../../data/bolimlar';
+import { manbalar } from '../../../../../data/manbalar';
+import { yol } from '../../../../../lib/yol';
+
+// Sahifaning hamma UI matni. {nom}: skriptda qiymat bilan almashtiriladi (f funksiyasi).
+// Taqiqlangan iboralar ishlatilmaydi; ogohlantirish "does not give an SAT score" ma'nosida.
+const MATN = {
+  title: 'Diagnostic test · SAT',
+  description: 'A free 10-question diagnostic estimate: weak areas in Reading and Writing and Math, and what to do next. It does not give an SAT score. Answers are saved only in this browser.',
+  yol: 'Practice',
+  orqaga: 'SAT Prep',
+  h1: 'SAT® diagnostic test',
+  tayyorlanmoqda: 'The diagnostic is being prepared. It will open here once the questions have been reviewed by the author.',
+  tayyorlanmoqdaTugma: 'Try a practice test for now',
+  ustki: 'Free diagnostic',
+  devPill: 'Dev: unreviewed questions are shown too',
+  lead: '10 questions, about 15 minutes: 5 Reading and Writing and 5 Math.',
+  ogohQalin: 'This is an estimate.',
+  ogohMatn: 'It does not give an SAT score. It only shows which areas to review.',
+  shartlar: [
+    'No strict time limit: the elapsed time is only shown.',
+    'You can move back and forth between questions.',
+    'Answers are saved only in this browser. No name or phone number is asked.',
+  ],
+  tozala: 'Clear history',
+  tasdiq: 'All attempts will be deleted from this browser. They cannot be restored.',
+  tozalaHa: 'Yes, delete',
+  tozalaYoq: 'Cancel',
+  boshla: 'Start',
+  progress: 'Diagnostic progress',
+  vaqt: 'Time elapsed',
+  bayroq: 'Come back later',
+  devSavol: 'Unreviewed question (dev only)',
+  desmos: 'Try it in Desmos',
+  yangiTab: '(opens in a new tab)',
+  oldingi: 'Previous',
+  keyingi: 'Next',
+  yakunlash: 'Finish',
+  ogohH: 'Before you finish',
+  baribir: 'Finish anyway',
+  navLabel: 'Question list',
+  navIzoh: 'Blue: answered. Dot: come back later. Thick border: current question.',
+  natijaH: 'Result',
+  natijaOgoh: 'Diagnostic estimate: this is not an SAT score and is not converted into one.',
+  domenlarH: 'By area',
+  keyingiH: 'Next step',
+  mockOldi: 'Full mock test:',
+  mockHavola: 'full-length practice test in the Bluebook™ app',
+  manba: 'Source:',
+  tekshirilgan: 'checked',
+  tahlilH: 'Question review',
+  tahlilIzoh: 'For each wrong or unanswered question, mark the type of mistake: this helps you plan your next review.',
+  qayta: 'Retake',
+  boshqaH: 'Other sections',
+  boshSahifa: 'Tayanch home page',
+  tezOrada: 'coming soon',
+  // Skript (JS) matnlari
+  js: {
+    sanaTili: 'en-US',
+    bolim: { RW: 'Reading and Writing', Math: 'Math' },
+    xatoTuri: { bilim: 'Knowledge gap', etibor: 'Careless mistake', vaqt: 'Ran out of time' },
+    savol: ['question', 'questions'],
+    yonalish: ['area', 'areas'],
+    raqam: 'Question {i}/{n}',
+    progressMatn: 'Question {i} of {n}',
+    oxirgi: 'Last attempt ({sana}): Reading and Writing {rw}, Math {m}.',
+    tozalandi: 'History cleared.',
+    xotiraYoq: 'Could not access browser storage.',
+    navBand: 'Question {i}: {holat}',
+    javobli: 'answered',
+    javobsiz: 'not answered',
+    belgili: ', come back later',
+    ogohJavobsiz: '{k} {savol} not answered: {royxat}. An unanswered question counts as wrong.',
+    ogohBelgili: ' Marked "Come back later": {royxat}.',
+    qaytish: 'Back to question {i}',
+    elonNatija: 'Result: Reading and Writing {rw}, Math {m}. Not answered: {k}.',
+    saqlandi: 'Result saved in this browser.',
+    saqlanmadi: 'Could not write to browser storage: the result is shown only while this page is open.',
+    statJavobsiz: 'Not answered',
+    statVaqt: 'Time elapsed',
+    domenSon: '{t}/{j} correct',
+    hammaTogri: 'You answered every question correctly. Next, try a full mock test.',
+    zaifBir: 'Area to review first:',
+    zaifKop: 'Areas to review first:',
+    zaifBand: ' ({bolim}): {x} wrong or unanswered. ',
+    darsYoq: 'There is no Tayanch lesson for this area yet.',
+    darslar: 'On Tayanch: ',
+    qolgan: 'And {k} more {soz} with mistakes: see "By area" above.',
+    holat: { togri: 'Correct', xato: 'Wrong', javobsiz: 'Not answered' },
+    sizningJavob: 'Your answer',
+    togriJavob: 'Correct answer',
+    izoh: 'Explanation (Uzbek).',
+    desmosMaslahat: 'Desmos tip (Uzbek).',
+    xatoTuriLegend: 'Type of mistake',
+    xtXulosa: '{bilim}: {a} · {etibor}: {b} · {vaqt}: {c} · Not marked: {d}',
+  },
+};
+
+const DEV = import.meta.env.DEV;
+const { savollar, yetarli } = tanlaSavollar(hamma as DiagSavol[], DEV);
+
+// Tavsiya: domen → Tayanch darslari. Faqat qurilgan (tayyor: true) sahifalar havola bo'ladi.
+const tayyorlar = new Map(satGuruhlar.flatMap((g) => g.sahifalar).filter((s) => s.tayyor).map((s) => [s.qism, s.nomi]));
+const havolalar = (qismlar: string[]) =>
+  qismlar.filter((q) => tayyorlar.has(q)).map((q) => ({ nomi: tayyorlar.get(q)!, href: yol(`/uz/sat/${q}`) }));
+const DOMEN_DARSLARI: Record<string, string[]> = {
+  'Information and Ideas': ['qollanma/reading-writing/dalil/'],
+  'Craft and Structure': ['qollanma/reading-writing/lugat-kontekstda/', 'mashq/lugat/'],
+  'Expression of Ideas': ['qollanma/reading-writing/otish-sozlari/'],
+  'Standard English Conventions': ['qollanma/reading-writing/xatoni-toping/'],
+  Algebra: ['qollanma/math/grafik/'],
+  'Advanced Math': ['qollanma/math/grafik/'],
+  'Problem-Solving and Data Analysis': ['qollanma/math/statistika/'],
+  'Geometry and Trigonometry': ['qollanma/math/hajm/', 'qollanma/math/birlik-aylana/'],
+};
+const tavsiyalar = Object.fromEntries(Object.entries(DOMEN_DARSLARI).map(([d, q]) => [d, havolalar(q)]));
+// vosita/kalkulyator/ (Graph sketcher) faqat satSahifalar'da tayyor: true bo'lsa chiqadi
+const desmosDarslar = havolalar(['vosita/kalkulyator/', 'qollanma/math-desmos/']);
+
+const cb01 = manbalar.find((m) => m.id === 'CB01');
+if (!cb01) throw new Error("diagnostika: manbalar.ts da CB01 (Bluebook practice tests) topilmadi");
+
+const data = { savollar, tavsiyalar, desmosDarslar, dev: DEV, matn: MATN.js };
+const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
+---
+<BolimQobiq
+  title={MATN.title}
+  description={MATN.description}
+  turi="mashq"
+  yol={[MATN.yol]}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki diag">
+    <a class="orqaga" href={yol('/uz/sat/')}>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M11 6l-6 6 6 6" /></svg>
+      {MATN.orqaga}
+    </a>
+
+    {!yetarli ? (
+      <section class="karta" aria-labelledby="d-h1">
+        <h1 id="d-h1">{MATN.h1}</h1>
+        <p class="lead">{MATN.tayyorlanmoqda}</p>
+        <a class="tugma tugma-asosiy" href={yol('/uz/sat/mashq/test/')}>{MATN.tayyorlanmoqdaTugma}</a>
+      </section>
+    ) : (
+      <>
+        <script type="application/json" id="diag-data" set:html={JSON.stringify(data)} />
+
+        <section class="karta" id="d-boshlash" aria-labelledby="d-h1">
+          <p class="pill-qator">
+            <span class="ustki-kok">{MATN.ustki}</span>
+            {DEV && <span class="pill pill-ogoh">{MATN.devPill}</span>}
+          </p>
+          <h1 id="d-h1">{MATN.h1}</h1>
+          <p class="lead">{MATN.lead}</p>
+          <p class="ogoh"><strong>{MATN.ogohQalin}</strong> {MATN.ogohMatn}</p>
+          <ul class="shartlar">
+            {MATN.shartlar.map((s) => <li>{s}</li>)}
+          </ul>
+          <div class="oxirgi" id="d-oxirgi" hidden>
+            <p id="d-oxirgi-matn"></p>
+            <button type="button" class="matn-tugma" id="d-tozala">{MATN.tozala}</button>
+            <div class="tasdiq" id="d-tasdiq" hidden>
+              <p>{MATN.tasdiq}</p>
+              <div class="tugmalar">
+                <button type="button" class="tugma tugma-ikkinchi" id="d-tozala-ha">{MATN.tozalaHa}</button>
+                <button type="button" class="tugma tugma-ikkinchi" id="d-tozala-yoq">{MATN.tozalaYoq}</button>
+              </div>
+            </div>
+          </div>
+          <div class="tugmalar">
+            <button type="button" class="tugma tugma-asosiy katta" id="d-boshla">{MATN.boshla}</button>
+          </div>
+        </section>
+
+        <section id="d-savol" class="savol-ekran" aria-labelledby="d-savol-h" hidden>
+          <div class="holat-qator">
+            <span class="raqam" id="d-raqam"></span>
+            <div class="progress" id="d-progress" role="progressbar" aria-label={MATN.progress} aria-valuemin="1" aria-valuemax={savollar.length} aria-valuenow="1">
+              <div class="progress-toldirish" id="d-progress-toldirish"></div>
+            </div>
+            <span class="vaqt">{MATN.vaqt} <span id="d-vaqt">00:00</span></span>
+          </div>
+
+          <div class="karta savol-karta">
+            <div class="karta-bosh">
+              <p class="meta" id="d-meta"></p>
+              <button type="button" class="bayroq" id="d-bayroq" aria-pressed="false">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4" /><path d="M4 4h13l-2 4 2 4H4" /></svg>
+                {MATN.bayroq}
+              </button>
+            </div>
+            <p class="pill pill-ogoh" id="d-dev" hidden>{MATN.devSavol}</p>
+            <h2 class="savol-matn" id="d-savol-h" tabindex="-1"></h2>
+            <fieldset class="variantlar" id="d-variantlar" aria-labelledby="d-savol-h">
+              {['A', 'B', 'C', 'D'].map((h) => (
+                <label class="variant">
+                  <input type="radio" name="d-javob" value={h} />
+                  <span class="harf" aria-hidden="true">{h}</span>
+                  <span class="v-matn"></span>
+                </label>
+              ))}
+            </fieldset>
+            <a class="desmos" id="d-desmos" href="https://www.desmos.com/calculator" target="_blank" rel="noopener" hidden>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18" /><path d="M6 17C9 5 13 5 18 9" /></svg>
+              {MATN.desmos}
+              <span class="ekranda-yoq">{MATN.yangiTab}</span>
+            </a>
+          </div>
+
+          <div class="pastki">
+            <button type="button" class="tugma tugma-ikkinchi" id="d-oldingi">{MATN.oldingi}</button>
+            <button type="button" class="tugma tugma-asosiy" id="d-keyingi" data-keyingi={MATN.keyingi} data-yakunlash={MATN.yakunlash}>{MATN.keyingi}</button>
+          </div>
+
+          <section class="karta ogoh-panel" id="d-ogoh" aria-labelledby="d-ogoh-h" hidden>
+            <h2 id="d-ogoh-h" tabindex="-1">{MATN.ogohH}</h2>
+            <p id="d-ogoh-matn"></p>
+            <div class="tugmalar">
+              <button type="button" class="tugma tugma-asosiy" id="d-qaytish"></button>
+              <button type="button" class="tugma tugma-ikkinchi" id="d-baribir">{MATN.baribir}</button>
+            </div>
+          </section>
+
+          <nav class="navigator" aria-label={MATN.navLabel}>
+            <ol id="d-nav"></ol>
+            <p class="nav-izoh sust">{MATN.navIzoh}</p>
+            <button type="button" class="matn-tugma" id="d-yakunla">{MATN.yakunlash}</button>
+          </nav>
+        </section>
+
+        <section id="d-natija" class="natija-ekran" aria-labelledby="d-natija-h" hidden>
+          <div class="karta">
+            <h2 id="d-natija-h" tabindex="-1">{MATN.natijaH}</h2>
+            <p class="ogoh">{MATN.natijaOgoh}</p>
+            <div class="umumiy" id="d-umumiy"></div>
+            <p class="sust kichik" id="d-saqlash"></p>
+          </div>
+
+          <div class="karta">
+            <h3>{MATN.domenlarH}</h3>
+            <div class="domenlar" id="d-domenlar"></div>
+          </div>
+
+          <div class="karta">
+            <h3>{MATN.keyingiH}</h3>
+            <div class="tavsiya" id="d-tavsiya"></div>
+            <p>
+              {MATN.mockOldi} <a href={cb01.havola} target="_blank" rel="noopener">{MATN.mockHavola}<span class="ekranda-yoq"> {MATN.yangiTab}</span></a>.{' '}
+              <span class="sust kichik">{MATN.manba} {cb01.nomi} ({cb01.tashkilot}), {MATN.tekshirilgan} {cb01.tekshirilganSana}.</span>
+            </p>
+          </div>
+
+          <div class="karta">
+            <h3>{MATN.tahlilH}</h3>
+            <p class="ikkinchi">{MATN.tahlilIzoh}</p>
+            <p class="xt-xulosa" id="d-xt-xulosa"></p>
+            <ol class="tahlil" id="d-tahlil"></ol>
+          </div>
+
+          <div class="tugmalar">
+            <button type="button" class="tugma tugma-asosiy katta" id="d-qayta">{MATN.qayta}</button>
+          </div>
+        </section>
+
+        <p class="ekranda-yoq" id="d-elon" aria-live="polite"></p>
+      </>
+    )}
+
+    <nav class="boshqa" aria-labelledby="boshqa-h">
+      <h2 id="boshqa-h">{MATN.boshqaH}</h2>
+      <ul>
+        <li><a href={yol('/uz/')}>{MATN.boshSahifa}</a></li>
+        {boshqa.map((b) => (
+          <li>
+            {b.holat === 'ochiq' ? <a href={yol(`/uz/${b.slug}/`)}>{b.nomi}</a> : <span>{b.nomi} <span class="yorliq">{MATN.tezOrada}</span></span>}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</BolimQobiq>
+
+<script>
+  import { hisoblaNatija, javobsizlar, type DiagSavol, type Harf, type Natija, type XatoTuri } from '../../../../../lib/diagnostika';
+  import { localProgressStore, type Urinish } from '../../../../../lib/progressStore';
+
+  interface Havola { nomi: string; href: string }
+  interface JsMatn {
+    sanaTili: string;
+    bolim: Record<'RW' | 'Math', string>;
+    xatoTuri: Record<XatoTuri, string>;
+    savol: [string, string];
+    yonalish: [string, string];
+    holat: Record<'togri' | 'xato' | 'javobsiz', string>;
+    [kalit: string]: unknown;
+  }
+  interface Data { savollar: DiagSavol[]; tavsiyalar: Record<string, Havola[]>; desmosDarslar: Havola[]; dev: boolean; matn: JsMatn }
+
+  const manba = document.getElementById('diag-data');
+  if (manba) ishga(JSON.parse(manba.textContent || '{}') as Data);
+
+  function ishga(d: Data) {
+    const S = d.savollar;
+    const N = S.length;
+    const T = d.matn;
+    const store = localProgressStore();
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+    const tuz = <K extends keyof HTMLElementTagNameMap>(teg: K, cls = '', matn = '') => {
+      const e = document.createElement(teg);
+      if (cls) e.className = cls;
+      if (matn) e.textContent = matn;
+      return e;
+    };
+    // MATN.js shablonini to'ldiradi: f('raqam', { i: 1, n: 10 }) -> "Question 1/10"
+    const f = (kalit: string, q: Record<string, string | number> = {}) =>
+      String(T[kalit] ?? '').replace(/\{(\w+)\}/g, (_, k: string) => String(q[k] ?? ''));
+    const son = (n: number, [bir, kop]: [string, string]) => (n === 1 ? bir : kop);
+    // Savol matni: Math savollari o'zbekcha (mazmuni o'zgarmaydi), R&W asosan inglizcha
+    const savolTili = (s: DiagSavol) => (s.section === 'Math' ? 'uz' : '');
+
+    const HARFLAR: Harf[] = ['A', 'B', 'C', 'D'];
+    const vaqtMatn = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    const tilQoy = (e: HTMLElement, til: string) => { if (til) e.lang = til; else e.removeAttribute('lang'); };
+
+    const ekranlar = { boshlash: $('d-boshlash'), savol: $('d-savol'), natija: $('d-natija') };
+    const variantlar = [...document.querySelectorAll<HTMLLabelElement>('#d-variantlar .variant')];
+    const navOl = $('d-nav');
+
+    let joriy = 0;
+    let javoblar: Record<string, Harf | null> = {};
+    let belgilar = new Set<string>();
+    let t0 = 0;
+    let sekund = 0;
+    let taymer = 0;
+    let urinish: Urinish | null = null;
+
+    const elon = (matn: string) => {
+      const e = $('d-elon');
+      e.textContent = '';
+      window.setTimeout(() => { e.textContent = matn; }, 100);
+    };
+
+    function korsat(nom: keyof typeof ekranlar) {
+      for (const [k, e] of Object.entries(ekranlar)) e.hidden = k !== nom;
+      $('d-ogoh').hidden = true;
+    }
+
+    // Boshlash ekrani: oxirgi urinish va tarixni o'chirish
+    function oxirgini() {
+      const u = store.getAttempts()[0];
+      $('d-oxirgi').hidden = !u;
+      if (!u) return;
+      const b = u.natija.bolimlar;
+      const sana = new Date(u.sana).toLocaleDateString(T.sanaTili, { month: 'long', day: 'numeric' });
+      $('d-oxirgi-matn').textContent = f('oxirgi', { sana, rw: `${b.RW.togri}/${b.RW.jami}`, m: `${b.Math.togri}/${b.Math.jami}` });
+    }
+    const tasdiqni = (ochiq: boolean) => { $('d-tasdiq').hidden = !ochiq; $('d-tozala').hidden = ochiq; };
+    $('d-tozala').addEventListener('click', () => { tasdiqni(true); $('d-tozala-ha').focus(); });
+    $('d-tozala-yoq').addEventListener('click', () => { tasdiqni(false); $('d-tozala').focus(); });
+    $('d-tozala-ha').addEventListener('click', () => {
+      const ok = store.clear();
+      tasdiqni(false);
+      oxirgini();
+      $('d-boshla').focus();
+      elon(ok ? f('tozalandi') : f('xotiraYoq'));
+    });
+
+    // Navigator tugmalari bir marta yaratiladi
+    const navTugmalar = S.map((_, i) => {
+      const li = tuz('li');
+      const b = tuz('button', 'nav-raqam', String(i + 1));
+      b.type = 'button';
+      b.addEventListener('click', () => { joriy = i; chiz(); });
+      li.append(b);
+      navOl.append(li);
+      return b;
+    });
+
+    function navChiz() {
+      navTugmalar.forEach((b, i) => {
+        const s = S[i];
+        const javobli = !!javoblar[s.id];
+        const belgili = belgilar.has(s.id);
+        b.classList.toggle('javobli', javobli);
+        b.classList.toggle('belgili', belgili);
+        if (i === joriy) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+        b.setAttribute('aria-label', f('navBand', { i: i + 1, holat: f(javobli ? 'javobli' : 'javobsiz') }) + (belgili ? f('belgili') : ''));
+      });
+    }
+
+    function chiz(fokus = true) {
+      const s = S[joriy];
+      $('d-raqam').textContent = f('raqam', { i: joriy + 1, n: N });
+      const pb = $('d-progress');
+      pb.setAttribute('aria-valuenow', String(joriy + 1));
+      pb.setAttribute('aria-valuetext', f('progressMatn', { i: joriy + 1, n: N }));
+      $('d-progress-toldirish').style.width = `${((joriy + 1) / N) * 100}%`;
+      $('d-meta').textContent = `${T.bolim[s.section]} · ${s.domain}`;
+      $('d-dev').hidden = !(d.dev && !s.reviewed);
+      const h = $('d-savol-h');
+      h.textContent = s.prompt;
+      tilQoy(h, savolTili(s));
+      variantlar.forEach((l, i) => {
+        const inp = l.querySelector('input')!;
+        const matn = l.querySelector<HTMLElement>('.v-matn')!;
+        l.hidden = i >= s.choices.length;
+        matn.textContent = s.choices[i] ?? '';
+        inp.checked = javoblar[s.id] === HARFLAR[i];
+      });
+      $('d-bayroq').setAttribute('aria-pressed', String(belgilar.has(s.id)));
+      $('d-desmos').hidden = s.section !== 'Math';
+      $<HTMLButtonElement>('d-oldingi').disabled = joriy === 0;
+      const keyingi = $('d-keyingi');
+      keyingi.textContent = (joriy === N - 1 ? keyingi.dataset.yakunlash : keyingi.dataset.keyingi) ?? '';
+      $('d-ogoh').hidden = true;
+      navChiz();
+      if (fokus) h.focus();
+    }
+
+    function boshla() {
+      joriy = 0;
+      javoblar = {};
+      belgilar = new Set();
+      urinish = null;
+      t0 = Date.now();
+      sekund = 0;
+      window.clearInterval(taymer);
+      $('d-vaqt').textContent = '00:00';
+      taymer = window.setInterval(() => {
+        sekund = Math.floor((Date.now() - t0) / 1000);
+        $('d-vaqt').textContent = vaqtMatn(sekund);
+      }, 1000);
+      korsat('savol');
+      chiz();
+    }
+
+    $('d-variantlar').addEventListener('change', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.name !== 'd-javob') return;
+      javoblar[S[joriy].id] = t.value as Harf;
+      navChiz();
+    });
+    $('d-bayroq').addEventListener('click', () => {
+      const id = S[joriy].id;
+      if (belgilar.has(id)) belgilar.delete(id); else belgilar.add(id);
+      $('d-bayroq').setAttribute('aria-pressed', String(belgilar.has(id)));
+      navChiz();
+    });
+    $('d-oldingi').addEventListener('click', () => { if (joriy > 0) { joriy -= 1; chiz(); } });
+    $('d-keyingi').addEventListener('click', () => { if (joriy < N - 1) { joriy += 1; chiz(); } else yakunlashniSora(); });
+    $('d-yakunla').addEventListener('click', yakunlashniSora);
+    $('d-qaytish').addEventListener('click', () => { joriy = Number($('d-qaytish').dataset.i || 0); chiz(); });
+    $('d-baribir').addEventListener('click', yakunla);
+    $('d-boshla').addEventListener('click', boshla);
+    $('d-qayta').addEventListener('click', boshla);
+
+    function yakunlashniSora() {
+      const bosh = javobsizlar(S, javoblar).map((id) => S.findIndex((s) => s.id === id) + 1);
+      if (bosh.length === 0) { yakunla(); return; }
+      const belgili = S.map((s, i) => (belgilar.has(s.id) ? i + 1 : 0)).filter(Boolean);
+      $('d-ogoh-matn').textContent =
+        f('ogohJavobsiz', { k: bosh.length, savol: son(bosh.length, T.savol), royxat: bosh.join(', ') }) +
+        (belgili.length ? f('ogohBelgili', { royxat: belgili.join(', ') }) : '');
+      $('d-qaytish').textContent = f('qaytish', { i: bosh[0] });
+      $('d-qaytish').dataset.i = String(bosh[0] - 1);
+      $('d-ogoh').hidden = false;
+      $('d-ogoh-h').focus();
+    }
+
+    function yakunla() {
+      window.clearInterval(taymer);
+      sekund = Math.floor((Date.now() - t0) / 1000);
+      const n = hisoblaNatija(S, javoblar);
+      urinish = {
+        v: 1,
+        id: `d-${Date.now().toString(36)}`,
+        sana: new Date().toISOString(),
+        sekund,
+        javoblar: Object.fromEntries(S.map((s) => [s.id, javoblar[s.id] ?? null])),
+        xatoTurlari: {},
+        natija: { bolimlar: n.bolimlar, domenlar: n.domenlar },
+      };
+      const saqlandi = store.saveAttempt(urinish);
+      natijaChiz(n, saqlandi);
+      korsat('natija');
+      $('d-natija-h').focus();
+      const b = n.bolimlar;
+      elon(f('elonNatija', { rw: `${b.RW.togri} / ${b.RW.jami}`, m: `${b.Math.togri} / ${b.Math.jami}`, k: n.javobsiz.length }));
+    }
+
+    const saqlashMatn = (ok: boolean) => f(ok ? 'saqlandi' : 'saqlanmadi');
+
+    function natijaChiz(n: Natija, saqlandi: boolean) {
+      const b = n.bolimlar;
+      const stat = (nom: string, qiymat: string) => {
+        const e = tuz('div', 'stat');
+        e.append(tuz('p', 'stat-son', qiymat), tuz('p', 'stat-nom', nom));
+        return e;
+      };
+      $('d-umumiy').replaceChildren(
+        stat(T.bolim.RW, `${b.RW.togri}/${b.RW.jami}`),
+        stat(T.bolim.Math, `${b.Math.togri}/${b.Math.jami}`),
+        stat(f('statJavobsiz'), String(n.javobsiz.length)),
+        stat(f('statVaqt'), vaqtMatn(sekund)),
+      );
+      $('d-saqlash').textContent = saqlashMatn(saqlandi);
+
+      // Domenlar
+      const domenlar = $('d-domenlar');
+      domenlar.replaceChildren();
+      for (const bolim of ['RW', 'Math'] as const) {
+        const guruh = tuz('div', 'domen-guruh');
+        guruh.append(tuz('h4', '', T.bolim[bolim]));
+        const ul = tuz('ul');
+        for (const dn of n.domenlar.filter((x) => x.section === bolim)) {
+          const li = tuz('li', 'domen');
+          const bosh = tuz('p', 'domen-bosh');
+          bosh.append(tuz('span', 'domen-nom', dn.domain), tuz('span', 'domen-son', f('domenSon', { t: dn.togri, j: dn.jami })));
+          const chiziq = tuz('div', 'domen-chiziq');
+          chiziq.setAttribute('aria-hidden', 'true');
+          const t = tuz('div', 'domen-toldirish');
+          t.style.width = `${(dn.togri / dn.jami) * 100}%`;
+          chiziq.append(t);
+          li.append(bosh, chiziq);
+          ul.append(li);
+        }
+        guruh.append(ul);
+        domenlar.append(guruh);
+      }
+
+      // Tavsiya: ko'pi bilan TAVSIYA_SONI ta domen (saralash diagnostika.ts da), qolgani soni bilan
+      const tav = $('d-tavsiya');
+      tav.replaceChildren();
+      if (n.zaifDomenlar.length === 0 && n.qolganZaif === 0) {
+        tav.append(tuz('p', '', f('hammaTogri')));
+      } else {
+        tav.append(tuz('p', '', f(n.zaifDomenlar.length + n.qolganZaif > 1 ? 'zaifKop' : 'zaifBir')));
+        const ul = tuz('ul');
+        for (const z of n.zaifDomenlar) {
+          const li = tuz('li');
+          li.append(tuz('strong', '', z.domain), document.createTextNode(f('zaifBand', { bolim: T.bolim[z.section], x: z.xato })));
+          const darslar = [...(d.tavsiyalar[z.domain] ?? []), ...(z.section === 'Math' ? d.desmosDarslar : [])]
+            .filter((h, i, arr) => arr.findIndex((x) => x.href === h.href) === i);
+          if (darslar.length === 0) {
+            li.append(document.createTextNode(f('darsYoq')));
+          } else {
+            li.append(document.createTextNode(f('darslar')));
+            darslar.forEach((h, i) => {
+              const a = tuz('a', '', h.nomi);
+              a.href = h.href;
+              li.append(a);
+              if (i < darslar.length - 1) li.append(document.createTextNode(', '));
+            });
+            li.append(document.createTextNode('.'));
+          }
+          ul.append(li);
+        }
+        tav.append(ul);
+        if (n.qolganZaif > 0) tav.append(tuz('p', 'qolgan', f('qolgan', { k: n.qolganZaif, soz: son(n.qolganZaif, T.yonalish) })));
+      }
+
+      // Savollar tahlili
+      const ol = $('d-tahlil');
+      ol.replaceChildren();
+      S.forEach((s, i) => {
+        const sn = n.savollar[i];
+        const li = tuz('li', `tahlil-band ${sn.holat}`);
+        const bosh = tuz('div', 't-bosh');
+        bosh.append(
+          tuz('p', 't-meta', `${i + 1}. ${T.bolim[s.section]} · ${s.domain} · ${s.skill}`),
+          tuz('p', 't-holat', T.holat[sn.holat]),
+        );
+        const savolP = tuz('p', 't-savol', s.prompt);
+        tilQoy(savolP, savolTili(s));
+        li.append(bosh, savolP);
+
+        const variant = (h: Harf | null) => (h ? `${h}) ${s.choices[HARFLAR.indexOf(h)]}` : T.holat.javobsiz);
+        const dl = tuz('dl', 't-javoblar');
+        dl.append(tuz('dt', '', f('sizningJavob')), tuz('dd', '', variant(sn.javob)), tuz('dt', '', f('togriJavob')), tuz('dd', '', variant(s.answer)));
+        li.append(dl);
+
+        // O'zbekcha izohlar: belgi inglizcha, matn lang="uz"
+        const uzbekcha = (sarlavha: string, matn: string) => {
+          const p = tuz('p', 't-izoh');
+          const m = tuz('span', '', matn);
+          m.lang = 'uz';
+          p.append(tuz('strong', '', `${sarlavha} `), m);
+          return p;
+        };
+        li.append(uzbekcha(f('izoh'), s.explanation_uz));
+        if (s.desmos_tip) li.append(uzbekcha(f('desmosMaslahat'), s.desmos_tip));
+
+        if (sn.holat !== 'togri') {
+          const fs = tuz('fieldset', 'xato-turi');
+          fs.append(tuz('legend', '', f('xatoTuriLegend')));
+          (Object.keys(T.xatoTuri) as XatoTuri[]).forEach((tur) => {
+            const l = tuz('label', 'xt-variant');
+            const inp = tuz('input');
+            inp.type = 'radio';
+            inp.name = `xt-${s.id}`;
+            inp.value = tur;
+            inp.addEventListener('change', () => {
+              if (!urinish) return;
+              urinish.xatoTurlari[s.id] = tur;
+              $('d-saqlash').textContent = saqlashMatn(store.saveAttempt(urinish));
+              xtXulosa(n);
+            });
+            l.append(inp, tuz('span', '', T.xatoTuri[tur]));
+            fs.append(l);
+          });
+          li.append(fs);
+        }
+        ol.append(li);
+      });
+      xtXulosa(n);
+    }
+
+    function xtXulosa(n: Natija) {
+      const xatolar = n.savollar.filter((s) => s.holat !== 'togri');
+      const e = $('d-xt-xulosa');
+      if (xatolar.length === 0 || !urinish) { e.textContent = ''; return; }
+      const sanoq: Record<XatoTuri, number> = { bilim: 0, etibor: 0, vaqt: 0 };
+      for (const s of xatolar) { const t = urinish.xatoTurlari[s.id]; if (t) sanoq[t] += 1; }
+      const belgilangan = sanoq.bilim + sanoq.etibor + sanoq.vaqt;
+      e.textContent = f('xtXulosa', {
+        bilim: T.xatoTuri.bilim, a: sanoq.bilim,
+        etibor: T.xatoTuri.etibor, b: sanoq.etibor,
+        vaqt: T.xatoTuri.vaqt, c: sanoq.vaqt,
+        d: xatolar.length - belgilangan,
+      });
+    }
+
+    oxirgini();
+  }
+</script>
+
+<style>
+  .diag { display: flex; flex-direction: column; gap: var(--b-5); }
+  .diag > :not(.ekranda-yoq) { max-width: 760px; }
+  .orqaga {
+    align-self: flex-start;
+    min-height: 44px; padding: 0 var(--b-3) 0 var(--b-2);
+    display: inline-flex; align-items: center; gap: var(--b-2);
+    border-radius: var(--r-toliq);
+    color: var(--rang-havola); font-weight: 700; text-decoration: none;
+  }
+  .orqaga:hover { background: var(--fon-ikkinchi); }
+
+  .karta {
+    background: var(--fon-ikkinchi);
+    border-radius: var(--r-katta);
+    padding: var(--b-8);
+    display: flex; flex-direction: column; gap: var(--b-4);
+  }
+  .karta[hidden], .diag section[hidden], .oxirgi[hidden], .tasdiq[hidden] { display: none; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 900; }
+  h2 { font-size: var(--matn-h3); font-weight: 800; }
+  h3 { font-size: var(--matn-katta); font-weight: 800; }
+  h2:focus, h1:focus { outline: none; }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { align-self: flex-start; padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill[hidden] { display: none; }
+  .pill-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .ogoh { padding: var(--b-4) var(--b-5); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .shartlar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-1); color: var(--matn-ikkinchi); }
+  .oxirgi { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); padding-top: var(--b-3); border-top: 1px solid var(--chiziq); }
+  .tasdiq { display: flex; flex-direction: column; gap: var(--b-3); }
+  .tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .katta { min-height: 52px; padding-inline: var(--b-8); }
+  .matn-tugma {
+    min-height: 44px; padding: 0 var(--b-4);
+    border: 0; border-radius: var(--r-toliq);
+    background: transparent; color: var(--rang-havola);
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
+  .matn-tugma[hidden] { display: none; }
+
+  /* Savol ekrani */
+  .savol-ekran { display: flex; flex-direction: column; gap: var(--b-4); }
+  .holat-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4); }
+  .raqam { font-weight: 800; }
+  .progress { flex: 1 1 160px; height: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .progress-toldirish { height: var(--b-2); width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); transition: width 0.25s ease; }
+  .vaqt { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); font-variant-numeric: tabular-nums; }
+  .vaqt span { font-weight: 800; color: var(--matn); }
+
+  .karta-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-2); }
+  .meta { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--matn-sust); }
+  .bayroq {
+    min-height: 44px; padding: 0 var(--b-3);
+    border: 2px solid transparent; border-radius: var(--r-toliq);
+    background: transparent; color: var(--matn-ikkinchi);
+    font: inherit; font-weight: 700; font-size: var(--matn-kichik);
+    display: inline-flex; align-items: center; gap: var(--b-2); cursor: pointer;
+  }
+  .bayroq svg { color: var(--rang-havola); }
+  .bayroq:hover { background: var(--sirt-ikkinchi); }
+  .bayroq[aria-pressed='true'] { border-color: var(--rang-asosiy); color: var(--matn); }
+  .bayroq[aria-pressed='true'] svg { fill: currentColor; }
+  .savol-matn { font-size: var(--matn-katta); line-height: 1.5; font-weight: 700; white-space: pre-line; }
+
+  .variantlar { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .variant {
+    position: relative;
+    min-height: 56px; padding: var(--b-2) var(--b-4);
+    border-radius: var(--r-orta);
+    background: var(--fon); border: 2px solid var(--chiziq-kuchli);
+    font-weight: 600;
+    display: flex; align-items: center; gap: var(--b-4);
+    cursor: pointer;
+  }
+  .variant[hidden] { display: none; }
+  .variant input { position: absolute; opacity: 0; pointer-events: none; }
+  .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant:hover { border-color: var(--rang-asosiy); }
+  .variant:has(input:checked) { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
+  .harf {
+    width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);
+    display: flex; align-items: center; justify-content: center;
+    font-size: var(--matn-kichik); font-weight: 800;
+    background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi);
+  }
+  .variant:has(input:checked) .harf { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .v-matn { flex: 1; }
+
+  .desmos {
+    align-self: flex-start;
+    min-height: 44px; padding: 0 var(--b-4);
+    border-radius: var(--r-toliq);
+    background: var(--sirt-ikkinchi); color: var(--matn);
+    font-weight: 700; font-size: var(--matn-kichik); text-decoration: none;
+    display: inline-flex; align-items: center; gap: var(--b-2);
+  }
+  .desmos[hidden] { display: none; }
+  .desmos:hover { background: var(--chiziq); }
+
+  .pastki { display: flex; justify-content: space-between; gap: var(--b-3); }
+  .pastki .tugma { min-width: 140px; }
+  .tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; opacity: 0.7; }
+
+  .navigator { display: flex; flex-direction: column; gap: var(--b-3); padding-top: var(--b-2); }
+  .navigator ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(10, 44px); gap: var(--b-2); }
+  .navigator :global(.nav-raqam) {
+    position: relative;
+    width: 44px; height: 44px;
+    border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-yon);
+    background: var(--fon); color: var(--matn);
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .navigator :global(.nav-raqam:hover) { border-color: var(--rang-asosiy); }
+  .navigator :global(.nav-raqam:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .navigator :global(.nav-raqam.javobli) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .navigator :global(.nav-raqam[aria-current='step']) { border: 3px solid var(--matn); font-weight: 900; }
+  .navigator :global(.nav-raqam.belgili::after) {
+    content: ''; position: absolute; top: 3px; right: 3px;
+    width: var(--b-2); height: var(--b-2); border-radius: var(--r-toliq);
+    background: var(--rang-ogoh-matn);
+  }
+  .nav-izoh { font-size: var(--matn-mayda); }
+  .navigator .matn-tugma { align-self: flex-start; }
+  .ogoh-panel { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .ogoh-panel h2 { color: var(--rang-ogoh-matn); }
+
+  /* Natija */
+  .natija-ekran { display: flex; flex-direction: column; gap: var(--b-5); }
+  .umumiy { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--b-3); }
+  .umumiy :global(.stat) { background: var(--fon); border-radius: var(--r-orta); padding: var(--b-4); }
+  .umumiy :global(.stat-son) { font-size: var(--matn-h3); font-weight: 900; font-variant-numeric: tabular-nums; }
+  .umumiy :global(.stat-nom) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+
+  .domenlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-5); }
+  .domenlar :global(h4) { font-size: var(--matn-asosiy); font-weight: 800; margin-bottom: var(--b-2); }
+  .domenlar :global(ul) { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .domenlar :global(.domen-bosh) { display: flex; justify-content: space-between; gap: var(--b-2); font-size: var(--matn-kichik); }
+  .domenlar :global(.domen-son) { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .domenlar :global(.domen-chiziq) { margin-top: var(--b-1); height: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .domenlar :global(.domen-toldirish) { height: var(--b-2); background: var(--rang-asosiy); }
+
+  .tavsiya { display: flex; flex-direction: column; gap: var(--b-2); }
+  .tavsiya :global(ul) { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); }
+  .karta a:not(.tugma):not(.desmos) { color: var(--rang-havola); font-weight: 700; }
+  .tavsiya :global(a) { color: var(--rang-havola); font-weight: 700; }
+  .tavsiya :global(.qolgan) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+
+  .xt-xulosa { font-size: var(--matn-kichik); font-weight: 700; }
+  .tahlil { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .tahlil :global(.tahlil-band) { background: var(--fon); border-radius: var(--r-orta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); border: 2px solid var(--chiziq); }
+  .tahlil :global(.tahlil-band.xato) { border: 2px dashed var(--matn); }
+  .tahlil :global(.t-bosh) { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--b-2); }
+  .tahlil :global(.t-meta) { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-sust); }
+  .tahlil :global(.t-holat) { padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 800; background: var(--sirt-ikkinchi); color: var(--matn); }
+  .tahlil :global(.togri .t-holat) { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .tahlil :global(.xato .t-holat) { background: var(--matn); color: var(--fon); }
+  .tahlil :global(.t-savol) { font-weight: 700; white-space: pre-line; }
+  .tahlil :global(.t-javoblar) { display: grid; grid-template-columns: auto 1fr; gap: var(--b-1) var(--b-4); margin: 0; font-size: var(--matn-kichik); }
+  .tahlil :global(.t-javoblar dt) { color: var(--matn-sust); }
+  .tahlil :global(.t-javoblar dd) { margin: 0; font-weight: 700; }
+  .tahlil :global(.t-izoh) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .tahlil :global(.t-izoh strong) { color: var(--matn); }
+  .tahlil :global(.xato-turi) { border: 1px solid var(--chiziq-kuchli); border-radius: var(--r-yon); margin: 0; padding: var(--b-2) var(--b-3) var(--b-3); display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-4); }
+  .tahlil :global(.xato-turi legend) { padding: 0 var(--b-1); font-size: var(--matn-mayda); font-weight: 800; }
+  .tahlil :global(.xt-variant) { min-height: 44px; display: inline-flex; align-items: center; gap: var(--b-2); cursor: pointer; font-size: var(--matn-kichik); }
+  .tahlil :global(.xt-variant input) { width: 20px; height: 20px; accent-color: var(--rang-asosiy); margin: 0; }
+  .tahlil :global(.xt-variant input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+
+  /* Boshqa bo'limlar */
+  .boshqa { margin-top: var(--b-8); padding-top: var(--b-6); border-top: 1px solid var(--chiziq); display: flex; flex-direction: column; gap: var(--b-3); }
+  .boshqa ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-6); }
+  .boshqa li { min-height: 44px; display: flex; align-items: center; }
+  .boshqa a { color: var(--rang-havola); font-weight: 700; }
+  .boshqa .yorliq { margin-left: var(--b-1); }
+
+  @media (max-width: 640px) {
+    .karta { padding: var(--b-5); }
+    .navigator ol { grid-template-columns: repeat(5, 44px); }
+    .umumiy { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .domenlar { grid-template-columns: minmax(0, 1fr); }
+    .pastki .tugma { flex: 1; min-width: 0; }
+    .tahlil :global(.tahlil-band) { padding: var(--b-4); }
+  }
+</style>

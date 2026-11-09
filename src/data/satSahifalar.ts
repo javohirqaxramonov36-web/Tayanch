@@ -29,6 +29,20 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Practice',
     sahifalar: [
       {
+        qism: 'mashq/diagnostika/',
+        // Sahifa: src/pages/uz/sat/mashq/diagnostika/ (savollar src/data/sat-diagnostic.json, saytda faqat reviewed: true).
+        tayyor: true,
+        nomi: 'Diagnostic test',
+        tavsif: 'A free diagnostic that shows which Reading and Writing and Math topics to practice first. The result is an estimate, not an SAT score.',
+        turi: 'mashq',
+        manbalar: ['CB01', 'CB05', 'CB06'],
+        tekshirilmagan: [
+          'The questions have not been reviewed by the author yet (reviewed: false); the live site shows only reviewed questions.',
+          'How the questions are grouped into domains and the skill names is a Tayanch classification; it has not been checked against College Board sources.',
+          '"About 15 minutes" is a Tayanch estimate.',
+        ],
+      },
+      {
         qism: 'mashq/test/',
         tayyor: true,
         nomi: 'Test',
