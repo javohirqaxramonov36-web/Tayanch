@@ -1,0 +1,33 @@
+---
+// Hisob formasi maydoni: label, izoh va xato matni input bilan aria-describedby orqali bog'langan.
+// Xato matni `<id>-xato` elementiga skriptdan yoziladi (src/lib/hisob.ts, maydonXatosi).
+interface Props {
+  id: string;
+  nomi: string;
+  turi?: 'text' | 'email';
+  autocomplete: string;
+  izoh?: string;
+  ixtiyoriy?: boolean;
+  maxlength?: number;
+}
+const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength } = Astro.props;
+const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join(' ');
+---
+<div class="hisob-maydon">
+  <label for={id}>{nomi}{ixtiyoriy && <span class="ixtiyoriy"> (optional)</span>}</label>
+  {izoh && <p class="hisob-izoh" id={`${id}-izoh`}>{izoh}</p>}
+  <input
+    class="hisob-kirit"
+    id={id}
+    name={id}
+    type={turi}
+    autocomplete={autocomplete}
+    required={!ixtiyoriy}
+    maxlength={maxlength}
+    spellcheck="false"
+    autocapitalize={turi === 'email' ? 'none' : undefined}
+    inputmode={turi === 'email' ? 'email' : undefined}
+    aria-describedby={tasvir}
+  />
+  <p class="hisob-xato" id={`${id}-xato`} hidden></p>
+</div>

@@ -16,7 +16,8 @@ export interface Props {
   description: string;
   ustki: string;      // "Math · Namuna"
   nomi: string;       // "Chiziqli tenglamalar"
-  progressNomi: string;
+  /** Berilmasa progress chizig'i chiqmaydi (masalan hisob sahifalari) */
+  progressNomi?: string;
   /** Qavat yo'lidagi oraliq bandlar */
   yol?: string[];
 }
@@ -37,12 +38,14 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Ast
         <span class="ustki" id="fokus-ustki">{ustki}</span>
         <span class="nomi" id="fokus-nomi">{nomi}</span>
       </div>
-      <div class="jarayon">
-        <div class="progress" role="progressbar" aria-label={progressNomi} aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" id="fokus-progress">
-          <div class="progress-toldirish" id="fokus-progress-toldirish"></div>
+      {progressNomi ? (
+        <div class="jarayon">
+          <div class="progress" role="progressbar" aria-label={progressNomi} aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" id="fokus-progress">
+            <div class="progress-toldirish" id="fokus-progress-toldirish"></div>
+          </div>
+          <span class="progress-matn" id="fokus-progress-matn"></span>
         </div>
-        <span class="progress-matn" id="fokus-progress-matn"></span>
-      </div>
+      ) : <span class="fokus-oraliq" aria-hidden="true"></span>}
       <slot name="amal" />
       <Lift variant="fokus" />
     </header>
@@ -77,6 +80,7 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Ast
   .fokus-bosh .progress { flex: 1; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); transition: width 0.25s ease; }
   .fokus-bosh .progress-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); white-space: nowrap; }
+  .fokus-bosh .fokus-oraliq { flex: 1; }
   .fokus-asosiy { flex: 1; padding: var(--b-6) var(--b-8) var(--b-10); }
   .fokus-yol { max-width: 760px; margin: 0 auto var(--b-5); }
 
