@@ -47,12 +47,7 @@ Muallif yaratgan (reja Free). Yangi loyiha kerak bo'lsa: https://supabase.com/da
 Hammasi Dashboard'da qilinadi, kalit qiymatlari repoga, chatga, logga yozilmaydi.
 
 1. **Authentication → Sign In / Providers → Email**: yoqilgan, "Confirm email" yoqilgan. Standart SMTP cheklovi: 0-bo'lim. Sinov uchun loyiha jamoasi a'zosining manzili ishlaydi.
-2. **Google** (SB04, https://supabase.com/docs/guides/auth/social-login/auth-google):
-   1. Google Cloud Console → Google Auth Platform: **Data Access (Scopes)** da `openid` (qo'lda qo'shiladi), `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi (tekshiruv jarayoni uzayadi).
-   2. **Clients** → yangi OAuth client, turi **Web application**.
-   3. **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz) va lokal `http://localhost:4321` (qo'llanma uni production'dan oldin olib tashlashni tavsiya qiladi).
-   4. **Authorized redirect URIs**: Supabase Dashboard → Authentication → Providers → Google sahifasidagi **Callback URL** (nusxa ko'chiriladi, qo'lda yozilmaydi).
-   5. Client ID va **Client Secret** faqat Supabase Dashboard'dagi Google provider sahifasiga kiritiladi, provider yoqiladi.
+2. **Google**: 10.6-bo'lim (P03B).
 3. **Authentication → URL Configuration**:
    - Site URL va Redirect URLs: 10-bo'lim va `supabase/config.toml` (aniq yo'llar, P03 da qo'llangan).
 4. **Anonymous sign-ins**: o'chiq qoladi (ishlatilmaydi).
@@ -251,6 +246,7 @@ https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/
+https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/callback/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/
 http://localhost:4321/Tayanch/**
@@ -292,6 +288,30 @@ Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov f
 
 ### 10.5. Keyingi vazifalar
 
-- P03B: Google bilan kirish (Google provider, client ID/secret faqat dashboard'da; Redirect URL'lar shu ro'yxatda).
+- P03B: Google bilan kirish: kod tayyor (branch `sat-google-login`), sozlash 10.6-bo'limda.
 - P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Hozircha `display_name`, `nickname` Supabase `user_metadata` da.
 - P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
+
+### 10.6. Google bilan kirish (P03B)
+
+Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): supabase.com/docs/guides/auth/social-login/auth-google, developers.google.com/identity/branding-guidelines, support.google.com/cloud/answer/15549945. Client secret faqat Supabase Dashboard'ga kiritiladi: repoga, chatga, `config.toml` ga yozilmaydi.
+
+**Google Cloud Console** (loyiha yaratilgan), Google Auth Platform:
+
+1. **Branding**: ilova nomi "Tayanch", support email (muallifniki), logo ixtiyoriy (logo qo'yilsa Google tekshiruvi uzayishi mumkin: tekshirish kerak). Authorized domains: Supabase qo'llanmasi `<ref>.supabase.co` ni qo'shishni aytadi (Supabase callback domeni); `github.io` kerakmi: **tekshirish kerak** (Console o'zi ogohlantiradi).
+2. **Audience**: User type **External**. Holat "Testing": faqat qo'shilgan test foydalanuvchilar kira oladi (100 tagacha); sinov uchun muallif email'i qo'shiladi.
+3. **Data Access (Scopes)**: `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi.
+4. **Clients** → Create client → turi **Web application**, nomi masalan "Tayanch web".
+   - **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz, oxirida `/` yo'q) va lokal `http://localhost:4321`.
+   - **Authorized redirect URIs**: Supabase Dashboard → Authentication → Sign In / Providers → Google sahifasidagi **Callback URL** (`https://<ref>.supabase.co/auth/v1/callback`; nusxa ko'chiriladi). Sayt manzili bu yerga **yozilmaydi**.
+   - Client ID va Client Secret chiqadi.
+
+**Supabase Dashboard** → Authentication → Sign In / Providers → **Google**: "Enable", Client ID va Client Secret qo'yiladi, Save. Qolgan maydonlar standart.
+
+**URL Configuration** (10.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/Tayanch/uz/hisob/callback/` qo'shiladi (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/Tayanch/**` allaqachon bor. Qo'llash: `supabase config diff --remote=<ref>` (2026-11-09: yagona e'lon qilingan farq shu callback qatori), muallif "ha" desa `supabase config push --remote=<ref>`.
+
+**Tartib**: provider yoqilmaguncha saytdagi Google tugmasi Supabase'ning `{"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}` sahifasini ochadi (2026-11-09, lokal sinov). Shuning uchun Google sozlamalari **merge va deploy'dan oldin** qilinadi.
+
+**Sinov** (muallif, haqiqiy Google hisobi bilan): yangi Google hisobi bilan kirish → rozilik sahifasi → "Davom etish" → `?keyin=` sahifasi; chiqish va qayta kirish (rozilik qayta so'ralmaydi); Google sahifasida "Cancel" → "Google orqali kirishni bekor qildingiz."; tasdiqlangan email/parol hisobi bilan bir xil Google email → bitta hisob (identity linking).
+
+**P28**: Google Auth Platform → Audience → **Publish app** (In production). Asosiy scope'li ilovalarga Google tekshiruvi kerak emasligi: tekshirish kerak. Lokal JavaScript origin production'dan oldin olib tashlanishi mumkin (Supabase qo'llanmasi tavsiyasi).
