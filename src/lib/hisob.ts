@@ -5,9 +5,10 @@ import { createClient, type AuthError, type Session, type SupabaseClient } from 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
 import { hisobSozlama } from '../data/hisobSozlama';
 import { yol } from './yol';
+import type { HisobSahifaKalit } from '../data/hisobSahifalar';
 
-export type HisobSahifa = 'kirish' | 'royxat' | 'parol-tiklash' | 'profil';
-export const hisobYoli = (sahifa: HisobSahifa) => yol(`/uz/sat/hisob/${sahifa}/`);
+// Hisob sahifalari 1-qavatda (bir bino, bitta kalit): hamma qavat shu yerga yuboradi. Matn o'zbekcha.
+export const hisobYoli = (sahifa: HisobSahifaKalit) => yol(`/uz/hisob/${sahifa}/`);
 /** Xatdagi havolalar uchun to'liq manzil (Supabase "Redirect URLs" ro'yxatida bo'lishi kerak). */
 export const toliqManzil = (ichki: string) => location.origin + ichki;
 
@@ -75,25 +76,25 @@ type Amal = 'kirish' | 'royxat' | 'tiklash' | 'yangilash' | 'profil' | 'qayta-yu
 export function xatoMatni(e: AuthError | Error, amal: Amal): string {
   const x = e as AuthError & { code?: string; status?: number };
   if (x.name === 'AuthRetryableFetchError' || x instanceof TypeError) {
-    return 'Could not reach the server. Check your internet connection and try again.';
+    return "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.";
   }
   if (x.status === 429 || x.code?.startsWith('over_')) {
-    return 'Too many attempts. Please wait a few minutes and try again.';
+    return "Urinishlar juda ko'p. Bir necha daqiqa kutib, qayta urinib ko'ring.";
   }
-  if (x.code === 'weak_password') return 'This password is too weak. Choose a longer one that is harder to guess.';
-  if (x.code === 'same_password') return 'The new password must be different from your current one.';
+  if (x.code === 'weak_password') return "Parol juda oddiy. Uzunroq va topish qiyinroq parol tanlang.";
+  if (x.code === 'same_password') return "Yangi parol hozirgisidan farq qilishi kerak.";
   if (amal === 'kirish') {
     // Supabase bu xatoni parol to'g'ri bo'lgandagina beradi (tekshirish kerak), shuning uchun email borligini oshkor qilmaydi.
-    if (x.code === 'email_not_confirmed') return 'Please confirm your email first: open the link we sent you.';
-    return 'Invalid email or password.';
+    if (x.code === 'email_not_confirmed') return "Avval emailingizni tasdiqlang: sizga yuborilgan havolani oching.";
+    return "Email yoki parol noto'g'ri.";
   }
-  if (amal === 'royxat') return 'Could not create the account. Please try again.';
-  if (amal === 'yangilash') return 'Could not save the new password. The reset link may have expired: request a new one.';
-  return 'Something went wrong. Please try again.';
+  if (amal === 'royxat') return "Hisob ochilmadi. Qayta urinib ko'ring.";
+  if (amal === 'yangilash') return "Yangi parol saqlanmadi. Havolaning muddati o'tgan bo'lishi mumkin: yangisini so'rang.";
+  return "Nimadir xato ketdi. Qayta urinib ko'ring.";
 }
 
 /** Havoladagi xato (muddati o'tgan yoki ishlatilgan havola) uchun matn. */
-export const havolaXatoMatni = 'This link is invalid or has expired. Request a new one below.';
+export const havolaXatoMatni = "Havola noto'g'ri yoki muddati o'tgan. Pastda yangisini so'rang.";
 
 // ---- Forma yordamchilari ----
 
@@ -113,7 +114,7 @@ export function yuklanish(tugma: HTMLButtonElement, band: boolean, matn?: string
   if (!tugma.dataset.asl) tugma.dataset.asl = tugma.textContent ?? '';
   tugma.disabled = band;
   tugma.setAttribute('aria-busy', String(band));
-  tugma.textContent = band ? (matn ?? 'Please wait…') : tugma.dataset.asl;
+  tugma.textContent = band ? (matn ?? 'Kuting…') : tugma.dataset.asl;
 }
 
 /** Forma darajasidagi xato (role="alert") yoki holat (role="status") xabari. */

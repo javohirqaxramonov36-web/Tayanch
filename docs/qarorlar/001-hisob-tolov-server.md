@@ -12,7 +12,7 @@ SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pu
 | Joy | Nima qiladi | Nima qilmaydi |
 | --- | --- | --- |
 | Brauzer (GitHub Pages, statik Astro) | Sahifalarni ko'rsatadi. Supabase JS mijozi ochiq kalit bilan kirish/chiqish qiladi, foydalanuvchining o'z yozuvlarini o'qiydi/yozadi (RLS cheklagan doirada). Hisobsiz holatda progress `tayanch:` kalitlarida. | To'lov holatini yozmaydi, tarifni o'zi ochmaydi, maxfiy kalit saqlamaydi. |
-| Supabase Auth | Bitta hisob butun sayt uchun: email va Google (SB04). Kirish va profil sahifalari hozircha `/uz/sat/hisob/` da, inglizcha (2026-11-09, P03; 1-qavatdagi `/uz/hisob/` keyinroq). Sessiya brauzerda `tayanch:auth` kalitida. | Har qavatga alohida login yo'q. |
+| Supabase Auth | Bitta hisob butun sayt uchun: email va Google (SB04). Kirish va profil sahifalari 1-qavatda, `/uz/hisob/`, o'zbekcha (2026-11-09; PR #58 da SAT ichida edi, muallif qarori bilan 1-qavatga ko'chdi). Hamma qavatdan kiriladi. Sessiya brauzerda `tayanch:auth` kalitida. | Har qavatga alohida login yo'q. |
 | Supabase Postgres | Profil, obuna (`bolim` maydoni bilan, hozircha faqat `sat`), kvota hisobi, javob va progress, original savollar (`verified_by` bilan). Har jadvalda RLS yoqilgan (SB03). | College Board materiallari saqlanmaydi. |
 | Supabase Edge Functions | inPAY'da invoice yaratish (bearer token bilan), inPAY webhook'ini qabul qilish, imzoni tekshirish va obunani yozish. Kalitlarni Supabase secrets dan oladi (SB02). | Brauzerga maxfiy kalit qaytarmaydi. |
 | inPAY | To'lov sahifasi va to'lov usullari; muvaffaqiyatli to'lovdan keyin `callback_url` ga imzolangan webhook (IP01). Karta ma'lumoti faqat shu yerda. | Tayanch sahifasida karta raqami so'ralmaydi. |

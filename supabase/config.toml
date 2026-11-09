@@ -5,10 +5,14 @@ project_id = "tayanch"
 
 [auth]
 # Havolada redirectTo bo'lmasa shu manzil ishlatiladi.
-site_url = "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/"
-# Tasdiqlash xati -> kirish/ (ba'zan ?keyin= bilan), parol tiklash -> parol-tiklash/. Lokal: astro dev/preview 4321.
+site_url = "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/"
+# Hisob 1-qavatda (/uz/hisob/, 2026-11-09). Tasdiqlash xati -> kirish/ (ba'zan ?keyin= bilan),
+# parol tiklash -> parol-tiklash/. Lokal: astro dev/preview 4321.
+# Eski /uz/sat/hisob/ manzillari ham qoladi: ular yangi joyga yo'naltiradi (yangi kod deploy bo'lguncha ham ishlaydi).
 additional_redirect_urls = [
-  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/",
   "http://localhost:4321/Tayanch/**",

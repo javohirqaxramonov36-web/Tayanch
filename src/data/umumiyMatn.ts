@@ -32,6 +32,10 @@ const uz = {
     yangiTab: '(yangi tabda ochiladi)',
     mavzu: "Qorong'i mavzu",
     tezOrada: 'tez orada',
+    hisob: 'Hisob',
+    hisobKirish: 'Kirish',
+    hisobim: 'Hisobim',
+    hisobIzoh: 'Ixtiyoriy hisob',
   },
   manba: {
     sarlavha: 'Manbalar va tekshiruv',
@@ -123,6 +127,10 @@ const en: Matn = {
     yangiTab: '(opens in a new tab)',
     mavzu: 'Dark mode',
     tezOrada: 'soon',
+    hisob: 'Account',
+    hisobKirish: 'Sign in',
+    hisobim: 'Your account',
+    hisobIzoh: 'Optional account',
   },
   manba: {
     sarlavha: 'Sources and review',

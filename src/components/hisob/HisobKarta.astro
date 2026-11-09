@@ -1,28 +1,33 @@
 ---
-// Hisob sahifalarining umumiy qolipi: SatFokus (yon panelsiz) ichida bitta ustun karta.
-// Matn inglizcha (SAT bo'limi). Uslub: DESIGN.md, tokens.css; xato rangi ogohlik juftligi (qizil yo'q).
-import SatFokus from '../../layouts/SatFokus.astro';
-import type { SatSahifa } from '../../data/satSahifalar';
+// Hisob sahifalarining umumiy qolipi: 1-qavat (Asosiy) ichida bitta ustun karta.
+// Hisob butun sayt uchun bitta, sahifalar 1-qavatda, matn o'zbekcha.
+// Uslub: DESIGN.md, tokens.css; xato rangi ogohlik juftligi (qizil yo'q).
+// Holat "qoralama" (noindex): Maxfiylik siyosati (P23) hisobga moslanmaguncha (ADR 001).
+import Asosiy from '../../layouts/Asosiy.astro';
+import type { HisobSahifaMalumot } from '../../data/hisobSahifalar';
 
 interface Props {
-  sahifa: SatSahifa;
+  sahifa: HisobSahifaMalumot;
   /** Karta ustidagi qisqa matn */
   lead?: string;
 }
 const { sahifa, lead } = Astro.props;
 ---
-<SatFokus title={`${sahifa.nomi} · SAT`} description={sahifa.tavsif} ustki="Account" nomi={sahifa.nomi} yol={['Account']}>
-  <div class="hisob">
-    <h1 id="hisob-sarlavha">{sahifa.nomi}</h1>
-    {lead && <p class="hisob-lead">{lead}</p>}
-    <p class="hisob-ogoh" data-hisob-yoq hidden>
-      Accounts are not available on this site yet. Everything else works without an account: your progress is saved in this browser.
-    </p>
-    <slot />
-  </div>
-</SatFokus>
+<Asosiy title={sahifa.nomi} description={sahifa.tavsif} turi="umumiy" bolim="umumiy" holat="qoralama" sahifaOxiri={false} yol={['Hisob']}>
+  <section class="ichki hisob-ichki">
+    <div class="hisob">
+      <h1 id="hisob-sarlavha">{sahifa.nomi}</h1>
+      {lead && <p class="hisob-lead">{lead}</p>}
+      <p class="hisob-ogoh" data-hisob-yoq hidden>
+        Hisob ochish saytda hali ishlamaydi. Qolgan hamma narsa hisobsiz ishlaydi: natijalaringiz shu brauzerda saqlanadi.
+      </p>
+      <slot />
+    </div>
+  </section>
+</Asosiy>
 
 <style is:global>
+  .hisob-ichki { padding-block: var(--b-6) var(--b-16); }
   .hisob {
     max-width: 480px; margin: 0 auto;
     display: flex; flex-direction: column; gap: var(--b-5);

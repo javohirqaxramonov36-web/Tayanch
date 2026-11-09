@@ -3,7 +3,7 @@
 // Tavsiflarda fakt yo'q: faqat sahifada nima bo'lishi yozilgan. Fakt qo'shilsa, manba ID si ham qo'shiladi.
 // Matn inglizcha (SAT bo'limi qoidasi, CLAUDE.md); qism (URL) va kod nomlari o'zbekcha qoladi.
 
-export type SatTuri = 'mashq' | 'vosita' | 'qollanma' | 'hisob';
+export type SatTuri = 'mashq' | 'vosita' | 'qollanma';
 
 export interface SatSahifa {
   /** /uz/sat/ dan keyingi qism, oxirida / bilan: "mashq/test/" */
@@ -225,55 +225,6 @@ export const turiNomi: Record<SatTuri | 'bolim-kirishi', string> = {
   mashq: 'Practice',
   vosita: 'Tool',
   qollanma: 'Guide',
-  hisob: 'Account',
-};
-
-/** Hisob sahifalari (P03). Kontent emas, shuning uchun `satGuruhlar` va kirish sahifasi ro'yxatida yo'q.
- *  Yon panelda alohida "profil bandi" (`yon-past`) orqali: kirmagan bo'lsa `kirish/`, kirgan bo'lsa `profil/`.
- *  Yo'llar `src/lib/hisob.ts` dagi `hisobYoli()` bilan bir xil. Qolip: `SatFokus` (yon panelsiz). */
-export const satHisobSahifalar: SatSahifa[] = [
-  {
-    qism: 'hisob/kirish/',
-    tayyor: true,
-    nomi: 'Sign in',
-    tavsif: 'Sign in to your Tayanch account. An account is optional: practice and lessons work without one.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-  {
-    qism: 'hisob/royxat/',
-    tayyor: true,
-    nomi: 'Create account',
-    tavsif: 'Create a Tayanch account with your email. An account is optional.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-  {
-    qism: 'hisob/parol-tiklash/',
-    tayyor: true,
-    nomi: 'Reset password',
-    tavsif: 'Get a link to set a new password for your Tayanch account.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-  {
-    qism: 'hisob/profil/',
-    tayyor: true,
-    nomi: 'Profile',
-    tavsif: 'Your Tayanch account: name, nickname and sign out.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-];
-
-export const hisobSahifa = (qism: string): SatSahifa => {
-  const t = satHisobSahifalar.find((x) => x.qism === qism);
-  if (!t) throw new Error(`satHisobSahifalar: ${qism} topilmadi`);
-  return t;
 };
 
 /** Yon panel guruhlari (dizayn rejasi B, 3-bosqich, muallif tanlovi 2026-11-09).
