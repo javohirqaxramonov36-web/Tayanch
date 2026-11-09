@@ -1,113 +1,459 @@
-/* Tayanch dizayn tokenlari. Qiymatlar va rollari: DESIGN.md
-   Palitra: oq, qora, ko'k (2026-11-04 qarori). */
-:root {
+/* Tayanch dizayn tokenlari. Manba: docs/ds/tayanch-ds-tokens.css (Tayanch Design System, 2026-11-09).
+   Qoidalar va rollar: DESIGN.md. Komponent CSS'ida faqat var(--...).
+   Saytga moslash (qiymatlar DS dan o'zgarishsiz):
+   - DS [data-theme="light"] → :root; [data-theme="dark"] → :root[data-mavzu='qorongi'] (BoshQism.astro qo'yadi).
+   - DS @container vp → @media (min-width: 768px).
+   - <html data-floor> server tomonda (joriyQavat). 1-qavat standarti :where(:root) da,
+     aks holda keyingi :root qoidasi [data-floor="3"] ni bosib ketadi.
+   - Shrift oilasi: 'Onest Variable' (@fontsource-variable/onest).
+   - Oxirida: sayt qo'shimchalari va eski o'zbekcha nomlarning DS ga ulanishi. */
+
+/* ==========================================================================
+   TAYANCH DESIGN SYSTEM — TOKENS (Stage 1 · Foundations)
+   Layer 1: PRIMITIVE  ->  Layer 2: SEMANTIC (light/dark)  ->  Layer 3: COMPONENT
+   The only file allowed to contain raw values.
+   ========================================================================== */
+
+:root{
+  /* ---- knobs (adjustment controls write these) ---- */
+  --knob-radius:1; --knob-density:1; --knob-glow:0.7;
+
+  /* ---- PRIMITIVE · color ---- */
+  --color-neutral-0:#FFFFFF; --color-neutral-50:#FBFBFC; --color-neutral-100:#F2F3F7; --color-neutral-200:#E5E6E9; --color-neutral-300:#D9DADE; --color-neutral-400:#A9ABAE; --color-neutral-500:#7F8083; --color-neutral-600:#5B5C5F; --color-neutral-700:#46484A; --color-neutral-800:#2A2B2E; --color-neutral-850:#1F2126; --color-neutral-900:#16181C; --color-neutral-950:#060708;
+  --color-brand-100:#F4F7FE; --color-brand-200:#BDCCFF; --color-brand-300:#8BA0F0; --color-brand-400:#5D72D9; --color-brand-500:#323CB3; --color-brand-600:#282E9C; --color-brand-700:#1E2282; --color-brand-800:#151866; --color-brand-900:#0D1049;
+  --color-floor-navigator-100:#EBFAFC; --color-floor-navigator-200:#C1F4FB; --color-floor-navigator-300:#94ECF7; --color-floor-navigator-400:#62E1F1; --color-floor-navigator-500:#19D3E6; --color-floor-navigator-600:#04A6B8; --color-floor-navigator-700:#017A8A; --color-floor-navigator-800:#00515E; --color-floor-navigator-900:#012C35;
+  --color-floor-admission-100:#FDF6E8; --color-floor-admission-200:#FFEBC3; --color-floor-admission-300:#FFDF9D; --color-floor-admission-400:#FFD271; --color-floor-admission-500:#FFC21F; --color-floor-admission-600:#CC9200; --color-floor-admission-700:#976600; --color-floor-admission-800:#633E02; --color-floor-admission-900:#331B00;
+  --color-floor-sat-100:#F2F7FF; --color-floor-sat-200:#C9DFFF; --color-floor-sat-300:#9EC5FE; --color-floor-sat-400:#6FA9FF; --color-floor-sat-500:#2F86FF; --color-floor-sat-600:#156AD9; --color-floor-sat-700:#0050B0; --color-floor-sat-800:#003982; --color-floor-sat-900:#002357;
+  --color-floor-ielts-100:#FEF4F3; --color-floor-ielts-200:#FFD1CB; --color-floor-ielts-300:#FEABA1; --color-floor-ielts-400:#FF7D71; --color-floor-ielts-500:#EF4841; --color-floor-ielts-600:#C92C2A; --color-floor-ielts-700:#A11618; --color-floor-ielts-800:#78040A; --color-floor-ielts-900:#500003;
+  --color-floor-eyuf-100:#ECFBF0; --color-floor-eyuf-200:#C4F7D0; --color-floor-eyuf-300:#9BF0B2; --color-floor-eyuf-400:#6EE695; --color-floor-eyuf-500:#3BD879; --color-floor-eyuf-600:#07AC5E; --color-floor-eyuf-700:#007F47; --color-floor-eyuf-800:#015631; --color-floor-eyuf-900:#002F1A;
+  --color-success-100:#EEFAF3; --color-success-200:#BDE6CD; --color-success-300:#8BD0A8; --color-success-400:#57B784; --color-success-500:#02985F; --color-success-600:#047C4D; --color-success-700:#01613B; --color-success-800:#00482A; --color-success-900:#00301A;
+  --color-warning-100:#FFF5EC; --color-warning-200:#FFDDC1; --color-warning-300:#FEC491; --color-warning-400:#FEA855; --color-warning-500:#EF8C0F; --color-warning-600:#C56E01; --color-warning-700:#9A5201; --color-warning-800:#713901; --color-warning-900:#4A2100;
+  --color-error-100:#FEF4F4; --color-error-200:#FFC6CA; --color-error-300:#FF929D; --color-error-400:#ED5F75; --color-error-500:#CD1E4C; --color-error-600:#AF013B; --color-error-700:#8E002E; --color-error-800:#6D0021; --color-error-900:#4E0016;
+  /* original Stage-0 raw values kept for the CVD before/after comparison only */
+  --color-legacy-ielts-500:#FF5B4F; --color-legacy-eyuf-500:#23CF77;
+
+  /* ---- PRIMITIVE · type ---- */
+  --font-family-sans-onest:'Onest Variable',"Segoe UI",Roboto,"Noto Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-family-sans-inter:"Inter","Segoe UI",Roboto,"Noto Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-family-sans:var(--font-family-sans-onest);
+  --font-family-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --font-weight-regular:400; --font-weight-medium:500; --font-weight-semibold:600; --font-weight-bold:700; --font-weight-extrabold:800;
+  /* size / line-height / weight / letter-spacing — mobile (m) and desktop (d) */
+  --font-size-display-m:40px; --line-height-display-m:44px; --font-weight-display-m:700; --letter-spacing-display-m:-0.035em;
+  --font-size-display-d:72px; --line-height-display-d:76px; --font-weight-display-d:700; --letter-spacing-display-d:-0.04em;
+  --font-size-h1-m:32px; --line-height-h1-m:36px; --font-weight-h1-m:700; --letter-spacing-h1-m:-0.03em;
+  --font-size-h1-d:48px; --line-height-h1-d:56px; --font-weight-h1-d:700; --letter-spacing-h1-d:-0.03em;
+  --font-size-h2-m:24px; --line-height-h2-m:32px; --font-weight-h2-m:700; --letter-spacing-h2-m:-0.02em;
+  --font-size-h2-d:32px; --line-height-h2-d:40px; --font-weight-h2-d:700; --letter-spacing-h2-d:-0.025em;
+  --font-size-h3-m:20px; --line-height-h3-m:28px; --font-weight-h3-m:600; --letter-spacing-h3-m:-0.01em;
+  --font-size-h3-d:24px; --line-height-h3-d:32px; --font-weight-h3-d:600; --letter-spacing-h3-d:-0.015em;
+  --font-size-body-m:16px; --line-height-body-m:24px; --font-weight-body-m:400; --letter-spacing-body-m:0em;
+  --font-size-body-d:18px; --line-height-body-d:28px; --font-weight-body-d:400; --letter-spacing-body-d:-0.005em;
+  --font-size-small-m:14px; --line-height-small-m:20px; --font-weight-small-m:400; --letter-spacing-small-m:0.005em;
+  --font-size-small-d:15px; --line-height-small-d:24px; --font-weight-small-d:400; --letter-spacing-small-d:0em;
+  --font-size-caption-m:12px; --line-height-caption-m:16px; --font-weight-caption-m:600; --letter-spacing-caption-m:0.04em;
+  --font-size-caption-d:13px; --line-height-caption-d:20px; --font-weight-caption-d:600; --letter-spacing-caption-d:0.04em;
+  --font-size-button-m:16px; --line-height-button-m:20px; --font-weight-button-m:600; --letter-spacing-button-m:0em;
+  --font-size-button-d:16px; --line-height-button-d:20px; --font-weight-button-d:600; --letter-spacing-button-d:0em;
+  --font-size-code:13px; --line-height-code:20px;
+
+  /* ---- PRIMITIVE · space (4px grid; density knob scales the unit) ---- */
+  --space-unit:calc(4px * var(--knob-density));
+  --space-0:0px;
+  --space-1:calc(var(--space-unit) * 1);  --space-2:calc(var(--space-unit) * 2);  --space-3:calc(var(--space-unit) * 3);  --space-4:calc(var(--space-unit) * 4);
+  --space-5:calc(var(--space-unit) * 5);  --space-6:calc(var(--space-unit) * 6);  --space-7:calc(var(--space-unit) * 7);  --space-8:calc(var(--space-unit) * 8);
+  --space-9:calc(var(--space-unit) * 9);  --space-10:calc(var(--space-unit) * 10); --space-11:calc(var(--space-unit) * 11); --space-12:calc(var(--space-unit) * 12);
+  --space-13:calc(var(--space-unit) * 13); --space-14:calc(var(--space-unit) * 14); --space-15:calc(var(--space-unit) * 15); --space-16:calc(var(--space-unit) * 16);
+
+  /* ---- PRIMITIVE · radius (corner knob scales all but full) ---- */
+  --radius-none:0px;
+  --radius-sm:calc(6px * var(--knob-radius)); --radius-md:calc(12px * var(--knob-radius)); --radius-lg:calc(20px * var(--knob-radius)); --radius-xl:calc(28px * var(--knob-radius)); --radius-full:999px;
+
+  /* ---- PRIMITIVE · size, border, breakpoints, layers ---- */
+  --size-touch-min:44px; --size-icon-sm:16px; --size-icon-md:20px; --size-icon-lg:24px; --icon-stroke-width:1.75;
+  --size-indicator-sm:16px; --size-indicator-md:32px; --size-indicator-hero:280px;
+  --size-swatch:88px; --size-content-max:1200px; --size-measure:68ch;
+  --border-width-1:1px; --border-width-2:2px; --border-width-3:3px;
+  --breakpoint-mobile:390px; --breakpoint-tablet:768px; --breakpoint-desktop:1280px;
+  --blur-glass:14px;
+  --opacity-0:0; --opacity-muted:0.5; --opacity-100:1;
+  --angle-quarter:90deg;
+  --z-base:0; --z-raised:1; --z-sticky:20;
+
+  /* ---- PRIMITIVE · motion ---- */
+  --duration-fast:150ms; --duration-base:250ms; --duration-slow:400ms; --duration-stagger:50ms;
+  --ease-enter:cubic-bezier(0.22, 1, 0.36, 1);      /* decelerate: things arriving / lighting up */
+  --ease-exit:cubic-bezier(0.55, 0, 1, 0.45);       /* accelerate: things leaving / dimming */
+  --ease-state:cubic-bezier(0.4, 0, 0.2, 1);        /* standard: hover, press, toggles, position */
+  --motion-distance:1;                               /* 0 under reduced motion: no translate/scale */
+}
+
+/* reduced motion: OS setting (unless the page toggle forces full) and the page toggle */
+@media (prefers-reduced-motion: reduce){
+  :root:not([data-motion="full"]){ --duration-fast:0ms; --duration-base:0ms; --duration-slow:0ms; --duration-stagger:0ms; --motion-distance:0; }
+}
+:root[data-motion="reduced"]{ --duration-fast:0ms; --duration-base:0ms; --duration-slow:0ms; --duration-stagger:0ms; --motion-distance:0; }
+
+/* ==========================================================================
+   Layer 2 · SEMANTIC  (defined per theme root so nested [data-theme] panels work)
+   ========================================================================== */
+:root{
+  color-scheme:light;
+  --color-bg:var(--color-neutral-50);
+  --color-bg-deep:var(--color-neutral-300);
+  --color-surface:var(--color-neutral-0);
+  --color-surface-sunken:var(--color-neutral-100);
+  --color-surface-glass:color-mix(in srgb, var(--color-neutral-0) 62%, transparent);
+  --color-surface-glass-strong:color-mix(in srgb, var(--color-neutral-0) 84%, transparent);
+  --color-border:var(--color-neutral-200);
+  --color-border-glass:var(--color-neutral-0);
+  --color-border-strong:var(--color-neutral-500);
+  --color-text-primary:var(--color-neutral-900);
+  --color-text-secondary:var(--color-neutral-600);
+  --color-text-disabled:var(--color-neutral-400);
+  --color-text-inverse:var(--color-neutral-0);
+  --color-on-floor:var(--color-neutral-950);
+
+  --color-brand:var(--color-brand-700);
+  --color-link:var(--color-brand-600);
+  --color-action-primary-bg:var(--color-brand-900);
+  --color-action-primary-bg-hover:var(--color-brand-800);
+  --color-action-primary-text:var(--color-neutral-0);
+  --color-focus-ring:var(--color-brand-600);
+  --color-focus-gap:var(--color-neutral-0);
+
+  --color-success-text:var(--color-success-700); --color-success-ui:var(--color-success-600); --color-success-subtle:var(--color-success-100);
+  --color-warning-text:var(--color-warning-700); --color-warning-ui:var(--color-warning-600); --color-warning-subtle:var(--color-warning-100);
+  --color-error-text:var(--color-error-600);     --color-error-ui:var(--color-error-600);     --color-error-subtle:var(--color-error-100);
+  --color-info-text:var(--color-brand-600);      --color-info-ui:var(--color-brand-600);      --color-info-subtle:var(--color-brand-100);
+
+  /* floors: fill = identity (500), text = AA text on bg/surface, ui = 3:1 on bg, subtle = tinted surface */
+  --color-floor-navigator-fill:var(--color-floor-navigator-500); --color-floor-navigator-text:var(--color-floor-navigator-700); --color-floor-navigator-ui:var(--color-floor-navigator-700); --color-floor-navigator-subtle:var(--color-floor-navigator-100);
+  --color-floor-admission-fill:var(--color-floor-admission-500); --color-floor-admission-text:var(--color-floor-admission-700); --color-floor-admission-ui:var(--color-floor-admission-700); --color-floor-admission-subtle:var(--color-floor-admission-100);
+  --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-700);             --color-floor-sat-ui:var(--color-floor-sat-600);             --color-floor-sat-subtle:var(--color-floor-sat-100);
+  --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-700);         --color-floor-ielts-ui:var(--color-floor-ielts-600);         --color-floor-ielts-subtle:var(--color-floor-ielts-100);
+  --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-700);           --color-floor-eyuf-ui:var(--color-floor-eyuf-700);           --color-floor-eyuf-subtle:var(--color-floor-eyuf-100);
+
+  --color-indicator-off:var(--color-neutral-400);
+  --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 82%, transparent);
+  --color-indicator-glass-left:color-mix(in srgb, var(--color-neutral-0) 42%, transparent);
+  --color-indicator-glass-right:color-mix(in srgb, var(--color-neutral-0) 62%, transparent);
+  --color-indicator-glass-stroke:var(--color-neutral-0);
+  --color-indicator-window-off:color-mix(in srgb, var(--color-neutral-900) 22%, transparent);
+  --color-indicator-shadow:color-mix(in srgb, var(--color-neutral-900) 22%, transparent);
+
+  --shadow-1:0 1px 2px color-mix(in srgb, var(--color-neutral-900) 8%, transparent), 0 1px 1px color-mix(in srgb, var(--color-neutral-900) 4%, transparent);
+  --shadow-2:0 8px 20px -6px color-mix(in srgb, var(--color-neutral-900) 14%, transparent), 0 2px 6px -2px color-mix(in srgb, var(--color-neutral-900) 8%, transparent);
+  --shadow-3:0 24px 48px -16px color-mix(in srgb, var(--color-neutral-900) 24%, transparent), 0 8px 16px -8px color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
+}
+:root[data-mavzu='qorongi']{
+  color-scheme:dark;
+  --color-bg:var(--color-neutral-900);
+  --color-bg-deep:var(--color-neutral-950);
+  --color-surface:var(--color-neutral-850);
+  --color-surface-sunken:var(--color-neutral-950);
+  --color-surface-glass:color-mix(in srgb, var(--color-neutral-0) 6%, transparent);
+  --color-surface-glass-strong:color-mix(in srgb, var(--color-neutral-0) 10%, transparent);
+  --color-border:var(--color-neutral-800);
+  --color-border-glass:color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
+  --color-border-strong:var(--color-neutral-500);
+  --color-text-primary:var(--color-neutral-50);
+  --color-text-secondary:var(--color-neutral-400);
+  --color-text-disabled:var(--color-neutral-600);
+  --color-text-inverse:var(--color-neutral-950);
+  --color-on-floor:var(--color-neutral-950);
+
+  --color-brand:var(--color-brand-300);
+  --color-link:var(--color-brand-300);
+  --color-action-primary-bg:var(--color-neutral-0);
+  --color-action-primary-bg-hover:var(--color-neutral-200);
+  --color-action-primary-text:var(--color-neutral-950);
+  --color-focus-ring:var(--color-brand-300);
+  --color-focus-gap:var(--color-neutral-950);
+
+  --color-success-text:var(--color-success-300); --color-success-ui:var(--color-success-400); --color-success-subtle:color-mix(in srgb, var(--color-success-900) 55%, var(--color-neutral-900));
+  --color-warning-text:var(--color-warning-300); --color-warning-ui:var(--color-warning-400); --color-warning-subtle:color-mix(in srgb, var(--color-warning-900) 55%, var(--color-neutral-900));
+  --color-error-text:var(--color-error-300);     --color-error-ui:var(--color-error-400);     --color-error-subtle:color-mix(in srgb, var(--color-error-900) 55%, var(--color-neutral-900));
+  --color-info-text:var(--color-brand-300);      --color-info-ui:var(--color-brand-300);      --color-info-subtle:color-mix(in srgb, var(--color-brand-900) 70%, var(--color-neutral-900));
+
+  --color-floor-navigator-fill:var(--color-floor-navigator-500); --color-floor-navigator-text:var(--color-floor-navigator-400); --color-floor-navigator-ui:var(--color-floor-navigator-500); --color-floor-navigator-subtle:color-mix(in srgb, var(--color-floor-navigator-900) 60%, var(--color-neutral-900));
+  --color-floor-admission-fill:var(--color-floor-admission-500); --color-floor-admission-text:var(--color-floor-admission-400); --color-floor-admission-ui:var(--color-floor-admission-500); --color-floor-admission-subtle:color-mix(in srgb, var(--color-floor-admission-900) 60%, var(--color-neutral-900));
+  --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-400);             --color-floor-sat-ui:var(--color-floor-sat-500);             --color-floor-sat-subtle:color-mix(in srgb, var(--color-floor-sat-900) 60%, var(--color-neutral-900));
+  --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-500);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
+  --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-500);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
+
+  --color-indicator-off:var(--color-neutral-700);
+  --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 12%, transparent);
+  --color-indicator-glass-left:color-mix(in srgb, var(--color-neutral-0) 5%, transparent);
+  --color-indicator-glass-right:color-mix(in srgb, var(--color-neutral-0) 8.5%, transparent);
+  --color-indicator-glass-stroke:color-mix(in srgb, var(--color-neutral-0) 26%, transparent);
+  --color-indicator-window-off:color-mix(in srgb, var(--color-neutral-0) 28%, transparent);
+  --color-indicator-shadow:color-mix(in srgb, var(--color-neutral-950) 60%, transparent);
+
+  --shadow-1:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 6%, transparent), 0 1px 2px color-mix(in srgb, var(--color-neutral-950) 60%, transparent);
+  --shadow-2:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 8%, transparent), 0 10px 24px -8px color-mix(in srgb, var(--color-neutral-950) 70%, transparent);
+  --shadow-3:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 10%, transparent), 0 28px 56px -16px color-mix(in srgb, var(--color-neutral-950) 85%, transparent);
+}
+
+/* theme-independent semantics + typography roles (recomputed per theme root) */
+:root{
+  --gradient-studio:radial-gradient(120% 70% at 50% 0%, var(--color-bg), var(--color-bg-deep) 75%);
+  --text-display-size:var(--font-size-display-m); --text-display-lh:var(--line-height-display-m); --text-display-weight:var(--font-weight-display-m); --text-display-ls:var(--letter-spacing-display-m);
+  --text-h1-size:var(--font-size-h1-m); --text-h1-lh:var(--line-height-h1-m); --text-h1-weight:var(--font-weight-h1-m); --text-h1-ls:var(--letter-spacing-h1-m);
+  --text-h2-size:var(--font-size-h2-m); --text-h2-lh:var(--line-height-h2-m); --text-h2-weight:var(--font-weight-h2-m); --text-h2-ls:var(--letter-spacing-h2-m);
+  --text-h3-size:var(--font-size-h3-m); --text-h3-lh:var(--line-height-h3-m); --text-h3-weight:var(--font-weight-h3-m); --text-h3-ls:var(--letter-spacing-h3-m);
+  --text-body-size:var(--font-size-body-m); --text-body-lh:var(--line-height-body-m); --text-body-weight:var(--font-weight-body-m); --text-body-ls:var(--letter-spacing-body-m);
+  --text-small-size:var(--font-size-small-m); --text-small-lh:var(--line-height-small-m); --text-small-weight:var(--font-weight-small-m); --text-small-ls:var(--letter-spacing-small-m);
+  --text-caption-size:var(--font-size-caption-m); --text-caption-lh:var(--line-height-caption-m); --text-caption-weight:var(--font-weight-caption-m); --text-caption-ls:var(--letter-spacing-caption-m);
+  --text-button-size:var(--font-size-button-m); --text-button-lh:var(--line-height-button-m); --text-button-weight:var(--font-weight-button-m); --text-button-ls:var(--letter-spacing-button-m);
+
+  /* ======================================================================
+     Layer 3 · COMPONENT tokens (Stage 1 scope: focus ring, glass, floor indicator)
+     ====================================================================== */
+  --focus-ring-width:var(--border-width-2); --focus-ring-gap:var(--border-width-2);
+  --focus-ring:0 0 0 var(--focus-ring-gap) var(--color-focus-gap), 0 0 0 calc(var(--focus-ring-gap) + var(--focus-ring-width)) var(--color-focus-ring);
+  --glass-fill:var(--color-surface-glass); --glass-stroke:var(--color-border-glass); --glass-blur:var(--blur-glass);
+
+  --floor-indicator-edge-width:var(--border-width-2);
+  --floor-indicator-glow-opacity:calc(0.95 * var(--knob-glow));
+  --floor-indicator-window-on:var(--color-neutral-0);
+  --floor-light-out-duration:var(--duration-base); --floor-light-out-ease:var(--ease-exit);
+  --floor-light-in-duration:var(--duration-slow);  --floor-light-in-ease:var(--ease-enter);
+  --floor-light-in-delay:calc(var(--duration-stagger) * 2);
+  --floor-car-duration:var(--duration-base); --floor-car-ease:var(--ease-state);
+}
+/* floor context: any element with data-floor exposes --floor-* for its children */
+/* floor context: any element with data-floor exposes --floor-* for its children (1-qavat = :root standarti) */
+:where(:root), [data-floor="1"]{ --floor-fill:var(--color-floor-navigator-fill); --floor-text:var(--color-floor-navigator-text); --floor-ui:var(--color-floor-navigator-ui); --floor-subtle:var(--color-floor-navigator-subtle); }
+[data-floor="2"]{ --floor-fill:var(--color-floor-admission-fill); --floor-text:var(--color-floor-admission-text); --floor-ui:var(--color-floor-admission-ui); --floor-subtle:var(--color-floor-admission-subtle); }
+[data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); }
+[data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); }
+[data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); }
+[data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
+
+/* desktop type roles (sayt: container query o'rniga media query) */
+@media (min-width: 768px){
+  :root{
+    --text-display-size:var(--font-size-display-d); --text-display-lh:var(--line-height-display-d); --text-display-weight:var(--font-weight-display-d); --text-display-ls:var(--letter-spacing-display-d);
+    --text-h1-size:var(--font-size-h1-d); --text-h1-lh:var(--line-height-h1-d); --text-h1-weight:var(--font-weight-h1-d); --text-h1-ls:var(--letter-spacing-h1-d);
+    --text-h2-size:var(--font-size-h2-d); --text-h2-lh:var(--line-height-h2-d); --text-h2-weight:var(--font-weight-h2-d); --text-h2-ls:var(--letter-spacing-h2-d);
+    --text-h3-size:var(--font-size-h3-d); --text-h3-lh:var(--line-height-h3-d); --text-h3-weight:var(--font-weight-h3-d); --text-h3-ls:var(--letter-spacing-h3-d);
+    --text-body-size:var(--font-size-body-d); --text-body-lh:var(--line-height-body-d); --text-body-weight:var(--font-weight-body-d); --text-body-ls:var(--letter-spacing-body-d);
+    --text-small-size:var(--font-size-small-d); --text-small-lh:var(--line-height-small-d); --text-small-weight:var(--font-weight-small-d); --text-small-ls:var(--letter-spacing-small-d);
+    --text-caption-size:var(--font-size-caption-d); --text-caption-lh:var(--line-height-caption-d); --text-caption-weight:var(--font-weight-caption-d); --text-caption-ls:var(--letter-spacing-caption-d);
+    --text-button-size:var(--font-size-button-d); --text-button-lh:var(--line-height-button-d); --text-button-weight:var(--font-weight-button-d); --text-button-ls:var(--letter-spacing-button-d);
+  }
+}
+
+
+/* ==========================================================================
+   STAGE 2 ADDITIONS · appended below the approved Stage 1 tokens (unchanged above)
+   ========================================================================== */
+:root{
+  /* primitive additions: layers and a few sizes components need */
+  --z-dropdown:30; --z-tooltip:40; --z-modal:50; --z-toast:60;
+  --size-control-sm:44px; --size-control-md:48px; --size-control-lg:56px;
+  --size-checkbox:22px; --size-radio-dot:10px; --size-slider-thumb:24px; --size-slider-track:6px;
+  --size-qcell:44px; --size-letter:32px; --size-sidebar:248px; --size-toast:400px; --size-modal:440px; --size-tooltip:240px; --size-bottombar:64px;
+  --size-spinner:18px;
+  --duration-instant:0ms; --duration-skeleton:1400ms; --duration-spin:800ms;
+  --skeleton-animation:skeleton-sweep; --spinner-animation:spin;
+}
+@media (prefers-reduced-motion: reduce){
+  :root:not([data-motion="full"]){ --duration-skeleton:0ms; --duration-spin:0ms; --skeleton-animation:none; --spinner-animation:none; }
+}
+:root[data-motion="reduced"]{ --duration-skeleton:0ms; --duration-spin:0ms; --skeleton-animation:none; --spinner-animation:none; }
+
+/* Layer 3 · COMPONENT tokens (theme-dependent values) */
+:root{
+  --btn-primary-bg:var(--color-action-primary-bg); --btn-primary-bg-hover:var(--color-action-primary-bg-hover); --btn-primary-bg-pressed:var(--color-brand-700); --btn-primary-text:var(--color-action-primary-text);
+  --btn-secondary-bg:var(--color-surface); --btn-secondary-bg-hover:var(--color-surface-sunken); --btn-secondary-bg-pressed:var(--color-neutral-200); --btn-secondary-border:var(--color-neutral-600); --btn-secondary-text:var(--color-text-primary);
+  --qcell-border:var(--color-neutral-600);
+  --btn-ghost-bg-hover:color-mix(in srgb, var(--color-neutral-900) 6%, transparent); --btn-ghost-bg-pressed:color-mix(in srgb, var(--color-neutral-900) 12%, transparent); --btn-ghost-text:var(--color-text-primary);
+  --btn-destructive-bg:var(--color-error-600); --btn-destructive-bg-hover:var(--color-error-700); --btn-destructive-bg-pressed:var(--color-error-800); --btn-destructive-text:var(--color-neutral-0);
+  --control-checked-bg:var(--color-brand-600); --control-checked-mark:var(--color-neutral-0);
+  --answer-letter-selected-text:var(--color-neutral-0);
+  --qcell-current-bg:var(--color-action-primary-bg); --qcell-current-text:var(--color-action-primary-text);
+  --skeleton-base:var(--color-neutral-200); --skeleton-shine:var(--color-neutral-100);
+  --scrim:color-mix(in srgb, var(--color-neutral-950) 45%, transparent);
+  --tooltip-bg:var(--color-neutral-900); --tooltip-text:var(--color-neutral-0);
+}
+:root[data-mavzu='qorongi']{
+  --btn-primary-bg:var(--color-action-primary-bg); --btn-primary-bg-hover:var(--color-action-primary-bg-hover); --btn-primary-bg-pressed:var(--color-neutral-300); --btn-primary-text:var(--color-action-primary-text);
+  --btn-secondary-bg:var(--color-surface-glass); --btn-secondary-bg-hover:var(--color-surface-glass-strong); --btn-secondary-bg-pressed:color-mix(in srgb, var(--color-neutral-0) 16%, transparent); --btn-secondary-border:var(--color-border-strong); --btn-secondary-text:var(--color-text-primary);
+  --qcell-border:var(--color-border-strong);
+  --btn-ghost-bg-hover:color-mix(in srgb, var(--color-neutral-0) 8%, transparent); --btn-ghost-bg-pressed:color-mix(in srgb, var(--color-neutral-0) 14%, transparent); --btn-ghost-text:var(--color-text-primary);
+  --btn-destructive-bg:var(--color-error-400); --btn-destructive-bg-hover:var(--color-error-300); --btn-destructive-bg-pressed:var(--color-error-200); --btn-destructive-text:var(--color-neutral-950);
+  --control-checked-bg:var(--color-brand-300); --control-checked-mark:var(--color-neutral-950);
+  --answer-letter-selected-text:var(--color-neutral-950);
+  --qcell-current-bg:var(--color-action-primary-bg); --qcell-current-text:var(--color-action-primary-text);
+  --skeleton-base:var(--color-neutral-800); --skeleton-shine:var(--color-neutral-700);
+  --scrim:color-mix(in srgb, var(--color-neutral-950) 70%, transparent);
+  --tooltip-bg:var(--color-neutral-50); --tooltip-text:var(--color-neutral-950);
+}
+/* Layer 3 · COMPONENT tokens (theme-independent; they point at semantic tokens) */
+:root{
+  --control-height-sm:max(var(--size-touch-min), var(--size-control-sm)); /* density never shrinks a control under 44px */
+  --control-height-md:max(var(--size-touch-min), calc(var(--size-control-md) * var(--knob-density)));
+  --control-height-lg:max(var(--size-touch-min), calc(var(--size-control-lg) * var(--knob-density)));
+  --control-pad-sm:var(--space-4); --control-pad-md:var(--space-5); --control-pad-lg:var(--space-6);
+  --control-radius:var(--radius-md); --control-border:var(--border-width-1);
+  --btn-radius:calc(var(--radius-xl) * 2); /* pill at 100%, square at 0% */
+  --btn-dot:var(--color-floor-navigator-500); --btn-press-shift:calc(var(--border-width-1) * var(--motion-distance));
+  --btn-disabled-bg:var(--color-surface-sunken); --btn-disabled-text:var(--color-text-disabled); --btn-disabled-border:var(--color-border);
+
+  --input-bg:var(--color-surface); --input-border:var(--color-border-strong); --input-border-hover:var(--color-text-secondary); --input-border-focus:var(--color-focus-ring);
+  --input-text:var(--color-text-primary); --input-placeholder:var(--color-text-secondary);
+  --input-error-border:var(--color-error-ui); --input-error-text:var(--color-error-text);
+  --input-disabled-bg:var(--color-surface-sunken); --input-disabled-border:var(--color-border); --input-disabled-text:var(--color-text-disabled);
+
+  --card-bg:var(--glass-fill); --card-border:var(--glass-stroke); --card-radius:var(--radius-lg); --card-pad:var(--space-5);
+  --card-shadow:var(--shadow-1); --card-shadow-hover:var(--shadow-2); --card-lift:calc(var(--border-width-2) * -1 * var(--motion-distance));
+  --card-accent-width:var(--border-width-3);
+
+  --badge-height:var(--space-6); --badge-pad:var(--space-2); --badge-radius:var(--radius-full);
+
+  --nav-item-active-bg:var(--color-surface-glass-strong); --nav-item-hover-bg:var(--btn-ghost-bg-hover);
+  --nav-indicator:var(--color-text-primary);
+
+  --timer-bg:var(--color-surface-glass-strong); --timer-border:var(--color-border);
+  --timer-warn-bg:var(--color-warning-subtle); --timer-warn-border:var(--color-warning-ui); --timer-warn-text:var(--color-warning-text);
+  --qcell-flag:var(--color-warning-ui);
+  --answer-bg:var(--color-surface); --answer-border:var(--color-border-strong); --answer-bg-hover:var(--color-surface-sunken);
+  --review-on-bg:var(--color-warning-subtle); --review-on-border:var(--color-warning-ui); --review-on-text:var(--color-warning-text);
+
+  --toast-bg:var(--color-surface); --modal-bg:var(--color-surface); --modal-radius:var(--radius-xl);
+}
+/* floor-aware component tokens: also declared on [data-floor] so they re-resolve inside a floor context */
+:where(:root), [data-floor]{
+  --slider-track:var(--color-surface-sunken); --slider-fill:var(--floor-ui, var(--color-brand)); --slider-thumb:var(--color-neutral-0); --slider-thumb-border:var(--floor-ui, var(--color-brand));
+  --qcell-answered-bg:var(--floor-subtle, var(--color-surface-sunken)); --qcell-answered-border:var(--floor-ui, var(--color-brand));
+  --answer-selected-bg:var(--floor-subtle, var(--color-info-subtle)); --answer-selected-border:var(--floor-ui, var(--color-brand)); --answer-letter-selected-bg:var(--floor-ui, var(--color-brand));
+  --progress-track:var(--color-surface-sunken); --progress-fill:var(--floor-ui, var(--color-brand)); --progress-height:var(--space-2);
+}
+
+/* ==========================================================================
+   Liquid Glass (muallif tasdiqladi, 2026-11-09).
+   backdrop-filter faqat: topbar, sticky panel, Lift paneli. Bino SVG blursiz.
+   Bir ekranda ko'pi bilan 3 qatlam. Aks (sheen) statik.
+   Kontrast eng yomon holatda (blur hisobga olinmagan): yorug' matn 5.12:1;
+   qorong'i matn 5.50:1, UI 3.21:1. Qiymat o'zgarsa qayta hisoblanadi.
+   Kartalar blursiz: --glass-card-bg faqat studio foni ustida.
+   ========================================================================== */
+:root{
+  --glass-blur:var(--blur-glass);
+  --glass-saturate:1.5;
+  --glass-backdrop:blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  --glass-chrome-bg:color-mix(in srgb, var(--color-neutral-0) 88%, transparent);
+  --glass-solid-bg:var(--color-surface);
+  --glass-card-bg:var(--color-surface-glass);
+  --glass-edge:inset 0 0 0 var(--border-width-1) color-mix(in srgb, var(--color-neutral-0) 70%, transparent);
+  --glass-sheen:linear-gradient(180deg, color-mix(in srgb, var(--color-neutral-0) 35%, transparent), transparent 50%);
+}
+:root[data-mavzu='qorongi']{
+  --glass-saturate:1.3;
+  --glass-chrome-bg:color-mix(in srgb, var(--color-neutral-900) 92%, transparent);
+  --glass-edge:inset 0 0 0 var(--border-width-1) color-mix(in srgb, var(--color-neutral-0) 14%, transparent);
+  --glass-sheen:linear-gradient(180deg, color-mix(in srgb, var(--color-neutral-0) 4%, transparent), transparent 50%);
+}
+/* Asosiy zaxira: backdrop-filter qo'llanmaydigan brauzerda zich oddiy fon */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  :root, :root[data-mavzu='qorongi']{ --glass-chrome-bg:var(--glass-solid-bg); --glass-backdrop:none; }
+}
+/* Qo'shimcha zaxira (hamma brauzerda qo'llanmaydi) */
+@media (prefers-reduced-transparency: reduce){
+  :root, :root[data-mavzu='qorongi']{ --glass-chrome-bg:var(--glass-solid-bg); --glass-card-bg:var(--color-surface); --glass-backdrop:none; --glass-sheen:none; }
+}
+
+/* ==========================================================================
+   Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
+   ========================================================================== */
+:root{
+  /* Qavat urg'usi ustidagi matn (chip, faol qator, Lift): yorug'da oq */
+  --floor-ui-text:var(--color-neutral-0);
+  /* Qora sahna: ikkala mavzuda bir xil, ustidagi matn ikkala mavzuda oq */
+  --qora:var(--color-neutral-900);
+  --qora-sirt:var(--color-neutral-850);
+  --qora-chiziq:var(--color-neutral-800);
+  --qora-matn:var(--color-neutral-0);
+  --qora-matn-ikkinchi:var(--color-neutral-400);
+  /* Neytral yorliq va ikkinchi darajali yuza */
+  --sirt-ikkinchi:var(--color-neutral-200);
+  color-scheme:light;
+}
+:root[data-mavzu='qorongi']{
+  --floor-ui-text:var(--color-neutral-950);
+  --sirt-ikkinchi:var(--color-neutral-800);
+  color-scheme:dark;
+}
+/* Qavat urg'usining to'q variantlari (3D yuzlar, hover): DS da yo'q, muallif tasdiqladi.
+   [data-floor] da ham e'lon qilinadi, shunda ichki qavat kontekstida qayta hisoblanadi. */
+:where(:root), [data-floor]{
+  --floor-ui-toq:color-mix(in srgb, var(--floor-ui) 80%, var(--color-neutral-950));
+  --floor-ui-chuqur:color-mix(in srgb, var(--floor-ui) 60%, var(--color-neutral-950));
+
+  /* Eski nomlar → DS (qavatga bog'liqlari) */
+  --rang-asosiy:var(--floor-ui);            /* urg'u: chip, son, progress, ikonka, chegara */
+  --rang-asosiy-toq:var(--floor-ui-toq);
+  --rang-asosiy-chuqur:var(--floor-ui-chuqur);
+  --rang-asosiy-och:var(--floor-subtle);
+  --rang-asosiy-matn:var(--floor-ui-text);
+}
+
+/* ==========================================================================
+   Eski o'zbekcha nomlar → DS. Yangi kodda DS nomlari ishlatiladi.
+   ========================================================================== */
+:root{
   /* Rang */
-  --rang-asosiy: #4255ff;          /* ko'k: tugmalar, havolalar, ta'kid */
-  --rang-asosiy-toq: #2f40e0;      /* hover */
-  --rang-asosiy-qorada: #8b97ff;   /* qora fon ustidagi ko'k (matn va chiziq) */
-  --rang-asosiy-matn: #ffffff;
-  --rang-asosiy-och: #eef0ff;      /* SAT dizayni: to'g'ri javob varianti foni */
-  --rang-asosiy-chuqur: #2433b8;   /* Topshirish yo'li: 3D pog'onaning yon yuzi */
-  --rang-havola: #4255ff;          /* matn ko'rinishidagi havola va ta'kid (fon ustida) */
-
-  --fon: #ffffff;
-  --fon-ikkinchi: #f5f6fa;         /* tinch sahna foni */
-  --sirt: #ffffff;
-  --sirt-ikkinchi: #eceef3;        /* neytral yorliq, ikkinchi darajali tugma */
-  --chiziq: #e6e8ee;
-  --chiziq-kuchli: #dfe2ea;
-  --matn: #0f1115;                 /* qora: matn, qora sahna, karta chegarasi */
-  --matn-ikkinchi: #4a5063;
-  --matn-sust: #5a6072;
-  /* Forma maydoni (input, select, textarea) chegarasi, WCAG 1.4.11 (3:1):
-     fon ustida yorug'da 6.27:1, qorong'ida 9.64:1. Yangi rang emas.
-     --chiziq-kuchli bu yerga yaramaydi (1.30:1 / 1.39:1). */
-  --chiziq-maydon: var(--matn-sust);
-
-  --qora: #0f1115;
-  --qora-sirt: #1b1e26;
-  --qora-chiziq: #2a2e38;
-  --qora-matn-ikkinchi: #b4b9c8;
-
-  --rang-ogoh-fon: #fff4e5;
-  --rang-ogoh-matn: #8a3b0a;
+  --rang-havola:var(--color-link);          /* matn ko'rinishidagi havola va ta'kid */
+  --rang-asosiy-qorada:var(--color-brand-300); /* qora sahna ustidagi ko'k */
+  --fon:var(--color-bg);
+  --fon-ikkinchi:var(--color-surface-sunken);
+  --sirt:var(--color-surface);
+  --chiziq:var(--color-border);
+  --chiziq-kuchli:var(--color-border);
+  --matn:var(--color-text-primary);
+  --matn-ikkinchi:var(--color-text-secondary);
+  --matn-sust:var(--color-text-secondary);
+  /* Forma maydoni chegarasi, WCAG 1.4.11 (3:1). --input-border (neutral-500) studio foni
+     pastida 3:1 ga yetmaydi, shuning uchun matn-sust (neutral-600 / 400) qoldi. */
+  --chiziq-maydon:var(--matn-sust);
+  --rang-ogoh-fon:var(--color-warning-subtle);
+  --rang-ogoh-matn:var(--color-warning-text);
 
   /* Tipografiya */
-  --shrift: 'Onest Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --matn-hero: 4rem;
-  --matn-h1: 2.875rem;
-  --matn-h2: 2.75rem;
-  --matn-h3: 1.5rem;
-  --matn-katta: 1.1875rem;
-  --matn-asosiy: 1rem;
-  --matn-kichik: 0.875rem;
-  --matn-mayda: 0.8125rem;
+  --shrift:var(--font-family-sans);
+  --matn-hero:var(--text-display-size);
+  --matn-h1:var(--text-h1-size);
+  --matn-h2:var(--text-h2-size);
+  --matn-h3:var(--text-h3-size);
+  --matn-katta:var(--font-size-body-d);
+  --matn-asosiy:var(--text-body-size);
+  --matn-kichik:var(--text-small-size);
+  --matn-mayda:var(--text-caption-size);
 
   /* Bo'shliq */
-  --b-1: 4px;
-  --b-2: 8px;
-  --b-3: 12px;
-  --b-4: 16px;
-  --b-5: 20px;
-  --b-6: 24px;
-  --b-8: 32px;
-  --b-10: 40px;
-  --b-14: 56px;
-  --b-16: 64px;
-  --b-24: 96px;
-  --kenglik: 1200px;
+  --b-1:var(--space-1); --b-2:var(--space-2); --b-3:var(--space-3); --b-4:var(--space-4);
+  --b-5:var(--space-5); --b-6:var(--space-6); --b-8:var(--space-8); --b-10:var(--space-10);
+  --b-14:var(--space-14); --b-16:var(--space-16);
+  --b-24:96px;                              /* DS da yo'q, eski qiymat */
+  --kenglik:var(--size-content-max);
 
   /* Shakl */
-  --r-kichik: 6px;
-  --r-yon: 12px;                   /* SAT dizayni: yon panel qatorlari, kichik tugmalar */
-  --r-logo: 10px;
-  --r-orta: 16px;
-  --r-katta: 24px;
-  --r-toliq: 999px;
-  --soya: 0 4px 16px rgba(15, 17, 21, 0.08);
-  --parda: rgba(15, 17, 21, 0.5);  /* telefonda panel ochilganda orqa fon */
+  --r-kichik:var(--radius-sm);
+  --r-yon:var(--radius-md);
+  --r-logo:var(--radius-md);
+  --r-orta:var(--radius-md);
+  --r-katta:var(--radius-lg);
+  --r-toliq:var(--radius-full);
+  --soya:var(--shadow-2);
+  --parda:var(--scrim);
 
-  /* Qobiq (SAT sidebar) */
-  --yon-kenglik: 288px;
-  --yon-yigilgan: 72px;
-
-  color-scheme: light;
+  /* Qobiq (bo'lim yon paneli): eski qiymatlar */
+  --yon-kenglik:288px;
+  --yon-yigilgan:72px;
 }
 
-/* Qorong'i mavzu. data-mavzu ni <head> dagi skript qo'yadi (BoshQism.astro):
-   avval localStorage dagi tanlov, bo'lmasa prefers-color-scheme.
-   Palitra o'zgarmaydi: oq, qora, ko'k. */
-:root[data-mavzu='qorongi'] {
-  --rang-asosiy: #4255ff;          /* fon sifatida: oq matn bilan 5.3:1 */
-  --rang-asosiy-toq: #2f40e0;
-  --rang-havola: #8b97ff;          /* qora fonda matn: 6.9:1 */
-  --rang-asosiy-och: #1b1e26;
-  --rang-asosiy-chuqur: #2433b8;
-
-  --fon: #0f1115;
-  --fon-ikkinchi: #1b1e26;
-  --sirt: #0f1115;
-  --sirt-ikkinchi: #2a2e38;
-  --chiziq: #2a2e38;
-  --chiziq-kuchli: #2a2e38;
-  --matn: #ffffff;
-  --matn-ikkinchi: #b4b9c8;
-  --matn-sust: #b4b9c8;
-
-  --rang-ogoh-fon: #33240f;        /* ogohlik ma'nosi saqlanadi: 2026-11-05 qarori */
-  --rang-ogoh-matn: #ffc98a;       /* #33240f ustida ~10:1 */
-
-  --soya: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --parda: rgba(0, 0, 0, 0.6);
-
-  color-scheme: dark;
-}
-
-@media (max-width: 640px) {
-  :root {
-    --matn-hero: 2.5rem;
-    --matn-h1: 2.125rem;
-    --matn-h2: 2rem;
-    --b-24: 64px;
-  }
+@media (max-width: 640px){
+  :root{ --b-24:64px; }
 }
