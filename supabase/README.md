@@ -308,7 +308,7 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 
 **Supabase Dashboard** → Authentication → Sign In / Providers → **Google**: "Enable", Client ID va Client Secret qo'yiladi, Save. Qolgan maydonlar standart.
 
-**URL Configuration** (10.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/Tayanch/uz/hisob/callback/` qo'shiladi (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/Tayanch/**` allaqachon bor. Qo'llash: `supabase config diff --remote=<ref>` (2026-11-09: yagona e'lon qilingan farq shu callback qatori), muallif "ha" desa `supabase config push --remote=<ref>`.
+**URL Configuration** (10.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/Tayanch/uz/hisob/callback/` qo'shiladi (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/Tayanch/**` allaqachon bor. **Qo'llangan (2026-11-09)**: `config diff` da yagona e'lon qilingan farq shu callback qatori edi; muallif "ha" degandan keyin `supabase config push --remote=<ref> --yes`, keyingi `config diff` da e'lon qilingan farq 0 (e'lon qilinmagan 8 ta sozlama o'zgarmadi).
 
 **Tartib**: provider yoqilmaguncha saytdagi Google tugmasi Supabase'ning `{"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}` sahifasini ochadi (2026-11-09, lokal sinov). Shuning uchun Google sozlamalari **merge va deploy'dan oldin** qilinadi.
 
