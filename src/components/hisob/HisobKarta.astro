@@ -1,0 +1,94 @@
+---
+// Hisob sahifalarining umumiy qolipi: SatFokus (yon panelsiz) ichida bitta ustun karta.
+// Matn inglizcha (SAT bo'limi). Uslub: DESIGN.md, tokens.css; xato rangi ogohlik juftligi (qizil yo'q).
+import SatFokus from '../../layouts/SatFokus.astro';
+import type { SatSahifa } from '../../data/satSahifalar';
+
+interface Props {
+  sahifa: SatSahifa;
+  /** Karta ustidagi qisqa matn */
+  lead?: string;
+}
+const { sahifa, lead } = Astro.props;
+---
+<SatFokus title={`${sahifa.nomi} · SAT`} description={sahifa.tavsif} ustki="Account" nomi={sahifa.nomi} yol={['Account']}>
+  <div class="hisob">
+    <h1 id="hisob-sarlavha">{sahifa.nomi}</h1>
+    {lead && <p class="hisob-lead">{lead}</p>}
+    <p class="hisob-ogoh" data-hisob-yoq hidden>
+      Accounts are not available on this site yet. Everything else works without an account: your progress is saved in this browser.
+    </p>
+    <slot />
+  </div>
+</SatFokus>
+
+<style is:global>
+  .hisob {
+    max-width: 480px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: var(--b-5);
+  }
+  .hisob h1 { font-size: var(--matn-h3); line-height: 1.2; font-weight: 800; }
+  .hisob h1:focus { outline: none; }
+  .hisob h2 { font-size: var(--matn-katta); font-weight: 800; }
+  .hisob-lead { color: var(--matn-ikkinchi); line-height: 1.6; }
+  .hisob-karta {
+    background: var(--sirt); border: 1px solid var(--chiziq); border-radius: var(--r-katta);
+    padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-5);
+  }
+  .hisob-karta[hidden], .hisob [hidden] { display: none; }
+  .hisob-forma { display: flex; flex-direction: column; gap: var(--b-5); }
+  .hisob-maydon { display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
+  .hisob-maydon label { font-weight: 700; }
+  .hisob-maydon .ixtiyoriy { font-weight: 500; color: var(--matn-sust); }
+  .hisob-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
+  .hisob-kirit {
+    width: 100%; min-height: 48px; padding: 0 var(--b-4);
+    border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    background: var(--fon); color: var(--matn); font: inherit; font-size: 17px;
+  }
+  .hisob-kirit:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .hisob-kirit[aria-invalid='true'] { border-color: var(--rang-ogoh-matn); }
+  .hisob-kirit:disabled { background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
+  .hisob-xato { font-size: var(--matn-kichik); font-weight: 700; color: var(--rang-ogoh-matn); line-height: 1.5; }
+  .hisob-xato::before { content: '! '; }
+
+  .hisob-belgi { display: flex; gap: var(--b-3); align-items: flex-start; }
+  .hisob-belgi input {
+    flex: none; width: 24px; height: 24px; margin: 0; margin-top: 1px;
+    accent-color: var(--rang-asosiy); cursor: pointer;
+  }
+  .hisob-belgi input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .hisob-belgi label { font-weight: 500; line-height: 1.5; cursor: pointer; }
+  .hisob-belgi-blok { display: flex; flex-direction: column; gap: var(--b-1); }
+
+  .hisob-alert, .hisob-ogoh {
+    font-weight: 700; line-height: 1.5;
+    color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon);
+    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4);
+  }
+  .hisob-holat {
+    font-weight: 700; line-height: 1.5;
+    color: var(--matn); background: var(--fon-ikkinchi);
+    border-left: 4px solid var(--rang-asosiy);
+    border-radius: var(--r-kichik); padding: var(--b-3) var(--b-4);
+  }
+  [data-mavzu='qorongi'] .hisob-holat { background: var(--sirt-ikkinchi); }
+
+  .hisob-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); align-items: center; }
+  .hisob .tugma { width: 100%; }
+  .hisob .tugma:disabled { cursor: not-allowed; opacity: 1; background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
+  .hisob .tugma-asosiy[aria-busy='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .hisob-havola { color: var(--rang-havola); font-weight: 700; }
+  .hisob-qator { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); flex-wrap: wrap; }
+  .hisob-past { text-align: center; color: var(--matn-ikkinchi); }
+  .hisob-yoki {
+    display: flex; align-items: center; gap: var(--b-3);
+    color: var(--matn-sust); font-size: var(--matn-kichik); font-weight: 700;
+  }
+  .hisob-yoki::before, .hisob-yoki::after { content: ''; flex: 1; border-top: 1px solid var(--chiziq-kuchli); }
+  .hisob-sust { color: var(--matn-ikkinchi); line-height: 1.6; font-size: var(--matn-kichik); }
+
+  @media (max-width: 640px) {
+    .hisob-karta { padding: var(--b-5) var(--b-4); border-radius: var(--r-orta); }
+  }
+</style>

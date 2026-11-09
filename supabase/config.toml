@@ -1,0 +1,21 @@
+# Tayanch: Supabase Auth sozlamalari (P03). Faqat ochiq qiymatlar; kalit va parol bu yerga yozilmaydi.
+# Qo'llash: `supabase config diff --remote=<ref>` (ko'rish), so'ng `supabase config push --remote=<ref>`.
+# Faylda yo'q sozlamalar Supabase'da o'zgarmaydi (CLI hujjati). Batafsil: supabase/README.md.
+project_id = "tayanch"
+
+[auth]
+# Havolada redirectTo bo'lmasa shu manzil ishlatiladi.
+site_url = "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/"
+# Tasdiqlash xati -> kirish/ (ba'zan ?keyin= bilan), parol tiklash -> parol-tiklash/. Lokal: astro dev/preview 4321.
+additional_redirect_urls = [
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/",
+  "http://localhost:4321/Tayanch/**",
+]
+# Formadagi hisobSozlama.parolMinUzunlik bilan bir xil.
+minimum_password_length = 8
+
+[auth.email]
+# Email tasdiqlash majburiy.
+enable_confirmations = true
