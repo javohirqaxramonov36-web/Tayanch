@@ -263,3 +263,22 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     throw new Error(`satYonGuruhlar: yon panelda yo'q yoki takroriy sahifa: ${yoq.map((x) => x.qism).join(', ')}`);
   }
 }
+
+/** Namuna (demo) sahifalari: `noindex` (SatFokus), yon panelda va `satGuruhlar` da yo'q (P06, muallif qarori 2026-11-09). */
+export const satNamunaSahifalar: SatSahifa[] = [
+  {
+    qism: 'vosita/savol-namuna/',
+    tayyor: true,
+    nomi: 'Question viewer',
+    tavsif: 'A sample of the component that shows SAT practice questions: multiple choice and student-produced response, formulas, figures and passages.',
+    turi: 'vosita',
+    manbalar: [],
+    tekshirilmagan: ['The sample questions were written for Tayanch and still need the author\'s review.'],
+  },
+];
+
+export const namunaSahifa = (qism: string): SatSahifa => {
+  const t = satNamunaSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satNamunaSahifalar: ${qism} topilmadi`);
+  return t;
+};
