@@ -133,6 +133,19 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
     from pg_proc p
    where p.pronamespace = 'public'::regnamespace
      and has_function_privilege('anon', p.oid, 'execute')
+     and p.prorettype not in ('trigger'::regtype, 'event_trigger'::regtype)
+  -- Trigger funksiyalarini to'g'ridan-to'g'ri (RPC) chaqirib bo'lmaydi, shuning uchun 22 ga kirmaydi.
+  -- Haqiqiy loyihada Supabase o'zi qo'shgan public.rls_auto_enable() (event trigger ensure_rls) shu yerda ko'rinadi.
+  union all
+  select 23, 'info: public sxemadagi trigger funksiyalari (RPC orqali chaqirilmaydi)', 'info',
+         coalesce(string_agg(p.oid::regprocedure::text || ' ' || p.prorettype::regtype::text
+                             || ' anon=' || has_function_privilege('anon', p.oid, 'execute')::text
+                             || coalesce(' event trigger: ' || (select string_agg(e.evtname || ' ' || e.evtevent, ', ')
+                                                                 from pg_event_trigger e where e.evtfoid = p.oid), ''),
+                             '; '), 'yo''q')
+    from pg_proc p
+   where p.pronamespace = 'public'::regnamespace
+     and p.prorettype in ('trigger'::regtype, 'event_trigger'::regtype)
 
   -- 3. security definer funksiyalarda search_path belgilangan
   union all

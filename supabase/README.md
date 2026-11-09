@@ -2,7 +2,9 @@
 
 Sxema, RLS va server funksiyalari (P02, PR #38). Haqiqiy loyihani ishga tushirish (P02b). Qarorlar: `docs/qarorlar/001-hisob-tolov-server.md`. Jadvallar va oqimlar: `docs/ma'lumotlar-modeli.md`.
 
-Login, link, push va Dashboard qadamlarini **muallif** o'z terminali va brauzerida bajaradi. Claude kalit, token va baza parolini so'ramaydi, ko'rmaydi va yozmaydi. Repoga va chatga faqat project-ref yozilishi mumkin.
+CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; muallif faqat parolni terminalga yozadi, brauzerda tasdiqlaydi va bazaga yozishdan oldin "ha" deydi. Dashboard qadamlarini muallif o'zi bajaradi. Claude kalit, token va baza parolini so'ramaydi, ko'rmaydi va yozmaydi (`--password`, `--token` va parolli env berilmaydi). Repoga va chatga faqat project-ref yozilishi mumkin.
+
+**Haqiqiy loyiha:** ref `uvwejvjrsswssgydwevm` ("Tayanch"), region `eu-central-1` (Frankfurt), reja Free, Postgres 17.11. Migratsiyalar 2026-11-09 da qo'llangan. Eski `uwgqlnvneqzcgzeroabm` (Sidney, pauzada) ishlatilmaydi.
 
 ## Papka
 
@@ -14,7 +16,7 @@ Login, link, push va Dashboard qadamlarini **muallif** o'z terminali va brauzeri
 | `tests/loyiha_tekshir.sql` | Loyiha holatini tekshirish, **faqat o'qiydi**: RLS, RPC va ularning huquqlari, jadval huquqlari lokal sinov bilan bir xilligi, bucket, trigger, SPR, sinov qoldig'i. SQL Editor'da ham, `psql` da ham ishlaydi. |
 | `../scripts/rls-tekshir.sh` | Lokal sinov: vaqtinchalik klaster, migratsiyalar 2 marta, testlar. `npm run db:tekshir` |
 
-`supabase/.temp/` (CLI `link` dan keyin yaratadi: project-ref, pooler manzili) `.gitignore` da. `supabase/config.toml` hozircha yo'q (3-bo'lim).
+`supabase/.temp/` (CLI `link` dan keyin yaratadi: project-ref, pooler manzili, servis versiyalari) `.gitignore` da. `supabase/config.toml` yo'q va kerak bo'lmadi: `link`, `db push --remote`, `migration list --remote`, `db query --remote` usiz ishladi (2026-11-09, 3-bo'lim).
 
 ## 0. Bepul reja cheklovlari
 
@@ -86,18 +88,40 @@ supabase migration list --remote
 
 - **CLI 3.x da `db push` sukut bo'yicha lokal bazaga** (127.0.0.1:54322) qaraydi; haqiqiy loyiha uchun `--remote` shart (`supabase db push --help`, 2026-11-09). `--remote` siz buyruq Docker'dagi lokal baza yo'qligi uchun ulanish xatosi beradi, loyihaga tegmaydi.
 - `--dry-run` qo'llanadigan 9 ta migratsiyani ko'rsatadi, hech narsa yozmaydi. `migration list --remote`: Local va Remote ustunlarida bir xil 9 ta versiya.
-- Token va parol: `login` brauzer orqali, token CLI'ning o'zida saqlanadi. Baza paroli so'ralsa, faqat terminalga kiritiladi.
-- `config.toml`: `db push --dry-run` (lokal) usiz ishladi; `link` va `db push --remote` uchun kerakmi: haqiqiy loyihada tekshiriladi. So'ralsa `supabase init`: 2026-11-09 da nusxa papkada sinaldi, faqat `config.toml` va `.temp/` qo'shdi, `migrations/` fayllari o'zgarmadi (checksum bir xil). `config.toml` dagi auth qiymatlari lokal standart (`site_url = "http://127.0.0.1:3000"`), shuning uchun u repoga faqat ko'rib chiqilgandan keyin qo'shiladi va `supabase config push` ishlatilmaydi (Dashboard sozlamalarini almashtirishi mumkin: tekshirish kerak).
+- Token va parol: `login` brauzer orqali, token CLI'ning o'zida saqlanadi. `link`, `db push --remote`, `migration list --remote`, `db query --remote` baza parolini **so'ramadi**: CLI har safar `Initialising login role...` deb vaqtinchalik login rolini token orqali yaratadi. Baza paroli faqat `psql` uchun kerak (6-bo'lim).
+- `config.toml` **kerak bo'lmadi** (2026-11-09, haqiqiy loyihada). `supabase init` qilinmadi. Kelajakda kerak bo'lsa: 2026-11-09 da nusxa papkada sinalgan, faqat `config.toml` va `.temp/` qo'shadi, `migrations/` ga tegmaydi; auth qiymatlari lokal standart (`site_url = "http://127.0.0.1:3000"`), shuning uchun repoga faqat ko'rib chiqilgandan keyin qo'shiladi va `supabase config push` ishlatilmaydi (Dashboard sozlamalarini almashtirishi mumkin: tekshirish kerak).
+
+Haqiqiy natija (2026-11-09, CLI 3.0.0):
+
+| Buyruq | CLI xabari |
+| --- | --- |
+| `supabase link --project-ref uvwejvjrsswssgydwevm` | `Target: project uvwejvjrsswssgydwevm`, `Finished supabase link.` Parol so'ramadi, `supabase/.temp/` yaratildi. |
+| `supabase db push --remote --dry-run` | `Target: project Tayanch (uvwejvjrsswssgydwevm) · production`, `DRY RUN: migrations will *not* be pushed`, 9 ta fayl ro'yxati. |
+| `supabase db push --remote` | Ro'yxatdan keyin `Apply 9 migrations on project Tayanch (...) · production?` **Yes / No** tanlovi, sukut **No** (Enter bosilsa bekor bo'ladi). Muallif "ha" degandan keyin `--yes` bilan qayta ishga tushirildi: `Confirmed by --yes`, 9 ta `Applying migration ...`, `Finished supabase db push.` |
+| `supabase migration list --remote` | JSON: 9 ta qator, har birida `local` = `remote` (`20261108000001` … `20261108000009`). |
+
+`--yes` faqat muallif dry-run ro'yxatini ko'rib "ha" degandan keyin qo'shiladi.
 - CLI'siz: Dashboard → SQL Editor'da fayllarni raqam tartibida birma-bir (`tests/lokal-shim.sql` ni **emas**). Bunda migratsiyalar tarixi yozilmaydi, keyin `db push` ularni yangi deb hisoblaydi: tavsiya qilinmaydi.
 
 ## 4. Push dan keyin tekshirish
 
-Dashboard → SQL Editor → `tests/loyiha_tekshir.sql` matnini qo'yib Run (yoki 6-bo'limdagi `psql` bilan `-f supabase/tests/loyiha_tekshir.sql`). Hamma qatorda `ok` yoki `info` bo'lishi kerak:
+Eng oson yo'l: CLI 3 ning `db query` buyrug'i (parol so'ramaydi, SQL Editor'ga nusxalash shart emas):
+
+```bash
+supabase db query --remote --yes -f supabase/tests/loyiha_tekshir.sql
+```
+
+- `--read-only` bilan **ishlamaydi**: u Management API'ning faqat o'qiydigan roli bilan bajaradi, bu rolda `private` funksiyalariga huquq yo'q, natija `ERROR: 42501: permission denied for function run_spr_tests` (2026-11-09). Fayl faqat SELECT (yozish buyrug'i yo'q), shuning uchun `--read-only` siz ishga tushirish xavfsiz; hosted maqsadda CLI tasdiq so'raydi, `--yes` shuning uchun.
+- Natija JSON (`rows` ichida `tartib`, `tekshiruv`, `holat`, `tafsilot`).
+- Muqobil: Dashboard → SQL Editor → fayl matnini qo'yib Run, yoki 6-bo'limdagi `psql` bilan `-f supabase/tests/loyiha_tekshir.sql`.
+
+Hamma qatorda `ok` yoki `info` bo'lishi kerak:
 
 | tartib | tekshiruv | kutilgan |
 | --- | --- | --- |
 | 10 | RLS | 23 jadval, RLS o'chiq: yo'q |
-| 20–22 | RPC | 9 / 9; anon hech birini, authenticated 7 tasini, `admin_*` ni faqat service_role chaqiradi; anon uchun boshqa public funksiya yo'q |
+| 20–22 | RPC | 9 / 9; anon hech birini, authenticated 7 tasini, `admin_*` ni faqat service_role chaqiradi; anon uchun boshqa public funksiya yo'q (trigger funksiyalari hisobga kirmaydi: ularni RPC orqali chaqirib bo'lmaydi) |
+| 23 | info | public sxemadagi trigger / event trigger funksiyalari. Haqiqiy loyihada: `rls_auto_enable()` (event trigger `ensure_rls`, `ddl_command_end`), egasi `postgres`. U bizning migratsiyamizda yo'q: loyiha yaratilganda Supabase qo'shgan, yangi public jadvalda RLS ni avtomatik yoqadi (qaysi sozlama qo'shgani: tekshirish kerak) |
 | 30, 40 | security definer, private | search_path hammasida; `private` anon/authenticated uchun yopiq |
 | 50 | huquqlar | 46 qator, farqlar: 0 (farq bo'lsa 51-qatorlar: jadval / rol, kutilgan va haqiqiy) |
 | 60, 61 | Storage | `question-figures` public = false; `question_figures_served_read` siyosati bor |
@@ -107,7 +131,16 @@ Dashboard → SQL Editor → `tests/loyiha_tekshir.sql` matnini qo'yib Run (yoki
 | 100 | Realtime | public jadval publikatsiyada yo'q |
 | 110, 111 | info | standart huquqlar (lokal shim bilan solishtirish uchun), Postgres versiyasi |
 
-Lokal natija (2026-11-09, Postgres 17.11): hamma qator `ok`; ataylab buzilganda (RLS o'chirildi, anon'ga `questions` SELECT, `admin_grant_plan` authenticated'ga, bucket ochildi) 4 tasi ham `XATO` bo'ldi. Dashboard'da ko'z bilan: Table Editor'da "RLS enabled", Storage'da bucket "Public" belgisiz.
+Lokal natija (2026-11-09, Postgres 17.11): hamma qator `ok`; ataylab buzilganda (RLS o'chirildi, anon'ga `questions` SELECT, `admin_grant_plan` authenticated'ga, bucket ochildi) 4 tasi ham `XATO` bo'ldi. 22/23-qator lokal sinovi: event trigger funksiyasi qo'shilganda 22 `ok`, 23 `info`; anon uchun oddiy public funksiya qo'shilganda 22 `XATO`.
+
+**Haqiqiy loyiha natijasi (2026-11-09, `uvwejvjrsswssgydwevm`, Postgres 17.11):**
+- Birinchi ishga tushirishda 22-qator `XATO`: `rls_auto_enable()` (yuqoridagi Supabase event trigger funksiyasi, anon'da EXECUTE bor). Funksiya `event_trigger` qaytaradi, uni to'g'ridan-to'g'ri chaqirib bo'lmaydi, shuning uchun 22-qator trigger funksiyalarini hisobga olmaydigan qilindi va ular 23-qatorda `info` sifatida ko'rsatiladi. Migratsiyalar o'zgarmadi.
+- Qayta ishga tushirishda: 10–100 hamma qator `ok`, 23, 110, 111 `info`.
+- 50-qator: 46 qator, farqlar 0, ya'ni real jadval va ustun huquqlari lokal shim bilan bir xil.
+- 110-qator (standart huquqlar): `postgres` va `supabase_admin` uchun public sxemada jadval (`arwdDxtm`), ketma-ketlik (`rwU`), funksiya (`X`) huquqlari `anon`, `authenticated`, `service_role` ga beriladi. Lokal shim `postgres` uchun xuddi shunday (`lokal-shim.sql` 64–66-qatorlar); `supabase_admin` yaratgan obyektlar migratsiyalarda yo'q (migratsiyalar `postgres` nomidan bajariladi).
+- 80: SPR 29 / 29; 90: plans `limits={}`, narx null; 91: savol 0; 92: sinov qoldig'i 0.
+
+Dashboard'da ko'z bilan: Table Editor'da "RLS enabled", Storage'da bucket "Public" belgisiz (muallif tekshiradi, hali ko'rilmagan).
 
 ## 5. Kalitlar qayerda turadi
 
