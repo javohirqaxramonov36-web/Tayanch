@@ -50,6 +50,8 @@ export function navigatorniIshgaTushir(): void {
   let qaytarilsin: HTMLElement | null = null;
   let yopishSababi: 'saqlandi' | 'otkazildi' | 'bekor' | null = null;
   let sanaTegildi = false;
+  /** true once the post-close work (render, focus) ran for the current opening */
+  let yakunlandi = true;
 
   // ---------- form state ----------
   const inputlar = (nom: string) => [...forma.querySelectorAll<HTMLInputElement>(`input[name="${nom}"]`)];
@@ -140,6 +142,7 @@ export function navigatorniIshgaTushir(): void {
   function och(r: Rejim) {
     rejim = r;
     yopishSababi = null;
+    yakunlandi = false;
     qaytarilsin = document.activeElement instanceof HTMLElement && document.activeElement !== document.body
       ? document.activeElement
       : null;
@@ -148,9 +151,29 @@ export function navigatorniIshgaTushir(): void {
     korsat(0);
   }
 
+  // Post-close work runs directly from yop() instead of relying only on the async `close` event
+  // (some embedded browsers deliver it late or not at all after a scripted close()).
   function yop(sabab: NonNullable<typeof yopishSababi>) {
     yopishSababi = sabab;
-    dialog!.close();
+    if (dialog!.open) dialog!.close();
+    yakunla();
+  }
+
+  function yakunla() {
+    if (yakunlandi) return;
+    yakunlandi = true;
+    // Browser may force-close (e.g. repeated ESC): treat it as skip/cancel so state stays consistent.
+    if (yopishSababi === null) {
+      if (rejim === 'birinchi' && !profil) {
+        profil = otkazilganProfil(new Date());
+        profilniYoz(ombor, profil);
+      }
+      yopishSababi = rejim === 'birinchi' ? 'otkazildi' : 'bekor';
+    }
+    chiz();
+    // Return focus: rebuild button (or whatever opened it); after first run, the roadmap heading.
+    const nishon = yopishSababi === 'bekor' ? qaytarilsin ?? qaytaBtn : salomEl;
+    nishon.focus();
   }
 
   function saqla() {
@@ -204,20 +227,7 @@ export function navigatorniIshgaTushir(): void {
     e.preventDefault();
     otkaz();
   });
-  dialog.addEventListener('close', () => {
-    // Browser may force-close (e.g. repeated ESC): treat it as skip/cancel so state stays consistent.
-    if (yopishSababi === null) {
-      if (rejim === 'birinchi' && !profil) {
-        profil = otkazilganProfil(new Date());
-        profilniYoz(ombor, profil);
-      }
-      yopishSababi = rejim === 'birinchi' ? 'otkazildi' : 'bekor';
-    }
-    chiz();
-    // Return focus: rebuild button (or whatever opened it); after first run, the roadmap heading.
-    const nishon = yopishSababi === 'bekor' ? qaytarilsin ?? qaytaBtn : salomEl;
-    requestAnimationFrame(() => nishon.focus());
-  });
+  dialog.addEventListener('close', yakunla);
 
   // Focus trap: keep Tab / Shift+Tab inside the dialog.
   dialog.addEventListener('keydown', (e) => {
