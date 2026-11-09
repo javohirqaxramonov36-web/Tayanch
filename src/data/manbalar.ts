@@ -115,6 +115,15 @@ export const manbalar: Manba[] = [
     izoh: "Kontent siyosati uchun. 10-bo'lim: xizmatlar \"solely for your non-commercial use\", ularni pul ishlash yoki \"as part of any test prep or other business\" uchun ishlatib bo'lmaydi. 8-bo'lim: kontentni yozma ruxsatsiz tarqatish, yuklab olish, ko'paytirish, scrape yoki data-mine qilish taqiqlangan. \"non-commercial use\" va \"test prep\" iqtiboslari sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200); 8-bo'lim iqtiboslari faqat WebFetch xulosasidan. Sahifada kuchga kirish sanasi topilmadi.",
   },
   {
+    id: 'CB12',
+    nomi: 'Digital SAT Suite content domains (Reading and Writing, Math)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/higher-ed-professionals/test-validity/content-domains',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "Original savollar taksonomiyasi (src/data/savolSxema.ts) uchun: R&W 4 domen (Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions) va 10 ko'nikma; Math 4 domen (Algebra, Advanced Math, Problem-Solving and Data Analysis, Geometry and Trigonometry) va 19 ko'nikma. Nomlar WebFetch xulosasidan (2026-11-09), sahifada sana yo'q. PSAT izohlari olib tashlangan, SAT nomi qolgan.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',

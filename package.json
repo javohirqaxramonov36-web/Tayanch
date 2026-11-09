@@ -8,12 +8,20 @@
     "preview": "astro preview",
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
-    "repo:tekshir": "node scripts/repo-tekshir.mjs"
+    "repo:tekshir": "node scripts/repo-tekshir.mjs",
+    "savol:tekshir": "node scripts/savol-tekshir.mjs",
+    "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",
+    "savol:tasdiqla": "node scripts/savol-tasdiqla.mjs",
+    "savol:import": "node --env-file-if-exists=.env scripts/savol-import.mjs",
+    "savol:sinov": "node --test scripts/savol/savol.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
     "@supabase/supabase-js": "^2.119.0",
     "astro": "^7.4.5",
     "three": "0.186.1"
+  },
+  "devDependencies": {
+    "katex": "^0.19.1"
   }
 }
