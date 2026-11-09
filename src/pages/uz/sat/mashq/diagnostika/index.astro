@@ -5,8 +5,8 @@
 // Hisob: src/lib/diagnostika.ts (ball 400–1600 va persentil yo'q; tavsiya ko'pi bilan TAVSIYA_SONI ta domen).
 // Saqlash: src/lib/progressStore.ts (kalit tayanch:sat-diagnostika).
 // Matn: hamma UI matni pastdagi MATN obyektida, inglizcha (SAT bo'limi qoidasi, CLAUDE.md; muallif tekshiradi).
-// Savollar mazmuni o'zgarmaydi: Math savollari va R&W ko'rsatmalari o'zbekcha, explanation_uz va desmos_tip
-// o'zbekcha qoladi va "(Uzbek)" deb belgilanadi, lang="uz" bilan.
+// Savol matni, variantlar va skill nomlari inglizcha (muallif qarori 2026-11-09, inglizcha qoralama, reviewed: false).
+// explanation_uz va desmos_tip o'zbekcha qoladi va "(Uzbek)" deb belgilanadi, lang="uz" bilan.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import hamma from '../../../../../data/sat-diagnostic.json';
 import { tanlaSavollar, type DiagSavol } from '../../../../../lib/diagnostika';
@@ -105,6 +105,7 @@ const MATN = {
     izoh: 'Explanation (Uzbek).',
     desmosMaslahat: 'Desmos tip (Uzbek).',
     xatoTuriLegend: 'Type of mistake',
+    xatoTuriSavol: ', question {i}',
     xtXulosa: '{bilim}: {a} · {etibor}: {b} · {vaqt}: {c} · Not marked: {d}',
   },
 };
@@ -159,6 +160,8 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
     ) : (
       <>
         <script type="application/json" id="diag-data" set:html={JSON.stringify(data)} />
+        {/* Savol va natija ekranida ko'rinadigan h1 yashirin bo'ladi: sahifada har doim bitta h1 qoladi */}
+        <h1 class="ekranda-yoq" id="d-h1-yashirin" hidden>{MATN.h1}</h1>
 
         <section class="karta" id="d-boshlash" aria-labelledby="d-h1">
           <p class="pill-qator">
@@ -330,12 +333,9 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
     const f = (kalit: string, q: Record<string, string | number> = {}) =>
       String(T[kalit] ?? '').replace(/\{(\w+)\}/g, (_, k: string) => String(q[k] ?? ''));
     const son = (n: number, [bir, kop]: [string, string]) => (n === 1 ? bir : kop);
-    // Savol matni: Math savollari o'zbekcha (mazmuni o'zgarmaydi), R&W asosan inglizcha
-    const savolTili = (s: DiagSavol) => (s.section === 'Math' ? 'uz' : '');
 
     const HARFLAR: Harf[] = ['A', 'B', 'C', 'D'];
     const vaqtMatn = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-    const tilQoy = (e: HTMLElement, til: string) => { if (til) e.lang = til; else e.removeAttribute('lang'); };
 
     const ekranlar = { boshlash: $('d-boshlash'), savol: $('d-savol'), natija: $('d-natija') };
     const variantlar = [...document.querySelectorAll<HTMLLabelElement>('#d-variantlar .variant')];
@@ -357,6 +357,7 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
 
     function korsat(nom: keyof typeof ekranlar) {
       for (const [k, e] of Object.entries(ekranlar)) e.hidden = k !== nom;
+      $('d-h1-yashirin').hidden = nom === 'boshlash';
       $('d-ogoh').hidden = true;
     }
 
@@ -414,7 +415,6 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
       $('d-dev').hidden = !(d.dev && !s.reviewed);
       const h = $('d-savol-h');
       h.textContent = s.prompt;
-      tilQoy(h, savolTili(s));
       variantlar.forEach((l, i) => {
         const inp = l.querySelector('input')!;
         const matn = l.querySelector<HTMLElement>('.v-matn')!;
@@ -585,9 +585,7 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
           tuz('p', 't-meta', `${i + 1}. ${T.bolim[s.section]} · ${s.domain} · ${s.skill}`),
           tuz('p', 't-holat', T.holat[sn.holat]),
         );
-        const savolP = tuz('p', 't-savol', s.prompt);
-        tilQoy(savolP, savolTili(s));
-        li.append(bosh, savolP);
+        li.append(bosh, tuz('p', 't-savol', s.prompt));
 
         const variant = (h: Harf | null) => (h ? `${h}) ${s.choices[HARFLAR.indexOf(h)]}` : T.holat.javobsiz);
         const dl = tuz('dl', 't-javoblar');
@@ -607,7 +605,10 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
 
         if (sn.holat !== 'togri') {
           const fs = tuz('fieldset', 'xato-turi');
-          fs.append(tuz('legend', '', f('xatoTuriLegend')));
+          // Ekran o'quvchi 10 ta bir xil guruh nomini eshitmasligi uchun savol raqami yashirin qo'shiladi
+          const legend = tuz('legend', '', f('xatoTuriLegend'));
+          legend.append(tuz('span', 'ekranda-yoq', f('xatoTuriSavol', { i: i + 1 })));
+          fs.append(legend);
           (Object.keys(T.xatoTuri) as XatoTuri[]).forEach((tur) => {
             const l = tuz('label', 'xt-variant');
             const inp = tuz('input');
@@ -755,7 +756,8 @@ const boshqa = bolimlar.filter((b) => b.slug !== 'sat');
 
   .pastki { display: flex; justify-content: space-between; gap: var(--b-3); }
   .pastki .tugma { min-width: 140px; }
-  .tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; opacity: 0.7; }
+  /* opacity yo'q: matn-sust sirt-ikkinchi ustida 4.5:1 dan yuqori qolsin */
+  .tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
 
   .navigator { display: flex; flex-direction: column; gap: var(--b-3); padding-top: var(--b-2); }
   .navigator ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(10, 44px); gap: var(--b-2); }
