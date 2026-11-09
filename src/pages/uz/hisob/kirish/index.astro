@@ -1,25 +1,24 @@
 ---
-// SAT · Hisob · Kirish (P03). Email + parol; Google joyi (P03B).
+// 1-qavat · Hisob · Kirish. Bitta hisob butun sayt uchun. Email + parol; Google joyi (P03B).
 // Holatlar: hisob o'chirilgan (env yo'q) · kirmagan (forma) · kirgan (davom etish) ·
 // xatdagi havoladan kelgan (email tasdiqlandi yoki havola eskirgan) · chiqqandan keyin (?chiqdi=1).
-import HisobKarta from '../../../../../components/hisob/HisobKarta.astro';
-import Maydon from '../../../../../components/hisob/Maydon.astro';
-import ParolMaydon from '../../../../../components/hisob/ParolMaydon.astro';
-import GoogleTugma from '../../../../../components/hisob/GoogleTugma.astro';
-import { hisobSahifa } from '../../../../../data/satSahifalar';
-import { yol } from '../../../../../lib/yol';
-
-const sahifa = hisobSahifa('hisob/kirish/');
+// ?keyin=<sayt ichidagi yo'l>: kirgandan keyin qaysi qavatdan kelgan bo'lsa o'sha sahifaga qaytaradi.
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import Maydon from '../../../../components/hisob/Maydon.astro';
+import ParolMaydon from '../../../../components/hisob/ParolMaydon.astro';
+import GoogleTugma from '../../../../components/hisob/GoogleTugma.astro';
+import { hisobSahifalar } from '../../../../data/hisobSahifalar';
+import { yol } from '../../../../lib/yol';
 ---
-<HisobKarta sahifa={sahifa} lead="An account is optional. Lessons and practice work without one.">
+<HisobKarta sahifa={hisobSahifalar.kirish} lead="Hisob ixtiyoriy. Darslar va mashqlar hisobsiz ham ishlaydi.">
   <p class="hisob-holat" id="kirish-holat" role="status" hidden></p>
   <p class="hisob-alert" id="kirish-havola-xato" role="alert" hidden></p>
 
   <section class="hisob-karta" id="kirgan" aria-labelledby="kirgan-sarlavha" hidden>
-    <h2 id="kirgan-sarlavha">You are signed in</h2>
+    <h2 id="kirgan-sarlavha">Siz hisobingizdasiz</h2>
     <p class="hisob-sust" id="kirgan-email"></p>
     <div class="hisob-tugmalar">
-      <a class="tugma tugma-asosiy" id="kirgan-davom" href={yol('/uz/sat/hisob/profil/')}>Continue</a>
+      <a class="tugma tugma-asosiy" id="kirgan-davom" href={yol('/uz/hisob/profil/')}>Davom etish</a>
     </div>
   </section>
 
@@ -27,18 +26,18 @@ const sahifa = hisobSahifa('hisob/kirish/');
     <form class="hisob-forma" id="kirish-forma" novalidate aria-labelledby="hisob-sarlavha">
       <p class="hisob-alert" id="kirish-xato" role="alert" hidden></p>
       <Maydon id="kirish-email" nomi="Email" turi="email" autocomplete="email" />
-      <ParolMaydon id="kirish-parol" nomi="Password" autocomplete="current-password" />
+      <ParolMaydon id="kirish-parol" nomi="Parol" autocomplete="current-password" />
       <div class="hisob-qator">
-        <a class="hisob-havola" href={yol('/uz/sat/hisob/parol-tiklash/')}>Forgot your password?</a>
+        <a class="hisob-havola" href={yol('/uz/hisob/parol-tiklash/')}>Parolni unutdingizmi?</a>
       </div>
-      <button type="submit" class="tugma tugma-asosiy" id="kirish-tugma">Sign in</button>
+      <button type="submit" class="tugma tugma-asosiy" id="kirish-tugma">Kirish</button>
     </form>
-    <p class="hisob-yoki" aria-hidden="true">or</p>
+    <p class="hisob-yoki" aria-hidden="true">yoki</p>
     <GoogleTugma />
   </div>
 
   <p class="hisob-past" data-hisob-bor>
-    New to Tayanch? <a class="hisob-havola" id="royxat-havola" href={yol('/uz/sat/hisob/royxat/')}>Create an account</a>
+    Hisobingiz yo'qmi? <a class="hisob-havola" id="royxat-havola" href={yol('/uz/hisob/royxat/')}>Ro'yxatdan o'ting</a>
   </p>
 </HisobKarta>
 
@@ -46,7 +45,7 @@ const sahifa = hisobSahifa('hisob/kirish/');
   import {
     hisobMijoz, hisobYoqBolsa, havolaHolati, havolaXatoMatni, keyingiManzil,
     xatoMatni, maydonXatosi, yuklanish, xabar, emailTogrimi,
-  } from '../../../../../lib/hisob';
+  } from '../../../../lib/hisob';
 
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
   const forma = $<HTMLFormElement>('kirish-forma');
@@ -60,12 +59,12 @@ const sahifa = hisobSahifa('hisob/kirish/');
   // ?keyin= ro'yxat havolasiga ham uzatiladi: tasdiqlash xatidan keyin foydalanuvchi o'sha sahifaga qaytadi.
   const qidiruv = new URLSearchParams(location.search);
   if (qidiruv.get('keyin')) $<HTMLAnchorElement>('royxat-havola').search = `?keyin=${encodeURIComponent(keyin)}`;
-  if (qidiruv.get('chiqdi') === '1') xabar(holat, 'You have signed out.');
+  if (qidiruv.get('chiqdi') === '1') xabar(holat, 'Hisobdan chiqdingiz.');
 
   function kirganniKorsat(emailMatn: string) {
     $('kirish-karta').hidden = true;
     document.querySelectorAll<HTMLElement>('[data-hisob-bor]').forEach((el) => (el.hidden = true));
-    $('kirgan-email').textContent = `Signed in as ${emailMatn}.`;
+    $('kirgan-email').textContent = `Siz ${emailMatn} hisobi bilan kirgansiz.`;
     $<HTMLAnchorElement>('kirgan-davom').href = keyin;
     $('kirgan').hidden = false;
   }
@@ -77,7 +76,7 @@ const sahifa = hisobSahifa('hisob/kirish/');
     if (havolaHolati.xato) {
       xabar($('kirish-havola-xato'), havolaXatoMatni);
     } else if (data.session && havolaHolati.tur === 'signup') {
-      xabar(holat, 'Your email is confirmed. Welcome to Tayanch.');
+      xabar(holat, "Emailingiz tasdiqlandi. Tayanch'ga xush kelibsiz.");
     }
     if (data.session) kirganniKorsat(data.session.user.email ?? '');
   }
@@ -85,10 +84,10 @@ const sahifa = hisobSahifa('hisob/kirish/');
   function tekshir(): boolean {
     let birinchi: HTMLInputElement | null = null;
     const e = email.value.trim();
-    const eXato = !e ? 'Enter your email.' : !emailTogrimi(e) ? 'Enter an email like name@example.com.' : null;
+    const eXato = !e ? 'Emailingizni kiriting.' : !emailTogrimi(e) ? "Email shu ko'rinishda bo'lsin: ism@example.com." : null;
     maydonXatosi(email, eXato);
     if (eXato) birinchi = email;
-    const pXato = parol.value ? null : 'Enter your password.';
+    const pXato = parol.value ? null : 'Parolingizni kiriting.';
     maydonXatosi(parol, pXato);
     if (pXato && !birinchi) birinchi = parol;
     birinchi?.focus();
@@ -102,12 +101,12 @@ const sahifa = hisobSahifa('hisob/kirish/');
     if (!tekshir()) return;
     const c = hisobMijoz();
     if (!c) return;
-    yuklanish(tugma, true, 'Signing in…');
+    yuklanish(tugma, true, 'Kirilmoqda…');
     try {
       const { error } = await c.auth.signInWithPassword({ email: email.value.trim(), password: parol.value });
       if (error) throw error;
       parol.value = '';
-      xabar(holat, 'Signed in. Taking you back…');
+      xabar(holat, 'Kirdingiz. Oldingi sahifaga qaytilmoqda…');
       location.assign(keyin);
       return;
     } catch (e) {

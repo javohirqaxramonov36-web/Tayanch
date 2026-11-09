@@ -14,7 +14,7 @@ const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlengt
 const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join(' ');
 ---
 <div class="hisob-maydon">
-  <label for={id}>{nomi}{ixtiyoriy && <span class="ixtiyoriy"> (optional)</span>}</label>
+  <label for={id}>{nomi}{ixtiyoriy && <span class="ixtiyoriy"> (ixtiyoriy)</span>}</label>
   {izoh && <p class="hisob-izoh" id={`${id}-izoh`}>{izoh}</p>}
   <input
     class="hisob-kirit"

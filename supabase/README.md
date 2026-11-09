@@ -15,13 +15,15 @@ Dashboard → Authentication → URL Configuration (`/dashboard/project/_/auth/u
 **Site URL** (havolada `redirectTo` bo'lmasa shu ishlatiladi):
 
 ```
-https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/
+https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 ```
 
-**Redirect URLs** (ruxsat ro'yxati). Kod ikkita manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`. Base `/Tayanch` harf katta-kichikligiga sezgir.
+**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod ikkita manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`. Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
 
 ```
-https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/
+https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
+https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**
+https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/
 http://localhost:4321/Tayanch/**
