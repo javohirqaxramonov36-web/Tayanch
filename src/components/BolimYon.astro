@@ -334,8 +334,9 @@ const ieltsGuruhlar = [
     display: flex; align-items: center; justify-content: space-between;
     gap: var(--b-3);
     padding: 0 var(--b-3) 0 var(--b-4);
-    background: var(--fon);
-    border-bottom: 1px solid var(--chiziq);
+    /* Liquid Glass (sticky topbar) */
+    background: var(--glass-sheen), var(--glass-chrome-bg); -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop); box-shadow: var(--glass-edge);
+    border-bottom: var(--border-width-1) solid var(--color-border);
   }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; min-height: 44px; color: var(--matn); }
   .logo-belgi {

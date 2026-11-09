@@ -64,7 +64,9 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Ast
   .fokus-bosh {
     min-height: 72px; flex: none;
     padding: var(--b-3) var(--b-8);
-    background: var(--fon); border-bottom: 1px solid var(--chiziq);
+    /* Liquid Glass (topbar) */
+    background: var(--glass-sheen), var(--glass-chrome-bg); -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop); box-shadow: var(--glass-edge);
+    border-bottom: var(--border-width-1) solid var(--color-border);
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-6);
   }
   .fokus-bosh .yopish {
