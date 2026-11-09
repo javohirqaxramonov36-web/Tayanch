@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import '../styles/ielts.css';
+import BoshQism from '../components/BoshQism.astro';
+import Lift from '../components/Lift.astro';
+import Belgi from '../components/ielts/Belgi.astro';
+import { joriyQavat } from '../data/qavatlar';
+import { matn } from '../data/umumiyMatn';
+import { yol } from '../lib/yol';
+
+interface Props {
+  nom: string;
+  tavsif: string;
+  vaqt?: string;
+}
+
+const { nom, tavsif, vaqt } = Astro.props;
+---
+<!doctype html>
+<html lang="uz" data-floor={joriyQavat(Astro.url.pathname)}>
+  <head>
+    <BoshQism title={`${nom} · IELTS`} description={tavsif} holat="qoralama" />
+  </head>
+  <body class="ielts-fokus">
+    <a class="otish" href="#asosiy">{matn.uz.otish}</a>
+    <header class="ielts-topbar shisha">
+      <div class="ielts-topbar-ichki">
+        <a class="ielts-orqaga" href={yol('/uz/ielts/mashq/')} aria-label="IELTS mashqlariga qaytish" title="IELTS mashqlariga qaytish">
+          <Belgi nom="orqa" />
+        </a>
+        <div class="ielts-topbar-nom">
+          <p>IELTS Academic</p>
+          <h1 lang="en">{nom}</h1>
+        </div>
+        {vaqt && (
+          <div class="ielts-soat" aria-label={`Qolgan vaqt, namuna: ${vaqt}`}>
+            <Belgi nom="vaqt" />
+            <span>{vaqt}</span>
+          </div>
+        )}
+        <Lift variant="fokus" />
+      </div>
+    </header>
+    <main class="ielts-test-kontent" id="asosiy" tabindex="-1">
+      <div class="ielts-namuna-qator">
+        <span class="yorliq">Namuna</span>
+        <p>Bu ekranda mashq interfeysini ko‘rishingiz mumkin.</p>
+      </div>
+      <slot />
+    </main>
+    <Lift variant="pastki" />
+  </body>
+</html>
+
+<style>
+  .ielts-topbar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-sticky);
+    border-block-end: var(--border-width-1) solid var(--color-border);
+  }
+  .ielts-topbar-ichki {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    max-inline-size: var(--size-content-max);
+    margin-inline: auto;
+    padding: var(--space-3) var(--space-4);
+  }
+  .ielts-orqaga {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: var(--size-touch-min);
+    block-size: var(--size-touch-min);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: var(--border-width-1) solid var(--color-border);
+  }
+  .ielts-orqaga:hover { background: var(--color-surface-sunken); }
+  .ielts-topbar-nom { flex: 1; min-inline-size: 0; }
+  .ielts-topbar-nom p { font-size: var(--text-caption-size); color: var(--color-text-secondary); }
+  .ielts-topbar-nom h1 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .ielts-soat {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width-1) solid var(--timer-border);
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    font-size: var(--text-small-size);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--text-button-weight);
+  }
+  @media (min-width: 768px) {
+    .ielts-topbar-ichki { padding-inline: var(--space-6); gap: var(--space-5); }
+  }
+</style>

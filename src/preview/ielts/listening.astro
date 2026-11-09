@@ -1,0 +1,105 @@
+---
+import IeltsFokus from '../../layouts/IeltsFokus.astro';
+import Belgi from '../../components/ielts/Belgi.astro';
+import SavolNamunalari from '../../components/ielts/SavolNamunalari.astro';
+import SavolYoli from '../../components/ielts/SavolYoli.astro';
+import Topshirish from '../../components/ielts/Topshirish.astro';
+import { yol } from '../../lib/yol';
+
+const savollar = ['javob', 'javob', 'joriy', 'bosh', 'bayroq', 'bosh', 'bosh', 'bosh'] as const;
+---
+<IeltsFokus nom="Listening" tavsif="Listening mashqining dizayn namunasi." vaqt="24:16">
+  <section class="ielts-yuza ielts-oqim" aria-labelledby="audio-sarlavha">
+    <div class="ielts-satr ielts-satr-oraliq">
+      <h2 id="audio-sarlavha" class="ielts-kichik-sarlavha">Audio va bo‘limlar</h2>
+      <span class="yorliq">1 / 4-qism</span>
+    </div>
+    <ol class="audio-qismlar" aria-label="Audio qismlari">
+      {[1, 2, 3, 4].map((qism) => <li aria-current={qism === 1 ? 'step' : undefined}>{qism}-qism</li>)}
+    </ol>
+    <div class="audio-panel">
+      <div class="audio-ijro">
+        <span class="audio-belgi"><Belgi nom="oyin" /></span>
+        <div><strong>1-qism audiosi</strong><p class="ielts-izoh">Audio bir marta ijro etiladi.</p></div>
+        <button class="tugma tugma-ikkinchi" type="button" disabled><Belgi nom="ijro" /> Ijro etish</button>
+      </div>
+      <progress class="ielts-olga" max="1" value="0" aria-label="Audio ijrosi"></progress>
+      <p class="ielts-izoh">00:00 · Audio pleer namunasi</p>
+    </div>
+  </section>
+  <SavolNamunalari modul="listening" />
+  <SavolYoli savollar={savollar} />
+  <details class="ielts-yuza ielts-ochiladigan">
+    <summary>Yakuniy tekshiruv holati <Belgi nom="pastga" /></summary>
+    <div class="ielts-ochiladigan-ichki ielts-oqim">
+      <div class="ielts-satr ielts-satr-oraliq">
+        <h2 class="ielts-kichik-sarlavha">Javoblarni tekshiring</h2>
+        <span class="audio-vaqt"><Belgi nom="vaqt" /> 02:00</span>
+      </div>
+      <p>Audio tugadi. Qolgan vaqtda bo‘sh javoblar va imloni tekshiring.</p>
+      <a class="ielts-havola" href="#savol-yoli">Savollar xaritasiga qaytish</a>
+    </div>
+  </details>
+  <Topshirish
+    natija={yol('/uz/ielts/vosita/natijalar/')}
+    tavsif="6 ta savolga javob berilmagan. Mashqqa qaytishingiz yoki natija namunasini ochishingiz mumkin."
+    amal="Natija namunasini ko‘rish"
+  />
+</IeltsFokus>
+
+<style>
+  .audio-qismlar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .audio-qismlar li {
+    padding: var(--space-2) var(--space-1);
+    border-radius: var(--radius-md);
+    text-align: center;
+    background: var(--color-surface-sunken);
+    color: var(--color-text-secondary);
+    font-size: var(--text-small-size);
+  }
+  .audio-qismlar li[aria-current] {
+    background: var(--floor-subtle);
+    border: var(--border-width-1) solid var(--floor-ui);
+    color: var(--color-text-primary);
+    font-weight: var(--text-button-weight);
+  }
+  .audio-panel {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: var(--border-width-1) solid var(--color-border);
+  }
+  .audio-ijro { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2) var(--space-3); align-items: center; }
+  .audio-ijro .tugma { grid-column: 1 / -1; }
+  .audio-belgi {
+    display: grid;
+    place-items: center;
+    inline-size: var(--size-touch-min);
+    block-size: var(--size-touch-min);
+    border-radius: var(--radius-full);
+    color: var(--floor-ui-text);
+    background: var(--floor-ui);
+  }
+  .audio-vaqt {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    color: var(--timer-warn-text);
+    background: var(--timer-warn-bg);
+    border: var(--border-width-1) solid var(--timer-warn-border);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+  }
+  @media (min-width: 768px) {
+    .audio-ijro { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .audio-ijro .tugma { grid-column: auto; }
+  }
+</style>

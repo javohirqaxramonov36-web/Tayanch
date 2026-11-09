@@ -39,7 +39,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
           title={yorliq(q)}
         >
           <span class="raqam">{q.raqam}</span>
-          {variant === 'pastki' && <span class="qisqa">{q.qisqaNom}</span>}
+          {variant === 'pastki' && <>{' '}<span class="qisqa">{q.qisqaNom}</span></>}
           {q.holat === 'tez-orada' && <span class="nuqta" aria-hidden="true"></span>}
         </a>
       </li>

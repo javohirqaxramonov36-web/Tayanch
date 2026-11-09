@@ -1,0 +1,111 @@
+---
+import BolimQobiq from '../../layouts/BolimQobiq.astro';
+import Belgi from '../../components/ielts/Belgi.astro';
+import { yol } from '../../lib/yol';
+import '../../styles/ielts.css';
+
+const xatolar = [
+  {
+    modul: 'Reading',
+    tur: 'True / False / Not Given',
+    manba: 'Sinov testi 01',
+    izoh: '5-savol · Dalil gapni qayta o‘qing va fikrga mosligini tekshiring.',
+    href: '/uz/ielts/mashq/reading/#savol-5',
+  },
+  {
+    modul: 'Reading',
+    tur: 'Matching headings',
+    manba: 'Reading darsi',
+    izoh: 'Paragrafni qamrab oladigan sarlavhani topishga urinib ko‘ring.',
+    href: '/uz/ielts/qollanma/reading/sarlavhalar/',
+  },
+  {
+    modul: 'Listening',
+    tur: 'Note completion',
+    manba: 'Sinov testi 01',
+    izoh: '3-savol · Bo‘sh joyga qanday so‘z kerakligini aniqlang.',
+    href: '/uz/ielts/mashq/listening/#savol-3',
+  },
+];
+---
+<BolimQobiq title="Xato daftari · IELTS" description="Dars va test xatolarini takrorlash ekranining dizayn namunasi." turi="vosita" bolim="ielts" holat="qoralama" yol={['Mashq']}>
+  <div class="ichki ielts-sahifa">
+    <header class="ielts-oqim">
+      <div class="ielts-namuna-qator"><span class="yorliq">Namuna</span><p>Dars va testdan olingan yozuvlar qanday ko‘rinishini ko‘ring.</p></div>
+      <div>
+        <h1>Xato daftari</h1>
+        <p class="ielts-izoh daftar-izoh">Xatolaringizni toping va o‘sha turdagi savollarni qayta ishlang.</p>
+      </div>
+    </header>
+
+    <section class="ielts-yuza ielts-oqim" aria-labelledby="filtrlar">
+      <h2 id="filtrlar" class="ielts-kichik-sarlavha">Xatolarni saralash</h2>
+      <div class="daftar-filtrlar">
+        <label>Bo‘lim
+          <select class="ielts-maydon" disabled>
+            <option>Barcha bo‘limlar</option>
+            <option lang="en">Reading</option>
+            <option lang="en">Listening</option>
+          </select>
+        </label>
+        <label>Savol turi
+          <select class="ielts-maydon" disabled>
+            <option>Barcha turlar</option>
+            {xatolar.map((xato) => <option lang="en">{xato.tur}</option>)}
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="ielts-yuza ielts-oqim" aria-labelledby="saqlangan">
+      <div class="ielts-satr ielts-satr-oraliq">
+        <h2 id="saqlangan" class="ielts-kichik-sarlavha">Saqlangan xatolar</h2>
+        <span class="yorliq">{xatolar.length} ta namuna</span>
+      </div>
+      <ul class="ielts-qatorlar daftar-qatorlar">
+        {xatolar.map((xato) => (
+          <li>
+            <span class="daftar-belgi"><Belgi nom={xato.modul === 'Reading' ? 'reading' : 'listening'} /></span>
+            <div class="daftar-yozuv">
+              <p class="ielts-satr"><span class="yorliq" lang="en">{xato.modul}</span><span class="ielts-yorliq">{xato.manba}</span></p>
+              <h3 lang="en">{xato.tur}</h3>
+              <p class="ielts-izoh">{xato.izoh}</p>
+            </div>
+            <a class="tugma tugma-ikkinchi" href={yol(xato.href)} aria-label={`Qayta ishlash: ${xato.tur}, ${xato.manba}`}>
+              <Belgi nom="takror" /> Qayta ishlash
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+    <a class="ielts-havola" href={yol('/uz/ielts/mashq/')}><Belgi nom="orqa" /> Mashqlarga qaytish</a>
+  </div>
+</BolimQobiq>
+
+<style>
+  .daftar-izoh { margin-block-start: var(--space-2); }
+  .daftar-filtrlar { display: grid; gap: var(--space-3); }
+  .daftar-filtrlar label { display: grid; gap: var(--space-2); min-inline-size: 0; font-size: var(--text-small-size); font-weight: var(--text-button-weight); }
+  .daftar-filtrlar .ielts-maydon:disabled { opacity: 1; color: var(--input-text); }
+  .daftar-qatorlar li { display: grid; align-items: center; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3); padding-block: var(--space-4); }
+  .daftar-qatorlar li:first-child { padding-block-start: 0; }
+  .daftar-qatorlar li:last-child { padding-block-end: 0; }
+  .daftar-qatorlar .tugma { grid-column: 1 / -1; }
+  .daftar-yozuv { display: grid; gap: var(--space-1); }
+  .daftar-yozuv h3 { font-size: var(--text-body-size); line-height: var(--text-body-lh); }
+  .daftar-belgi {
+    display: grid;
+    place-items: center;
+    align-self: start;
+    inline-size: var(--size-touch-min);
+    block-size: var(--size-touch-min);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-sunken);
+  }
+  .ielts-sahifa > .ielts-havola { justify-self: start; }
+  @media (min-width: 768px) {
+    .daftar-filtrlar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .daftar-qatorlar li { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .daftar-qatorlar .tugma { grid-column: auto; }
+  }
+</style>

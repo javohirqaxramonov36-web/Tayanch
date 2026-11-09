@@ -1,0 +1,139 @@
+/* IELTS mashq ekranlari uchun umumiy maket va boshqaruv elementlari. */
+.ielts-sahifa,
+.ielts-test-kontent {
+  display: grid;
+  gap: var(--space-6);
+  min-inline-size: 0;
+}
+.ielts-test-kontent {
+  inline-size: 100%;
+  max-inline-size: var(--size-content-max);
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-4) var(--space-10);
+}
+html:has(.ielts-fokus) { scroll-padding-block-start: calc(var(--size-touch-min) + var(--space-10)); }
+.ielts-fokus .otish { z-index: var(--z-dropdown); }
+
+.ielts-belgi { flex: none; inline-size: var(--size-icon-md); block-size: var(--size-icon-md); }
+.ielts-oqim { display: grid; gap: var(--space-4); }
+.ielts-satr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+.ielts-satr > :first-child { min-inline-size: 0; }
+.ielts-satr-oraliq { justify-content: space-between; }
+.ielts-amallar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.ielts-amallar > .tugma { flex: 1 1 auto; }
+.ielts-namuna-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.ielts-namuna-qator p,
+.ielts-izoh {
+  color: var(--color-text-secondary);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+}
+.ielts-kichik-sarlavha { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+.ielts-yorliq {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--text-caption-weight);
+}
+
+.ielts-yuza {
+  min-inline-size: 0;
+  padding: var(--space-4);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--card-radius);
+  background: var(--color-surface);
+}
+.ielts-qatorlar { list-style: none; margin: 0; padding: 0; }
+.ielts-qatorlar > li + li { border-block-start: var(--border-width-1) solid var(--color-border); }
+.ielts-havola {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--size-touch-min);
+  color: var(--color-link);
+  font-weight: var(--text-button-weight);
+}
+
+.ielts-maydon {
+  inline-size: 100%;
+  min-block-size: var(--control-height-md);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-2) solid var(--color-text-secondary);
+  border-radius: var(--control-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  font: inherit;
+}
+.ielts-maydon::placeholder { color: var(--input-placeholder); opacity: 1; }
+.ielts-maydon:focus-visible, .ielts-tanlov input:focus-visible + span {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-gap);
+}
+.ielts-olga {
+  appearance: none;
+  display: block;
+  inline-size: 100%;
+  block-size: var(--progress-height);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--progress-track);
+  color: var(--progress-fill);
+}
+.ielts-olga::-webkit-progress-bar { background: var(--progress-track); border-radius: var(--radius-full); }
+.ielts-olga::-webkit-progress-value { background: var(--progress-fill); border-radius: var(--radius-full); }
+.ielts-olga::-moz-progress-bar { background: var(--progress-fill); border-radius: var(--radius-full); }
+
+.ielts-ochiladigan { padding: 0; }
+.ielts-ochiladigan summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  min-block-size: var(--control-height-md);
+  border-radius: var(--card-radius);
+  list-style: none;
+  font-weight: var(--text-button-weight);
+  cursor: pointer;
+}
+.ielts-ochiladigan summary::-webkit-details-marker { display: none; }
+.ielts-ochiladigan[open] summary > .ielts-belgi { rotate: calc(2 * var(--angle-quarter)); }
+.ielts-ochiladigan-ichki {
+  padding: var(--space-4);
+  border-block-start: var(--border-width-1) solid var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .ielts-test-kontent { padding: var(--space-6) var(--space-6) var(--space-12); }
+  .ielts-yuza { padding: var(--space-6); }
+  .ielts-ochiladigan { padding: 0; }
+  .ielts-amallar > .tugma { flex: none; }
+}
+
+.ielts-tekshiruv { list-style: none; margin: 0; padding: 0; }
+.ielts-tekshiruv li + li { border-block-start: var(--border-width-1) solid var(--color-border); }
+.ielts-tekshiruv label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--size-touch-min);
+  padding-block: var(--space-2);
+  font-size: var(--text-small-size);
+  cursor: pointer;
+}
+.ielts-tekshiruv input {
+  inline-size: var(--size-checkbox);
+  block-size: var(--size-checkbox);
+  margin: 0;
+  flex: none;
+  accent-color: var(--btn-primary-bg);
+}
+.ielts-tekshiruv input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-gap);
+}

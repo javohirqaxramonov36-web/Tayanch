@@ -1,0 +1,21 @@
+---
+import Belgi from './Belgi.astro';
+
+interface Props {
+  natija: string;
+  tavsif: string;
+  amal: string;
+}
+const { natija, tavsif, amal } = Astro.props;
+---
+<details class="ielts-yuza ielts-ochiladigan">
+  <summary>Mashqni topshirish <Belgi nom="pastga" /></summary>
+  <div class="ielts-ochiladigan-ichki ielts-oqim">
+    <h2 class="ielts-kichik-sarlavha">Mashqni yakunlaysizmi?</h2>
+    <p>{tavsif}</p>
+    <div class="ielts-amallar">
+      <a class="tugma tugma-ikkinchi" href="#savollar">Mashqqa qaytish</a>
+      <a class="tugma tugma-asosiy" href={natija}>{amal}</a>
+    </div>
+  </div>
+</details>
