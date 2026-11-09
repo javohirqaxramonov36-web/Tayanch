@@ -8,16 +8,17 @@ import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
 import Zina from '../../components/Zina.astro';
+import Bino from '../../components/Bino.astro';
 
 const sochilgan = [
-  { t: 'IELTS', x: 4, y: 6, r: -6 },
-  { t: 'Common App', x: 46, y: 0, r: 4 },
-  { t: 'Motivatsion esse', x: 20, y: 30, r: 3 },
-  { t: 'SAT', x: 68, y: 34, r: -8 },
-  { t: 'Tavsiyanoma', x: 2, y: 58, r: 5 },
-  { t: 'Stipendiya', x: 40, y: 62, r: -3 },
-  { t: 'Muddat?', x: 70, y: 76, r: 7, qora: true },
-  { t: 'Hujjatlar', x: 14, y: 84, r: -4 },
+  { t: 'IELTS', x: 6, y: 8, r: -6 },
+  { t: 'Common App', x: 66, y: 2, r: 4 },
+  { t: 'Motivatsion esse', x: 0, y: 32, r: 3 },
+  { t: 'SAT', x: 78, y: 30, r: -8 },
+  { t: 'Tavsiyanoma', x: 2, y: 56, r: 5 },
+  { t: 'Stipendiya', x: 72, y: 54, r: -3 },
+  { t: 'Muddat?', x: 74, y: 80, r: 7, qora: true },
+  { t: 'Hujjatlar', x: 8, y: 82, r: -4 },
 ];
 const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
 ---
@@ -44,7 +45,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
         <ul>
           {qavatlar.slice(1).map((q) => (
             <li>
-              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} data-floor={q.raqam} href={yol(q.manzil)}>
+              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} data-floor={q.raqam} data-bino-yoq={q.raqam} href={yol(q.manzil)}>
                 <span class="qq-raqam" aria-hidden="true">{q.raqam}</span>
                 <span class="qq-nom"><span class="sr">{q.raqam}-qavat: </span>{q.nomi}</span>
                 {q.holat === 'tez-orada' && <span class="qq-pill">qurilmoqda</span>}
@@ -56,6 +57,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
       </nav>
     </div>
     <div class="sochilgan" aria-hidden="true">
+      <Bino aktiv={1} class="sochilgan-bino" />
       {sochilgan.map((s) => (
         <span class={s.qora ? 'yorliq-katta qora' : 'yorliq-katta'} style={`left:${s.x}%;top:${s.y}%;transform:rotate(${s.r}deg)`}>{s.t}</span>
       ))}
@@ -143,6 +145,9 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   .muammo h1 { font-size: var(--matn-hero); line-height: 1.04; letter-spacing: -1px; font-weight: 900; }
   .xira { color: #7b8194; }
   .sochilgan { flex: 1 1 420px; min-width: 0; position: relative; height: 340px; }
+  /* DS shisha bino: yorliqlar uning atrofida, bino ularning ostida */
+  .sochilgan :global(.sochilgan-bino) { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: auto; height: 100%; }
+  .yorliq-katta { z-index: var(--z-raised); }
   .yorliq-katta {
     position: absolute; white-space: nowrap;
     background: var(--fon-ikkinchi); color: var(--matn-sust);
