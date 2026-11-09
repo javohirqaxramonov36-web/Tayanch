@@ -30,6 +30,8 @@ const uz = {
     rasmiySayt: 'rasmiy sayt',
     yangiTab: '(yangi tabda ochiladi)',
     mavzu: "Qorong'i mavzu",
+    /** Logo aria-label (hozircha faqat SAT'da ishlatiladi): ko'rinadigan "Tayanch SAT" bilan boshlanadi */
+    boshSahifa: (nom: string) => `Tayanch ${nom}: Tayanch bosh sahifasi`,
   },
   manba: {
     sarlavha: 'Manbalar va tekshiruv',
@@ -118,6 +120,7 @@ const en: Matn = {
     rasmiySayt: 'official site',
     yangiTab: '(opens in a new tab)',
     mavzu: 'Dark mode',
+    boshSahifa: (nom) => `Tayanch ${nom}: Tayanch home page`,
   },
   manba: {
     sarlavha: 'Sources and review',
