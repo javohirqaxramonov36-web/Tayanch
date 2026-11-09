@@ -17,7 +17,8 @@ Palitra: **oq, qora, ko'k** (2026-11-04 qarori). Bo'limlar rang bilan emas, ikon
 | `--fon` | `#ffffff` | Sahifa foni |
 | `--fon-ikkinchi` | `#f5f6fa` | Tinch sahna foni, ichki kartalar |
 | `--sirt-ikkinchi` | `#eceef3` | Neytral yorliq, ikkinchi darajali tugma |
-| `--chiziq` / `--chiziq-kuchli` | `#e6e8ee` / `#dfe2ea` | Ajratuvchi va variant tugmasi chegarasi |
+| `--chiziq` / `--chiziq-kuchli` | `#e6e8ee` / `#dfe2ea` | Ajratuvchi va variant tugmasi chegarasi (forma maydoniga emas: fon ustida 1.30:1) |
+| `--chiziq-maydon` | = `--matn-sust` | Forma maydoni (input, select, textarea) chegarasi. WCAG 1.4.11 (kamida 3:1): fon ustida 6.27:1, `--fon-ikkinchi` ustida 5.80:1 (2026-11-09) |
 | `--matn` = `--qora` | `#0f1115` | Asosiy matn, qora sahna, karta chegarasi (1.5px) |
 | `--matn-ikkinchi` | `#4a5063` | Tavsiflar |
 | `--matn-sust` | `#5a6072` | Yorliqlar, izohlar |
@@ -37,7 +38,7 @@ Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`).
 | `--fon-ikkinchi` | `#1b1e26` |
 | `--sirt-ikkinchi`, `--chiziq`, `--chiziq-kuchli` | `#2a2e38` |
 | `--matn` | `#ffffff` |
-| `--matn-ikkinchi`, `--matn-sust` | `#b4b9c8` |
+| `--matn-ikkinchi`, `--matn-sust`, `--chiziq-maydon` | `#b4b9c8` (maydon chegarasi fon ustida 9.64:1, `--fon-ikkinchi` ustida 8.50:1) |
 | `--rang-asosiy` | `#4255ff` (fon sifatida, oq matn bilan) |
 | `--rang-havola` | `#8b97ff` (qora fondagi matn) |
 | `--rang-ogoh-fon` / `--rang-ogoh-matn` | `#33240f` / `#ffc98a` ("tekshirish kerak" yorlig'i; yorug'da `#fff4e5` / `#8a3b0a`). Oldingi `#1b1e26` / oq juftligi ogohlikni oddiy yorliqdan ajratmas edi |
@@ -96,7 +97,7 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
   - **Savol progressi** (Topshirish yo'lidagi 3D zinapoya) va **Zina** (qavatlar orasidagi tekis kartalar) har xil ko'rinadi va har xil yozilgan; ularni adashtirmaslik kerak.
   - Topshirish yo'lida asosiy yo'l kartasi qora (qorong'ida `--fon-ikkinchi` + 2px `--rang-havola` chegara); kartaning orqa yuzi pasport sahifasi (to'r fon, muhrli faktlar, "tekshirish kerak" yorliqlari).
 - **Hisob va to'lov sahifalari** (2026-11-08, ADR `docs/qarorlar/001-hisob-tolov-server.md`). Umumiy kirish va profil 1-qavatda (o'zbekcha), SAT tarif sahifalari inglizcha. Yangi rang yo'q, faqat mavjud tokenlar. Qizil yoki yashil ta'kid taqiqi bu yerda ham amal qiladi: xato ham, muvaffaqiyat ham rang bilan emas, matn va ikonka bilan aytiladi.
-  - **Forma maydoni**: ko'rinib turadigan `<label>` maydon ustida (placeholder yorliq o'rnini bosmaydi). Balandlik kamida 48px, `--sirt` fon, 2px `--chiziq-kuchli` chegara, `--r-orta`, matn `--matn-asosiy`. Fokus: 3px `--rang-asosiy` chegara. To'g'ri `type` va `autocomplete` (`email`, `current-password`, `new-password`). Yordamchi matn maydon ostida `--matn-ikkinchi`, `aria-describedby` bilan bog'lanadi.
+  - **Forma maydoni**: ko'rinib turadigan `<label>` maydon ustida (placeholder yorliq o'rnini bosmaydi). Balandlik kamida 48px, `--sirt` fon, 2px `--chiziq-maydon` chegara (`--chiziq-kuchli` emas: u 3:1 ga yetmaydi), `--r-orta`, matn `--matn-asosiy`. Fokus: 3px `--rang-asosiy` chegara. To'g'ri `type` va `autocomplete` (`email`, `current-password`, `new-password`). Yordamchi matn maydon ostida `--matn-ikkinchi`, `aria-describedby` bilan bog'lanadi.
   - **Xato xabari**: maydon ostida, ogohlik juftligi (`--rang-ogoh-fon` / `--rang-ogoh-matn`), `--r-kichik`, ogohlik ikonkasi (inline SVG) va matn. Maydonga `aria-invalid="true"` va `aria-describedby`. Forma yuborilganda xatolar ro'yxati tepada `role="alert"` bilan, fokus unga o'tadi. Xato faqat rang bilan ko'rsatilmaydi. Matn nima qilishni aytadi ("Email manzilida @ belgisi yo'q"), aybdor qilmaydi.
   - **Parol maydoni**: forma maydoni qoidalari + "Ko'rsatish" / "Show" tugmasi (`<button type="button">`, `aria-pressed`, maydon ichida o'ngda, 48px). Talablar (uzunlik) maydon ostida oldindan yoziladi. Nusxa qo'yish (paste) taqiqlanmaydi.
   - **Kvota ko'rsatkichi** (Free tarifda): Progress komponenti (8px, `--r-toliq`, to'ldirish `--rang-asosiy`) + matn "ishlatilgan / jami" ko'rinishida (kvota raqamlari hali belgilanmagan). Kvota tugaganda rang o'zgarmaydi; ostida matn va Pro tariflar sahifasiga `<a>` havola. `role="progressbar"` bilan `aria-valuenow`/`aria-valuemax` yoki oddiy matn.
