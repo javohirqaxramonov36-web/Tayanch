@@ -13,6 +13,8 @@ additional_redirect_urls = [
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/",
+  # Google (P03B, PR #64): Supabase'da 2026-11-09 dan qo'llangan; bu faylda ham bo'lmasa push uni o'chiradi.
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/callback/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/",
   "http://localhost:4321/Tayanch/**",
@@ -23,3 +25,30 @@ minimum_password_length = 8
 [auth.email]
 # Email tasdiqlash majburiy.
 enable_confirmations = true
+
+# Xat shablonlari (P28, 2026-11-09): o'zbekcha, hisob sahifalari 1-qavatda. Faqat ishlatiladigan uchtasi.
+# Havola {{ .ConfirmationURL }} o'zgarmagan (redirect_to shu orqali o'tadi).
+[auth.email.template.confirmation]
+subject = "Tayanch: emailingizni tasdiqlang"
+content_path = "./supabase/templates/tasdiqlash.html"
+
+[auth.email.template.recovery]
+subject = "Tayanch: yangi parol o'rnating"
+content_path = "./supabase/templates/parol-tiklash.html"
+
+[auth.email.template.email_change]
+subject = "Tayanch: yangi emailni tasdiqlang"
+content_path = "./supabase/templates/email-almashtirish.html"
+
+# O'z SMTP (P28). Muallif domen va xizmat hisobini tayyorlagach yoqiladi (supabase/README.md 4-bo'lim).
+# Parol faqat muhit o'zgaruvchisida (lokal supabase/.env yoki shell), bu faylga va repoga yozilmaydi.
+# Diqqat: blok yoqilgan holda `config push` qilinsa, o'zgaruvchi berilmagan bo'lsa parol bo'sh yozilishi mumkin:
+# tekshirish kerak. Shuning uchun parolni muallif Dashboard'ga kiritadi va bu blok izohda qoladi.
+# [auth.email.smtp]
+# enabled = true
+# host = "smtp.resend.com"
+# port = 465
+# user = "resend"
+# pass = "env(SUPABASE_AUTH_SMTP_PASS)"
+# admin_email = "no-reply@<domen>"
+# sender_name = "Tayanch"

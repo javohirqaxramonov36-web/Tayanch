@@ -53,15 +53,21 @@ Supabase'ning o'z pochta xizmati (hujjat bo'yicha, 2026-11-09):
 
 Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov faqat muallifning (jamoa a'zosi) email'i bilan.
 
-## 4. O'z SMTP (P28 da bajariladi)
+## 4. O'z SMTP (P28)
 
-1. SMTP xizmatini tanlash (masalan Resend; hujjatda Resend, AWS SES, Postmark, SendGrid, ZeptoMail, Brevo bor). Narx va bepul limitni xizmatning o'z sahifasidan tekshirish.
-2. Xizmatda yuboruvchi domenni tasdiqlash (DNS yozuvlari: SPF, DKIM). GitHub Pages'ning `github.io` domeni uchun DNS yozib bo'lmaydi: o'z domen kerak bo'ladi (**tekshirish kerak**: domen qarori muallifda).
-3. Xizmatdan SMTP host, port, username va parol (API kalit) olish. Ular faqat dashboard'ga kiritiladi, repoga va chatga yozilmaydi.
-4. Dashboard → Authentication → Settings → SMTP (`/dashboard/project/_/auth/smtp`): "Enable custom SMTP", host, port, username, password, From manzili (masalan `no-reply@<domen>`), yuboruvchi nomi ("Tayanch").
-5. Dashboard → Authentication → Rate Limits: o'z SMTP bilan boshlang'ich limit soatiga 30 ta xat (hujjat); kerak bo'lsa oshiriladi.
-6. Email shablonlari (Authentication → Emails): matnni inglizchaga moslash (SAT bo'limi), muallif tekshiradi.
-7. Sinov: yangi email bilan ro'yxat, tasdiqlash, kirish, parol tiklash.
+**Tanlov (2026-11-09): Resend.** Bepul tarif: oyiga 3000, kuniga 100 xat, 3 ta domen (resend.com/pricing, 2026-11-09). Supabase o'z SMTP bilan boshlang'ich limiti soatiga 30 xat (supabase.com/docs/guides/auth/auth-smtp). Yuboruvchi domen tasdiqlangan bo'lishi kerak (SPF, DKIM DNS yozuvlari); `github.io` ga DNS yozib bo'lmaydi, shuning uchun **o'z domen kerak**. Domensiz Resend boshqa odamlarga yubora oladimi: tekshirish kerak (bepul tarif sahifasida yozilmagan).
+
+Muallif qiladi (parol va kalit chatga, repoga yozilmaydi):
+
+1. resend.com da hisob ochish (Google bilan ham bo'ladi).
+2. Resend → Domains → Add domain: o'z domeningiz (masalan `tayanch.uz`). Resend ko'rsatgan DNS yozuvlarini domen sotib olingan joyda qo'shish, "Verified" bo'lishini kutish.
+3. Resend → API Keys → Create (ruxsat: "Sending access"). Kalit faqat bir marta ko'rinadi: uni darhol keyingi qadamga qo'ying.
+4. Supabase Dashboard → Authentication → Emails → SMTP Settings (`/dashboard/project/_/auth/smtp`): "Enable custom SMTP"; Host `smtp.resend.com`, Port `465`, Username `resend`, Password: 3-qadamdagi kalit; Sender email `no-reply@<domen>`, Sender name `Tayanch`. Save.
+5. Shundan keyin Claude: `config.toml` dagi SMTP blokida domen (parolsiz) yozadi, rate limit va sinovni bajaradi.
+
+**Xat shablonlari** (o'zbekcha): `supabase/templates/` (`tasdiqlash.html`, `parol-tiklash.html`, `email-almashtirish.html`), mavzular `config.toml` da. Qo'llash: `supabase config diff --remote=<ref>` (2026-11-09: 3 ta mavzu farqi, boshqa e'lon qilingan farq yo'q), so'ng `supabase config push --remote=<ref>`. Havola `{{ .ConfirmationURL }}` o'zgarmagan. `config.toml` da `/uz/hisob/callback/` Redirect URL ham bor (PR #64 Supabase'ga qo'llagan): faylda bo'lmasa push uni o'chirardi.
+
+Sinov (SMTP yoqilgach): yangi email bilan ro'yxat, tasdiqlash, kirish, parol tiklash; xat "Spam"ga tushmasligini ko'rish.
 
 ## 5. Keyingi vazifalar
 
