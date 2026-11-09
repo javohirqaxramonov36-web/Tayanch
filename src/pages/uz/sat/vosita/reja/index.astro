@@ -332,7 +332,7 @@ const havolalar = {
     min-height: 48px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
     background: var(--fon); color: var(--matn); font: inherit; font-size: 17px; max-width: 100%;
   }
-  .forma input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .forma input:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .segment { display: flex; flex-wrap: wrap; gap: var(--b-2); }
   .segment button { min-height: 44px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
   .segment button:hover { border-color: var(--rang-asosiy); }
@@ -363,7 +363,7 @@ const havolalar = {
   .haftalar :global(details) { border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
   .haftalar :global(summary) { min-height: 56px; padding: var(--b-3) var(--b-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); cursor: pointer; list-style: none; }
   .haftalar :global(summary::-webkit-details-marker) { display: none; }
-  .haftalar :global(summary:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-orta); }
+  .haftalar :global(summary:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--r-orta); }
   .haftalar :global(.h-raqam) { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-weight: 800; font-size: var(--matn-kichik); }
   .haftalar :global(.h-nom) { font-weight: 800; flex: 1 1 200px; min-width: 0; }
   .haftalar :global(.h-hisob) { font-variant-numeric: tabular-nums; }

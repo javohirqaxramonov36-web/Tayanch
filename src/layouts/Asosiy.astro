@@ -7,6 +7,7 @@ import SahifaOxiri from '../components/SahifaOxiri.astro';
 import BoshQism from '../components/BoshQism.astro';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
+import { joriyQavat } from '../data/qavatlar';
 
 export interface Props {
   title: string;
@@ -30,7 +31,7 @@ const {
 } = Astro.props;
 ---
 <!doctype html>
-<html lang={til}>
+<html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
     <BoshQism title={title} description={description} holat={holat} />
   </head>

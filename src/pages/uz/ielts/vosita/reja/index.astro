@@ -299,7 +299,7 @@ const ikonkalar = {
   }
   .haftalar :global(.kun:hover) { border-color: var(--matn); }
   .haftalar :global(.kun.bajarildi) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
-  .haftalar :global(.kun:has(input:focus-visible)) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .haftalar :global(.kun:has(input:focus-visible)) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .haftalar :global(.k-bosh) { display: flex; align-items: center; justify-content: space-between; }
   .haftalar :global(.k-raqam) { font-size: var(--matn-mayda); font-weight: 500; color: var(--matn-ikkinchi); }
   .haftalar :global(input) { width: 20px; height: 20px; margin: 0; accent-color: var(--rang-asosiy); cursor: pointer; }

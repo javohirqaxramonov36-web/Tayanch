@@ -7,6 +7,7 @@ import BoshQism from '../components/BoshQism.astro';
 import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
+import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import type { BolimSlug } from '../data/bolimlar';
 import { bolimTili, matn } from '../data/umumiyMatn';
@@ -32,7 +33,7 @@ const til = Astro.props.til ?? bolimTili(bolim);
 const sahifaNomi = title.split(' · ')[0];
 ---
 <!doctype html>
-<html lang={til}>
+<html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
     <BoshQism title={title} description={description} holat={holat} />
   </head>

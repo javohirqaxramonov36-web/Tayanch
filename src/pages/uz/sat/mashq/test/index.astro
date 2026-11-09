@@ -239,7 +239,7 @@ import { yol } from '../../../../../lib/yol';
     cursor: pointer;
   }
   .variant input { position: absolute; opacity: 0; pointer-events: none; }
-  .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .variant:hover { border-color: var(--rang-asosiy); }
   .harf {
     width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);

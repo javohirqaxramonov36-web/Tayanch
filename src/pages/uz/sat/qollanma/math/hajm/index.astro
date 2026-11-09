@@ -224,7 +224,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 <style is:global>
   .dars .hajm-quti { height: 320px; touch-action: pan-y; }
   @container (min-width: 780px) { .dars .hajm-quti { height: 460px; } }
-  .dars .hajm-quti:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 3px; }
+  .dars .hajm-quti:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
   .dars .hajm-quti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
   .dars .hajm-quti.ushlangan canvas { cursor: grabbing; }
   .dars .hajm-poster { position: absolute; inset: 15% 20%; width: 60%; height: 60%; color: var(--matn-sust); }
