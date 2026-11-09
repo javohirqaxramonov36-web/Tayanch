@@ -40,15 +40,14 @@ content_path = "./supabase/templates/parol-tiklash.html"
 subject = "Tayanch: yangi emailni tasdiqlang"
 content_path = "./supabase/templates/email-almashtirish.html"
 
-# O'z SMTP (P28). Muallif domen va xizmat hisobini tayyorlagach yoqiladi (supabase/README.md 4-bo'lim).
-# Parol faqat muhit o'zgaruvchisida (lokal supabase/.env yoki shell), bu faylga va repoga yozilmaydi.
-# Diqqat: blok yoqilgan holda `config push` qilinsa, o'zgaruvchi berilmagan bo'lsa parol bo'sh yozilishi mumkin:
-# tekshirish kerak. Shuning uchun parolni muallif Dashboard'ga kiritadi va bu blok izohda qoladi.
+# O'z SMTP (P28): Gmail SMTP, alohida Gmail hisobi va App Password bilan (muallifda domen yo'q, 2026-11-09).
+# Hammasi Dashboard'da (supabase/README.md 4-bo'lim). Blok izohda qoladi: yoqilgan holda o'zgaruvchisiz
+# `config push` parolni bo'sh yozishi mumkin (tekshirish kerak).
 # [auth.email.smtp]
 # enabled = true
-# host = "smtp.resend.com"
+# host = "smtp.gmail.com"
 # port = 465
-# user = "resend"
+# user = "<sayt uchun Gmail>"
 # pass = "env(SUPABASE_AUTH_SMTP_PASS)"
-# admin_email = "no-reply@<domen>"
+# admin_email = "<sayt uchun Gmail>"
 # sender_name = "Tayanch"

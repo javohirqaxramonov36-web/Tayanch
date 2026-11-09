@@ -55,15 +55,21 @@ Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov f
 
 ## 4. O'z SMTP (P28)
 
-**Tanlov (2026-11-09): Resend.** Bepul tarif: oyiga 3000, kuniga 100 xat, 3 ta domen (resend.com/pricing, 2026-11-09). Supabase o'z SMTP bilan boshlang'ich limiti soatiga 30 xat (supabase.com/docs/guides/auth/auth-smtp). Yuboruvchi domen tasdiqlangan bo'lishi kerak (SPF, DKIM DNS yozuvlari); `github.io` ga DNS yozib bo'lmaydi, shuning uchun **o'z domen kerak**. Domensiz Resend boshqa odamlarga yubora oladimi: tekshirish kerak (bepul tarif sahifasida yozilmagan).
+**Tanlov (2026-11-09): Gmail SMTP, alohida Gmail hisobi bilan.** Muallifda o'z domen yo'q (2026-11-09). Resend va boshqa xizmatlar yuboruvchi domenni tasdiqlashni (SPF, DKIM) talab qiladi, `github.io` ga DNS yozib bo'lmaydi. Gmail'ning o'z SMTP'si domen talab qilmaydi va xatni Google o'zi imzolaydi.
 
-Muallif qiladi (parol va kalit chatga, repoga yozilmaydi):
+- Server `smtp.gmail.com`, port 465 (SSL) yoki 587 (TLS), login: to'liq Gmail manzili va App Password (Google Workspace yordami "Send email from a printer, scanner, or app", 2026-11-09).
+- App Password uchun 2 bosqichli tasdiqlash yoqilgan bo'lishi kerak; yaratish joyi myaccount.google.com/apppasswords; Google parolini o'zgartirish hamma App Password'ni bekor qiladi (support.google.com/accounts/answer/185833).
+- Shaxsiy Gmail limiti: kuniga 500 xat (support.google.com/mail/answer/22839). Supabase o'z SMTP bilan boshlang'ich limiti soatiga 30 xat (supabase.com/docs/guides/auth/auth-smtp).
+- Nega Brevo emas: Brevo domensiz Gmail manzilini yuboruvchi qilib beradi, lekin xat Google imzosisiz ketadi (gmail.com DMARC: `p=none; sp=quarantine`, DNS, 2026-11-09) va Spam'ga tushish xavfi katta.
+- Keyin: foydalanuvchi ko'paysa yoki kuniga 500 dan oshsa, o'z domen + Resend (bepul: oyiga 3000, kuniga 100 xat, resend.com/pricing) ga o'tiladi.
 
-1. resend.com da hisob ochish (Google bilan ham bo'ladi).
-2. Resend → Domains → Add domain: o'z domeningiz (masalan `tayanch.uz`). Resend ko'rsatgan DNS yozuvlarini domen sotib olingan joyda qo'shish, "Verified" bo'lishini kutish.
-3. Resend → API Keys → Create (ruxsat: "Sending access"). Kalit faqat bir marta ko'rinadi: uni darhol keyingi qadamga qo'ying.
-4. Supabase Dashboard → Authentication → Emails → SMTP Settings (`/dashboard/project/_/auth/smtp`): "Enable custom SMTP"; Host `smtp.resend.com`, Port `465`, Username `resend`, Password: 3-qadamdagi kalit; Sender email `no-reply@<domen>`, Sender name `Tayanch`. Save.
-5. Shundan keyin Claude: `config.toml` dagi SMTP blokida domen (parolsiz) yozadi, rate limit va sinovni bajaradi.
+Muallif qiladi (parol chatga, repoga yozilmaydi):
+
+1. Yangi Gmail hisobi oching, faqat sayt uchun (masalan `tayanch.xat@gmail.com`; shaxsiy pochtangiz emas).
+2. Shu hisobda 2 bosqichli tasdiqlashni yoqing: myaccount.google.com → Security.
+3. myaccount.google.com/apppasswords → nom "Supabase" → Create. 16 belgili parol chiqadi: uni faqat 4-qadamga qo'ying.
+4. Supabase Dashboard → Authentication → Emails → SMTP Settings: "Enable custom SMTP"; Sender email: 1-qadamdagi Gmail; Sender name `Tayanch`; Host `smtp.gmail.com`; Port `465`; Username: shu Gmail; Password: 3-qadamdagi parol. Save.
+5. Claude'ga "tayyor" deng: shablonlarni qo'llaydi va sinovni bajaradi.
 
 **Xat shablonlari** (o'zbekcha): `supabase/templates/` (`tasdiqlash.html`, `parol-tiklash.html`, `email-almashtirish.html`), mavzular `config.toml` da. Qo'llash: `supabase config diff --remote=<ref>` (2026-11-09: 3 ta mavzu farqi, boshqa e'lon qilingan farq yo'q), so'ng `supabase config push --remote=<ref>`. Havola `{{ .ConfirmationURL }}` o'zgarmagan. `config.toml` da `/uz/hisob/callback/` Redirect URL ham bor (PR #64 Supabase'ga qo'llagan): faylda bo'lmasa push uni o'chirardi.
 
