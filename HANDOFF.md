@@ -4,6 +4,16 @@ Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: 
 
 Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5 qavatning hammasi). Boshqa `Tayanch-*-prep` papkalarida faqat dizayn fayllari bor.
 
+## IELTS mashqlari · `codex/ielts-dizayn`
+
+`31bc592` gacha bo‘lgan o‘zgarishlarda IELTS dashboardi, JSON test mexanizmi, natijalar va Xato daftari tayyorlandi. `public/data/ielts/` ichida to‘rt modulning har biri uchun 10 ta Tayanchga xos original mashq to‘plami bor. Writing grafiklaridagi ma’lumotlar uydirma, band hisoblari taxminiy.
+
+Reading va Listening’dagi 800 ta sinov savoli shu ish davomida qayta yechildi va javoblar kalitga mos keldi. Muallif tasdig‘i uchun `verified_by` bo‘sh. Chrome’da 390 va 1280 px kengliklarda yorug‘ va qorong‘i mavzular tekshirildi. Audio va mikrofon oqimi simulyatsiyada sinaldi. Tafsilotlar [IELTS sinovlari tekshiruv hisobotida](docs/ielts-sinov-tekshiruv.md).
+
+**Keyingi chat uchun topshiriq.** `codex/ielts-dizayn` branchidagi `mock-01` to‘plamini to‘rt modul bo‘yicha ishlat. Reading va Listening savollarini kalitni ochishdan oldin yech, noaniq savol yoki zaif dalilni ID bilan qayd et. Writing’da grafik va jadvalni solishtir. Imkon bo‘lsa haqiqiy telefonda Listening ovozi, pauzalari va davomiyligini, Speaking’da taymer va yozuvni tekshir. Listening skriptlari imtihon yozuvidan qisqaroq. Topilmalarni ustuvorlik bo‘yicha ber va aniq xatolarni tuzat. `verified_by`, merge va deploy qarorlari muallifga tegishli.
+
+Lokal dashboard `/Tayanch/uz/ielts/mashq/`. Tekshiruv buyruqlari `node scripts/ielts-tekshir.mjs --toliq` va `npm run build`. Lokal server uchun `npm run dev -- --port 4328`.
+
 ## 1. Sayt tuzilmasi: 5 qavatli bino
 
 | Qavat | Nomi | Manzil | Holat (`bolimlar.ts`) | Nima bor |
