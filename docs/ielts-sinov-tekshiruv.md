@@ -83,3 +83,77 @@ Matnlar 759, 744 va 750 so‘z. Savollar 13, 13 va 14 ta.
 | 37–40 | A · E · spread · appointments |
 
 7-savol uchun slip ishlatishning tarixiy boshlanishi haqida gap yo‘q. 30-savol uchun xizmat narxi ko‘rsatilmagan. 33-savolning ikkala javobi C xatboshisida, biri bo‘shagan stollarga taqsimlash, ikkinchisi tor kirish joyiga moslashish haqida. Kalit bilan farq: 0.
+
+## Reading 05
+
+Matnlar 766, 740 va 762 so‘z. Savollar 13, 13 va 14 ta.
+
+| Savollar | Matnga qarab qayta yechilgan javoblar |
+| --- | --- |
+| 1–5 | True · False · Not Given · True · False |
+| 6–9 | shutter · aperture · tripod · noise |
+| 10–13 | To make labels on several objects legible · Adjust for differences that the comparison needs to preserve · reference patch · G |
+| 14–17 | Height in relation to the tide · The effect of roots below the surface · Measuring deposits and surface movement separately · Room for an inland shift |
+| 18–21 | B · D · F · G |
+| 22–26 | platform · sediment · organic · reference · slope |
+| 27–31 | No · No · Not Given · Yes · Yes |
+| 32–36 | More copies could have increased the forms’ chances of survival · The material is absent + The material is present within a broadly described group · They need to examine a physical property of the paper · Assess whether a gap is related to the policy · When work actually started |
+| 37–40 | C · G · purpose · back |
+
+3-savoldagi sham yorug‘ligida o‘tkazilgan sinov va 29-savoldagi kirish to‘lovi matnda yo‘q. 33-savolning ikkala tanlovi C xatboshisida aniq ajratilgan. Kalit bilan farq: 0.
+
+Texnik faktlar uchun foydalanilgan manbalar. [Nikon, ekspozitsiya asoslari](https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/a-basic-look-at-the-basics-of-exposure) · [NOAA, suv bosadigan sho‘r o‘tloqlarda cho‘kma va ildizlar](https://coastalscience.noaa.gov/project/salt-marsh-ecology-era-sea-level-rise/)
+
+## Reading 06
+
+Matnlar 753, 750 va 758 so‘z. Savollar 13, 13 va 14 ta.
+
+| Savollar | Matnga qarab qayta yechilgan javoblar |
+| --- | --- |
+| 1–5 | True · False · Not Given · True · True |
+| 6–9 | clearance · compresses · vibrates · moisture |
+| 10–13 | It has less room to deform during an impact · Reach the underside without pulling on a projection · label · model |
+| 14–17 | A · C · E · F |
+| 18–21 | Opposite changes on the two sides of a bend · The formation of a shorter route · Testing the evidence left by an old route · Comparing the course under different water levels |
+| 22–26 | settles · roots · neck · vegetation · flood |
+| 27–31 | Yes · No · Yes · Not Given · No |
+| 32–36 | Materials involved before delivery and after production · When the amount of working space matters · Mass of material cut + Time spent on each order · The conclusion may depend less on the uncertain value · Switching to a different supplier |
+| 37–40 | B · G · leg · spare capacity |
+
+3-savolda qadoqlash materialining kelib chiqish joyi haqida gap yo‘q. 30-savolda huquqiy majburiyat yoki e’lon qilish muddati berilmagan. 34-savoldagi taqsimot usullari C xatboshisida alohida sanalgan. Kalit bilan farq: 0.
+
+## Reading 07
+
+Matnlar 753, 734 va 747 so‘z. Savollar 13, 13 va 14 ta.
+
+| Savollar | Matnga qarab qayta yechilgan javoblar |
+| --- | --- |
+| 1–5 | True · False · Not Given · False · True |
+| 6–9 | droplets · area · magnesium · rinse |
+| 10–13 | They help the liquid reach the dirt and then detach it · Replacing the dirty wash water · A clear-looking surface can still feel oily · warming |
+| 14–17 | How water temperature affects layers in the pond · Why snow alters the light below · Continuing demand for oxygen beneath ice · What changes when the cover disappears |
+| 18–21 | A · C · E · F |
+| 22–26 | dense · four · light · respiration · leaves |
+| 27–31 | Yes · No · Not Given · Yes · No |
+| 32–36 | The words can sound clear while conveying the wrong intention · The form of a request + The amount of explanation · It can remove uncertainty needed for a later event · It can interrupt the pace of a scene · The translation can become more explicit than the original |
+| 37–40 | C · G · place name · timing |
+
+3-savolda zig‘ir matosi sinovi haqida gap yo‘q. 29-savolda muallifning shaxsiy xatlarga munosabati aytilmagan. 33-savolning ikkala javobi C xatboshisida bir gapda berilgan. Kalit bilan farq: 0.
+
+## Reading 08
+
+Matnlar 749, 748 va 750 so‘z. Savollar 13, 13 va 14 ta.
+
+| Savollar | Matnga qarab qayta yechilgan javoblar |
+| --- | --- |
+| 1–5 | False · True · Not Given · True · False |
+| 6–9 | needle · level · declination · magnet |
+| 10–13 | A wrong sign can increase the error · To follow the direction without constantly reading the compass · G · road |
+| 14–17 | Why particles do not meet a simple size threshold · Changes as the filter is used · Liquid that bypasses the paper · When the useful part is what stays behind |
+| 18–21 | A · C · E · G |
+| 22–26 | filtrate · orientation · resistance · gap · fibres |
+| 27–31 | Yes · No · Not Given · Yes · No |
+| 32–36 | It has a smooth area that a hand could have held · The comparison works best when the edges are visible + An image can help if the display hides a feature · Surviving objects may come from a small number of well-preserved places · Beside the claim it qualifies · It can connect the term to an observable example |
+| 37–40 | A · G · wood · heading |
+
+3-savolda xarita siyohi haqida gap yo‘q. 29-savolda audio yozuv yoki uni yozuvchi shaxs haqida fikr berilmagan. 33-savolning ikkala javobi C xatboshisida asoslangan. Kalit bilan farq: 0.

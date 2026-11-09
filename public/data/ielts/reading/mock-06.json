@@ -1,0 +1,875 @@
+{
+  "id": "mock-06",
+  "module": "reading",
+  "title": "Academic Reading · Set 06",
+  "durationSeconds": 3600,
+  "verified_by": null,
+  "sections": [
+    {
+      "title": "Protecting an object in transit",
+      "paragraphs": [
+        "A fragile object can reach the end of a journey with damage even if the outside of its box looks undisturbed. The box and its contents may have moved together for most of the trip. During a sudden stop, the object can continue moving relative to the box and meet an internal surface. One job of packaging is therefore to control movement inside the container. Another is to reduce the forces transmitted when the whole package is handled. A strong exterior helps with some loads, such as weight from other boxes. It gives less information about the protection provided to an object that can slide freely within it.",
+        "The shape of the object influences where it can safely be supported. A handle that protrudes from a heavy vessel might be strong enough to hold the vessel during ordinary use. It may still be a poor place to support the weight of the vessel during a series of impacts. Supporting a broad area of the body can distribute the load more evenly. The maker of a package therefore needs to consider which parts can carry force and which should be left with clearance. A package that holds a fragile projection tightly may appear secure while directing a large fraction of an impact through the very part that needs protection.",
+        "A cushion between the object and the box can reduce the effect of a sudden stop. As the cushion compresses, the object slows over a greater distance than it would against a rigid wall. The cushion needs enough room to deform. If it is already compressed tightly when the box is closed, it may have little distance left in which to slow the object. A very soft layer can also be inadequate if it compresses completely during an impact. In choosing a material, the packer has to think about the weight it supports, the available space and the kind of handling the package might experience.",
+        "A journey can involve small repeated movements as well as isolated impacts. An object that touches a rough surface may rub against it each time a vehicle vibrates. The marks from repeated rubbing can appear even when no single event would have caused noticeable damage. A smooth protective layer can separate the surface from the cushioning material. The layer should stay in place without pulling at delicate features. Pieces inside the box also need to be kept apart. Two objects can each be adequately cushioned from the walls of a container and still damage one another if they are able to come into contact.",
+        "Some materials are sensitive to the conditions around them. A package can encounter warmer or cooler air as it moves between a building, a vehicle and a place of delivery. Rapid changes can matter to a surface even when the temperature reached at the end would ordinarily be acceptable. A container that slows the change can give the contents more time to adjust. Moisture deserves separate consideration. A cover that limits the entry of damp air can be useful, but putting a wet object inside it can trap moisture. The packer needs information about the condition of the object before choosing a protective enclosure.",
+        "Handling also depends on the person who receives the package. A box may travel safely and still be opened in a way that puts an object at risk. A heavy item that must be lifted from below should be reachable without first pulling on an upper projection. A label can tell the receiver which side to open and where to find instructions. The position of the label is important if the package is turned during unloading. A clear unpacking sequence can prevent someone from removing the part that supports the object before another support is ready. In this sense, unpacking is one of the operations the package has to make possible.",
+        "A useful test of a package examines its behaviour under conditions it is meant to face. A model of similar size and weight can reveal some problems without risking the original object. Marks on the model or changes to the position of packing materials can show where movement occurred. A successful result does not prove that the package will survive every possible journey. It does provide evidence about a particular design and a particular set of conditions. Recording both makes the test useful when deciding what to change. Over time, those records can help a workshop distinguish damage caused by a weak material from damage caused by a poorly planned arrangement."
+      ],
+      "questions": [
+        {
+          "id": "r06-01",
+          "type": "tfng",
+          "text": "An object can be damaged although the box looks intact.",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "A fragile object can reach the end of a journey with damage even if the outside of its box looks undisturbed."
+            }
+          ],
+          "explanation_uz": "Qutining tashqi holati ichki zarar yo‘qligini ko‘rsatmaydi.",
+          "explanation_en": "The first sentence explicitly allows internal damage.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "True"
+        },
+        {
+          "id": "r06-02",
+          "type": "tfng",
+          "text": "The handle is necessarily the safest point to support a vessel during repeated impacts.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "It may still be a poor place to support the weight of the vessel during a series of impacts."
+            }
+          ],
+          "explanation_uz": "Odatda mustahkam tutqich zarbalar uchun yomon tayanch bo‘lishi mumkin.",
+          "explanation_en": "The handle may carry the vessel in use but still be unsuitable in transit.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "False"
+        },
+        {
+          "id": "r06-03",
+          "type": "tfng",
+          "text": "The packaging workshop orders its cushions from a manufacturer near the coast.",
+          "evidence": [
+            {
+              "ref": "A–G (whole passage)",
+              "quote": ""
+            }
+          ],
+          "explanation_uz": "Yostiqchalar qayerdan olinishi aytilmagan.",
+          "explanation_en": "The source and location of the manufacturer are unstated.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "Not Given"
+        },
+        {
+          "id": "r06-04",
+          "type": "tfng",
+          "text": "Two separately cushioned items may damage each other if they touch.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "Two objects can each be adequately cushioned from the walls of a container and still damage one another if they are able to come into contact."
+            }
+          ],
+          "explanation_uz": "Devorlardan himoya qilingan ikki buyum o‘zaro tegsa zarar yetkazishi mumkin.",
+          "explanation_en": "Protection from the wall does not prevent contact between the objects.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "True"
+        },
+        {
+          "id": "r06-05",
+          "type": "tfng",
+          "text": "Closing a wet object inside a protective cover can retain moisture.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "A cover that limits the entry of damp air can be useful, but putting a wet object inside it can trap moisture."
+            }
+          ],
+          "explanation_uz": "Nam buyumni yopish namlikni ichkarida tutib qolishi mumkin.",
+          "explanation_en": "A damp object inside the cover can retain moisture.",
+          "difficulty": 1,
+          "options": [
+            "True",
+            "False",
+            "Not Given"
+          ],
+          "correct": "True"
+        },
+        {
+          "id": "r06-06",
+          "type": "sentence-completion",
+          "text": "Parts that should not carry force may need to be left with ___.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "The maker of a package therefore needs to consider which parts can carry force and which should be left with clearance."
+            }
+          ],
+          "explanation_uz": "Kuch tushmasligi uchun mo‘rt qismlar atrofida bo‘shliq qoladi.",
+          "explanation_en": "Clearance keeps vulnerable parts away from supports.",
+          "difficulty": 1,
+          "accepted": [
+            "clearance"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-07",
+          "type": "sentence-completion",
+          "text": "The object slows over a greater distance as the cushion ___.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "As the cushion compresses, the object slows over a greater distance than it would against a rigid wall."
+            }
+          ],
+          "explanation_uz": "Yostiqcha siqilib, to‘xtash masofasini oshiradi.",
+          "explanation_en": "Compression increases the distance over which the object slows.",
+          "difficulty": 1,
+          "accepted": [
+            "compresses"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-08",
+          "type": "sentence-completion",
+          "text": "The object can rub repeatedly when the vehicle ___.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "An object that touches a rough surface may rub against it each time a vehicle vibrates."
+            }
+          ],
+          "explanation_uz": "Transport tebranganda buyum yuzaga ishqalanishi mumkin.",
+          "explanation_en": "Vehicle vibration can produce repeated rubbing.",
+          "difficulty": 1,
+          "accepted": [
+            "vibrates"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-09",
+          "type": "sentence-completion",
+          "text": "Apart from temperature, ___ needs separate consideration when choosing an enclosure.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "Moisture deserves separate consideration."
+            }
+          ],
+          "explanation_uz": "Haroratdan tashqari namlik ham alohida hisobga olinadi.",
+          "explanation_en": "The text singles out moisture as a separate concern.",
+          "difficulty": 1,
+          "accepted": [
+            "moisture"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-10",
+          "type": "choice-single",
+          "text": "Why is a cushion compressed tightly before the journey less useful?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "If it is already compressed tightly when the box is closed, it may have little distance left in which to slow the object."
+            }
+          ],
+          "explanation_uz": "Oldindan siqilgan qatlam zarbada yana yetarli siqilmasligi mumkin.",
+          "explanation_en": "The remaining distance available for deformation is limited.",
+          "difficulty": 1,
+          "options": [
+            "It increases the available stopping distance.",
+            "It has less room to deform during an impact.",
+            "It prevents all rubbing between objects.",
+            "It removes moisture from the package."
+          ],
+          "correct": "It has less room to deform during an impact."
+        },
+        {
+          "id": "r06-11",
+          "type": "choice-single",
+          "text": "What should the receiver be able to do with an item that must be lifted from below?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "A heavy item that must be lifted from below should be reachable without first pulling on an upper projection."
+            }
+          ],
+          "explanation_uz": "Pastidan olish uchun avval yuqoridagi chiqintini tortish shart bo‘lmasligi kerak.",
+          "explanation_en": "Safe access should make pulling on the projection unnecessary.",
+          "difficulty": 1,
+          "options": [
+            "Remove every support first",
+            "Reach the underside without pulling on a projection",
+            "Turn the box upside down to find the item",
+            "Hold the item by its upper projection"
+          ],
+          "correct": "Reach the underside without pulling on a projection"
+        },
+        {
+          "id": "r06-12",
+          "type": "short-answer",
+          "text": "What tells the receiver which side to open?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "A label can tell the receiver which side to open and where to find instructions."
+            }
+          ],
+          "explanation_uz": "Qutidagi yorliq ochiladigan tomonni ko‘rsatadi.",
+          "explanation_en": "A label can direct the receiver to the right side.",
+          "difficulty": 1,
+          "accepted": [
+            "label",
+            "a label"
+          ],
+          "maxWords": 2
+        },
+        {
+          "id": "r06-13",
+          "type": "short-answer",
+          "text": "What can be used to test packaging without risking the original object?",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "A model of similar size and weight can reveal some problems without risking the original object."
+            }
+          ],
+          "explanation_uz": "O‘lchami va vazni yaqin model ishlatilishi mumkin.",
+          "explanation_en": "A model takes the place of the original in the test.",
+          "difficulty": 1,
+          "accepted": [
+            "model",
+            "a model"
+          ],
+          "maxWords": 2
+        }
+      ]
+    },
+    {
+      "title": "The changing route of a river bend",
+      "paragraphs": [
+        "The path of a river is often drawn as a line that stays in the same place. A river flowing across a broad area of loose material can change its course over time. A bend may grow wider, move along the valley or be replaced by a shorter route. The water is involved in each of these changes, but so are the materials that form the channel and its banks. A bend made from easily moved sand may respond differently from one held in place by resistant rock. To understand an observed change, it is useful to look beyond the outline of the channel and examine what the river can remove or deposit.",
+        "In a curved channel, the outer bank often experiences stronger erosion than the inner side. The current can carry away particles from the outside of the bend. On the inside, where flow near the bank can be slower, some of the material being carried settles out. The result can be a low deposit that grows towards the centre of the channel. These processes do not require the whole bend to move at once. Small shifts at different points can gradually change its outline. An observer comparing two photographs should therefore consider whether the apparent difference is a movement of the bank or only a change in the water level.",
+        "Bank material affects the rate of change. A river may undercut a bank and leave a part of it hanging over the water. A piece can then break away even if the surface of the bank had looked undisturbed shortly before. Plant roots can help hold material together in some places, although their influence depends on how deeply they extend and on where erosion occurs. A bank with plants can still fail if the river removes material below the zone held by roots. An estimate based only on the vegetation visible from above would miss the importance of the lower bank.",
+        "As a bend develops, two parts of the channel can come close together on either side of a narrow piece of land. Water may cross this neck during a flood. If the new route becomes established, more of the flow can take the shorter course instead of travelling around the bend. Material can then collect at the ends of the former route. Part of the bend may remain as a separate body of water. This sequence is possible in some settings, but its steps need not occur at the same rate. A new channel can begin to form without the previous one becoming completely isolated at once.",
+        "Evidence of older routes can remain after the main current has moved away. A curved low area may contain different soil or vegetation from the ground around it. It can remain visible in a photograph or in a survey of ground height even when it contains little standing water. The shape alone is not conclusive evidence of how it formed. An investigator may compare it with surrounding channels and examine the material beneath the surface. Several observations that fit the same history are more persuasive than resemblance to a bend in a single picture. The writer treats the old outline as a starting point for inquiry.",
+        "A change to the bank at one site can also alter conditions elsewhere. If a structure prevents erosion on one side, the river can still move sediment through the channel. Flow may be redirected around the end of a protected section or towards a different part of the bed. The result depends on the structure and on the shape of the channel at the time. A decision to protect a particular site should therefore be evaluated at a scale larger than the individual bank. Observations upstream and downstream can reveal effects that would be missed by checking only whether the protected material remains in place.",
+        "Records made at different times help separate lasting change from the effects of a single water level. A channel photographed in a flood can appear much wider than it does in dry weather even if its banks have barely moved. Fixed points on the surrounding land give observers a basis for comparing the position of the banks across images. Visits to the site can add details about deposits and signs of collapse. Together, these observations show how the route has developed and which explanations remain uncertain. They are especially useful when a decision about a nearby path or building depends on whether the river is likely to reach it."
+      ],
+      "questions": [
+        {
+          "id": "r06-14",
+          "type": "matching-information",
+          "text": "Which paragraph contrasts a bend in easily moved material with one held by rock?",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "A bend made from easily moved sand may respond differently from one held in place by resistant rock."
+            }
+          ],
+          "explanation_uz": "A xatboshisi qum va mustahkam tog‘ jinsini qiyoslaydi.",
+          "explanation_en": "The contrast between sand and rock occurs in A.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "A"
+        },
+        {
+          "id": "r06-15",
+          "type": "matching-information",
+          "text": "Which paragraph describes how a vegetated bank can fail from below?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "A bank with plants can still fail if the river removes material below the zone held by roots."
+            }
+          ],
+          "explanation_uz": "Oqim ildizlardan pastdagi qatlamni olib ketsa qirg‘oq qulaydi.",
+          "explanation_en": "C explains erosion below the root zone.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "C"
+        },
+        {
+          "id": "r06-16",
+          "type": "matching-information",
+          "text": "Which paragraph recommends checking material under an old outline?",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "An investigator may compare it with surrounding channels and examine the material beneath the surface."
+            }
+          ],
+          "explanation_uz": "E xatboshisida eski o‘zan shaklini tekshirish uchun yer ostidagi material ko‘riladi.",
+          "explanation_en": "The suggested test of the old shape appears in E.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "E"
+        },
+        {
+          "id": "r06-17",
+          "type": "matching-information",
+          "text": "Which paragraph asks observers to look beyond one protected bank?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "Observations upstream and downstream can reveal effects that would be missed by checking only whether the protected material remains in place."
+            }
+          ],
+          "explanation_uz": "F xatboshisi ta’sirni yuqori va quyi oqimda ko‘rishni tavsiya qiladi.",
+          "explanation_en": "The paragraph recommends observations upstream and downstream.",
+          "difficulty": 2,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "F"
+        },
+        {
+          "id": "r06-18",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph B.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "In a curved channel, the outer bank often experiences stronger erosion than the inner side. The current can carry away particles from the outside of the bend. On the inside, where flow near the bank can be slower, some of the material being carried settles out. The result can be a low deposit that grows towards the centre of the channel. These processes do not require the whole bend to move at once. Small shifts at different points can gradually change its outline. An observer comparing two photographs should therefore consider whether the apparent difference is a movement of the bank or only a change in the water level."
+            }
+          ],
+          "explanation_uz": "Tashqi chetda eroziya, ichki chetda cho‘kish tasvirlangan.",
+          "explanation_en": "The paragraph contrasts removal on the outside and deposition on the inside.",
+          "difficulty": 2,
+          "options": [
+            "Fixed points for comparing images",
+            "Opposite changes on the two sides of a bend",
+            "Plants as the only cause of collapse",
+            "Looking for evidence in an abandoned route",
+            "Protecting the whole valley"
+          ],
+          "correct": "Opposite changes on the two sides of a bend"
+        },
+        {
+          "id": "r06-19",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph D.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "As a bend develops, two parts of the channel can come close together on either side of a narrow piece of land. Water may cross this neck during a flood. If the new route becomes established, more of the flow can take the shorter course instead of travelling around the bend. Material can then collect at the ends of the former route. Part of the bend may remain as a separate body of water. This sequence is possible in some settings, but its steps need not occur at the same rate. A new channel can begin to form without the previous one becoming completely isolated at once."
+            }
+          ],
+          "explanation_uz": "Suv tor bo‘yin orqali o‘tib yangi yo‘lga tushishi mumkin.",
+          "explanation_en": "The paragraph describes a cut across a neck and the fate of the old bend.",
+          "difficulty": 2,
+          "options": [
+            "The formation of a shorter route",
+            "Comparing banks in photographs",
+            "Changes to a protected site",
+            "Identifying plants by their roots",
+            "The effects of a resistant rock bed"
+          ],
+          "correct": "The formation of a shorter route"
+        },
+        {
+          "id": "r06-20",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph E.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "Evidence of older routes can remain after the main current has moved away. A curved low area may contain different soil or vegetation from the ground around it. It can remain visible in a photograph or in a survey of ground height even when it contains little standing water. The shape alone is not conclusive evidence of how it formed. An investigator may compare it with surrounding channels and examine the material beneath the surface. Several observations that fit the same history are more persuasive than resemblance to a bend in a single picture. The writer treats the old outline as a starting point for inquiry."
+            }
+          ],
+          "explanation_uz": "Eski o‘zan shakli boshqa kuzatuvlar bilan tekshiriladi.",
+          "explanation_en": "The paragraph considers how to interpret traces of a former channel.",
+          "difficulty": 2,
+          "options": [
+            "Material deposited inside an active bend",
+            "The width of the river during a flood",
+            "Testing the evidence left by an old route",
+            "Protecting a bank with a structure",
+            "A comparison of live plant roots"
+          ],
+          "correct": "Testing the evidence left by an old route"
+        },
+        {
+          "id": "r06-21",
+          "type": "matching-headings",
+          "text": "Choose the best heading for paragraph G.",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "Records made at different times help separate lasting change from the effects of a single water level. A channel photographed in a flood can appear much wider than it does in dry weather even if its banks have barely moved. Fixed points on the surrounding land give observers a basis for comparing the position of the banks across images. Visits to the site can add details about deposits and signs of collapse. Together, these observations show how the route has developed and which explanations remain uncertain. They are especially useful when a decision about a nearby path or building depends on whether the river is likely to reach it."
+            }
+          ],
+          "explanation_uz": "Doimiy nuqtalar yordamida turli suv sathidagi suratlar qiyoslanadi.",
+          "explanation_en": "The last paragraph explains how to distinguish lasting change from water-level differences.",
+          "difficulty": 2,
+          "options": [
+            "Why all flood photographs should be discarded",
+            "Comparing the course under different water levels",
+            "The arrival of sediment from a new source",
+            "How a piece of bank breaks away",
+            "The development of a narrow neck"
+          ],
+          "correct": "Comparing the course under different water levels"
+        },
+        {
+          "id": "r06-22",
+          "type": "summary-completion",
+          "text": "On the inner side of a bend, some of the carried material ___.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "On the inside, where flow near the bank can be slower, some of the material being carried settles out."
+            }
+          ],
+          "explanation_uz": "Ichki qirg‘oq yaqinida olib kelingan zarrachalar cho‘kadi.",
+          "explanation_en": "The passage says some material settles on the slower side.",
+          "difficulty": 2,
+          "accepted": [
+            "settles"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-23",
+          "type": "summary-completion",
+          "text": "Plant ___ may hold some of the bank material together.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "Plant roots can help hold material together in some places, although their influence depends on how deeply they extend and on where erosion occurs."
+            }
+          ],
+          "explanation_uz": "Ildizlar ayrim joylarda qirg‘oqni tutib turadi.",
+          "explanation_en": "Roots are identified as a stabilising feature.",
+          "difficulty": 2,
+          "accepted": [
+            "roots"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-24",
+          "type": "summary-completion",
+          "text": "In a flood, water can cross the narrow ___ between two parts of the channel.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "Water may cross this neck during a flood."
+            }
+          ],
+          "explanation_uz": "Suv ikki o‘zan qismi orasidagi tor bo‘yindan o‘tishi mumkin.",
+          "explanation_en": "The narrow piece of land is called a neck.",
+          "difficulty": 2,
+          "accepted": [
+            "neck"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-25",
+          "type": "summary-completion",
+          "text": "An old route can have different soil or ___ from nearby ground.",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "A curved low area may contain different soil or vegetation from the ground around it."
+            }
+          ],
+          "explanation_uz": "Eski o‘zanda o‘simlik qoplami atrofdagidan farq qilishi mumkin.",
+          "explanation_en": "Vegetation is named alongside soil.",
+          "difficulty": 2,
+          "accepted": [
+            "vegetation"
+          ],
+          "maxWords": 1
+        },
+        {
+          "id": "r06-26",
+          "type": "summary-completion",
+          "text": "In a ___, the channel may look wider even if its banks have barely changed.",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "A channel photographed in a flood can appear much wider than it does in dry weather even if its banks have barely moved."
+            }
+          ],
+          "explanation_uz": "Toshqin suratda o‘zan kengroq ko‘rinishi mumkin.",
+          "explanation_en": "The example compares flooding with dry weather.",
+          "difficulty": 2,
+          "accepted": [
+            "flood"
+          ],
+          "maxWords": 1
+        }
+      ]
+    },
+    {
+      "title": "Drawing the boundary of a material footprint",
+      "paragraphs": [
+        "An estimate of a product's material footprint depends on which activities are included. Consider a table made in a small workshop. An account limited to the wood arriving at the workshop can describe how much wood the workers handle. It leaves out the material used before the delivery and the material required later for repair or replacement. A wider account can examine some of those activities, but it must decide which indirect uses belong to the product. Such choices are easier to assess when the purpose of the estimate is stated. A comparison of production methods and a comparison of ways to furnish a room may call for different boundaries.",
+        "The item being counted can affect the result as much as the boundary. A table sold as one item and a larger table sold as one item provide different amounts of working surface. Counting material per table might be appropriate for a purchaser who needs a fixed number of separate places. Counting material per area of surface can be more informative when space is the service of interest. Neither comparison automatically captures how long the surfaces remain useful. The writer favours specifying the service before selecting the unit. A small total attached to a small item does not by itself show that the item provides the service more efficiently.",
+        "Products also share processes. A machine may cut material for several orders during the same working day. Some of the machine's use can be associated with each order, but different rules can assign different shares. One rule might divide the use by the mass of material cut. Another might use the time spent on each order. These choices can matter where a light item takes longer to produce than a heavy one. A report that gives the resulting figures without explaining the rule makes the comparison hard to interpret. Stating the rule allows a reader to ask whether a different allocation would change the conclusion.",
+        "Repair can affect the comparison in ways that are easy to overlook. Replacing a damaged leg uses material and labour, but it can allow the rest of a table to remain in service. If a repair extends the life of the table, its cost needs to be considered alongside the material that would have been needed for a replacement. The size of the benefit depends on what the owner would otherwise have done. Someone who would have kept using the table without the repair presents a different case from someone who would have bought another immediately. Predictions about future choices should be identified as assumptions rather than as observed quantities.",
+        "A comparison can become sensitive to assumptions when it combines stages with quite different sources of information. The workshop may know the amount of wood it ordered but have only an approximate estimate of the material used by its suppliers. Precise figures for one stage do not remove uncertainty in another. One response is to calculate the result using several plausible values for the uncertain part. If the ordering of the alternatives stays the same across that range, the conclusion may be less dependent on the assumption. If it changes, the reader learns which information would be most useful to improve. Either outcome can guide the next investigation.",
+        "There is also a difference between an account of what happened and a prediction of what will happen if a choice is changed. The material used to supply existing tables can be divided among them using an agreed procedure. Predicting the effect of ordering more tables asks how suppliers would respond to extra demand. They might use spare capacity, switch to a different supplier or change the way a delivery is organised. Information about current production can inform that prediction without determining it. The writer treats these as distinct questions because a figure suitable for describing the past may be misleading when used to predict the consequence of a new decision.",
+        "A good material account makes the relationship between the result and the original question visible. It identifies the service, the activities included and the rules used where several products share a process. It also distinguishes measured quantities from assumptions that would change if circumstances changed. This approach need not prevent a simple summary from being presented. It does mean that the summary should remain connected to a description that lets others check whether their decision is similar enough to use it. The account is most valuable when it shows both the comparison that its evidence supports and the additional evidence needed for a different comparison."
+      ],
+      "questions": [
+        {
+          "id": "r06-27",
+          "type": "ynng",
+          "text": "The writer recommends choosing the service before the unit of comparison.",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "The writer favours specifying the service before selecting the unit."
+            }
+          ],
+          "explanation_uz": "Avval xizmat aniqlanadi, keyin o‘lchov birligi tanlanadi.",
+          "explanation_en": "The writer explicitly favours this sequence.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "Yes"
+        },
+        {
+          "id": "r06-28",
+          "type": "ynng",
+          "text": "The writer believes all rules give each order the same share of the machine’s use.",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "Some of the machine's use can be associated with each order, but different rules can assign different shares."
+            }
+          ],
+          "explanation_uz": "Vazn bo‘yicha va vaqt bo‘yicha taqsimlash farq qilishi mumkin.",
+          "explanation_en": "Different allocation rules can assign different shares.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "No"
+        },
+        {
+          "id": "r06-29",
+          "type": "ynng",
+          "text": "The writer believes the material benefit of a repair depends on the owner’s alternative action.",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "The size of the benefit depends on what the owner would otherwise have done."
+            }
+          ],
+          "explanation_uz": "Foyda ta’mirsiz egasi nima qilishiga bog‘liq.",
+          "explanation_en": "The passage compares continued use with immediate replacement.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "Yes"
+        },
+        {
+          "id": "r06-30",
+          "type": "ynng",
+          "text": "The writer expects suppliers to be legally required to publish their material data next year.",
+          "evidence": [
+            {
+              "ref": "A–G (whole passage)",
+              "quote": ""
+            }
+          ],
+          "explanation_uz": "Majburiy e’lon va uning muddati matnda yo‘q.",
+          "explanation_en": "The text mentions uncertain estimates without discussing any future legal requirement.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "Not Given"
+        },
+        {
+          "id": "r06-31",
+          "type": "ynng",
+          "text": "The writer says that data on existing production fully determine how suppliers will respond to additional demand.",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "Information about current production can inform that prediction without determining it."
+            }
+          ],
+          "explanation_uz": "Hozirgi ishlab chiqarish bashoratga yordam beradi, uni to‘liq belgilamaydi.",
+          "explanation_en": "Current information is useful but cannot settle the future response.",
+          "difficulty": 3,
+          "options": [
+            "Yes",
+            "No",
+            "Not Given"
+          ],
+          "correct": "No"
+        },
+        {
+          "id": "r06-32",
+          "type": "choice-single",
+          "text": "What is omitted by an account limited to wood arriving at the workshop?",
+          "evidence": [
+            {
+              "ref": "A",
+              "quote": "It leaves out the material used before the delivery and the material required later for repair or replacement."
+            }
+          ],
+          "explanation_uz": "Bunday hisob yetkazishdan oldingi va keyingi ta’mir yoki almashtirishni qamramaydi.",
+          "explanation_en": "The narrow boundary excludes earlier uses and later repair or replacement.",
+          "difficulty": 3,
+          "options": [
+            "All wood handled in the workshop",
+            "Materials involved before delivery and after production",
+            "Only the number of orders placed",
+            "Every activity carried out at the workshop"
+          ],
+          "correct": "Materials involved before delivery and after production"
+        },
+        {
+          "id": "r06-33",
+          "type": "choice-single",
+          "text": "When is material per area of surface particularly informative?",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "Counting material per area of surface can be more informative when space is the service of interest."
+            }
+          ],
+          "explanation_uz": "Ish yuzasi kerak bo‘lganda maydon birligiga material mosroq qiyos beradi.",
+          "explanation_en": "The passage links this unit to providing space.",
+          "difficulty": 3,
+          "options": [
+            "When only the number of colours matters",
+            "When the two tables have identical sizes by definition",
+            "When the amount of working space matters",
+            "When the original wood order cannot be counted"
+          ],
+          "correct": "When the amount of working space matters"
+        },
+        {
+          "id": "r06-34",
+          "type": "choice-multiple",
+          "text": "Which TWO bases for dividing machine use are described?",
+          "evidence": [
+            {
+              "ref": "C",
+              "quote": "One rule might divide the use by the mass of material cut."
+            },
+            {
+              "ref": "C",
+              "quote": "Another might use the time spent on each order."
+            }
+          ],
+          "explanation_uz": "Uskuna ishlatilishini massa yoki ishga ketgan vaqtga qarab bo‘lish mumkin.",
+          "explanation_en": "The examples allocate by mass and by time.",
+          "difficulty": 3,
+          "options": [
+            "Mass of material cut",
+            "Number of customers' visits",
+            "Time spent on each order",
+            "Colour of the table surface",
+            "Date the workshop opened"
+          ],
+          "correct": [
+            "Mass of material cut",
+            "Time spent on each order"
+          ]
+        },
+        {
+          "id": "r06-35",
+          "type": "choice-single",
+          "text": "What does a stable ordering across several plausible values suggest?",
+          "evidence": [
+            {
+              "ref": "E",
+              "quote": "If the ordering of the alternatives stays the same across that range, the conclusion may be less dependent on the assumption."
+            }
+          ],
+          "explanation_uz": "Turli qiymatlarda tartib o‘zgarmasa, xulosa taxminga kamroq bog‘liq bo‘lishi mumkin.",
+          "explanation_en": "The ordering is robust over the tested range.",
+          "difficulty": 3,
+          "options": [
+            "The uncertain value is now known exactly.",
+            "The conclusion may depend less on the uncertain value.",
+            "All the stages were measured directly.",
+            "The cost of materials will remain fixed."
+          ],
+          "correct": "The conclusion may depend less on the uncertain value."
+        },
+        {
+          "id": "r06-36",
+          "type": "choice-single",
+          "text": "Which action is given as a possible response to extra demand?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "They might use spare capacity, switch to a different supplier or change the way a delivery is organised."
+            }
+          ],
+          "explanation_uz": "Qo‘shimcha buyurtmaga javoban yetkazib beruvchi o‘zgarishi mumkin.",
+          "explanation_en": "The passage lists switching supplier among the possible responses.",
+          "difficulty": 3,
+          "options": [
+            "Removing the working surface from each table",
+            "Switching to a different supplier",
+            "Making delivery information inaccessible",
+            "Counting the order as a completed repair"
+          ],
+          "correct": "Switching to a different supplier"
+        },
+        {
+          "id": "r06-37",
+          "type": "matching-information",
+          "text": "Which paragraph distinguishes one item sold from the amount of working surface it provides?",
+          "evidence": [
+            {
+              "ref": "B",
+              "quote": "A table sold as one item and a larger table sold as one item provide different amounts of working surface."
+            }
+          ],
+          "explanation_uz": "B xatboshisi buyum soni va yuzasining kattaligini ajratadi.",
+          "explanation_en": "The unit comparison occurs in B.",
+          "difficulty": 3,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "B"
+        },
+        {
+          "id": "r06-38",
+          "type": "matching-information",
+          "text": "Which paragraph explains how a short summary can stay open to scrutiny?",
+          "evidence": [
+            {
+              "ref": "G",
+              "quote": "It does mean that the summary should remain connected to a description that lets others check whether their decision is similar enough to use it."
+            }
+          ],
+          "explanation_uz": "G xatboshisi qisqa xulosa batafsil ta’rifga bog‘langan bo‘lishini aytadi.",
+          "explanation_en": "Readers need the accompanying description to judge applicability.",
+          "difficulty": 3,
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": "G"
+        },
+        {
+          "id": "r06-39",
+          "type": "short-answer",
+          "text": "Which table part is replaced in the repair example?",
+          "evidence": [
+            {
+              "ref": "D",
+              "quote": "Replacing a damaged leg uses material and labour, but it can allow the rest of a table to remain in service."
+            }
+          ],
+          "explanation_uz": "Ta’mir misolida stol oyog‘i almashtiriladi.",
+          "explanation_en": "The example replaces a damaged leg.",
+          "difficulty": 3,
+          "accepted": [
+            "leg",
+            "a leg"
+          ],
+          "maxWords": 2
+        },
+        {
+          "id": "r06-40",
+          "type": "short-answer",
+          "text": "What might a supplier use to meet extra demand without immediately changing suppliers?",
+          "evidence": [
+            {
+              "ref": "F",
+              "quote": "They might use spare capacity, switch to a different supplier or change the way a delivery is organised."
+            }
+          ],
+          "explanation_uz": "Yetkazib beruvchi mavjud bo‘sh quvvatdan foydalanishi mumkin.",
+          "explanation_en": "Spare capacity is a response distinct from changing suppliers.",
+          "difficulty": 3,
+          "accepted": [
+            "spare capacity"
+          ],
+          "maxWords": 2
+        }
+      ]
+    }
+  ]
+}
