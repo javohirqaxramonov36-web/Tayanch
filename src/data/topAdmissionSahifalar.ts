@@ -19,7 +19,7 @@ export const taGuruhlar: TaGuruh[] = [
   {
     nomi: "Yo'nalishlar",
     bandlar: [
-      { nomi: 'Türkiye Bursları' },
+      { nomi: 'Türkiye Bursları', href: 'top-admission/turkiye-burslari/' },
       { nomi: 'Stipendium Hungaricum' },
       { nomi: 'AQSH' },
     ],

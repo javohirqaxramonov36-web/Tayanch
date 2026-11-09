@@ -17,3 +17,20 @@ tekshiruv/
 SAT mock testlar/
 SAT-question bank/
 SAT-kurs materillari/
+
+# Kalitlar va shaxsiy fayllar (docs/kontent-siyosati.md)
+**/.env
+**/.env.*
+supabase/.env
+# Supabase CLI vaqtinchalik fayllari
+supabase/.temp/
+private/
+*.pem
+
+# College Board va kurs materiallari: faqat lokal, shaxsiy o'rganish uchun
+sat-practice-test-*
+scoring-sat-practice-*
+[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*.json
+
+# Sinov build'lari
+dist-*/

@@ -1,0 +1,31 @@
+---
+// Eski manzillar: hisob sahifalari 2026-11-09 da SAT ichidan (/uz/sat/hisob/) 1-qavatga (/uz/hisob/) ko'chdi.
+// Bu sahifa eski havolalarni (xatlardagi havolalar ham) yangi joyga yuboradi: ?keyin= va #... saqlanadi.
+// JS o'chiq bo'lsa meta refresh va oddiy havola ishlaydi.
+import { hisobSahifalar, type HisobSahifaKalit } from '../../../../data/hisobSahifalar';
+import { yol } from '../../../../lib/yol';
+
+export function getStaticPaths() {
+  return (Object.keys(hisobSahifalar) as HisobSahifaKalit[]).map((sahifa) => ({ params: { sahifa } }));
+}
+
+const { sahifa } = Astro.params as { sahifa: HisobSahifaKalit };
+const yangi = yol(`/uz/hisob/${sahifa}/`);
+---
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{hisobSahifalar[sahifa].nomi} · Tayanch</title>
+    <link rel="canonical" href={yangi} />
+    <script is:inline define:vars={{ yangi }}>
+      location.replace(yangi + location.search + location.hash);
+    </script>
+    <meta http-equiv="refresh" content={`0; url=${yangi}`} />
+  </head>
+  <body>
+    <p>Bu sahifa ko'chdi: <a href={yangi}>{hisobSahifalar[sahifa].nomi}</a>.</p>
+  </body>
+</html>

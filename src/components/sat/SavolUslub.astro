@@ -1,0 +1,190 @@
+---
+// Savol ko'rsatkichi (P06) uslubi: src/lib/sat/savolKorsatkich.ts DOM'i uchun.
+// Komponent ishlatiladigan sahifaga bir marta qo'yiladi. Qiymatlar faqat tokens.css dan (DESIGN.md:
+// variant tugmasi 56px+, 2px --chiziq-kuchli, --r-orta; forma maydoni 2px --chiziq-maydon; xato ogohlik juftligi).
+// To'g'ri / xato faqat rang bilan emas: ikonka, chiziq turi va yashirin matn bilan ham.
+---
+<style is:global>
+  .sk { container-type: inline-size; color: var(--matn); }
+  .sk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .sk-tartib { display: grid; gap: var(--b-5); align-items: start; }
+
+  .sk-passage, .sk-savol {
+    background: var(--fon); border-radius: var(--r-katta);
+    box-shadow: var(--soya);
+    padding: var(--b-8);
+    min-width: 0;
+  }
+  [data-mavzu='qorongi'] .sk-passage, [data-mavzu='qorongi'] .sk-savol { background: var(--fon-ikkinchi); }
+  .sk-savol { display: flex; flex-direction: column; gap: var(--b-6); }
+  .sk-passage:focus-visible, .sk-jadval:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+
+  /* Matn: passage, savol, variant, izoh */
+  .sk-matn { font-size: var(--matn-katta); line-height: 1.6; max-width: 62ch; overflow-wrap: break-word; }
+  .sk-matn p { margin: 0 0 var(--b-4); }
+  .sk-matn p:last-child { margin-bottom: 0; }
+  .sk-matn u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .sk-stem { font-size: var(--matn-katta); font-weight: 600; }
+  .sk-jadval { overflow-x: auto; margin: var(--b-4) 0; max-width: 100%; border-radius: var(--r-kichik); }
+  .sk-jadval table { border-collapse: collapse; font-size: var(--matn-asosiy); min-width: 100%; }
+  .sk-jadval th, .sk-jadval td { border: 1px solid var(--chiziq-maydon); padding: var(--b-2) var(--b-3); text-align: left; vertical-align: top; }
+  .sk-jadval th { background: var(--fon-ikkinchi); font-weight: 700; }
+  [data-mavzu='qorongi'] .sk-jadval th { background: var(--sirt-ikkinchi); }
+  .sk-formula-alohida { margin: var(--b-3) 0; overflow-x: auto; overflow-y: hidden; }
+  .sk .katex { font-size: 1.08em; }
+
+  /* Ustki qator: raqam va asboblar */
+  .sk-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
+  .sk-pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  .sk-asboblar { display: flex; gap: var(--b-2); flex-wrap: wrap; margin-left: auto; }
+  .sk-asbob {
+    min-height: 48px; padding: 0 14px;
+    border: 0; border-radius: var(--r-toliq);
+    background: transparent; color: var(--matn-ikkinchi);
+    font: inherit; font-weight: 700; font-size: var(--matn-kichik);
+    display: inline-flex; align-items: center; gap: var(--b-2); cursor: pointer;
+  }
+  .sk-asbob[hidden] { display: none; }
+  .sk-asbob svg { color: var(--rang-havola); flex: none; }
+  .sk-asbob:hover { background: var(--fon-ikkinchi); }
+  [data-mavzu='qorongi'] .sk-asbob:hover { background: var(--sirt-ikkinchi); }
+  .sk-asbob[aria-pressed='true'] { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .sk-bayroq[aria-pressed='true'] svg { fill: currentColor; }
+
+  /* Rasm */
+  .sk-rasm { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .sk-rasm img { display: block; max-width: 100%; height: auto; border-radius: var(--r-orta); border: 1px solid var(--chiziq); background: var(--fon); }
+  .sk-rasm figcaption { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+
+  /* Variantlar (DESIGN.md: variant tugmasi) */
+  .sk-variantlar { display: flex; flex-direction: column; gap: var(--b-3); }
+  .sk-qator { display: flex; align-items: stretch; gap: var(--b-2); }
+  .sk-variant {
+    flex: 1; min-width: 0;
+    min-height: 56px; padding: 10px 18px;
+    border-radius: var(--r-orta);
+    background: var(--fon); border: 2px solid var(--chiziq-kuchli);
+    color: var(--matn); font: inherit; font-size: var(--matn-katta); font-weight: 600; text-align: left;
+    display: flex; align-items: center; gap: var(--b-4);
+    cursor: pointer;
+  }
+  [data-mavzu='qorongi'] .sk-variant { background: var(--fon); }
+  .sk-variant:hover { border-color: var(--rang-asosiy); }
+  .sk-variant:focus-visible, .sk-ochir:focus-visible, .sk-asbob:focus-visible, .sk-katta:focus-visible {
+    outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
+  }
+  .sk-harf {
+    width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);
+    display: flex; align-items: center; justify-content: center;
+    font-size: var(--matn-kichik); font-weight: 800;
+    background: var(--fon-ikkinchi); color: var(--matn-ikkinchi);
+  }
+  [data-mavzu='qorongi'] .sk-harf { background: var(--sirt-ikkinchi); }
+  .sk-v-matn { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .sk-belgi { display: none; flex: none; }
+
+  .sk-tanlangan .sk-variant { border-color: var(--rang-asosiy); }
+  .sk-tanlangan .sk-harf, .sk-togri .sk-harf { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+
+  /* Cross out: ustidan chiziq va xira matn (yashirin "eliminated" matni bilan) */
+  .sk-ochirilgan .sk-v-matn, .sk-ochirilgan .sk-harf { text-decoration: line-through; text-decoration-thickness: 2px; }
+  .sk-ochirilgan .sk-variant { border-style: dashed; color: var(--matn-sust); }
+
+  .sk-ochir {
+    flex: none; width: 56px; min-height: 56px;
+    border-radius: var(--r-orta); border: 2px solid var(--chiziq-kuchli);
+    background: transparent; color: var(--matn-ikkinchi);
+    font: inherit; font-weight: 800; font-size: var(--matn-kichik);
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .sk-ochir[hidden] { display: none; }
+  .sk-ochir:hover { border-color: var(--rang-asosiy); }
+  .sk-ochir-harf { text-decoration: line-through; text-decoration-thickness: 2px; }
+  .sk-ochir[aria-pressed='true'] { background: var(--sirt-ikkinchi); color: var(--matn); border-color: var(--matn-sust); }
+  .sk-ochir[aria-pressed='true'] .sk-ochir-harf { text-decoration: none; }
+
+  /* Qulflangan (javob berilgan) */
+  .sk-qulf .sk-variant { cursor: default; }
+  .sk-qulf .sk-variant:hover { border-color: var(--chiziq-kuchli); }
+  .sk-qulf .sk-tanlangan .sk-variant:hover { border-color: var(--rang-asosiy); }
+
+  /* Natija (taymersiz) */
+  .sk-togri .sk-variant, .sk-togri .sk-variant:hover { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .sk-togri .sk-belgi-togri { display: block; color: var(--rang-havola); }
+  .sk-xato .sk-variant, .sk-xato .sk-variant:hover { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); }
+  .sk-xato .sk-v-matn { text-decoration: line-through; }
+  .sk-xato .sk-harf { background: var(--matn); color: var(--fon); }
+  .sk-xato .sk-belgi-xato { display: block; color: var(--matn); }
+
+  .sk-natija {
+    margin-top: var(--b-5);
+    border-radius: var(--r-katta); padding: 24px 28px;
+    background: var(--qora); color: var(--rang-asosiy-matn);
+    border: 1px solid var(--qora-chiziq);
+    display: flex; flex-direction: column; gap: var(--b-2);
+  }
+  .sk-natija[hidden] { display: none; }
+  .sk-natija.sk-natija-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
+  .sk-natija-sarlavha { margin: 0; font-size: 18px; font-weight: 800; }
+  .sk-natija-izoh { font-size: var(--matn-asosiy); }
+  .sk-natija-izoh:empty { display: none; }
+
+  /* SPR */
+  .sk-spr { display: flex; flex-direction: column; gap: var(--b-2); }
+  .sk-spr-yorliq { font-weight: 700; }
+  .sk-spr-qator { display: flex; gap: var(--b-3); flex-wrap: wrap; align-items: center; }
+  .sk-spr-maydon {
+    flex: 0 1 240px; min-width: 0;
+    min-height: 56px; padding: 0 var(--b-4);
+    background: var(--sirt); color: var(--matn);
+    border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    font: inherit; font-size: var(--matn-katta); font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .sk-spr-maydon:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 1px; border-color: var(--rang-asosiy); }
+  .sk-spr-maydon[aria-invalid='true'] { border-style: dashed; }
+  .sk-spr-maydon:read-only { background: var(--fon-ikkinchi); }
+  .sk-yordam { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .sk-spr-xato {
+    margin: 0; align-self: flex-start;
+    padding: var(--b-2) var(--b-3); border-radius: var(--r-kichik);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    font-size: var(--matn-kichik); font-weight: 600;
+    display: flex; align-items: flex-start; gap: var(--b-2);
+  }
+  .sk-spr-xato[hidden], .sk-korinish[hidden] { display: none; }
+  .sk-spr-xato svg { flex: none; width: 18px; height: 18px; margin-top: 1px; }
+  .sk-korinish { display: flex; align-items: center; gap: var(--b-3); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .sk-korinish-qiymat { font-size: var(--matn-katta); color: var(--matn); }
+
+  /* Tugmalar */
+  .sk-katta {
+    min-height: 52px; padding: 0 28px;
+    border: 0; border-radius: var(--r-toliq);
+    font: inherit; font-weight: 800; font-size: var(--matn-asosiy); cursor: pointer;
+  }
+  .sk-katta[hidden] { display: none; }
+  .sk-asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .sk-asosiy:hover { background: var(--rang-asosiy-toq); }
+
+  /* Keng konteyner: passage chapda, savol o'ngda, ikkalasi alohida suriladi */
+  @container (min-width: 960px) {
+    .sk-passageli { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .sk-passageli .sk-passage { max-height: calc(100vh - 220px); overflow-y: auto; }
+  }
+
+  /* Tor konteyner (telefon): passage tepada, savol pastda */
+  @container (max-width: 560px) {
+    .sk-passage, .sk-savol { padding: var(--b-5); border-radius: var(--r-orta); }
+    .sk-matn, .sk-stem, .sk-variant { font-size: var(--matn-asosiy); }
+    .sk-variant { padding: 10px 14px; gap: var(--b-3); }
+    .sk-ochir { width: 48px; }
+    .sk-spr-maydon { flex: 1 1 100%; }
+    .sk-spr-qator .sk-katta { flex: 1 1 100%; }
+    .sk-asbob { padding: 0 10px; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sk-variant, .sk-ochir, .sk-asbob { transition: border-color 0.15s ease, background-color 0.15s ease; }
+  }
+</style>

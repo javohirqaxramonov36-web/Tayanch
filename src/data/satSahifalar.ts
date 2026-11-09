@@ -1,6 +1,7 @@
 // SAT bo'limining sahifalari va sidebar guruhlari.
 // Manzillar taklif (S1 vazifasi). Hamma sahifa hozircha "tez orada" va holati "qoralama".
 // Tavsiflarda fakt yo'q: faqat sahifada nima bo'lishi yozilgan. Fakt qo'shilsa, manba ID si ham qo'shiladi.
+// Matn inglizcha (SAT bo'limi qoidasi, CLAUDE.md); qism (URL) va kod nomlari o'zbekcha qoladi.
 
 export type SatTuri = 'mashq' | 'vosita' | 'qollanma';
 
@@ -21,35 +22,35 @@ export interface SatGuruh {
   sahifalar: SatSahifa[];
 }
 
-const UMUMIY_TEKSHIRILMAGAN = "Sahifa mazmuni hali yozilmagan: hozircha faqat sarlavha va reja.";
+const UMUMIY_TEKSHIRILMAGAN = 'The page content has not been written yet: for now there is only a title and a plan.';
 
 export const satGuruhlar: SatGuruh[] = [
   {
-    nomi: 'Mashq',
+    nomi: 'Practice',
     sahifalar: [
       {
         qism: 'mashq/test/',
         tayyor: true,
         nomi: 'Test',
-        tavsif: "Reading & Writing va Math bo'yicha qisqa mashq testlari. To'liq mock uchun rasmiy materiallarga havola beriladi.",
+        tavsif: 'Short practice tests in Reading & Writing and Math. For a full mock test, links to official materials are provided.',
         turi: 'mashq',
         manbalar: ['CB01'],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Mashq savollari hali tuzilmagan; ular boshqa saytlardan ko'chirilmaydi."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The practice questions have not been written yet; they are not copied from other sites.'],
       },
       {
         qism: 'mashq/bank/',
         tayyor: true,
-        nomi: 'Savol banki',
-        tavsif: "Mavzu bo'yicha saralangan mashq savollari: Reading & Writing va Math.",
+        nomi: 'Question bank',
+        tavsif: 'Practice questions sorted by topic: Reading & Writing and Math.',
         turi: 'mashq',
         manbalar: ['CB02'],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Savollar manbasi va litsenziyasi hali belgilanmagan."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The source and license of the questions have not been decided yet.'],
       },
       {
         qism: 'vosita/natijalar/',
         tayyor: true,
-        nomi: 'Mening natijalarim',
-        tavsif: "Mashqlardagi javoblaringiz va xatolaringiz ro'yxati. Ma'lumot faqat shu brauzerda saqlanadi. Ball hisoblanmaydi.",
+        nomi: 'My results',
+        tavsif: 'A list of your answers and mistakes in the exercises. Data is saved only in this browser. No score is calculated.',
         turi: 'vosita',
         manbalar: [],
         tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
@@ -57,161 +58,161 @@ export const satGuruhlar: SatGuruh[] = [
       {
         qism: 'vosita/reja/',
         tayyor: true,
-        nomi: 'Reja tuzgich',
-        tavsif: "Imtihon sanasi va maqsad ballingizdan haftalik tayyorgarlik ro'yxati. Ma'lumot faqat shu brauzerda saqlanadi. Ball kafolatlanmaydi.",
+        nomi: 'Study planner',
+        tavsif: 'A weekly prep list built from your test date and target score. Data is saved only in this browser. No score is guaranteed.',
         turi: 'vosita',
         manbalar: ['CB01', 'CB04'],
-        tekshirilmagan: ["Haftalik vazifalar Tayanch tavsiyasi, rasmiy reja emas.", "Ball qadami (10) rasmiy sahifada yozilmagan: kiritish maydonida qulaylik uchun olingan."],
+        tekshirilmagan: ['The weekly tasks are a Tayanch recommendation, not an official plan.', 'The score step (10) is not stated on the official page: it is used in the input field for convenience.'],
       },
       {
         qism: 'vosita/takrorlash/',
         tayyor: true,
-        nomi: 'Xato daftari: takrorlash',
-        tavsif: "Darslarda xato qilingan mashqlarni oraliq bilan takrorlash: ertaga, keyin 3, 7 va 14 kundan so'ng. Ma'lumot faqat shu brauzerda. Ball hisoblanmaydi.",
+        nomi: 'Mistake log: review',
+        tavsif: 'Review the exercises you got wrong in lessons at intervals: tomorrow, then after 3, 7 and 14 days. Data stays only in this browser. No score is calculated.',
         turi: 'vosita',
         manbalar: [],
-        tekshirilmagan: ["Takrorlash oraliqlari Tayanch tanlovi, rasmiy tavsiya emas."],
+        tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
       },
     ],
   },
   {
-    nomi: 'Math darslari',
+    nomi: 'Math lessons',
     sahifalar: [
       {
         qism: 'qollanma/math/hajm/',
         tayyor: true,
-        nomi: 'Hajm laboratoriyasi',
-        tavsif: "Silindr, konus, shar va prizma hajmi 3D sahnada: o'lchamni o'zgartiring, formulani ko'ring, 6 ta mashq.",
+        nomi: 'Volume lab',
+        tavsif: 'The volume of a cylinder, cone, sphere and prism in a 3D scene: change the dimensions, see the formula, 6 exercises.',
         turi: 'qollanma',
         manbalar: ['CB05'],
-        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+        tekshirilmagan: ['The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".'],
       },
       {
         qism: 'qollanma/math/grafik/',
         tayyor: true,
-        nomi: 'Funksiya grafigi',
-        tavsif: "To'g'ri chiziq, parabolaning uch shakli va ikki tenglama kesishishi: slayder bilan grafikni o'zgartiring, 5 ta mashq.",
+        nomi: 'Function graphs',
+        tavsif: 'A straight line, three forms of a parabola and the intersection of two equations: change the graph with sliders, 5 exercises.',
         turi: 'qollanma',
         manbalar: ['CB05'],
-        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+        tekshirilmagan: ['The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".'],
       },
       {
         qism: 'qollanma/math/birlik-aylana/',
         tayyor: true,
-        nomi: 'Birlik aylana',
-        tavsif: "Burchakni sudrab sin, cos va tan qiymatlarini ko'ring, gradus va radianni almashtiring, 5 ta mashq.",
+        nomi: 'Unit circle',
+        tavsif: 'Drag the angle to see the sin, cos and tan values, switch between degrees and radians, 5 exercises.',
         turi: 'qollanma',
         manbalar: ['CB05'],
-        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+        tekshirilmagan: ['The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".'],
       },
       {
         qism: 'qollanma/math/statistika/',
         tayyor: true,
-        nomi: 'Statistika',
-        tavsif: "Nuqtalarni sudrab o'rtacha, mediana va standart og'ish qanday o'zgarishini ko'ring, 5 ta mashq.",
+        nomi: 'Statistics',
+        tavsif: 'Drag the points to see how the mean, median and standard deviation change, 5 exercises.',
         turi: 'qollanma',
         manbalar: ['CB05'],
-        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan.", "Standart og'ish populatsiya formulasi bilan (n ga bo'linadi)."],
+        tekshirilmagan: ['The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".', 'Standard deviation uses the population formula (divided by n).'],
       },
     ],
   },
   {
-    nomi: 'Reading & Writing darslari',
+    nomi: 'Reading & Writing lessons',
     sahifalar: [
       {
         qism: 'qollanma/reading-writing/xatoni-toping/',
         tayyor: true,
-        nomi: 'Xatoni toping',
-        tavsif: "Gapdagi xatoli so'z yoki belgini bosing, keyin tuzating: vergul, nuqtali vergul, ikki nuqta, ega va fe'l, zamon. 5 ta mashq.",
+        nomi: 'Find the error',
+        tavsif: 'Tap the word or punctuation mark with the error in a sentence, then fix it: commas, semicolons, colons, subject and verb, tense. 5 exercises.',
         turi: 'qollanma',
         manbalar: ['CB06'],
-        tekshirilmagan: ["Mashq savollari Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+        tekshirilmagan: ['The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".'],
       },
       {
         qism: 'qollanma/reading-writing/dalil/',
         tayyor: true,
-        nomi: 'Dalilni belgilang',
-        tavsif: "Qisqa matnda da'voni qo'llab-quvvatlaydigan gapni belgilang va tuzoq gaplarni ajrating. 5 ta mashq.",
+        nomi: 'Mark the evidence',
+        tavsif: 'In a short text, mark the sentence that supports the claim and tell the trap sentences apart. 5 exercises.',
         turi: 'qollanma',
         manbalar: ['CB06'],
-        tekshirilmagan: ["Matnlar va savollar Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+        tekshirilmagan: ['The texts and questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".'],
       },
       {
         qism: 'qollanma/reading-writing/otish-sozlari/',
         tayyor: true,
-        nomi: "O'tish so'zlari",
-        tavsif: "Ikki gap orasidagi munosabatni toping (qarama-qarshilik, sabab-natija, misol, davom) va mos o'tish so'zini tanlang. 5 ta mashq.",
+        nomi: 'Transition words',
+        tavsif: 'Find the relationship between two sentences (contrast, cause and effect, example, continuation) and choose the matching transition word. 5 exercises.',
         turi: 'qollanma',
         manbalar: ['CB06'],
-        tekshirilmagan: ["Matnlar va savollar Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan.", "Munosabat jadvali Tayanch tavsiyasi, rasmiy tasnif emas."],
+        tekshirilmagan: ['The texts and questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".', 'The relationship table is a Tayanch recommendation, not an official classification.'],
       },
       {
         qism: 'qollanma/reading-writing/lugat-kontekstda/',
         tayyor: true,
-        nomi: "Lug'at kontekstda",
-        tavsif: "So'z ma'nosini gapdagi kontekst ishorasidan toping: ko'p ma'noli so'zlar, ohang va asosiy ma'no tuzog'i. 5 ta mashq.",
+        nomi: 'Vocabulary in context',
+        tavsif: "Find a word's meaning from the context clue in the sentence: words with several meanings, tone, and the primary-meaning trap. 5 exercises.",
         turi: 'qollanma',
         manbalar: ['CB06'],
-        tekshirilmagan: ["Matnlar va savollar Tayanch uchun yozilgan; muallif tekshiruvidan o'tmaganlari \"tekshirilmagan\" deb belgilangan."],
+        tekshirilmagan: ['The texts and questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".'],
       },
     ],
   },
   {
-    nomi: "O'qish",
+    nomi: 'Reading',
     sahifalar: [
       {
         qism: 'mashq/kitoblar/',
-        nomi: 'Kitoblar',
-        tavsif: "Tayyorgarlik uchun o'qish ro'yxati. Faqat bepul yoki ochiq litsenziyali materiallar, havola bilan.",
+        nomi: 'Books',
+        tavsif: 'A reading list for your prep. Only free or openly licensed materials, with links.',
         turi: 'mashq',
         manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Ro'yxatdagi har material litsenziyasi alohida tekshiriladi."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The license of each material on the list is checked separately.'],
       },
       {
         qism: 'mashq/lugat/',
         tayyor: true,
-        nomi: "Lug'at",
-        tavsif: "Reading & Writing matnlarida uchraydigan so'zlar uchun kartochkalar.",
+        nomi: 'Vocabulary',
+        tavsif: 'Flashcards for words that appear in Reading & Writing texts.',
         turi: 'mashq',
         manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "So'zlar ro'yxati manbasi hali belgilanmagan."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The source of the word list has not been decided yet.'],
       },
     ],
   },
   {
-    nomi: "Qo'llanmalar",
+    nomi: 'Guides',
     sahifalar: [
       {
         qism: 'qollanma/strategiya/',
-        nomi: 'Strategiya',
-        tavsif: "Tayyorgarlikni qayerdan boshlash va qanday rejalashtirish: muallif tajribasi asosida.",
+        nomi: 'Strategy',
+        tavsif: "Where to start your prep and how to plan it: based on the author's experience.",
         turi: 'qollanma',
         manbalar: ['CB02'],
         tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
       },
       {
         qism: 'qollanma/math-desmos/',
-        nomi: 'Math va Desmos',
-        tavsif: "Math bo'limida Desmos kalkulyatori va formulalarni qo'llash usullari.",
+        nomi: 'Math and Desmos',
+        tavsif: 'Ways to use the Desmos calculator and formulas in the Math section.',
         turi: 'qollanma',
         manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Imtihonda Desmos qanday berilishi haqida rasmiy manba hali jurnalga qo'shilmagan."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source on how Desmos is provided in the test has not been added to the source log yet.'],
       },
       {
         qism: 'qollanma/reading-writing/',
         nomi: 'Reading & Writing',
-        tavsif: "Reading & Writing savol turlari bilan ishlash va xatolarni tahlil qilish.",
+        tavsif: 'Working with Reading & Writing question types and analyzing mistakes.',
         turi: 'qollanma',
         manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Savol turlari ro'yxati uchun rasmiy manba hali jurnalga qo'shilmagan."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source for the list of question types has not been added to the source log yet.'],
       },
       {
         qism: 'qollanma/vaqt/',
-        nomi: 'Vaqt va retake',
-        tavsif: "Imtihon vaqtini taqsimlash va qayta topshirishni rejalashtirish.",
+        nomi: 'Timing and retakes',
+        tavsif: 'Pacing your time in the test and planning a retake.',
         turi: 'qollanma',
         manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, "Imtihon vaqti va qayta topshirish qoidalari uchun rasmiy manba hali jurnalga qo'shilmagan."],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source for test timing and retake rules has not been added to the source log yet.'],
       },
     ],
   },
@@ -220,8 +221,64 @@ export const satGuruhlar: SatGuruh[] = [
 export const satSahifalar: SatSahifa[] = satGuruhlar.flatMap((g) => g.sahifalar);
 
 export const turiNomi: Record<SatTuri | 'bolim-kirishi', string> = {
-  'bolim-kirishi': "Bo'lim kirishi",
-  mashq: 'Mashq',
-  vosita: 'Vosita',
-  qollanma: "Qo'llanma",
+  'bolim-kirishi': 'Section home',
+  mashq: 'Practice',
+  vosita: 'Tool',
+  qollanma: 'Guide',
+};
+
+/** Yon panel guruhlari (dizayn rejasi B, 3-bosqich, muallif tanlovi 2026-11-09).
+ *  SAT kirish sahifasi va sahifa yo'li `satGuruhlar` dan foydalanadi, u o'zgarmaydi.
+ *  "Coming soon": hali yozilmagan sahifalar (tayyor emas) yon panelda havola emas. */
+export interface SatYonGuruh {
+  nomi: string;
+  qismlar: { nomi?: string; sahifalar: SatSahifa[] }[];
+  tezOrada?: boolean;
+}
+
+const s = (qism: string) => {
+  const t = satSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satYonGuruhlar: ${qism} topilmadi`);
+  return t;
+};
+
+export const satYonGuruhlar: SatYonGuruh[] = [
+  {
+    nomi: 'Lessons',
+    qismlar: [
+      { nomi: 'Math', sahifalar: ['hajm', 'grafik', 'birlik-aylana', 'statistika'].map((q) => s(`qollanma/math/${q}/`)) },
+      { nomi: 'Reading & Writing', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
+    ],
+  },
+  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
+];
+
+// Har tayyor sahifa yon panelda aynan bir marta bo'lishi kerak (yangi sahifa qo'shilsa build eslatadi).
+{
+  const yonda = satYonGuruhlar.flatMap((g) => g.qismlar.flatMap((q) => q.sahifalar));
+  const yoq = satSahifalar.filter((x) => !yonda.includes(x));
+  if (yoq.length || new Set(yonda).size !== yonda.length) {
+    throw new Error(`satYonGuruhlar: yon panelda yo'q yoki takroriy sahifa: ${yoq.map((x) => x.qism).join(', ')}`);
+  }
+}
+
+/** Namuna (demo) sahifalari: `noindex` (SatFokus), yon panelda va `satGuruhlar` da yo'q (P06, muallif qarori 2026-11-09). */
+export const satNamunaSahifalar: SatSahifa[] = [
+  {
+    qism: 'vosita/savol-namuna/',
+    tayyor: true,
+    nomi: 'Question viewer',
+    tavsif: 'A sample of the component that shows SAT practice questions: multiple choice and student-produced response, formulas, figures and passages.',
+    turi: 'vosita',
+    manbalar: [],
+    tekshirilmagan: ['The sample questions were written for Tayanch and still need the author\'s review.'],
+  },
+];
+
+export const namunaSahifa = (qism: string): SatSahifa => {
+  const t = satNamunaSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satNamunaSahifalar: ${qism} topilmadi`);
+  return t;
 };
