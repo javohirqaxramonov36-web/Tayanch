@@ -1,0 +1,15 @@
+---
+// <head> ichidagi sinxron skript: saqlangan Navigator profili bor-yo'qligini sahifa chizilishidan oldin
+// <html data-yol="bor|yoq"> ga yozadi. CSS shunga qarab yo'l xaritasi blokini ko'rsatadi, onboarding esa
+// faqat to'liq tekshiruvdan keyin ochiladi: qaytuvchi foydalanuvchida hech narsa "chaqnamaydi".
+// localStorage yopiq yoki JSON buzilgan bo'lsa "yoq".
+import { PROFIL_KALITI } from '../../lib/navigator/profil';
+---
+<script is:inline define:vars={{ kalit: PROFIL_KALITI }}>
+  var b = 'yoq';
+  try {
+    var x = JSON.parse(localStorage.getItem(kalit) || 'null');
+    if (x && typeof x === 'object' && (x.skipped === true || (Array.isArray(x.goals) && x.goals.length > 0))) b = 'bor';
+  } catch (e) {}
+  document.documentElement.setAttribute('data-yol', b);
+</script>

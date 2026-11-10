@@ -1,0 +1,252 @@
+---
+// Savol ko'rsatkichi (P06) namuna sahifasi: noindex (SatFokus = qoralama), yon panelda yo'q.
+// Komponent: src/lib/sat/savolKorsatkich.ts. Bu sahifa uning "ota"si: holatni xotirada saqlaydi (localStorage yo'q),
+// hodisalarni qabul qilib yangila() ni chaqiradi. Namuna savollar: src/data/satSavolNamuna.ts ("Sample").
+import SatFokus from '../../../../../layouts/SatFokus.astro';
+import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
+import { namunaSavollar } from '../../../../../data/satSavolNamuna';
+import { namunaSahifa } from '../../../../../data/satSahifalar';
+import uchburchak from '../../../../../assets/sat/namuna-uchburchak.svg?url';
+
+const sahifa = namunaSahifa('vosita/savol-namuna/');
+const malumot = namunaSavollar.map((n) => ({
+  ...n,
+  savol: { ...n.savol, figure: n.savol.figure ? { ...n.savol.figure, src: uchburchak } : null },
+}));
+---
+<SatFokus
+  title={`${sahifa.nomi} · SAT`}
+  description={sahifa.tavsif}
+  ustki="Tool · Sample"
+  nomi={sahifa.nomi}
+  yol={['Tools']}
+>
+  <SavolUslub />
+  <script type="application/json" id="namuna-data" set:html={JSON.stringify(malumot).replace(/</g, "\\u003c")} />
+
+  <div class="namuna">
+    <header class="namuna-bosh">
+      <p class="pill-namuna">Sample</p>
+      <h1>{sahifa.nomi}</h1>
+      <p class="kirish">
+        A preview of the component that shows SAT® practice questions: Reading and Writing and Math, multiple choice and
+        student-produced response. The questions were written for Tayanch as samples. They are not official SAT questions.
+        Nothing on this page is saved or sent anywhere.
+      </p>
+    </header>
+
+    <div class="boshqaruv">
+      <fieldset class="rejim">
+        <legend>Mode</legend>
+        <label><input type="radio" name="rejim" value="taymersiz" checked /> Practice (untimed): check each answer</label>
+        <label><input type="radio" name="rejim" value="taymerli" /> Timed: answers are not checked</label>
+      </fieldset>
+      <nav class="savol-nav" aria-label="Sample questions">
+        <ol>
+          {malumot.map((n, i) => (
+            <li><button type="button" class="nav-tugma" data-i={i} aria-label={`Question ${i + 1}: ${n.turi}`}>{i + 1}</button></li>
+          ))}
+        </ol>
+      </nav>
+    </div>
+
+    <p class="turi" id="savol-turi"></p>
+    <div id="savol-joy"></div>
+
+    <div class="pastki">
+      <button type="button" class="ikkinchi-tugma" id="oldingi">Previous</button>
+      <button type="button" class="asosiy-tugma" id="tekshir" disabled>Check answer</button>
+      <button type="button" class="ikkinchi-tugma" id="keyingi">Next</button>
+    </div>
+
+    <details class="jurnal">
+      <summary>Event log</summary>
+      <p class="jurnal-izoh">The events the component sends to the page, newest first.</p>
+      <ol id="jurnal"></ol>
+    </details>
+
+    <section class="klaviatura" aria-labelledby="klav-h">
+      <h2 id="klav-h">Keyboard</h2>
+      <ul>
+        <li><kbd>A</kbd>–<kbd>D</kbd>: choose an answer (when focus is inside the question)</li>
+        <li><kbd>↑</kbd> <kbd>↓</kbd>: move between answer choices and choose</li>
+        <li><kbd>Space</kbd> or <kbd>Enter</kbd>: choose the focused answer</li>
+        <li><kbd>Enter</kbd> in the answer box: submit a student-produced response</li>
+      </ul>
+    </section>
+  </div>
+</SatFokus>
+
+<script>
+  import { savolChiz, type SavolKorsatkich } from '../../../../../lib/sat/savolKorsatkich';
+  import { BOSH_HOLAT, type SavolHolati, type SavolRejimi } from '../../../../../lib/sat/savolTuri';
+  import type { NamunaSavol } from '../../../../../data/satSavolNamuna';
+  import { sprNormalla } from '../../../../../lib/sat/sprFormat';
+
+  type Namuna = NamunaSavol & { savol: NamunaSavol['savol'] & { figure: { src: string; alt: string; caption?: string } | null } };
+  const data: Namuna[] = JSON.parse(document.getElementById('namuna-data')!.textContent!);
+  const $ = (id: string) => document.getElementById(id)!;
+  const joy = $('savol-joy');
+  const tekshirTugma = $('tekshir') as HTMLButtonElement;
+  const navTugmalar = Array.from(document.querySelectorAll<HTMLButtonElement>('.nav-tugma'));
+
+  let rejim: SavolRejimi = 'taymersiz';
+  let joriy = 0;
+  let holatlar: SavolHolati[] = data.map(() => ({ ...BOSH_HOLAT, ochirilgan: [] }));
+  let komponent: SavolKorsatkich | null = null;
+
+  function jurnal(matn: string) {
+    const ol = $('jurnal');
+    const li = document.createElement('li');
+    li.textContent = matn;
+    ol.prepend(li);
+    while (ol.children.length > 8) ol.lastElementChild!.remove();
+  }
+
+  // Namuna uchun oddiy taqqoslash (haqiqiy tekshiruv serverda: P02 spr_equal)
+  function sprTeng(a: string, b: string) {
+    const son = (s: string) => {
+      const [p, q] = sprNormalla(s).split('/');
+      return q ? Number(p) / Number(q) : Number(p);
+    };
+    return Math.abs(son(a) - son(b)) < 1e-9;
+  }
+
+  function natijaBer(i: number, javob: string) {
+    const n = data[i];
+    const togrimi = n.savol.format === 'mcq' ? n.togri.includes(javob) : n.togri.some((t) => sprTeng(t, javob));
+    return { togrimi, togriJavob: n.togri[0], izoh: n.izoh };
+  }
+
+  function yangila(i: number, ozgarish: Partial<SavolHolati>) {
+    holatlar[i] = { ...holatlar[i], ...ozgarish };
+    if (i === joriy) {
+      komponent?.yangila(holatlar[i]);
+      tugmalar();
+    }
+  }
+
+  function tugmalar() {
+    const h = holatlar[joriy];
+    const mcq = data[joriy].savol.format === 'mcq';
+    tekshirTugma.hidden = !mcq || rejim === 'taymerli';
+    tekshirTugma.disabled = h.javobBerilgan || !h.tanlangan;
+    ($('oldingi') as HTMLButtonElement).disabled = joriy === 0;
+    ($('keyingi') as HTMLButtonElement).disabled = joriy === data.length - 1;
+    navTugmalar.forEach((b, i) => {
+      if (i === joriy) b.setAttribute('aria-current', 'step');
+      else b.removeAttribute('aria-current');
+      b.classList.toggle('belgilangan', holatlar[i].belgilangan);
+    });
+  }
+
+  function och(i: number) {
+    joriy = i;
+    komponent?.yoq();
+    const n = data[i];
+    $('savol-turi').textContent = n.turi;
+    komponent = savolChiz(joy, {
+      savol: n.savol,
+      holat: holatlar[i],
+      rejim,
+      raqam: i + 1,
+      onSelect: (kalit) => { jurnal(`onSelect(${kalit ?? 'null'})`); yangila(i, { tanlangan: kalit }); },
+      onEliminate: (kalit, ochirilgan) => {
+        jurnal(`onEliminate(${kalit}, ${ochirilgan})`);
+        const s = new Set(holatlar[i].ochirilgan);
+        if (ochirilgan) s.add(kalit); else s.delete(kalit);
+        yangila(i, { ochirilgan: [...s] });
+      },
+      onFlag: (b) => { jurnal(`onFlag(${b})`); yangila(i, { belgilangan: b }); },
+      onSubmitSpr: (qiymat) => {
+        jurnal(`onSubmitSpr("${qiymat}")`);
+        if (rejim === 'taymerli') yangila(i, { sprQiymat: qiymat });
+        else yangila(i, { sprQiymat: qiymat, javobBerilgan: true, natija: natijaBer(i, qiymat) });
+      },
+    });
+    tugmalar();
+  }
+
+  tekshirTugma.addEventListener('click', () => {
+    const h = holatlar[joriy];
+    if (!h.tanlangan) return;
+    yangila(joriy, { javobBerilgan: true, natija: natijaBer(joriy, h.tanlangan) });
+    joy.querySelector<HTMLElement>('.sk-variant[aria-checked="true"]')?.focus();
+  });
+  $('oldingi').addEventListener('click', () => och(Math.max(0, joriy - 1)));
+  $('keyingi').addEventListener('click', () => och(Math.min(data.length - 1, joriy + 1)));
+  navTugmalar.forEach((b) => b.addEventListener('click', () => och(Number(b.dataset.i))));
+  document.querySelectorAll<HTMLInputElement>('input[name="rejim"]').forEach((r) =>
+    r.addEventListener('change', () => {
+      rejim = r.value as SavolRejimi;
+      holatlar = data.map(() => ({ ...BOSH_HOLAT, ochirilgan: [] }));
+      jurnal(`mode: ${rejim}`);
+      och(joriy);
+    }),
+  );
+
+  och(0);
+</script>
+
+<style>
+  .namuna { max-width: var(--kenglik); margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
+  .namuna-bosh { display: flex; flex-direction: column; gap: var(--b-3); max-width: 62ch; }
+  .pill-namuna {
+    align-self: flex-start; margin: 0;
+    padding: 4px 12px; border-radius: var(--r-toliq);
+    border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi);
+    font-size: var(--matn-mayda); font-weight: 700;
+  }
+  h1 { margin: 0; font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; }
+  .kirish { margin: 0; font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+
+  .boshqaruv { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--b-4); }
+  .rejim { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5); }
+  .rejim legend { font-weight: 700; margin-bottom: var(--b-2); padding: 0; }
+  .rejim label { min-height: 48px; display: inline-flex; align-items: center; gap: var(--b-2); cursor: pointer; }
+  .rejim input { width: 20px; height: 20px; accent-color: var(--rang-asosiy); margin: 0; }
+  .savol-nav ol { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--b-2); }
+  .nav-tugma {
+    width: 48px; height: 48px; border-radius: var(--r-toliq);
+    border: 1.5px solid var(--chiziq-maydon); background: var(--fon); color: var(--matn);
+    font: inherit; font-weight: 800; cursor: pointer;
+  }
+  .nav-tugma[aria-current] { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .nav-tugma.belgilangan { border-style: dashed; border-width: 2px; }
+  .turi { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
+
+  .pastki { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .asosiy-tugma, .ikkinchi-tugma {
+    min-height: 52px; padding: 0 28px;
+    border: 0; border-radius: var(--r-toliq);
+    font: inherit; font-weight: 800; cursor: pointer;
+  }
+  .asosiy-tugma { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); margin-left: auto; }
+  .asosiy-tugma:hover { background: var(--rang-asosiy-toq); }
+  .asosiy-tugma[hidden] { display: none; }
+  .asosiy-tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
+  .ikkinchi-tugma { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .ikkinchi-tugma:disabled { color: var(--matn-sust); cursor: not-allowed; }
+  .asosiy-tugma[hidden] + .ikkinchi-tugma { margin-left: auto; }
+  .nav-tugma:focus-visible, .asosiy-tugma:focus-visible, .ikkinchi-tugma:focus-visible, .jurnal summary:focus-visible {
+    outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
+  }
+
+  .jurnal { border: 1px solid var(--chiziq); border-radius: var(--r-orta); padding: 0 var(--b-4); background: var(--fon); }
+  .jurnal summary { min-height: 48px; display: flex; align-items: center; font-weight: 700; cursor: pointer; }
+  .jurnal-izoh { margin: 0 0 var(--b-2); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .jurnal ol { margin: 0 0 var(--b-4); padding-left: var(--b-6); font-family: ui-monospace, monospace; font-size: var(--matn-kichik); }
+
+  .klaviatura h2 { margin: 0 0 var(--b-2); font-size: var(--matn-katta); font-weight: 800; }
+  .klaviatura ul { margin: 0; padding-left: var(--b-5); color: var(--matn-ikkinchi); display: flex; flex-direction: column; gap: var(--b-1); }
+  kbd {
+    padding: 1px 6px; border-radius: var(--r-kichik); border: 1px solid var(--chiziq-maydon);
+    font: inherit; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn); background: var(--fon);
+  }
+
+  @media (max-width: 640px) {
+    .pastki > * { flex: 1 1 0; }
+    .pastki .asosiy-tugma { order: -1; flex: 1 1 100%; margin-left: 0; }
+    .pastki .ikkinchi-tugma { margin-left: 0; padding: 0 var(--b-4); }
+  }
+</style>
