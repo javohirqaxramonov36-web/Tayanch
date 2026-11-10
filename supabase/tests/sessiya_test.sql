@@ -1,4 +1,4 @@
--- P08 sessiya RPC sinovlari (0011): get_session, finish_session, add_to_review, submit_answer o'zgarishlari.
+-- P08 sessiya RPC sinovlari (20261110120000_sessiya): get_session, finish_session, add_to_review, submit_answer o'zgarishlari.
 -- rls_test.sql kabi: bitta tranzaksiya, oxirida ROLLBACK. Sinov savollari faqat "SINOV" matnli soxta yozuvlar.
 \set ON_ERROR_STOP on
 \set QUIET on

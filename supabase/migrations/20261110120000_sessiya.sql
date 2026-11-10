@@ -1,4 +1,4 @@
--- 0011. Mashq sessiyasi sahifasi (P08, /uz/sat/mashq/sessiya/): sessiyani qayta ochish, yakunlash,
+-- 0012 (20261110120000). Mashq sessiyasi sahifasi (P08, /uz/sat/mashq/sessiya/): sessiyani qayta ochish, yakunlash,
 -- redo ro'yxatiga qo'shish; submit_answer: bir vaqtdagi ikki so'rov va yakunlangan sessiya.
 -- Takror ishga tushirish xavfsiz (create or replace).
 --
