@@ -1,7 +1,7 @@
 # 002. Google bilan kirish (P03B)
 
 - **Holat**: qabul qilingan (spetsifikatsiya muallif tasdiqlagan, 2026-11-09). Kod: branch `sat-google-login`.
-- **Bog'liq**: `001-hisob-tolov-server.md` (bitta hisob, Supabase Auth), `supabase/README.md` 10-bo'lim (sozlash qadamlari).
+- **Bog'liq**: `001-hisob-tolov-server.md` (bitta hisob, Supabase Auth), `supabase/README.md` 2.5 (sozlash qadamlari).
 - **Joy**: hisob sahifalari 1-qavatda (`/uz/hisob/`, o'zbekcha; PR #61). Spetsifikatsiyada `/uz/sat/hisob/` (inglizcha) edi, hisob ko'chgani uchun shu yerga moslandi.
 
 ## Oqim

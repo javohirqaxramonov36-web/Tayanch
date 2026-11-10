@@ -93,7 +93,11 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.usage_status()', false, true, true),
   ('public.can_read_question_figure(text)', false, true, true),
   ('public.admin_grant_plan(uuid,text,integer,text,text)', false, false, true),
-  ('public.admin_hide_question(text,text,text)', false, false, true)
+  ('public.admin_hide_question(text,text,text)', false, false, true),
+  ('public.payment_create(uuid,text)', false, false, true),
+  ('public.payment_set_invoice(uuid,text,jsonb)', false, false, true),
+  ('public.payment_apply_event(jsonb)', false, false, true),
+  ('public.payment_pending_stale(integer,integer,integer)', false, false, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
@@ -124,7 +128,7 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
                      has_function_privilege('anon', oid, 'execute') <> anon
                   or has_function_privilege('authenticated', oid, 'execute') <> authenticated
                   or has_function_privilege('service_role', oid, 'execute') <> service_role)),
-                  'anon hech birini, authenticated 7 tasini, admin_* ni faqat service_role chaqiradi')
+                  'anon hech birini, authenticated 7 tasini, admin_* va payment_* ni faqat service_role chaqiradi')
     from rpc
   union all
   select 22, 'rpc: anon chaqira oladigan boshqa public funksiyalar',

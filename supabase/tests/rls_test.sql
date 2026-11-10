@@ -559,6 +559,355 @@ begin
 end
 $$;
 
+------------------------------------------------------------------------------
+-- 6. To'lov (inPAY): payment_create, payment_set_invoice, payment_apply_event (0010)
+------------------------------------------------------------------------------
+-- SINOV qiymatlari (haqiqiy narx emas, tranzaksiya oxirida qaytariladi): pro 1000 so'm / 30 kun,
+-- elite faol, lekin narxsiz. inPAY id va evt_ id lari soxta.
+update public.plans set is_active = true, price_uzs = 1000, period_days = 30 where code = 'pro';
+update public.plans set is_active = true, price_uzs = null, period_days = null where code = 'elite';
+
+set local role anon;
+select set_config('request.jwt.claims', '{"role": "anon"}', true) \gset
+
+do $$
+begin
+  begin
+    perform public.payment_create('00000000-0000-4000-8000-00000000000c', 'pro');
+    raise exception 'FAIL 16: anon payment_create ni chaqirdi';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.payment_apply_event('{"id": "evt_sinov", "type": "payment.succeeded"}'::jsonb);
+    raise exception 'FAIL 16: anon payment_apply_event ni chaqirdi';
+  exception when insufficient_privilege then null;
+  end;
+end
+$$;
+
+reset role;
+
+set local role authenticated;
+select set_config('request.jwt.claims',
+  '{"role": "authenticated", "sub": "00000000-0000-4000-8000-00000000000c"}', true) \gset
+
+do $$
+begin
+  begin
+    perform public.payment_create('00000000-0000-4000-8000-00000000000c', 'pro');
+    raise exception 'FAIL 16: C payment_create ni chaqirdi';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.payment_set_invoice(gen_random_uuid(), 'sinovord', '{}'::jsonb);
+    raise exception 'FAIL 16: C payment_set_invoice ni chaqirdi';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.payment_apply_event('{"id": "evt_sinov", "type": "payment.succeeded"}'::jsonb);
+    raise exception 'FAIL 16: C payment_apply_event ni chaqirdi';
+  exception when insufficient_privilege then null;
+  end;
+  raise notice 'OK 16 to''lov funksiyalari: anon va authenticated chaqira olmaydi (faqat service_role)';
+end
+$$;
+
+reset role;
+
+set local role service_role;
+select set_config('request.jwt.claims', '{"role": "service_role"}', true) \gset
+
+do $$
+declare
+  c  constant uuid := '00000000-0000-4000-8000-00000000000c';
+  b  constant uuid := '00000000-0000-4000-8000-00000000000b';
+  r  jsonb;
+  p1 uuid;
+  pf uuid;
+  i  integer;
+begin
+  -- Tarif tekshiruvi
+  begin
+    perform public.payment_create(c, 'free');
+    raise exception 'FAIL 17: free uchun to''lov yaratildi';
+  exception when others then
+    if sqlerrm <> 'plan_not_available' then raise; end if;
+  end;
+  begin
+    perform public.payment_create(c, 'elite');
+    raise exception 'FAIL 17: narxsiz tarif uchun to''lov yaratildi';
+  exception when others then
+    if sqlerrm <> 'plan_price_not_set' then raise; end if;
+  end;
+  begin
+    perform public.payment_create(c, 'yoq');
+    raise exception 'FAIL 17: mavjud bo''lmagan tarif uchun to''lov yaratildi';
+  exception when others then
+    if sqlerrm <> 'plan_not_found' then raise; end if;
+  end;
+
+  -- To'lov yaratish -> pending
+  r := public.payment_create(c, 'pro');
+  p1 := (r ->> 'payment_id')::uuid;
+  if (r ->> 'amount_uzs')::bigint <> 1000 or (r ->> 'period_days')::integer <> 30 or r ->> 'plan_code' <> 'pro' then
+    raise exception 'FAIL 17: payment_create javobi noto''g''ri: %', r;
+  end if;
+  if not exists (select 1 from public.payments where id = p1 and user_id = c and status = 'created'
+                   and amount_uzs = 1000 and provider_order_id = 'tayanch:' || p1::text
+                   and (raw -> 'tayanch' ->> 'period_days')::integer = 30) then
+    raise exception 'FAIL 17: payments qatori noto''g''ri';
+  end if;
+  -- Chaqiruv alohida: "or" ichida tekshiruv tartibi kafolatlanmaydi.
+  r := to_jsonb(public.payment_set_invoice(p1, 'sinovord00000001',
+       '{"id": "sinovord00000001", "status": "requires_payment_method", "livemode": false}'::jsonb));
+  if r #>> '{}' <> 'pending'
+     or not exists (select 1 from public.payments where id = p1 and status = 'pending'
+                      and provider_order_id = 'sinovord00000001') then
+    raise exception 'FAIL 17: payment_set_invoice pending qilmadi';
+  end if;
+  begin
+    perform public.payment_set_invoice(p1, 'sinovord00000009', '{}'::jsonb);
+    raise exception 'FAIL 17: pending to''lovga invoice qayta yozildi';
+  exception when others then
+    if sqlerrm <> 'payment_wrong_state' then raise; end if;
+  end;
+
+  -- inPAY xatosi -> failed
+  pf := (public.payment_create(c, 'pro') ->> 'payment_id')::uuid;
+  r := to_jsonb(public.payment_set_invoice(pf, null, '{"code": "sinov_xato", "status": 503}'::jsonb));
+  if r #>> '{}' <> 'failed'
+     or not exists (select 1 from public.payments where id = pf and status = 'failed'
+                      and raw -> 'inpay_error' ->> 'code' = 'sinov_xato') then
+    raise exception 'FAIL 17: inPAY xatosida failed bo''lmadi';
+  end if;
+
+  -- 1 soatda 5 tadan ortiq ochiq to'lov yo'q
+  for i in 1..5 loop
+    perform public.payment_create(b, 'pro');
+  end loop;
+  begin
+    perform public.payment_create(b, 'pro');
+    raise exception 'FAIL 17: 6-ochiq to''lov yaratildi';
+  exception when others then
+    if sqlerrm <> 'too_many_payments' then raise; end if;
+  end;
+
+  perform set_config('test.p1', p1::text, true);
+  raise notice 'OK 17 payment_create: free/narxsiz/yo''q tarif rad etiladi, created -> pending, inPAY xatosi -> failed, 1 soatda 5 ochiq to''lov chegarasi';
+end
+$$;
+
+do $$
+declare
+  c  constant uuid := '00000000-0000-4000-8000-00000000000c';
+  p1 uuid := current_setting('test.p1')::uuid;
+  e  jsonb;
+  r  jsonb;
+  s  public.subscriptions;
+begin
+  e := jsonb_build_object('id', 'evt_sinov_01', 'object', 'event', 'type', 'payment.created', 'livemode', false,
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000001', 'amount', 1000, 'currency', 'UZS', 'status', 'succeeded',
+           'metadata', jsonb_build_object('payment_id', p1))));
+
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'ignored'
+     or not exists (select 1 from public.payment_events where event_id = 'evt_sinov_01' and processed_at is not null) then
+    raise exception 'FAIL 18: payment.created ignored bo''lmadi: %', r;
+  end if;
+
+  e := e || '{"type": "payment.succeeded"}';
+
+  r := public.payment_apply_event(jsonb_set(e || '{"id": "evt_sinov_02"}', '{data,object,amount}', '999'));
+  if r ->> 'error' <> 'amount_mismatch'
+     or (select error from public.payment_events where event_id = 'evt_sinov_02') <> 'amount_mismatch'
+     or (select status from public.payments where id = p1) <> 'pending' then
+    raise exception 'FAIL 18: noto''g''ri summa ushlanmadi: %', r;
+  end if;
+  r := public.payment_apply_event(jsonb_set(e || '{"id": "evt_sinov_02"}', '{data,object,amount}', '999'));
+  if r ->> 'result' <> 'duplicate' then
+    raise exception 'FAIL 18: takror evt_ id duplicate bo''lmadi: %', r;
+  end if;
+
+  r := public.payment_apply_event(e || '{"id": "evt_sinov_03", "livemode": true}');
+  if r ->> 'error' <> 'livemode_mismatch' then
+    raise exception 'FAIL 18: livemode farqi ushlanmadi: %', r;
+  end if;
+  r := public.payment_apply_event(jsonb_set(e || '{"id": "evt_sinov_04"}', '{data,object,metadata,payment_id}',
+                                            to_jsonb(gen_random_uuid()::text)));
+  if r ->> 'error' <> 'metadata_mismatch' then
+    raise exception 'FAIL 18: metadata farqi ushlanmadi: %', r;
+  end if;
+  r := public.payment_apply_event(jsonb_set(e || '{"id": "evt_sinov_05"}', '{data,object,id}', '"sinovyoq0000000"'));
+  if r ->> 'error' <> 'unknown_order' then
+    raise exception 'FAIL 18: noma''lum to''lov ushlanmadi: %', r;
+  end if;
+  if exists (select 1 from public.subscriptions where payment_id = p1) then
+    raise exception 'FAIL 18: xato hodisa obuna yaratdi';
+  end if;
+
+  -- To'g'ri hodisa -> paid, obuna 30 kun, audit_log
+  r := public.payment_apply_event(e || '{"id": "evt_sinov_06"}');
+  select * into s from public.subscriptions where payment_id = p1;
+  if r ->> 'result' <> 'paid'
+     or (select status from public.payments where id = p1) <> 'paid'
+     or (select paid_at from public.payments where id = p1) is null
+     or s.id is null or s.user_id <> c or s.plan_code <> 'pro' or s.bolim <> 'sat' or s.status <> 'active'
+     or s.source <> 'payment' or s.ends_at - s.starts_at <> interval '30 days'
+     or not exists (select 1 from public.audit_log where action = 'payment_paid' and target_id = p1::text) then
+    raise exception 'FAIL 18: to''g''ri hodisa to''lovni yopmadi: %', r;
+  end if;
+
+  r := public.payment_apply_event(e || '{"id": "evt_sinov_06"}');
+  if r ->> 'result' <> 'duplicate' then
+    raise exception 'FAIL 18: takror webhook duplicate bo''lmadi: %', r;
+  end if;
+  r := public.payment_apply_event(e || '{"id": "evt_sinov_07"}');
+  if r ->> 'result' <> 'already_paid' or (select count(*) from public.subscriptions where payment_id = p1) <> 1 then
+    raise exception 'FAIL 18: boshqa evt_ id bilan takror succeeded ikkinchi obuna berdi: %', r;
+  end if;
+  raise notice 'OK 18 webhook: summa/livemode/metadata/noma''lum to''lov ushlanadi, takror evt_ id e''tiborsiz, paid -> 30 kunlik obuna, audit_log';
+end
+$$;
+
+-- inpay-holat (P20): GET /payments/{id} javobi webhook shaklidagi hodisa sifatida o'sha funksiyaga beriladi.
+-- Webhook allaqachon paid qilgan to'lov: already_paid, keyin shu poll_ id duplicate; ikkinchi obuna yo'q.
+do $$
+declare
+  p1 uuid := current_setting('test.p1')::uuid;
+  e  jsonb;
+  r  jsonb;
+begin
+  e := jsonb_build_object('id', 'poll_sinovord00000001_succeeded', 'type', 'payment.succeeded', 'livemode', false,
+         'source', 'inpay-holat',
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000001', 'object', 'payment', 'amount', 1000, 'currency', 'UZS', 'status', 'succeeded',
+           'livemode', false, 'metadata', jsonb_build_object('payment_id', p1))));
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'already_paid' then
+    raise exception 'FAIL 18b: poll hodisasi already_paid bo''lmadi: %', r;
+  end if;
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'duplicate' or (select count(*) from public.subscriptions where payment_id = p1) <> 1 then
+    raise exception 'FAIL 18b: takror poll duplicate bo''lmadi yoki ikkinchi obuna: %', r;
+  end if;
+  raise notice 'OK 18b inpay-holat: poll hodisasi webhook bilan bir xil funksiyada, idempotent';
+end
+$$;
+
+do $$
+declare
+  c  constant uuid := '00000000-0000-4000-8000-00000000000c';
+  p1 uuid := current_setting('test.p1')::uuid;
+  p2 uuid;
+  p3 uuid;
+  e  jsonb;
+  r  jsonb;
+begin
+  -- Ikkinchi to'lov: failed, keyin succeeded (summa matn ko'rinishida) -> paid, obuna birinchisining oxiridan
+  p2 := (public.payment_create(c, 'pro') ->> 'payment_id')::uuid;
+  perform public.payment_set_invoice(p2, 'sinovord00000002', '{"id": "sinovord00000002", "livemode": false}'::jsonb);
+  e := jsonb_build_object('id', 'evt_sinov_11', 'type', 'payment.failed', 'livemode', false,
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000002', 'amount', '1000.00', 'currency', 'UZS',
+           'metadata', jsonb_build_object('payment_id', p2))));
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'failed' or (select status from public.payments where id = p2) <> 'failed' then
+    raise exception 'FAIL 19: payment.failed failed qilmadi: %', r;
+  end if;
+  r := public.payment_apply_event(e || '{"id": "evt_sinov_12", "type": "payment.succeeded"}');
+  if r ->> 'result' <> 'paid'
+     or (select starts_at from public.subscriptions where payment_id = p2)
+        <> (select ends_at from public.subscriptions where payment_id = p1) then
+    raise exception 'FAIL 19: failed -> paid yoki obuna uzaytirish ishlamadi: %', r;
+  end if;
+
+  -- Uchinchi to'lov: canceled
+  p3 := (public.payment_create(c, 'pro') ->> 'payment_id')::uuid;
+  perform public.payment_set_invoice(p3, 'sinovord00000003', '{"id": "sinovord00000003", "livemode": false}'::jsonb);
+  r := public.payment_apply_event(jsonb_set(jsonb_set(e || '{"id": "evt_sinov_13", "type": "payment.canceled"}',
+         '{data,object,id}', '"sinovord00000003"'), '{data,object,metadata,payment_id}', to_jsonb(p3::text)));
+  if r ->> 'result' <> 'canceled' or (select status from public.payments where id = p3) <> 'canceled' then
+    raise exception 'FAIL 19: payment.canceled canceled qilmadi: %', r;
+  end if;
+
+  -- Boshqa hodisa va yaroqsiz hodisa
+  r := public.payment_apply_event('{"id": "evt_sinov_14", "type": "subscription.created", "livemode": false}'::jsonb);
+  if r ->> 'result' <> 'ignored' then
+    raise exception 'FAIL 19: subscription.created ignored bo''lmadi: %', r;
+  end if;
+  begin
+    perform public.payment_apply_event('{"type": "payment.succeeded"}'::jsonb);
+    raise exception 'FAIL 19: id siz hodisa qabul qilindi';
+  exception when others then
+    if sqlerrm <> 'invalid_event' then raise; end if;
+  end;
+  raise notice 'OK 19 webhook: failed -> paid, yangi obuna oldingisining oxiridan boshlanadi, canceled, boshqa hodisa ignored, id siz hodisa rad etiladi';
+end
+$$;
+
+reset role;
+
+do $$
+begin
+  if (private.current_plan('00000000-0000-4000-8000-00000000000c', 'sat')).code <> 'pro' then
+    raise exception 'FAIL 20: to''langan obuna current_plan da ko''rinmadi';
+  end if;
+  raise notice 'OK 20 current_plan: to''lov orqali berilgan obuna kvotaga ta''sir qiladi';
+end
+$$;
+
+-- P21: webhook kelmay qolgan to'lovlar (payment_pending_stale) va payment_events.payload tozalanishi.
+do $$
+declare
+  c  constant uuid := '00000000-0000-4000-8000-00000000000c';
+  p4 uuid;
+  r  jsonb;
+  v  jsonb;
+begin
+  if has_function_privilege('anon', 'public.payment_pending_stale(integer,integer,integer)', 'execute')
+     or has_function_privilege('authenticated', 'public.payment_pending_stale(integer,integer,integer)', 'execute')
+     or not has_function_privilege('service_role', 'public.payment_pending_stale(integer,integer,integer)', 'execute') then
+    raise exception 'FAIL 21: payment_pending_stale huquqlari noto''g''ri';
+  end if;
+
+  p4 := (public.payment_create(c, 'pro') ->> 'payment_id')::uuid;
+  perform public.payment_set_invoice(p4, 'sinovord00000004', '{"id": "sinovord00000004", "livemode": false}'::jsonb);
+  if exists (select 1 from public.payment_pending_stale() s where s.id = p4) then
+    raise exception 'FAIL 21: yangi to''lov eski deb topildi';
+  end if;
+  update public.payments set created_at = now() - interval '3 days' where id = p4;
+  if exists (select 1 from public.payment_pending_stale() s where s.id = p4) then
+    raise exception 'FAIL 21: 48 soatdan eski to''lov ro''yxatga tushdi';
+  end if;
+  update public.payments set created_at = now() - interval '20 minutes' where id = p4;
+  if not exists (select 1 from public.payment_pending_stale() s where s.id = p4 and s.provider_order_id = 'sinovord00000004') then
+    raise exception 'FAIL 21: 20 daqiqalik pending to''lov topilmadi';
+  end if;
+
+  -- Hodisada mijoz ma'lumoti bor: to'lov qo'llanadi, jurnalga faqat ruxsat etilgan maydonlar yoziladi.
+  r := public.payment_apply_event(jsonb_build_object(
+         'id', 'evt_sinov_21', 'object', 'event', 'type', 'payment.succeeded', 'livemode', false,
+         'customer', jsonb_build_object('phone', '+998900000000'),
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000004', 'amount', 1000, 'currency', 'UZS', 'status', 'succeeded',
+           'phone', '+998900000000', 'card', jsonb_build_object('pan', '8600SINOV0000'),
+           'metadata', jsonb_build_object('payment_id', p4, 'izoh', 'SINOV')))));
+  select payload into v from public.payment_events where event_id = 'evt_sinov_21';
+  if r ->> 'result' <> 'paid'
+     or v::text like '%998900000000%' or v::text like '%8600SINOV%' or v::text like '%SINOV%'
+     or v -> 'data' -> 'object' ->> 'amount' <> '1000'
+     or v -> 'data' -> 'object' -> 'metadata' ->> 'payment_id' <> p4::text
+     or v -> 'dropped' <> '["customer", "data.object.card", "data.object.metadata.izoh", "data.object.phone"]'::jsonb then
+    raise exception 'FAIL 21: payload tozalanmadi yoki to''lov qo''llanmadi: % / %', r, v;
+  end if;
+  if exists (select 1 from public.payment_pending_stale() s where s.id = p4) then
+    raise exception 'FAIL 21: paid to''lov hali ro''yxatda';
+  end if;
+  raise notice 'OK 21 muvofiqlash: faqat 15 daqiqa-48 soatlik pending, faqat service_role; payment_events.payload da mijoz ma''lumoti yo''q';
+end
+$$;
+
 do $$ begin raise notice 'HAMMASI O''TDI'; end $$;
 
 rollback;
