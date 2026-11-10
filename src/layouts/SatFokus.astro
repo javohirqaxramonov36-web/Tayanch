@@ -20,8 +20,12 @@ export interface Props {
   progressNomi?: string;
   /** Qavat yo'lidagi oraliq bandlar */
   yol?: string[];
+  /** Yopish (×) tugmasi manzili va yorlig'i; standart: SAT bo'limi */
+  yopish?: { href: string; yorliq: string };
+  /** false: telefondagi pastki lift paneli chiqmaydi (mashq sessiyasi, P08) */
+  liftPastki?: boolean;
 }
-const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Astro.props;
+const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish, liftPastki = true } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -31,7 +35,7 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Ast
   <body class="fokus">
     <a class="otish" href="#asosiy">{M.otish}</a>
     <header class="fokus-bosh">
-      <a class="yopish" href={yol('/uz/sat/')} aria-label={M.fokus.qaytish}>
+      <a class="yopish" href={yopish?.href ?? yol('/uz/sat/')} aria-label={yopish?.yorliq ?? M.fokus.qaytish}>
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
       </a>
       <div class="sarlavha">
@@ -54,7 +58,7 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [] } = Ast
       <slot />
     </main>
     <SatEslatma />
-    <Lift variant="pastki" />
+    {liftPastki && <Lift variant="pastki" />}
   </body>
 </html>
 

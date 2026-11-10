@@ -168,5 +168,5 @@ export function boshlashSababi(p: { holat: BankHolat; tanlanganSoni: number; mos
 
 export const sonMatni = (n: number) => `${n} ${n === 1 ? 'question matches' : 'questions match'}`;
 
-/** sessionStorage kaliti: P08 sessiya sahifasi start_session javobini shu yerdan o'qiydi. */
+/** sessionStorage kaliti: start_session javobi. P08 sessiya sahifasi uni o'qimaydi (sessiya doim get_session dan), ochilganda o'chiradi. */
 export const SESSIYA_KALITI = 'tayanch:sat-sessiya';
