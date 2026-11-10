@@ -68,4 +68,6 @@ Provider: `/auth/v1/settings` da `external.google: true`, `/auth/v1/authorize?pr
 | Bekor qilish (`error=access_denied`) | Qisman: Supabase callback'i xatoni sahifaga uzatadi (yuqorida), sahifa "Google orqali kirishni bekor qildingiz." (`role="alert"`) va "Qayta urinish" (kirish `?keyin=` bilan) ko'rsatadi. Google'dagi haqiqiy "Cancel" bosilmagan. |
 | Tasdiqlangan email/parol hisobi bilan bir xil email | Sinalgan: bitta foydalanuvchi, identity'lar `email` + `google`; rozilik bir marta yozildi. Keyin parol bilan kirish sinalmagan. |
 
-Sinalmagan: saytda (GitHub Pages, merge'dan keyin), telefon, tasdiqlanmagan email/parol + Google (yuqoridagi xavf), muddati o'tgan kod xatosi, Google'dagi haqiqiy "Cancel".
+Saytda (GitHub Pages) 2026-11-10 da PR #64 merge va deploy'dan keyin sinalgan: `kirish/?keyin=/Tayanch/uz/sat/` → Google → callback → `/uz/sat/` (mavjud hisob, rozilik qayta so'ralmadi).
+
+Sinalmagan: saytda yangi hisob va rozilik sahifasi (lokal dev'da sinalgan), telefon, tasdiqlanmagan email/parol + Google (yuqoridagi xavf), muddati o'tgan kod xatosi, Google'dagi haqiqiy "Cancel".
