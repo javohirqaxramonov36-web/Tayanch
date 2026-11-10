@@ -41,10 +41,23 @@ export const satGuruhlar: SatGuruh[] = [
         qism: 'mashq/bank/',
         tayyor: true,
         nomi: 'Question bank',
-        tavsif: 'Practice questions sorted by topic: Reading & Writing and Math.',
+        tavsif: 'Pick SAT skills, set the difficulty and start a practice session with questions checked by the author.',
         turi: 'mashq',
         manbalar: ['CB02'],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The source and license of the questions have not been decided yet.'],
+        tekshirilmagan: [
+          'Question counts come from the Tayanch database and appear only after you sign in. The bank is empty until the author publishes checked questions.',
+          'The practice session page is not ready yet: starting a session opens a "coming soon" page.',
+        ],
+      },
+      {
+        // P08: start_session javobi sessionStorage "tayanch:sat-sessiya" da, manzil ?id=<session_id>.
+        qism: 'mashq/sessiya/',
+        tayyor: false,
+        nomi: 'Practice session',
+        tavsif: 'Solve the questions you picked in the question bank, one at a time, timed or untimed.',
+        turi: 'mashq',
+        manbalar: [],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
       },
       {
         qism: 'vosita/natijalar/',

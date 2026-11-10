@@ -165,3 +165,17 @@ Savollar migratsiyaga yozilmaydi. Ular alohida vazifada service role bilan `ques
 - P12: profilni `profiles` jadvaliga ulash. Jadval (RLS bilan, `display_name`, `nickname`, `target_score`, `exam_date` va boshqalar) `migrations/20261108000002_profiles.sql` da bor, lekin sayt kodi uni hali ishlatmaydi: hozircha `display_name`, `nickname` Supabase `user_metadata` da.
 - P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
 - P28: o'z SMTP (6-bo'lim) va Pro rejaga o'tish qarori (0-bo'lim).
+
+## 12. Navigator onboarding (`onboarding_profiles`)
+
+Migratsiya: `migrations/20261109130000_onboarding_profiles.sql` (mustaqil, boshqa ochiq PR migratsiyalariga bog'liq emas). Hali `db push` qilinmagan: muallif ko'rib chiqib o'zi qo'llaydi.
+
+Lokal sinov (Docker kerak emas, oddiy Postgres):
+
+```bash
+psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_shim.sql
+psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261109130000_onboarding_profiles.sql
+psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
+```
+
+Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).

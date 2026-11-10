@@ -9,6 +9,8 @@
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
     "repo:tekshir": "node scripts/repo-tekshir.mjs",
+    "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'",
+    "savol-banki:sinov": "node --test 'src/lib/testlar/*.test.ts'",
     "db:tekshir": "bash scripts/rls-tekshir.sh"
   },
   "dependencies": {
