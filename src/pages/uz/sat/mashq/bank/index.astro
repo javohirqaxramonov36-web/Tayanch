@@ -557,6 +557,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
     background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
   }
+  .chip:hover { border-color: var(--rang-asosiy); }
   .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
   .belgi-qutisi { display: flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: var(--b-2); font-size: 15px; font-weight: 600; cursor: pointer; }
   input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--rang-asosiy); }

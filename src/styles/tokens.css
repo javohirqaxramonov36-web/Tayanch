@@ -71,6 +71,14 @@
   --soya: 0 4px 16px rgba(15, 17, 21, 0.08);
   --parda: rgba(15, 17, 21, 0.5);  /* telefonda panel ochilganda orqa fon */
 
+  /* Harakat: o'tish davomiyligi va egri chizig'i. Qoidalar: DESIGN.md "Harakat" */
+  --harakat-tez: 120ms;            /* hover, bosilish: rang, chegara, soya, ko'tarilish */
+  --harakat-orta: 220ms;           /* panel ochilishi, progress to'lishi */
+  --harakat-sekin: 400ms;          /* lift yozuvi kabi sekin paydo bo'lish */
+  --harakat-egri: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --kotarilish: translateY(-2px);  /* bosiladigan karta hover */
+  --bosilish: translateY(1px);     /* tugma :active */
+
   /* Qobiq (SAT sidebar) */
   --yon-kenglik: 288px;
   --yon-yigilgan: 72px;
@@ -105,6 +113,16 @@
   --parda: rgba(0, 0, 0, 0.6);
 
   color-scheme: dark;
+}
+
+/* Harakatni kamaytirish so'ralganda ko'tarilish va bosilish ham o'chadi
+   (o'tishlar global.css oxirida o'chiriladi). */
+@media (prefers-reduced-motion: reduce) {
+  :root { --kotarilish: none; --bosilish: none; }
+}
+/* Sensorli ekranda hover bosilgandan keyin "yopishib" qoladi: karta ko'tarilmaydi. */
+@media (hover: none) {
+  :root { --kotarilish: none; }
 }
 
 @media (max-width: 640px) {

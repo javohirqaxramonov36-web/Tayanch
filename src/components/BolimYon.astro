@@ -478,20 +478,20 @@ const ieltsGuruhlar = [
       height: 100dvh;
       transform: translateX(-100%);
       visibility: hidden;
-      transition: transform 0.22s ease, visibility 0s linear 0.22s;
+      transition: transform var(--harakat-orta) var(--harakat-egri), visibility 0s linear var(--harakat-orta);
       box-shadow: var(--soya);
     }
     .yon-bosh { padding-top: var(--b-3); }
     :global([data-panel-ochiq]) .yon {
       transform: none; visibility: visible;
-      transition: transform 0.22s ease;
+      transition: transform var(--harakat-orta) var(--harakat-egri);
     }
     .parda {
       display: block;
       position: fixed; inset: 0; z-index: 30;
       background: var(--parda);
       opacity: 0; pointer-events: none;
-      transition: opacity 0.22s ease;
+      transition: opacity var(--harakat-orta) var(--harakat-egri);
     }
     :global([data-panel-ochiq]) .parda { opacity: 1; pointer-events: auto; }
     :global(html[data-panel-ochiq]) { overflow: hidden; }
