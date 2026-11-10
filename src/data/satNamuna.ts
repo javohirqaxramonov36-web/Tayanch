@@ -85,28 +85,6 @@ export const kartalar: Karta[] = [
   { soz: 'scrutinize', turkum: 'verb', tarjima: 'sinchiklab tekshirmoq', misol: 'Scrutinize each answer choice before you pick one.' },
 ];
 
-export interface BankMavzu { nomi: string; yechilgan: number; jami: number }
-
-// Savol banki ekrani uchun namuna holat (dizayndagi raqamlar).
-export const bankMavzular: Record<'rw' | 'math', BankMavzu[]> = {
-  rw: [
-    { nomi: 'Main idea of a text', yechilgan: 6, jami: 12 },
-    { nomi: 'Meaning of a word in context', yechilgan: 3, jami: 10 },
-    { nomi: 'Structure and purpose of a text', yechilgan: 0, jami: 8 },
-    { nomi: 'Conclusions from evidence', yechilgan: 2, jami: 9 },
-    { nomi: 'Punctuation', yechilgan: 9, jami: 9 },
-    { nomi: 'Connecting sentences', yechilgan: 1, jami: 7 },
-  ],
-  math: [
-    { nomi: 'Linear equations', yechilgan: 4, jami: 12 },
-    { nomi: 'Percentages and ratios', yechilgan: 2, jami: 10 },
-    { nomi: 'Quadratic equations', yechilgan: 0, jami: 8 },
-    { nomi: 'Functions', yechilgan: 5, jami: 11 },
-    { nomi: 'Geometry', yechilgan: 1, jami: 9 },
-    { nomi: 'Statistics', yechilgan: 7, jami: 7 },
-  ],
-};
-
 // Natijalar ekranida, brauzerda hali javob bo'lmasa ko'rsatiladigan namuna (dizayndagi qatorlar).
 export interface Javob { id: string; mavzu: string; bolim: string; sana: string; javob: string; togriJavob: string; togri: boolean }
 export const namunaJavoblar: Javob[] = [
