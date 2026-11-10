@@ -5,18 +5,16 @@ export const hisobSozlama = {
   /** Hisob ochish uchun minimal yosh (muallif, 2026-11-08). null bo'lsa ro'yxat formasi yosh belgisini so'ramaydi. */
   minYosh: 12 as number | null,
   /**
-   * 18 yoshgacha bo'lganlar uchun qo'shimcha qoida (masalan ota-ona roziligi).
-   * Qaror (2026-11-09): hozircha qo'shimcha qadam yo'q; lex.uz tekshiruvi P23 (Maxfiylik siyosati) bilan birga
-   * (HANDOFF §5, 12-savol). null: ro'yxat formasida ko'rsatilmaydi.
+   * 18 yoshgacha bo'lganlar uchun qo'shimcha qoida. Qaror (2026-11-09, P23, HANDOFF §5 12-savol):
+   * "Shaxsga doir ma'lumotlar to'g'risida"gi Qonun 21-moddasi voyaga yetmagan subyekt ma'lumotiga ishlov berish uchun
+   * ota-ona (vasiy) roziligini yozma, shu jumladan elektron shaklda talab qiladi (LX02); voyaga yetish 18 yosh (LX03).
+   * Ro'yxat formasi 12–17 yoshlilardan ota-ona ismi va rozilik belgisini so'raydi. null: qadam ko'rsatilmaydi.
    */
-  voyagaYetmaganQoida: null as null | { yoshgacha: number; talab: 'ota-ona-roziligi' },
-  /**
-   * Maxfiylik va Shartlar sahifalari (P23). null: havola o'rniga "coming soon" matni. Qiymat yol() ga beriladi.
-   * Maxfiylik: P23 gacha mavjud /uz/maxfiylik/ (P03B spetsifikatsiyasi, 2026-11-09). Uning matni hali hisobsiz
-   * holatni tasvirlaydi: P23 da yangilanadi.
-   */
+  voyagaYetmaganQoida: { yoshgacha: 18, talab: 'ota-ona-roziligi', manbalar: ['LX02', 'LX03'] } as
+    null | { yoshgacha: number; talab: 'ota-ona-roziligi'; manbalar: string[] },
+  /** Maxfiylik va Shartlar sahifalari (P23, 2026-11-09). Qiymat yol() ga beriladi. */
   maxfiylikSahifa: '/uz/maxfiylik/' as string | null,
-  shartlarSahifa: null as string | null,
+  shartlarSahifa: '/uz/shartlar/' as string | null,
   /**
    * Parolning eng kam uzunligi (forma tekshiruvi; 2026-11-09 qarori, HANDOFF §5, 18-savol).
    * Supabase'dagi `minimum_password_length` (supabase/config.toml) bilan bir xil bo'lishi kerak.
@@ -26,7 +24,8 @@ export const hisobSozlama = {
    * Rozilik (Maxfiylik + Shartlar + yosh) versiyasi (P03B, 2026-11-09). Ro'yxat user_metadata'ga, rozilik sahifasi
    * profiles.consent_version ga yozadi; consent_at ni server triggeri qo'yadi. Hujjatlar o'zgarsa yangi sana.
    */
-  rozilikVersiya: '2026-11-09',
+  // 2026-11-10: Maxfiylik qayta yozildi, Shartlar qo'shildi (P23): avval rozi bo'lganlar qayta so'raladi.
+  rozilikVersiya: '2026-11-10',
   /** Reyting taxallusi (ixtiyoriy): harf, raqam, pastki chiziq. */
   taxallusNaqsh: '[A-Za-z0-9_]{3,20}',
   /**

@@ -162,8 +162,8 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 
 - P03B: Google bilan kirish: PR #64 da merge qilingan, sozlash 2.5 (provider 2026-11-10 da yoqilgan; lokal dev va saytda sinalgan).
 - P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Jadval sxemada bor (`migrations/20261108000002_profiles.sql`), hisob sahifalari hali unga yozmaydi: hozircha `display_name`, `nickname` Supabase `user_metadata` da.
-- P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
-- P28: o'z SMTP (2.4).
+- P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`).
+- P28: o'z SMTP (2.4): Gmail SMTP yoqilgan, o'zbekcha shablonlar qo'llangan (PR #70, 2026-11-10).
 
 ## 3. Migratsiyalarni qo'llash (Supabase CLI)
 

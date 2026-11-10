@@ -1,7 +1,7 @@
 ---
 // 1-qavat · Hisob · Kirish. Bitta hisob butun sayt uchun. Email + parol; Google (P03B, GoogleTugma).
 // Holatlar: hisob o'chirilgan (env yo'q) · kirmagan (forma) · kirgan (davom etish) ·
-// xatdagi havoladan kelgan (email tasdiqlandi yoki havola eskirgan) · chiqqandan keyin (?chiqdi=1).
+// xatdagi havoladan kelgan (email tasdiqlandi yoki havola eskirgan) · chiqqandan keyin (?chiqdi=1) · hisob o'chirilgandan keyin (?ochirildi=1).
 // ?keyin=<sayt ichidagi yo'l>: kirgandan keyin qaysi qavatdan kelgan bo'lsa o'sha sahifaga qaytaradi.
 import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
 import Maydon from '../../../../components/hisob/Maydon.astro';
@@ -61,6 +61,7 @@ import { yol } from '../../../../lib/yol';
   const qidiruv = new URLSearchParams(location.search);
   if (qidiruv.get('keyin')) $<HTMLAnchorElement>('royxat-havola').search = `?keyin=${encodeURIComponent(keyin)}`;
   if (qidiruv.get('chiqdi') === '1') xabar(holat, 'Hisobdan chiqdingiz.');
+  if (qidiruv.get('ochirildi') === '1') xabar(holat, "Hisobingiz o'chirildi.");
 
   // Kirgandan keyin: rozilik yozilgan bo'lsa keyin'ga, bo'lmasa rozilik sahifasiga.
   // O'qib bo'lmasa keyin'ga (himoyalangan sahifa qorovuli baribir tekshiradi).

@@ -32,6 +32,20 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
         <p class="hisob-sust">Shu qurilmada hisobdan chiqasiz. Brauzerda saqlangan natijalar shu yerda qoladi.</p>
         <button type="button" class="tugma tugma-ikkinchi" id="chiqish-tugma">Chiqish</button>
       </section>
+
+      <section class="hisob-karta" aria-labelledby="ochirish-sarlavha">
+        <h2 id="ochirish-sarlavha">Hisobni o'chirish</h2>
+        <p class="hisob-sust">Hisobingiz va serverdagi ma'lumotlaringiz butunlay o'chiriladi. Shu brauzerda saqlangan natijalar qoladi: ularni brauzer sozlamalaridan tozalashingiz mumkin.</p>
+        <button type="button" class="tugma tugma-ikkinchi" id="ochirish-tugma" aria-expanded="false" aria-controls="ochirish-tasdiq">Hisobni o'chirish</button>
+        <div class="ochirish-tasdiq" id="ochirish-tasdiq" hidden>
+          <p id="ochirish-savol" tabindex="-1"><strong>Rostdan ham o'chirasizmi?</strong> Buni qaytarib bo'lmaydi.</p>
+          <p class="hisob-alert" id="ochirish-xato" role="alert" hidden></p>
+          <div class="ochirish-tugmalar">
+            <button type="button" class="tugma tugma-asosiy" id="ochirish-ha">Ha, o'chirish</button>
+            <button type="button" class="tugma tugma-ikkinchi" id="ochirish-yoq">Bekor qilish</button>
+          </div>
+        </div>
+      </section>
     </div>
   </HisobQorovul>
 </HisobKarta>
@@ -39,6 +53,10 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
 <style>
   .profil { display: flex; flex-direction: column; gap: var(--b-5); }
   .profil strong { overflow-wrap: anywhere; }
+  .ochirish-tasdiq { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ochirish-tasdiq[hidden] { display: none; }
+  .ochirish-tasdiq p:focus { outline: none; }
+  .ochirish-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
 </style>
 
 <script>
@@ -91,5 +109,35 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
     await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
     try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
     location.assign(`${hisobYoli('kirish')}?chiqdi=1`);
+  });
+
+  // Hisobni o'chirish: ikki bosqich (tugma → tasdiq). Escape yoki "Bekor qilish" yopadi va fokusni qaytaradi.
+  const ochirish = $<HTMLButtonElement>('ochirish-tugma');
+  const tasdiq = $('ochirish-tasdiq');
+  const ha = $<HTMLButtonElement>('ochirish-ha');
+  function tasdiqni(ochiq: boolean) {
+    tasdiq.hidden = !ochiq;
+    ochirish.setAttribute('aria-expanded', String(ochiq));
+    xabar($('ochirish-xato'), null);
+    if (ochiq) $('ochirish-savol').focus();
+    else ochirish.focus();
+  }
+  ochirish.addEventListener('click', () => tasdiqni(tasdiq.hidden));
+  $<HTMLButtonElement>('ochirish-yoq').addEventListener('click', () => tasdiqni(false));
+  tasdiq.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !ha.disabled) tasdiqni(false); });
+  ha.addEventListener('click', async () => {
+    const c = hisobMijoz();
+    if (!c) return;
+    xabar($('ochirish-xato'), null);
+    yuklanish(ha, true, "O'chirilmoqda…");
+    // Server funksiyasi: supabase/migrations/20261110210000_hisobni_ochirish.sql (faqat o'z hisobi).
+    const { error } = await c.rpc('delete_own_account');
+    if (error) {
+      yuklanish(ha, false);
+      return xabar($('ochirish-xato'), xatoMatni(error as unknown as Error, 'ochirish'));
+    }
+    await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
+    location.assign(`${hisobYoli('kirish')}?ochirildi=1`);
   });
 </script>

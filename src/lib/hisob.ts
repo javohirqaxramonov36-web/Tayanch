@@ -192,7 +192,7 @@ export function hisobQorovul(): Promise<Session | null> {
   return qorovulVadasi;
 }
 
-type Amal = 'kirish' | 'royxat' | 'tiklash' | 'yangilash' | 'profil' | 'qayta-yuborish';
+type Amal = 'kirish' | 'royxat' | 'tiklash' | 'yangilash' | 'profil' | 'qayta-yuborish' | 'ochirish';
 
 /** Supabase xatosini foydalanuvchi matniga aylantiradi. Email borligi yoki yo'qligi hech qachon aytilmaydi. */
 export function xatoMatni(e: AuthError | Error, amal: Amal): string {
@@ -211,6 +211,11 @@ export function xatoMatni(e: AuthError | Error, amal: Amal): string {
     return "Email yoki parol noto'g'ri.";
   }
   if (amal === 'royxat') return "Hisob ochilmadi. Qayta urinib ko'ring.";
+  if (amal === 'ochirish') {
+    // 23503: hisobga "on delete restrict" bilan bog'langan yozuv bor (masalan to'lov tarixi).
+    if (x.code === '23503') return "Hisobingizda to'lov yozuvlari bor, shuning uchun uni bu yerdan o'chirib bo'lmaydi.";
+    return "Hisob o'chirilmadi. Qayta urinib ko'ring.";
+  }
   if (amal === 'yangilash') return "Yangi parol saqlanmadi. Havolaning muddati o'tgan bo'lishi mumkin: yangisini so'rang.";
   return "Nimadir xato ketdi. Qayta urinib ko'ring.";
 }
