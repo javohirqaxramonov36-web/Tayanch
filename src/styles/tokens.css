@@ -36,12 +36,16 @@
   --shrift: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --matn-hero: 4rem;
   --matn-h1: 2.875rem;
-  --matn-h2: 2.75rem;
+  --matn-h2: 2rem;
   --matn-h3: 1.5rem;
-  --matn-katta: 1.1875rem;
+  --matn-katta: 1.125rem;
   --matn-asosiy: 1rem;
   --matn-kichik: 0.875rem;
   --matn-mayda: 0.8125rem;
+  /* Harf oralig'i (em: o'lcham bilan birga o'zgaradi). Katta sarlavha zichroq. */
+  --oraliq-hero: -0.025em;
+  --oraliq-sarlavha: -0.02em;      /* h1, h2 */
+  --oraliq-kichik-sarlavha: -0.01em; /* h3 */
 
   /* Bo'shliq */
   --b-1: 4px;
@@ -107,7 +111,7 @@
   :root {
     --matn-hero: 2.5rem;
     --matn-h1: 2.125rem;
-    --matn-h2: 2rem;
+    --matn-h2: 1.625rem;
     --b-24: 64px;
   }
 }
