@@ -23,3 +23,12 @@ minimum_password_length = 8
 [auth.email]
 # Email tasdiqlash majburiy.
 enable_confirmations = true
+
+# Edge Function'lar (inPAY to'lovi, PR #62; supabase/README.md 10-bo'lim). `supabase functions deploy` o'qiydi.
+# inpay-webhook: inPAY Supabase JWT yubormaydi, so'rov X-Inpay-Signature imzosi bilan tekshiriladi.
+[functions.inpay-webhook]
+verify_jwt = false
+
+# tolov-yaratish: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi.
+[functions.tolov-yaratish]
+verify_jwt = false

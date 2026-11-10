@@ -11,7 +11,8 @@
     "repo:tekshir": "node scripts/repo-tekshir.mjs",
     "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'",
     "savol-banki:sinov": "node --test 'src/lib/testlar/*.test.ts'",
-    "db:tekshir": "bash scripts/rls-tekshir.sh"
+    "db:tekshir": "bash scripts/rls-tekshir.sh",
+    "funksiyalar:tekshir": "deno test --no-lock --node-modules-dir=none supabase/functions/tests/ && deno check --no-lock --node-modules-dir=none supabase/functions/tolov-yaratish/index.ts supabase/functions/inpay-webhook/index.ts"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",

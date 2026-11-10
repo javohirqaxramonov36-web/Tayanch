@@ -1,6 +1,6 @@
-# Supabase: loyiha va migratsiyalar
+# Supabase: loyiha, migratsiyalar va sozlamalar
 
-Sxema, RLS va server funksiyalari (P02, PR #38). Haqiqiy loyihani ishga tushirish (P02b). Qarorlar: `docs/qarorlar/001-hisob-tolov-server.md`. Jadvallar va oqimlar: `docs/ma'lumotlar-modeli.md`.
+Sxema, RLS va server funksiyalari (P02, PR #38). Haqiqiy loyihani ishga tushirish (P02b). Auth va dashboard sozlamalari (hisob, P03): 2-bo'lim. To'lov (inPAY): 10-bo'lim. Qarorlar: `docs/qarorlar/001-hisob-tolov-server.md`. Jadvallar va oqimlar: `docs/ma'lumotlar-modeli.md`.
 
 CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; muallif faqat parolni terminalga yozadi, brauzerda tasdiqlaydi va bazaga yozishdan oldin "ha" deydi. Dashboard qadamlarini muallif o'zi bajaradi. Claude kalit, token va baza parolini so'ramaydi, ko'rmaydi va yozmaydi (`--password`, `--token` va parolli env berilmaydi). Repoga va chatga faqat project-ref yozilishi mumkin.
 
@@ -11,12 +11,15 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | Fayl | Nima |
 | --- | --- |
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
+| `migrations/20261109000010_tolov_inpay.sql` | To'lov SQL funksiyalari (`payment_create`, `payment_set_invoice`, `payment_apply_event`), faqat service_role. Jadvallarga tegmaydi. 10-bo'lim. |
+| `functions/tolov-yaratish/`, `functions/inpay-webhook/` | Edge Function'lar: inPAY to'lovi va webhook (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
 | `tests/loyiha_tekshir.sql` | Loyiha holatini tekshirish, **faqat o'qiydi**: RLS, RPC va ularning huquqlari, jadval huquqlari lokal sinov bilan bir xilligi, bucket, trigger, SPR, sinov qoldig'i. SQL Editor'da ham, `psql` da ham ishlaydi. |
 | `../scripts/rls-tekshir.sh` | Lokal sinov: vaqtinchalik klaster, migratsiyalar 2 marta, testlar. `npm run db:tekshir` |
+| `config.toml` | Auth sozlamalari (P03, PR #58; 2-bo'lim) va Edge Function'lar uchun `verify_jwt = false` (10-bo'lim). Faqat ochiq qiymatlar. |
 
-`supabase/.temp/` (CLI `link` dan keyin yaratadi: project-ref, pooler manzili, servis versiyalari) `.gitignore` da. `supabase/config.toml` P03 da auth sozlamalari uchun qo'shilgan (2-bo'lim). Migratsiyalar uchun u kerak bo'lmadi: `link`, `db push --remote`, `migration list --remote`, `db query --remote` usiz ishladi (2026-11-09, 3-bo'lim).
+`supabase/.temp/` (CLI `link` dan keyin yaratadi: project-ref, pooler manzili, servis versiyalari) `.gitignore` da. Migratsiya buyruqlari `config.toml` ga bog'liq emas: `link`, `db push --remote`, `migration list --remote`, `db query --remote` u hali yo'q paytda ishladi (2026-11-09, 3-bo'lim). `config.toml` keyin P03 da qo'lda yozildi (`supabase init` emas).
 
 ## 0. Bepul reja cheklovlari
 
@@ -34,7 +37,7 @@ Tekshirildi **2026-11-09**, manbalar: https://supabase.com/pricing, https://supa
 Tayanch uchun xulosa:
 - Bepul reja faqat sinov va yopiq beta uchun. Loyiha to'xtatilsa, saytdagi kirish va mashq ishlamaydi (statik sahifalar ishlayveradi).
 - Backup yo'q: muhim o'zgarishdan oldin muallif qo'lda eksport qiladi va faylni **repo papkasidan tashqarida** saqlaydi (unda foydalanuvchi ma'lumoti bo'ladi). Usul (`supabase db dump` yoki Homebrew `pg_dump` session pooler orqali): sinalmagan, birinchi haqiqiy foydalanuvchidan oldin sinaladi.
-- Email bilan ro'yxatdan o'tish jamoadan tashqaridagi foydalanuvchilarga ishlashi uchun o'z SMTP serveri kerak (alohida qaror, `/uz/hisob/` dan oldin).
+- Email bilan ro'yxatdan o'tish jamoadan tashqaridagi foydalanuvchilarga ishlashi uchun o'z SMTP serveri kerak (P28, 2.4-bo'lim).
 - **Pro rejaga o'tish qarori P28 da qabul qilinadi.**
 - To'lov (inPAY) ishga tushmaguncha `subscriptions` ga faqat `admin_grant_plan` yozadi.
 
@@ -42,13 +45,15 @@ Tayanch uchun xulosa:
 
 Muallif yaratgan (reja Free). Yangi loyiha kerak bo'lsa: https://supabase.com/dashboard → New project, region foydalanuvchilarga yaqin, baza paroli parol menejerida (repoga emas).
 
-## 2. Dashboard va auth sozlamalari
+## 2. Dashboard va Auth sozlamalari (hisob, P03)
 
-Kalit, parol va SMTP ma'lumotlari bu yerga **yozilmaydi**, ularni muallif Dashboard'ga o'zi kiritadi. Brauzer uchun ochiq qiymatlar (`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`): `docs/lokal-ish-tartibi.md`, "Supabase o'zgaruvchilari".
+Bu bo'limda faqat sozlash qadamlari; kalit, parol va SMTP ma'lumotlari bu yerga **yozilmaydi** (chatga, logga ham). Ularni muallif Supabase dashboard'iga o'zi kiritadi.
+
+Brauzer uchun ochiq qiymatlar (`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`): `docs/lokal-ish-tartibi.md`, "Supabase o'zgaruvchilari".
 
 Manbalar (tekshirildi 2026-11-09): supabase.com/docs/guides/auth/redirect-urls, /auth/rate-limits, /auth/auth-smtp.
 
-**Holat (2026-11-09, P03):** 2.1–2.2-bo'limdagi sozlamalar `supabase/config.toml` da yozilgan va Tayanch loyihasiga qo'llangan (`supabase config push --remote=<ref>`; faylda yo'q sozlamalar o'zgarmaydi). O'zgargani: Site URL (`localhost:3000` edi), Redirect URL'lar (bo'sh edi), parol uzunligi 6 → 8. Email tasdiqlash avvaldan yoqilgan edi. Brauzer kaliti: publishable (`sb_publishable_...`, legacy `anon` emas); `.env` va GitHub repo variables'ga qiymat ko'rsatilmasdan CLI orqali yozilgan. Keyingi o'zgarishlar ham shu fayl orqali: avval `supabase config diff --remote=<ref>`, so'ng `push`.
+**Holat (2026-11-09):** 2.1–2.2 dagi sozlamalar `supabase/config.toml` da yozilgan va Tayanch loyihasiga qo'llangan (`supabase config push --remote=<ref>`; faylda yo'q sozlamalar o'zgarmaydi). O'zgargani: Site URL (`localhost:3000` edi), Redirect URL'lar (bo'sh edi), parol uzunligi 6 → 8. Email tasdiqlash avvaldan yoqilgan edi. Brauzer kaliti: publishable (`sb_publishable_...`, legacy `anon` emas); `.env` va GitHub repo variables'ga qiymat ko'rsatilmasdan CLI orqali yozilgan. Keyingi o'zgarishlar ham shu fayl orqali: avval `supabase config diff --remote=<ref>`, so'ng `push`.
 
 ### 2.1 URL Configuration
 
@@ -71,13 +76,13 @@ https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/
 http://localhost:4321/Tayanch/**
 ```
 
-`**` har qanday belgini (`/` ham) qamraydi. Query (`?keyin=`) glob bilan mos kelishini hujjat aniq aytmaydi: **tekshirish kerak** (Supabase hujjatidagi glob sinov vositasida yoki haqiqiy xat bilan). Mos kelmasa, Supabase Site URL'ga qaytaradi: foydalanuvchi baribir kirgan bo'ladi, faqat `keyin` yo'qoladi.
+`**` har qanday belgini (`/` ham) qamraydi (`*` `/` dan o'tmaydi, saytda har manzil `/` bilan tugaydi). Query (`?keyin=`) glob bilan mos kelishini hujjat aniq aytmaydi: **tekshirish kerak** (Supabase hujjatidagi glob sinov vositasida yoki haqiqiy xat bilan). Mos kelmasa, Supabase Site URL'ga qaytaradi: foydalanuvchi baribir kirgan bo'ladi, faqat `keyin` yo'qoladi.
 
 Lokal port boshqacha bo'lsa (masalan `astro dev` 4321 dan boshqa), shu port ham qo'shiladi.
 
 ### 2.2 Email bilan kirish
 
-Dashboard → Authentication → Sign In / Providers → Email:
+Dashboard → Authentication → Sign In / Providers → Email (yoqilgan):
 
 - **Confirm email**: yoqilgan (majburiy tasdiqlash, P03 talabi).
 - **Minimum password length**: 8 dan kam emas (formadagi `hisobSozlama.parolMinUzunlik`; HANDOFF §5, 18-savol).
@@ -87,7 +92,7 @@ Oqim turi: brauzer kodi `flowType: 'implicit'` ishlatadi (`src/lib/hisob.ts`). S
 
 ### 2.3 Standart pochta xizmati: faqat sinov uchun
 
-Supabase'ning o'z pochta xizmati (hujjat bo'yicha, 2026-11-09):
+Supabase'ning o'z pochta xizmati (hujjat bo'yicha, 2026-11-09; qisqasi 0-bo'limda):
 
 - soatiga **2 ta** xat (butun loyiha bo'yicha; ogohlantirishsiz o'zgarishi mumkin);
 - faqat loyiha **jamoasi a'zolari** manziliga yuboradi, boshqa manzil "Email address not authorized" xatosini oladi (formada "Could not create the account" bo'lib chiqadi);
@@ -105,17 +110,28 @@ Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov f
 6. Email shablonlari (Authentication → Emails): matnni inglizchaga moslash (SAT bo'limi), muallif tekshiradi.
 7. Sinov: yangi email bilan ro'yxat, tasdiqlash, kirish, parol tiklash.
 
-### 2.5 Boshqa sozlamalar
+### 2.5 Google (P03B)
 
-- **Google** (P03B, SB04, https://supabase.com/docs/guides/auth/social-login/auth-google):
-  1. Google Cloud Console → Google Auth Platform: **Data Access (Scopes)** da `openid` (qo'lda qo'shiladi), `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi (tekshiruv jarayoni uzayadi).
-  2. **Clients** → yangi OAuth client, turi **Web application**.
-  3. **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz) va lokal `http://localhost:4321` (qo'llanma uni production'dan oldin olib tashlashni tavsiya qiladi).
-  4. **Authorized redirect URIs**: Supabase Dashboard → Authentication → Providers → Google sahifasidagi **Callback URL** (nusxa ko'chiriladi, qo'lda yozilmaydi).
-  5. Client ID va **Client Secret** faqat Supabase Dashboard'dagi Google provider sahifasiga kiritiladi, provider yoqiladi.
-- **Anonymous sign-ins**: o'chiq qoladi (ishlatilmaydi).
-- **Data API** (exposed schemas): faqat `public` (va standart `graphql_public`). `private` qo'shilmaydi.
-- **API keys**: saytda faqat loyiha URL va publishable kalit (SB01, P03 da ulangan, yuqoridagi "Holat"). Secret / `service_role` kaliti hech qachon saytga, repoga, chatga.
+SB04, https://supabase.com/docs/guides/auth/social-login/auth-google. Redirect URL'lar 2.1 dagi ro'yxatda.
+
+1. Google Cloud Console → Google Auth Platform: **Data Access (Scopes)** da `openid` (qo'lda qo'shiladi), `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi (tekshiruv jarayoni uzayadi).
+2. **Clients** → yangi OAuth client, turi **Web application**.
+3. **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz) va lokal `http://localhost:4321` (qo'llanma uni production'dan oldin olib tashlashni tavsiya qiladi).
+4. **Authorized redirect URIs**: Supabase Dashboard → Authentication → Providers → Google sahifasidagi **Callback URL** (nusxa ko'chiriladi, qo'lda yozilmaydi).
+5. Client ID va **Client Secret** faqat Supabase Dashboard'dagi Google provider sahifasiga kiritiladi, provider yoqiladi.
+
+### 2.6 Boshqa sozlamalar
+
+1. **Anonymous sign-ins**: o'chiq qoladi (ishlatilmaydi).
+2. **Data API** (exposed schemas): faqat `public` (va standart `graphql_public`). `private` qo'shilmaydi.
+3. **API keys**: saytga faqat loyiha URL va publishable kalit beriladi (SB01; P03 da ulangan, yuqoridagi holat). Secret / `service_role` kaliti hech qachon saytga, repoga, chatga.
+
+### 2.7 Keyingi vazifalar
+
+- P03B: Google bilan kirish (2.5; client ID/secret faqat dashboard'da).
+- P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Jadval sxemada bor (`migrations/20261108000002_profiles.sql`), hisob sahifalari hali unga yozmaydi: hozircha `display_name`, `nickname` Supabase `user_metadata` da.
+- P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
+- P28: o'z SMTP (2.4).
 
 ## 3. Migratsiyalarni qo'llash (Supabase CLI)
 
@@ -146,7 +162,7 @@ supabase migration list --remote
 - **CLI 3.x da `db push` sukut bo'yicha lokal bazaga** (127.0.0.1:54322) qaraydi; haqiqiy loyiha uchun `--remote` shart (`supabase db push --help`, 2026-11-09). `--remote` siz buyruq Docker'dagi lokal baza yo'qligi uchun ulanish xatosi beradi, loyihaga tegmaydi.
 - `--dry-run` qo'llanadigan 9 ta migratsiyani ko'rsatadi, hech narsa yozmaydi. `migration list --remote`: Local va Remote ustunlarida bir xil 9 ta versiya.
 - Token va parol: `login` brauzer orqali, token CLI'ning o'zida saqlanadi. `link`, `db push --remote`, `migration list --remote`, `db query --remote` baza parolini **so'ramadi**: CLI har safar `Initialising login role...` deb vaqtinchalik login rolini token orqali yaratadi. Baza paroli faqat `psql` uchun kerak (6-bo'lim).
-- Migratsiyalar uchun `config.toml` **kerak bo'lmadi** (2026-11-09, haqiqiy loyihada, fayl hali yo'q edi). Hozir `supabase/config.toml` bor (P03): unda faqat auth sozlamalari, ular `supabase config push --remote=<ref>` bilan qo'llanadi, avval `supabase config diff --remote=<ref>` (2-bo'lim).
+- Migratsiyalar uchun `config.toml` **kerak bo'lmadi** (2026-11-09, haqiqiy loyihada). `supabase init` qilinmadi: u lokal standart auth qiymatlarini (`site_url = "http://127.0.0.1:3000"`) yozadi (2026-11-09 da nusxa papkada sinalgan; faqat `config.toml` va `.temp/` qo'shadi, `migrations/` ga tegmaydi). Keyin P03 da (PR #58) `supabase/config.toml` qo'lda, faqat kerakli Auth sozlamalari bilan yozildi va `supabase config push --remote=<ref>` bilan qo'llandi: faylda yo'q sozlamalar o'zgarmaydi (2-bo'lim, "Holat"). Har `push` dan oldin `supabase config diff --remote=<ref>`.
 
 Haqiqiy natija (2026-11-09, CLI 3.0.0):
 
@@ -203,11 +219,12 @@ Dashboard'da ko'z bilan: Table Editor'da "RLS enabled", Storage'da bucket "Publi
 
 | Kalit | Joy |
 | --- | --- |
-| Supabase URL, publishable (anon) kalit | Sayt sozlamasi (ochiq bo'lishi mumkin, xavfsizlikni RLS ta'minlaydi, SB01). P03 da `.env` va GitHub repo variables orqali ulangan (`docs/lokal-ish-tartibi.md`). |
+| Supabase URL, publishable kalit | Sayt sozlamasi `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` (`.env` va GitHub repo variables, P03; `docs/lokal-ish-tartibi.md`). Ochiq bo'lishi mumkin, xavfsizlikni RLS ta'minlaydi (SB01). |
 | `service_role` / secret kalit | Faqat Supabase Edge Functions muhiti (avtomatik) va lokal `supabase/functions/.env` |
 | Google client secret | Dashboard → Authentication → Providers → Google |
+| SMTP host, username, parol (P28) | Dashboard → Authentication → Settings → SMTP (2.4) |
 | Baza paroli | Parol menejeri; CLI yoki `psql` so'raganda terminalga |
-| inPAY `merchant_id`, `bearer_token`, `webhook_secret` | `supabase secrets set ...` (SB02) va lokal `supabase/functions/.env` |
+| inPAY `INPAY_SECRET_KEY` (`sk_test_…` / `sk_live_…`), `INPAY_WEBHOOK_SECRET` (`whsec_…`) | Dashboard → Edge Functions → Secrets (SB02), muallif o'zi qo'yadi. Merchant ID v2'da kerak emas (10-bo'lim) |
 
 `.env` fayllari va `supabase/.temp/` `.gitignore` da. Kalit oshkor bo'lsa: darhol rotate.
 
@@ -283,11 +300,69 @@ select public.admin_hide_question('<external_id>', 'sabab', 'muallif');
 
 Savollar migratsiyaga yozilmaydi. Ular alohida (keyingi vazifa) service role bilan `questions` ga yuklanadi: `status = 'draft'`, muallif tekshirgach `verified` va `verified_by`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
 
-## 10. Keyingi vazifalar (hisob)
+## 10. To'lov: inPAY Edge Function'lari
 
-- P03B: Google bilan kirish (Google provider, client ID/secret faqat dashboard'da; Redirect URL'lar shu ro'yxatda).
-- P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Hozircha `display_name`, `nickname` Supabase `user_metadata` da.
-- P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
+inPAY **API v2** (IP03, 2026-11-09). v1 (IP04) ishlatilmaydi: uning hujjatida webhook imzosi va sinov rejimi yo'q. Oqim va holatlar: `docs/ma'lumotlar-modeli.md`, "To'lov".
+
+```
+brauzer (hisobga kirgan) ── POST tolov-yaratish {"plan": "pro"} ─> payment_create (narx va muddat plans dan) ─> payments: created
+                                                                ─> inPAY POST /payments/ (Idempotency-Key = payment id)
+                                                                ─> payment_set_invoice ─> payments: pending, brauzerga checkout_url
+inPAY ── POST inpay-webhook (X-Inpay-Signature) ─> imzo, 5 daqiqa ─> payment_apply_event (bitta tranzaksiya):
+           payment_events (evt_ id unique) ─> summa, UZS, livemode, metadata.payment_id ─> payments: paid ─> subscriptions ─> audit_log
+```
+
+- **Brauzer to'lovni tasdiqlay olmaydi**: `paid` va obunani faqat imzosi tekshirilgan webhook yozadi. `return_url` (`/uz/sat/hisob/tolov/?tolov=<id>`, sahifa hali yo'q) faqat `payments.status` ni o'qiydi.
+- **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. Hozir ikkalasi `null` va `pro`/`elite` faol emas (P19), shuning uchun `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
+- **Obuna muddati**: to'lov yaratilgan paytdagi `period_days` (`payments.raw.tayanch`). Shu tarifda faol obuna bo'lsa, yangisi uning oxiridan boshlanadi. Takroriy (avto) to'lov yo'q: har davr yangi to'lov. v2'da "Obunalar" bo'limi bor (IP03), keyingi vazifa.
+- **Holatlar**: `created → pending → paid | failed | canceled`. `failed` yoki `canceled` dan keyin `payment.succeeded` kelsa `paid` bo'ladi (pul olingan). `paid` yakuniy.
+- **Webhook javobi**: qayta ishlansa yoki xato bilan saqlansa 200; imzo yo'q yoki eskirgan bo'lsa 400, noto'g'ri bo'lsa 401 (bazaga yozilmaydi); baza xatosi 500 (inPAY 8 martagacha qayta yuboradi). Xato bilan saqlangan hodisalar (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) obuna bermaydi va qo'lda ko'riladi:
+
+```sql
+select received_at, event_id, provider_order_id, error from public.payment_events
+ where error is not null order by received_at desc;
+```
+
+- **Chegara**: bir foydalanuvchida 1 soatda 5 tadan ortiq ochiq (`created`/`pending`) to'lov yaratilmaydi (`429`). Tayanch tanlovi.
+
+### Secret'lar (muallif qo'yadi, qiymatlari repoga, chatga va logga yozilmaydi)
+
+| Nom | Qayerdan | Izoh |
+| --- | --- | --- |
+| `INPAY_SECRET_KEY` | inPAY kabineti → Kassa → API v2 kalitlari | `sk_test_…` sinov, `sk_live_…` jonli. To'liq faqat yaratilganda bir marta ko'rsatiladi |
+| `INPAY_WEBHOOK_SECRET` | `GET /webhooks/secret/` (faqat `sk_live_` bilan) yoki kabinet (tekshirish kerak) | `whsec_…`, sinov va jonli xabarlar uchun bitta |
+| `SAYT_URL` (ixtiyoriy, maxfiy emas) | | Standart `https://javohirqaxramonov36-web.github.io/Tayanch` |
+| `TOLOV_ORIGINLAR` (ixtiyoriy, maxfiy emas) | | Vergul bilan. Standart: GitHub Pages va `localhost:4321` |
+
+`SUPABASE_URL` va service kaliti (`SUPABASE_SECRET_KEYS` yoki eski `SUPABASE_SERVICE_ROLE_KEY`) Supabase o'zi beradi. Funksiya sozlama yetishmasa `500 server_not_configured` qaytaradi va logga faqat NOMINI yozadi.
+
+### inPAY kabinetida (muallif, deploy'dan oldin)
+
+1. Kassa → API v2 kalitlari: kalit yaratish (avval `sk_test_`).
+2. Oq ro'yxat (https://inpay.uz/merchant/whitelist/): `javohirqaxramonov36-web.github.io` (return_url) va `uvwejvjrsswssgydwevm.supabase.co` (webhook_url). Aks holda inPAY `domain_not_whitelisted` qaytaradi.
+3. IP cheklovi o'chiq: Edge Function'ning chiquvchi IP manzili doimiy ekani tasdiqlanmagan (tekshirish kerak).
+
+### Deploy (faqat muallif "ha" deganidan keyin)
+
+```bash
+supabase db push --remote
+supabase functions deploy tolov-yaratish --no-verify-jwt --use-api
+supabase functions deploy inpay-webhook --no-verify-jwt --use-api
+```
+
+JWT tekshiruvi ikkala funksiyada o'chiq: `inpay-webhook` ga inPAY Supabase JWT yubormaydi (imzo bilan tekshiriladi); `tolov-yaratish` foydalanuvchini kod ichida `auth.getUser` bilan tekshiradi. Bu `supabase/config.toml` da yozilgan (`[functions.tolov-yaratish]`, `[functions.inpay-webhook]`: `verify_jwt = false`), shuning uchun bayroqsiz `supabase functions deploy <nom>` ham shunday deploy qilishi kerak (Supabase CLI config hujjati; CLI 3.0.0 da sinalmagan, tekshirish kerak). `--no-verify-jwt` zaxira sifatida buyruqda qoladi: natija bir xil. `--use-api`: Docker kerak emas. `supabase config diff` / `config push` bu bo'limlarni ko'rsatadimi yoki o'tkazib yuboradimi: tekshirish kerak. Manzillar: `https://uvwejvjrsswssgydwevm.supabase.co/functions/v1/<nom>`.
+
+**Sinov rejimi xavfi**: `INPAY_SECRET_KEY` `sk_test_` bo'lganda test karta (`8600 0000 0000 0001`) bilan to'lov "o'tadi" va obuna beriladi. Shuning uchun sinov paytida tarif faqat sinov uchun faol qilinadi va oxirida yana yashiriladi (`is_active = false`), jonli rejimga `sk_live_` bilan o'tiladi. Jonli kalit bilan yaratilgan to'lovga sinov hodisasi (`livemode: false`) obuna bermaydi (`livemode_mismatch`).
+
+### Sinov
+
+```bash
+npm run db:tekshir        # SQL: OK 16-20 (huquqlar, payment_create, webhook oqimi, takror hodisa, current_plan)
+npm run funksiyalar:tekshir   # Deno: imzo, inPAY mijozi, ikkala funksiya oqimi; index.ts tur tekshiruvi
+```
+
+- **Sinalgan (2026-11-09, lokal)**: SQL sinovlari (OK 16–20) va 3 ta ataylab buzish (summa tekshiruvi, takror hodisa, huquq) ushlandi; Deno testlari 29/29; `index.ts` supabase-js 2.118.0 bilan tur tekshiruvidan o'tdi; handler'lar vaqtinchalik Postgres'dagi haqiqiy SQL funksiyalari bilan birga (inPAY soxta): created → pending → paid, 30 kunlik obuna, takror webhook, soxta imzo.
+- **Sinalmagan (tekshirish kerak)**: Supabase'ga deploy, PostgREST orqali `rpc()` (lokal sinovda psql), haqiqiy inPAY (sinov kaliti bilan to'lov, webhook kelishi va imzo formati), `SUPABASE_SECRET_KEYS` tuzilishi, brauzerdan CORS, `/uz/sat/hisob/tolov/` sahifasi (hali yo'q).
 
 ## 11. Navigator onboarding (`onboarding_profiles`)
 
