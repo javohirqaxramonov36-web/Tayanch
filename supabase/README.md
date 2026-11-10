@@ -134,7 +134,7 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 
 **Qo'llangan (2026-11-10)**: muallif Google Cloud loyihasi `tayanch-auth-2611` (Testing, External; test userlar 2 ta) Client ID/secret'ni Dashboard'ga qo'ydi va yoqdi. Tekshiruv: `/auth/v1/settings` → `external.google: true`; `/auth/v1/authorize?provider=google` → 302 `accounts.google.com`.
 
-**Sinov** (2026-11-10, lokal dev, muallif haqiqiy Google hisobi bilan; batafsil `docs/qarorlar/002-google-kirish.md` "Sinov"): yangi Google hisobi → rozilik sahifasi → "Davom etish": sinalgan; chiqish va `?keyin=` bilan qayta kirish (rozilik qayta so'ralmaydi, `keyin` ga qaytadi): sinalgan; tasdiqlangan email/parol hisobi bilan bir xil Google email → bitta hisob (`email` + `google` identity): sinalgan; bekor qilish: Supabase `?error=access_denied` ni callback'ga uzatishi va sahifa matni sinalgan, Google'dagi haqiqiy "Cancel" sinalmagan. Sinalmagan: saytda (merge'dan keyin), telefon, bog'langandan keyin parol bilan kirish, tasdiqlanmagan email/parol + Google.
+**Sinov** (2026-11-10, lokal dev, muallif haqiqiy Google hisobi bilan; batafsil `docs/qarorlar/002-google-kirish.md` "Sinov"): yangi Google hisobi → rozilik sahifasi → "Davom etish": sinalgan; chiqish va `?keyin=` bilan qayta kirish (rozilik qayta so'ralmaydi, `keyin` ga qaytadi): sinalgan; tasdiqlangan email/parol hisobi bilan bir xil Google email → bitta hisob (`email` + `google` identity): sinalgan; bekor qilish: Supabase `?error=access_denied` ni callback'ga uzatishi va sahifa matni sinalgan, Google'dagi haqiqiy "Cancel" sinalmagan. Saytda (GitHub Pages) 2026-11-10 da PR #64 merge va deploy'dan keyin sinalgan: `kirish/?keyin=/Tayanch/uz/sat/` → Google → callback → `/uz/sat/` (mavjud hisob, rozilik qayta so'ralmadi). Sinalmagan: telefon, bog'langandan keyin parol bilan kirish, tasdiqlanmagan email/parol + Google.
 
 **P28**: Google Auth Platform → Audience → **Publish app** (In production). Asosiy scope'li ilovalarga Google tekshiruvi kerak emasligi: tekshirish kerak. Lokal JavaScript origin production'dan oldin olib tashlanishi mumkin (Supabase qo'llanmasi tavsiyasi).
 
@@ -146,7 +146,7 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 
 ### 2.7 Keyingi vazifalar
 
-- P03B: Google bilan kirish: kod PR #64 da, sozlash 2.5 (provider 2026-11-10 da yoqilgan, lokal dev'da sinalgan; saytda merge'dan keyin sinaladi).
+- P03B: Google bilan kirish: PR #64 da merge qilingan, sozlash 2.5 (provider 2026-11-10 da yoqilgan; lokal dev va saytda sinalgan).
 - P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Jadval sxemada bor (`migrations/20261108000002_profiles.sql`), hisob sahifalari hali unga yozmaydi: hozircha `display_name`, `nickname` Supabase `user_metadata` da.
 - P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
 - P28: o'z SMTP (2.4).
