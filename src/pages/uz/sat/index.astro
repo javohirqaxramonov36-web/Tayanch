@@ -123,7 +123,7 @@ const qadamlar = [
   /* Hero */
   .hero { display: flex; flex-wrap: wrap; gap: var(--b-8); align-items: stretch; }
   .hero-matn { flex: 3 1 420px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); }
-  .hero h1 { font-size: 56px; line-height: 1.05; font-weight: 900; letter-spacing: -1px; }
+  .hero h1 { font-size: 56px; line-height: 1.05; font-weight: 900; letter-spacing: var(--oraliq-hero); }
   .lead { font-size: 19px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 58ch; }
   .lead-telefon { display: none; }
   .tuzilma a { color: var(--qora-matn-ikkinchi); }
@@ -212,7 +212,7 @@ const qadamlar = [
   /* Telefon ekrani */
   @media (max-width: 640px) {
     .sat-kirish { padding-top: 28px; gap: var(--b-10); }
-    .hero h1 { font-size: 38px; line-height: 1.08; letter-spacing: -0.5px; }
+    .hero h1 { font-size: 38px; line-height: 1.08; letter-spacing: var(--oraliq-hero); }
     .lead { display: none; }
     .lead-telefon { display: block; font-size: 17px; }
     .sahifalar, .pastki { display: none; }

@@ -53,6 +53,7 @@ Bitta oila: **Figtree** (Google Fonts, OFL litsenziya), `@fontsource-variable/fi
 
 | Token | O'lcham / qator | Qalinlik | Qayerda |
 | --- | --- | --- | --- |
+| `--matn-hero` | 64px / 1.04 (telefonda 40px) | 900 | Faqat bosh sahifa hero sarlavhasi |
 | `--matn-h1` | 46px / 1.12 (telefonda 34px) | 800 | Sahifa sarlavhasi |
 | `--matn-h2` | 32px / 1.2 (telefonda 26px) | 800 | Bo'lim sarlavhasi |
 | `--matn-h3` | 24px / 1.25 | 800 | Karta sarlavhasi |
@@ -62,6 +63,16 @@ Bitta oila: **Figtree** (Google Fonts, OFL litsenziya), `@fontsource-variable/fi
 | `--matn-mayda` | 13px / 1.4 | 700 | Ustki yorliq (`1 · BOSHLASH`) |
 
 Qator uzunligi 60–75 belgi (`max-width: 62ch`).
+
+Harf oralig'i (2026-11-10): sarlavhalarda manfiy, `em` da (o'lcham bilan birga o'zgaradi). Kodda xom `px` qiymat yozilmaydi.
+
+| Token | Qiymat | Qayerda |
+| --- | --- | --- |
+| `--oraliq-hero` | -0.025em | Hero va 56px dan katta sarlavha |
+| `--oraliq-sarlavha` | -0.02em | h1, h2 |
+| `--oraliq-kichik-sarlavha` | -0.01em | h3 |
+
+Bosh harfli ustki yorliqlarda musbat oraliq (0.06em) o'z joyida qoladi. Sarlavhalar `text-wrap: balance` (qatorlar teng sinadi), abzaslar `text-wrap: pretty` (oxirgi qatorda yolg'iz so'z qolmaydi); eski brauzerda oddiy sinish.
 
 ## Bo'shliq
 
