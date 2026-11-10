@@ -1,5 +1,5 @@
 ---
-// 1-qavat · Hisob · Kirish. Bitta hisob butun sayt uchun. Email + parol; Google joyi (P03B).
+// 1-qavat · Hisob · Kirish. Bitta hisob butun sayt uchun. Email + parol; Google (P03B, GoogleTugma).
 // Holatlar: hisob o'chirilgan (env yo'q) · kirmagan (forma) · kirgan (davom etish) ·
 // xatdagi havoladan kelgan (email tasdiqlandi yoki havola eskirgan) · chiqqandan keyin (?chiqdi=1).
 // ?keyin=<sayt ichidagi yo'l>: kirgandan keyin qaysi qavatdan kelgan bo'lsa o'sha sahifaga qaytaradi.
@@ -42,8 +42,9 @@ import { yol } from '../../../../lib/yol';
 </HisobKarta>
 
 <script>
+  import type { Session, SupabaseClient } from '@supabase/supabase-js';
   import {
-    hisobMijoz, hisobYoqBolsa, havolaHolati, havolaXatoMatni, keyingiManzil,
+    hisobMijoz, hisobYoqBolsa, havolaHolati, havolaXatoMatni, keyingiManzil, rozilikHolati, rozilikYoli,
     xatoMatni, maydonXatosi, yuklanish, xabar, emailTogrimi,
   } from '../../../../lib/hisob';
 
@@ -60,6 +61,16 @@ import { yol } from '../../../../lib/yol';
   const qidiruv = new URLSearchParams(location.search);
   if (qidiruv.get('keyin')) $<HTMLAnchorElement>('royxat-havola').search = `?keyin=${encodeURIComponent(keyin)}`;
   if (qidiruv.get('chiqdi') === '1') xabar(holat, 'Hisobdan chiqdingiz.');
+
+  // Kirgandan keyin: rozilik yozilgan bo'lsa keyin'ga, bo'lmasa rozilik sahifasiga.
+  // O'qib bo'lmasa keyin'ga (himoyalangan sahifa qorovuli baribir tekshiradi).
+  async function davomManzili(c: SupabaseClient, s: Session): Promise<string> {
+    try {
+      return (await rozilikHolati(c, s)) === 'bor' ? keyin : rozilikYoli(keyin);
+    } catch {
+      return keyin;
+    }
+  }
 
   function kirganniKorsat(emailMatn: string) {
     $('kirish-karta').hidden = true;
@@ -78,7 +89,10 @@ import { yol } from '../../../../lib/yol';
     } else if (data.session && havolaHolati.tur === 'signup') {
       xabar(holat, "Emailingiz tasdiqlandi. Tayanch'ga xush kelibsiz.");
     }
-    if (data.session) kirganniKorsat(data.session.user.email ?? '');
+    if (data.session) {
+      kirganniKorsat(data.session.user.email ?? '');
+      $<HTMLAnchorElement>('kirgan-davom').href = await davomManzili(c, data.session);
+    }
   }
 
   function tekshir(): boolean {
@@ -103,11 +117,11 @@ import { yol } from '../../../../lib/yol';
     if (!c) return;
     yuklanish(tugma, true, 'Kirilmoqda…');
     try {
-      const { error } = await c.auth.signInWithPassword({ email: email.value.trim(), password: parol.value });
+      const { data, error } = await c.auth.signInWithPassword({ email: email.value.trim(), password: parol.value });
       if (error) throw error;
       parol.value = '';
       xabar(holat, 'Kirdingiz. Oldingi sahifaga qaytilmoqda…');
-      location.assign(keyin);
+      location.assign(await davomManzili(c, data.session));
       return;
     } catch (e) {
       xabar(xato, xatoMatni(e as Error, 'kirish'));

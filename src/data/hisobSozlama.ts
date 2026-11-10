@@ -10,14 +10,23 @@ export const hisobSozlama = {
    * (HANDOFF §5, 12-savol). null: ro'yxat formasida ko'rsatilmaydi.
    */
   voyagaYetmaganQoida: null as null | { yoshgacha: number; talab: 'ota-ona-roziligi' },
-  /** Maxfiylik va Shartlar sahifalari (P23). null: havola o'rniga "coming soon" matni. Qiymat yol() ga beriladi. */
-  maxfiylikSahifa: null as string | null,
+  /**
+   * Maxfiylik va Shartlar sahifalari (P23). null: havola o'rniga "coming soon" matni. Qiymat yol() ga beriladi.
+   * Maxfiylik: P23 gacha mavjud /uz/maxfiylik/ (P03B spetsifikatsiyasi, 2026-11-09). Uning matni hali hisobsiz
+   * holatni tasvirlaydi: P23 da yangilanadi.
+   */
+  maxfiylikSahifa: '/uz/maxfiylik/' as string | null,
   shartlarSahifa: null as string | null,
   /**
    * Parolning eng kam uzunligi (forma tekshiruvi; 2026-11-09 qarori, HANDOFF §5, 18-savol).
    * Supabase'dagi `minimum_password_length` (supabase/config.toml) bilan bir xil bo'lishi kerak.
    */
   parolMinUzunlik: 8,
+  /**
+   * Rozilik (Maxfiylik + Shartlar + yosh) versiyasi (P03B, 2026-11-09). Ro'yxat user_metadata'ga, rozilik sahifasi
+   * profiles.consent_version ga yozadi; consent_at ni server triggeri qo'yadi. Hujjatlar o'zgarsa yangi sana.
+   */
+  rozilikVersiya: '2026-11-09',
   /** Reyting taxallusi (ixtiyoriy): harf, raqam, pastki chiziq. */
   taxallusNaqsh: '[A-Za-z0-9_]{3,20}',
   /**
@@ -25,4 +34,6 @@ export const hisobSozlama = {
    * shuning uchun istisno kerak emas. Supabase o'zi yana `tayanch:auth-code-verifier` kabi yordamchi kalit qo'shishi mumkin.
    */
   sessiyaKaliti: 'tayanch:auth',
+  /** Google'ga ketishdan oldin "kirgandan keyin qayerga" (sessionStorage; callback o'qib o'chiradi). */
+  keyinKaliti: 'tayanch:hisob-keyin',
 } as const;
