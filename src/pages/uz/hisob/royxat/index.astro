@@ -70,7 +70,7 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
             {maxfiylikSahifa ? <a class="hisob-havola" href={yol(maxfiylikSahifa)}>Maxfiylik siyosati</a> : 'Maxfiylik siyosati'}{' '}va {shartlarSahifa ? <a class="hisob-havola" href={yol(shartlarSahifa)}>Foydalanish shartlari</a> : 'Foydalanish shartlari'}ga roziman.
           </label>
         </div>
-        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Bu sahifalar yozilmoqda. Havolalar shu yerda paydo bo'ladi.</p>}
+        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Foydalanish shartlari sahifasi yozilmoqda. Havola shu yerda paydo bo'ladi.</p>}
         <p class="hisob-xato" id="royxat-rozilik-xato" hidden></p>
       </div>
 
@@ -155,9 +155,11 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
         password: parol.value,
         options: {
           emailRedirectTo: qaytish,
-          // user_metadata: rozilik vaqti va tasdiqlangan minimal yosh (profil jadvali P12 da).
+          // user_metadata: rozilik vaqti, versiyasi va tasdiqlangan minimal yosh. consent_version ni
+          // birinchi kirishda rozilik darvozasi profiles'ga ko'chiradi (src/lib/hisob.ts, rozilikHolati).
           data: {
             terms_accepted_at: new Date().toISOString(),
+            consent_version: hisobSozlama.rozilikVersiya,
             min_age_confirmed: hisobSozlama.minYosh,
             ...(yoshKichik?.checked && otaOnaIsm
               ? { age_group: 'minor', guardian_name: otaOnaIsm.value.trim(), guardian_consent_at: new Date().toISOString() }

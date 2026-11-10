@@ -145,11 +145,11 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
     padding: 2px 8px; border-radius: var(--r-toliq);
     background: var(--rang-asosiy-och); color: var(--rang-havola);
     font-size: var(--matn-mayda); font-weight: 800; white-space: nowrap;
-    transition: opacity 0.4s ease;
+    transition: opacity var(--harakat-sekin) var(--harakat-egri);
   }
   .lift-harakat[hidden] { display: none; }
-  .lift-harakat.yuqoriga { animation: lift-yuqori 0.45s ease-out; }
-  .lift-harakat.pastga { animation: lift-past 0.45s ease-out; }
+  .lift-harakat.yuqoriga { animation: lift-yuqori var(--harakat-sekin) var(--harakat-egri); }
+  .lift-harakat.pastga { animation: lift-past var(--harakat-sekin) var(--harakat-egri); }
   .lift-harakat.ketdi { opacity: 0; }
   @keyframes lift-yuqori { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
   @keyframes lift-past { from { transform: translateY(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -173,7 +173,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
     background: var(--fon); border-top: 1px solid var(--chiziq);
     padding: 6px var(--b-2) calc(6px + env(safe-area-inset-bottom));
   }
-  .lift-pastki { transition: transform 0.25s ease; }
+  .lift-pastki { transition: transform var(--harakat-orta) var(--harakat-egri); }
   .lift-pastki.yashirin { transform: translateY(calc(100% + 1px)); }
   @media (prefers-reduced-motion: reduce) {
     .lift-pastki { transition: none; }

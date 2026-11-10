@@ -75,7 +75,7 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
     $('profil-email').textContent = u.email ?? '';
     ism.value = String(u.user_metadata?.display_name ?? '');
     taxallus.value = String(u.user_metadata?.nickname ?? '');
-  });
+  }).catch(() => undefined); // xatoni HisobQorovul ko'rsatadi
 
   $<HTMLFormElement>('profil-forma').addEventListener('submit', async (ev) => {
     ev.preventDefault();
@@ -130,7 +130,7 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
     if (!c) return;
     xabar($('ochirish-xato'), null);
     yuklanish(ha, true, "O'chirilmoqda…");
-    // Server funksiyasi: supabase/migrations/20261109130000_hisobni_ochirish.sql (faqat o'z hisobi).
+    // Server funksiyasi: supabase/migrations/20261110210000_hisobni_ochirish.sql (faqat o'z hisobi).
     const { error } = await c.rpc('delete_own_account');
     if (error) {
       yuklanish(ha, false);

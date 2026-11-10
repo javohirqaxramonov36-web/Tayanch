@@ -20,6 +20,12 @@ export const hisobSozlama = {
    * Supabase'dagi `minimum_password_length` (supabase/config.toml) bilan bir xil bo'lishi kerak.
    */
   parolMinUzunlik: 8,
+  /**
+   * Rozilik (Maxfiylik + Shartlar + yosh) versiyasi (P03B, 2026-11-09). Ro'yxat user_metadata'ga, rozilik sahifasi
+   * profiles.consent_version ga yozadi; consent_at ni server triggeri qo'yadi. Hujjatlar o'zgarsa yangi sana.
+   */
+  // 2026-11-10: Maxfiylik qayta yozildi, Shartlar qo'shildi (P23): avval rozi bo'lganlar qayta so'raladi.
+  rozilikVersiya: '2026-11-10',
   /** Reyting taxallusi (ixtiyoriy): harf, raqam, pastki chiziq. */
   taxallusNaqsh: '[A-Za-z0-9_]{3,20}',
   /**
@@ -27,4 +33,6 @@ export const hisobSozlama = {
    * shuning uchun istisno kerak emas. Supabase o'zi yana `tayanch:auth-code-verifier` kabi yordamchi kalit qo'shishi mumkin.
    */
   sessiyaKaliti: 'tayanch:auth',
+  /** Google'ga ketishdan oldin "kirgandan keyin qayerga" (sessionStorage; callback o'qib o'chiradi). */
+  keyinKaliti: 'tayanch:hisob-keyin',
 } as const;

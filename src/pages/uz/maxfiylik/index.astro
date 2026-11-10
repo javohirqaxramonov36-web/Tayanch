@@ -10,6 +10,8 @@ const brauzerKalitlari: [string, string][] = [
   ['tayanch:auth', "hisobga kirganingizda sessiya (Supabase o'zi yozadi). Chiqqaningizda o'chadi."],
   ['tayanch:mavzu, tayanch:sidebar', "yorug' yoki qorong'i mavzu va yon panel holati."],
   ['tayanch:sat-…, tayanch:ielts-…, tayanch:top-admission-…', "javoblar, dars progressi, xato daftari, takrorlash, lug'at va reja."],
+  ['tayanch:navigator-yol:v1', "bosh sahifadagi yo'l xaritasi javoblaringiz."],
+  ['tayanch:hisob-keyin', "Google bilan kirishda qaysi sahifaga qaytish (faqat shu oyna yopilguncha, sessionStorage)."],
   ['tayanch-topshirish-yoli', "Topshirish yo'li vositasidagi belgilaringiz."],
   ['tayanch:qavat', "qaysi qavatda ekaningiz (faqat shu oyna yopilguncha, sessionStorage)."],
 ];
@@ -20,18 +22,19 @@ const brauzerKalitlari: [string, string][] = [
   turi="umumiy"
   bolim="umumiy"
   holat="chop-etilgan"
-  tekshirilgan="2026-11-09"
-  keyingiTekshiruv="2026-12-09"
+  tekshirilgan="2026-11-10"
+  keyingiTekshiruv="2026-12-10"
   manbalar={['LX02', 'LX03', 'LX04']}
   tekshirilmagan={[
     "GitHub Pages xostingi tashrif buyuruvchilar haqida qanday texnik ma'lumot (masalan, IP manzil) yozishi: GitHub'ning rasmiy hujjatida tekshirish kerak",
+    "Xat yuborish uchun email Google'ning Gmail xizmatiga beriladi: Google LLC EU-US Data Privacy Framework ro'yxatida ekani (VM 415-son qarori, 2-band sharti) tekshirish kerak",
     "Supabase o'z jurnallarida (masalan, kirish jurnali) qanday texnik ma'lumot va qancha muddat saqlashi: Supabase hujjatida tekshirish kerak",
     "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: huquqshunos fikri kerak",
   ]}
 >
   <section class="ichki sahifa">
     <h1>Maxfiylik siyosati</h1>
-    <p class="ikkinchi">Kuchga kirgan sana: 2026-yil 9-noyabr. Hisob ixtiyoriy: saytning hamma bepul qismi hisobsiz ham ishlaydi.</p>
+    <p class="ikkinchi">Kuchga kirgan sana: 2026-yil 10-noyabr. Hisob ixtiyoriy: saytning hamma bepul qismi hisobsiz ham ishlaydi.</p>
 
     <h2>Hisob ochsangiz nima saqlanadi</h2>
     <ul>
@@ -40,15 +43,17 @@ const brauzerKalitlari: [string, string][] = [
       <li><strong>Ism va taxallus</strong> (ixtiyoriy): profil sahifasida o'zingiz yozasiz. Taxallus keyinchalik reytinglarda ko'rinishi mumkin.</li>
       <li><strong>Rozilik belgilari</strong>: shu siyosat va Foydalanish shartlariga rozi bo'lgan vaqt (<code>terms_accepted_at</code>), yoshingiz {minYosh} da yoki undan kattaligi (<code>min_age_confirmed</code>) va yosh guruhi.</li>
       {vq && <li><strong>{vq.yoshgacha} yoshgacha bo'lsangiz</strong>: ota-ona yoki vasiyning ismi va u rozilik bergan vaqt.</li>}
+      <li><strong>Google bilan kirsangiz</strong>: Google beradigan ism, email va profil rasmi havolasi (boshqa ruxsat so'ralmaydi).</li>
+      <li><strong>Bosh sahifadagi yo'l xaritasi javoblari</strong> (tanlangan maqsadlar, muddat yoki sana, kunlik vaqt): hisobga kirgan bo'lsangiz, boshqa qurilmada ham ko'rinishi uchun.</li>
       <li><strong>Texnik sanalar</strong>: hisob ochilgan, email tasdiqlangan va oxirgi kirgan vaqt (Supabase Auth o'zi yozadi).</li>
     </ul>
-    <p>Dars va mashq natijalari hozircha faqat brauzeringizda. Ular hisobga ko'chirilganda shu sahifa yangilanadi. Google bilan kirish hali ishlamaydi; qo'shilganda Google beradigan ma'lumot (ism va email) shu yerda yoziladi.</p>
+    <p>Dars va mashq natijalari hozircha faqat brauzeringizda. Ular hisobga ko'chirilganda shu sahifa yangilanadi.</p>
 
     <h2>Nima uchun ishlatiladi</h2>
     <p>Faqat hisobingiz ishlashi uchun: kirish, profilingizni ko'rsatish va kerakli xatlarni yuborish. Ma'lumotingiz sotilmaydi, reklama uchun ishlatilmaydi va qonunda nazarda tutilgan holatlardan tashqari uchinchi shaxsga berilmaydi.</p>
 
     <h2>Qayerda saqlanadi</h2>
-    <p>Hisob ma'lumotlari <strong>Supabase</strong> xizmatida, <strong>Frankfurt (Germaniya)</strong> serverida saqlanadi. Xatlar ham Supabase orqali yuboriladi. Germaniya Vazirlar Mahkamasi tasdiqlagan, shaxsga doir ma'lumotlar bir xil himoya qilinadigan davlatlar ro'yxatida bor (LX04). Shuning uchun Qonun ma'lumotni u yerda saqlashga ruxsat beradi (15 va 27¹-moddalar, LX02). Tayanch biometrik yoki genetik ma'lumot yig'maydi.</p>
+    <p>Hisob ma'lumotlari <strong>Supabase</strong> xizmatida, <strong>Frankfurt (Germaniya)</strong> serverida saqlanadi. Tasdiqlash va parol tiklash xatlari Google'ning Gmail pochta xizmati orqali yuboriladi: buning uchun emailingiz Google'ga beriladi. Germaniya Vazirlar Mahkamasi tasdiqlagan, shaxsga doir ma'lumotlar bir xil himoya qilinadigan davlatlar ro'yxatida bor (LX04). Shuning uchun Qonun ma'lumotni u yerda saqlashga ruxsat beradi (15 va 27¹-moddalar, LX02). Tayanch biometrik yoki genetik ma'lumot yig'maydi.</p>
 
     <h2>{vq ? `${vq.yoshgacha} yoshgacha bo'lganlar` : 'Yosh'}</h2>
     <p>Hisobni {minYosh} yoshdan ochish mumkin.{vq && <> Qonun bo'yicha voyaga yetmaganlar ({vq.yoshgacha} yoshgacha, LX03) ma'lumotiga ishlov berish uchun ota-ona yoki vasiy yozma, shu jumladan elektron shaklda rozilik beradi (21-modda, LX02). Shuning uchun ro'yxatdan o'tish formasida ota-ona yoki vasiy o'z ismini yozib, rozilik belgisini qo'yadi.</>}</p>
