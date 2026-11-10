@@ -145,6 +145,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - Har sahifa 390px va 1280px da, yorug' va qorong'i mavzuda ishlashi kerak. Gorizontal scroll yo'q. Telefonda pastki lift kontentni yopmaydi (`body` pastki bo'shlig'i va `scroll-padding-bottom` global.css'da).
 - Har sahifa tepasida Qavat yo'li, qavat kirish sahifasi pastida Zina, oxirida manbalar va tekshiruv bloki (`SahifaOxiri` yoki `ManbaBlok`).
 - Animatsiyalar `prefers-reduced-motion` da o'chadi.
+- Dizayn seriyasi (2026-11-10 da merge qilingan): PR #74 tipografiya (`--oraliq-*` harf oralig'i tokenlari, h2 32px, `text-wrap`), PR #75 rang va kontrast (`--chiziq-kuchli`, `--matn-ikkinchi`/`--matn-sust`, qorong'i mavzu chiziqlari, `::selection`), PR #76 harakat (`--harakat-*`, `--kotarilish`, `--bosilish`, umumiy transition, DESIGN.md "Harakat" bo'limi). #74 va #76 dagi Savol banki konflikti main'ni branch'ga merge qilish bilan hal qilingan. Qoldiq tozalash (branch `dizayn-tozalash`): bosh sahifa hero `.xira` xom `#7b8194` o'rniga `--matn-sust` (yorug' 5.40:1, qorong'i 7.42:1), TopshirishYoli `.bayroq` va `.pog .ust` transition'lariga `--harakat-egri`. Sinalmagan: axe, VoiceOver, haqiqiy telefon, `prefers-reduced-motion` emulyatsiyasi.
 - Taqiqlar: gradient fon, glassmorphism, qizil ta'kid, uydirma raqam, sharh yoki ism, "kafolat" ("Natija kafolatlanmaydi" / SAT'da "Results are not guaranteed" inkoridan tashqari), "Official", "100% grant".
 
 ## 8. Texnik eslatmalar
