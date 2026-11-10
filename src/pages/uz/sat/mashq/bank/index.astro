@@ -1,161 +1,547 @@
 ---
-// Savol banki. Dizayn: Tayanch-SAT-dizayn.md, "SavolBanki" ekrani.
-// Mavzular va ularning holati namuna ma'lumot (ekranda belgilangan).
+// Savol banki (P07). Dizayn: Tayanch-SAT-dizayn.md, "SavolBanki" ekrani; spetsifikatsiya muallif tasdiqlagan (2026-11-10).
+// Domen va skill ro'yxati taksonomiyadan (statik). Sonlar FAQAT Supabase question_counts RPC'dan (hisob bilan):
+// statik build'da hech qanday raqam yo'q. Sof mantiq: src/lib/savolBanki.ts.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
-import { bankMavzular } from '../../../../../data/satNamuna';
+import { savolTaksonomiya, type SavolBolim } from '../../../../../data/satTaksonomiya';
+import { HAJMLAR } from '../../../../../lib/savolBanki';
 import { yol } from '../../../../../lib/yol';
+
+const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
+  { kalit: 'rw', nomi: 'Reading and Writing' },
+  { kalit: 'math', nomi: 'Math' },
+];
+const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 ---
 <BolimQobiq
   title="Question bank · SAT"
-  description="Choose a topic and solve questions on that topic only. An explanation appears after each answer."
+  description="Pick SAT skills, set the difficulty and start a practice session with questions checked by the author."
   turi="mashq"
   yol={['Practice']}
   bolim="sat"
   holat="qoralama"
 >
-  <script type="application/json" id="bank-data" set:html={JSON.stringify(bankMavzular)} />
-  <div class="ichki bank" data-test-url={yol('/uz/sat/mashq/test/')}>
+  <div class="ichki bank" data-holat="loading"
+    data-sessiya-url={yol('/uz/sat/mashq/sessiya/')}
+    data-bank-url={yol('/uz/sat/mashq/bank/')}>
     <section class="bosh" aria-labelledby="bank-h">
-      <div class="bosh-matn">
-        <p class="pill-qator"><span class="pill">Practice</span><span class="pill pill-chiziq">Sample data</span></p>
-        <h1 id="bank-h">Question bank</h1>
-        <p class="lead">Choose a topic and solve questions on that topic only. An explanation appears after each answer.</p>
+      <p class="pill-qator"><span class="pill">Practice</span></p>
+      <h1 id="bank-h">Question bank</h1>
+      <p class="lead">Pick the skills you want to work on, set the difficulty and start a session. Only questions the author has checked are included.</p>
+      <p class="kvota" id="kvota" hidden></p>
+      <div class="ogoh" id="kvota-tugadi" hidden>
+        <p id="kvota-tugadi-matn"></p>
+        <!-- P20 da tariflar sahifasiga (/uz/sat/hisob/tariflar/) o'tkaziladi; hozircha profil. -->
+        <a id="rejalar" href="#">See plans</a>
       </div>
-      <a class="katta-tugma asosiy" href={yol('/uz/sat/mashq/test/')}>
-        Mixed questions
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
-      </a>
     </section>
+
+    <div class="izoh-karta" id="izoh" role="status" hidden>
+      <p class="izoh-sarlavha" id="izoh-sarlavha"></p>
+      <p class="izoh-matn" id="izoh-matn"></p>
+      <button type="button" class="kichik-tugma" id="qayta" hidden>Retry</button>
+    </div>
 
     <section class="filtrlar" aria-label="Filters">
       <div class="segment" role="tablist" aria-label="Section">
-        <button type="button" role="tab" aria-selected="true" data-bolim="rw">Reading &amp; Writing</button>
-        <button type="button" role="tab" aria-selected="false" data-bolim="math">Math</button>
+        {BOLIMLAR.map((b, i) => (
+          <button type="button" role="tab" id={`tab-${b.kalit}`} aria-controls={`panel-${b.kalit}`}
+            aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-bolim={b.kalit}>{b.nomi}</button>
+        ))}
       </div>
-      <div class="qator">
-        <span class="qator-nom">Difficulty:</span>
-        <button type="button" class="chip" aria-pressed="true" data-qiyinlik="hammasi">All</button>
-        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="oson">Easy</button>
-        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="orta">Medium</button>
-        <button type="button" class="chip" aria-pressed="false" data-qiyinlik="qiyin">Hard</button>
-        <label class="belgi-qutisi">
-          <input type="checkbox" id="yechilmagan" />
-          Unsolved only
-        </label>
+
+      <div class="filtr-qatorlar">
+        <fieldset class="qator">
+          <legend class="qator-nom">Difficulty</legend>
+          <button type="button" class="chip" aria-pressed="true" data-qiyinlik="">All</button>
+          <button type="button" class="chip" aria-pressed="false" data-qiyinlik="easy">Easy</button>
+          <button type="button" class="chip" aria-pressed="false" data-qiyinlik="medium">Medium</button>
+          <button type="button" class="chip" aria-pressed="false" data-qiyinlik="hard">Hard</button>
+        </fieldset>
+        <fieldset class="qator">
+          <legend class="qator-nom">Questions</legend>
+          <button type="button" class="chip" aria-pressed="true" data-yechilgan="all">All</button>
+          <button type="button" class="chip" aria-pressed="false" data-yechilgan="unsolved">Unsolved</button>
+          <label class="belgi-qutisi"><input type="checkbox" id="belgilangan" /> Marked for review</label>
+          <label class="belgi-qutisi"><input type="checkbox" id="qayta-yechish" /> Redo list</label>
+        </fieldset>
       </div>
     </section>
 
-    <section class="mavzular" aria-labelledby="mavzu-h" role="tabpanel">
-      <h2 id="mavzu-h" class="ustki-yorliq">Reading &amp; Writing topics</h2>
-      <ul id="mavzu-royxat"></ul>
+    {BOLIMLAR.map((b, i) => (
+      <section class="skilllar" role="tabpanel" id={`panel-${b.kalit}`} aria-labelledby={`tab-${b.kalit}`} hidden={i !== 0} data-panel={b.kalit}>
+        <div class="skill-bosh">
+          <h2 class="kichik-sarlavha">{b.nomi} skills</h2>
+          <p class="skill-izoh" data-son-izoh>Questions per skill</p>
+        </div>
+        <p class="bolim-bosh" data-bolim-bosh hidden>No verified {b.nomi} questions yet.</p>
+        <div class="domenlar" aria-busy="true">
+          {Object.entries(savolTaksonomiya[b.kalit]).map(([domen, skills]) => {
+            const d = `${b.kalit}-${id(domen)}`;
+            return (
+              <div class="domen" data-domen={domen}>
+                <label class="domen-bosh" for={`d-${d}`}>
+                  <input type="checkbox" id={`d-${d}`} data-domen-quti />
+                  <span class="d-nom">{domen}</span>
+                  <span class="son" data-domen-son aria-hidden="true"></span>
+                </label>
+                <ul class="skill-royxat" aria-label={domen}>
+                  {skills.map((s) => (
+                    <li>
+                      <label class="skill" for={`s-${d}-${id(s)}`}>
+                        <input type="checkbox" id={`s-${d}-${id(s)}`} data-skill={s} />
+                        <span class="s-nom">{s}</span>
+                        <span class="son" data-son><span class="skelet" aria-hidden="true"></span></span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+
+    <section class="sozlama" aria-label="Session settings">
+      <fieldset class="qator">
+        <legend class="qator-nom">Questions per session</legend>
+        {HAJMLAR.map((h, i) => (
+          <button type="button" class="chip" aria-pressed={i === 1 ? 'true' : 'false'} data-hajm={String(h)}>{h === 'all' ? 'All' : h}</button>
+        ))}
+      </fieldset>
+      <fieldset class="qator">
+        <legend class="qator-nom">Mode</legend>
+        <button type="button" class="chip" aria-pressed="true" data-rejim="practice">Untimed</button>
+        <button type="button" class="chip" aria-pressed="false" data-rejim="timed">Timed</button>
+      </fieldset>
     </section>
 
-    <section class="tanlov" aria-label="Selection" aria-live="polite">
-      <div>
-        <p class="ustki-yorliq kok-yorliq">Selected</p>
-        <p class="tanlov-matn" id="tanlov-matn">No topic selected</p>
-        <p class="tanlov-izoh" id="tanlov-izoh">Tap one or more topics above.</p>
+    <section class="tanlov" aria-label="Start a session">
+      <div class="tanlov-holat" aria-live="polite">
+        <p class="tanlov-matn" id="tanlov-matn">Loading question counts…</p>
+        <p class="tanlov-izoh" id="tanlov-izoh"></p>
       </div>
-      <a class="katta-tugma oq" id="boshlash" href={yol('/uz/sat/mashq/test/')}>Start solving</a>
+      <button type="button" class="katta-tugma oq" id="boshlash" disabled aria-describedby="tanlov-izoh">Start practice session</button>
+      <a class="katta-tugma oq" id="kirish-havola" href={yol('/uz/hisob/kirish/')} hidden>Sign in to practice</a>
     </section>
 
-    <p class="eslatma">Questions are written separately for Tayanch and are not copied from other sites. The topic progress is sample data: for now, each topic has only a few questions.</p>
+    <div class="eslatma">
+      <p>Questions are written for Tayanch and checked by the author before they appear here; they are not copied from other sites.</p>
+      <p><a href={yol('/uz/sat/mashq/test/')}>Sample test · saved in this browser only</a></p>
+    </div>
   </div>
 </BolimQobiq>
 
 <script>
-  import type { BankMavzu } from '../../../../../data/satNamuna';
+  import { hisobMijoz, hisobYoli, yuklanish } from '../../../../../lib/hisob';
+  import {
+    filtrJson, skillSonlari, bolimJami, faolSkilllar, mosSon, domenHolati, sessiyaHajmi, hajmIzohi,
+    kvotaHolati, kvotaTugadiMatni, xatoTuri, boshlashSababi, sonMatni, SESSIYA_KALITI,
+    type BankFiltr, type BankHolat, type Hajm, type Kvota, type Qiyinlik, type Rejim, type SonJavob, type UsageJavob,
+  } from '../../../../../lib/savolBanki';
+  import type { SavolBolim } from '../../../../../data/satTaksonomiya';
 
-  const data: Record<'rw' | 'math', BankMavzu[]> = JSON.parse(document.getElementById('bank-data')!.textContent || '{}');
-  const testUrl = (document.querySelector('.bank') as HTMLElement).dataset.testUrl!;
-  const QNOMI: Record<string, string> = { hammasi: 'all levels', oson: 'easy', orta: 'medium', qiyin: 'hard' };
+  interface Api {
+    sonlar(f: Record<string, unknown>): Promise<SonJavob>;
+    boshlash(f: Record<string, unknown>, hajm: number, rejim: Rejim): Promise<{ session_id: string | null }>;
+    kvota(): Promise<UsageJavob>;
+  }
+
+  const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
+  const bank = document.querySelector<HTMLElement>('.bank')!;
+  const BOLIMLAR: SavolBolim[] = ['rw', 'math'];
+
   const s = {
-    bolim: 'rw' as 'rw' | 'math',
-    qiyinlik: 'hammasi',
-    yechilmagan: false,
-    tanlangan: { rw: ['Main idea of a text'], math: ['Linear equations'] } as Record<string, string[]>,
+    holat: 'loading' as BankHolat,
+    filtr: { section: 'rw', qiyinlik: [], yechilgan: 'all', belgilangan: false, qaytaYechish: false } as BankFiltr,
+    tanlangan: { rw: new Set<string>(), math: new Set<string>() } as Record<SavolBolim, Set<string>>,
+    sonlar: { rw: null, math: null } as Record<SavolBolim, Map<string, number> | null>,
+    jami: { rw: 0, math: 0 } as Record<SavolBolim, number>,
+    hajm: 20 as Hajm,
+    rejim: 'practice' as Rejim,
+    kvota: null as Kvota | null,
+    band: false,
+    xato: null as string | null,
   };
-  const royxat = document.getElementById('mavzu-royxat')!;
+  let api: Api | null = null;
 
-  const chiz = () => {
-    document.querySelectorAll<HTMLButtonElement>('[data-bolim]').forEach((b) =>
-      b.setAttribute('aria-selected', String(b.dataset.bolim === s.bolim)));
-    document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) =>
-      b.setAttribute('aria-pressed', String(b.dataset.qiyinlik === s.qiyinlik)));
-    document.getElementById('mavzu-h')!.textContent = `${s.bolim === 'rw' ? 'Reading & Writing' : 'Math'} topics`;
+  // ---- Chizish ----
+  const sonlarOchiq = () => s.holat === 'ready';
 
-    const tanlanganlar = s.tanlangan[s.bolim];
-    royxat.replaceChildren();
-    data[s.bolim]
-      .filter((m) => !s.yechilmagan || m.yechilgan < m.jami)
-      .forEach((m) => {
-        const faol = tanlanganlar.includes(m.nomi);
-        const li = document.createElement('li');
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'mavzu' + (faol ? ' faol' : '');
-        b.setAttribute('aria-pressed', String(faol));
-        const foiz = Math.round((m.yechilgan / m.jami) * 100);
-        b.innerHTML = `
-          <span class="m-bosh"><span class="m-nom"></span><span class="m-belgi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span></span>
-          <span class="m-past">
-            <span class="m-izoh"><span>${m.yechilgan} / ${m.jami} solved</span><span>${m.jami - m.yechilgan} left</span></span>
-            <span class="m-iz" aria-hidden="true"><span class="m-toldirish" style="width:${foiz}%"></span></span>
-          </span>`;
-        b.querySelector('.m-nom')!.textContent = m.nomi;
-        b.addEventListener('click', () => {
-          const j = s.tanlangan[s.bolim];
-          const k = j.indexOf(m.nomi);
-          if (k >= 0) j.splice(k, 1); else j.push(m.nomi);
-          chiz();
-        });
-        li.append(b);
-        royxat.append(li);
+  function chizTablar() {
+    document.querySelectorAll<HTMLButtonElement>('[role="tab"]').forEach((b) => {
+      const faol = b.dataset.bolim === s.filtr.section;
+      b.setAttribute('aria-selected', String(faol));
+      b.tabIndex = faol ? 0 : -1;
+    });
+    document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== s.filtr.section));
+  }
+
+  function chizChiplar() {
+    document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) => {
+      const q = b.dataset.qiyinlik as Qiyinlik | '';
+      b.setAttribute('aria-pressed', String(q ? s.filtr.qiyinlik.includes(q) : s.filtr.qiyinlik.length === 0));
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-yechilgan]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.yechilgan === s.filtr.yechilgan)));
+    document.querySelectorAll<HTMLButtonElement>('[data-hajm]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.hajm === String(s.hajm))));
+    document.querySelectorAll<HTMLButtonElement>('[data-rejim]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.rejim === s.rejim)));
+  }
+
+  function chizSkilllar(bolim: SavolBolim) {
+    const panel = document.querySelector<HTMLElement>(`[data-panel="${bolim}"]`)!;
+    const sonlar = s.sonlar[bolim];
+    const ochiq = sonlarOchiq();
+    const kutish = ochiq && !sonlar;
+    const tanlangan = s.tanlangan[bolim];
+    const bolimBosh = ochiq && s.jami[bolim] === 0;
+    panel.querySelector<HTMLElement>('[data-bolim-bosh]')!.hidden = !bolimBosh;
+    panel.querySelector<HTMLElement>('[data-son-izoh]')!.hidden = !ochiq;
+    const royxat = panel.querySelector<HTMLElement>('.domenlar')!;
+    royxat.setAttribute('aria-busy', String(s.holat === 'loading' || kutish));
+
+    panel.querySelectorAll<HTMLElement>('[data-domen]').forEach((d) => {
+      const skills: string[] = [];
+      let domenSon = 0;
+      d.querySelectorAll<HTMLInputElement>('[data-skill]').forEach((inp) => {
+        const nom = inp.dataset.skill!;
+        skills.push(nom);
+        const son = sonlar?.get(nom) ?? 0;
+        domenSon += son;
+        const yopiq = ochiq && (kutish || son === 0);
+        inp.disabled = yopiq;
+        inp.checked = tanlangan.has(nom) && !(ochiq && !kutish && son === 0);
+        inp.closest('.skill')!.classList.toggle('sust', ochiq && !kutish && son === 0);
+        const el = inp.parentElement!.querySelector<HTMLElement>('[data-son]')!;
+        if (s.holat === 'loading' || kutish) el.innerHTML = '<span class="skelet" aria-hidden="true"></span>';
+        else if (ochiq) el.innerHTML = `${son}<span class="korinmas"> ${son === 1 ? 'question' : 'questions'}</span>`;
+        else el.textContent = '';
       });
+      const quti = d.querySelector<HTMLInputElement>('[data-domen-quti]')!;
+      const holat = domenHolati(skills, tanlangan, ochiq ? (sonlar ?? new Map()) : null);
+      quti.checked = holat === 'all';
+      quti.indeterminate = holat === 'some';
+      // Native checkbox: qisman holat indeterminate orqali "mixed" deb o'qiladi (aria-checked native input'da tavsiya etilmaydi).
+      quti.disabled = ochiq && (kutish || domenSon === 0);
+      d.querySelector<HTMLElement>('[data-domen-son]')!.textContent = ochiq && !kutish ? String(domenSon) : '';
+    });
+  }
 
-    const tanlanganData = data[s.bolim].filter((m) => tanlanganlar.includes(m.nomi));
-    const qolgan = tanlanganData.reduce((a, m) => a + (m.jami - m.yechilgan), 0);
-    document.getElementById('tanlov-matn')!.textContent = tanlanganData.length === 0
-      ? 'No topic selected'
-      : `${tanlanganData.length} ${tanlanganData.length === 1 ? 'topic' : 'topics'}, ${qolgan} unsolved ${qolgan === 1 ? 'question' : 'questions'}`;
-    document.getElementById('tanlov-izoh')!.textContent = tanlanganData.length === 0
-      ? 'Tap one or more topics above.'
-      : `Difficulty: ${QNOMI[s.qiyinlik]}. ${tanlanganData.map((m) => m.nomi).join(', ')}`;
-    const boshlash = document.getElementById('boshlash') as HTMLAnchorElement;
-    boshlash.href = tanlanganlar.length ? `${testUrl}?mavzular=${encodeURIComponent(tanlanganlar.join('|'))}` : testUrl;
+  function chizIzoh() {
+    const izoh = $('izoh');
+    const qayta = $('qayta');
+    const yoz = (sarlavha: string, matn: string, tugma = false) => {
+      $('izoh-sarlavha').textContent = sarlavha;
+      $('izoh-matn').textContent = matn;
+      qayta.hidden = !tugma;
+      izoh.hidden = false;
+    };
+    izoh.hidden = true;
+    if (s.holat === 'empty') yoz('No verified questions yet', 'The author is still checking the first questions. Counts will appear here once they are published.');
+    else if (s.holat === 'error') yoz("Question counts didn't load", s.xato ?? 'Check your connection and try again.', true);
+    else if (s.holat === 'anon') yoz('Sign in to see question counts', 'You can browse the skills below. Practice sessions and counts need a Tayanch account.');
+    else if (s.holat === 'no-supabase') yoz('Practice sessions are not available here', "Sign-in isn't set up on this copy of the site, so question counts can't load. The skill list is below.");
+  }
+
+  function chizKvota() {
+    const k = s.kvota;
+    $('kvota').hidden = !k || s.holat !== 'ready';
+    if (k) $('kvota').textContent = k.matn;
+    const tugadi = !!k?.tugadi && s.holat === 'ready';
+    $('kvota-tugadi').hidden = !tugadi;
+    if (k && tugadi) $('kvota-tugadi-matn').textContent = kvotaTugadiMatni(k);
+  }
+
+  function chizPanel() {
+    const bolim = s.filtr.section;
+    const tanlangan = s.tanlangan[bolim];
+    const sonlar = s.sonlar[bolim];
+    const tugma = $<HTMLButtonElement>('boshlash');
+    const kirish = $<HTMLAnchorElement>('kirish-havola');
+    const anon = s.holat === 'anon';
+    tugma.hidden = anon;
+    kirish.hidden = !anon;
+
+    let matn: string;
+    let izoh: string;
+    if (anon) {
+      matn = tanlangan.size ? `${tanlangan.size} ${tanlangan.size === 1 ? 'skill' : 'skills'} selected` : 'No skills selected';
+      izoh = 'Sign in to see how many questions match and to start a session.';
+    } else if (s.holat === 'no-supabase') {
+      matn = 'Sessions are not available here';
+      izoh = 'Sign-in is not set up on this copy of the site.';
+    } else {
+      const ochiq = sonlarOchiq() && sonlar;
+      const mos = ochiq ? mosSon(tanlangan, sonlar) : 0;
+      const tanlanganSoni = ochiq ? faolSkilllar(tanlangan, sonlar).length : tanlangan.size;
+      const sabab = s.holat === 'ready' && !sonlar
+        ? 'Updating counts…'
+        : boshlashSababi({ holat: s.holat, tanlanganSoni, mos, kvotaTugadi: !!s.kvota?.tugadi, bolimBosh: s.holat === 'ready' && s.jami[bolim] === 0 });
+      matn = ochiq ? sonMatni(mos) : s.holat === 'ready' ? 'Updating counts…' : s.holat === 'loading' ? 'Loading question counts…' : s.holat === 'empty' ? 'No questions yet' : 'Counts unavailable';
+      if (s.holat === 'ready' && !sonlar) izoh = '';
+      else if (s.xato && s.holat === 'ready') izoh = s.xato;
+      else if (sabab) izoh = sabab;
+      else izoh = hajmIzohi(s.hajm, sessiyaHajmi(s.hajm, mos, s.kvota?.savolQolgan ?? null));
+      if (!s.band) tugma.disabled = !!sabab;
+    }
+    $('tanlov-matn').textContent = matn;
+    $('tanlov-izoh').textContent = izoh;
+  }
+
+  function chiz() {
+    bank.dataset.holat = s.holat;
+    chizTablar();
+    chizChiplar();
+    BOLIMLAR.forEach(chizSkilllar);
+    chizIzoh();
+    chizKvota();
+    chizPanel();
+  }
+
+  // ---- Ma'lumot ----
+  const kesh = new Map<string, Map<string, number>>();
+  let sorovRaqami = 0;
+  let kechikish: number | undefined;
+
+  async function sonlarniOl() {
+    if (!api || s.holat !== 'ready') return;
+    const bolim = s.filtr.section;
+    const f = filtrJson(s.filtr);
+    const kalit = JSON.stringify(f);
+    const bor = kesh.get(kalit);
+    if (bor) { s.sonlar[bolim] = bor; chiz(); return; }
+    const raqam = ++sorovRaqami;
+    s.sonlar[bolim] = null;
+    chiz();
+    try {
+      const javob = await api.sonlar(f);
+      if (raqam !== sorovRaqami) return;
+      const m = skillSonlari(javob, bolim);
+      kesh.set(kalit, m);
+      s.sonlar[bolim] = m;
+      s.xato = null;
+    } catch (e) {
+      if (raqam !== sorovRaqami) return;
+      xatoniKorsat(e);
+    }
+    chiz();
+  }
+
+  /** Filtr o'zgarganda: boshqa bo'lim sonlari eskirdi, joriysi debounce bilan qayta so'raladi. */
+  function filtrOzgardi() {
+    BOLIMLAR.forEach((b) => (s.sonlar[b] = null));
+    chiz();
+    clearTimeout(kechikish);
+    kechikish = window.setTimeout(sonlarniOl, 300);
+  }
+
+  function xatoniKorsat(e: unknown) {
+    const tur = xatoTuri(e);
+    if (tur === 'kirish') { s.holat = 'anon'; return; }
+    s.holat = 'error';
+    s.xato = tur === 'tarmoq' ? "Couldn't reach the server. Check your connection and try again." : 'Something went wrong on the server. Try again.';
+  }
+
+  async function yukla() {
+    s.holat = 'loading';
+    s.xato = null;
+    kesh.clear();
+    BOLIMLAR.forEach((b) => (s.sonlar[b] = null));
+    chiz();
+    try {
+      const [asos, usage] = await Promise.all([api!.sonlar({}), api!.kvota().catch(() => null)]);
+      s.jami = bolimJami(asos);
+      s.kvota = usage ? kvotaHolati(usage) : null;
+      s.holat = Number(asos.total) > 0 ? 'ready' : 'empty';
+    } catch (e) {
+      xatoniKorsat(e);
+    }
+    chiz();
+    if (s.holat === 'ready') await sonlarniOl();
+  }
+
+  function haqiqiyApi(c: NonNullable<ReturnType<typeof hisobMijoz>>): Api {
+    const rpc = async <T,>(nom: string, args?: Record<string, unknown>): Promise<T> => {
+      const { data, error } = await c.rpc(nom, args);
+      if (error) throw error;
+      return data as T;
+    };
+    return {
+      sonlar: (f) => rpc<SonJavob>('question_counts', { p_filters: f }),
+      boshlash: (f, hajm, rejim) => rpc('start_session', { p_filters: f, p_volume: hajm, p_mode: rejim }),
+      kvota: () => rpc<UsageJavob>('usage_status'),
+    };
+  }
+
+  async function boshla() {
+    const tugma = $<HTMLButtonElement>('boshlash');
+    if (!api || s.band || tugma.disabled) return;
+    const bolim = s.filtr.section;
+    const sonlar = s.sonlar[bolim];
+    if (!sonlar) return;
+    const skills = faolSkilllar(s.tanlangan[bolim], sonlar);
+    const { soni } = sessiyaHajmi(s.hajm, mosSon(skills, sonlar), s.kvota?.savolQolgan ?? null);
+    if (soni < 1) return;
+    s.band = true;
+    s.xato = null;
+    yuklanish(tugma, true, 'Starting…');
+    $('tanlov-izoh').textContent = 'Starting your session…';
+    try {
+      const javob = await api.boshlash(filtrJson(s.filtr, skills), soni, s.rejim);
+      if (!javob.session_id) {
+        s.xato = 'No questions match these filters';
+        kesh.clear();
+        filtrOzgardi();
+      } else {
+        try { sessionStorage.setItem(SESSIYA_KALITI, JSON.stringify(javob)); } catch { /* xotira yopiq: sessiya sahifasi id bilan qayta so'raydi */ }
+        location.assign(`${bank.dataset.sessiyaUrl}?id=${encodeURIComponent(javob.session_id)}`);
+        return;
+      }
+    } catch (e) {
+      const tur = xatoTuri(e);
+      if (tur === 'kvota') {
+        const k = s.kvota;
+        s.kvota = { ...(k ?? kvotaHolati(null)), tugadi: true, qolgan: 0, savolQolgan: k?.kalit === 'questions' ? 0 : (k?.savolQolgan ?? null) };
+        s.xato = 'Daily limit reached';
+      } else if (tur === 'kirish') {
+        s.holat = 'anon';
+      } else {
+        s.xato = tur === 'tarmoq'
+          ? "Couldn't reach the server. Check your connection and try again."
+          : "The session didn't start. Try again.";
+      }
+    }
+    s.band = false;
+    yuklanish(tugma, false);
+    chiz();
+  }
+
+  // ---- Hodisalar ----
+  const tablar = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+  const bolimTanla = (b: SavolBolim, fokus = false) => {
+    if (s.filtr.section === b) return;
+    s.filtr.section = b;
+    s.xato = null;
+    chiz();
+    if (fokus) tablar.find((t) => t.dataset.bolim === b)?.focus();
+    if (s.holat === 'ready' && !s.sonlar[b]) { clearTimeout(kechikish); sonlarniOl(); }
   };
-
-  document.querySelectorAll<HTMLButtonElement>('[data-bolim]').forEach((b) =>
-    b.addEventListener('click', () => { s.bolim = b.dataset.bolim as 'rw' | 'math'; chiz(); }));
-  document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) =>
-    b.addEventListener('click', () => { s.qiyinlik = b.dataset.qiyinlik!; chiz(); }));
-  document.getElementById('yechilmagan')!.addEventListener('change', (e) => {
-    s.yechilmagan = (e.target as HTMLInputElement).checked; chiz();
+  tablar.forEach((t, i) => {
+    t.addEventListener('click', () => bolimTanla(t.dataset.bolim as SavolBolim));
+    t.addEventListener('keydown', (e) => {
+      const k = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tablar.length - 1 }[e.key];
+      if (k === undefined) return;
+      e.preventDefault();
+      bolimTanla(tablar[(k + tablar.length) % tablar.length].dataset.bolim as SavolBolim, true);
+    });
   });
+
+  document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) => b.addEventListener('click', () => {
+    const q = b.dataset.qiyinlik as Qiyinlik | '';
+    if (!q) s.filtr.qiyinlik = [];
+    else {
+      const j = new Set(s.filtr.qiyinlik);
+      if (j.has(q)) j.delete(q); else j.add(q);
+      s.filtr.qiyinlik = j.size === 3 ? [] : [...j];
+    }
+    filtrOzgardi();
+  }));
+  document.querySelectorAll<HTMLButtonElement>('[data-yechilgan]').forEach((b) => b.addEventListener('click', () => {
+    if (s.filtr.yechilgan === b.dataset.yechilgan) return;
+    s.filtr.yechilgan = b.dataset.yechilgan as BankFiltr['yechilgan'];
+    filtrOzgardi();
+  }));
+  $<HTMLInputElement>('belgilangan').addEventListener('change', (e) => {
+    s.filtr.belgilangan = (e.target as HTMLInputElement).checked; filtrOzgardi();
+  });
+  $<HTMLInputElement>('qayta-yechish').addEventListener('change', (e) => {
+    s.filtr.qaytaYechish = (e.target as HTMLInputElement).checked; filtrOzgardi();
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-hajm]').forEach((b) => b.addEventListener('click', () => {
+    s.hajm = (b.dataset.hajm === 'all' ? 'all' : Number(b.dataset.hajm)) as Hajm; s.xato = null; chiz();
+  }));
+  document.querySelectorAll<HTMLButtonElement>('[data-rejim]').forEach((b) => b.addEventListener('click', () => {
+    s.rejim = b.dataset.rejim as Rejim; chiz();
+  }));
+
+  document.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => {
+    const bolim = panel.dataset.panel as SavolBolim;
+    panel.addEventListener('change', (e) => {
+      const inp = e.target as HTMLInputElement;
+      const j = s.tanlangan[bolim];
+      const sonlar = sonlarOchiq() ? s.sonlar[bolim] : null;
+      if (inp.dataset.skill) {
+        if (inp.checked) j.add(inp.dataset.skill); else j.delete(inp.dataset.skill);
+      } else if (inp.hasAttribute('data-domen-quti')) {
+        const skills = [...inp.closest('[data-domen]')!.querySelectorAll<HTMLInputElement>('[data-skill]')].map((x) => x.dataset.skill!);
+        const holat = domenHolati(skills, j, sonlar);
+        const ochiq = sonlar ? skills.filter((x) => (sonlar.get(x) ?? 0) > 0) : skills;
+        if (holat === 'all') skills.forEach((x) => j.delete(x)); else ochiq.forEach((x) => j.add(x));
+      }
+      s.xato = null;
+      chiz();
+    });
+  });
+
+  $('boshlash').addEventListener('click', boshla);
+  $('qayta').addEventListener('click', () => { if (api) yukla(); });
+  $<HTMLAnchorElement>('rejalar').href = hisobYoli('profil');
+  $<HTMLAnchorElement>('kirish-havola').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(bank.dataset.bankUrl!)}`;
+
+  // ---- Boshlash ----
+  async function ishgaTushir() {
+    // Faqat dev: ?mock=bosh|kam|kop|kvota|kvota2|xato. Prod build'da bu shox va mock moduli yo'q.
+    if (import.meta.env.DEV) {
+      const mock = new URLSearchParams(location.search).get('mock');
+      if (mock) {
+        const { mockApi } = await import('../../../../../lib/savolBankiMock');
+        api = mockApi(mock as Parameters<typeof mockApi>[0]);
+        return yukla();
+      }
+    }
+    const c = hisobMijoz();
+    if (!c) { s.holat = 'no-supabase'; return chiz(); }
+    const { data } = await c.auth.getSession();
+    if (!data.session) { s.holat = 'anon'; return chiz(); }
+    api = haqiqiyApi(c);
+    return yukla();
+  }
   chiz();
+  ishgaTushir();
 </script>
 
 <style>
   .bank { padding-top: var(--b-14); display: flex; flex-direction: column; gap: var(--b-8); }
-  .bosh { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--b-5); }
-  .bosh-matn { display: flex; flex-direction: column; gap: 14px; max-width: 60ch; }
+  /* display: flex sinflari [hidden] ni bosib ketmasin */
+  .bank [hidden] { display: none !important; }
+  .bosh { display: flex; flex-direction: column; gap: 14px; max-width: 62ch; }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 900; letter-spacing: -0.5px; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
   .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); }
-  .ustki-yorliq { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
-
-  .katta-tugma {
-    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    min-height: 52px; padding: 0 26px; border-radius: var(--r-toliq);
-    text-decoration: none; font-weight: 800; font-size: 16px; white-space: nowrap;
+  .kvota { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .ogoh {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
   }
-  .katta-tugma.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta-tugma.asosiy:hover { background: var(--rang-asosiy-toq); }
-  .katta-tugma.oq { background: var(--rang-asosiy-matn); color: var(--qora); }
+  .ogoh a { color: inherit; font-weight: 800; min-height: 44px; display: inline-flex; align-items: center; }
 
-  .filtrlar { display: flex; flex-direction: column; gap: var(--b-4); border-bottom: 1px solid var(--chiziq); padding-bottom: var(--b-6); }
+  .izoh-karta {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2);
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6);
+  }
+  .izoh-sarlavha { font-size: var(--matn-katta); font-weight: 800; }
+  .izoh-matn { color: var(--matn-ikkinchi); max-width: 62ch; }
+  .kichik-tugma {
+    margin-top: var(--b-2); min-height: 44px; padding: 0 20px; border-radius: var(--r-toliq);
+    border: 0; background: var(--matn); color: var(--fon); font: inherit; font-weight: 800; cursor: pointer;
+  }
+
+  .filtrlar { display: flex; flex-direction: column; gap: var(--b-5); border-bottom: 1px solid var(--chiziq); padding-bottom: var(--b-6); }
   .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); align-self: flex-start; }
   .segment button {
     min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--r-toliq);
@@ -163,42 +549,52 @@ import { yol } from '../../../../../lib/yol';
     font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
   }
   .segment button[aria-selected='true'] { background: var(--matn); color: var(--fon); }
-  .qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .qator-nom { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); margin-right: var(--b-1); }
+  .filtr-qatorlar { display: flex; flex-direction: column; gap: var(--b-3); }
+  fieldset.qator { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .qator-nom { float: left; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); margin-right: var(--b-2); min-width: 9ch; }
   .chip {
     min-height: 44px; padding: 0 16px; border-radius: var(--r-toliq);
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
     background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
   }
+  .chip:hover { border-color: var(--rang-asosiy); }
   .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
-  .belgi-qutisi { margin-left: auto; display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 600; cursor: pointer; }
-  .belgi-qutisi input { width: 20px; height: 20px; margin: 0; accent-color: var(--rang-asosiy); }
+  .belgi-qutisi { display: flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: var(--b-2); font-size: 15px; font-weight: 600; cursor: pointer; }
+  input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--rang-asosiy); }
+  input[type='checkbox']:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
 
-  .mavzular { display: flex; flex-direction: column; gap: var(--b-4); }
-  #mavzu-royxat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--b-3); }
-  #mavzu-royxat :global(.mavzu) {
-    width: 100%; min-height: 120px; padding: 20px; border-radius: 20px;
-    font: inherit; text-align: left; cursor: pointer;
-    display: flex; flex-direction: column; justify-content: space-between; gap: var(--b-4);
-    background: var(--fon); color: var(--matn); border: 1.5px solid var(--matn);
+  .skilllar { display: flex; flex-direction: column; gap: var(--b-4); }
+  .skill-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-2); }
+  .kichik-sarlavha { font-size: var(--matn-katta); font-weight: 800; }
+  .skill-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); font-weight: 600; }
+  .bolim-bosh { color: var(--matn-ikkinchi); font-weight: 600; }
+  .domenlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr)); gap: var(--b-4); }
+  .domen { border: 1.5px solid var(--matn); border-radius: 20px; padding: var(--b-2) var(--b-3) var(--b-3); }
+  .domen-bosh, .skill {
+    display: flex; align-items: center; gap: var(--b-3); min-height: 44px; padding: var(--b-1) var(--b-2);
+    border-radius: var(--r-yon); cursor: pointer;
   }
-  #mavzu-royxat :global(.mavzu.faol) { background: var(--qora); color: var(--rang-asosiy-matn); border-color: var(--qora); }
-  :global([data-mavzu='qorongi']) #mavzu-royxat :global(.mavzu.faol) { background: var(--sirt-ikkinchi); border-color: var(--rang-asosiy); }
-  #mavzu-royxat :global(.m-bosh) { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); width: 100%; }
-  #mavzu-royxat :global(.m-nom) { font-size: 17px; font-weight: 800; }
-  #mavzu-royxat :global(.m-belgi) {
-    width: 28px; height: 28px; flex: none; border-radius: var(--r-toliq);
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid var(--chiziq-kuchli); color: transparent;
+  .domen-bosh { font-weight: 800; font-size: 17px; border-bottom: 1px solid var(--chiziq); border-radius: var(--r-yon) var(--r-yon) 0 0; margin-bottom: var(--b-1); }
+  .skill:hover, .domen-bosh:hover { background: var(--fon-ikkinchi); }
+  .skill-royxat { list-style: none; margin: 0; padding: 0; }
+  .s-nom, .d-nom { flex: 1; min-width: 0; }
+  .s-nom { font-size: 15px; font-weight: 600; line-height: 1.35; }
+  .son { font-variant-numeric: tabular-nums; font-weight: 800; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); min-width: 3ch; text-align: right; }
+  .skill.sust { cursor: default; }
+  .skill.sust .s-nom, .skill.sust .son { color: var(--matn-sust); }
+  .skill.sust:hover { background: transparent; }
+  .son :global(.skelet) {
+    display: inline-block; width: 2.5ch; height: 0.9em; border-radius: var(--r-kichik); background: var(--sirt-ikkinchi); vertical-align: middle;
+    animation: skelet 1.2s ease-in-out infinite alternate;
   }
-  #mavzu-royxat :global(.mavzu.faol .m-belgi) { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  #mavzu-royxat :global(.m-past) { display: flex; flex-direction: column; gap: var(--b-2); width: 100%; }
-  #mavzu-royxat :global(.m-izoh) { display: flex; justify-content: space-between; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  #mavzu-royxat :global(.mavzu.faol .m-izoh) { color: var(--qora-matn-ikkinchi); }
-  #mavzu-royxat :global(.m-iz) { display: block; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  #mavzu-royxat :global(.mavzu.faol .m-iz) { background: var(--qora-chiziq); }
-  #mavzu-royxat :global(.m-toldirish) { display: block; height: 100%; background: var(--rang-asosiy); border-radius: var(--r-toliq); }
-  #mavzu-royxat :global(.mavzu.faol .m-toldirish) { background: var(--rang-asosiy-qorada); }
+  @keyframes skelet { from { opacity: 1; } to { opacity: 0.45; } }
+  @media (prefers-reduced-motion: reduce) { .son :global(.skelet) { animation: none; } }
+  .son :global(.korinmas), .korinmas {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .bank:not([data-holat='ready']) .son:empty { display: none; }
+
+  .sozlama { display: flex; flex-direction: column; gap: var(--b-3); border-top: 1px solid var(--chiziq); padding-top: var(--b-6); }
 
   .tanlov {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
@@ -206,16 +602,36 @@ import { yol } from '../../../../../lib/yol';
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta); padding: 24px 28px;
   }
-  .tanlov > div { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
-  .kok-yorliq { color: var(--rang-asosiy-qorada); }
+  /* Qorong'i mavzuda sahifa foni ham qora: panel bir pog'ona yuqoriroq sirtda */
+  :global([data-mavzu='qorongi']) .tanlov { background: var(--qora-sirt); }
+  .tanlov-holat { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
   .tanlov-matn { font-size: 20px; font-weight: 800; }
   .tanlov-izoh { font-size: var(--matn-kichik); color: var(--qora-matn-ikkinchi); }
+  .katta-tugma {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 0 26px; border-radius: var(--r-toliq); border: 0;
+    text-decoration: none; font: inherit; font-weight: 800; font-size: 16px; white-space: nowrap; cursor: pointer;
+  }
+  .katta-tugma.oq { background: var(--rang-asosiy-matn); color: var(--qora); }
+  .katta-tugma.oq:focus-visible { outline-color: var(--rang-asosiy-qorada); }
+  .katta-tugma:disabled { background: var(--qora-sirt); color: var(--qora-matn-ikkinchi); border: 1.5px dashed var(--qora-matn-ikkinchi); cursor: not-allowed; }
+  .katta-tugma[aria-busy='true'] { cursor: progress; border-style: solid; }
+  .katta-tugma[hidden] { display: none; }
   .eslatma { font-size: var(--matn-kichik); color: var(--matn-sust); max-width: 62ch; }
+  .eslatma a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rang-havola); font-weight: 700; }
 
+  @media (max-width: 1023.98px) {
+    /* Telefon va planshetda pastki Lift paneli (72px) ustida yopishadi */
+    .tanlov { position: sticky; z-index: 5; bottom: calc(80px + env(safe-area-inset-bottom)); box-shadow: var(--soya); }
+    :global(html:has(.tanlov)) { scroll-padding-bottom: calc(240px + env(safe-area-inset-bottom)); }
+  }
   @media (max-width: 640px) {
     .bank { padding-top: 28px; gap: var(--b-6); }
     h1 { font-size: 34px; }
-    .bosh .katta-tugma, .tanlov .katta-tugma { width: 100%; }
-    .belgi-qutisi { margin-left: 0; }
+    .tanlov { padding: var(--b-4); gap: var(--b-3); border-radius: var(--r-orta); }
+    .tanlov-matn { font-size: var(--matn-katta); }
+    .tanlov .katta-tugma { width: 100%; }
+    .qator-nom { float: none; width: 100%; }
+    .domen { padding-inline: var(--b-2); }
   }
 </style>

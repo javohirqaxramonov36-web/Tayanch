@@ -180,7 +180,7 @@
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--b-1) var(--b-4);
   color: var(--matn); text-decoration: none;
 }
-.rn-qadam:hover { box-shadow: inset 0 0 0 1px var(--matn); }
+.rn-qadam:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
 .rn-qadam strong { font-size: 1.1875rem; font-weight: 800; }
 .rn-qadam span { grid-column: 1; color: var(--matn-ikkinchi); line-height: 1.5; }
 .rn-qadam svg { grid-column: 2; grid-row: 1 / span 2; color: var(--rang-havola); }
@@ -257,6 +257,5 @@ details[open] > summary .rn-ok { transform: rotate(180deg); }
   .rb-tarix svg { grid-column: 2; grid-row: 1 / span 2; }
   .rt-dialog-amal .tugma { flex: 1 1 100%; }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .rt-nav-tugma svg, .rn-ok { transition: transform 0.15s ease; }
-}
+/* Motion: tokens only (DESIGN.md "Harakat"); global.css switches transitions off for reduced motion. */
+.rt-nav-tugma svg, .rn-ok { transition: transform var(--harakat-tez) var(--harakat-egri); }

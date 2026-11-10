@@ -13,11 +13,14 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3 { margin: 0; font-weight: 800; }
-h1 { font-size: var(--matn-h1); line-height: 1.12; }
-h2 { font-size: var(--matn-h2); line-height: 1.2; }
-h3 { font-size: var(--matn-h3); line-height: 1.25; }
-p { margin: 0; }
+/* Sarlavha qatorlari teng uzunlikda sinadi, oxirgi qatorda yolg'iz so'z qolmaydi */
+h1, h2, h3 { margin: 0; font-weight: 800; text-wrap: balance; }
+h1 { font-size: var(--matn-h1); line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
+h2 { font-size: var(--matn-h2); line-height: 1.2; letter-spacing: var(--oraliq-sarlavha); }
+h3 { font-size: var(--matn-h3); line-height: 1.25; letter-spacing: var(--oraliq-kichik-sarlavha); }
+p { margin: 0; text-wrap: pretty; }
+
+::selection { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
 
 a { color: inherit; text-underline-offset: 0.15em; }
 a:focus-visible, button:focus-visible, summary:focus-visible {
@@ -41,6 +44,19 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 }
 .otish:focus { left: var(--b-2); }
 
+/* Harakat: bosiladigan elementlar holati silliq almashadi (DESIGN.md "Harakat").
+   .variant: javob varianti (label yoki button). O'z transition'i bor komponent buni bosib o'tadi. */
+a, button, summary, .variant {
+  transition:
+    color var(--harakat-tez) var(--harakat-egri),
+    background-color var(--harakat-tez) var(--harakat-egri),
+    border-color var(--harakat-tez) var(--harakat-egri),
+    box-shadow var(--harakat-tez) var(--harakat-egri),
+    transform var(--harakat-tez) var(--harakat-egri);
+}
+/* Tugma bosilganda yengil cho'kadi; sahifalardagi tugma klasslari ham shu yerda */
+:is(a, button):is(.tugma, .katta-tugma, .katta, .tugma-l):active:not(:disabled) { transform: var(--bosilish); }
+
 /* Tugmalar */
 .tugma {
   display: inline-flex;
@@ -61,6 +77,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .tugma-asosiy:hover { background: var(--rang-asosiy-toq); }
 .tugma-ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
 .tugma-ikkinchi:hover { background: var(--chiziq); }
+.tugma-ikkinchi:active { background: var(--chiziq-kuchli); }
+.tugma-asosiy:active { background: var(--rang-asosiy-toq); }
 
 /* Yorliq */
 .yorliq {
@@ -69,7 +87,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   border-radius: var(--r-toliq);
   background: var(--sirt-ikkinchi);
   color: var(--matn-ikkinchi);
-  font-size: 12px;
+  font-size: var(--matn-mayda);
+  line-height: 1.4;
   font-weight: 700;
 }
 

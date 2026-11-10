@@ -281,13 +281,13 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
 
   /* 3D savol zinapoyasi */
   .sahna { perspective: 900px; display: grid; place-items: center; gap: var(--b-1); min-height: 280px; }
-  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s var(--harakat-egri); }
   .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
   .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
   .pog .ust, .pog .old, .pog .yon { position: absolute; }
-  .pog .ust { inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); transition: background .4s, transform .6s cubic-bezier(.2,.8,.2,1); }
-  .pog .old { left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); transition: height .6s cubic-bezier(.2,.8,.2,1); }
-  .pog .yon { right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+  .pog .ust { inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); transition: background .4s, transform .6s var(--harakat-egri); }
+  .pog .old { left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); transition: height .6s var(--harakat-egri); }
+  .pog .yon { right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); transition: width .6s var(--harakat-egri); }
   .pog.bajarildi .ust { background: var(--rang-asosiy); border-color: var(--rang-asosiy-toq); }
   .pog.bajarildi .old { background: var(--rang-asosiy-toq); }
   .pog.bajarildi .yon { background: var(--rang-asosiy-chuqur); }
@@ -310,10 +310,10 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   .variantlar :global(.variant) {
     min-height: 56px; padding: 10px 16px; border-radius: var(--r-orta); border: 2px solid var(--chiziq-kuchli);
     background: var(--fon); font: inherit; font-weight: 700; color: var(--matn); text-align: left; cursor: pointer;
-    display: grid; gap: 2px; transition: border-color .15s, background .15s, transform .15s;
+    display: grid; gap: 2px; transition: border-color var(--harakat-tez) var(--harakat-egri), background-color var(--harakat-tez) var(--harakat-egri), transform var(--harakat-tez) var(--harakat-egri);
   }
   .variantlar :global(.variant small) { font-weight: 500; font-size: var(--matn-mayda); color: var(--matn-sust); line-height: 1.35; }
-  .variantlar :global(.variant:hover) { border-color: var(--matn); transform: translateY(-2px); }
+  .variantlar :global(.variant:hover) { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
   .variantlar :global(.variant[aria-pressed="true"]) { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
   .variantlar :global(.variant[aria-pressed="true"] small) { color: var(--rang-havola); }
 
@@ -332,14 +332,14 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
 
   /* 3D aylanadigan karta */
   .yollar :global(.karta) { min-width: 0; transform-style: preserve-3d; }
-  .yollar :global(.karta-ichi) { display: grid; position: relative; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .yollar :global(.karta-ichi) { display: grid; position: relative; transform-style: preserve-3d; transition: transform .7s var(--harakat-egri); }
   .yollar :global(.karta.ochiq .karta-ichi) { transform: rotateY(180deg); }
   .yollar :global(.yuz) {
     backface-visibility: hidden; -webkit-backface-visibility: hidden;
     border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--fon);
     padding: var(--b-6); display: flex; flex-direction: column; gap: 14px; min-width: 0;
   }
-  .yollar :global(.yuz.old) { transition: box-shadow .2s, transform .2s; }
+  .yollar :global(.yuz.old) { transition: box-shadow var(--harakat-tez) var(--harakat-egri), transform var(--harakat-tez) var(--harakat-egri); }
   .yollar :global(.karta:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--matn); }
   /* Orqa yuz: pasport sahifasi (20px katakli fon, maket) */
   .yollar :global(.yuz.orqa) {
