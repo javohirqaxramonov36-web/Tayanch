@@ -367,3 +367,17 @@ npm run funksiyalar:tekshir   # Deno: imzo, inPAY mijozi, ikkala funksiya oqimi;
 
 - **Sinalgan (2026-11-09, lokal)**: SQL sinovlari (OK 16–20) va 3 ta ataylab buzish (summa tekshiruvi, takror hodisa, huquq) ushlandi; Deno testlari 29/29; `index.ts` supabase-js 2.118.0 bilan tur tekshiruvidan o'tdi; handler'lar vaqtinchalik Postgres'dagi haqiqiy SQL funksiyalari bilan birga (inPAY soxta): created → pending → paid, 30 kunlik obuna, takror webhook, soxta imzo.
 - **Sinalmagan (tekshirish kerak)**: Supabase'ga deploy, PostgREST orqali `rpc()` (lokal sinovda psql), haqiqiy inPAY (sinov kaliti bilan to'lov, webhook kelishi va imzo formati), `SUPABASE_SECRET_KEYS` tuzilishi, brauzerdan CORS, `/uz/sat/hisob/obuna/` va `/uz/sat/hisob/tolov-natija/` haqiqiy sessiya bilan (P20, faqat soxta holatda ko'rilgan).
+
+## 11. Navigator onboarding (`onboarding_profiles`)
+
+Migratsiya: `migrations/20261109130000_onboarding_profiles.sql` (mustaqil, boshqa ochiq PR migratsiyalariga bog'liq emas). Hali `db push` qilinmagan: muallif ko'rib chiqib o'zi qo'llaydi.
+
+Lokal sinov (Docker kerak emas, oddiy Postgres):
+
+```bash
+psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_shim.sql
+psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261109130000_onboarding_profiles.sql
+psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
+```
+
+Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
