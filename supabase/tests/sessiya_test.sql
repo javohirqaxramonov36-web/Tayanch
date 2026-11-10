@@ -14,12 +14,24 @@ insert into public.questions
 values
   ('ss-math-1', 'math', 'SS-domain', 'SS-skill-m', 2, 'mcq', 'SINOV savol 1',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "B"}', 'SINOV izoh 1', null, 'verified', 'sinov', 'sinov2'),
+   '{"choice": "B"}', 'SINOV izoh 1', null, 'draft', 'sinov', null),
   ('ss-math-2', 'math', 'SS-domain', 'SS-skill-m', 3, 'spr', 'SINOV savol 2',
-   null, '{"accepted": ["1/2"]}', 'SINOV izoh 2', null, 'verified', 'sinov', 'sinov2'),
+   null, '{"accepted": ["1/2"]}', 'SINOV izoh 2', null, 'draft', 'sinov', null),
   ('ss-rw-1', 'rw', 'SS-domain-rw', 'SS-skill-r', 1, 'mcq', 'SINOV savol 3',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "A"}', 'SINOV izoh 3', null, 'verified', 'sinov', 'sinov2');
+   '{"choice": "A"}', 'SINOV izoh 3', null, 'draft', 'sinov', null);
+
+-- Tasdiqlash: PR #65 (questions_p05) sxemasida verified_at ham majburiy; ustun bo'lmasa (main) faqat status.
+do $$
+begin
+  if exists (select 1 from information_schema.columns
+             where table_schema = 'public' and table_name = 'questions' and column_name = 'verified_at') then
+    execute 'update public.questions set status = ''verified'', verified_by = ''sinov2'', verified_at = now() where external_id like ''ss-%''';
+  else
+    update public.questions set status = 'verified', verified_by = 'sinov2' where external_id like 'ss-%';
+  end if;
+end
+$$;
 
 select set_config('ss.q_m1', (select id::text from public.questions where external_id = 'ss-math-1'), true),
        set_config('ss.q_m2', (select id::text from public.questions where external_id = 'ss-math-2'), true),

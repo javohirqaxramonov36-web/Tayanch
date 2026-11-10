@@ -258,6 +258,8 @@ psql uchun baza paroli kerak edi va u hal bo'lmadi (pastda), shuning uchun test 
 - CLI `\set`/`\gset` ni bilmaydi va `notice` xabarlarini ko'rsatmaydi. Shuning uchun repodagi fayl emas, uning vaqtinchalik nusxasi ishlatildi (repoga qo'shilmagan): `\set` qatorlari olib tashlandi, `\gset` o'rniga `;`, har `raise notice 'OK NN …'` o'rniga `test.ok` sozlamasiga `OK NN` qo'shish, oxirgi `HAMMASI O'TDI` xabari o'rniga ataylab `raise exception 'NATIJA:% | HAMMASI O''TDI …'`. Tekshiruvlar va `FAIL` xatolari o'zgarmadi.
 - Ataylab xato tranzaksiyani bekor qiladi (ROLLBACK bilan bir xil), CLI uni xato matnida qaytaradi: `ERROR: P0001: NATIJA: OK 01 OK 02 OK 04 OK 05 … OK 15 | HAMMASI O'TDI`. Birorta tekshiruv o'tmasa, shu joyda `FAIL NN` xatosi chiqadi.
 
+**`sessiya_test.sql` (P08, 2026-11-10, `uvwejvjrsswssgydwevm`):** xuddi shu usulda vaqtinchalik nusxa (`OK SNN` → `test.ok`, oxirida `NATIJA` xatosi). Natija: `ERROR: P0001: NATIJA: S01 S02 … S09 | SESSIYA SINOVLARI O'TDI`. Keyin qoldiq 0 (sinov foydalanuvchilari, savollar, sessiyalar, urinishlar, navbat, kvota). Test savollari avval `draft` yoziladi va keyin tasdiqlanadi: shunda PR #65 (`questions_p05`: `verified_at`, draft/verified qoidalari) bor va yo'q sxemada ham ishlaydi.
+
 #### Muqobil: psql (baza paroli kerak)
 
 1. Shart: 4-bo'lim hamma qatori `ok`. Eng yaxshi vaqt: haqiqiy foydalanuvchilar hali yo'q.
