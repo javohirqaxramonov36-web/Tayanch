@@ -109,7 +109,13 @@ const obuna = yol('/uz/sat/hisob/obuna/');
   }
 
   window.addEventListener('pagehide', () => window.clearTimeout(taymer));
-  yukla();
+  // hisobQorovul rozilikni ham tekshiradi: profiles o'qib bo'lmasa va'da rad etiladi (darvoza yopiq).
+  yukla().catch(() => {
+    const el = $('[data-yoq]');
+    el.textContent = "We couldn't read your account. Refresh the page to try again.";
+    el.setAttribute('role', 'alert');
+    el.hidden = false;
+  });
 </script>
 
 <style>
