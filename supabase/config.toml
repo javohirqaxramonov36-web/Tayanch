@@ -41,7 +41,7 @@ subject = "Tayanch: yangi emailni tasdiqlang"
 content_path = "./supabase/templates/email-almashtirish.html"
 
 # O'z SMTP (P28): Gmail SMTP, alohida Gmail hisobi va App Password bilan (muallifda domen yo'q, 2026-11-09).
-# Hammasi Dashboard'da (supabase/README.md 4-bo'lim). Blok izohda qoladi: yoqilgan holda o'zgaruvchisiz
+# Hammasi Dashboard'da (supabase/README.md 2.4-bo'lim). Blok izohda qoladi: yoqilgan holda o'zgaruvchisiz
 # `config push` parolni bo'sh yozishi mumkin (tekshirish kerak).
 # [auth.email.smtp]
 # enabled = true
@@ -51,3 +51,20 @@ content_path = "./supabase/templates/email-almashtirish.html"
 # pass = "env(SUPABASE_AUTH_SMTP_PASS)"
 # admin_email = "<sayt uchun Gmail>"
 # sender_name = "Tayanch"
+
+# Edge Function'lar (inPAY to'lovi, PR #62; supabase/README.md 10-bo'lim). `supabase functions deploy` o'qiydi.
+# inpay-webhook: inPAY Supabase JWT yubormaydi, so'rov X-Inpay-Signature imzosi bilan tekshiriladi.
+[functions.inpay-webhook]
+verify_jwt = false
+
+# tolov-yaratish: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi.
+[functions.tolov-yaratish]
+verify_jwt = false
+
+# inpay-holat: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi; faqat o'z to'lovi.
+[functions.inpay-holat]
+verify_jwt = false
+
+# inpay-muvofiqlash (P21): Supabase Cron JWT yubormaydi; X-Cron-Secret (MUVOFIQLASH_SECRET) kod ichida tekshiriladi.
+[functions.inpay-muvofiqlash]
+verify_jwt = false
