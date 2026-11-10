@@ -142,6 +142,15 @@ export const manbalar: Manba[] = [
     izoh: "To'rt ko'nikma bo'yicha namuna topshiriqlar; Listening va Reading uchun javob kalitlari PDF. Sahifada bepulligi yozilmagan.",
   },
   {
+    id: 'IE04',
+    nomi: 'IELTS scoring in detail: band scores explained',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-10',
+    izoh: "Listening va Reading: 40 savol, har to'g'ri javob 1 ball; xom ball 9 bandli shkalaga o'tkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yo'q. Kerakli ball test versiyasiga qarab biroz o'zgaradi.",
+  },
+  {
     id: 'ID01',
     nomi: 'Free IELTS practice tests',
     tashkilot: 'IDP IELTS',

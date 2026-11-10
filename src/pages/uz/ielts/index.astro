@@ -5,7 +5,7 @@
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
 import Zina from '../../../components/Zina.astro';
-import { qollanmalar, asos, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
+import { qollanmalar, asos, mashqlar, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
 import { manbalar } from '../../../data/manbalar';
 import { yol } from '../../../lib/yol';
 
@@ -108,6 +108,23 @@ const namunalar = [
         <div class="kun"><span class="katak toldirilgan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7" /></svg></span><span class="kun-raqam">1-kun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Writing</div>
         <div class="kun"><span class="katak"></span><span class="kun-raqam">2-kun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Listening</div>
         <div class="kun"><span class="katak"></span><span class="kun-raqam">3-kun</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Writing</div>
+      </div>
+    </section>
+
+    <section class="qollanmalar" aria-labelledby="mashq-h">
+      <h2 id="mashq-h">Mashq testlari</h2>
+      <div class="kul-blok">
+        <ul>
+          {mashqlar.slice().reverse().map((m) => (
+            <li>
+              <a class="q-qator" href={yol(`/uz/ielts/${m.qism}`)}>
+                <svg class="q-ikonka" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={m.ikonka} />
+                <span class="q-nom"><strong>{m.nomi}</strong><span>{m.tavsif}</span></span>
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
 

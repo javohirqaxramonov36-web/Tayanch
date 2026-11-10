@@ -9,7 +9,10 @@
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
     "repo:tekshir": "node scripts/repo-tekshir.mjs",
-    "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'"
+    "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'",
+    "check": "astro check",
+    "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts'",
+    "validate:tests": "node scripts/ielts-testlarni-tekshir.ts"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
@@ -17,5 +20,10 @@
     "astro": "^7.4.5",
     "katex": "^0.19.1",
     "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.6",
+    "typescript": "^6.0.3"
   }
 }
