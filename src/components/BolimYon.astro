@@ -5,7 +5,7 @@
 //   Esc yopadi, fokus panel ichida aylanadi, qolgan sahifa inert bo'ladi, aria-expanded yangilanadi.
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satYonGuruhlar } from '../data/satSahifalar';
-import { qollanmalar, asos, vositalar, darslar as ieltsDarslar } from '../data/ieltsSahifalar';
+import { qollanmalar, asos, vositalar, mashqlar as ieltsMashqlar, darslar as ieltsDarslar } from '../data/ieltsSahifalar';
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import Lift from './Lift.astro';
 import { yol } from '../lib/yol';
@@ -58,6 +58,7 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
 const ieltsGuruhlar = [
   { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
   { nomi: 'Reading darslari', bandlar: ieltsDarslar },
+  { nomi: 'Mashq', bandlar: ieltsMashqlar },
   { nomi: 'Vositalar', bandlar: vositalar },
 ];
 ---
