@@ -1,10 +1,12 @@
 // tolov-yaratish: hisobga kirgan foydalanuvchi uchun SAT tarifiga inPAY to'lovi yaratadi.
 //
-// So'rov:  POST, Authorization: Bearer <Supabase sessiya tokeni>, tana {"plan": "pro" | "elite"}
-// Javob:   200 {"payment_id", "checkout_url"}; xato {"error": "<kod>"}
-// Narx va muddat faqat bazadan (plans): brauzer summa yubormaydi. To'lov holatini bu funksiya "paid" qilmaydi,
-// buni faqat inpay-webhook qiladi.
-import type { TolovSorovi, YaratishNatijasi } from '../_shared/inpay.ts';
+// So'rov:  POST, Authorization: Bearer <Supabase sessiya tokeni>,
+//          tana {"plan_code": "pro" | "elite", "period"?: "oylik"}  ("plan" ham qabul qilinadi)
+// Javob:   200 {"payment_id", "checkout_url", "reused"}; xato {"error": "<kod>"}
+// Narx va muddat faqat bazadan (plans). Tanada summa (amount, amount_uzs, price...) bo'lsa so'rov rad etiladi.
+// Bir xil tarif uchun yaqinda ochilgan pending to'lov bo'lsa yangisi yaratilmaydi, o'sha havola qaytadi.
+// To'lovni "paid" qilish bu funksiyada yo'q: inpay-webhook yoki inpay-holat (inPAY'dan o'qib) qiladi.
+import { kassaFaolEmasmi, type TolovSorovi, type YaratishNatijasi } from '../_shared/inpay.ts';
 import { bearerToken, corsSarlavhalari, jsonJavob } from '../_shared/http.ts';
 import type { RpcNatija } from '../_shared/turlar.ts';
 
@@ -18,6 +20,8 @@ export interface YaratishBogliqlik {
   foydalanuvchi: (jwt: string) => Promise<string | null>;
   rpc: (nomi: string, args: Record<string, unknown>) => Promise<RpcNatija>;
   inpayYarat: (s: TolovSorovi) => Promise<YaratishNatijasi>;
+  /** Shu foydalanuvchi va tarif uchun OCHIQ_TOLOV_DAQIQA ichida yaratilgan pending to'lov (checkout havolasi bilan). */
+  ochiqTolov: (userId: string, planCode: string) => Promise<{ payment_id: string; checkout_url: string } | null>;
   jurnal: (xabar: string, tafsilot?: Record<string, unknown>) => void;
 }
 
@@ -29,6 +33,15 @@ const YARATISH_XATOLARI: Record<string, [number, string]> = {
   too_many_payments: [429, 'too_many_payments'],
   user_not_found: [401, 'not_signed_in'],
 };
+
+/** Shu daqiqa ichida ochilgan pending to'lov qayta beriladi. inPAY checkout havolasining amal muddati hujjatda
+ *  ko'rsatilmagan (tekshirish kerak): shuning uchun qisqa oyna, Tayanch tanlovi. */
+export const OCHIQ_TOLOV_DAQIQA = 30;
+
+/** Hozir bitta davr bor: plans.period_days (P19). Boshqa davrlar narxi berilgach qo'shiladi. */
+export const DAVRLAR = ['oylik'] as const;
+/** Mijoz yuborishi mumkin bo'lmagan summa maydonlari. */
+const SUMMA_MAYDONLARI = ['amount', 'amount_uzs', 'price', 'price_uzs', 'summa', 'narx'];
 
 interface YaratilganTolov {
   payment_id: string;
@@ -61,14 +74,30 @@ export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise
   const userId = jwt ? await d.foydalanuvchi(jwt) : null;
   if (!userId) return javob(401, { error: 'not_signed_in' });
 
-  let plan: unknown;
+  let tana: Record<string, unknown> = {};
   try {
-    plan = (await req.json())?.plan;
+    const t = await req.json();
+    if (t && typeof t === 'object' && !Array.isArray(t)) tana = t;
   } catch {
-    plan = undefined;
+    // bo'sh yoki JSON emas: pastda invalid_request
   }
+  if (SUMMA_MAYDONLARI.some((k) => k in tana)) {
+    d.jurnal('summa mijozdan keldi, rad etildi', { user_id: userId });
+    return javob(400, { error: 'amount_not_allowed' });
+  }
+  const plan = tana.plan_code ?? tana.plan;
   if (typeof plan !== 'string' || !/^[a-z][a-z0-9_]{1,31}$/.test(plan)) {
     return javob(400, { error: 'invalid_request' });
+  }
+  const davr = tana.period ?? 'oylik';
+  if (typeof davr !== 'string' || !(DAVRLAR as readonly string[]).includes(davr)) {
+    return javob(409, { error: 'period_not_available' });
+  }
+
+  const ochiq = await d.ochiqTolov(userId, plan);
+  if (ochiq) {
+    d.jurnal('ochiq to\'lov qayta berildi', { payment_id: ochiq.payment_id });
+    return javob(200, { ...ochiq, reused: true });
   }
 
   const yaratish = await d.rpc('payment_create', { p_user: userId, p_plan_code: plan });
@@ -89,7 +118,7 @@ export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise
     planCode: p.plan_code,
     amountUzs: p.amount_uzs,
     description: `Tayanch SAT ${p.plan_name}, ${p.period_days} days`,
-    returnUrl: `${d.saytUrl}/uz/sat/hisob/tolov/?tolov=${encodeURIComponent(p.payment_id)}`,
+    returnUrl: `${d.saytUrl}/uz/sat/hisob/tolov-natija/?tolov=${encodeURIComponent(p.payment_id)}`,
     webhookUrl: `${d.supabaseUrl}/functions/v1/inpay-webhook`,
   });
 
@@ -106,6 +135,10 @@ export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise
       request_id: natija.requestId,
       yozildi: !yoz.error,
     });
+    if (kassaFaolEmasmi(natija.code)) {
+      d.jurnal('inPAY kassasi faol emas (merchant_inactive): kabinetda kassa holatini tekshiring', { payment_id: p.payment_id });
+      return javob(503, { error: 'payments_unavailable' });
+    }
     return javob(502, { error: 'payment_provider_error' });
   }
 
@@ -121,5 +154,5 @@ export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise
   }
 
   d.jurnal('to\'lov yaratildi', { payment_id: p.payment_id, livemode: natija.tolov.livemode });
-  return javob(200, { payment_id: p.payment_id, checkout_url: natija.tolov.checkout_url });
+  return javob(200, { payment_id: p.payment_id, checkout_url: natija.tolov.checkout_url, reused: false });
 }

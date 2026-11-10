@@ -125,6 +125,82 @@ export async function inpayTolovYarat(s: TolovSorovi, o: YaratishSozlamasi): Pro
 }
 
 // ---------------------------------------------------------------------------
+// To'lov holati: GET /payments/{id} (IP03: "Webhook kelmagan yoki shubha bo'lgan holatda holatni shu yerdan tekshiring").
+// inPAY holatlari: requires_payment_method, requires_action, processing, succeeded (yakuniy), failed, canceled (yakuniy).
+// ---------------------------------------------------------------------------
+
+/** GET javobidagi `data`: bazaga yozishdan oldin tekshiriladigan maydonlar. */
+export interface InpayTolovHolati {
+  id: string;
+  status: string;
+  amount: number;
+  currency: string;
+  livemode: boolean;
+  metadata: Record<string, unknown>;
+  [maydon: string]: unknown;
+}
+
+export type HolatNatijasi =
+  | { ok: true; tolov: InpayTolovHolati }
+  | { ok: false; httpStatus: number; code: string; requestId?: string };
+
+/** Tayanch ekranidagi uch holat. Faqat `succeeded` to'langan hisoblanadi (IP03). */
+export type TayanchHolat = 'pending' | 'success' | 'failed';
+
+export function inpayHolatiniOgir(status: string): TayanchHolat {
+  if (status === 'succeeded') return 'success';
+  if (status === 'failed' || status === 'canceled') return 'failed';
+  return 'pending';
+}
+
+function holatniTekshir(data: unknown): InpayTolovHolati | null {
+  if (!obyektmi(data)) return null;
+  const { id, status, amount, currency, livemode, metadata } = data;
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) return null;
+  if (typeof status !== 'string' || !/^[a-z_]{1,40}$/.test(status)) return null;
+  if (!Number.isSafeInteger(amount) || typeof currency !== 'string' || typeof livemode !== 'boolean') return null;
+  return { ...data, id, status, amount: amount as number, currency, livemode, metadata: obyektmi(metadata) ? metadata : {} };
+}
+
+export async function inpayTolovHolati(
+  inpayId: string,
+  o: Omit<YaratishSozlamasi, 'kutishMs'>,
+): Promise<HolatNatijasi> {
+  if (!/^[A-Za-z0-9_-]{1,64}$/.test(inpayId)) return { ok: false, httpStatus: 0, code: 'invalid_id' };
+  const fetchFn = o.fetchFn ?? fetch;
+  let res: Response;
+  try {
+    res = await fetchFn(`${INPAY_API_URL}/payments/${inpayId}`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${o.secretKey}`, Accept: 'application/json' },
+      signal: AbortSignal.timeout(o.timeoutMs ?? 8_000),
+    });
+  } catch {
+    return { ok: false, httpStatus: 0, code: 'network_error' };
+  }
+  let json: unknown = null;
+  try {
+    json = await res.json();
+  } catch {
+    json = null;
+  }
+  if (res.ok && obyektmi(json) && json.success === true) {
+    const tolov = holatniTekshir(json.data);
+    return tolov ? { ok: true, tolov } : { ok: false, httpStatus: res.status, code: 'invalid_response' };
+  }
+  const xato = obyektmi(json) && obyektmi(json.error) ? json.error : {};
+  return {
+    ok: false,
+    httpStatus: res.status,
+    code: typeof xato.code === 'string' ? xato.code : `http_${res.status}`,
+    ...(typeof xato.request_id === 'string' ? { requestId: xato.request_id } : {}),
+  };
+}
+
+/** Kassa faol emas (IP03 xato kodi `merchant_inactive`): foydalanuvchiga "vaqtincha ishlamaydi". */
+export const kassaFaolEmasmi = (code: string) => code.toLowerCase() === 'merchant_inactive';
+
+// ---------------------------------------------------------------------------
 // Webhook imzosi: X-Inpay-Signature: t=<unix>,v1=<hex>; v1 = HMAC-SHA256("{t}.{xom tana}", whsec_…)
 // ---------------------------------------------------------------------------
 

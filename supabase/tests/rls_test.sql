@@ -770,6 +770,31 @@ begin
 end
 $$;
 
+-- inpay-holat (P20): GET /payments/{id} javobi webhook shaklidagi hodisa sifatida o'sha funksiyaga beriladi.
+-- Webhook allaqachon paid qilgan to'lov: already_paid, keyin shu poll_ id duplicate; ikkinchi obuna yo'q.
+do $$
+declare
+  p1 uuid := current_setting('test.p1')::uuid;
+  e  jsonb;
+  r  jsonb;
+begin
+  e := jsonb_build_object('id', 'poll_sinovord00000001_succeeded', 'type', 'payment.succeeded', 'livemode', false,
+         'source', 'inpay-holat',
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000001', 'object', 'payment', 'amount', 1000, 'currency', 'UZS', 'status', 'succeeded',
+           'livemode', false, 'metadata', jsonb_build_object('payment_id', p1))));
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'already_paid' then
+    raise exception 'FAIL 18b: poll hodisasi already_paid bo''lmadi: %', r;
+  end if;
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'duplicate' or (select count(*) from public.subscriptions where payment_id = p1) <> 1 then
+    raise exception 'FAIL 18b: takror poll duplicate bo''lmadi yoki ikkinchi obuna: %', r;
+  end if;
+  raise notice 'OK 18b inpay-holat: poll hodisasi webhook bilan bir xil funksiyada, idempotent';
+end
+$$;
+
 do $$
 declare
   c  constant uuid := '00000000-0000-4000-8000-00000000000c';
