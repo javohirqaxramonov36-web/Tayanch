@@ -13,12 +13,17 @@ additional_redirect_urls = [
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/",
+  # Google (P03B): redirectTo query'siz, aniq shu manzil (keyin sessionStorage'da). Qo'llangan 2026-11-09.
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/callback/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/",
   "http://localhost:4321/Tayanch/**",
 ]
 # Formadagi hisobSozlama.parolMinUzunlik bilan bir xil.
 minimum_password_length = 8
+
+# Google provider (client ID, secret) bu faylda emas: Dashboard → Authentication → Providers → Google
+# (secret repoga tushmasligi uchun). Faylda yo'q sozlama config push'da o'zgarmaydi.
 
 [auth.email]
 # Email tasdiqlash majburiy.

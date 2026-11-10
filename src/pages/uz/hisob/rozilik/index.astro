@@ -1,0 +1,133 @@
+---
+// 1-qavat · Hisob · Rozilik (P03B). Darvoza: profiles.consent_version bo'sh bo'lsa hisobQorovul va callback shu yerga
+// ?keyin= bilan yuboradi. Sessiya kerak, lekin bu sahifa o'zi qorovul ishlatmaydi (aylanib qolmaslik uchun).
+// "Davom etish" faqat consent_version ni yozadi (consent_at ni server triggeri qo'yadi). "Chiqish": signOut.
+// profiles o'qib yoki yozib bo'lmasa: darvoza yopiq, xato ko'rsatiladi (role="alert").
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import { hisobSahifalar } from '../../../../data/hisobSahifalar';
+import { hisobSozlama } from '../../../../data/hisobSozlama';
+import { yol } from '../../../../lib/yol';
+
+const { minYosh, maxfiylikSahifa, shartlarSahifa } = hisobSozlama;
+const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
+---
+<HisobKarta sahifa={hisobSahifalar.rozilik} lead="Hisobingizdan foydalanishdan oldin bir marta tasdiqlang.">
+  <p class="hisob-holat" id="rozilik-kutish" role="status" data-hisob-bor>Hisob tekshirilmoqda…</p>
+
+  <div class="hisob-karta" id="rozilik-karta" hidden>
+    <p class="hisob-sust">Siz <strong id="rozilik-email"></strong> bilan kirgansiz.</p>
+    <form class="hisob-forma" id="rozilik-forma" novalidate aria-labelledby="hisob-sarlavha">
+      <p class="hisob-alert" id="rozilik-xato" role="alert" hidden></p>
+
+      {minYosh !== null && (
+        <div class="hisob-belgi-blok">
+          <div class="hisob-belgi">
+            <input type="checkbox" id="rozilik-yosh" name="rozilik-yosh" required aria-describedby="rozilik-yosh-xato" />
+            <label for="rozilik-yosh">Yoshim {minYosh} da yoki undan katta.</label>
+          </div>
+          <p class="hisob-xato" id="rozilik-yosh-xato" hidden></p>
+        </div>
+      )}
+
+      <div class="hisob-belgi-blok">
+        <div class="hisob-belgi">
+          <input type="checkbox" id="rozilik-hujjat" name="rozilik-hujjat" required aria-describedby={hujjatlarTayyor ? 'rozilik-hujjat-xato' : 'rozilik-hujjat-izoh rozilik-hujjat-xato'} />
+          <label for="rozilik-hujjat">
+            {maxfiylikSahifa ? <a class="hisob-havola" href={yol(maxfiylikSahifa)}>Maxfiylik siyosati</a> : 'Maxfiylik siyosati'}{' '}va {shartlarSahifa ? <a class="hisob-havola" href={yol(shartlarSahifa)}>Foydalanish shartlari</a> : 'Foydalanish shartlari'}ga roziman.
+          </label>
+        </div>
+        {!hujjatlarTayyor && <p class="hisob-izoh" id="rozilik-hujjat-izoh">Foydalanish shartlari sahifasi yozilmoqda. Havola shu yerda paydo bo'ladi.</p>}
+        <p class="hisob-xato" id="rozilik-hujjat-xato" hidden></p>
+      </div>
+
+      <button type="submit" class="tugma tugma-asosiy" id="rozilik-tugma">Davom etish</button>
+    </form>
+  </div>
+
+  <section class="hisob-karta" id="rozilik-chiqish" aria-labelledby="rozilik-chiqish-sarlavha" hidden>
+    <h2 id="rozilik-chiqish-sarlavha">Rozi emasmisiz?</h2>
+    <p class="hisob-sust">Hisobdan chiqing. Darslar va mashqlar hisobsiz ham ishlaydi.</p>
+    <button type="button" class="tugma tugma-ikkinchi" id="chiqish-tugma">Chiqish</button>
+  </section>
+</HisobKarta>
+
+<script>
+  import {
+    hisobMijoz, hisobYoqBolsa, hisobYoli, keyingiManzil, rozilikHolati, rozilikYoz, rozilikXatoMatni,
+    maydonXatosi, yuklanish, xabar, xatoMatni,
+  } from '../../../../lib/hisob';
+  import { hisobSozlama } from '../../../../data/hisobSozlama';
+  import type { Session } from '@supabase/supabase-js';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const forma = $<HTMLFormElement>('rozilik-forma');
+  const yosh = document.getElementById('rozilik-yosh') as HTMLInputElement | null;
+  const hujjat = $<HTMLInputElement>('rozilik-hujjat');
+  const tugma = $<HTMLButtonElement>('rozilik-tugma');
+  const xato = $('rozilik-xato');
+  const keyin = keyingiManzil();
+  let sessiya: Session | null = null;
+
+  async function boshla() {
+    if (hisobYoqBolsa()) return;
+    const c = hisobMijoz()!;
+    sessiya = (await c.auth.getSession()).data.session;
+    if (!sessiya) {
+      location.replace(`${hisobYoli('kirish')}?keyin=${encodeURIComponent(keyin)}`);
+      return;
+    }
+    $('rozilik-email').textContent = sessiya.user.email ?? '';
+    $('rozilik-kutish').hidden = true;
+    $('rozilik-karta').hidden = false;
+    $('rozilik-chiqish').hidden = false;
+    try {
+      if ((await rozilikHolati(c, sessiya)) === 'bor') {
+        location.replace(keyin);
+        return;
+      }
+    } catch {
+      // Darvoza yopiq qoladi: forma ko'rinadi, yozishda ham xato bo'lsa shu matn qoladi.
+      xabar(xato, rozilikXatoMatni);
+    }
+  }
+
+  function tekshir(): boolean {
+    const xatolar: [HTMLInputElement, string | null][] = [];
+    if (yosh) xatolar.push([yosh, yosh.checked ? null : `Hisobdan foydalanish uchun yoshingiz kamida ${hisobSozlama.minYosh} da bo'lishi kerak.`]);
+    xatolar.push([hujjat, hujjat.checked ? null : "Davom etish uchun rozilik belgisini qo'ying."]);
+    for (const [i, m] of xatolar) maydonXatosi(i, m);
+    const birinchi = xatolar.find(([, m]) => m)?.[0];
+    birinchi?.focus();
+    return !birinchi;
+  }
+
+  forma.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    xabar(xato, null);
+    if (!tekshir() || !sessiya) return;
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(tugma, true, 'Saqlanmoqda…');
+    try {
+      await rozilikYoz(c, sessiya);
+      location.replace(keyin);
+      return;
+    } catch (e) {
+      const x = e as Error & { name?: string };
+      xabar(xato, x.name === 'AuthRetryableFetchError' || x instanceof TypeError ? xatoMatni(x, 'profil') : "Rozilik saqlanmadi. Sahifani yangilab, qayta urinib ko'ring.");
+    }
+    yuklanish(tugma, false);
+  });
+
+  const chiqish = $<HTMLButtonElement>('chiqish-tugma');
+  chiqish.addEventListener('click', async () => {
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(chiqish, true, 'Chiqilmoqda…');
+    await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    location.replace(`${hisobYoli('kirish')}?chiqdi=1`);
+  });
+
+  [yosh, hujjat].forEach((i) => i?.addEventListener('change', () => i.checked && maydonXatosi(i, null)));
+  boshla();
+</script>

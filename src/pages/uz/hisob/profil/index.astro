@@ -57,7 +57,7 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
     $('profil-email').textContent = u.email ?? '';
     ism.value = String(u.user_metadata?.display_name ?? '');
     taxallus.value = String(u.user_metadata?.nickname ?? '');
-  });
+  }).catch(() => undefined); // xatoni HisobQorovul ko'rsatadi
 
   $<HTMLFormElement>('profil-forma').addEventListener('submit', async (ev) => {
     ev.preventDefault();
