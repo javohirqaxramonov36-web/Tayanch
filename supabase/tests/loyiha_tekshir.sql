@@ -96,7 +96,8 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.admin_hide_question(text,text,text)', false, false, true),
   ('public.payment_create(uuid,text)', false, false, true),
   ('public.payment_set_invoice(uuid,text,jsonb)', false, false, true),
-  ('public.payment_apply_event(jsonb)', false, false, true)
+  ('public.payment_apply_event(jsonb)', false, false, true),
+  ('public.payment_pending_stale(integer,integer,integer)', false, false, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k

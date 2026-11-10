@@ -62,12 +62,12 @@ Deno.test('to\'g\'ri imzo: hodisa payment_apply_event ga butunligicha beriladi, 
   assert.equal(JSON.stringify(jurnal).includes('metadata'), false, 'logda tana yo\'q');
 });
 
-Deno.test('imzo yo\'q, noto\'g\'ri yoki eskirgan: 400/401, bazaga murojaat yo\'q', async () => {
+Deno.test('imzo yo\'q, noto\'g\'ri yoki eskirgan: 401, bazaga murojaat yo\'q', async () => {
   const tana = JSON.stringify(HODISA);
   const holatlar: Array<[string | null, number, string]> = [
-    [null, 400, 'signature_missing'],
+    [null, 401, 'signature_missing'],
     [imzola(tana.replace('1000', '1')), 401, 'signature_invalid'],
-    [imzola(tana, T - 400), 400, 'signature_expired'],
+    [imzola(tana, T - 400), 401, 'signature_expired'],
   ];
   for (const [imzo, status, kod] of holatlar) {
     const { d, chaqiruvlar } = bogliqlik();

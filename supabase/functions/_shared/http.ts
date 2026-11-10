@@ -27,3 +27,21 @@ export function bearerToken(sarlavha: string | null): string | null {
   const m = /^Bearer\s+(\S+)$/i.exec(sarlavha?.trim() ?? '');
   return m ? m[1] : null;
 }
+
+/**
+ * Ikki maxfiy satrni doimiy vaqtda solishtiradi (uzunligi har xil bo'lsa ham): avval SHA-256, so'ng bayt XOR.
+ * Bo'sh satr hech qachon teng emas.
+ */
+export async function sirTengmi(a: string | null | undefined, b: string | null | undefined): Promise<boolean> {
+  if (!a || !b) return false;
+  const enc = new TextEncoder();
+  const [x, y] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(a)),
+    crypto.subtle.digest('SHA-256', enc.encode(b)),
+  ]);
+  const u = new Uint8Array(x);
+  const v = new Uint8Array(y);
+  let farq = 0;
+  for (let i = 0; i < u.length; i++) farq |= u[i] ^ v[i];
+  return farq === 0;
+}
