@@ -770,6 +770,31 @@ begin
 end
 $$;
 
+-- inpay-holat (P20): GET /payments/{id} javobi webhook shaklidagi hodisa sifatida o'sha funksiyaga beriladi.
+-- Webhook allaqachon paid qilgan to'lov: already_paid, keyin shu poll_ id duplicate; ikkinchi obuna yo'q.
+do $$
+declare
+  p1 uuid := current_setting('test.p1')::uuid;
+  e  jsonb;
+  r  jsonb;
+begin
+  e := jsonb_build_object('id', 'poll_sinovord00000001_succeeded', 'type', 'payment.succeeded', 'livemode', false,
+         'source', 'inpay-holat',
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000001', 'object', 'payment', 'amount', 1000, 'currency', 'UZS', 'status', 'succeeded',
+           'livemode', false, 'metadata', jsonb_build_object('payment_id', p1))));
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'already_paid' then
+    raise exception 'FAIL 18b: poll hodisasi already_paid bo''lmadi: %', r;
+  end if;
+  r := public.payment_apply_event(e);
+  if r ->> 'result' <> 'duplicate' or (select count(*) from public.subscriptions where payment_id = p1) <> 1 then
+    raise exception 'FAIL 18b: takror poll duplicate bo''lmadi yoki ikkinchi obuna: %', r;
+  end if;
+  raise notice 'OK 18b inpay-holat: poll hodisasi webhook bilan bir xil funksiyada, idempotent';
+end
+$$;
+
 do $$
 declare
   c  constant uuid := '00000000-0000-4000-8000-00000000000c';
@@ -829,6 +854,57 @@ begin
     raise exception 'FAIL 20: to''langan obuna current_plan da ko''rinmadi';
   end if;
   raise notice 'OK 20 current_plan: to''lov orqali berilgan obuna kvotaga ta''sir qiladi';
+end
+$$;
+
+-- P21: webhook kelmay qolgan to'lovlar (payment_pending_stale) va payment_events.payload tozalanishi.
+do $$
+declare
+  c  constant uuid := '00000000-0000-4000-8000-00000000000c';
+  p4 uuid;
+  r  jsonb;
+  v  jsonb;
+begin
+  if has_function_privilege('anon', 'public.payment_pending_stale(integer,integer,integer)', 'execute')
+     or has_function_privilege('authenticated', 'public.payment_pending_stale(integer,integer,integer)', 'execute')
+     or not has_function_privilege('service_role', 'public.payment_pending_stale(integer,integer,integer)', 'execute') then
+    raise exception 'FAIL 21: payment_pending_stale huquqlari noto''g''ri';
+  end if;
+
+  p4 := (public.payment_create(c, 'pro') ->> 'payment_id')::uuid;
+  perform public.payment_set_invoice(p4, 'sinovord00000004', '{"id": "sinovord00000004", "livemode": false}'::jsonb);
+  if exists (select 1 from public.payment_pending_stale() s where s.id = p4) then
+    raise exception 'FAIL 21: yangi to''lov eski deb topildi';
+  end if;
+  update public.payments set created_at = now() - interval '3 days' where id = p4;
+  if exists (select 1 from public.payment_pending_stale() s where s.id = p4) then
+    raise exception 'FAIL 21: 48 soatdan eski to''lov ro''yxatga tushdi';
+  end if;
+  update public.payments set created_at = now() - interval '20 minutes' where id = p4;
+  if not exists (select 1 from public.payment_pending_stale() s where s.id = p4 and s.provider_order_id = 'sinovord00000004') then
+    raise exception 'FAIL 21: 20 daqiqalik pending to''lov topilmadi';
+  end if;
+
+  -- Hodisada mijoz ma'lumoti bor: to'lov qo'llanadi, jurnalga faqat ruxsat etilgan maydonlar yoziladi.
+  r := public.payment_apply_event(jsonb_build_object(
+         'id', 'evt_sinov_21', 'object', 'event', 'type', 'payment.succeeded', 'livemode', false,
+         'customer', jsonb_build_object('phone', '+998900000000'),
+         'data', jsonb_build_object('object', jsonb_build_object(
+           'id', 'sinovord00000004', 'amount', 1000, 'currency', 'UZS', 'status', 'succeeded',
+           'phone', '+998900000000', 'card', jsonb_build_object('pan', '8600SINOV0000'),
+           'metadata', jsonb_build_object('payment_id', p4, 'izoh', 'SINOV')))));
+  select payload into v from public.payment_events where event_id = 'evt_sinov_21';
+  if r ->> 'result' <> 'paid'
+     or v::text like '%998900000000%' or v::text like '%8600SINOV%' or v::text like '%SINOV%'
+     or v -> 'data' -> 'object' ->> 'amount' <> '1000'
+     or v -> 'data' -> 'object' -> 'metadata' ->> 'payment_id' <> p4::text
+     or v -> 'dropped' <> '["customer", "data.object.card", "data.object.metadata.izoh", "data.object.phone"]'::jsonb then
+    raise exception 'FAIL 21: payload tozalanmadi yoki to''lov qo''llanmadi: % / %', r, v;
+  end if;
+  if exists (select 1 from public.payment_pending_stale() s where s.id = p4) then
+    raise exception 'FAIL 21: paid to''lov hali ro''yxatda';
+  end if;
+  raise notice 'OK 21 muvofiqlash: faqat 15 daqiqa-48 soatlik pending, faqat service_role; payment_events.payload da mijoz ma''lumoti yo''q';
 end
 $$;
 

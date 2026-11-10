@@ -32,3 +32,11 @@ verify_jwt = false
 # tolov-yaratish: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi.
 [functions.tolov-yaratish]
 verify_jwt = false
+
+# inpay-holat: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi; faqat o'z to'lovi.
+[functions.inpay-holat]
+verify_jwt = false
+
+# inpay-muvofiqlash (P21): Supabase Cron JWT yubormaydi; X-Cron-Secret (MUVOFIQLASH_SECRET) kod ichida tekshiriladi.
+[functions.inpay-muvofiqlash]
+verify_jwt = false

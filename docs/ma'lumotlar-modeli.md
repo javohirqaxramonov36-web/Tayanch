@@ -114,7 +114,7 @@ review sessiyada to'g'ri: 1→2 (+3 kun), 2→3 (+7), 3→4 (+14), 4→5 (o'zlas
 
 Oraliqlar Tayanch tanlovi, rasmiy qoida emas.
 
-### To'lov (inPAY API v2, IP03; migratsiya 0010, Edge Function'lar `tolov-yaratish`, `inpay-webhook`)
+### To'lov (inPAY API v2, IP03; migratsiyalar 0010, 0011, Edge Function'lar `tolov-yaratish`, `inpay-webhook`, `inpay-holat`, `inpay-muvofiqlash`)
 
 ```
 Brauzer ── tolov-yaratish (JWT, {"plan"}) ─> payment_create ─> payments (created, provider_order_id = 'tayanch:<id>')
@@ -124,7 +124,11 @@ inPAY ── inpay-webhook: imzo (X-Inpay-Signature, 5 daqiqa) ─> payment_appl
            payment_events (provider, event_id unique: takror = 'duplicate')
            └─ payment.succeeded: summa, UZS, livemode, metadata mos ─> payments (paid) ─> subscriptions (payment_id unique) ─> audit_log
            └─ payment.failed / payment.canceled ─> payments (failed / canceled); boshqa hodisa ─> 'ignored'
+inpay-holat (foydalanuvchi) / inpay-muvofiqlash (Cron, 15 daqiqa–48 soat pending) ─> inPAY GET /payments/{id}
+           ─> yakuniy bo'lsa o'sha payment_apply_event (id 'poll_<inpay id>_<status>')
 ```
+
+`payment_events.payload` trigger bilan tozalanadi (0011): faqat ruxsat etilgan maydonlar, qolganlarining faqat nomi `dropped` da.
 
 Holatlar: `created → pending → paid | failed | canceled`; `failed`/`canceled` dan keyin `succeeded` kelsa `paid`, `paid` yakuniy. Xato hodisa (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) `payment_events.error` bilan saqlanadi, obuna bermaydi. Obuna muddati `payments.raw.tayanch.period_days` (to'lov paytidagi tarif), shu tarifda faol obuna bo'lsa uning oxiridan boshlanadi.
 

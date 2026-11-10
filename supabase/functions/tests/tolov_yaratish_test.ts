@@ -19,6 +19,7 @@ function bogliqlik(o: {
   inpay?: YaratishNatijasi;
   setInvoice?: RpcNatija;
   yetishmaydi?: string[];
+  ochiq?: { payment_id: string; checkout_url: string } | null;
 } = {}): { d: YaratishBogliqlik; h: Holat } {
   const h: Holat = { rpc: [], inpay: [], jurnal: [] };
   const d: YaratishBogliqlik = {
@@ -44,6 +45,7 @@ function bogliqlik(o: {
         tolov: { id: 'sinovord00000001', status: 'requires_payment_method', checkout_url: 'https://inpay.uz/checkout/sinovord00000001', livemode: false },
       });
     },
+    ochiqTolov: () => Promise.resolve(o.ochiq ?? null),
     jurnal: (x) => h.jurnal.push(x),
   };
   return { d, h };
@@ -114,19 +116,57 @@ Deno.test('payment_create xatolari HTTP holatiga aylanadi', async () => {
   }
 });
 
-Deno.test('muvaffaqiyat: summa bazadan (brauzer summasi e\'tiborsiz), set_invoice, checkout_url', async () => {
+Deno.test('summa mijozdan kelsa: 400 amount_not_allowed, bazaga va inPAY\'ga murojaat yo\'q', async () => {
+  for (const tana of [{ plan: 'pro', amount: 1 }, { plan_code: 'pro', amount_uzs: 1000 }, { plan: 'pro', price: 0 }]) {
+    const { d, h } = bogliqlik();
+    const r = await tolovYaratish(sorov({ tana }), d);
+    assert.equal(r.status, 400);
+    assert.deepEqual(await r.json(), { error: 'amount_not_allowed' });
+    assert.equal(h.rpc.length, 0);
+    assert.equal(h.inpay.length, 0);
+  }
+});
+
+Deno.test('davr: oylik (standart) qabul qilinadi, boshqasi 409 period_not_available', async () => {
   const { d, h } = bogliqlik();
-  const r = await tolovYaratish(sorov({ tana: { plan: 'pro', amount: 1 } }), d);
+  const r = await tolovYaratish(sorov({ tana: { plan_code: 'pro', period: '3oylik' } }), d);
+  assert.equal(r.status, 409);
+  assert.deepEqual(await r.json(), { error: 'period_not_available' });
+  assert.equal(h.rpc.length, 0);
+  assert.equal((await tolovYaratish(sorov({ tana: { plan_code: 'pro', period: 'oylik' } }), bogliqlik().d)).status, 200);
+});
+
+Deno.test('ochiq pending to\'lov bor: yangisi yaratilmaydi, o\'sha havola qaytadi', async () => {
+  const ochiq = { payment_id: PID, checkout_url: 'https://inpay.uz/checkout/eski' };
+  const { d, h } = bogliqlik({ ochiq });
+  const r = await tolovYaratish(sorov(), d);
+  assert.equal(r.status, 200);
+  assert.deepEqual(await r.json(), { ...ochiq, reused: true });
+  assert.equal(h.rpc.length, 0);
+  assert.equal(h.inpay.length, 0);
+});
+
+Deno.test('kassa faol emas (merchant_inactive): 503 payments_unavailable, sabab logda', async () => {
+  const { d, h } = bogliqlik({ inpay: { ok: false, httpStatus: 403, code: 'merchant_inactive' } });
+  const r = await tolovYaratish(sorov(), d);
+  assert.equal(r.status, 503);
+  assert.deepEqual(await r.json(), { error: 'payments_unavailable' });
+  assert.ok(h.jurnal.some((x) => x.includes('merchant_inactive')));
+});
+
+Deno.test('muvaffaqiyat: summa bazadan, set_invoice, checkout_url', async () => {
+  const { d, h } = bogliqlik();
+  const r = await tolovYaratish(sorov({ tana: { plan: 'pro' } }), d);
   assert.equal(r.status, 200);
   assert.equal(r.headers.get('access-control-allow-origin'), SAYT);
-  assert.deepEqual(await r.json(), { payment_id: PID, checkout_url: 'https://inpay.uz/checkout/sinovord00000001' });
+  assert.deepEqual(await r.json(), { payment_id: PID, checkout_url: 'https://inpay.uz/checkout/sinovord00000001', reused: false });
   assert.deepEqual(h.rpc[0], { nomi: 'payment_create', args: { p_user: USER, p_plan_code: 'pro' } });
   assert.deepEqual(h.inpay[0], {
     paymentId: PID,
     planCode: 'pro',
     amountUzs: 1000,
     description: 'Tayanch SAT Pro, 30 days',
-    returnUrl: `${SAYT}/Tayanch/uz/sat/hisob/tolov/?tolov=${PID}`,
+    returnUrl: `${SAYT}/Tayanch/uz/sat/hisob/tolov-natija/?tolov=${PID}`,
     webhookUrl: 'https://sinov.supabase.co/functions/v1/inpay-webhook',
   });
   assert.equal(h.rpc[1].nomi, 'payment_set_invoice');
