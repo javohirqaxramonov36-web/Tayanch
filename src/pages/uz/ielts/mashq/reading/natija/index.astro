@@ -1,0 +1,56 @@
+---
+// IELTS Reading result page. The attempt is read from the browser (?urinish=<id>), so the page
+// itself is static. Renderer: src/lib/ielts/reading/ekran/natija.ts. Band table: IE04 + Tayanch estimate.
+import BolimQobiq from '../../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../../components/ManbaBlok.astro';
+import '../../../../../../styles/ielts-reading.css';
+import { MM, RM } from '../../../../../../data/ielts/readingMatn';
+---
+<BolimQobiq
+  title="Reading natijasi · IELTS"
+  description="IELTS Reading mashq testi natijasi: to'g'ri javoblar, taxminiy band, savol turlari bo'yicha aniqlik va tushuntirishlar."
+  turi="mashq"
+  yol={[MM.ustki, 'Reading test']}
+  bolim="ielts"
+  holat="qoralama"
+>
+  <div class="ichki rn-sahifa">
+    <header class="bosh">
+      <p class="ustki-kok">Reading test</p>
+      <h1>{RM.natijaSarlavha}</h1>
+      <p class="sust kichik">{RM.eslatma}</p>
+    </header>
+
+    <div class="rn" id="rn">
+      <p class="rn-bosh-xabar" role="status">{RM.natijaYuklanmoqda}</p>
+      <noscript><p class="rn-bosh-xabar">Natijani ko'rish uchun brauzerda JavaScript yoqilgan bo'lishi kerak.</p></noscript>
+    </div>
+
+    <ManbaBlok
+      manbalar={['IE04', 'IE02']}
+      tekshirilgan="2026-11-10"
+      keyingiTekshiruv="2026-12-10"
+      tekshirilmagan={[
+        "Band jadvalida rasmiy manbada faqat to'rtta nuqta bor (15 → 5, 23 → 6, 30 → 7, 35 → 8). Qolgan chegaralar Tayanch taxmini.",
+        "Savollar va matnlar Tayanch uchun yozilgan mashq, rasmiy IELTS materiali emas.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { ishgaTushirNatija } from '../../../../../../lib/ielts/reading/ekran/natijaSahifa.ts';
+  void ishgaTushirNatija();
+</script>
+
+<style>
+  .rn-sahifa { padding-top: var(--b-10); padding-bottom: var(--b-14); display: flex; flex-direction: column; gap: var(--b-8); max-width: calc(912px + 2 * var(--b-10)) !important; }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  .bosh p { margin: 0; }
+  @media (max-width: 640px) {
+    .rn-sahifa { padding-top: var(--b-6); }
+    h1 { font-size: 32px; }
+  }
+</style>

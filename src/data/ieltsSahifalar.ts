@@ -40,6 +40,12 @@ export const darslar: IeltsBand[] = [
   { nomi: 'Matching headings', tavsif: 'Paragrafning asosiy fikriga sarlavha tanlash', qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
 ];
 
+/** Mashq testlari (hozircha faqat Reading ishlaydi) */
+export const mashqlar: IeltsBand[] = [
+  { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
+  { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+];
+
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
 ];

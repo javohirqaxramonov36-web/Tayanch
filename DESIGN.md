@@ -17,16 +17,16 @@ Palitra: **oq, qora, ko'k** (2026-11-04 qarori). Bo'limlar rang bilan emas, ikon
 | `--fon` | `#ffffff` | Sahifa foni |
 | `--fon-ikkinchi` | `#f5f6fa` | Tinch sahna foni, ichki kartalar |
 | `--sirt-ikkinchi` | `#eceef3` | Neytral yorliq, ikkinchi darajali tugma |
-| `--chiziq` / `--chiziq-kuchli` | `#e6e8ee` / `#dfe2ea` | Ajratuvchi va variant tugmasi chegarasi (forma maydoniga emas: fon ustida 1.30:1) |
-| `--chiziq-maydon` | = `--matn-sust` | Forma maydoni (input, select, textarea) chegarasi. WCAG 1.4.11 (kamida 3:1): fon ustida 6.27:1, `--fon-ikkinchi` ustida 5.80:1 (2026-11-09) |
+| `--chiziq` / `--chiziq-kuchli` | `#e6e8ee` / `#cfd3de` | Nozik ajratuvchi / karta va variant tugmasi chegarasi (forma maydoniga emas: fon ustida 1.50:1). 2026-11-10: `--chiziq-kuchli` to'qlashtirildi, kartalar fondan ajralsin |
+| `--chiziq-maydon` | = `--matn-sust` | Forma maydoni (input, select, textarea) chegarasi. WCAG 1.4.11 (kamida 3:1): fon ustida 5.40:1, `--fon-ikkinchi` ustida 5.00:1 (2026-11-10) |
 | `--matn` = `--qora` | `#0f1115` | Asosiy matn, qora sahna, karta chegarasi (1.5px) |
-| `--matn-ikkinchi` | `#4a5063` | Tavsiflar |
-| `--matn-sust` | `#5a6072` | Yorliqlar, izohlar |
+| `--matn-ikkinchi` | `#3f4556` | Tavsiflar (fon ustida 9.56:1) |
+| `--matn-sust` | `#636a7d` | Yorliqlar, izohlar (fon 5.40:1, `--fon-ikkinchi` 5.00:1, `--sirt-ikkinchi` 4.65:1). 2026-11-10: ikki kulrang matn darajasi aniq farqlansin deb ajratildi |
 | `--qora-sirt` / `--qora-chiziq` | `#1b1e26` / `#2a2e38` | Qora sahna ichidagi kartalar va chiziqlar |
 | `--qora-matn-ikkinchi` | `#b4b9c8` | Qora fondagi ikkinchi darajali matn |
 
 Qora sahna sahifada faqat bitta: bosh sahifadagi cho'qqi (muallif yo'li).
-Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`). Telefonda panel orqasidagi parda: `--parda`.
+Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`). Telefonda panel orqasidagi parda: `--parda`. Belgilangan matn (`::selection`): `--rang-asosiy` fon, oq matn (5.28:1).
 
 ### Qorong'i mavzu (2026-11-04, S1)
 
@@ -36,9 +36,11 @@ Matn ko'rinishidagi havola va ta'kid uchun `--rang-havola` (yorug'da `#4255ff`).
 | --- | --- |
 | `--fon`, `--sirt` | `#0f1115` |
 | `--fon-ikkinchi` | `#1b1e26` |
-| `--sirt-ikkinchi`, `--chiziq`, `--chiziq-kuchli` | `#2a2e38` |
+| `--sirt-ikkinchi` | `#2a2e38` |
+| `--chiziq` / `--chiziq-kuchli` | `#313540` / `#3b404d` (fon ustida 1.54:1 / 1.82:1; `--sirt-ikkinchi` ustida ham ko'rinadi) |
 | `--matn` | `#ffffff` |
-| `--matn-ikkinchi`, `--matn-sust`, `--chiziq-maydon` | `#b4b9c8` (maydon chegarasi fon ustida 9.64:1, `--fon-ikkinchi` ustida 8.50:1) |
+| `--matn-ikkinchi` | `#b4b9c8` (fon ustida 9.64:1) |
+| `--matn-sust`, `--chiziq-maydon` | `#9ca2b4` (fon ustida 7.42:1, `--fon-ikkinchi` 6.54:1, `--sirt-ikkinchi` 5.33:1) |
 | `--rang-asosiy` | `#4255ff` (fon sifatida, oq matn bilan) |
 | `--rang-havola` | `#8b97ff` (qora fondagi matn) |
 | `--rang-ogoh-fon` / `--rang-ogoh-matn` | `#33240f` / `#ffc98a` ("tekshirish kerak" yorlig'i; yorug'da `#fff4e5` / `#8a3b0a`). Oldingi `#1b1e26` / oq juftligi ogohlikni oddiy yorliqdan ajratmas edi |
@@ -53,6 +55,7 @@ Bitta oila: **Figtree** (Google Fonts, OFL litsenziya), `@fontsource-variable/fi
 
 | Token | O'lcham / qator | Qalinlik | Qayerda |
 | --- | --- | --- | --- |
+| `--matn-hero` | 64px / 1.04 (telefonda 40px) | 900 | Faqat bosh sahifa hero sarlavhasi |
 | `--matn-h1` | 46px / 1.12 (telefonda 34px) | 800 | Sahifa sarlavhasi |
 | `--matn-h2` | 32px / 1.2 (telefonda 26px) | 800 | Bo'lim sarlavhasi |
 | `--matn-h3` | 24px / 1.25 | 800 | Karta sarlavhasi |
@@ -63,6 +66,16 @@ Bitta oila: **Figtree** (Google Fonts, OFL litsenziya), `@fontsource-variable/fi
 
 Qator uzunligi 60–75 belgi (`max-width: 62ch`).
 
+Harf oralig'i (2026-11-10): sarlavhalarda manfiy, `em` da (o'lcham bilan birga o'zgaradi). Kodda xom `px` qiymat yozilmaydi.
+
+| Token | Qiymat | Qayerda |
+| --- | --- | --- |
+| `--oraliq-hero` | -0.025em | Hero va 56px dan katta sarlavha |
+| `--oraliq-sarlavha` | -0.02em | h1, h2 |
+| `--oraliq-kichik-sarlavha` | -0.01em | h3 |
+
+Bosh harfli ustki yorliqlarda musbat oraliq (0.06em) o'z joyida qoladi. Sarlavhalar `text-wrap: balance` (qatorlar teng sinadi), abzaslar `text-wrap: pretty` (oxirgi qatorda yolg'iz so'z qolmaydi); eski brauzerda oddiy sinish.
+
 ## Bo'shliq
 
 4 ga asoslangan shkala: `--b-1` 4px, `--b-2` 8px, `--b-3` 12px, `--b-4` 16px, `--b-5` 20px, `--b-6` 24px, `--b-8` 32px, `--b-10` 40px, `--b-14` 56px, `--b-16` 64px.
@@ -71,7 +84,28 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 ## Shakl va chuqurlik
 
 - Radius: `--r-kichik` 6px, `--r-logo` 10px, `--r-yon` 12px, `--r-orta` 16px, `--r-katta` 24px, `--r-toliq` 999px.
-- Soya: faqat bitta, `--soya` `0 4px 16px rgba(40,46,62,0.08)`. Faqat asosiy interaktiv karta (test, kartochka) uchun.
+- Soya: faqat bitta, `--soya` `0 4px 16px rgba(15,17,21,0.08)` (qorong'ida `rgba(0,0,0,0.4)`). Faqat asosiy interaktiv karta (test, kartochka) uchun.
+
+## Harakat
+
+Harakat faqat holat o'zgarishini bildiradi (hover, bosilish, ochilish, to'lish). Bezak uchun animatsiya qo'shilmaydi.
+
+| Token | Qiymat | Qayerda |
+| --- | --- | --- |
+| `--harakat-tez` | 120ms | Hover va bosilish: rang, fon, chegara, soya, ko'tarilish |
+| `--harakat-orta` | 220ms | Panel ochilishi, progress to'lishi, pog'ona holati |
+| `--harakat-sekin` | 400ms | Sekin paydo bo'lish (lift yozuvi) |
+| `--harakat-egri` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Hamma o'tish uchun bitta egri chiziq |
+| `--kotarilish` | `translateY(-2px)` | Bosiladigan karta hover |
+| `--bosilish` | `translateY(1px)` | Tugma `:active` |
+
+- **Umumiy qoida** (`global.css`): `a`, `button`, `summary` va `.variant` da rang, fon, chegara, soya va `transform` `--harakat-tez` bilan almashadi. Komponentda alohida `transition` yozish faqat boshqa xossa (kenglik, shaffoflik) yoki boshqa davomiylik kerak bo'lganda, va faqat tokenlar bilan. Xom `.15s`, `ease` yozilmaydi.
+- **Tugma**: hover fon ozgina to'qroq, `:active` da `--bosilish`.
+- **Bosiladigan karta** (chegarali, mustaqil blok): hover chegara `--rang-asosiy` + `--kotarilish`. Soya qo'shilmaydi; bor bo'lsa faqat `--soya`. Istisno: bosh sahifadagi bo'lim kartasi va Topshirish yo'li kartasi qora ofset soyani saqlaydi (pastga qarang).
+- **Javob varianti va ro'yxat qatori**: faqat chegara yoki fon rangi, ko'tarilish yo'q (o'qish paytida joyidan qimirlamaydi).
+- Hover faqat bosiladigan elementga beriladi. Sensorli ekranda (`hover: none`) `--kotarilish` `none`: karta bosilgandan keyin ko'tarilib qolmaydi. Fokus halqasi (3px `--rang-asosiy`) o'tishsiz, darhol chiqadi.
+- **3D sahna** (Topshirish yo'li pog'onalari, karta aylanishi): o'z davomiyligi (0.3–0.8s) qoladi, egri chiziq `--harakat-egri`.
+- **`prefers-reduced-motion: reduce`**: hamma `transition` va `animation` o'chadi (`global.css` oxiri), `--kotarilish` va `--bosilish` `none` bo'ladi (`tokens.css`). Holat rangi baribir almashadi, faqat darhol.
 
 ## Komponentlar
 
@@ -99,10 +133,11 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
   - **MRZ qatori**: faqat sahifa oxiri blokida, `--fon-ikkinchi` lentada ikki qator `TAYANCH<<TOP<ADMISSION<<<…`, Figtree 700, harf oralig'i 0.22em, `aria-hidden`. Shaxsiy ma'lumot yo'q.
   - **Savol progressi** (Topshirish yo'lidagi 3D zinapoya) va **Zina** (qavatlar orasidagi tekis kartalar) har xil ko'rinadi va har xil yozilgan; ularni adashtirmaslik kerak.
   - Topshirish yo'lida asosiy yo'l kartasi qora (qorong'ida `--fon-ikkinchi` + 2px `--rang-havola` chegara); kartaning orqa yuzi pasport sahifasi (to'r fon, muhrli faktlar, "tekshirish kerak" yorliqlari).
-- **Hisob va to'lov sahifalari** (2026-11-08, ADR `docs/qarorlar/001-hisob-tolov-server.md`). Umumiy kirish va profil 1-qavatda (o'zbekcha), SAT tarif sahifalari inglizcha. Yangi rang yo'q, faqat mavjud tokenlar. Qizil yoki yashil ta'kid taqiqi bu yerda ham amal qiladi: xato ham, muvaffaqiyat ham rang bilan emas, matn va ikonka bilan aytiladi.
+- **Hisob va to'lov sahifalari** (2026-11-08, ADR `docs/qarorlar/001-hisob-tolov-server.md`). Umumiy kirish va profil 1-qavatda (o'zbekcha), SAT tarif sahifalari inglizcha. Yangi rang yo'q, faqat mavjud tokenlar (yagona istisno: Google tugmasi, pastda). Qizil yoki yashil ta'kid taqiqi bu yerda ham amal qiladi: xato ham, muvaffaqiyat ham rang bilan emas, matn va ikonka bilan aytiladi.
   - **Forma maydoni**: ko'rinib turadigan `<label>` maydon ustida (placeholder yorliq o'rnini bosmaydi). Balandlik kamida 48px, `--sirt` fon, 2px `--chiziq-maydon` chegara (`--chiziq-kuchli` emas: u 3:1 ga yetmaydi), `--r-orta`, matn `--matn-asosiy`. Fokus: 3px `--rang-asosiy` chegara. To'g'ri `type` va `autocomplete` (`email`, `current-password`, `new-password`). Yordamchi matn maydon ostida `--matn-ikkinchi`, `aria-describedby` bilan bog'lanadi.
   - **Xato xabari**: maydon ostida, ogohlik juftligi (`--rang-ogoh-fon` / `--rang-ogoh-matn`), `--r-kichik`, ogohlik ikonkasi (inline SVG) va matn. Maydonga `aria-invalid="true"` va `aria-describedby`. Forma yuborilganda xatolar ro'yxati tepada `role="alert"` bilan, fokus unga o'tadi. Xato faqat rang bilan ko'rsatilmaydi. Matn nima qilishni aytadi ("Email manzilida @ belgisi yo'q"), aybdor qilmaydi.
   - **Parol maydoni**: forma maydoni qoidalari + "Ko'rsatish" / "Show" tugmasi (`<button type="button">`, `aria-pressed`, maydon ichida o'ngda, 48px). Talablar (uzunlik) maydon ostida oldindan yoziladi. Nusxa qo'yish (paste) taqiqlanmaydi.
+  - **Google tugmasi** (`GoogleTugma.astro`, P03B, 2026-11-09; muallif tasdiqlagan istisno): Google brend qoidalari bo'yicha (developers.google.com/identity/branding-guidelines, tekshirildi 2026-11-09), sayt palitrasidan tashqari. Rangli standart G logosi rasmiy SVG'dan o'zgarishsiz (monoxrom taqiq), 20px, matndan oldin. Ranglar faqat shu tugmada, `--google-*` tokenlari: yorug'da fon `#FFFFFF`, 1px chegara `#747775`, matn `#1F1F1F`; qorong'ida `#131314`, `#8E918F`, `#E3E3E3`. Kontrast: matn 16.5:1 / 14.5:1, chegara karta ustida 4.5:1 / 5.9:1. 48px, to'liq yumaloq (`--r-toliq`), to'liq kenglik, logo va matn orasi 10px. Hover: `--google-hover` holat qatlami (ichki soya; Google qiymati emas, o'zimizniki). Fokus: saytning umumiy fokus halqasi. Matn "Google bilan davom etish" (Google'ning "Continue with Google" varianti; o'zbekcha tarjima muallif tekshiradi). **Og'ish**: shrift Google Sans Medium 14/20 emas, sayt shrifti 500, `--matn-asosiy` (sayt tugmalari bilan bir xil o'lcham; brend qoidasidan kichik og'ish, muallif tasdiqlagan). Bosilganda "Kuting…" va o'chiq; Google'dan "Orqaga" bilan qaytilsa (`pageshow`) tiklanadi.
   - **Kvota ko'rsatkichi** (Free tarifda): Progress komponenti (8px, `--r-toliq`, to'ldirish `--rang-asosiy`) + matn "ishlatilgan / jami" ko'rinishida (kvota raqamlari hali belgilanmagan). Kvota tugaganda rang o'zgarmaydi; ostida matn va Pro tariflar sahifasiga `<a>` havola. `role="progressbar"` bilan `aria-valuenow`/`aria-valuemax` yoki oddiy matn.
   - **To'lov usuli tugmasi** (Click, Payme, UzCard/HUMO): radio guruhi sifatida (`<fieldset>` + `<legend>`, har biri `<input type="radio">` va `<label>`), Variant tugmasi ko'rinishida: 56px, 2px `--chiziq-kuchli`, `--r-orta`. Tanlangani 2px `--rang-asosiy` chegara va belgi ikonkasi. Usul nomi matn bilan yoziladi; to'lov tizimlari logotiplari faqat ularning rasmiy brend qoidalari tekshirilgandan keyin. Pastda bitta asosiy tugma "To'lash" / "Pay", summa tugma yonida yoziladi. Karta raqami Tayanch sahifasida so'ralmaydi (to'lov inPAY sahifasida).
 - **SAT bo'limi inglizcha matnlari** (2026-11-08, SAT matni inglizcha): muhr ichida "TEKSHIRILGAN" o'rniga **VERIFIED** va sana; "tekshirish kerak" yorlig'i o'rniga **needs verification**; footerdagi "Natija kafolatlanmaydi" o'rniga **Results are not guaranteed**; "Namuna" o'rniga **Sample**. Ko'rinish va qoidalar o'zbekcha variant bilan bir xil. SAT sahifalarida `<html lang="en">` (qolip vazifasi). Inglizcha matnni muallif tekshiradi.
