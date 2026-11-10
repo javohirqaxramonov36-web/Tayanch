@@ -20,6 +20,8 @@ h2 { font-size: var(--matn-h2); line-height: 1.2; letter-spacing: var(--oraliq-s
 h3 { font-size: var(--matn-h3); line-height: 1.25; letter-spacing: var(--oraliq-kichik-sarlavha); }
 p { margin: 0; text-wrap: pretty; }
 
+::selection { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+
 a { color: inherit; text-underline-offset: 0.15em; }
 a:focus-visible, button:focus-visible, summary:focus-visible {
   outline: 3px solid var(--rang-asosiy);
