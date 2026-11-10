@@ -1,6 +1,7 @@
 // inpay-webhook: inPAY v2 hodisalarini qabul qiladi (payment.succeeded, payment.failed, payment.canceled, ...).
 //
-// 1. Imzo (X-Inpay-Signature, 5 daqiqa) xom tana bo'yicha tekshiriladi. O'tmasa: 400/401, bazaga hech narsa yozilmaydi.
+// 1. Imzo (X-Inpay-Signature, 5 daqiqa) xom tana bo'yicha tekshiriladi. O'tmasa (yo'q, eskirgan yoki noto'g'ri): 401,
+//    bazaga hech narsa yozilmaydi. Imzo tekshirilmasdan tana parse ham qilinmaydi.
 // 2. Hodisa butunligicha payment_apply_event ga beriladi: bitta tranzaksiyada payment_events (evt_ id unique),
 //    payments, subscriptions, audit_log. Takror hodisa "duplicate", hech narsa o'zgarmaydi.
 // 3. Javob: qayta ishlansa yoki xato bilan saqlansa 200 (inPAY qayta yubormaydi); baza xatosida 500 (inPAY
@@ -13,8 +14,8 @@ import type { RpcNatija } from '../_shared/turlar.ts';
 export const MAKS_TANA_BAYT = 64 * 1024;
 
 const IMZO_XATOLARI: Record<Exclude<ImzoNatijasi, 'ok'>, [number, string]> = {
-  sarlavha_yoq: [400, 'signature_missing'],
-  eskirgan: [400, 'signature_expired'],
+  sarlavha_yoq: [401, 'signature_missing'],
+  eskirgan: [401, 'signature_expired'],
   notogri: [401, 'signature_invalid'],
 };
 

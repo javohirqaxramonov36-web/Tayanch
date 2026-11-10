@@ -309,9 +309,9 @@ export const manbalar: Manba[] = [
     nomi: 'inpay-python (rasmiy Python SDK)',
     tashkilot: 'inPAY',
     havola: 'https://pypi.org/project/inpay-python/',
-    tekshiruvDarajasi: 'tekshirilmagan',
-    tekshirilganSana: '2026-11-08',
-    izoh: "Tekshirilmoqda: sahifa 2026-11-08 da bu mashinadan to'liq ochilmadi. REST hujjati topilmagan.",
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-10',
+    izoh: "1.0.1 manba kodi (webhook.py, models.py, client.py) o'qildi: API v1 uchun (/api/v1/create/, /api/v1/transactions/). Webhook X-InPAY-Signature = hex(HMAC-SHA256(xom tana, webhook secret)), ixtiyoriy 'sha256=' prefiksi, vaqt tamg'asi yo'q, hmac.compare_digest; tana maydonlari event, order_id, amount, status ('success' = to'langan), payment_method. Tayanch v2 (IP03) ni ishlatadi, bu format qo'llanmaydi.",
   },
   {
     id: 'IP03',

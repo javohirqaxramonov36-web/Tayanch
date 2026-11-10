@@ -9,7 +9,8 @@
 // SQL funksiya payment_apply_event orqali qo'llanadi (summa, valyuta, livemode, metadata tekshiruvi, obuna,
 // audit_log shu yerda; takror chaqiruv idempotent). Brauzer obunani hech qachon o'zi yoqmaydi.
 // Boshqa foydalanuvchining to'lovi so'ralsa javob "topilmadi" bilan bir xil (borligi oshkor qilinmaydi).
-import { type HolatNatijasi, inpayHolatiniOgir, kassaFaolEmasmi, type TayanchHolat } from '../_shared/inpay.ts';
+import type { HolatNatijasi, TayanchHolat } from '../_shared/inpay.ts';
+import { inpaydanQolla } from '../_shared/tolovQollash.ts';
 import { bearerToken, corsSarlavhalari, jsonJavob } from '../_shared/http.ts';
 import type { RpcNatija } from '../_shared/turlar.ts';
 
@@ -71,42 +72,9 @@ export async function inpayHolat(req: Request, d: HolatBogliqlik): Promise<Respo
   // Yakuniy holat yoki inPAY id si hali yo'q (created): inPAY'ga so'rov kerak emas.
   if (holat !== 'pending' || tolov.status !== 'pending') return javob(200, { status: holat });
 
-  const natija = await d.inpayHolat(tolov.provider_order_id);
-  if (!natija.ok) {
-    d.jurnal(kassaFaolEmasmi(natija.code) ? 'inPAY kassasi faol emas (merchant_inactive)' : 'inPAY holati olinmadi', {
-      payment_id: tolov.id,
-      kod: natija.code,
-      http: natija.httpStatus,
-      request_id: natija.requestId,
-    });
-    return javob(200, { status: 'pending' });
-  }
-
-  const inpay = natija.tolov;
-  if (inpay.id !== tolov.provider_order_id) {
-    d.jurnal('inPAY boshqa to\'lovni qaytardi', { payment_id: tolov.id });
-    return javob(200, { status: 'pending' });
-  }
-  if (inpayHolatiniOgir(inpay.status) === 'pending') return javob(200, { status: 'pending' });
-
-  // Webhook hodisasi shaklida (payment_apply_event kutgan tuzilma). id barqaror: takror so'rov 'duplicate' bo'ladi.
-  const hodisa = {
-    id: `poll_${inpay.id}_${inpay.status}`,
-    type: `payment.${inpay.status}`,
-    livemode: inpay.livemode,
-    source: 'inpay-holat',
-    data: { object: inpay },
-  };
-  const qollash = await d.rpc('payment_apply_event', { p_event: hodisa });
-  if (qollash.error) {
-    d.jurnal('payment_apply_event xatosi', { payment_id: tolov.id, kod: qollash.error.code });
-    return javob(200, { status: 'pending' });
-  }
-  const r = qollash.data as { result?: unknown; error?: unknown } | null;
-  if (r?.result === 'error') {
-    // Masalan amount_mismatch yoki livemode_mismatch: obuna berilmaydi, muallif qo'lda ko'radi.
-    d.jurnal('to\'lov qo\'llanmadi', { payment_id: tolov.id, sabab: r.error });
-  }
+  // inPAY'dan o'qish va yakuniy bo'lsa qo'llash (inpay-muvofiqlash bilan umumiy). Natija baribir bazadan o'qiladi.
+  const q = await inpaydanQolla(tolov, d);
+  if (q.holat !== 'qollandi') return javob(200, { status: 'pending' });
 
   // Yakuniy javob bazadan (qo'llangandan keyingi holat).
   const keyin = await d.tolovOl(tolov.id);

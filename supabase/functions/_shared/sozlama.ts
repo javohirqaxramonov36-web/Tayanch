@@ -1,7 +1,8 @@
 // Edge Function sozlamasi muhit o'zgaruvchilaridan. Qiymatlar hech qachon logga yozilmaydi, faqat NOMLARI.
 //
 // Supabase o'zi beradi: SUPABASE_URL, SUPABASE_SECRET_KEYS (yangi), SUPABASE_SERVICE_ROLE_KEY (eski, hali beriladi).
-// Muallif Supabase Secrets'ga qo'yadi: INPAY_SECRET_KEY (sk_test_… / sk_live_…), INPAY_WEBHOOK_SECRET (whsec_…).
+// Muallif Supabase Secrets'ga qo'yadi: INPAY_SECRET_KEY (sk_test_… / sk_live_…), INPAY_WEBHOOK_SECRET (whsec_…),
+// MUVOFIQLASH_SECRET (inpay-muvofiqlash ni chaqirish uchun, o'zi yaratgan tasodifiy satr).
 // Ixtiyoriy (maxfiy emas): SAYT_URL, TOLOV_ORIGINLAR (vergul bilan).
 
 export const STANDART_SAYT_URL = 'https://javohirqaxramonov36-web.github.io/Tayanch';
@@ -16,6 +17,7 @@ export interface Sozlama {
   serviceKey?: string;
   inpaySecretKey?: string;
   inpayWebhookSecret?: string;
+  muvofiqlashSecret?: string;
   saytUrl: string;
   originlar: string[];
 }
@@ -51,6 +53,7 @@ export function sozlamaniOl(o: MuhitOquvchi): Sozlama {
     serviceKey: serviceKalit(o),
     inpaySecretKey: o('INPAY_SECRET_KEY') || undefined,
     inpayWebhookSecret: o('INPAY_WEBHOOK_SECRET') || undefined,
+    muvofiqlashSecret: o('MUVOFIQLASH_SECRET') || undefined,
     saytUrl: (o('SAYT_URL') || STANDART_SAYT_URL).replace(/\/+$/, ''),
     originlar: originlar.length ? originlar : [...STANDART_ORIGINLAR],
   };
@@ -72,6 +75,7 @@ export function yetishmaydi(s: Sozlama, kerak: ReadonlyArray<keyof Sozlama>): st
     ['serviceKey', 'SUPABASE_SECRET_KEYS | SUPABASE_SERVICE_ROLE_KEY'],
     ['inpaySecretKey', 'INPAY_SECRET_KEY'],
     ['inpayWebhookSecret', 'INPAY_WEBHOOK_SECRET'],
+    ['muvofiqlashSecret', 'MUVOFIQLASH_SECRET'],
   ]);
   const xato = kerak.filter((k) => !s[k]).map((k) => nomlar.get(k) ?? String(k));
   if (kerak.includes('inpaySecretKey') && s.inpaySecretKey && !inpayKalitRejimi(s.inpaySecretKey)) {
