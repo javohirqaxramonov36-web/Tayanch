@@ -216,6 +216,20 @@ export const satGuruhlar: SatGuruh[] = [
       },
     ],
   },
+  {
+    nomi: 'Account',
+    sahifalar: [
+      {
+        qism: 'hisob/obuna/',
+        tayyor: true,
+        nomi: 'Plans',
+        tavsif: 'Choose a SAT plan and pay through inPAY. Each payment covers one prepaid period; nothing renews automatically.',
+        turi: 'vosita',
+        manbalar: ['IP03'],
+        tekshirilmagan: ['Prices and usage limits are not set yet.'],
+      },
+    ],
+  },
 ];
 
 export const satSahifalar: SatSahifa[] = satGuruhlar.flatMap((g) => g.sahifalar);
@@ -252,6 +266,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/obuna/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 

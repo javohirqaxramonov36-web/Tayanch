@@ -312,7 +312,10 @@ inPAY ── POST inpay-webhook (X-Inpay-Signature) ─> imzo, 5 daqiqa ─> pay
            payment_events (evt_ id unique) ─> summa, UZS, livemode, metadata.payment_id ─> payments: paid ─> subscriptions ─> audit_log
 ```
 
-- **Brauzer to'lovni tasdiqlay olmaydi**: `paid` va obunani faqat imzosi tekshirilgan webhook yozadi. `return_url` (`/uz/sat/hisob/tolov/?tolov=<id>`, sahifa hali yo'q) faqat `payments.status` ni o'qiydi.
+- **Brauzer to'lovni tasdiqlay olmaydi**: `paid` va obunani faqat server yozadi: imzosi tekshirilgan webhook yoki `inpay-holat` (P20). `inpay-holat` inPAY'dan `GET /payments/{id}` bilan o'qiydi (IP03: webhook kelmasa shu bilan tekshiriladi) va natijani webhook bilan bir xil `payment_apply_event` ga `poll_<inpay id>_<status>` hodisa id si bilan beradi (summa, valyuta, livemode, metadata tekshiruvi o'sha yerda; takror chaqiruv `duplicate`). `return_url`: `/uz/sat/hisob/tolov-natija/?tolov=<id>`; sahifa `inpay-holat` ni 3 soniyada bir, 60 soniyagacha so'raydi.
+- **Takror bosish**: `tolov-yaratish` shu foydalanuvchi va tarif uchun 30 daqiqa ichida ochilgan `pending` to'lov bo'lsa (kalit rejimi bir xil), yangisini yaratmaydi, o'sha `checkout_url` ni qaytaradi. inPAY checkout havolasining amal muddati hujjatda yo'q: tekshirish kerak.
+- **Summa**: so'rov tanasida `amount`, `amount_uzs`, `price`... bo'lsa `400 amount_not_allowed`. Davr: hozir faqat `oylik` (`plans.period_days`); boshqasi `409 period_not_available` (3 oylik narx P19 da).
+- **Kassa faol emas** (`merchant_inactive`): brauzerga `503 payments_unavailable`, logda aniq sabab (kalitsiz).
 - **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. Hozir ikkalasi `null` va `pro`/`elite` faol emas (P19), shuning uchun `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
 - **Obuna muddati**: to'lov yaratilgan paytdagi `period_days` (`payments.raw.tayanch`). Shu tarifda faol obuna bo'lsa, yangisi uning oxiridan boshlanadi. Takroriy (avto) to'lov yo'q: har davr yangi to'lov. v2'da "Obunalar" bo'limi bor (IP03), keyingi vazifa.
 - **Holatlar**: `created → pending → paid | failed | canceled`. `failed` yoki `canceled` dan keyin `payment.succeeded` kelsa `paid` bo'ladi (pul olingan). `paid` yakuniy.
@@ -348,6 +351,7 @@ select received_at, event_id, provider_order_id, error from public.payment_event
 supabase db push --remote
 supabase functions deploy tolov-yaratish --no-verify-jwt --use-api
 supabase functions deploy inpay-webhook --no-verify-jwt --use-api
+supabase functions deploy inpay-holat --no-verify-jwt --use-api
 ```
 
 JWT tekshiruvi ikkala funksiyada o'chiq: `inpay-webhook` ga inPAY Supabase JWT yubormaydi (imzo bilan tekshiriladi); `tolov-yaratish` foydalanuvchini kod ichida `auth.getUser` bilan tekshiradi. Bu `supabase/config.toml` da yozilgan (`[functions.tolov-yaratish]`, `[functions.inpay-webhook]`: `verify_jwt = false`), shuning uchun bayroqsiz `supabase functions deploy <nom>` ham shunday deploy qilishi kerak (Supabase CLI config hujjati; CLI 3.0.0 da sinalmagan, tekshirish kerak). `--no-verify-jwt` zaxira sifatida buyruqda qoladi: natija bir xil. `--use-api`: Docker kerak emas. `supabase config diff` / `config push` bu bo'limlarni ko'rsatadimi yoki o'tkazib yuboradimi: tekshirish kerak. Manzillar: `https://uvwejvjrsswssgydwevm.supabase.co/functions/v1/<nom>`.
@@ -362,4 +366,4 @@ npm run funksiyalar:tekshir   # Deno: imzo, inPAY mijozi, ikkala funksiya oqimi;
 ```
 
 - **Sinalgan (2026-11-09, lokal)**: SQL sinovlari (OK 16–20) va 3 ta ataylab buzish (summa tekshiruvi, takror hodisa, huquq) ushlandi; Deno testlari 29/29; `index.ts` supabase-js 2.118.0 bilan tur tekshiruvidan o'tdi; handler'lar vaqtinchalik Postgres'dagi haqiqiy SQL funksiyalari bilan birga (inPAY soxta): created → pending → paid, 30 kunlik obuna, takror webhook, soxta imzo.
-- **Sinalmagan (tekshirish kerak)**: Supabase'ga deploy, PostgREST orqali `rpc()` (lokal sinovda psql), haqiqiy inPAY (sinov kaliti bilan to'lov, webhook kelishi va imzo formati), `SUPABASE_SECRET_KEYS` tuzilishi, brauzerdan CORS, `/uz/sat/hisob/tolov/` sahifasi (hali yo'q).
+- **Sinalmagan (tekshirish kerak)**: Supabase'ga deploy, PostgREST orqali `rpc()` (lokal sinovda psql), haqiqiy inPAY (sinov kaliti bilan to'lov, webhook kelishi va imzo formati), `SUPABASE_SECRET_KEYS` tuzilishi, brauzerdan CORS, `/uz/sat/hisob/obuna/` va `/uz/sat/hisob/tolov-natija/` haqiqiy sessiya bilan (P20, faqat soxta holatda ko'rilgan).
