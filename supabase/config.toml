@@ -29,6 +29,32 @@ minimum_password_length = 8
 # Email tasdiqlash majburiy.
 enable_confirmations = true
 
+# Xat shablonlari (P28, 2026-11-09): o'zbekcha, hisob sahifalari 1-qavatda. Faqat ishlatiladigan uchtasi.
+# Havola {{ .ConfirmationURL }} o'zgarmagan (redirect_to shu orqali o'tadi).
+[auth.email.template.confirmation]
+subject = "Tayanch: emailingizni tasdiqlang"
+content_path = "./supabase/templates/tasdiqlash.html"
+
+[auth.email.template.recovery]
+subject = "Tayanch: yangi parol o'rnating"
+content_path = "./supabase/templates/parol-tiklash.html"
+
+[auth.email.template.email_change]
+subject = "Tayanch: yangi emailni tasdiqlang"
+content_path = "./supabase/templates/email-almashtirish.html"
+
+# O'z SMTP (P28): Gmail SMTP, alohida Gmail hisobi va App Password bilan (muallifda domen yo'q, 2026-11-09).
+# Hammasi Dashboard'da (supabase/README.md 2.4-bo'lim). Blok izohda qoladi: yoqilgan holda o'zgaruvchisiz
+# `config push` parolni bo'sh yozishi mumkin (tekshirish kerak).
+# [auth.email.smtp]
+# enabled = true
+# host = "smtp.gmail.com"
+# port = 465
+# user = "<sayt uchun Gmail>"
+# pass = "env(SUPABASE_AUTH_SMTP_PASS)"
+# admin_email = "<sayt uchun Gmail>"
+# sender_name = "Tayanch"
+
 # Edge Function'lar (inPAY to'lovi, PR #62; supabase/README.md 10-bo'lim). `supabase functions deploy` o'qiydi.
 # inpay-webhook: inPAY Supabase JWT yubormaydi, so'rov X-Inpay-Signature imzosi bilan tekshiriladi.
 [functions.inpay-webhook]
