@@ -1,6 +1,6 @@
 # 002. Google bilan kirish (P03B)
 
-- **Holat**: qabul qilingan (spetsifikatsiya muallif tasdiqlagan, 2026-11-09). Kod: branch `sat-google-login`.
+- **Holat**: qabul qilingan (spetsifikatsiya muallif tasdiqlagan, 2026-11-09). Kod: branch `sat-google-login`. Google provider Supabase'da yoqilgan va haqiqiy Google bilan lokal dev'da sinalgan (2026-11-10, pastda "Sinov").
 - **Bog'liq**: `001-hisob-tolov-server.md` (bitta hisob, Supabase Auth), `supabase/README.md` 2.5 (sozlash qadamlari).
 - **Joy**: hisob sahifalari 1-qavatda (`/uz/hisob/`, o'zbekcha; PR #61). Spetsifikatsiyada `/uz/sat/hisob/` (inglizcha) edi, hisob ko'chgani uchun shu yerga moslandi.
 
@@ -31,7 +31,7 @@
 | Tarmoq | P03 matni ("Serverga ulanib bo'lmadi…") |
 | Boshqa | Google orqali kirib bo'lmadi. Qayta urinib ko'ring. |
 
-Bekor qilinganda Supabase `error=access_denied` ni redirect manziliga query'da uzatishi: **tekshirish kerak** (haqiqiy Google bilan).
+Bekor qilinganda Supabase `error=access_denied` ni redirect manziliga query'da (va hash'da) uzatadi: Supabase `/auth/v1/callback` ga Google javobi `?error=access_denied&state=…` qo'lda yuborilganda 302 → `…/uz/hisob/callback/?error=access_denied&error_description=#error=access_denied` (2026-11-10). Google sahifasidagi haqiqiy "Cancel" tugmasi bosilmagan: ruxsat avval berilgan hisoblarda Google ruxsat ekranini ko'rsatmadi.
 
 ## Rozilik darvozasi
 
@@ -45,7 +45,7 @@ Bekor qilinganda Supabase `error=access_denied` ni redirect manziliga query'da u
 
 - Supabase avtomatik linking: bir xil email → bitta foydalanuvchi; **tasdiqlanmagan** identity'lar olib tashlanadi (supabase.com/docs/guides/auth/auth-identity-linking, 2026-11-09).
 - Holat: kimdir boshqa odamning email'i bilan email/parol hisob ochib, tasdiqlamay qoldirsa, haqiqiy egasi Google bilan kirganda tasdiqlanmagan parol identity'si o'chirilishi kerak (hujjat mazmuni). Bu yo'l hujjatda batafsil yozilmagan: **tekshirish kerak** (haqiqiy sinov: tasdiqlanmagan email/parol → keyin shu email bilan Google → parol bilan kirib bo'lmasligi).
-- Tasdiqlangan email/parol + keyin Google (bir xil email): bitta hisob, ikkala usul ishlaydi (kutilgan; sinalmagan).
+- Tasdiqlangan email/parol + keyin Google (bir xil email): bitta hisob, `auth.identities` da `email` va `google` (sinalgan 2026-11-10). Bog'langandan keyin parol bilan kirish: sinalmagan.
 
 ## Ma'lumot
 
@@ -56,3 +56,16 @@ Bekor qilinganda Supabase `error=access_denied` ni redirect manziliga query'da u
 
 - "Testing" holatida 100 tagacha test foydalanuvchi va ruxsat 7 kunda tugashi mumkin; faqat asosiy scope'li ilovalarga bu cheklovlarning bir qismi taalluqli emas (support.google.com/cloud/answer/15549945): **tekshirish kerak**.
 - "Publish app" (In production): P28 ro'yxatida.
+
+## Sinov (2026-11-10, lokal dev `localhost:4321`, muallif o'zi bosdi va Google'ga o'zi kirdi)
+
+Provider: `/auth/v1/settings` da `external.google: true`, `/auth/v1/authorize?provider=google` 302 → `accounts.google.com`. Baza faqat o'qib tekshirildi (`supabase db query --remote --read-only`, email chiqarilmadi).
+
+| Ssenariy | Natija |
+| --- | --- |
+| Yangi Google hisobi (test user) → callback → `/uz/hisob/rozilik/` → "Davom etish" → `keyin` | Sinalgan. Yangi foydalanuvchi, identity faqat `google`, `profiles.consent_version` = `2026-11-09`, `consent_at` bor, `display_name` to'ldi. Bu urinish `?keyin=` siz boshlangan: standart profilga qaytdi. |
+| Chiqish → `kirish/?keyin=/Tayanch/uz/sat/` → Google → callback | Sinalgan. Rozilik qayta so'ralmadi, to'g'ri `/Tayanch/uz/sat/` ochildi; `tayanch:auth-code-verifier` va `tayanch:hisob-keyin` tozalangan. |
+| Bekor qilish (`error=access_denied`) | Qisman: Supabase callback'i xatoni sahifaga uzatadi (yuqorida), sahifa "Google orqali kirishni bekor qildingiz." (`role="alert"`) va "Qayta urinish" (kirish `?keyin=` bilan) ko'rsatadi. Google'dagi haqiqiy "Cancel" bosilmagan. |
+| Tasdiqlangan email/parol hisobi bilan bir xil email | Sinalgan: bitta foydalanuvchi, identity'lar `email` + `google`; rozilik bir marta yozildi. Keyin parol bilan kirish sinalmagan. |
+
+Sinalmagan: saytda (GitHub Pages, merge'dan keyin), telefon, tasdiqlanmagan email/parol + Google (yuqoridagi xavf), muddati o'tgan kod xatosi, Google'dagi haqiqiy "Cancel".
