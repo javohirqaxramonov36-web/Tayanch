@@ -9,12 +9,15 @@
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
     "repo:tekshir": "node scripts/repo-tekshir.mjs",
+    "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'",
+    "savol-banki:sinov": "node --test 'src/lib/testlar/*.test.ts'",
     "db:tekshir": "bash scripts/rls-tekshir.sh"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
     "@supabase/supabase-js": "^2.119.0",
     "astro": "^7.4.5",
+    "katex": "^0.19.1",
     "three": "0.186.1"
   }
 }

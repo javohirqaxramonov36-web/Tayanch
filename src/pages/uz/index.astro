@@ -8,6 +8,8 @@ import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
 import Zina from '../../components/Zina.astro';
+import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
+import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
 
 const sochilgan = [
   { t: 'IELTS', x: 4, y: 6, r: -6 },
@@ -34,6 +36,11 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
     "Timeline bosqichlarining tartibi va yillari muallif tomonidan to'liq tasdiqlanishi kerak",
   ]}
 >
+  <YolBelgisi slot="bosh" />
+
+  <!-- 0. Shaxsiy yo'l xaritasi (Navigator onboarding): faqat saqlangan profil bo'lsa ko'rinadi -->
+  <YolXaritasi />
+
   <!-- 1. Muammo -->
   <section class="ichki muammo" aria-labelledby="s1">
     <div class="muammo-matn">
@@ -76,7 +83,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
       </ol>
       <div class="vadalar">
         <p><strong>Rasmiy manba bilan.</strong> Har qoida va muddat yonida manba havolasi va tekshirilgan sana.</p>
-        <p><strong>Ro'yxatsiz va to'lovsiz.</strong> Kiritgan narsangiz faqat brauzeringizda qoladi.</p>
+        <p><strong>Ro'yxatsiz va to'lovsiz.</strong> Kiritgan narsangiz brauzeringizda qoladi. Ixtiyoriy hisobga kirsangiz, yo'l xaritangiz hisobingizda ham saqlanadi.</p>
         <p><strong>Halol.</strong> Natija kafolatlanmaydi. Uydirma raqam va sharh yo'q.</p>
       </div>
     </div>
