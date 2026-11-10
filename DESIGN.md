@@ -73,6 +73,27 @@ Kontent kengligi: `--kenglik` 1200px, yon chekka 20px. Bo'limlar orasi: 56–64p
 - Radius: `--r-kichik` 6px, `--r-logo` 10px, `--r-yon` 12px, `--r-orta` 16px, `--r-katta` 24px, `--r-toliq` 999px.
 - Soya: faqat bitta, `--soya` `0 4px 16px rgba(40,46,62,0.08)`. Faqat asosiy interaktiv karta (test, kartochka) uchun.
 
+## Harakat
+
+Harakat faqat holat o'zgarishini bildiradi (hover, bosilish, ochilish, to'lish). Bezak uchun animatsiya qo'shilmaydi.
+
+| Token | Qiymat | Qayerda |
+| --- | --- | --- |
+| `--harakat-tez` | 120ms | Hover va bosilish: rang, fon, chegara, soya, ko'tarilish |
+| `--harakat-orta` | 220ms | Panel ochilishi, progress to'lishi, pog'ona holati |
+| `--harakat-sekin` | 400ms | Sekin paydo bo'lish (lift yozuvi) |
+| `--harakat-egri` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Hamma o'tish uchun bitta egri chiziq |
+| `--kotarilish` | `translateY(-2px)` | Bosiladigan karta hover |
+| `--bosilish` | `translateY(1px)` | Tugma `:active` |
+
+- **Umumiy qoida** (`global.css`): `a`, `button`, `summary` va `.variant` da rang, fon, chegara, soya va `transform` `--harakat-tez` bilan almashadi. Komponentda alohida `transition` yozish faqat boshqa xossa (kenglik, shaffoflik) yoki boshqa davomiylik kerak bo'lganda, va faqat tokenlar bilan. Xom `.15s`, `ease` yozilmaydi.
+- **Tugma**: hover fon ozgina to'qroq, `:active` da `--bosilish`.
+- **Bosiladigan karta** (chegarali, mustaqil blok): hover chegara `--rang-asosiy` + `--kotarilish`. Soya qo'shilmaydi; bor bo'lsa faqat `--soya`. Istisno: bosh sahifadagi bo'lim kartasi va Topshirish yo'li kartasi qora ofset soyani saqlaydi (pastga qarang).
+- **Javob varianti va ro'yxat qatori**: faqat chegara yoki fon rangi, ko'tarilish yo'q (o'qish paytida joyidan qimirlamaydi).
+- Hover faqat bosiladigan elementga beriladi. Sensorli ekranda (`hover: none`) `--kotarilish` `none`: karta bosilgandan keyin ko'tarilib qolmaydi. Fokus halqasi (3px `--rang-asosiy`) o'tishsiz, darhol chiqadi.
+- **3D sahna** (Topshirish yo'li pog'onalari, karta aylanishi): o'z davomiyligi (0.3–0.8s) qoladi, egri chiziq `--harakat-egri`.
+- **`prefers-reduced-motion: reduce`**: hamma `transition` va `animation` o'chadi (`global.css` oxiri), `--kotarilish` va `--bosilish` `none` bo'ladi (`tokens.css`). Holat rangi baribir almashadi, faqat darhol.
+
 ## Komponentlar
 
 - **Tugma.** Asosiy: `--rang-asosiy` fon, oq matn, to'liq yumaloq, balandlik kamida 48px. Ikkinchi darajali: `--sirt` yoki `--sirt-ikkinchi` fon. Hover: ozgina to'qroq. Fokus: 3px `--rang-asosiy` chegara. Tugma faqat `<button>` yoki `<a>`.
