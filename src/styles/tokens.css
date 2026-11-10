@@ -15,13 +15,13 @@
   --sirt: #ffffff;
   --sirt-ikkinchi: #eceef3;        /* neytral yorliq, ikkinchi darajali tugma */
   --chiziq: #e6e8ee;
-  --chiziq-kuchli: #dfe2ea;
+  --chiziq-kuchli: #cfd3de;          /* karta va variant tugmasi chegarasi: fon ustida 1.50:1 */
   --matn: #0f1115;                 /* qora: matn, qora sahna, karta chegarasi */
-  --matn-ikkinchi: #4a5063;
-  --matn-sust: #5a6072;
+  --matn-ikkinchi: #3f4556;         /* tavsif: fon ustida 9.56:1 */
+  --matn-sust: #636a7d;             /* yorliq, izoh: fon 5.40:1, --sirt-ikkinchi 4.65:1 */
   /* Forma maydoni (input, select, textarea) chegarasi, WCAG 1.4.11 (3:1):
-     fon ustida yorug'da 6.27:1, qorong'ida 9.64:1. Yangi rang emas.
-     --chiziq-kuchli bu yerga yaramaydi (1.30:1 / 1.39:1). */
+     fon ustida yorug'da 5.40:1, qorong'ida 7.42:1. Yangi rang emas.
+     --chiziq-kuchli bu yerga yaramaydi (1.50:1 / 1.82:1). */
   --chiziq-maydon: var(--matn-sust);
 
   --qora: #0f1115;
@@ -88,11 +88,11 @@
   --fon-ikkinchi: #1b1e26;
   --sirt: #0f1115;
   --sirt-ikkinchi: #2a2e38;
-  --chiziq: #2a2e38;
-  --chiziq-kuchli: #2a2e38;
+  --chiziq: #313540;                /* --sirt-ikkinchi dan farq qiladi (ustida ham ko'rinadi) */
+  --chiziq-kuchli: #3b404d;         /* fon ustida 1.82:1 */
   --matn: #ffffff;
   --matn-ikkinchi: #b4b9c8;
-  --matn-sust: #b4b9c8;
+  --matn-sust: #9ca2b4;             /* fon 7.42:1, --sirt-ikkinchi 5.33:1 */
 
   --rang-ogoh-fon: #33240f;        /* ogohlik ma'nosi saqlanadi: 2026-11-05 qarori */
   --rang-ogoh-matn: #ffc98a;       /* #33240f ustida ~10:1 */
