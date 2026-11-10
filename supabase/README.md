@@ -161,7 +161,7 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 ### 2.7 Keyingi vazifalar
 
 - P03B: Google bilan kirish: PR #64 da merge qilingan, sozlash 2.5 (provider 2026-11-10 da yoqilgan; lokal dev va saytda sinalgan).
-- P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Jadval sxemada bor (`migrations/20261108000002_profiles.sql`), hisob sahifalari hali unga yozmaydi: hozircha `display_name`, `nickname` Supabase `user_metadata` da.
+- P12: profil sahifasi `public.profiles` jadvalidan o'qiydi va unga yozadi (PR #69, 2026-11-10): ism, taxallus (unique, band bo'lsa 23505), SAT maqsad ball (400–1600, CB04), imtihon sanasi. Jadval: `migrations/20261108000002_profiles.sql`.
 - P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`).
 - P28: o'z SMTP (2.4): Gmail SMTP yoqilgan, o'zbekcha shablonlar qo'llangan (PR #70, 2026-11-10).
 

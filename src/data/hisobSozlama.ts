@@ -36,3 +36,6 @@ export const hisobSozlama = {
   /** Google'ga ketishdan oldin "kirgandan keyin qayerga" (sessionStorage; callback o'qib o'chiradi). */
   keyinKaliti: 'tayanch:hisob-keyin',
 } as const;
+
+/** SAT umumiy ball oralig'i (CB04, College Board "SAT Suite Score Structure"). profiles.target_score check bilan bir xil. */
+export const satBall = { min: 400, max: 1600, manba: 'CB04' } as const;
