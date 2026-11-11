@@ -43,7 +43,7 @@ Tayanch uchun xulosa:
 - Bepul reja faqat sinov va yopiq beta uchun. Loyiha to'xtatilsa, saytdagi kirish va mashq ishlamaydi (statik sahifalar ishlayveradi).
 - Backup yo'q: muhim o'zgarishdan oldin muallif qo'lda eksport qiladi va faylni **repo papkasidan tashqarida** saqlaydi (unda foydalanuvchi ma'lumoti bo'ladi). Usul (`supabase db dump` yoki Homebrew `pg_dump` session pooler orqali): sinalmagan, birinchi haqiqiy foydalanuvchidan oldin sinaladi.
 - Email bilan ro'yxatdan o'tish jamoadan tashqaridagi foydalanuvchilarga ishlashi uchun o'z SMTP serveri kerak (P28, 2.4-bo'lim).
-- **Pro rejaga o'tish qarori P28 da qabul qilinadi.**
+- **Pro rejaga o'tish qarori P28 da qabul qilinadi.** Tavsiya va chiqarish ro'yxati: `docs/chiqarish-royxati.md` (2026-11-12, qaror muallifda).
 - To'lov (inPAY) ishga tushmaguncha `subscriptions` ga faqat `admin_grant_plan` yozadi.
 
 ## 1. Loyiha yaratish
