@@ -156,7 +156,8 @@ export async function rozilikHolati(c: SupabaseClient, sessiya: Session): Promis
   const { data, error } = await c.from('profiles').select('consent_version').eq('id', sessiya.user.id).maybeSingle();
   if (error) throw error;
   if (!data) throw new Error('Profil topilmadi');
-  if (data.consent_version) return 'bor';
+  // Hujjatlar o'zgarsa (rozilikVersiya yangi sana) eski rozilik yetmaydi: qayta so'raladi.
+  if (data.consent_version === hisobSozlama.rozilikVersiya) return 'bor';
   if (sessiya.user.user_metadata?.consent_version === hisobSozlama.rozilikVersiya) {
     await rozilikYoz(c, sessiya);
     return 'bor';

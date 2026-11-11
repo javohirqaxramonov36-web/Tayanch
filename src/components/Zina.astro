@@ -25,6 +25,7 @@ const kartalar = [
       </span>
       <span class="z-nom">{M.qavat(q.raqam)}: {q.nomi}</span>
       {q.holat === 'tez-orada' && <span class="z-pill">{M.zina.qurilmoqda}</span>}
+      {(q.slug === 'sat' || q.slug === 'ielts') && <span class="z-pill" lang="en">Beta</span>}
     </a>
   ))}
 </nav>

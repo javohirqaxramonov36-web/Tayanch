@@ -3,12 +3,14 @@
 // ?keyin= bilan yuboradi. Sessiya kerak, lekin bu sahifa o'zi qorovul ishlatmaydi (aylanib qolmaslik uchun).
 // "Davom etish" faqat consent_version ni yozadi (consent_at ni server triggeri qo'yadi). "Chiqish": signOut.
 // profiles o'qib yoki yozib bo'lmasa: darvoza yopiq, xato ko'rsatiladi (role="alert").
+// Yosh guruhi va 12–17 uchun ota-ona roziligi (P23, YoshRozilik): avval user_metadata'ga, keyin consent_version.
 import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import YoshRozilik from '../../../../components/hisob/YoshRozilik.astro';
 import { hisobSahifalar } from '../../../../data/hisobSahifalar';
 import { hisobSozlama } from '../../../../data/hisobSozlama';
 import { yol } from '../../../../lib/yol';
 
-const { minYosh, maxfiylikSahifa, shartlarSahifa } = hisobSozlama;
+const { maxfiylikSahifa, shartlarSahifa } = hisobSozlama;
 const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
 ---
 <HisobKarta sahifa={hisobSahifalar.rozilik} lead="Hisobingizdan foydalanishdan oldin bir marta tasdiqlang.">
@@ -19,15 +21,7 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
     <form class="hisob-forma" id="rozilik-forma" novalidate aria-labelledby="hisob-sarlavha">
       <p class="hisob-alert" id="rozilik-xato" role="alert" hidden></p>
 
-      {minYosh !== null && (
-        <div class="hisob-belgi-blok">
-          <div class="hisob-belgi">
-            <input type="checkbox" id="rozilik-yosh" name="rozilik-yosh" required aria-describedby="rozilik-yosh-xato" />
-            <label for="rozilik-yosh">Yoshim {minYosh} da yoki undan katta.</label>
-          </div>
-          <p class="hisob-xato" id="rozilik-yosh-xato" hidden></p>
-        </div>
-      )}
+      <YoshRozilik prefiks="rozilik" kichikIzoh="hisobdan foydalana olmaysiz: hisobdan chiqing" />
 
       <div class="hisob-belgi-blok">
         <div class="hisob-belgi">
@@ -57,11 +51,12 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
     maydonXatosi, yuklanish, xabar, xatoMatni,
   } from '../../../../lib/hisob';
   import { hisobSozlama } from '../../../../data/hisobSozlama';
+  import { yoshBloki } from '../../../../lib/hisobYosh';
   import type { Session } from '@supabase/supabase-js';
 
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
   const forma = $<HTMLFormElement>('rozilik-forma');
-  const yosh = document.getElementById('rozilik-yosh') as HTMLInputElement | null;
+  const yosh = yoshBloki('rozilik');
   const hujjat = $<HTMLInputElement>('rozilik-hujjat');
   const tugma = $<HTMLButtonElement>('rozilik-tugma');
   const xato = $('rozilik-xato');
@@ -93,10 +88,9 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
 
   function tekshir(): boolean {
     const xatolar: [HTMLInputElement, string | null][] = [];
-    if (yosh) xatolar.push([yosh, yosh.checked ? null : `Hisobdan foydalanish uchun yoshingiz kamida ${hisobSozlama.minYosh} da bo'lishi kerak.`]);
     xatolar.push([hujjat, hujjat.checked ? null : "Davom etish uchun rozilik belgisini qo'ying."]);
     for (const [i, m] of xatolar) maydonXatosi(i, m);
-    const birinchi = xatolar.find(([, m]) => m)?.[0];
+    const birinchi = yosh.tekshir() ?? xatolar.find(([, m]) => m)?.[0];
     birinchi?.focus();
     return !birinchi;
   }
@@ -109,6 +103,11 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
     if (!c) return;
     yuklanish(tugma, true, 'Saqlanmoqda…');
     try {
+      // Yosh va ota-ona roziligi user_metadata'da (ro'yxat formasi bilan bir xil maydonlar).
+      const { error } = await c.auth.updateUser({
+        data: { ...yosh.metadata(), terms_accepted_at: new Date().toISOString(), consent_version: hisobSozlama.rozilikVersiya },
+      });
+      if (error) throw error;
       await rozilikYoz(c, sessiya);
       location.replace(keyin);
       return;
@@ -128,6 +127,6 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
     location.replace(`${hisobYoli('kirish')}?chiqdi=1`);
   });
 
-  [yosh, hujjat].forEach((i) => i?.addEventListener('change', () => i.checked && maydonXatosi(i, null)));
+  hujjat.addEventListener('change', () => hujjat.checked && maydonXatosi(hujjat, null));
   boshla();
 </script>

@@ -197,6 +197,15 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Guides',
     sahifalar: [
       {
+        qism: 'qollanma/qayerdan-boshlash/',
+        tayyor: true,
+        nomi: 'Where to start',
+        tavsif: 'Answer four questions and get a step-by-step self-study path, plus a map of free official resources.',
+        turi: 'qollanma',
+        manbalar: ['CB20', 'CB21', 'CB27'],
+        tekshirilmagan: ['The steps and their order are a Tayanch recommendation, not an official plan.'],
+      },
+      {
         qism: 'qollanma/strategiya/',
         nomi: 'Strategy',
         tavsif: "Where to start your prep and how to plan it: based on the author's experience.",
@@ -271,6 +280,7 @@ const s = (qism: string) => {
 };
 
 export const satYonGuruhlar: SatYonGuruh[] = [
+  { nomi: 'Start here', qismlar: [{ sahifalar: ['qollanma/qayerdan-boshlash/'].map(s) }] },
   {
     nomi: 'Lessons',
     qismlar: [
