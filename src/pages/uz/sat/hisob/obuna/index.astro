@@ -1,9 +1,13 @@
 ---
-// SAT tariflari va to'lov (P20). Faqat kirgan foydalanuvchi; kirmagan bo'lsa kirish sahifasiga (?keyin= bilan).
+// SAT tariflari va to'lov (P20), obuna holati va to'lov tarixi (P22).
+// Faqat kirgan foydalanuvchi; kirmagan bo'lsa kirish sahifasiga (?keyin= bilan).
 // Narx va muddat bazadan (plans, faqat faol tariflar ko'rinadi). Brauzer summa yubormaydi:
 // tugma tolov-yaratish ga faqat {plan_code, period} beradi va inPAY sahifasiga o'tadi. Karta ma'lumoti bu saytda yo'q.
 // Davr almashtirgich: tabiiy radio guruh (strelkalar bilan). To'lov tugmasi bosilgach band bo'ladi (takror bosish yo'q).
 // Dizayn: uchta bir xil karta qatori emas (DESIGN.md "Taqiqlar"): Pro (qora) va Max yonma-yon, Free pastda qator.
+// P22: obuna va to'lovlar faqat o'qiladi (subscriptions SELECT, payment_history RPC). Eslatma 7 kun qolganda
+// sahifa ochilganda chiqadi, tugagach Free xabari; "Check payment status" faqat inpay-holat orqali.
+// Sun'iy holatlar (faqat dev): ?sinov=faol|5kun|tugagan|hech (src/lib/sat/obunaSinov.ts).
 // Brauzerda faqat tayanch:sat-tolov (oxirgi to'lov raqami).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
@@ -16,6 +20,8 @@ const usullar = satTarif.tolovUsullari.map((u) => usulNomi[u]);
 const usulMatn = usullar.length
   ? `On the inPAY page you can pay with ${usullar.length > 1 ? `${usullar.slice(0, -1).join(', ')} or ${usullar.at(-1)}` : usullar[0]}.`
   : 'You choose how to pay on the inPAY checkout page.';
+const aloqa = satTarif.aloqa;
+const qaytarish = satTarif.qaytarishHavola;
 ---
 <BolimQobiq
   title="Plans · SAT"
@@ -35,8 +41,20 @@ const usulMatn = usullar.length
 
     <p class="holat-matn" role="status" data-kutish>Checking your account…</p>
     <p class="ogoh" data-yoq hidden>Accounts are not available on this site yet.</p>
+    <p class="ogoh" data-sinov-belgi hidden>Test data (development only). Nothing on this page comes from a real account.</p>
 
     <div data-ichi hidden>
+      <section class="eslatma" data-eslatma aria-labelledby="eslatma-sarlavha" hidden>
+        <h2 id="eslatma-sarlavha" class="eslatma-sarlavha" data-eslatma-sarlavha></h2>
+        <p data-eslatma-matn></p>
+        <div class="cheklov">
+          <h3 class="kichik-sarlavha" data-cheklov-sarlavha>What is limited on Free</h3>
+          <ul data-cheklov-royxat></ul>
+          <p class="ikkinchi kichik" data-cheklov-yoq hidden>Nothing on this site is limited on Free right now.</p>
+        </div>
+        <button type="button" class="tugma uzaytir" data-uzaytir hidden>Extend</button>
+      </section>
+
       <section class="joriy" aria-labelledby="joriy-sarlavha">
         <h2 id="joriy-sarlavha" class="kichik-sarlavha">Your plan</h2>
         <p class="joriy-nom" data-joriy-nom>—</p>
@@ -85,6 +103,27 @@ const usulMatn = usullar.length
         <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
       </article>
 
+      <section class="tarix-blok" aria-labelledby="tarix-sarlavha">
+        <h2 id="tarix-sarlavha" class="kichik-sarlavha">Payment history</h2>
+        <p class="ikkinchi" data-tarix-bosh hidden>No payments yet.</p>
+        <p class="tarix-xabar" role="status" data-tarix-xabar></p>
+        <table class="tarix" role="table" data-tarix hidden>
+          <caption class="ekranda-yoq">Your payments, newest first</caption>
+          <thead role="rowgroup">
+            <tr role="row">
+              <th scope="col" role="columnheader">Date</th>
+              <th scope="col" role="columnheader">Payment ID</th>
+              <th scope="col" role="columnheader">Method</th>
+              <th scope="col" role="columnheader">Plan</th>
+              <th scope="col" role="columnheader" class="son">Amount</th>
+              <th scope="col" role="columnheader">Status</th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup" data-tarix-qatorlar></tbody>
+        </table>
+        <p class="ikkinchi kichik" data-tarix-izoh hidden>A payment waiting for more than {satTarif.tekshirishDaqiqa} minutes can be checked with inPAY. Receipts are not shown here because inPAY does not send them to Tayanch.</p>
+      </section>
+
       <section class="tolov-izoh" aria-labelledby="tolov-sarlavha">
         <h2 id="tolov-sarlavha" class="kichik-sarlavha">How payment works</h2>
         <ul>
@@ -92,40 +131,68 @@ const usulMatn = usullar.length
           <li>Card details are entered only on the inPAY page. Tayanch never receives or stores them.</li>
           <li>Your plan turns on after inPAY confirms the payment. Returning to this site alone does not count as payment.</li>
           <li>No automatic charges. Each period is paid separately.</li>
+          <li>When a plan ends you move to Free. Nothing you saved is deleted.</li>
+        </ul>
+      </section>
+
+      <section class="tolov-izoh" aria-labelledby="yordam-sarlavha">
+        <h2 id="yordam-sarlavha" class="kichik-sarlavha">Problems with a payment</h2>
+        <ul>
+          <li>If money left your account but your plan did not change, wait a few minutes, then use "Check payment status" in the payment history.</li>
+          {aloqa
+            ? <li>Still not resolved? <a href={aloqa.havola}>{aloqa.matn}</a> and include the payment ID from the history.</li>
+            : <li>Keep the payment ID from the history. You will need it if you contact us about this payment.</li>}
+          {qaytarish
+            ? <li>Refunds: see the <a href={yol(qaytarish)}>refund policy</a>.</li>
+            : <li>Refund terms are not published yet.</li>}
         </ul>
       </section>
     </div>
 
-    <ManbaBlok manbalar={['IP03']} tekshirilgan="2026-11-10" keyingiTekshiruv="2026-12-10" tekshirilmagan={['A real payment has not been made through this page yet.', 'Usage limits are not set yet.']} />
+    <ManbaBlok manbalar={['IP03']} tekshirilgan="2026-11-10" keyingiTekshiruv="2026-12-10" tekshirilmagan={['Payment history and status checks have not been tried with a real account in a browser yet.', 'Usage limits are not set yet.']} />
   </div>
 </BolimQobiq>
 
 <script>
   import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
   import { funksiya, narxYozuv, tolovXatoMatni, tolovniEsla } from '../../../../../lib/sat/tolov';
-  import { kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
+  import { bayroqNomi, kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
   import { tarifBayrogimi } from '../../../../../data/satAnalitika';
   import { usageBarniChiz, type UsageJavob } from '../../../../../lib/sat/usageBar';
+  import {
+    eslatma, freeCheklovlari, holatNomi, obunaHolati, qisqaId, sanaYozuv, tekshirishMumkin, usulYozuv,
+    type ObunaYozuv, type TolovYozuv,
+  } from '../../../../../lib/sat/obunaHolat';
 
-  interface Tarif { code: string; name: string; price_uzs: number | null; period_days: number | null; features: unknown }
+  interface Tarif { code: string; name: string; price_uzs: number | null; period_days: number | null; features: unknown; limits: unknown }
+  interface Malumot { tariflar: Tarif[]; usage: UsageJavob; obunalar: ObunaYozuv[]; tolovlar: TolovYozuv[] }
 
   const $ = <T extends HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s);
   const kutish = $('[data-kutish]');
   const ichi = $('[data-ichi]');
   const xatoEl = $('[data-xato]');
+  const tarixXabar = $('[data-tarix-xabar]');
   let tariflar: Tarif[] = [];
   let joriyKod = 'free';
+  let sinovRejim = false;
 
   const xato = (m: string | null) => { if (xatoEl) { xatoEl.textContent = m ?? ''; xatoEl.hidden = !m; } };
   const davr = () => (document.querySelector<HTMLInputElement>('input[name="davr"]:checked')?.value ?? 'oylik') as DavrKod;
+  const tarifNomi = (kod: string) => tariflar.find((t) => t.code === kod)?.name ?? satTarif.tariflar.find((t) => t.kod === kod)?.nomi ?? kod;
+
+  /** Tarif uchun to'lov tugmasi chiqadimi: narx, muddat va tanlangan davr serverda bor. */
+  function tarifTayyor(kod: string): boolean {
+    const t = tariflar.find((x) => x.code === kod);
+    const davrFaol = (satTarif.faolDavrlar as readonly string[]).includes(davr());
+    return davrFaol && !!t && typeof t.price_uzs === 'number' && t.price_uzs >= 1000 && !!t.period_days;
+  }
 
   function kartalarniYangila() {
-    const d = davr();
-    const davrFaol = (satTarif.faolDavrlar as readonly string[]).includes(d);
+    const davrFaol = (satTarif.faolDavrlar as readonly string[]).includes(davr());
     document.querySelectorAll<HTMLElement>('.tarif[data-tarif]').forEach((karta) => {
       const kod = karta.dataset.tarif!;
       const t = tariflar.find((x) => x.code === kod);
-      const tayyor = davrFaol && !!t && typeof t.price_uzs === 'number' && t.price_uzs >= 1000 && !!t.period_days;
+      const tayyor = tarifTayyor(kod);
       // Faol bo'lmagan tarif (masalan Max) RLS tufayli bazadan kelmaydi: "Coming soon".
       $('[data-narx]', karta)!.textContent = tayyor ? narxYozuv(t!.price_uzs!) : t ? 'Not available yet' : 'Coming soon';
       $('[data-narx-izoh]', karta)!.textContent = tayyor
@@ -141,22 +208,112 @@ const usulMatn = usullar.length
       tugma.textContent = joriyKod === kod ? 'Extend this plan' : 'Continue to payment';
       tugma.dataset.asl = tugma.textContent;
     });
+    const uz = $<HTMLButtonElement>('[data-uzaytir]');
+    if (uz && uz.dataset.tolov) uz.hidden = !tarifTayyor(uz.dataset.tolov);
   }
 
-  function joriyniKorsat(nom: string, kod: string, tugash: string | null, usage: UsageJavob) {
+  function holatniKorsat(m: Malumot) {
+    const hozir = new Date();
+    const kod = m.usage.plan?.code ?? 'free';
     joriyKod = kod;
-    $('[data-joriy-nom]')!.textContent = nom;
-    const m = $('[data-joriy-muddat]')!;
-    m.hidden = !tugash;
-    if (tugash) m.textContent = `Active until ${new Date(tugash).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
+    const h = obunaHolati(m.obunalar, hozir, kod, satTarif.eslatmaKun);
+
+    $('[data-joriy-nom]')!.textContent = m.usage.plan?.name ?? 'Free';
+    const muddat = $('[data-joriy-muddat]')!;
+    muddat.hidden = !(h.tur === 'faol' || h.tur === 'tugayapti');
+    if (!muddat.hidden) {
+      muddat.textContent = h.tugash
+        ? `Paid until ${sanaYozuv(h.tugash)} · ${h.qolganKun === 0 ? 'ends today' : `${h.qolganKun} ${h.qolganKun === 1 ? 'day' : 'days'} left`}.`
+        : 'No end date.';
+    }
     document.querySelectorAll<HTMLElement>('[data-tarif]').forEach((k) => {
       $('[data-joriy-belgi]', k)!.hidden = k.dataset.tarif !== kod;
     });
     const ub = $('[data-usage-bar]');
-    if (ub) usageBarniChiz(ub, usage, kvotaNomi);
+    if (ub) usageBarniChiz(ub, m.usage, kvotaNomi);
+
+    // Eslatma: faqat tugayapti va tugagan. Neytral blok, taymer va bosim yo'q.
+    const blok = $('[data-eslatma]')!;
+    const nomi = h.planKod ? tarifNomi(h.planKod) : '';
+    const e = eslatma(h, nomi);
+    blok.hidden = !e;
+    if (e && h.planKod) {
+      $('[data-eslatma-sarlavha]')!.textContent = e.sarlavha;
+      $('[data-eslatma-matn]')!.textContent = e.matn;
+      $('[data-cheklov-sarlavha]')!.textContent = h.tur === 'tugagan' ? 'What is limited on Free' : 'What changes on Free if the plan ends';
+      const royxat = freeCheklovlari(
+        m.tariflar.find((t) => t.code === 'free'), m.tariflar.find((t) => t.code === h.planKod), bayroqNomi, kvotaNomi, tarifBayrogimi,
+      );
+      $('[data-cheklov-royxat]')!.replaceChildren(...royxat.map((s) => Object.assign(document.createElement('li'), { textContent: s })));
+      $('[data-cheklov-royxat]')!.hidden = royxat.length === 0;
+      $('[data-cheklov-yoq]')!.hidden = royxat.length > 0;
+      const uz = $<HTMLButtonElement>('[data-uzaytir]')!;
+      uz.dataset.tolov = h.planKod;
+      uz.textContent = h.tur === 'tugagan' ? `Renew ${nomi}` : `Extend ${nomi}`;
+      uz.dataset.asl = uz.textContent;
+    }
+  }
+
+  function katak(nom: string, ...ichki: (string | Node)[]) {
+    const td = document.createElement('td');
+    td.setAttribute('role', 'cell');
+    td.dataset.nom = nom;
+    td.append(...ichki);
+    return td;
+  }
+
+  function tarixniChiz(tolovlar: TolovYozuv[]) {
+    const hozir = new Date();
+    const jadval = $('[data-tarix]')!;
+    $('[data-tarix-bosh]')!.hidden = tolovlar.length > 0;
+    jadval.hidden = tolovlar.length === 0;
+    $('[data-tarix-izoh]')!.hidden = tolovlar.length === 0;
+    $('[data-tarix-qatorlar]')!.replaceChildren(...tolovlar.map((t) => {
+      const tr = document.createElement('tr');
+      tr.setAttribute('role', 'row');
+      const sana = new Date(t.created_at).toLocaleString('en-GB', {
+        day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tashkent',
+      });
+      const id = Object.assign(document.createElement('code'), { textContent: qisqaId(t.id), title: t.id });
+      const idKatak = katak('Payment ID', id);
+      if (t.test) idKatak.append(' ', Object.assign(document.createElement('span'), { className: 'yorliq', textContent: 'Test' }));
+      const holat = katak('Status', Object.assign(document.createElement('span'), {
+        className: `holat holat-${t.status}`, textContent: holatNomi[t.status] ?? t.status,
+      }));
+      if (tekshirishMumkin(t, hozir, satTarif.tekshirishDaqiqa)) {
+        const b = Object.assign(document.createElement('button'), { type: 'button', className: 'tugma tugma-ikkinchi tekshir', textContent: 'Check payment status' });
+        b.dataset.tekshir = t.id;
+        b.setAttribute('aria-describedby', `tolov-${t.id}`);
+        id.id = `tolov-${t.id}`;
+        holat.append(b);
+      }
+      const son = katak('Amount', narxYozuv(t.amount_uzs));
+      son.classList.add('son');
+      tr.append(katak('Date', sana), idKatak, katak('Method', usulYozuv(t.provider)), katak('Plan', t.plan_name), son, holat);
+      return tr;
+    }));
+  }
+
+  function korsat(m: Malumot) {
+    tariflar = m.tariflar;
+    holatniKorsat(m);
+    tarixniChiz(m.tolovlar);
+    kartalarniYangila();
+    if (kutish) kutish.hidden = true;
+    if (ichi) ichi.hidden = false;
   }
 
   async function yukla() {
+    if (import.meta.env.DEV) {
+      const s = new URLSearchParams(location.search).get('sinov');
+      const sinov = await import('../../../../../lib/sat/obunaSinov');
+      if (sinov.sinovTurmi(s)) {
+        sinovRejim = true;
+        $('[data-sinov-belgi]')!.hidden = false;
+        korsat(sinov.sinovMalumot(s, new Date()));
+        return;
+      }
+    }
     const c = hisobMijoz();
     if (!c) {
       if (kutish) kutish.hidden = true;
@@ -166,57 +323,87 @@ const usulMatn = usullar.length
     const sessiya = await hisobQorovul();
     if (!sessiya) return; // kirish sahifasiga yo'naltirildi
 
-    const [p, u, s] = await Promise.all([
-      c.from('plans').select('code, name, price_uzs, period_days, features').eq('bolim', 'sat'),
+    const [p, u, s, t] = await Promise.all([
+      c.from('plans').select('code, name, price_uzs, period_days, features, limits').eq('bolim', 'sat'),
       c.rpc('usage_status'),
-      c.from('subscriptions').select('plan_code, ends_at').eq('bolim', 'sat').eq('status', 'active')
-        .gt('ends_at', new Date().toISOString()).order('ends_at', { ascending: false }).limit(1),
+      c.from('subscriptions').select('plan_code, status, starts_at, ends_at').eq('bolim', 'sat')
+        .in('status', ['active', 'expired']).order('ends_at', { ascending: false }).limit(50),
+      c.rpc('payment_history', { p_bolim: 'sat' }),
     ]);
-    tariflar = (p.data as Tarif[] | null) ?? [];
-    const plan = (u.data as UsageJavob | null) ?? {};
-    const kod = plan.plan?.code ?? 'free';
-    const tugash = kod !== 'free' ? (s.data?.find((x) => x.plan_code === kod)?.ends_at ?? null) : null;
-    joriyniKorsat(plan.plan?.name ?? 'Free', kod, tugash, plan);
-    if (p.error || u.error) xato('Some plan details could not be loaded. Refresh the page to try again.');
-    kartalarniYangila();
-    if (kutish) kutish.hidden = true;
-    if (ichi) ichi.hidden = false;
+    korsat({
+      tariflar: (p.data as Tarif[] | null) ?? [],
+      usage: (u.data as UsageJavob | null) ?? {},
+      obunalar: (s.data as ObunaYozuv[] | null) ?? [],
+      tolovlar: (t.data as TolovYozuv[] | null) ?? [],
+    });
+    if (p.error || u.error || s.error) xato('Some plan details could not be loaded. Refresh the page to try again.');
+    if (t.error && tarixXabar) tarixXabar.textContent = 'Payment history could not be loaded. Refresh the page to try again.';
+  }
+
+  async function tolovBoshla(tugma: HTMLButtonElement, planKod: string) {
+    if (tugma.disabled) return;
+    xato(null);
+    const hammasi = document.querySelectorAll<HTMLButtonElement>('[data-tolov], [data-uzaytir]');
+    hammasi.forEach((b) => (b.disabled = true));
+    tugma.setAttribute('aria-busy', 'true');
+    tugma.textContent = 'Opening checkout…';
+    const r = sinovRejim
+      ? ({ ok: false, kod: 'server_not_configured', status: 0 } as const)
+      : await funksiya<{ payment_id: string; checkout_url: string }>('tolov-yaratish', { plan_code: planKod, period: davr() });
+    if (r.ok && typeof r.data.checkout_url === 'string' && r.data.checkout_url.startsWith('https://')) {
+      tolovniEsla(r.data.payment_id);
+      location.assign(r.data.checkout_url);
+      return; // sahifa almashadi; tugma band qoladi
+    }
+    if (!r.ok && r.kod === 'not_signed_in') {
+      location.reload(); // qorovul kirish sahifasiga yuboradi
+      return;
+    }
+    hammasi.forEach((b) => (b.disabled = false));
+    tugma.removeAttribute('aria-busy');
+    tugma.textContent = tugma.dataset.asl ?? 'Continue to payment';
+    xato(tolovXatoMatni(r.ok ? 'invalid_response' : r.kod));
+    xatoEl?.scrollIntoView({ block: 'nearest' });
   }
 
   document.querySelectorAll<HTMLInputElement>('input[name="davr"]').forEach((r) => r.addEventListener('change', kartalarniYangila));
+  document.querySelectorAll<HTMLButtonElement>('[data-tolov]').forEach((b) => b.addEventListener('click', () => tolovBoshla(b, b.dataset.tolov!)));
+  const uzaytir = $<HTMLButtonElement>('[data-uzaytir]');
+  uzaytir?.addEventListener('click', () => { if (uzaytir.dataset.tolov) tolovBoshla(uzaytir, uzaytir.dataset.tolov); });
 
-  document.querySelectorAll<HTMLButtonElement>('[data-tolov]').forEach((tugma) => {
-    tugma.addEventListener('click', async () => {
-      if (tugma.disabled) return;
-      xato(null);
-      document.querySelectorAll<HTMLButtonElement>('[data-tolov]').forEach((b) => (b.disabled = true));
-      tugma.setAttribute('aria-busy', 'true');
-      tugma.textContent = 'Opening checkout…';
-      const r = await funksiya<{ payment_id: string; checkout_url: string }>('tolov-yaratish', {
-        plan_code: tugma.dataset.tolov,
-        period: davr(),
-      });
-      if (r.ok && typeof r.data.checkout_url === 'string' && r.data.checkout_url.startsWith('https://')) {
-        tolovniEsla(r.data.payment_id);
-        location.assign(r.data.checkout_url);
-        return; // sahifa almashadi; tugma band qoladi
-      }
-      if (!r.ok && r.kod === 'not_signed_in') {
-        location.reload(); // qorovul kirish sahifasiga yuboradi
-        return;
-      }
-      document.querySelectorAll<HTMLButtonElement>('[data-tolov]').forEach((b) => (b.disabled = false));
-      tugma.removeAttribute('aria-busy');
-      tugma.textContent = tugma.dataset.asl ?? 'Continue to payment';
-      xato(tolovXatoMatni(r.ok ? 'invalid_response' : r.kod));
-      xatoEl?.scrollIntoView({ block: 'nearest' });
-    });
+  // "Check payment status": faqat inpay-holat (server bazani yangilaydi). Natija role="status" orqali o'qiladi.
+  $('[data-tarix-qatorlar]')?.addEventListener('click', async (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tekshir]');
+    if (!b || b.disabled) return;
+    const id = b.dataset.tekshir!;
+    b.disabled = true;
+    b.setAttribute('aria-busy', 'true');
+    b.textContent = 'Checking…';
+    if (tarixXabar) tarixXabar.textContent = '';
+    const r = sinovRejim
+      ? ({ ok: true, data: { status: 'pending' } } as const)
+      : await funksiya<{ status: 'pending' | 'success' | 'failed' }>('inpay-holat', { payment_id: id });
+    const qisqa = qisqaId(id);
+    let matn: string;
+    if (r.ok && r.data.status === 'success') matn = `Payment ${qisqa} is confirmed. Your plan has been updated.`;
+    else if (r.ok && r.data.status === 'failed') matn = `inPAY reports that payment ${qisqa} was not completed. You can start a new payment.`;
+    else if (r.ok) matn = `inPAY has not confirmed payment ${qisqa} yet. Check again in a few minutes.`;
+    else if (r.kod === 'not_signed_in') { location.reload(); return; }
+    else matn = tolovXatoMatni(r.kod);
+    if (r.ok && r.data.status !== 'pending') {
+      await yukla().catch(() => null); // jadval, tarif va eslatma yangi holat bilan
+    } else {
+      b.disabled = false;
+      b.removeAttribute('aria-busy');
+      b.textContent = 'Check payment status';
+    }
+    if (tarixXabar) tarixXabar.textContent = matn;
   });
 
   // bfcache: inPAY sahifasidan "orqaga" qaytilsa tugmalar band holatda qolmasin.
   window.addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
-    document.querySelectorAll<HTMLButtonElement>('[data-tolov]').forEach((b) => {
+    document.querySelectorAll<HTMLButtonElement>('[data-tolov], [data-uzaytir]').forEach((b) => {
       b.disabled = false;
       b.removeAttribute('aria-busy');
       if (b.dataset.asl) b.textContent = b.dataset.asl;
@@ -245,6 +432,16 @@ const usulMatn = usullar.length
   [data-ichi]:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-8); }
 
   .kichik-sarlavha { font-size: var(--matn-kichik); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+
+  /* Eslatma: neytral (ogohlantiruvchi rang emas), chap rangli chiziqsiz (DESIGN.md "Taqiqlar"). */
+  .eslatma { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); }
+  .eslatma-sarlavha { font-size: var(--matn-h3); }
+  .eslatma p { max-width: 62ch; }
+  .cheklov { display: flex; flex-direction: column; gap: var(--b-2); }
+  .cheklov ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
+  .uzaytir { align-self: flex-start; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .uzaytir:hover { background: var(--rang-asosiy-toq); }
+  .uzaytir:disabled { cursor: progress; opacity: 0.75; }
 
   .joriy { display: flex; flex-direction: column; gap: var(--b-2); padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); }
   .joriy-nom { font-size: var(--matn-h3); font-weight: 800; }
@@ -281,6 +478,32 @@ const usulMatn = usullar.length
   .tavsiya .tolov-tugma:focus-visible { outline-color: var(--rang-asosiy-qorada); }
 
   .tarif-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-4); flex-wrap: wrap; padding: var(--b-4) var(--b-6); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
+
+  /* To'lov tarixi: kompyuterda jadval, telefonda har to'lov alohida blok (role atributlari jadval ma'nosini saqlaydi). */
+  .tarix-blok { display: flex; flex-direction: column; gap: var(--b-3); }
+  .tarix-xabar:empty { display: none; }
+  .tarix-xabar { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .tarix { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); }
+  .tarix th { text-align: left; font-weight: 700; color: var(--matn-ikkinchi); padding: var(--b-2) var(--b-3); border-bottom: 1.5px solid var(--chiziq-kuchli); }
+  /* Qatorlar JS bilan yaratiladi (scoped atributsiz): ular uchun :global(). */
+  .tarix :global(td) { padding: var(--b-3); border-bottom: 1px solid var(--chiziq); vertical-align: top; }
+  .tarix .son, .tarix :global(td.son) { text-align: right; white-space: nowrap; }
+  .tarix :global(code) { font-family: var(--font-family-mono); }
+  .tarix :global(.yorliq) { padding: 2px 8px; border-radius: var(--r-toliq); border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  .tarix :global(.holat) { display: block; font-weight: 700; }
+  .tarix :global(.holat-paid) { color: var(--color-success-text); }
+  .tarix :global(.holat-failed) { color: var(--color-error-text); }
+  .tarix :global(.tekshir) { margin-top: var(--b-2); min-height: var(--size-touch-min); }
+  .tarix :global(.tekshir:disabled) { cursor: progress; opacity: 0.75; }
+  @media (max-width: 640px) {
+    .tarix thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .tarix, .tarix tbody, .tarix :global(tr), .tarix :global(td) { display: block; }
+    .tarix :global(tr) { padding: var(--b-3) 0; border-bottom: 1px solid var(--chiziq); }
+    .tarix :global(td) { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: var(--b-3); padding: var(--b-1) 0; border: 0; }
+    .tarix :global(td::before) { content: attr(data-nom); color: var(--matn-ikkinchi); font-weight: 700; }
+    .tarix :global(td.son) { text-align: left; }
+    .tarix :global(td > *) { grid-column: 2; }
+  }
 
   .tolov-izoh { display: flex; flex-direction: column; gap: var(--b-3); }
   .tolov-izoh ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-2); color: var(--matn-ikkinchi); max-width: 70ch; }

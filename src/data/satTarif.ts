@@ -26,6 +26,12 @@ export const satTarif = {
   tolovUsullari: [] as TolovUsuli[],
   /** To'lov tasdiqlanmasa aloqa yo'li (muallif to'ldiradi). null: faqat to'lov raqamini saqlash so'raladi. */
   aloqa: null as null | { matn: string; havola: string },
+  /** Qaytarish (refund) siyosati sahifasi, yol() ga beriladigan yo'l (P23). null: havola chiqmaydi, "not published yet". */
+  qaytarishHavola: null as null | string,
+  /** Obuna eslatmasi: tugashiga shu kun yoki kamroq qolganda (P22). */
+  eslatmaKun: 7,
+  /** Kutilayotgan to'lov shu daqiqadan eski bo'lsa "Check payment status" (P22; inpay-muvofiqlash ham 15 daqiqadan). */
+  tekshirishDaqiqa: 15,
   /** Natija sahifasi: inpay-holat har necha soniyada va jami necha soniya so'raladi. */
   sorovOraligiS: 3,
   kutishS: 60,
@@ -46,6 +52,11 @@ export const kvotaNomi: Record<string, string> = {
   review_sessions: 'Review sessions',
   new_words: 'New words', // P15
   plan_rebuilds: 'Plan rebuilds', // P13
+};
+
+/** plans.features dagi mashina bayrog'i -> Free ga tushganda "nima cheklanadi" ro'yxatidagi nom (P22). */
+export const bayroqNomi: Record<string, string> = {
+  analytics_extended: 'Extended analytics (accuracy by difficulty, timing)',
 };
 
 /** Brauzerda faqat oxirgi to'lov raqami (qaytish sahifasi uchun). Karta ma'lumoti hech qayerda saqlanmaydi. */

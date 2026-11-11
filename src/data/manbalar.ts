@@ -541,6 +541,15 @@ export const manbalar: Manba[] = [
     izoh: "Sahifa sarlavhasi \"Desmos | Graphing Calculator\" (HTTP 200). Narx sahifa HTML'ida yozilmagan: tekshirish kerak. SAT'da Desmos borligi CB26 da.",
   },
   {
+    id: 'DS02',
+    nomi: 'Desmos API Terms of Service',
+    tashkilot: 'Desmos Studio',
+    havola: 'https://www.desmos.com/api-terms',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-11',
+    izoh: "Version 1.0, July 11, 2025 (sahifa JavaScript bilan yuklanadi, brauzerda o'qildi). §2a: bepul Trial faqat shaxsiy notijorat foydalanish yoki 90 kunlik ichki sinov; production ilova tijoriy foydalanish. §3a: tijoriy foydalanishdan oldin pullik reja yoki Commercial Addendum. §5b-iii: Desmos brendingini yashirish mumkin emas. §5c: API kaliti maxfiy saqlanadi. Tayanch API ishlatmaydi, faqat desmos.com/calculator ga havola (docs/qarorlar/003-desmos.md).",
+  },
+  {
     id: 'PR01',
     nomi: 'Free SAT Practice Test (The Princeton Review)',
     tashkilot: 'The Princeton Review',
