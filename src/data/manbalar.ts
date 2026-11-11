@@ -115,6 +115,15 @@ export const manbalar: Manba[] = [
     izoh: "Kontent siyosati uchun. 10-bo'lim: xizmatlar \"solely for your non-commercial use\", ularni pul ishlash yoki \"as part of any test prep or other business\" uchun ishlatib bo'lmaydi. 8-bo'lim: kontentni yozma ruxsatsiz tarqatish, yuklab olish, ko'paytirish, scrape yoki data-mine qilish taqiqlangan. \"non-commercial use\" va \"test prep\" iqtiboslari sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200); 8-bo'lim iqtiboslari faqat WebFetch xulosasidan. Sahifada kuchga kirish sanasi topilmadi.",
   },
   {
+    id: 'CB12',
+    nomi: 'Official SAT Question of the Day',
+    tashkilot: 'College Board',
+    havola: 'https://qotd.collegeboard.org/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-11',
+    izoh: "College Board'ning kunlik rasmiy savol sahifasi (sahifa sarlavhasi: \"Official SAT Question of the Day – SAT Suite | College Board\"). Help Center \"What is Question of the Day?\" (satsuite.collegeboard.org/help-center/what-question-day) shu manzilga olib boradi. SAT kirishidagi Tayanch kun savoli (P10) pastida tashqi havola sifatida; Tayanch savoli emas. P16 resurslar xaritasi ham shu ID'ni ishlatadi. Bepulligi va savol almashish vaqti bu sahifalarda tekshirilmadi (tekshirish kerak).",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',
