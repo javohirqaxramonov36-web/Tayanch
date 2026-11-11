@@ -164,7 +164,7 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 
 - P03B: Google bilan kirish: PR #64 da merge qilingan, sozlash 2.5 (provider 2026-11-10 da yoqilgan; lokal dev va saytda sinalgan).
 - P12: profil sahifasi `public.profiles` jadvalidan o'qiydi va unga yozadi (PR #69, 2026-11-10): ism, taxallus (unique, band bo'lsa 23505), SAT maqsad ball (400–1600, CB04), imtihon sanasi. Jadval: `migrations/20261108000002_profiles.sql`.
-- P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`).
+- P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`). Jonli bazaga 2026-11-11 da qo'llangan (`db push --dry-run` faqat shu faylni ko'rsatdi); `anon` chaqira olmaydi (401), `authenticated` chaqiradi, `security definer`, `search_path=""`. Haqiqiy hisobni o'chirish sinalmagan.
 - P28: o'z SMTP (2.4): Gmail SMTP yoqilgan, o'zbekcha shablonlar qo'llangan (PR #70, 2026-11-10).
 
 ## 3. Migratsiyalarni qo'llash (Supabase CLI)
@@ -313,7 +313,15 @@ Parol haqida (2026-11-09):
 
 ## 7. Kvota va tariflar
 
-`plans` jadvalida `free`, `pro`, `elite`: `price_uzs = null`, `limits = {}` (cheklov yo'q). Qiymatlarni P19 da muallif beradi:
+P19 holati (`migrations/20261111090000_tariflar_p19.sql`, jonli bazada 2026-11-10 dan shunday):
+
+| Tarif | `price_uzs` | `period_days` | `is_active` | `limits` |
+| --- | --- | --- | --- | --- |
+| `free` | null | null | true | `{}` |
+| `pro` | 59000 | 30 | true | `{}` |
+| `elite` | null | null | false ("Coming soon") | `{}` |
+
+Kvota: muallif qarori (2026-11-11) "hozircha cheklovsiz", `limits = {}` (kalit yo'q = cheklov yo'q). Keyin qo'yilsa, yangi migratsiya bilan:
 
 ```sql
 update public.plans
