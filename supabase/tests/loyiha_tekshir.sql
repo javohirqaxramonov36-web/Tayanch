@@ -31,14 +31,14 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('official_mistakes', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('official_tests', 'anon', ''),
   ('official_tests', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('onboarding_profiles', 'anon', ''),
+  ('onboarding_profiles', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('payment_events', 'anon', ''),
   ('payment_events', 'authenticated', ''),
   ('payments', 'anon', ''),
   ('payments', 'authenticated', 'SELECT(amount_uzs),SELECT(bolim),SELECT(created_at),SELECT(id),SELECT(paid_at),SELECT(plan_code),SELECT(provider),SELECT(provider_order_id),SELECT(status),SELECT(user_id)'),
   ('plan_tasks', 'anon', ''),
   ('plan_tasks', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
-  ('onboarding_profiles', 'anon', ''),
-  ('onboarding_profiles', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('plans', 'anon', 'SELECT'),
   ('plans', 'authenticated', 'SELECT'),
   ('practice_sessions', 'anon', ''),
@@ -62,7 +62,9 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('user_state', 'anon', ''),
   ('user_state', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('vocab_progress', 'anon', ''),
-  ('vocab_progress', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('user_vocab_words', 'anon', ''),
+  ('user_vocab_words', 'authenticated', 'DELETE,SELECT'),
+  ('vocab_progress', 'authenticated', 'DELETE,SELECT'),
   ('vocab_words', 'anon', 'SELECT'),
   ('vocab_words', 'authenticated', 'SELECT')
 ),
@@ -103,7 +105,12 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.get_session(uuid)', false, true, true),
   ('public.finish_session(uuid)', false, true, true),
   ('public.add_to_review(uuid)', false, true, true),
-  ('public.analytics_summary()', false, true, true)
+  ('public.analytics_summary()', false, true, true),
+  ('public.vocab_status()', false, true, true),
+  ('public.vocab_rate(uuid,boolean,boolean)', false, true, true),
+  ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
+  ('public.user_word_add(text,text,text,text)', false, true, true),
+  ('public.vocab_import_local(jsonb)', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
@@ -111,8 +118,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 24 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 24); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 25 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 25); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 
