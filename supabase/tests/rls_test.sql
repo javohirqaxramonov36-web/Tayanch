@@ -93,7 +93,11 @@ begin
   if not exists (select 1 from public.plans where code = 'free') then
     raise exception 'FAIL 02: anon faol tarifni ko''rmadi';
   end if;
-  if exists (select 1 from public.plans where code in ('pro', 'elite')) then
+  -- P19 (20261111090000): pro faol, elite faol emas ("Coming soon").
+  if not exists (select 1 from public.plans where code = 'pro') then
+    raise exception 'FAIL 02: anon faol pro tarifini ko''rmadi';
+  end if;
+  if exists (select 1 from public.plans where code = 'elite') then
     raise exception 'FAIL 02: anon faol bo''lmagan tarifni ko''rdi';
   end if;
   if exists (select 1 from storage.objects where bucket_id = 'question-figures') then
