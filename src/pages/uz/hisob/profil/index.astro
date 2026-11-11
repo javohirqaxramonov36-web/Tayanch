@@ -1,0 +1,193 @@
+---
+// 1-qavat · Hisob · Hisobim (profil). Himoyalangan sahifa: HisobQorovul.
+// Ma'lumot public.profiles jadvalida (P12; migratsiya supabase/migrations/20261108000002_profiles.sql, RLS: faqat o'z qatori).
+// Qatorni auth.users triggeri ochadi, sahifa faqat o'qiydi va yangilaydi (INSERT huquqi yo'q).
+// SAT maqsad ball oralig'i 400–1600: CB04 (College Board, SAT Suite Score Structure); bazada ham shu check.
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import HisobQorovul from '../../../../components/hisob/HisobQorovul.astro';
+import Maydon from '../../../../components/hisob/Maydon.astro';
+import { hisobSahifalar } from '../../../../data/hisobSahifalar';
+import { satBall } from '../../../../data/hisobSozlama';
+---
+<HisobKarta sahifa={hisobSahifalar.profil}>
+  <HisobQorovul>
+    <div class="profil">
+      <section class="hisob-karta" aria-labelledby="hisob-malumot">
+        <h2 id="hisob-malumot">Hisob</h2>
+        <p>Siz <strong id="profil-email"></strong> bilan kirgansiz.</p>
+        <p class="hisob-sust">Dars va mashqlardagi natijalaringiz hozircha faqat shu brauzerda saqlanadi. Ularni hisobga sinxronlash keyinroq qo'shiladi.</p>
+      </section>
+
+      <section class="hisob-karta" aria-labelledby="profil-sarlavha">
+        <h2 id="profil-sarlavha">Ma'lumotlaringiz</h2>
+        <form class="hisob-forma" id="profil-forma" novalidate aria-labelledby="profil-sarlavha">
+          <p class="hisob-alert" id="profil-xato" role="alert" hidden></p>
+          <p class="hisob-holat" id="profil-holat" role="status" hidden></p>
+          <Maydon id="profil-ism" nomi="Ism" autocomplete="name" maxlength={60} izoh="Saytda sizga shu ism bilan murojaat qilamiz." />
+          <Maydon id="profil-taxallus" nomi="Taxallus" autocomplete="nickname" maxlength={20} ixtiyoriy izoh="Reytinglarda ko'rinadi. 3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_)." />
+          <Maydon id="profil-ball" nomi="SAT maqsad ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} ixtiyoriy izoh={`${satBall.min} dan ${satBall.max} gacha butun son (SAT umumiy ball oralig'i).`} />
+          <Maydon id="profil-sana" nomi="Imtihon sanasi" turi="date" autocomplete="off" ixtiyoriy izoh="Qaysi kuni imtihon topshirmoqchisiz." />
+          <button type="submit" class="tugma tugma-asosiy" id="profil-tugma">Saqlash</button>
+        </form>
+      </section>
+
+      <section class="hisob-karta" aria-labelledby="chiqish-sarlavha">
+        <h2 id="chiqish-sarlavha">Hisobdan chiqish</h2>
+        <p class="hisob-sust">Shu qurilmada hisobdan chiqasiz. Brauzerda saqlangan natijalar shu yerda qoladi.</p>
+        <button type="button" class="tugma tugma-ikkinchi" id="chiqish-tugma">Chiqish</button>
+      </section>
+
+      <section class="hisob-karta" aria-labelledby="ochirish-sarlavha">
+        <h2 id="ochirish-sarlavha">Hisobni o'chirish</h2>
+        <p class="hisob-sust">Hisobingiz va serverdagi ma'lumotlaringiz butunlay o'chiriladi. Shu brauzerda saqlangan natijalar qoladi: ularni brauzer sozlamalaridan tozalashingiz mumkin.</p>
+        <button type="button" class="tugma tugma-ikkinchi" id="ochirish-tugma" aria-expanded="false" aria-controls="ochirish-tasdiq">Hisobni o'chirish</button>
+        <div class="ochirish-tasdiq" id="ochirish-tasdiq" hidden>
+          <p id="ochirish-savol" tabindex="-1"><strong>Rostdan ham o'chirasizmi?</strong> Buni qaytarib bo'lmaydi.</p>
+          <p class="hisob-alert" id="ochirish-xato" role="alert" hidden></p>
+          <div class="ochirish-tugmalar">
+            <button type="button" class="tugma tugma-asosiy" id="ochirish-ha">Ha, o'chirish</button>
+            <button type="button" class="tugma tugma-ikkinchi" id="ochirish-yoq">Bekor qilish</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </HisobQorovul>
+</HisobKarta>
+
+<style>
+  .profil { display: flex; flex-direction: column; gap: var(--b-5); }
+  .profil strong { overflow-wrap: anywhere; }
+  .ochirish-tasdiq { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ochirish-tasdiq[hidden] { display: none; }
+  .ochirish-tasdiq p:focus { outline: none; }
+  .ochirish-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+</style>
+
+<script>
+  import { hisobMijoz, hisobQorovul, hisobYoli, xatoMatni, maydonXatosi, yuklanish, xabar } from '../../../../lib/hisob';
+  import { hisobSozlama, satBall } from '../../../../data/hisobSozlama';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const ism = $<HTMLInputElement>('profil-ism');
+  const taxallus = $<HTMLInputElement>('profil-taxallus');
+  const ball = $<HTMLInputElement>('profil-ball');
+  const sana = $<HTMLInputElement>('profil-sana');
+  const tugma = $<HTMLButtonElement>('profil-tugma');
+  const naqsh = new RegExp(`^${hisobSozlama.taxallusNaqsh}$`);
+  const maydonlar = [ism, taxallus, ball, sana];
+  let foydalanuvchiId = '';
+
+  function formaYoq(yoq: boolean) {
+    maydonlar.forEach((el) => (el.disabled = yoq));
+    tugma.disabled = yoq;
+  }
+
+  formaYoq(true);
+  hisobQorovul().then(async (sessiya) => {
+    if (!sessiya) return;
+    const u = sessiya.user;
+    foydalanuvchiId = u.id;
+    $('profil-email').textContent = u.email ?? '';
+    const c = hisobMijoz();
+    if (!c) return;
+    const { data, error } = await c
+      .from('profiles')
+      .select('display_name, nickname, target_score, exam_date')
+      .eq('id', u.id)
+      .maybeSingle();
+    if (error || !data) {
+      return xabar($('profil-xato'), "Profil ma'lumotlarini yuklab bo'lmadi. Sahifani yangilab ko'ring.");
+    }
+    // display_name bo'sh bo'lsa, P12 dan oldingi user_metadata qiymati taklif qilinadi (saqlanganda jadvalga yoziladi).
+    ism.value = String(data.display_name ?? u.user_metadata?.display_name ?? '');
+    taxallus.value = String(data.nickname ?? u.user_metadata?.nickname ?? '');
+    ball.value = data.target_score == null ? '' : String(data.target_score);
+    sana.value = data.exam_date ?? '';
+    formaYoq(false);
+  }).catch(() => undefined); // xatoni HisobQorovul ko'rsatadi
+
+  function ballXatosi(qiymat: string): string | null {
+    if (!qiymat) return ball.validity.badInput ? 'Faqat raqam kiriting.' : null;
+    const n = Number(qiymat);
+    if (!Number.isInteger(n) || n < satBall.min || n > satBall.max) {
+      return `${satBall.min} dan ${satBall.max} gacha butun son kiriting.`;
+    }
+    return null;
+  }
+
+  $<HTMLFormElement>('profil-forma').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    xabar($('profil-xato'), null);
+    xabar($('profil-holat'), null);
+    const i = ism.value.trim();
+    const t = taxallus.value.trim();
+    const b = ball.value.trim();
+    const xatolar: [HTMLInputElement, string | null][] = [
+      [ism, i ? null : 'Ismingizni kiriting.'],
+      [taxallus, !t || naqsh.test(t) ? null : '3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_) ishlating.'],
+      [ball, ballXatosi(b)],
+      [sana, sana.validity.badInput ? "Sanani to'liq kiriting." : null],
+    ];
+    xatolar.forEach(([el, m]) => maydonXatosi(el, m));
+    const birinchi = xatolar.find(([, m]) => m)?.[0];
+    if (birinchi) return birinchi.focus();
+    const c = hisobMijoz();
+    if (!c || !foydalanuvchiId) return;
+    yuklanish(tugma, true, 'Saqlanmoqda…');
+    const { data, error } = await c
+      .from('profiles')
+      .update({ display_name: i, nickname: t || null, target_score: b ? Number(b) : null, exam_date: sana.value || null })
+      .eq('id', foydalanuvchiId)
+      .select('id');
+    yuklanish(tugma, false);
+    if (error?.code === '23505') {
+      maydonXatosi(taxallus, "Bu taxallus band. Boshqasini tanlang.");
+      return taxallus.focus();
+    }
+    if (error || !data?.length) return xabar($('profil-xato'), xatoMatni((error ?? new Error('profil')) as Error, 'profil'));
+    xabar($('profil-holat'), 'Saqlandi.');
+  });
+  maydonlar.forEach((el) => el.addEventListener('input', () => maydonXatosi(el, null)));
+
+  const chiqish = $<HTMLButtonElement>('chiqish-tugma');
+  chiqish.addEventListener('click', async () => {
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(chiqish, true, 'Chiqilmoqda…');
+    // scope 'local': faqat shu qurilmadagi sessiya tugaydi. Server javob bermasa ham (tarmoq yo'q)
+    // supabase-js mahalliy sessiyani o'chiradi (sinaldi), shuning uchun natijadan qat'i nazar chiqiladi.
+    await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
+    location.assign(`${hisobYoli('kirish')}?chiqdi=1`);
+  });
+
+  // Hisobni o'chirish: ikki bosqich (tugma → tasdiq). Escape yoki "Bekor qilish" yopadi va fokusni qaytaradi.
+  const ochirish = $<HTMLButtonElement>('ochirish-tugma');
+  const tasdiq = $('ochirish-tasdiq');
+  const ha = $<HTMLButtonElement>('ochirish-ha');
+  function tasdiqni(ochiq: boolean) {
+    tasdiq.hidden = !ochiq;
+    ochirish.setAttribute('aria-expanded', String(ochiq));
+    xabar($('ochirish-xato'), null);
+    if (ochiq) $('ochirish-savol').focus();
+    else ochirish.focus();
+  }
+  ochirish.addEventListener('click', () => tasdiqni(tasdiq.hidden));
+  $<HTMLButtonElement>('ochirish-yoq').addEventListener('click', () => tasdiqni(false));
+  tasdiq.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !ha.disabled) tasdiqni(false); });
+  ha.addEventListener('click', async () => {
+    const c = hisobMijoz();
+    if (!c) return;
+    xabar($('ochirish-xato'), null);
+    yuklanish(ha, true, "O'chirilmoqda…");
+    // Server funksiyasi: supabase/migrations/20261110210000_hisobni_ochirish.sql (faqat o'z hisobi).
+    const { error } = await c.rpc('delete_own_account');
+    if (error) {
+      yuklanish(ha, false);
+      return xabar($('ochirish-xato'), xatoMatni(error as unknown as Error, 'ochirish'));
+    }
+    await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
+    location.assign(`${hisobYoli('kirish')}?ochirildi=1`);
+  });
+</script>

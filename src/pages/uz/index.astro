@@ -9,6 +9,8 @@ import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
 import Zina from '../../components/Zina.astro';
 import Bino from '../../components/Bino.astro';
+import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
+import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
 
 const sochilgan = [
   { t: 'IELTS', x: 6, y: 8, r: -6 },
@@ -31,10 +33,14 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   tekshirilgan="2026-11-04"
   keyingiTekshiruv="2026-12-04"
   tekshirilmagan={[
-    "Stipendiya takliflari summasi ($1.1M+): tasdiqlovchi jadval hali tayyor emas",
     "Timeline bosqichlarining tartibi va yillari muallif tomonidan to'liq tasdiqlanishi kerak",
   ]}
 >
+  <YolBelgisi slot="bosh" />
+
+  <!-- 0. Shaxsiy yo'l xaritasi (Navigator onboarding): faqat saqlangan profil bo'lsa ko'rinadi -->
+  <YolXaritasi />
+
   <!-- 1. Muammo -->
   <section class="ichki muammo" aria-labelledby="s1">
     <div class="muammo-matn">
@@ -48,7 +54,8 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
               <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} data-floor={q.raqam} data-bino-yoq={q.raqam} href={yol(q.manzil)}>
                 <span class="qq-raqam" aria-hidden="true">{q.raqam}</span>
                 <span class="qq-nom"><span class="sr">{q.raqam}-qavat: </span>{q.nomi}</span>
-                {q.holat === 'tez-orada' && <span class="qq-pill">qurilmoqda</span>}
+                {q.holat === 'tez-orada' && <span class="qq-pill" lang="en">Coming soon</span>}
+                {(q.slug === 'sat' || q.slug === 'ielts') && <span class="qq-pill" lang="en">Beta</span>}
               </a>
             </li>
           ))}
@@ -78,7 +85,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
       </ol>
       <div class="vadalar">
         <p><strong>Rasmiy manba bilan.</strong> Har qoida va muddat yonida manba havolasi va tekshirilgan sana.</p>
-        <p><strong>Ro'yxatsiz va to'lovsiz.</strong> Kiritgan narsangiz faqat brauzeringizda qoladi.</p>
+        <p><strong>Ro'yxatsiz va to'lovsiz.</strong> Kiritgan narsangiz brauzeringizda qoladi. Ixtiyoriy hisobga kirsangiz, yo'l xaritangiz hisobingizda ham saqlanadi.</p>
         <p><strong>Halol.</strong> Natija kafolatlanmaydi. Uydirma raqam va sharh yo'q.</p>
       </div>
     </div>
@@ -114,7 +121,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
               </svg>
               <span class="karta-nom">{b.nomi}</span>
               <span class="karta-tavsif">{b.tavsif}</span>
-              <span class="karta-holat">{ochiq ? 'Boshlash' : 'Tez orada'}</span>
+              <span class="karta-holat">{ochiq ? 'Boshlash' : 'Coming soon'}</span>
             </a>
           </li>
         );
@@ -142,7 +149,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   /* 1. Muammo */
   .muammo { padding-block: var(--b-24) 88px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
   .muammo-matn { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
-  .muammo h1 { font-size: var(--matn-hero); line-height: 1.04; letter-spacing: -1px; font-weight: 900; }
+  .muammo h1 { font-size: var(--matn-hero); line-height: 1.04; letter-spacing: var(--oraliq-hero); font-weight: 900; }
   .xira { color: var(--color-text-secondary); }
   .sochilgan { flex: 1 1 420px; min-width: 0; position: relative; height: 340px; }
   /* DS shisha bino: yorliqlar uning atrofida, bino ularning ostida */

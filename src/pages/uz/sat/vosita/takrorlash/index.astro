@@ -342,7 +342,7 @@ const malumot = {
   .takror :global(.pill) { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
   .takror :global(.pill-ogoh) { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
   .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: 32px; }
   h2:focus, .yakun-matn:focus { outline: none; }
   h3 { font-size: 20px; }
@@ -359,7 +359,7 @@ const malumot = {
   .darslar { display: flex; flex-direction: column; gap: var(--b-2); }
   .darslar ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--b-2); }
   .darslar a { min-height: 48px; display: flex; align-items: center; padding: 0 var(--b-4); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); color: var(--rang-havola); font-weight: 700; text-decoration: none; }
-  .darslar a:hover { border-color: var(--rang-asosiy); }
+  .darslar a:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
   .darslar a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .guruh { border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
   .guruh summary { min-height: 56px; padding: var(--b-3) var(--b-4); display: flex; align-items: center; font-weight: 800; cursor: pointer; }

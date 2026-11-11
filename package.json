@@ -8,12 +8,28 @@
     "preview": "astro preview",
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
-    "repo:tekshir": "node scripts/repo-tekshir.mjs"
+    "repo:tekshir": "node scripts/repo-tekshir.mjs",
+    "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'",
+    "savol-banki:sinov": "node --test 'src/lib/testlar/*.test.ts'",
+    "db:tekshir": "bash scripts/rls-tekshir.sh",
+    "funksiyalar:tekshir": "deno test --no-lock --node-modules-dir=none supabase/functions/tests/ && deno check --no-lock --node-modules-dir=none supabase/functions/tolov-yaratish/index.ts supabase/functions/inpay-webhook/index.ts supabase/functions/inpay-holat/index.ts supabase/functions/inpay-muvofiqlash/index.ts",
+    "inpay:webhook-sinov": "node scripts/inpay-webhook-sinov.mjs",
+    "lugat:import": "node scripts/lugat-import.mjs",
+    "lugat:sinov": "node --test scripts/lugat/*.test.mjs",
+    "check": "astro check",
+    "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
+    "validate:tests": "node scripts/ielts-testlarni-tekshir.ts"
   },
   "dependencies": {
     "@fontsource-variable/onest": "^5.3.1",
     "@supabase/supabase-js": "^2.119.0",
     "astro": "^7.4.5",
+    "katex": "^0.19.1",
     "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.6",
+    "typescript": "^6.0.3"
   }
 }

@@ -1,7 +1,15 @@
 ---
 import { yol } from '../lib/yol';
 import Lift from './Lift.astro';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
 // Bo'limlarga o'tishni lift bajaradi (Tayanch binosi, 5 qavat).
+// Hisob (bitta, butun sayt uchun): "Kirish" / "Hisobim". Faqat Supabase sozlangan build'da chiqadi;
+// holatni src/lib/hisobHolat.ts yangilaydi. Hisob sahifalarining o'zida ?keyin= qo'shilmaydi.
+const hisobBor = Boolean(PUBLIC_SUPABASE_URL && PUBLIC_SUPABASE_ANON_KEY);
+const joriy = Astro.url.pathname;
+const hisobSahifasida = joriy.startsWith(yol('/uz/hisob/'));
+const hisobKirish = yol('/uz/hisob/kirish/') + (hisobSahifasida ? '' : `?keyin=${encodeURIComponent(joriy)}`);
+const hisobProfil = yol('/uz/hisob/profil/');
 ---
 <header class="menyu-qator">
   <div class="ichki menyu-ichki">
@@ -14,12 +22,29 @@ import Lift from './Lift.astro';
         <li><a href={yol('/uz/#qavatlar')}>Yo'nalishlar</a></li>
         <li><a href={yol('/uz/deadline/')}>Muddatlar</a></li>
         <li><a href={yol('/uz/manbalar/')}>Manbalar</a></li>
+        {hisobBor && (
+          <li>
+            <a
+              class="hisob-menyu" href={hisobKirish} data-hisob-havola
+              data-kirish={hisobKirish} data-profil={hisobProfil}
+              data-matn-kirish="Kirish" data-matn-kirgan="Hisobim"
+            >
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" /></svg>
+              <span data-hisob-nom>Kirish</span>
+            </a>
+          </li>
+        )}
         <li><a class="boshlash" href={yol('/uz/#maqsad')}>Boshlash</a></li>
       </ul>
     </nav>
     <Lift variant="menyu" />
   </div>
 </header>
+
+<script>
+  import { hisobHavolalari } from '../lib/hisobHolat';
+  hisobHavolalari();
+</script>
 
 <style>
   /* Liquid Glass (topbar) */
@@ -56,5 +81,6 @@ import Lift from './Lift.astro';
     border-radius: var(--btn-radius); padding-block: 0; padding-inline: var(--control-pad-md);
     font-weight: var(--text-button-weight);
   }
+  ul a.hisob-menyu { display: inline-flex; align-items: center; gap: 6px; }
   ul a.boshlash:hover { background: var(--btn-primary-bg-hover); color: var(--btn-primary-text); }
 </style>

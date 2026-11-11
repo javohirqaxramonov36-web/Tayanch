@@ -37,6 +37,7 @@ const id = 'qavatlar-aro-h';
               <span class="qa-nom" lang={k.nomiTili}>{k.nomi}</span>
               <span class="qa-izoh">{k.izoh}</span>
               {q.holat === 'tez-orada' && <span class="qa-pill">{M.zina.qurilmoqda}</span>}
+              {(q.slug === 'sat' || q.slug === 'ielts') && <span class="qa-pill" lang="en">Beta</span>}
             </a>
           </li>
         );

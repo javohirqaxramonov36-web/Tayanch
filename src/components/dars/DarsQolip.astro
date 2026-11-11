@@ -504,7 +504,7 @@ const qadamlar = [
   .dars .pill-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
   .dars .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
   .dars .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .dars h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; text-wrap: balance; }
+  .dars h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); text-wrap: balance; }
   .dars .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
 
   .dars .maqsad { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-wrap: wrap; gap: var(--b-6); justify-content: space-between; }
@@ -512,7 +512,7 @@ const qadamlar = [
   .dars .maqsad ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-1); }
   .dars .maqsad-progress { flex: 0 1 240px; display: flex; flex-direction: column; gap: var(--b-2); justify-content: flex-end; }
   .dars .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .dars .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); transition: width 0.3s; }
+  .dars .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); transition: width var(--harakat-orta) var(--harakat-egri); }
 
   /* Laboratoriya: kenglik yetsa sahna chapda, panel o'ngda; aks holda panel sahna ostida */
   .dars .lab { container-type: inline-size; }

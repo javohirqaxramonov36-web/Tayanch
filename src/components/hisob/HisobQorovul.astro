@@ -1,18 +1,20 @@
 ---
 // Himoyalangan sahifa qorovuli. Ichidagi kontent sessiya tekshirilguncha yashirin.
 // Sessiya yo'q: kirish sahifasiga ?keyin=<shu sahifa> bilan yuboradi (src/lib/hisob.ts, hisobQorovul).
+// Rozilik yo'q (profiles.consent_version bo'sh): rozilik sahifasiga. profiles o'qib bo'lmasa: kontent yopiq, xato.
 // Hisob o'chirilgan (env yo'q): HisobKarta'dagi ogohlik ko'rinadi, kontent yashirin qoladi.
 // Sahifa skripti sessiyani `await hisobQorovul()` bilan oladi (bir xil va'da, ikki marta so'ralmaydi).
 ---
 <div class="hisob-qorovul">
-  <p class="hisob-holat" role="status" data-qorovul-kutish>Checking your account…</p>
+  <p class="hisob-holat" role="status" data-qorovul-kutish>Hisob tekshirilmoqda…</p>
+  <p class="hisob-alert" role="alert" data-qorovul-xato hidden></p>
   <div data-qorovul-ichi hidden>
     <slot />
   </div>
 </div>
 
 <script>
-  import { hisobQorovul, hisobYoqBolsa } from '../../lib/hisob';
+  import { hisobQorovul, hisobYoqBolsa, rozilikXatoMatni, xabar } from '../../lib/hisob';
 
   const kutish = document.querySelector<HTMLElement>('[data-qorovul-kutish]');
   const ichi = document.querySelector<HTMLElement>('[data-qorovul-ichi]');
@@ -23,6 +25,9 @@
       if (!sessiya) return; // kirish sahifasiga yo'naltirildi
       if (kutish) kutish.hidden = true;
       if (ichi) ichi.hidden = false;
+    }).catch(() => {
+      if (kutish) kutish.hidden = true;
+      xabar(document.querySelector<HTMLElement>('[data-qorovul-xato]'), rozilikXatoMatni);
     });
   }
 </script>

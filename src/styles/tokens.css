@@ -462,6 +462,17 @@
   --soya:var(--shadow-2);
   --parda:var(--scrim);
 
+  /* main'dan (2026-11-10/11) kelgan eski nomlar → DS */
+  --oraliq-hero:var(--text-display-ls);
+  --oraliq-sarlavha:var(--text-h1-ls);       /* h1, h2 */
+  --oraliq-kichik-sarlavha:var(--text-h3-ls); /* h3 */
+  --harakat-tez:var(--duration-fast);         /* hover, bosilish */
+  --harakat-orta:var(--duration-base);        /* panel ochilishi, progress */
+  --harakat-sekin:var(--duration-slow);
+  --harakat-egri:var(--ease-enter);
+  --kotarilish:translateY(var(--card-lift));  /* bosiladigan karta hover (reduced motion'da 0) */
+  --bosilish:translateY(var(--btn-press-shift)); /* tugma :active */
+
   /* Qobiq (bo'lim yon paneli): eski qiymatlar */
   --yon-kenglik:288px;
   --yon-yigilgan:72px;
@@ -470,3 +481,12 @@
 @media (max-width: 640px){
   :root{ --b-24:64px; }
 }
+/* Sensorli ekranda hover bosilgandan keyin "yopishib" qoladi: karta ko'tarilmaydi. */
+@media (hover: none){
+  :root{ --kotarilish:none; }
+}
+
+/* Google tugmasi: Google brend qoidalari (developers.google.com/identity/branding-guidelines, 2026-11-09).
+   Sayt palitrasidan istisno (DESIGN.md, "Google tugmasi"). hover: holat qatlami, Google qiymati emas. */
+:root{ --google-fon:#ffffff; --google-chiziq:#747775; --google-matn:#1f1f1f; --google-hover:rgba(31, 31, 31, 0.08); }
+:root[data-mavzu='qorongi']{ --google-fon:#131314; --google-chiziq:#8e918f; --google-matn:#e3e3e3; --google-hover:rgba(227, 227, 227, 0.08); }

@@ -3,7 +3,7 @@
 // Tavsiflarda fakt yo'q: faqat sahifada nima bo'lishi yozilgan. Fakt qo'shilsa, manba ID si ham qo'shiladi.
 // Matn inglizcha (SAT bo'limi qoidasi, CLAUDE.md); qism (URL) va kod nomlari o'zbekcha qoladi.
 
-export type SatTuri = 'mashq' | 'vosita' | 'qollanma' | 'hisob';
+export type SatTuri = 'mashq' | 'vosita' | 'qollanma';
 
 export interface SatSahifa {
   /** /uz/sat/ dan keyingi qism, oxirida / bilan: "mashq/test/" */
@@ -41,10 +41,12 @@ export const satGuruhlar: SatGuruh[] = [
         qism: 'mashq/bank/',
         tayyor: true,
         nomi: 'Question bank',
-        tavsif: 'Practice questions sorted by topic: Reading & Writing and Math.',
+        tavsif: 'Pick SAT skills, set the difficulty and start a practice session with questions checked by the author.',
         turi: 'mashq',
         manbalar: ['CB02'],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The source and license of the questions have not been decided yet.'],
+        tekshirilmagan: [
+          'Question counts come from the Tayanch database and appear only after you sign in. The bank is empty until the author publishes checked questions.',
+        ],
       },
       {
         qism: 'vosita/natijalar/',
@@ -63,6 +65,18 @@ export const satGuruhlar: SatGuruh[] = [
         turi: 'vosita',
         manbalar: ['CB01', 'CB04'],
         tekshirilmagan: ['The weekly tasks are a Tayanch recommendation, not an official plan.', 'The score step (10) is not stated on the official page: it is used in the input field for convenience.'],
+      },
+      {
+        qism: 'vosita/rasmiy-testlar/',
+        tayyor: true,
+        nomi: 'Test tracker',
+        tavsif: 'Log the scores and mistakes from your Bluebook practice tests and real SAT attempts, and see which skills you miss most. Only your own entries: no questions are stored and no score is estimated.',
+        turi: 'vosita',
+        manbalar: ['CB01', 'CB03', 'CB04'],
+        tekshirilmagan: [
+          'The score step (10) is not stated on the official page: it is used in the fields for convenience.',
+          'Questions per module (27 and 22) are the CB03 section totals split equally between two modules.',
+        ],
       },
       {
         qism: 'vosita/takrorlash/',
@@ -183,6 +197,15 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Guides',
     sahifalar: [
       {
+        qism: 'qollanma/qayerdan-boshlash/',
+        tayyor: true,
+        nomi: 'Where to start',
+        tavsif: 'Answer four questions and get a step-by-step self-study path, plus a map of free official resources.',
+        turi: 'qollanma',
+        manbalar: ['CB20', 'CB21', 'CB27'],
+        tekshirilmagan: ['The steps and their order are a Tayanch recommendation, not an official plan.'],
+      },
+      {
         qism: 'qollanma/strategiya/',
         nomi: 'Strategy',
         tavsif: "Where to start your prep and how to plan it: based on the author's experience.",
@@ -216,6 +239,20 @@ export const satGuruhlar: SatGuruh[] = [
       },
     ],
   },
+  {
+    nomi: 'Account',
+    sahifalar: [
+      {
+        qism: 'hisob/obuna/',
+        tayyor: true,
+        nomi: 'Plans',
+        tavsif: 'Choose a SAT plan and pay through inPAY. Each payment covers one prepaid period; nothing renews automatically.',
+        turi: 'vosita',
+        manbalar: ['IP03'],
+        tekshirilmagan: ['Prices and usage limits are not set yet.'],
+      },
+    ],
+  },
 ];
 
 export const satSahifalar: SatSahifa[] = satGuruhlar.flatMap((g) => g.sahifalar);
@@ -225,55 +262,6 @@ export const turiNomi: Record<SatTuri | 'bolim-kirishi', string> = {
   mashq: 'Practice',
   vosita: 'Tool',
   qollanma: 'Guide',
-  hisob: 'Account',
-};
-
-/** Hisob sahifalari (P03). Kontent emas, shuning uchun `satGuruhlar` va kirish sahifasi ro'yxatida yo'q.
- *  Yon panelda alohida "profil bandi" (`yon-past`) orqali: kirmagan bo'lsa `kirish/`, kirgan bo'lsa `profil/`.
- *  Yo'llar `src/lib/hisob.ts` dagi `hisobYoli()` bilan bir xil. Qolip: `SatFokus` (yon panelsiz). */
-export const satHisobSahifalar: SatSahifa[] = [
-  {
-    qism: 'hisob/kirish/',
-    tayyor: true,
-    nomi: 'Sign in',
-    tavsif: 'Sign in to your Tayanch account. An account is optional: practice and lessons work without one.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-  {
-    qism: 'hisob/royxat/',
-    tayyor: true,
-    nomi: 'Create account',
-    tavsif: 'Create a Tayanch account with your email. An account is optional.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-  {
-    qism: 'hisob/parol-tiklash/',
-    tayyor: true,
-    nomi: 'Reset password',
-    tavsif: 'Get a link to set a new password for your Tayanch account.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-  {
-    qism: 'hisob/profil/',
-    tayyor: true,
-    nomi: 'Profile',
-    tavsif: 'Your Tayanch account: name, nickname and sign out.',
-    turi: 'hisob',
-    manbalar: [],
-    tekshirilmagan: [],
-  },
-];
-
-export const hisobSahifa = (qism: string): SatSahifa => {
-  const t = satHisobSahifalar.find((x) => x.qism === qism);
-  if (!t) throw new Error(`satHisobSahifalar: ${qism} topilmadi`);
-  return t;
 };
 
 /** Yon panel guruhlari (dizayn rejasi B, 3-bosqich, muallif tanlovi 2026-11-09).
@@ -292,6 +280,7 @@ const s = (qism: string) => {
 };
 
 export const satYonGuruhlar: SatYonGuruh[] = [
+  { nomi: 'Start here', qismlar: [{ sahifalar: ['qollanma/qayerdan-boshlash/'].map(s) }] },
   {
     nomi: 'Lessons',
     qismlar: [
@@ -300,7 +289,8 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     ],
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/obuna/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 
@@ -312,3 +302,48 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     throw new Error(`satYonGuruhlar: yon panelda yo'q yoki takroriy sahifa: ${yoq.map((x) => x.qism).join(', ')}`);
   }
 }
+
+/** Namuna (demo) sahifalari: `noindex` (SatFokus), yon panelda va `satGuruhlar` da yo'q (P06, muallif qarori 2026-11-09). */
+export const satNamunaSahifalar: SatSahifa[] = [
+  {
+    qism: 'vosita/savol-namuna/',
+    tayyor: true,
+    nomi: 'Question viewer',
+    tavsif: 'A sample of the component that shows SAT practice questions: multiple choice and student-produced response, formulas, figures and passages.',
+    turi: 'vosita',
+    manbalar: [],
+    tekshirilmagan: ['The sample questions were written for Tayanch and still need the author\'s review.'],
+  },
+];
+
+/**
+ * Ichki fokus sahifalari: faqat boshqa sahifadan ochiladi (masalan Savol banki → sessiya, ?id= bilan),
+ * shuning uchun yon panelda va `satGuruhlar` da yo'q. SatFokus qolipi: noindex.
+ */
+export const satIchkiSahifalar: SatSahifa[] = [
+  {
+    // P08: manzil ?id=<session_id> (javoblar URL da emas). Savol banki start javobini sessionStorage "tayanch:sat-sessiya" ga ham yozadi.
+    qism: 'mashq/sessiya/',
+    tayyor: true,
+    nomi: 'Practice session',
+    tavsif: 'Solve the questions you picked in the question bank, one at a time, timed or untimed, and review your mistakes.',
+    turi: 'mashq',
+    manbalar: ['CB03'],
+    tekshirilmagan: [
+      'Timed mode gives about 71 seconds per Reading and Writing question and about 95 seconds per Math question, worked out from the official section times. The real test times each module, not each question.',
+      'The time limit is kept by this page. The server does not yet reject answers sent after the time is up.',
+    ],
+  },
+];
+
+export const ichkiSahifa = (qism: string): SatSahifa => {
+  const t = satIchkiSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satIchkiSahifalar: ${qism} topilmadi`);
+  return t;
+};
+
+export const namunaSahifa = (qism: string): SatSahifa => {
+  const t = satNamunaSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satNamunaSahifalar: ${qism} topilmadi`);
+  return t;
+};

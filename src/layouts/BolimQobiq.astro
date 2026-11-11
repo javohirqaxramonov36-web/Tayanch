@@ -46,6 +46,7 @@ const sahifaNomi = title.split(' · ')[0];
         <slot />
       </main>
       {bolim === 'sat' && <SatEslatma />}
+      <p class="ichki beta-holat" lang="en">Beta — in development</p>
     </div>
     <Lift variant="pastki" />
   </body>
@@ -54,6 +55,7 @@ const sahifaNomi = title.split(' · ')[0];
 <style is:global>
   .bolim-qobiq .kontent-ustun { min-width: 0; }
   .bolim-qobiq .kontent-ustun .ichki { max-width: 960px; padding-inline: var(--b-4); padding-bottom: var(--b-16); }
+  .bolim-qobiq .kontent-ustun .beta-holat { margin: 0; padding-block: var(--b-4) var(--b-6); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
 
   @media (min-width: 1024px) {
     .bolim-qobiq {

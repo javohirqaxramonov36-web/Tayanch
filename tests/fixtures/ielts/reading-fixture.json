@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "testId": "fixture-mini",
+  "title": "Fixture: The Village Clock",
+  "durationMinutes": 60,
+  "passages": [
+    {
+      "id": "p1",
+      "difficulty": "Fixture",
+      "title": "The Village Clock",
+      "paragraphs": [
+        {
+          "label": "A",
+          "text": "For most of the last century, the clock on the old mill in Ashby was the only public clock in the village. It was never accurate. Farmers joked that it showed the right time only twice a day, and most people preferred to listen for the bakery whistle instead."
+        },
+        {
+          "label": "B",
+          "text": "In 1987 a retired engineer, Mara Lind, offered to repair the mechanism without payment. She spent forty evenings in the mill tower, replacing worn gears with parts she made at home. When she finished, the clock lost less than a minute a month."
+        },
+        {
+          "label": "C",
+          "text": "The repair changed village habits in small ways. The weekly market began to open at a fixed hour, and the school stopped ringing its own bell. Not everyone was pleased: the baker complained that nobody listened for his whistle any more."
+        }
+      ],
+      "groups": [
+        {
+          "type": "tfng",
+          "instructions": "Do the following statements agree with the information given in the passage? Choose TRUE, FALSE or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 1,
+              "prompt": "Before the repair, villagers relied on the mill clock to tell the time.",
+              "answer": "FALSE",
+              "explanation": "Paragraph A says the clock was never accurate and most people listened for the bakery whistle instead, which contradicts the statement.",
+              "evidence": { "paragraph": "A", "quote": "most people preferred to listen for the bakery whistle instead" }
+            }
+          ]
+        },
+        {
+          "type": "matching-headings",
+          "instructions": "Choose the correct heading for the paragraph from the list of headings below.",
+          "headings": [
+            { "id": "i", "text": "A clock nobody trusted" },
+            { "id": "ii", "text": "An unpaid repair" },
+            { "id": "iii", "text": "The cost of new gears" }
+          ],
+          "questions": [
+            {
+              "number": 2,
+              "prompt": "Paragraph B",
+              "answer": "ii",
+              "explanation": "Paragraph B is about Mara Lind repairing the clock without payment. The price of the gears is not discussed.",
+              "evidence": { "paragraph": "B", "quote": "offered to repair the mechanism without payment" }
+            }
+          ]
+        },
+        {
+          "type": "mcq",
+          "instructions": "Choose TWO letters, A-D.",
+          "questions": [
+            {
+              "numbers": [3, 4],
+              "choose": 2,
+              "prompt": "Which TWO changes followed the repair of the clock?",
+              "options": [
+                { "id": "A", "text": "The market started at a set time." },
+                { "id": "B", "text": "The bakery closed." },
+                { "id": "C", "text": "The school no longer rang its bell." },
+                { "id": "D", "text": "A second clock was installed." }
+              ],
+              "answer": ["A", "C"],
+              "explanation": "Paragraph C names two changes: the market opened at a fixed hour and the school stopped ringing its own bell. The bakery did not close, and no second clock is mentioned.",
+              "evidence": { "paragraph": "C", "quote": "The weekly market began to open at a fixed hour, and the school stopped ringing its own bell." }
+            }
+          ]
+        },
+        {
+          "type": "gap-fill",
+          "instructions": "Complete the sentence below. Choose ONE WORD ONLY from the passage or write A NUMBER.",
+          "questions": [
+            {
+              "number": 5,
+              "prompt": "Mara Lind worked in the mill tower for ______ evenings.",
+              "wordLimit": 1,
+              "answer": "forty",
+              "acceptedAnswers": ["40"],
+              "explanation": "Paragraph B states that she spent forty evenings in the mill tower.",
+              "evidence": { "paragraph": "B", "quote": "She spent forty evenings in the mill tower" }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

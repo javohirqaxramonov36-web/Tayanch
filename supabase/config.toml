@@ -5,10 +5,16 @@ project_id = "tayanch"
 
 [auth]
 # Havolada redirectTo bo'lmasa shu manzil ishlatiladi.
-site_url = "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/"
-# Tasdiqlash xati -> kirish/ (ba'zan ?keyin= bilan), parol tiklash -> parol-tiklash/. Lokal: astro dev/preview 4321.
+site_url = "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/"
+# Hisob 1-qavatda (/uz/hisob/, 2026-11-09). Tasdiqlash xati -> kirish/ (ba'zan ?keyin= bilan),
+# parol tiklash -> parol-tiklash/. Lokal: astro dev/preview 4321.
+# Eski /uz/sat/hisob/ manzillari ham qoladi: ular yangi joyga yo'naltiradi (yangi kod deploy bo'lguncha ham ishlaydi).
 additional_redirect_urls = [
-  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**",
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/",
+  # Google (P03B): redirectTo query'siz, aniq shu manzil (keyin sessionStorage'da). Qo'llangan 2026-11-09.
+  "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/callback/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/",
   "http://localhost:4321/Tayanch/**",
@@ -16,6 +22,52 @@ additional_redirect_urls = [
 # Formadagi hisobSozlama.parolMinUzunlik bilan bir xil.
 minimum_password_length = 8
 
+# Google provider (client ID, secret) bu faylda emas: Dashboard → Authentication → Providers → Google
+# (secret repoga tushmasligi uchun). Faylda yo'q sozlama config push'da o'zgarmaydi.
+
 [auth.email]
 # Email tasdiqlash majburiy.
 enable_confirmations = true
+
+# Xat shablonlari (P28, 2026-11-09): o'zbekcha, hisob sahifalari 1-qavatda. Faqat ishlatiladigan uchtasi.
+# Havola {{ .ConfirmationURL }} o'zgarmagan (redirect_to shu orqali o'tadi).
+[auth.email.template.confirmation]
+subject = "Tayanch: emailingizni tasdiqlang"
+content_path = "./supabase/templates/tasdiqlash.html"
+
+[auth.email.template.recovery]
+subject = "Tayanch: yangi parol o'rnating"
+content_path = "./supabase/templates/parol-tiklash.html"
+
+[auth.email.template.email_change]
+subject = "Tayanch: yangi emailni tasdiqlang"
+content_path = "./supabase/templates/email-almashtirish.html"
+
+# O'z SMTP (P28): Gmail SMTP, alohida Gmail hisobi va App Password bilan (muallifda domen yo'q, 2026-11-09).
+# Hammasi Dashboard'da (supabase/README.md 2.4-bo'lim). Blok izohda qoladi: yoqilgan holda o'zgaruvchisiz
+# `config push` parolni bo'sh yozishi mumkin (tekshirish kerak).
+# [auth.email.smtp]
+# enabled = true
+# host = "smtp.gmail.com"
+# port = 465
+# user = "<sayt uchun Gmail>"
+# pass = "env(SUPABASE_AUTH_SMTP_PASS)"
+# admin_email = "<sayt uchun Gmail>"
+# sender_name = "Tayanch"
+
+# Edge Function'lar (inPAY to'lovi, PR #62; supabase/README.md 10-bo'lim). `supabase functions deploy` o'qiydi.
+# inpay-webhook: inPAY Supabase JWT yubormaydi, so'rov X-Inpay-Signature imzosi bilan tekshiriladi.
+[functions.inpay-webhook]
+verify_jwt = false
+
+# tolov-yaratish: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi.
+[functions.tolov-yaratish]
+verify_jwt = false
+
+# inpay-holat: foydalanuvchi kod ichida auth.getUser bilan tekshiriladi; faqat o'z to'lovi.
+[functions.inpay-holat]
+verify_jwt = false
+
+# inpay-muvofiqlash (P21): Supabase Cron JWT yubormaydi; X-Cron-Secret (MUVOFIQLASH_SECRET) kod ichida tekshiriladi.
+[functions.inpay-muvofiqlash]
+verify_jwt = false

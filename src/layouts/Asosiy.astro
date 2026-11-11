@@ -34,6 +34,7 @@ const {
 <html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
     <BoshQism title={title} description={description} holat={holat} />
+    <slot name="bosh" />
   </head>
   <body>
     <a class="otish" href="#asosiy">Asosiy matnga o'tish</a>
