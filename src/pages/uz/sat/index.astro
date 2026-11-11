@@ -8,6 +8,7 @@ import { manbalar } from '../../../data/manbalar';
 const cb03 = manbalar.find((m) => m.id === 'CB03')!;
 import { yol } from '../../../lib/yol';
 import Zina from '../../../components/Zina.astro';
+import KunSavoli from '../../../components/sat/KunSavoli.astro';
 import SatMaqsadSarlavha from '../../../components/sat/SatMaqsadSarlavha.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
@@ -70,6 +71,8 @@ const qadamlar = [
         <p class="tuzilma-izoh">Source: <a href={cb03.havola} rel="noopener">{cb03.tashkilot}</a>, checked {cb03.tekshirilganSana}.</p>
       </div>
     </section>
+
+    <KunSavoli />
 
     <section class="yol" aria-labelledby="yol-h">
       <div class="bosh-qator">

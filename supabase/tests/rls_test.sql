@@ -93,7 +93,11 @@ begin
   if not exists (select 1 from public.plans where code = 'free') then
     raise exception 'FAIL 02: anon faol tarifni ko''rmadi';
   end if;
-  if exists (select 1 from public.plans where code in ('pro', 'elite')) then
+  -- P19 (20261111090000): pro faol, max (20261111200000 gacha elite) faol emas ("Coming soon").
+  if not exists (select 1 from public.plans where code = 'pro') then
+    raise exception 'FAIL 02: anon faol pro tarifini ko''rmadi';
+  end if;
+  if exists (select 1 from public.plans where code = 'max') then
     raise exception 'FAIL 02: anon faol bo''lmagan tarifni ko''rdi';
   end if;
   if exists (select 1 from storage.objects where bucket_id = 'question-figures') then
@@ -195,7 +199,7 @@ begin
   end;
   update public.review_queue set note = 'SINOV izoh', reason_tag = 'hisob' where question_id = q1;
   begin
-    insert into public.subscriptions (user_id, plan_code, source) values (a, 'elite', 'admin');
+    insert into public.subscriptions (user_id, plan_code, source) values (a, 'max', 'admin');
     raise exception 'FAIL 06: A subscriptions ga yozdi';
   exception when insufficient_privilege then null;
   end;
@@ -230,7 +234,7 @@ begin
   exception when insufficient_privilege then null;
   end;
   begin
-    perform public.admin_grant_plan(a, 'elite', 30, 'sinov', 'sinov');
+    perform public.admin_grant_plan(a, 'max', 30, 'sinov', 'sinov');
     raise exception 'FAIL 06: A admin_grant_plan ni chaqirdi';
   exception when insufficient_privilege then null;
   end;
@@ -313,8 +317,9 @@ begin
   if position('"correct"' in r::text) > 0 or position('"explanation"' in r::text) > 0 then
     raise exception 'FAIL 09: daily_question javobida to''g''ri javob bor';
   end if;
-  if (public.usage_status() -> 'today' ->> 'daily')::integer <> 1 then
-    raise exception 'FAIL 09: daily kvotasi ikki marta sarflandi';
+  -- P10 (20261111220000): kun savoli kvota sarflamaydi.
+  if coalesce((public.usage_status() -> 'today' ->> 'daily')::integer, 0) <> 0 then
+    raise exception 'FAIL 09: kun savoli daily kvotasini sarfladi';
   end if;
   raise notice 'OK 09 usage_status (limits bo''sh = cheklovsiz), question_counts, daily_question (kuniga bitta sessiya, javobsiz)';
 end
@@ -581,9 +586,9 @@ $$;
 -- 6. To'lov (inPAY): payment_create, payment_set_invoice, payment_apply_event (0010)
 ------------------------------------------------------------------------------
 -- SINOV qiymatlari (haqiqiy narx emas, tranzaksiya oxirida qaytariladi): pro 1000 so'm / 30 kun,
--- elite faol, lekin narxsiz. inPAY id va evt_ id lari soxta.
+-- max faol, lekin narxsiz. inPAY id va evt_ id lari soxta.
 update public.plans set is_active = true, price_uzs = 1000, period_days = 30 where code = 'pro';
-update public.plans set is_active = true, price_uzs = null, period_days = null where code = 'elite';
+update public.plans set is_active = true, price_uzs = null, period_days = null where code = 'max';
 
 set local role anon;
 select set_config('request.jwt.claims', '{"role": "anon"}', true) \gset
@@ -652,7 +657,7 @@ begin
     if sqlerrm <> 'plan_not_available' then raise; end if;
   end;
   begin
-    perform public.payment_create(c, 'elite');
+    perform public.payment_create(c, 'max');
     raise exception 'FAIL 17: narxsiz tarif uchun to''lov yaratildi';
   exception when others then
     if sqlerrm <> 'plan_price_not_set' then raise; end if;
