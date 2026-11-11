@@ -15,6 +15,7 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | `migrations/20261110000011_tolov_audit_muvofiqlash.sql` | `payment_events.payload` tozalash trigger'i va `payment_pending_stale` (P21), 10-bo'lim. |
 | `migrations/20261110120000_sessiya.sql` | Mashq sessiyasi sahifasi (P08): `get_session`, `finish_session`, `add_to_review`; `submit_answer` yangilangan (parallel so'rov, yakunlangan sessiya). Sinov `tests/sessiya_test.sql`. |
 | `migrations/20261111120000_analitika.sql` | Analitika paneli (P14): `analytics_summary()` (yig'indi serverda, kun chegarasi Asia/Tashkent), `private.has_feature`, `plans.features` ga `analytics_extended` (Pro, Elite). Sinov `tests/analitika_test.sql`. **Jonli bazaga hali qo'llanmagan** (merge'dan keyin, muallif ruxsati bilan). |
+| `migrations/20261111150000_kvota_p19.sql` | P19 kvota: `usage_status()` ga `resets_at` va `today_resets_at`, `private.period_end`, `elite` nomi Max. Qoidalar: `docs/tarif-qoidalari.md`. Sinov `tests/kvota_test.sql` (K00–K05) va `scripts/rls-tekshir.sh` dagi K06 (parallel). |
 | `functions/tolov-yaratish/`, `functions/inpay-webhook/`, `functions/inpay-holat/`, `functions/inpay-muvofiqlash/` | Edge Function'lar: inPAY to'lovi, webhook, holat va muvofiqlashtirish (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
@@ -319,7 +320,7 @@ P19 holati (`migrations/20261111090000_tariflar_p19.sql`, jonli bazada 2026-11-1
 | --- | --- | --- | --- | --- |
 | `free` | null | null | true | `{}` |
 | `pro` | 59000 | 30 | true | `{}` |
-| `elite` | null | null | false ("Coming soon") | `{}` |
+| `elite` (ekranda Max) | null | null | false ("Coming soon") | `{}` |
 
 Kvota: muallif qarori (2026-11-11) "hozircha cheklovsiz", `limits = {}` (kalit yo'q = cheklov yo'q). Keyin qo'yilsa, yangi migratsiya bilan:
 
