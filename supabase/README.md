@@ -312,7 +312,15 @@ Parol haqida (2026-11-09):
 
 ## 7. Kvota va tariflar
 
-`plans` jadvalida `free`, `pro`, `elite`: `price_uzs = null`, `limits = {}` (cheklov yo'q). Qiymatlarni P19 da muallif beradi:
+P19 holati (`migrations/20261111090000_tariflar_p19.sql`, jonli bazada 2026-11-10 dan shunday):
+
+| Tarif | `price_uzs` | `period_days` | `is_active` | `limits` |
+| --- | --- | --- | --- | --- |
+| `free` | null | null | true | `{}` |
+| `pro` | 59000 | 30 | true | `{}` |
+| `elite` | null | null | false ("Coming soon") | `{}` |
+
+Kvota: muallif qarori (2026-11-11) "hozircha cheklovsiz", `limits = {}` (kalit yo'q = cheklov yo'q). Keyin qo'yilsa, yangi migratsiya bilan:
 
 ```sql
 update public.plans

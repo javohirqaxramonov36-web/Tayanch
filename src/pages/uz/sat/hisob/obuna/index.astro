@@ -125,9 +125,11 @@ const usulMatn = usullar.length
       const kod = karta.dataset.tarif!;
       const t = tariflar.find((x) => x.code === kod);
       const tayyor = davrFaol && !!t && typeof t.price_uzs === 'number' && t.price_uzs >= 1000 && !!t.period_days;
-      $('[data-narx]', karta)!.textContent = tayyor ? narxYozuv(t!.price_uzs!) : 'Not available yet';
+      // Faol bo'lmagan tarif (masalan Elite) RLS tufayli bazadan kelmaydi: "Coming soon".
+      $('[data-narx]', karta)!.textContent = tayyor ? narxYozuv(t!.price_uzs!) : t ? 'Not available yet' : 'Coming soon';
       $('[data-narx-izoh]', karta)!.textContent = tayyor
         ? `For ${t!.period_days} days, paid once.`
+        : !t ? 'This plan is not open yet.'
         : davrFaol ? 'The price will appear here once it is set.' : 'This billing period is not available yet.';
       const imk = $<HTMLUListElement>('[data-imkoniyat]', karta)!;
       const royxat = t && Array.isArray(t.features) ? t.features.filter((f): f is string => typeof f === 'string') : [];
