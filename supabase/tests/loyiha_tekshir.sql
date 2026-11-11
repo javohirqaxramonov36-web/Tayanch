@@ -215,10 +215,9 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
 
   -- 9. Ma'lumot holati: tariflar bo'sh, savol yo'q, sinov qoldig'i yo'q
   union all
-  select 90, 'plans: free, pro, elite (ekranda Max); qiymatlar docs/tarif-qoidalari.md bilan solishtiriladi',
-         case when count(*) = 3 then 'ok' else 'XATO' end,
-         string_agg(code || ' nom=' || name || ' faol=' || is_active || ' limits=' || limits::text
-                    || ' narx=' || coalesce(price_uzs::text, 'null') || ' kun=' || coalesce(period_days::text, 'null'), '; ' order by code)
+  select 90, 'plans: free, pro, elite; limits = {}, price_uzs = null (P19 gacha)',
+         case when count(*) = 3 and bool_and(limits = '{}'::jsonb and price_uzs is null) then 'ok' else 'XATO' end,
+         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null'), '; ' order by code)
     from public.plans
    where code in ('free', 'pro', 'elite')
   union all

@@ -3,7 +3,7 @@
 // Narx va muddat bazadan (plans, faqat faol tariflar ko'rinadi). Brauzer summa yubormaydi:
 // tugma tolov-yaratish ga faqat {plan_code, period} beradi va inPAY sahifasiga o'tadi. Karta ma'lumoti bu saytda yo'q.
 // Davr almashtirgich: tabiiy radio guruh (strelkalar bilan). To'lov tugmasi bosilgach band bo'ladi (takror bosish yo'q).
-// Dizayn: uchta bir xil karta qatori emas (DESIGN.md "Taqiqlar"): Pro (qora) va Max (kod elite) yonma-yon, Free pastda qator.
+// Dizayn: uchta bir xil karta qatori emas (DESIGN.md "Taqiqlar"): Pro (qora) va Elite yonma-yon, Free pastda qator.
 // Brauzerda faqat tayanch:sat-tolov (oxirgi to'lov raqami).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
@@ -126,7 +126,7 @@ const usulMatn = usullar.length
       const kod = karta.dataset.tarif!;
       const t = tariflar.find((x) => x.code === kod);
       const tayyor = davrFaol && !!t && typeof t.price_uzs === 'number' && t.price_uzs >= 1000 && !!t.period_days;
-      // Faol bo'lmagan tarif (masalan Max) RLS tufayli bazadan kelmaydi: "Coming soon".
+      // Faol bo'lmagan tarif (masalan Elite) RLS tufayli bazadan kelmaydi: "Coming soon".
       $('[data-narx]', karta)!.textContent = tayyor ? narxYozuv(t!.price_uzs!) : t ? 'Not available yet' : 'Coming soon';
       $('[data-narx-izoh]', karta)!.textContent = tayyor
         ? `For ${t!.period_days} days, paid once.`

@@ -1,13 +1,13 @@
 # Tarif qoidalari (SAT, P19)
 
-Holat: 2026-11-11. Manba: jonli `plans` jadvali va migratsiyalar `20261111090000_tariflar_p19.sql`, `20261111120000_analitika.sql`, `20261111150000_kvota_p19.sql`.
+Holat: 2026-11-11. Manba: jonli `plans` jadvali va migratsiyalar `20261111090000_tariflar_p19.sql`, `20261111120000_analitika.sql`, `20261111210000_kvota_p19.sql`.
 Raqamlarni faqat muallif beradi. Ular kodga emas, `public.plans` qatoriga yoziladi (pastdagi "Qiymatni o'zgartirish" bo'limi).
 
 ## Tariflar
 
-Tariflar: Free, Pro, Max (muallif qarori, 2026-11-11). Ekranda **Max** ko'rinadi, ichki kod esa `elite` bo'lib qoladi: `payments` va `subscriptions` tashqi kalitlari, `tolov-yaratish` Edge Function va eski migratsiyalar shu kodga bog'langan.
+Tariflar: Free, Pro, Max (muallif qarori, 2026-11-11). Nom va kod `elite` → `max` alohida PR #101 da (`20261111200000_tarif_max.sql`); bu hujjat yangi kodni yozadi.
 
-| | Free (`free`) | Pro (`pro`) | Max (`elite`) |
+| | Free (`free`) | Pro (`pro`) | Max (`max`) |
 | --- | --- | --- | --- |
 | Holat | faol | faol | faol emas ("Coming soon") |
 | Narx | to'lovsiz | 59 000 so'm | belgilanmagan |

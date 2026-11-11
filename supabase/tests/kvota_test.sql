@@ -1,4 +1,4 @@
--- P19 kvota sinovlari (20261111150000_kvota_p19): limit tugashi, kun almashishi, tarif tugashi, admin, usage_status.
+-- P19 kvota sinovlari (20261111210000_kvota_p19): limit tugashi, kun almashishi, tarif tugashi, admin, usage_status.
 -- Parallel so'rovlar alohida: scripts/rls-tekshir.sh oxirida (bir nechta ulanish kerak).
 -- Bitta tranzaksiya, oxirida ROLLBACK. Limit raqamlari faqat shu sinov ichida (haqiqiy qiymat: plans, muallif).
 \set ON_ERROR_STOP on
@@ -16,16 +16,13 @@ update public.plans set limits = '{"questions": {"max": 5, "per": "day"},
  where code = 'free';
 update public.plans set limits = '{"questions": {"max": 20, "per": "day"}}' where code = 'pro';
 
--- K00: nom va effective plan
+-- K00: effective plan
 do $$
 begin
-  if (select name from public.plans where code = 'elite') <> 'Max' then
-    raise exception 'FAIL K00: elite tarifining nomi Max emas';
-  end if;
   if (private.current_plan('00000000-0000-4000-8000-0000000000d5', 'sat')).code <> 'free' then
     raise exception 'FAIL K00: obunasiz foydalanuvchi free emas';
   end if;
-  raise notice 'OK K00 elite nomi Max; obunasiz = free';
+  raise notice 'OK K00 obunasiz foydalanuvchi = free';
 end
 $$;
 

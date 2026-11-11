@@ -1,7 +1,7 @@
 -- P19 (2-qism). Kvota holati: tiklanish vaqti (resets_at) va hisoblash qoidalari.
 -- Qoidalar hujjati: docs/tarif-qoidalari.md.
 --
--- Muallif qarori (2026-11-11): limitlar hozircha yo'q (hamma tarifda limits = '{}'), Elite "Coming soon",
+-- Muallif qarori (2026-11-11): limitlar hozircha yo'q (hamma tarifda limits = '{}'), Max (oldin Elite) "Coming soon",
 -- faqat 30 kunlik davr, sinov muddati yo'q. Shuning uchun bu fayl plans qiymatlarini o'zgartirmaydi.
 -- Raqamlar keyin ma'lumot sifatida yoziladi (kod o'zgarmaydi), masalan:
 --   update public.plans set limits = '{"questions": {"max": <son>, "per": "day"}}' where code = 'free';
@@ -16,11 +16,8 @@
 -- Amaldagi tarif (effective plan) = private.current_plan(user, bolim): faol, boshlangan va tugamagan obuna;
 -- bir nechta bo'lsa eng yuqori sort; hech biri bo'lmasa 'free'. Obuna tugaganda hech narsa o'chirilmaydi.
 --
+-- Tarif nomi/kodi (Elite -> Max) bu yerda emas: 20261111200000_tarif_max.sql (PR #101).
 -- Takror ishga tushirilsa buzilmaydi.
-
--- Muallif qarori (2026-11-11): tariflar Free, Pro, Max. Ekrandagi nom 'Max', ichki kod 'elite' qoladi
--- (payments/subscriptions tashqi kalitlari, tolov-yaratish va eski migratsiyalar shu kodga bog'langan).
-update public.plans set name = 'Max' where code = 'elite' and name is distinct from 'Max';
 
 -- Davr tugash vaqti (keyingi davr boshi), Toshkent yarim tuni bo'yicha. 'day' standart.
 create or replace function private.period_end(p_per text)

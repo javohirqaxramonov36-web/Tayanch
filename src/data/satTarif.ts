@@ -11,7 +11,7 @@ export const satTarif = {
   tariflar: [
     { kod: 'free', nomi: 'Free' },
     { kod: 'pro', nomi: 'Pro' },
-    { kod: 'elite', nomi: 'Max' }, // ekranda Max, ichki kod elite (muallif qarori 2026-11-11)
+    { kod: 'elite', nomi: 'Elite' },
   ] as { kod: TarifKod; nomi: string }[],
   /** Belgi qo'yiladigan tarif. Yorliq "Recommended": "most popular" foydalanuvchi soniga oid da'vo, raqam yo'q. */
   tavsiya: 'pro' as TarifKod,
@@ -37,7 +37,7 @@ export const usulNomi: Record<TolovUsuli, string> = {
   'uzcard-humo': 'UzCard/HUMO',
 };
 
-/** Kvota kalitlari (0008_rpc.sql, 20261111150000_kvota_p19.sql) -> ekrandagi nom. Tartib = UsageBar tartibi. */
+/** Kvota kalitlari (0008_rpc.sql, 20261111210000_kvota_p19.sql) -> ekrandagi nom. Tartib = UsageBar tartibi. */
 export const kvotaNomi: Record<string, string> = {
   sessions: 'Practice sessions',
   questions: 'Questions',
