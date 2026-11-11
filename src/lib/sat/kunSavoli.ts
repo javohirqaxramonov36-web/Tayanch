@@ -1,5 +1,5 @@
 // Kun savoli (P10) sof mantiqi: turlar, mehmon yozuvi (localStorage), matnlar. DOM va tarmoq yo'q (testlanadi).
-// Server: supabase/migrations/20261111120000_kun_savoli.sql (daily_question_public, check_daily_answer,
+// Server: supabase/migrations/20261111220000_kun_savoli.sql (daily_question_public, check_daily_answer,
 // daily_question, submit_answer). Komponent: src/components/sat/KunSavoli.astro. Matn inglizcha (SAT bo'limi).
 //
 // Sana chegarasi: Asia/Tashkent (UTC+5). Savol Toshkent vaqti 00:00 da almashadi; next_at shu vaqt (ISO).

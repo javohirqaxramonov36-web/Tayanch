@@ -76,6 +76,7 @@ Hammasi `security definer`, `search_path = ''`, execute faqat `authenticated` da
 | `check_daily_answer(question, answer)` | faqat bugungi savol: `is_correct`, `correct`, `explanation` (anon ham) | sarflamaydi, hech narsa yozmaydi |
 | `start_review_session(limit)` | muddati kelgan takrorlash savollari | `review_sessions` +1, `questions` +n |
 | `usage_status()` | tarif, cheklovlar, bugungi sarf | sarflamaydi |
+| `analytics_summary()` | analitika paneli (P14): jami, ko'nikma va bo'lim bo'yicha aniqlik, 90 kunlik faollik, streak, xato sababi teglari; `analytics_extended` bayrog'i bo'lsa qiyinlik bo'yicha aniqlik va median vaqt | sarflamaydi |
 | `can_read_question_figure(name)` | Storage policy yordamchisi | sarflamaydi |
 | `admin_grant_plan(...)`, `admin_hide_question(...)` | yangi obuna / yashirilgan savol id, `audit_log` | service role |
 
@@ -137,7 +138,7 @@ Holatlar: `created → pending → paid | failed | canceled`; `failed`/`canceled
 
 Brauzer to'lovni "tasdiqlay" olmaydi: `payments`, `subscriptions`, `payment_events` ga mijozda yozish huquqi yo'q, `payment_*` funksiyalarini faqat service_role chaqiradi. Batafsil: `supabase/README.md`, 10-bo'lim.
 
-### Kun savoli (P10, migratsiya `20261111120000_kun_savoli.sql`)
+### Kun savoli (P10, migratsiya `20261111220000_kun_savoli.sql`)
 
 ```
 daily_pick(bugun, Toshkent) ─ daily_picks da bormi va yaroqlimi (verified, rasmsiz)? ─> o'sha
@@ -153,7 +154,7 @@ Kirgan ── daily_question ─> 'daily' sessiya (kuniga bitta) + result (javob
 - **Streak**: faol kun = kun savoliga javob berilgan Toshkent kuni (to'g'ri yoki xato farqsiz). Bugun javob berilmagan bo'lsa kechagacha bo'lgan ketma-ketlik ko'rsatiladi (kun tugaguncha uzilmaydi). Hisob `practice_sessions` (`daily`) va `attempts` dan, alohida jadval yo'q.
 - **Kvota**: kun savoli hech qanday kalitni sarflamaydi (P19 bilan kelishilgan qoida). `daily` kaliti `usage_counters` da qoladi, lekin oshmaydi.
 - **Rasmli savol** kun savoli bo'lmaydi: mehmon `question-figures` dan rasm ocha olmaydi.
-- **Sinov**: `supabase/tests/kun_savoli_test.sql` (K01–K13, sana `private.today_tashkent` almashtirilib simulyatsiya qilinadi), `npm run db:tekshir`.
+- **Sinov**: `supabase/tests/kun_savoli_test.sql` (KS01–KS13, sana `private.today_tashkent` almashtirilib simulyatsiya qilinadi), `npm run db:tekshir`.
 
 ### Kvota
 

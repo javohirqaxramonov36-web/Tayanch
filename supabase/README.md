@@ -14,6 +14,9 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | `migrations/20261109000010_tolov_inpay.sql` | To'lov SQL funksiyalari (`payment_create`, `payment_set_invoice`, `payment_apply_event`), faqat service_role. Jadvallarga tegmaydi. 10-bo'lim. |
 | `migrations/20261110000011_tolov_audit_muvofiqlash.sql` | `payment_events.payload` tozalash trigger'i va `payment_pending_stale` (P21), 10-bo'lim. |
 | `migrations/20261110120000_sessiya.sql` | Mashq sessiyasi sahifasi (P08): `get_session`, `finish_session`, `add_to_review`; `submit_answer` yangilangan (parallel so'rov, yakunlangan sessiya). Sinov `tests/sessiya_test.sql`. |
+| `migrations/20261111120000_analitika.sql` | Analitika paneli (P14): `analytics_summary()` (yig'indi serverda, kun chegarasi Asia/Tashkent), `private.has_feature`, `plans.features` ga `analytics_extended` (Pro, Max). Sinov `tests/analitika_test.sql`. Jonli bazaga 2026-11-11 da qo'llangan (PR #91 merge va deploy'dan keyin). |
+| `migrations/20261111200000_tarif_max.sql` | Tarif nomi Elite -> Max (muallif, 2026-11-11): `plans` da `elite` qatori `max` / `Max` bo'ladi, qolgan ustunlar o'zgarmaydi. `elite` ga obuna yoki to'lov havolasi bo'lsa FK xatosi bilan to'xtaydi. |
+| `migrations/20261111210000_kvota_p19.sql` | P19 kvota: `usage_status()` ga `resets_at` va `today_resets_at`, `private.period_end`. Qoidalar: `docs/tarif-qoidalari.md`. Sinov `tests/kvota_test.sql` (K00–K05) va `scripts/rls-tekshir.sh` dagi K06 (parallel). |
 | `functions/tolov-yaratish/`, `functions/inpay-webhook/`, `functions/inpay-holat/`, `functions/inpay-muvofiqlash/` | Edge Function'lar: inPAY to'lovi, webhook, holat va muvofiqlashtirish (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
@@ -163,7 +166,7 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 
 - P03B: Google bilan kirish: PR #64 da merge qilingan, sozlash 2.5 (provider 2026-11-10 da yoqilgan; lokal dev va saytda sinalgan).
 - P12: profil sahifasi `public.profiles` jadvalidan o'qiydi va unga yozadi (PR #69, 2026-11-10): ism, taxallus (unique, band bo'lsa 23505), SAT maqsad ball (400–1600, CB04), imtihon sanasi. Jadval: `migrations/20261108000002_profiles.sql`.
-- P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`).
+- P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`). Jonli bazaga 2026-11-11 da qo'llangan (`db push --dry-run` faqat shu faylni ko'rsatdi); `anon` chaqira olmaydi (401), `authenticated` chaqiradi, `security definer`, `search_path=""`. Haqiqiy hisobni o'chirish sinalmagan.
 - P28: o'z SMTP (2.4): Gmail SMTP yoqilgan, o'zbekcha shablonlar qo'llangan (PR #70, 2026-11-10).
 
 ## 3. Migratsiyalarni qo'llash (Supabase CLI)
@@ -312,7 +315,15 @@ Parol haqida (2026-11-09):
 
 ## 7. Kvota va tariflar
 
-`plans` jadvalida `free`, `pro`, `elite`: `price_uzs = null`, `limits = {}` (cheklov yo'q). Qiymatlarni P19 da muallif beradi:
+P19 holati (`migrations/20261111090000_tariflar_p19.sql`, jonli bazada 2026-11-10 dan shunday):
+
+| Tarif | `price_uzs` | `period_days` | `is_active` | `limits` |
+| --- | --- | --- | --- | --- |
+| `free` | null | null | true | `{}` |
+| `pro` | 59000 | 30 | true | `{}` |
+| `max` | null | null | false ("Coming soon") | `{}` |
+
+Kvota: muallif qarori (2026-11-11) "hozircha cheklovsiz", `limits = {}` (kalit yo'q = cheklov yo'q). Keyin qo'yilsa, yangi migratsiya bilan:
 
 ```sql
 update public.plans
@@ -320,7 +331,7 @@ update public.plans
  where code = 'free';
 ```
 
-Kvota kalitlari: `sessions`, `questions`, `answers`, `daily`, `review_sessions` (batafsil: `migrations/20261108000008_rpc.sql` boshida). Kun savoli (P10, `20261111120000_kun_savoli.sql`) hech qanday kalitni sarflamaydi: `daily` kaliti qoladi, lekin oshmaydi.
+Kvota kalitlari: `sessions`, `questions`, `answers`, `daily`, `review_sessions` (batafsil: `migrations/20261108000008_rpc.sql` boshida). Kun savoli (P10, `20261111220000_kun_savoli.sql`) hech qanday kalitni sarflamaydi: `daily` kaliti qoladi, lekin oshmaydi.
 
 ## 8. Admin amallari
 
@@ -353,7 +364,7 @@ Supabase Cron (10 daqiqa) ── POST inpay-muvofiqlash (X-Cron-Secret) ─> pay
 - **Takror bosish**: `tolov-yaratish` shu foydalanuvchi va tarif uchun 30 daqiqa ichida ochilgan `pending` to'lov bo'lsa (kalit rejimi bir xil), yangisini yaratmaydi, o'sha `checkout_url` ni qaytaradi. inPAY checkout havolasining amal muddati hujjatda yo'q: tekshirish kerak.
 - **Summa**: so'rov tanasida `amount`, `amount_uzs`, `price`... bo'lsa `400 amount_not_allowed`. Davr: hozir faqat `oylik` (`plans.period_days`); boshqasi `409 period_not_available` (3 oylik narx P19 da).
 - **Kassa faol emas** (`merchant_inactive`): brauzerga `503 payments_unavailable`, logda aniq sabab (kalitsiz).
-- **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. 2026-11-10 dan `pro` faol: 59000 so'm, 30 kun. `elite` faol emas (narx `null`, P19), unga `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
+- **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. 2026-11-10 dan `pro` faol: 59000 so'm, 30 kun. `max` faol emas (narx `null`, P19), unga `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
 - **Obuna muddati**: to'lov yaratilgan paytdagi `period_days` (`payments.raw.tayanch`). Shu tarifda faol obuna bo'lsa, yangisi uning oxiridan boshlanadi. Takroriy (avto) to'lov yo'q: har davr yangi to'lov. v2'da "Obunalar" bo'limi bor (IP03), keyingi vazifa.
 - **Holatlar**: `created → pending → paid | failed | canceled`. `failed` yoki `canceled` dan keyin `payment.succeeded` kelsa `paid` bo'ladi (pul olingan). `paid` yakuniy.
 - **Webhook javobi**: qayta ishlansa yoki xato bilan saqlansa 200; imzo yo'q, eskirgan yoki noto'g'ri bo'lsa 401 (P21 gacha yo'q/eskirgan 400 edi; tana parse qilinmaydi, bazaga yozilmaydi); baza xatosi 500 (inPAY 8 martagacha qayta yuboradi). Xato bilan saqlangan hodisalar (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) obuna bermaydi va qo'lda ko'riladi:

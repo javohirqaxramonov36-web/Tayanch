@@ -1,4 +1,4 @@
--- 20261111120000. Kun savoli (P10, SAT kirish sahifasi): hamma uchun bitta savol, mehmon uchun cheklangan RPC,
+-- 20261111220000. Kun savoli (P10, SAT kirish sahifasi): hamma uchun bitta savol, mehmon uchun cheklangan RPC,
 -- streak (ketma-ket faol kun) serverda. Takror ishga tushirish xavfsiz (if not exists / create or replace).
 --
 -- Qoidalar:
