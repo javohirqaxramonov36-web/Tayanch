@@ -1,0 +1,1191 @@
+---
+// Mashq sessiyasi (P08): Savol bankida tanlangan savollarni birma-bir yechish. Fokus qolipi, yon panelsiz.
+// Manzil: /uz/sat/mashq/sessiya/?id=<session_id> (javoblar URL da emas). Server: get_session, submit_answer,
+// finish_session, add_to_review (supabase/migrations/20261110120000_sessiya.sql), review_queue (RLS).
+// Taymersiz rejim: "Check" → natija va tushuntirish darhol. Taymerli rejim: javoblar oxirigacha o'zgaradi, "Finish"
+// yoki vaqt tugaganda yuboriladi, tushuntirishlar natija sahifasida (muallif qarori, 2026-11-10).
+// Sof mantiq: src/lib/sat/sessiya.ts. Dev mock: src/lib/sat/sessiyaMock.ts (?mock=..., faqat DEV).
+import SatFokus from '../../../../../layouts/SatFokus.astro';
+import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { ichkiSahifa } from '../../../../../data/satSahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const sahifa = ichkiSahifa('mashq/sessiya/');
+const bankUrl = yol('/uz/sat/mashq/bank/');
+const IK = {
+  xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
+  soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
+};
+---
+<SatFokus
+  title={`${sahifa.nomi} · SAT`}
+  description={sahifa.tavsif}
+  ustki="Practice"
+  nomi={sahifa.nomi}
+  progressNomi="Questions answered"
+  yol={['Practice', 'Question bank']}
+  yopish={{ href: bankUrl, yorliq: 'Leave the session and go to the question bank. Your progress is saved.' }}
+  liftPastki={false}
+>
+  <div slot="amal" class="amallar">
+    <div class="taymer" id="taymer" hidden>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{IK.soat.map((d) => <path d={d} />)}</svg>
+      <span class="sr-only">Time left:</span>
+      <span class="taymer-vaqt" id="taymer-vaqt" role="timer">--:--</span>
+    </div>
+    <button type="button" class="kichik-tugma kulrang" id="taymer-yashir" aria-pressed="false" aria-controls="taymer" hidden>Hide timer</button>
+    <button type="button" class="kichik-tugma kulrang" id="xarita-och" aria-haspopup="dialog" hidden>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.xarita.map((d) => <path d={d} />)}</svg>
+      Questions
+    </button>
+  </div>
+
+  <SavolUslub />
+  <div class="sessiya" id="sessiya" data-bank-url={bankUrl} data-kirish-url={yol('/uz/hisob/kirish/')} data-rejalar-url={yol('/uz/hisob/profil/')}>
+    {import.meta.env.DEV && <p class="pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
+
+    <section class="holat-karta" id="yuklash" role="status">
+      <p class="holat-sarlavha">Loading your session…</p>
+    </section>
+
+    <section class="holat-karta" id="xabar" hidden aria-labelledby="xabar-h">
+      <h1 id="xabar-h" class="holat-sarlavha" tabindex="-1"></h1>
+      <p id="xabar-matn" class="holat-matn"></p>
+      <div class="holat-amal">
+        <button type="button" class="asosiy-tugma" id="xabar-qayta" hidden>Try again</button>
+        <a class="asosiy-tugma" id="xabar-havola" hidden></a>
+      </div>
+    </section>
+
+    <section id="savol-ekran" hidden aria-label="Question">
+      <h1 class="sr-only" id="savol-h" tabindex="-1">Question</h1>
+      <div class="saqlash" id="saqlash" hidden>
+        <p id="saqlash-matn"></p>
+        <button type="button" class="matn-tugma" id="saqlash-qayta" hidden>Retry now</button>
+        <a class="matn-tugma" id="saqlash-havola" hidden>See plans</a>
+      </div>
+      <div id="savol-joy"></div>
+      <div class="sessiya-pastki" id="pastki">
+        <button type="button" class="ikkinchi-tugma" id="oldingi">Back</button>
+        <button type="button" class="ikkinchi-tugma" id="otkaz">Skip</button>
+        <button type="button" class="asosiy-tugma" id="tekshir" disabled aria-describedby="tekshir-izoh">Check</button>
+        <button type="button" class="asosiy-tugma" id="keyingi">Next</button>
+      </div>
+      <p class="sr-only" id="tekshir-izoh">Choose an answer first.</p>
+    </section>
+
+    <section class="holat-karta" id="yuborish" hidden aria-labelledby="yuborish-h">
+      <h1 id="yuborish-h" class="holat-sarlavha" tabindex="-1">Submitting your answers…</h1>
+      <p id="yuborish-matn" class="holat-matn" role="status"></p>
+      <div class="holat-amal">
+        <button type="button" class="asosiy-tugma" id="yuborish-qayta" hidden>Try again</button>
+      </div>
+    </section>
+
+    <section id="natija" hidden aria-labelledby="natija-h"></section>
+
+    <ManbaBlok
+      manbalar={sahifa.manbalar}
+      tekshirilgan="2026-11-05"
+      keyingiTekshiruv="2026-12-05"
+      tekshirilmagan={sahifa.tekshirilmagan}
+    />
+  </div>
+
+  <dialog class="xarita" id="xarita" aria-labelledby="xarita-h">
+    <div class="xarita-ichi">
+      <div class="xarita-bosh">
+        <h2 id="xarita-h">Questions</h2>
+        <button type="button" class="yopish-tugma" id="xarita-yop" aria-label="Close">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
+      <p class="xarita-izoh" id="xarita-izoh"></p>
+      <p class="xarita-ogoh" id="xarita-ogoh" hidden></p>
+      <ol class="xarita-panjara" id="xarita-panjara"></ol>
+      <ul class="xarita-belgi" aria-label="Legend">
+        <li><span class="namuna-katak answered" aria-hidden="true"></span> Answered</li>
+        <li><span class="namuna-katak" aria-hidden="true"></span> Not answered</li>
+        <li><span class="namuna-katak skipped" aria-hidden="true"></span> Skipped</li>
+        <li><span class="namuna-katak flag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M4 22V4" /><path d="M4 4h13l-2 4 2 4H4" /></svg></span> Marked for review</li>
+      </ul>
+      <div class="xarita-amal">
+        <button type="button" class="ikkinchi-tugma" id="xarita-qayt">Back to questions</button>
+        <button type="button" class="asosiy-tugma" id="yakunla">Finish session</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="sr-only" id="taymer-elon" aria-live="assertive" aria-atomic="true"></div>
+  <div class="sr-only" id="elon" aria-live="polite" aria-atomic="true"></div>
+</SatFokus>
+
+<script>
+  import { hisobMijoz } from '../../../../../lib/hisob';
+  import { SESSIYA_KALITI } from '../../../../../lib/savolBanki';
+  import { savolChiz, type SavolKorsatkich } from '../../../../../lib/sat/savolKorsatkich';
+  import { BOSH_HOLAT, type SavolHolati } from '../../../../../lib/sat/savolTuri';
+  import { sprTekshir } from '../../../../../lib/sat/sprFormat';
+  import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
+  import {
+    MAHALLIY_KALIT, mahalliyniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
+    xarita, xaritaYorliq, navbatgaQosh, keyingiUrinishMs, sessiyaXatosi, idTogrimi, hisobot, SABABLAR, sababTogrimi,
+    type Mahalliy, type SessiyaApi, type SessiyaJavob, type ServerSavol, type YuborJavob, type NatijaBand,
+  } from '../../../../../lib/sat/sessiya';
+
+  const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
+  const ildiz = $('sessiya');
+  const BANK = ildiz.dataset.bankUrl!;
+  const SINF = { flag: ['M4 22V4', 'M4 4h13l-2 4 2 4H4'], togri: ['M5 12l5 5L20 7'], xato: ['M6 6l12 12M18 6L6 18'] };
+
+  // ---------- Holat ----------
+  let api: SessiyaApi | null = null;
+  let id = '';
+  let S: SessiyaJavob | null = null;
+  let m: Mahalliy = mahalliyniTekshir(null);
+  let soatOlingan = 0;
+  const javoblar = new Map<string, YuborJavob & { answer: string }>();
+  const review = new Map<string, string | null>();
+  const ui = new Map<string, SavolHolati>();
+  const rasmlar = new Map<string, string | null>();
+  let korsatkich: SavolKorsatkich | null = null;
+  let korsatilgan = -1;
+  let ekran: 'yuklash' | 'xabar' | 'savol' | 'yuborish' | 'natija' = 'yuklash';
+  let kirgan = performance.now();
+  let oldingiQolgan: number | null = null;
+  let yuborilmoqda = false;
+  let qaytaTaymer: ReturnType<typeof setTimeout> | undefined;
+  let yakunVadasi: Promise<void> | null = null;
+  let sinxronTaymer: ReturnType<typeof setTimeout> | undefined;
+
+  const taymerli = () => S?.mode === 'timed';
+  const savollar = (): ServerSavol[] => S?.questions ?? [];
+  const joriySavol = () => savollar()[m.joriy];
+  const navbatda = (qid: string) => m.navbat.some((b) => b.qid === qid);
+  const javobBor = (qid: string) => javoblar.has(qid);
+  const yakunlangan = () => !!S?.finished_at;
+
+  // ---------- Xotira ----------
+  function saqla() {
+    try { localStorage.setItem(MAHALLIY_KALIT(id), JSON.stringify(m)); } catch { /* xotira yopiq: sahifa ochiq turguncha ishlaydi */ }
+  }
+  function oqiMahalliy(): Mahalliy {
+    try { return mahalliyniTekshir(localStorage.getItem(MAHALLIY_KALIT(id))); } catch { return mahalliyniTekshir(null); }
+  }
+  /** Boshqa tab yozgan holatni qo'shadi; joriy savol shu tabniki bo'lib qoladi. */
+  function birlashtir(boshqa: Mahalliy) {
+    const vaqt = { ...boshqa.vaqt };
+    for (const [k, v] of Object.entries(m.vaqt)) vaqt[k] = Math.max(v, vaqt[k] ?? 0);
+    m = { ...boshqa, joriy: m.joriy, vaqt };
+  }
+
+  // ---------- Vaqt ----------
+  /** Joriy savolda sarflangan vaqtni yig'adi (tab ko'rinib turganda; taymersiz rejimda javobgacha). */
+  function vaqtYig() {
+    const q = joriySavol();
+    const hozir = performance.now();
+    if (q && ekran === 'savol' && !document.hidden && (taymerli() || !(javobBor(q.id) || navbatda(q.id)))) {
+      m.vaqt[q.id] = Math.round((m.vaqt[q.id] ?? 0) + (hozir - kirgan));
+    }
+    kirgan = hozir;
+  }
+
+  // ---------- Ekranlar ----------
+  function korsat(e: typeof ekran) {
+    ekran = e;
+    $('yuklash').hidden = e !== 'yuklash';
+    $('xabar').hidden = e !== 'xabar';
+    $('savol-ekran').hidden = e !== 'savol';
+    $('yuborish').hidden = e !== 'yuborish';
+    $('natija').hidden = e !== 'natija';
+    const ishda = e === 'savol';
+    $('xarita-och').hidden = !ishda;
+    $('taymer').hidden = !(ishda && taymerli()) || $('taymer-yashir').getAttribute('aria-pressed') === 'true';
+    $('taymer-yashir').hidden = !(ishda && taymerli());
+    // .jarayon da display: flex bor, shuning uchun hidden emas, style
+    $('fokus-progress').parentElement!.style.display = ishda || e === 'yuborish' ? '' : 'none';
+  }
+
+  function xabarKorsat(sarlavha: string, matn: string, amal?: { qayta?: boolean; havola?: { href: string; matn: string } }) {
+    $('xabar-h').textContent = sarlavha;
+    $('xabar-matn').textContent = matn;
+    $('xabar-qayta').hidden = !amal?.qayta;
+    const h = $<HTMLAnchorElement>('xabar-havola');
+    h.hidden = !amal?.havola;
+    if (amal?.havola) { h.href = amal.havola.href; h.textContent = amal.havola.matn; }
+    korsat('xabar');
+    $('xabar-h').focus();
+  }
+
+  function elon(matn: string) {
+    const e = $('elon');
+    e.textContent = '';
+    setTimeout(() => (e.textContent = matn), 50);
+  }
+
+  function kirishHavolasi() {
+    return `${ildiz.dataset.kirishUrl}?keyin=${encodeURIComponent(location.pathname + location.search)}`;
+  }
+
+  function xatoEkrani(e: unknown) {
+    const tur = sessiyaXatosi(e);
+    if (tur === 'kirish') return xabarKorsat('Sign in to continue', 'Practice sessions are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
+    if (tur === 'topilmadi') return xabarKorsat('Session not found', 'This session does not exist or belongs to another account. Start a new one from the question bank.', { havola: { href: BANK, matn: 'Go to the question bank' } });
+    if (tur === 'tarmoq') return xabarKorsat("Couldn't reach the server", 'Check your connection and try again. Your answers on this device are kept.', { qayta: true });
+    return xabarKorsat('Something went wrong', 'The session did not load. Try again in a moment.', { qayta: true });
+  }
+
+  // ---------- Progress ----------
+  function progressChiz() {
+    const n = savollar().length;
+    const javob = xarita(savollar(), m, new Set(javoblar.keys()), taymerli()).filter((b) => b.holat === 'answered' || b.holat === 'pending').length;
+    const p = $('fokus-progress');
+    p.setAttribute('aria-valuemax', String(n));
+    p.setAttribute('aria-valuenow', String(javob));
+    p.setAttribute('aria-valuetext', `${javob} of ${n} answered`);
+    $('fokus-progress-toldirish').style.width = n ? `${(javob / n) * 100}%` : '0';
+    $('fokus-progress-matn').textContent = ekran === 'savol' ? `${m.joriy + 1} / ${n}` : `${javob} / ${n}`;
+  }
+
+  // ---------- Savol ----------
+  function holatOl(q: ServerSavol): SavolHolati {
+    const h = ui.get(q.id) ?? { ...BOSH_HOLAT, ochirilgan: [] };
+    const j = javoblar.get(q.id);
+    const band = m.navbat.find((b) => b.qid === q.id);
+    const javob = j?.answer ?? band?.javob ?? (taymerli() ? m.qoralama[q.id] : undefined);
+    const qulf = !taymerli() && (!!j || !!band);
+    return {
+      ...h,
+      javobBerilgan: qulf,
+      tanlangan: q.format === 'mcq' ? (javob ?? h.tanlangan) : null,
+      sprQiymat: q.format === 'spr' ? (javob ?? h.sprQiymat ?? '') : undefined,
+      belgilangan: m.belgilar.includes(q.id),
+      natija: j && !taymerli() ? { togrimi: j.is_correct, togriJavob: togriMatn(j.correct), izoh: j.explanation } : null,
+    };
+  }
+
+  function uiYangila(q: ServerSavol, ozgar: Partial<SavolHolati>) {
+    ui.set(q.id, { ...holatOl(q), ...ozgar });
+  }
+
+  /** Taymerli rejim: SPR maydonida yozilgan, lekin "Save answer" bosilmagan qiymat ham qoralamaga tushadi. */
+  function sprQoralamaOl() {
+    const q = joriySavol();
+    if (!q || q.format !== 'spr' || !taymerli()) return;
+    const inp = $('savol-joy').querySelector<HTMLInputElement>('input[type="text"]');
+    if (!inp) return;
+    const t = sprTekshir(inp.value);
+    if (t.ok) m.qoralama[q.id] = t.qiymat;
+    else if (!inp.value.trim()) delete m.qoralama[q.id];
+  }
+
+  async function savolChizish(fokus: boolean) {
+    const q = joriySavol();
+    if (!q) return;
+    let rasm: string | null = null;
+    if (q.figure) {
+      if (!rasmlar.has(q.figure.path)) rasmlar.set(q.figure.path, await api!.rasm(q.figure.path).catch(() => null));
+      rasm = rasmlar.get(q.figure.path) ?? null;
+    }
+    korsatkich?.yoq();
+    const joy = $('savol-joy');
+    korsatkich = savolChiz(joy, {
+      savol: komponentSavoli(q, rasm),
+      holat: holatOl(q),
+      rejim: taymerli() ? 'taymerli' : 'taymersiz',
+      raqam: m.joriy + 1,
+      onSelect: (k) => {
+        uiYangila(q, { tanlangan: k });
+        if (taymerli()) {
+          if (k) m.qoralama[q.id] = k; else delete m.qoralama[q.id];
+          m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
+          saqla();
+        }
+        yangila();
+      },
+      onSubmitSpr: (v) => {
+        uiYangila(q, { sprQiymat: v });
+        if (taymerli()) {
+          m.qoralama[q.id] = v;
+          m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
+          saqla();
+          elon('Answer saved. You can change it until you finish.');
+          yangila();
+        } else {
+          tekshir(v);
+        }
+      },
+      onFlag: (b) => {
+        m.belgilar = b ? [...new Set([...m.belgilar, q.id])] : m.belgilar.filter((x) => x !== q.id);
+        saqla();
+        yangila();
+      },
+      onEliminate: (k, on) => {
+        const h = holatOl(q);
+        uiYangila(q, { ochirilgan: on ? [...new Set([...h.ochirilgan, k])] : h.ochirilgan.filter((x) => x !== k) });
+        yangila();
+      },
+    });
+    korsatilgan = m.joriy;
+    $('savol-h').textContent = `Question ${m.joriy + 1} of ${savollar().length}`;
+    tugmalarChiz();
+    progressChiz();
+    if (fokus) {
+      await korsatkich.tayyor;
+      $('savol-h').focus();
+    }
+  }
+
+  /** Mavjud komponentni yangilaydi (qayta chizmasdan). */
+  function yangila() {
+    const q = joriySavol();
+    if (!q || !korsatkich) return;
+    korsatkich.yangila(holatOl(q));
+    tugmalarChiz();
+    progressChiz();
+  }
+
+  function tugmalarChiz() {
+    const q = joriySavol();
+    if (!q) return;
+    const n = savollar().length;
+    const oxirgi = m.joriy === n - 1;
+    const h = holatOl(q);
+    const tayyor = javobBor(q.id) || navbatda(q.id);
+    const oldingi = $<HTMLButtonElement>('oldingi');
+    const otkaz = $<HTMLButtonElement>('otkaz');
+    const tekshirT = $<HTMLButtonElement>('tekshir');
+    const keyingi = $<HTMLButtonElement>('keyingi');
+    oldingi.disabled = m.joriy === 0;
+    if (taymerli()) {
+      otkaz.hidden = true;
+      tekshirT.hidden = true;
+      keyingi.hidden = false;
+      keyingi.textContent = oxirgi ? 'Review and finish' : 'Next';
+    } else {
+      otkaz.hidden = tayyor;
+      tekshirT.hidden = tayyor || q.format === 'spr';
+      tekshirT.disabled = !h.tanlangan;
+      $('tekshir-izoh').textContent = h.tanlangan ? '' : 'Choose an answer first.';
+      keyingi.hidden = !tayyor;
+      keyingi.textContent = oxirgi ? 'See results' : 'Next';
+    }
+  }
+
+  function otish(i: number, fokus = true) {
+    if (!S || i < 0 || i >= savollar().length) return;
+    sprQoralamaOl();
+    vaqtYig();
+    m.joriy = i;
+    saqla();
+    savolChizish(fokus);
+  }
+
+  // ---------- Javob yuborish (navbat) ----------
+  function tekshir(javob: string) {
+    const q = joriySavol();
+    if (!q || taymerli() || javobBor(q.id) || navbatda(q.id) || yakunlangan()) return;
+    vaqtYig();
+    m.navbat = navbatgaQosh(m.navbat, { qid: q.id, javob, timeMs: m.vaqt[q.id] ?? 0 });
+    m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
+    saqla();
+    yangila();
+    $<HTMLButtonElement>('keyingi').focus();
+    navbatniYubor();
+  }
+
+  function saqlashHolati(matn: string | null, o: { qayta?: boolean; rejalar?: boolean } = {}) {
+    const quti = $('saqlash');
+    // Ko'rinadigan quti yashirin holatdan chiqadi (live region emas): muhim xabar umumiy polite hududda e'lon qilinadi
+    // (qayta urinish soniyasi o'zgarganda takror aytilmaydi)
+    const raqamsiz = (x: string) => x.replace(/\d+/g, '');
+    if (matn && raqamsiz(matn) !== raqamsiz($('saqlash-matn').textContent ?? '') && (o.qayta || o.rejalar || !/…$/.test(matn))) elon(matn);
+    quti.hidden = !matn;
+    $('saqlash-matn').textContent = matn ?? '';
+    $('saqlash-qayta').hidden = !o.qayta;
+    const h = $<HTMLAnchorElement>('saqlash-havola');
+    h.hidden = !o.rejalar;
+    h.href = ildiz.dataset.rejalarUrl!;
+    if (ekran === 'yuborish') {
+      $('yuborish-matn').textContent = matn ?? '';
+      $('yuborish-qayta').hidden = !o.qayta;
+    }
+  }
+
+  /** Navbatdagi javoblarni ketma-ket yuboradi. Tarmoq xatosida keyinroq qayta urinadi. */
+  async function navbatniYubor(): Promise<void> {
+    if (yuborilmoqda || !api) return;
+    clearTimeout(qaytaTaymer);
+    yuborilmoqda = true;
+    try {
+      while (m.navbat.length) {
+        const b = m.navbat[0];
+        if (ekran === 'savol') saqlashHolati(m.navbat.length > 1 ? `Saving ${m.navbat.length} answers…` : 'Checking your answer…');
+        try {
+          const javob = await api.yubor(id, b.qid, b.javob, b.timeMs);
+          const oldin = javoblar.get(b.qid);
+          javoblar.set(b.qid, { ...javob, answer: javob.already_answered ? (oldin?.answer ?? b.javob) : b.javob });
+          if (!javob.is_correct && !review.has(b.qid)) review.set(b.qid, null);
+          if (javob.already_answered) {
+            if (oldin?.answer !== b.javob) elon('This question was already answered, maybe in another tab. The saved answer is shown.');
+            sinxronla();
+          }
+          m.navbat = m.navbat.filter((x) => x.qid !== b.qid);
+          saqla();
+        } catch (e) {
+          const tur = sessiyaXatosi(e);
+          if (tur === 'tarmoq' || tur === 'boshqa') {
+            b.urinish++;
+            saqla();
+            const kut = keyingiUrinishMs(b.urinish - 1);
+            saqlashHolati(tur === 'tarmoq'
+              ? (m.yakunlanmoqda
+                ? `No connection. Your answers are saved on this device and will be sent when you're back online. Retrying in ${Math.round(kut / 1000)} s.`
+                : `Not saved: no connection. Retrying in ${Math.round(kut / 1000)} s.`)
+              : `Not saved: the server didn't respond. Retrying in ${Math.round(kut / 1000)} s.`, { qayta: true });
+            qaytaTaymer = setTimeout(() => navbatniYubor(), kut);
+            return;
+          }
+          m.navbat = m.navbat.filter((x) => x.qid !== b.qid);
+          saqla();
+          if (tur === 'kirish') { xatoEkrani(e); return; }
+          if (tur === 'kvota') {
+            saqlashHolati("You've reached today's answer limit, so this answer wasn't checked.", { rejalar: true });
+            m.navbat = [];
+            saqla();
+            yangila();
+            return;
+          }
+          if (tur === 'yakunlangan') {
+            saqlashHolati('This session has already finished.');
+            await qaytaYukla();
+            return;
+          }
+          saqlashHolati("This answer couldn't be saved. Try again.");
+        }
+        if (ekran === 'savol') {
+          yangila();
+          // Natija pastki panel ostida qolmasin
+          if (joriySavol()?.id === b.qid) $('savol-joy').querySelector('.sk-natija:not([hidden])')?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }
+      }
+      saqlashHolati(null);
+    } finally {
+      yuborilmoqda = false;
+    }
+  }
+
+  // ---------- Yakunlash ----------
+  function yakunla(sabab: 'tugma' | 'vaqt' | 'davom'): Promise<void> {
+    yakunVadasi ??= (async () => {
+      if (ekran === 'savol') { sprQoralamaOl(); vaqtYig(); }
+      if (xaritaDialog.open) xaritaYop();
+      if (taymerli()) {
+        for (const q of savollar()) {
+          const j = m.qoralama[q.id];
+          if (j && !javobBor(q.id) && !navbatda(q.id)) m.navbat = navbatgaQosh(m.navbat, { qid: q.id, javob: j, timeMs: m.vaqt[q.id] ?? 0 });
+        }
+      }
+      m.yakunlanmoqda = true;
+      saqla();
+      korsat('yuborish');
+      $('yuborish-h').textContent = sabab === 'vaqt' ? "Time's up. Submitting your answers…" : 'Submitting your answers…';
+      $('yuborish-h').focus();
+      progressChiz();
+      // Navbat bo'shaguncha (tarmoq qaytishini kutadi)
+      while (m.navbat.length) {
+        await navbatniYubor();
+        if (ekran === 'xabar') return;
+        if (m.navbat.length) await new Promise<void>((r) => { const t = () => { removeEventListener('online', t); r(); }; addEventListener('online', t); setTimeout(t, keyingiUrinishMs(m.navbat[0]?.urinish ?? 0)); });
+      }
+      for (let urinish = 0; ; urinish++) {
+        try {
+          await api!.yakunla(id);
+          break;
+        } catch (e) {
+          const tur = sessiyaXatosi(e);
+          if (tur !== 'tarmoq' && tur !== 'boshqa') { xatoEkrani(e); return; }
+          const kut = keyingiUrinishMs(urinish);
+          saqlashHolati(`No connection. Your answers are saved on this device. Retrying in ${Math.round(kut / 1000)} s.`, { qayta: true });
+          await new Promise((r) => setTimeout(r, kut));
+        }
+      }
+      await qaytaYukla();
+    })().finally(() => { yakunVadasi = null; });
+    return yakunVadasi;
+  }
+
+  function yakunlashniSora() {
+    const xb = xarita(savollar(), m, new Set(javoblar.keys()), taymerli());
+    const qolgan = xb.filter((b) => b.holat === 'unanswered' || b.holat === 'skipped').length;
+    if (!qolgan) return yakunla('tugma');
+    xaritaOch(qolgan === 1 ? '1 question has no answer. Finish anyway?' : `${qolgan} questions have no answer. Finish anyway?`);
+  }
+
+  // ---------- Xarita (dialog) ----------
+  const xaritaDialog = $<HTMLDialogElement>('xarita');
+  let xaritaOchuvchi: HTMLElement | null = null;
+
+  function xaritaChiz(ogoh?: string) {
+    const xb = xarita(savollar(), m, new Set(javoblar.keys()), taymerli());
+    const javob = xb.filter((b) => b.holat === 'answered').length;
+    const belgi = xb.filter((b) => b.belgilangan).length;
+    $('xarita-izoh').textContent = `${javob} of ${xb.length} answered${belgi ? ` · ${belgi} marked for review` : ''}`;
+    $('xarita-ogoh').hidden = !ogoh;
+    $('xarita-ogoh').textContent = ogoh ?? '';
+    const ol = $('xarita-panjara');
+    ol.replaceChildren(...xb.map((b) => {
+      const li = document.createElement('li');
+      const t = document.createElement('button');
+      t.type = 'button';
+      t.className = `katak ${b.holat}`;
+      t.textContent = String(b.raqam);
+      t.setAttribute('aria-label', xaritaYorliq(b));
+      if (b.joriy) t.setAttribute('aria-current', 'step');
+      if (b.belgilangan) t.append(ikonka(SINF.flag, 'katak-bayroq', true));
+      t.addEventListener('click', () => { xaritaYop(); otish(b.raqam - 1); });
+      li.append(t);
+      return li;
+    }));
+  }
+  function xaritaOch(ogoh?: string) {
+    xaritaOchuvchi = document.activeElement as HTMLElement | null;
+    sprQoralamaOl();
+    xaritaChiz(ogoh);
+    xaritaDialog.showModal();
+    // Ogohlantirishda xavfsiz tugma fokusda (Enter tasodifan yakunlab yubormasin)
+    (ogoh ? $('xarita-qayt') : xaritaDialog.querySelector<HTMLElement>('[aria-current]') ?? $('xarita-yop')).focus();
+  }
+  // Mantiq yopuvchi funksiyada: ilova brauzerida skriptli close() "close" hodisasini bermasligi mumkin.
+  function xaritaYop() {
+    if (xaritaDialog.open) xaritaDialog.close();
+    // Ochuvchi tugma fokus olmagan bo'lsa (Safari bosishda tugmaga fokus bermaydi) xarita tugmasiga qaytadi
+    const qayt = xaritaOchuvchi && xaritaOchuvchi !== document.body && xaritaOchuvchi.isConnected ? xaritaOchuvchi : $('xarita-och');
+    if (ekran === 'savol') qayt.focus();
+    xaritaOchuvchi = null;
+  }
+  xaritaDialog.addEventListener('cancel', (e) => { e.preventDefault(); xaritaYop(); });
+  xaritaDialog.addEventListener('click', (e) => { if (e.target === xaritaDialog) xaritaYop(); });
+  $('xarita-yop').addEventListener('click', xaritaYop);
+  $('xarita-qayt').addEventListener('click', xaritaYop);
+  $('xarita-och').addEventListener('click', () => xaritaOch());
+  $('yakunla').addEventListener('click', () => yakunla('tugma'));
+
+  function ikonka(yollar: string[], sinf: string, toldir = false): SVGSVGElement {
+    const NS = 'http://www.w3.org/2000/svg';
+    const s = document.createElementNS(NS, 'svg');
+    s.setAttribute('aria-hidden', 'true');
+    s.setAttribute('viewBox', '0 0 24 24');
+    s.setAttribute('width', '14');
+    s.setAttribute('height', '14');
+    s.setAttribute('fill', toldir ? 'currentColor' : 'none');
+    s.setAttribute('stroke', 'currentColor');
+    s.setAttribute('stroke-width', '2.5');
+    s.setAttribute('stroke-linecap', 'round');
+    s.setAttribute('stroke-linejoin', 'round');
+    s.setAttribute('class', sinf);
+    for (const d of yollar) { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); s.append(p); }
+    return s;
+  }
+
+  // ---------- Taymer ----------
+  function taymerTik() {
+    if (!S || !taymerli() || !S.time_limit_ms || ekran === 'natija' || yakunlangan()) return;
+    const qolgan = qolganMs({ startedAt: S.started_at, limitMs: S.time_limit_ms, serverNow: S.server_now, soatOlingan }, Date.now());
+    $('taymer-vaqt').textContent = vaqtMatni(qolgan);
+    $('taymer').classList.toggle('kam', qolgan <= 300_000);
+    const ch = chegaraOtildi(oldingiQolgan, qolgan);
+    oldingiQolgan = qolgan;
+    if (ch === 'besh') $('taymer-elon').textContent = '5 minutes left.';
+    if (ch === 'bir') $('taymer-elon').textContent = '1 minute left.';
+    if (ch === 'tugadi' || qolgan <= 0) {
+      $('taymer-elon').textContent = "Time's up. Your answers are being submitted.";
+      if (ekran === 'savol' || ekran === 'yuklash') yakunla('vaqt');
+    }
+  }
+  $('taymer-yashir').addEventListener('click', () => {
+    const t = $('taymer-yashir');
+    const yashir = t.getAttribute('aria-pressed') !== 'true';
+    t.setAttribute('aria-pressed', String(yashir));
+    t.textContent = yashir ? 'Show timer' : 'Hide timer';
+    $('taymer').hidden = yashir;
+  });
+
+  setInterval(() => {
+    if (ekran !== 'savol') return;
+    vaqtYig();
+    taymerTik();
+  }, 1000);
+  setInterval(() => { if (ekran === 'savol') saqla(); }, 5000);
+
+  // ---------- Natija ----------
+  function el<K extends keyof HTMLElementTagNameMap>(teg: K, sinf?: string, matn?: string): HTMLElementTagNameMap[K] {
+    const e = document.createElement(teg);
+    if (sinf) e.className = sinf;
+    if (matn !== undefined) e.textContent = matn;
+    return e;
+  }
+
+  function redoBoshqaruv(b: NatijaBand, xatomi: boolean): HTMLElement {
+    const qid = b.savol.id;
+    const quti = el('div', 'redo');
+    const holat = el('p', 'redo-holat');
+    holat.setAttribute('role', 'status');
+    const tugma = el('button', 'kichik-tugma kulrang');
+    tugma.type = 'button';
+    const sabab = xatomi ? sababGuruh(b) : null;
+    const chiz = () => {
+      const bor = review.has(qid);
+      holat.replaceChildren();
+      if (bor) holat.append(ikonka(SINF.togri, 'redo-ikonka'), document.createTextNode(xatomi ? 'In your redo list (added automatically)' : 'In your redo list'));
+      tugma.textContent = bor ? 'Remove from redo list' : 'Add to redo list';
+      holat.hidden = !bor;
+      if (sabab) sabab.hidden = !bor;
+    };
+    tugma.addEventListener('click', async () => {
+      if (tugma.getAttribute('aria-busy') === 'true') return;
+      tugma.setAttribute('aria-busy', 'true');
+      const bor = review.has(qid);
+      try {
+        if (bor) { await api!.navbatdanOl(qid); review.delete(qid); }
+        else { await api!.navbatgaQosh(qid); review.set(qid, null); }
+        chiz();
+        elon(bor ? 'Removed from your redo list.' : 'Added to your redo list.');
+      } catch {
+        holat.hidden = false;
+        holat.textContent = "Couldn't save. Check your connection and try again.";
+      }
+      tugma.removeAttribute('aria-busy');
+    });
+    chiz();
+    quti.append(holat, tugma);
+    if (sabab) quti.append(sabab);
+    return quti;
+  }
+
+  function sababGuruh(b: NatijaBand): HTMLElement {
+    const qid = b.savol.id;
+    const f = el('div', 'sabab');
+    f.setAttribute('role', 'group');
+    const yorliq = el('p', 'sabab-yorliq', 'Why did you miss it?');
+    yorliq.id = `sabab-${b.raqam}`;
+    f.setAttribute('aria-labelledby', yorliq.id);
+    const chiplar = el('div', 'sabab-chiplar');
+    const izoh = el('p', 'sabab-izoh');
+    izoh.setAttribute('role', 'status');
+    const tugmalar = SABABLAR.map((s) => {
+      const t = el('button', 'chip', s.nomi);
+      t.type = 'button';
+      t.dataset.sabab = s.kalit;
+      t.addEventListener('click', async () => {
+        const oldin = review.get(qid) ?? null;
+        const yangi = oldin === s.kalit ? null : s.kalit;
+        review.set(qid, yangi);
+        chiz();
+        try {
+          await api!.sabab(qid, yangi);
+          izoh.textContent = yangi ? `Saved: ${s.nomi.toLowerCase()}.` : 'Tag removed.';
+        } catch {
+          review.set(qid, oldin);
+          chiz();
+          izoh.textContent = "Couldn't save the tag. Try again.";
+        }
+      });
+      return t;
+    });
+    const chiz = () => tugmalar.forEach((t) => t.setAttribute('aria-pressed', String(review.get(qid) === t.dataset.sabab)));
+    chiz();
+    chiplar.append(...tugmalar);
+    f.append(yorliq, chiplar, izoh);
+    return f;
+  }
+
+  function natijaKarta(b: NatijaBand, tur: 'xato' | 'otkaz' | 'togri'): HTMLElement {
+    const a = el('article', 'natija-karta');
+    const h = el('h3', 'natija-karta-h');
+    h.append(
+      ikonka(tur === 'togri' ? SINF.togri : SINF.xato, 'natija-ikonka'),
+      document.createTextNode(`Question ${b.raqam}`),
+    );
+    const meta = el('p', 'natija-meta', `${b.savol.section === 'rw' ? 'Reading and Writing' : 'Math'} · ${b.savol.skill}`);
+    const stem = el('div', 'natija-stem sk-matn');
+    xavfsizMatn(b.savol.stem, stem);
+    a.append(h, meta, stem);
+    if (b.natija) {
+      const j = el('p', 'natija-javob');
+      const siz = el('span', '', `Your answer: ${b.natija.answer}`);
+      const togri = el('span', '', `Correct answer: ${togriMatn(b.natija.correct)}`);
+      j.append(siz, togri);
+      a.append(j);
+      if (b.natija.explanation) {
+        const d = el('details', 'izoh-ochiq');
+        const s = el('summary', '', 'Explanation');
+        const ich = el('div', 'izoh-matn sk-matn');
+        xavfsizMatn(b.natija.explanation, ich);
+        d.append(s, ich);
+        a.append(d);
+      }
+    } else {
+      a.append(el('p', 'natija-javob', 'Not answered. The correct answer is shown only after you answer.'));
+    }
+    a.append(redoBoshqaruv(b, tur === 'xato'));
+    return a;
+  }
+
+  function natijaChiz() {
+    if (!S) return;
+    const h = hisobot(S);
+    const quti = $('natija');
+    const sarlavha = el('h1', 'natija-h', 'Session results');
+    sarlavha.id = 'natija-h';
+    sarlavha.tabIndex = -1;
+    const rejim = el('p', 'lead', `${taymerli() ? 'Timed' : 'Untimed'} practice · ${h.jami} ${h.jami === 1 ? 'question' : 'questions'}`);
+
+    const statlar = el('dl', 'statlar');
+    const stat = (dt: string, dd: string, izoh?: string) => {
+      const d = el('div', 'stat');
+      d.append(el('dt', '', dt), el('dd', 'stat-son', dd));
+      if (izoh) d.append(el('dd', 'stat-izoh', izoh));
+      statlar.append(d);
+    };
+    stat('Score', `${h.foiz}%`, `${h.togri} of ${h.jami} correct`);
+    stat('Time', davomiylikMatni(h.vaqtMs), 'Spent on answered questions');
+    stat('Answered', `${h.javobBerilgan} / ${h.jami}`, h.jami - h.javobBerilgan ? `${h.jami - h.javobBerilgan} skipped` : 'None skipped');
+
+    const skill = el('section', 'natija-bolim');
+    skill.setAttribute('aria-labelledby', 'skill-h');
+    const sh = el('h2', '', 'By skill');
+    sh.id = 'skill-h';
+    const jadval = el('table', 'skill-jadval');
+    const thead = el('thead');
+    const tr0 = el('tr');
+    for (const t of ['Skill', 'Correct']) { const th = el('th', '', t); th.scope = 'col'; tr0.append(th); }
+    thead.append(tr0);
+    const tbody = el('tbody');
+    for (const s of h.skilllar) {
+      const tr = el('tr');
+      const th = el('th');
+      th.scope = 'row';
+      th.append(el('span', 'skill-nomi', s.skill), el('span', 'skill-bolim', s.section === 'rw' ? 'Reading and Writing' : 'Math'));
+      const td = el('td');
+      const bar = el('span', 'skill-bar');
+      bar.setAttribute('aria-hidden', 'true');
+      const ich = el('span', 'skill-bar-ich');
+      ich.style.width = `${s.jami ? (s.togri / s.jami) * 100 : 0}%`;
+      bar.append(ich);
+      td.append(el('span', 'skill-son', `${s.togri} / ${s.jami}`), bar);
+      tr.append(th, td);
+      tbody.append(tr);
+    }
+    jadval.append(thead, tbody);
+    skill.append(sh, jadval);
+
+    const bolim = (idh: string, nom: string, izoh: string | null, bandlar: NatijaBand[], tur: 'xato' | 'otkaz' | 'togri', yopiq = false) => {
+      const s = el('section', 'natija-bolim');
+      s.setAttribute('aria-labelledby', idh);
+      const hh = el('h2', '', `${nom} (${bandlar.length})`);
+      hh.id = idh;
+      if (yopiq) {
+        const d = el('details', 'yigma');
+        const sm = el('summary');
+        sm.append(hh);
+        d.append(sm);
+        if (izoh) d.append(el('p', 'bolim-izoh', izoh));
+        d.append(...bandlar.map((b) => natijaKarta(b, tur)));
+        s.append(d);
+      } else {
+        s.append(hh);
+        if (izoh) s.append(el('p', 'bolim-izoh', izoh));
+        s.append(...bandlar.map((b) => natijaKarta(b, tur)));
+      }
+      return s;
+    };
+
+    const amal = el('div', 'natija-amal');
+    const bank = el('a', 'asosiy-tugma', 'Back to the question bank');
+    bank.href = BANK;
+    amal.append(bank);
+
+    quti.replaceChildren(sarlavha, rejim, statlar, skill);
+    if (h.xatolar.length) quti.append(bolim('xato-h', 'Mistakes', 'Wrong answers go to your redo list automatically. Tag why you missed each one to see patterns later.', h.xatolar, 'xato'));
+    else quti.append(el('p', 'bolim-izoh', h.javobBerilgan ? 'No mistakes in this session.' : 'You did not answer any questions in this session.'));
+    if (h.otkazilgan.length) quti.append(bolim('otkaz-h', 'Skipped', null, h.otkazilgan, 'otkaz'));
+    if (h.togrilar.length) quti.append(bolim('togri-h', 'Correct answers', 'Add a question to your redo list if you guessed or want to practice it again.', h.togrilar, 'togri', true));
+    quti.append(amal);
+  }
+
+  // ---------- Yuklash va sinxronlash ----------
+  function serverdanOl(j: SessiyaJavob) {
+    S = j;
+    soatOlingan = Date.now();
+    javoblar.clear();
+    for (const r of j.results ?? []) {
+      javoblar.set(r.question_id, { is_correct: r.is_correct, correct: r.correct, explanation: r.explanation, already_answered: true, answer: r.answer });
+    }
+    review.clear();
+    for (const r of j.review ?? []) review.set(r.question_id, sababTogrimi(r.reason_tag) ? r.reason_tag : null);
+    // Serverda javobi borlari navbatdan chiqadi
+    m.navbat = m.navbat.filter((b) => !javoblar.has(b.qid));
+    if (m.joriy >= j.questions.length) m.joriy = 0;
+  }
+
+  async function qaytaYukla() {
+    try {
+      serverdanOl(await api!.ol(id));
+    } catch (e) {
+      return xatoEkrani(e);
+    }
+    holatgaOt(false);
+  }
+
+  /** Boshqa tab yoki qurilmadagi o'zgarishni oladi (javoblar, yakun). Kvota sarflamaydi. */
+  function sinxronla() {
+    clearTimeout(sinxronTaymer);
+    sinxronTaymer = setTimeout(async () => {
+      if (!api || !S || ekran === 'yuklash' || ekran === 'xabar' || yakunVadasi) return;
+      try {
+        const j = await api.ol(id);
+        const edi = yakunlangan();
+        serverdanOl(j);
+        if (!edi && yakunlangan()) return holatgaOt(true);
+        if (ekran === 'savol') yangila();
+      } catch { /* keyingi safar */ }
+    }, 400);
+  }
+
+  function holatgaOt(fokus: boolean) {
+    if (!S) return;
+    if (!S.questions.length) {
+      return xabarKorsat('This session has no questions', 'Start a new session from the question bank.', { havola: { href: BANK, matn: 'Go to the question bank' } });
+    }
+    if (yakunlangan() && !m.navbat.length) {
+      korsatkich?.yoq();
+      korsatkich = null;
+      korsat('natija');
+      natijaChiz();
+      progressChiz();
+      try { localStorage.removeItem(MAHALLIY_KALIT(id)); } catch { /* */ }
+      $('natija-h').focus();
+      return;
+    }
+    if (m.yakunlanmoqda || yakunlangan()) { yakunla('davom'); return; }
+    if (taymerli() && S.time_limit_ms) {
+      const qolgan = qolganMs({ startedAt: S.started_at, limitMs: S.time_limit_ms, serverNow: S.server_now, soatOlingan }, Date.now());
+      if (qolgan <= 0) { korsat('savol'); yakunla('vaqt'); return; }
+    }
+    const edi = ekran;
+    korsat('savol');
+    kirgan = performance.now();
+    if (edi !== 'savol' || korsatilgan !== m.joriy) savolChizish(fokus);
+    else yangila();
+    taymerTik();
+    if (m.navbat.length) navbatniYubor();
+  }
+
+  // ---------- Hodisalar ----------
+  $('tekshir').addEventListener('click', () => {
+    const q = joriySavol();
+    const t = q && holatOl(q).tanlangan;
+    if (t) tekshir(t);
+  });
+  $('keyingi').addEventListener('click', () => {
+    if (m.joriy >= savollar().length - 1) return yakunlashniSora();
+    otish(m.joriy + 1);
+  });
+  $('oldingi').addEventListener('click', () => otish(m.joriy - 1));
+  $('otkaz').addEventListener('click', () => {
+    const q = joriySavol();
+    if (!q) return;
+    if (!m.otkazilgan.includes(q.id)) m.otkazilgan.push(q.id);
+    saqla();
+    if (m.joriy >= savollar().length - 1) { progressChiz(); return yakunlashniSora(); }
+    otish(m.joriy + 1);
+  });
+  $('saqlash-qayta').addEventListener('click', () => { m.navbat.forEach((b) => (b.urinish = 0)); navbatniYubor(); });
+  $('yuborish-qayta').addEventListener('click', () => { m.navbat.forEach((b) => (b.urinish = 0)); dispatchEvent(new Event('online')); });
+  $('xabar-qayta').addEventListener('click', () => { korsat('yuklash'); boshla(); });
+
+  addEventListener('online', () => { if (m.navbat.length) navbatniYubor(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { vaqtYig(); saqla(); return; }
+    kirgan = performance.now();
+    taymerTik();
+    sinxronla();
+  });
+  addEventListener('pagehide', () => { if (ekran === 'savol') { sprQoralamaOl(); vaqtYig(); saqla(); } });
+  addEventListener('storage', (e) => {
+    if (!id || e.key !== MAHALLIY_KALIT(id) || !e.newValue) return;
+    birlashtir(mahalliyniTekshir(e.newValue));
+    if (ekran === 'savol') yangila();
+    sinxronla();
+  });
+
+  // ---------- Boshlash ----------
+  async function boshla() {
+    const p = new URLSearchParams(location.search);
+    // Faqat dev: ?mock=oddiy|taymerli|qisqa|uzilish|kvota|xato (&tozala=1). Prod build'da bu shox va mock moduli yo'q.
+    if (import.meta.env.DEV && p.get('mock')) {
+      const { mockApi, MOCK_ID, mockTozala } = await import('../../../../../lib/sat/sessiyaMock');
+      const tur = p.get('mock') as keyof typeof MOCK_ID;
+      if (p.get('tozala')) { mockTozala(); p.delete('tozala'); }
+      if (!p.get('id')) p.set('id', MOCK_ID[tur] ?? MOCK_ID.oddiy);
+      history.replaceState(null, '', `${location.pathname}?${p}`);
+      api = mockApi(tur);
+      const pill = document.getElementById('namuna-pill');
+      if (pill) pill.hidden = false;
+    }
+    id = new URLSearchParams(location.search).get('id') ?? '';
+    if (!idTogrimi(id)) {
+      return xabarKorsat('No session selected', 'Choose skills in the question bank and start a session there.', { havola: { href: BANK, matn: 'Go to the question bank' } });
+    }
+    if (!api) {
+      const c = hisobMijoz();
+      if (!c) return xabarKorsat('Accounts are not available yet', 'Practice sessions need a Tayanch account, and sign-in is not set up on this copy of the site.', { havola: { href: BANK, matn: 'Go to the question bank' } });
+      const { data } = await c.auth.getSession();
+      if (!data.session) return xabarKorsat('Sign in to continue', 'Practice sessions are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
+      api = haqiqiyApi(c);
+    }
+    // Savol bankidagi start javobi kerak emas: sessiya doim serverdan (get_session) olinadi.
+    try { sessionStorage.removeItem(SESSIYA_KALITI); } catch { /* */ }
+    m = oqiMahalliy();
+    try {
+      serverdanOl(await api.ol(id));
+    } catch (e) {
+      return xatoEkrani(e);
+    }
+    saqla();
+    holatgaOt(false);
+  }
+
+  function haqiqiyApi(c: NonNullable<ReturnType<typeof hisobMijoz>>): SessiyaApi {
+    const rpc = async <T,>(nom: string, args: Record<string, unknown>): Promise<T> => {
+      const { data, error } = await c.rpc(nom, args);
+      if (error) throw error;
+      return data as T;
+    };
+    return {
+      ol: (sid) => rpc<SessiyaJavob>('get_session', { p_session: sid }),
+      yubor: (sid, qid, javob, t) => rpc<YuborJavob>('submit_answer', { p_session: sid, p_question: qid, p_answer: javob, p_time_ms: Math.round(t) }),
+      yakunla: (sid) => rpc<{ finished_at: string }>('finish_session', { p_session: sid }),
+      navbatgaQosh: async (qid) => { await rpc('add_to_review', { p_question: qid }); },
+      navbatdanOl: async (qid) => {
+        const { error } = await c.from('review_queue').delete().eq('question_id', qid);
+        if (error) throw error;
+      },
+      sabab: async (qid, tag) => {
+        const { error } = await c.from('review_queue').update({ reason_tag: tag }).eq('question_id', qid);
+        if (error) throw error;
+      },
+      rasm: async (path) => {
+        const { data, error } = await c.storage.from('question-figures').createSignedUrl(path, 3600);
+        return error ? null : data.signedUrl;
+      },
+    };
+  }
+
+  boshla();
+</script>
+
+<style is:global>
+  /* Global: natija, xarita va redo elementlarini skript yaratadi (scoped uslub ularga tegmaydi). Sinf nomlari shu sahifaga xos. */
+  .sessiya { max-width: var(--kenglik); margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
+  .sessiya [hidden], .amallar [hidden] { display: none !important; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .pill-namuna {
+    align-self: flex-start; margin: 0;
+    padding: 4px 12px; border-radius: var(--r-toliq);
+    border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi);
+    font-size: var(--matn-mayda); font-weight: 700;
+  }
+
+  /* Sarlavhadagi amallar: taymer, yashirish, xarita */
+  .amallar { display: flex; align-items: center; gap: var(--b-2); flex-wrap: wrap; }
+  .taymer {
+    display: inline-flex; align-items: center; gap: var(--b-2);
+    min-height: 48px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
+    background: var(--fon-ikkinchi); color: var(--matn);
+    font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+  .taymer.kam { background: var(--matn); color: var(--fon); }
+  .kichik-tugma {
+    display: inline-flex; align-items: center; gap: var(--b-2);
+    min-height: 48px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
+    border: 0; font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
+  }
+  .kichik-tugma.kulrang { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .kichik-tugma.kulrang:hover { background: var(--chiziq-kuchli); }
+  .kichik-tugma[aria-busy='true'] { cursor: progress; }
+
+  .holat-karta {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
+    background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+    padding: var(--b-6);
+  }
+  .holat-sarlavha { margin: 0; font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .holat-sarlavha:focus { outline: none; }
+  .holat-matn { margin: 0; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .holat-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .holat-amal:empty { display: none; }
+
+  .saqlash {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
+  }
+  .saqlash p { margin: 0; }
+  .matn-tugma {
+    min-height: 48px; padding: 0 var(--b-2); border: 0; background: transparent; color: inherit;
+    font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer;
+    display: inline-flex; align-items: center;
+  }
+
+  #savol-h:focus, .natija-h:focus { outline: none; }
+
+  #savol-joy .sk-natija { scroll-margin-bottom: 96px; }
+  .sessiya-pastki {
+    position: sticky; bottom: 0; z-index: 2;
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3);
+    padding: var(--b-3) 0; margin-top: var(--b-2);
+    background: var(--fon-ikkinchi); border-top: 1px solid var(--chiziq);
+  }
+  [data-mavzu='qorongi'] .sessiya-pastki { background: var(--fon); }
+  .asosiy-tugma, .ikkinchi-tugma {
+    min-height: 52px; padding: 0 28px;
+    border: 0; border-radius: var(--r-toliq);
+    font: inherit; font-weight: 800; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
+  }
+  .asosiy-tugma { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .asosiy-tugma:hover { background: var(--rang-asosiy-toq); }
+  .asosiy-tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
+  .ikkinchi-tugma { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .ikkinchi-tugma:hover { background: var(--chiziq-kuchli); }
+  .ikkinchi-tugma:disabled { color: var(--matn-sust); cursor: not-allowed; background: var(--sirt-ikkinchi); }
+  .sessiya-pastki #tekshir, .sessiya-pastki #keyingi { margin-left: auto; }
+  .sessiya-pastki #otkaz:not([hidden]) + #tekshir { margin-left: 0; }
+  .sessiya-pastki #otkaz { margin-left: auto; }
+  .asosiy-tugma:focus-visible, .ikkinchi-tugma:focus-visible, .kichik-tugma:focus-visible, .matn-tugma:focus-visible,
+  .katak:focus-visible, .yopish-tugma:focus-visible, .chip:focus-visible, .izoh-ochiq summary:focus-visible, .yigma summary:focus-visible {
+    outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
+  }
+
+  /* Savollar xaritasi */
+  .xarita {
+    width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px);
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: 0;
+    background: var(--fon); color: var(--matn);
+  }
+  .xarita::backdrop { background: var(--parda); }
+  .xarita-ichi { padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4); }
+  .xarita-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
+  .xarita-bosh h2 { margin: 0; font-size: var(--matn-h3); font-weight: 800; }
+  .yopish-tugma {
+    width: 48px; height: 48px; border-radius: var(--r-yon); border: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--fon-ikkinchi); color: var(--matn); cursor: pointer;
+  }
+  .xarita-izoh { margin: 0; color: var(--matn-ikkinchi); font-weight: 600; }
+  .xarita-ogoh {
+    margin: 0; background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-weight: 700;
+  }
+  .xarita-panjara { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: var(--b-2); }
+  .katak {
+    position: relative; width: 100%; min-width: 48px; height: 48px; border-radius: var(--r-orta);
+    border: 2px solid var(--chiziq-maydon); background: var(--fon); color: var(--matn);
+    font: inherit; font-weight: 800; cursor: pointer;
+  }
+  .katak.answered, .katak.pending { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katak.skipped { border-style: dashed; }
+  .katak[aria-current] { box-shadow: 0 0 0 3px var(--fon), 0 0 0 5px var(--matn); }
+  .katak-bayroq { position: absolute; top: 3px; right: 3px; }
+  .xarita-belgi { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .xarita-belgi li { display: inline-flex; align-items: center; gap: var(--b-2); }
+  .namuna-katak {
+    width: 18px; height: 18px; border-radius: var(--r-kichik); border: 2px solid var(--chiziq-maydon); background: var(--fon);
+    display: inline-flex; align-items: center; justify-content: center; color: var(--matn);
+  }
+  .namuna-katak.answered { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
+  .namuna-katak.skipped { border-style: dashed; }
+  .namuna-katak.flag { border: 0; }
+  .xarita-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
+
+  /* Natija */
+  #natija { display: flex; flex-direction: column; gap: var(--b-6); }
+  .natija-h { margin: 0; font-size: var(--matn-h1); font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; }
+  .lead { margin: 0; font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+  /* Bitta panel: ball asosiy, vaqt va javoblar ikkinchi darajali (uchta bir xil karta emas) */
+  .statlar {
+    margin: 0; display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+    background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden;
+  }
+  .stat { padding: var(--b-5) var(--b-6); }
+  .stat + .stat { border-left: 1px solid var(--chiziq); }
+  .stat dt { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
+  .stat dd { margin: 0; }
+  .stat-son { font-size: var(--matn-h3); font-weight: 900; font-variant-numeric: tabular-nums; }
+  .stat:first-child .stat-son { font-size: var(--matn-hero); line-height: 1; color: var(--rang-havola); }
+  .stat-izoh { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
+  .natija-bolim { display: flex; flex-direction: column; gap: var(--b-3); }
+  .natija-bolim h2 { margin: 0; font-size: var(--matn-h3); font-weight: 800; display: inline; }
+  .bolim-izoh { margin: 0; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .skill-jadval { width: 100%; border-collapse: collapse; background: var(--fon); border-radius: var(--r-orta); overflow: hidden; }
+  .skill-jadval th, .skill-jadval td { text-align: left; padding: var(--b-3) var(--b-4); border-bottom: 1px solid var(--chiziq); vertical-align: middle; }
+  .skill-jadval thead th { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
+  .skill-jadval tbody th { font-weight: 700; }
+  .skill-nomi { display: block; }
+  .skill-bolim { display: block; font-size: var(--matn-mayda); font-weight: 600; color: var(--matn-sust); }
+  .skill-jadval td { width: 40%; }
+  .skill-son { display: block; font-weight: 800; font-variant-numeric: tabular-nums; margin-bottom: var(--b-1); }
+  .skill-bar { display: block; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .skill-bar-ich { display: block; height: 100%; background: var(--rang-havola); border-radius: var(--r-toliq); }
+
+  .natija-karta {
+    background: var(--fon); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta);
+    padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3);
+  }
+  .natija-karta-h { margin: 0; display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-katta); font-weight: 800; }
+  .natija-ikonka { width: 18px; height: 18px; color: var(--rang-havola); }
+  .natija-meta { margin: 0; font-size: var(--matn-kichik); color: var(--matn-sust); font-weight: 600; }
+  .natija-stem { margin: 0; }
+  .natija-javob { margin: 0; display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5); font-weight: 700; }
+  .izoh-ochiq { border-top: 1px solid var(--chiziq); padding-top: var(--b-2); }
+  .izoh-ochiq summary, .yigma summary { min-height: 48px; display: flex; align-items: center; font-weight: 800; cursor: pointer; }
+  .izoh-matn { color: var(--matn-ikkinchi); padding-bottom: var(--b-2); }
+  .yigma { display: flex; flex-direction: column; gap: var(--b-3); }
+  .yigma > :not(summary) { margin-top: var(--b-3); }
+  .redo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
+  .redo-holat { margin: 0; display: inline-flex; align-items: center; gap: var(--b-2); font-weight: 700; font-size: var(--matn-kichik); }
+  .redo-ikonka { color: var(--rang-havola); }
+  .sabab { flex-basis: 100%; display: flex; flex-direction: column; gap: var(--b-2); }
+  .sabab-yorliq { margin: 0; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); }
+  .sabab-chiplar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .sabab-izoh { margin: 0; min-height: 1em; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .chip {
+    min-height: 48px; padding: 0 16px; border-radius: var(--r-toliq);
+    font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-maydon);
+  }
+  .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
+  .natija-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+
+  @media (max-width: 640px) {
+    .amallar { width: 100%; }
+    .amallar #xarita-och { margin-left: auto; }
+    .holat-karta { padding: var(--b-5); }
+    .sessiya-pastki { padding-bottom: calc(var(--b-3) + env(safe-area-inset-bottom, 0px)); }
+    .sessiya-pastki > * { flex: 1 1 0; padding: 0 var(--b-4); }
+    .sessiya-pastki #tekshir, .sessiya-pastki #keyingi, .sessiya-pastki #otkaz { margin-left: 0; }
+    .xarita-ichi { padding: var(--b-5); }
+    .xarita-amal > * { flex: 1 1 100%; }
+    .natija-amal > * { flex: 1 1 100%; }
+    .statlar { grid-template-columns: 1fr 1fr; }
+    .stat:first-child { grid-column: 1 / -1; }
+    .stat + .stat { border-left: 0; border-top: 1px solid var(--chiziq); }
+    .stat:last-child { border-left: 1px solid var(--chiziq); }
+  }
+</style>

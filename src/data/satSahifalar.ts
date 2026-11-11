@@ -46,18 +46,7 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: ['CB02'],
         tekshirilmagan: [
           'Question counts come from the Tayanch database and appear only after you sign in. The bank is empty until the author publishes checked questions.',
-          'The practice session page is not ready yet: starting a session opens a "coming soon" page.',
         ],
-      },
-      {
-        // P08: start_session javobi sessionStorage "tayanch:sat-sessiya" da, manzil ?id=<session_id>.
-        qism: 'mashq/sessiya/',
-        tayyor: false,
-        nomi: 'Practice session',
-        tavsif: 'Solve the questions you picked in the question bank, one at a time, timed or untimed.',
-        turi: 'mashq',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
       },
       {
         qism: 'vosita/natijalar/',
@@ -304,6 +293,32 @@ export const satNamunaSahifalar: SatSahifa[] = [
     tekshirilmagan: ['The sample questions were written for Tayanch and still need the author\'s review.'],
   },
 ];
+
+/**
+ * Ichki fokus sahifalari: faqat boshqa sahifadan ochiladi (masalan Savol banki → sessiya, ?id= bilan),
+ * shuning uchun yon panelda va `satGuruhlar` da yo'q. SatFokus qolipi: noindex.
+ */
+export const satIchkiSahifalar: SatSahifa[] = [
+  {
+    // P08: manzil ?id=<session_id> (javoblar URL da emas). Savol banki start javobini sessionStorage "tayanch:sat-sessiya" ga ham yozadi.
+    qism: 'mashq/sessiya/',
+    tayyor: true,
+    nomi: 'Practice session',
+    tavsif: 'Solve the questions you picked in the question bank, one at a time, timed or untimed, and review your mistakes.',
+    turi: 'mashq',
+    manbalar: ['CB03'],
+    tekshirilmagan: [
+      'Timed mode gives about 71 seconds per Reading and Writing question and about 95 seconds per Math question, worked out from the official section times. The real test times each module, not each question.',
+      'The time limit is kept by this page. The server does not yet reject answers sent after the time is up.',
+    ],
+  },
+];
+
+export const ichkiSahifa = (qism: string): SatSahifa => {
+  const t = satIchkiSahifalar.find((x) => x.qism === qism);
+  if (!t) throw new Error(`satIchkiSahifalar: ${qism} topilmadi`);
+  return t;
+};
 
 export const namunaSahifa = (qism: string): SatSahifa => {
   const t = satNamunaSahifalar.find((x) => x.qism === qism);

@@ -13,6 +13,7 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
 | `migrations/20261109000010_tolov_inpay.sql` | To'lov SQL funksiyalari (`payment_create`, `payment_set_invoice`, `payment_apply_event`), faqat service_role. Jadvallarga tegmaydi. 10-bo'lim. |
 | `migrations/20261110000011_tolov_audit_muvofiqlash.sql` | `payment_events.payload` tozalash trigger'i va `payment_pending_stale` (P21), 10-bo'lim. |
+| `migrations/20261110120000_sessiya.sql` | Mashq sessiyasi sahifasi (P08): `get_session`, `finish_session`, `add_to_review`; `submit_answer` yangilangan (parallel so'rov, yakunlangan sessiya). Sinov `tests/sessiya_test.sql`. |
 | `functions/tolov-yaratish/`, `functions/inpay-webhook/`, `functions/inpay-holat/`, `functions/inpay-muvofiqlash/` | Edge Function'lar: inPAY to'lovi, webhook, holat va muvofiqlashtirish (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
@@ -287,6 +288,8 @@ psql uchun baza paroli kerak edi va u hal bo'lmadi (pastda), shuning uchun test 
 - CLI faylni Management API orqali bitta so'rov va bitta tranzaksiyada bajaradi. Oldindan zararsiz sinov bilan tekshirildi: `begin … rollback` undan oldingi hamma narsani bekor qiladi (vaqtinchalik jadval ham, `set_config` ham). Rol: `postgres` (superuser emas), psql bilan session pooler orqali ulangandagi rol bilan bir xil.
 - CLI `\set`/`\gset` ni bilmaydi va `notice` xabarlarini ko'rsatmaydi. Shuning uchun repodagi fayl emas, uning vaqtinchalik nusxasi ishlatildi (repoga qo'shilmagan): `\set` qatorlari olib tashlandi, `\gset` o'rniga `;`, har `raise notice 'OK NN …'` o'rniga `test.ok` sozlamasiga `OK NN` qo'shish, oxirgi `HAMMASI O'TDI` xabari o'rniga ataylab `raise exception 'NATIJA:% | HAMMASI O''TDI …'`. Tekshiruvlar va `FAIL` xatolari o'zgarmadi.
 - Ataylab xato tranzaksiyani bekor qiladi (ROLLBACK bilan bir xil), CLI uni xato matnida qaytaradi: `ERROR: P0001: NATIJA: OK 01 OK 02 OK 04 OK 05 … OK 15 | HAMMASI O'TDI`. Birorta tekshiruv o'tmasa, shu joyda `FAIL NN` xatosi chiqadi.
+
+**`sessiya_test.sql` (P08, 2026-11-10, `uvwejvjrsswssgydwevm`):** xuddi shu usulda vaqtinchalik nusxa (`OK SNN` → `test.ok`, oxirida `NATIJA` xatosi). Natija: `ERROR: P0001: NATIJA: S01 S02 … S09 | SESSIYA SINOVLARI O'TDI`. Keyin qoldiq 0 (sinov foydalanuvchilari, savollar, sessiyalar, urinishlar, navbat, kvota). Test savollari avval `draft` yoziladi va keyin tasdiqlanadi: shunda PR #65 (`questions_p05`: `verified_at`, draft/verified qoidalari) bor va yo'q sxemada ham ishlaydi.
 
 #### Muqobil: psql (baza paroli kerak)
 
