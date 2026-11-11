@@ -324,8 +324,9 @@ const tekshirilmagan = [
   .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s var(--harakat-egri); }
   .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
   .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
-  .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; }
-  .pog .ust span { transform: rotateZ(38deg) rotateX(-58deg); font-weight: 800; font-size: 13px; }
+  .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; transform-style: preserve-3d; }
+  /* Yozuv zina ustida tik turadi: preserve-3d bo'lmasa qarama-qarshi burilish matnni yassilab, o'qib bo'lmas qilardi */
+  .pog .ust span { transform-origin: 50% 100%; transform: translateY(-50%) rotateZ(38deg) rotateX(-58deg); font-weight: 800; font-size: 15px; }
   .pog .old { position: absolute; left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); }
   .pog .yon { position: absolute; right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); }
   .p1 { left: 0; top: 128px; --h: 28px; }
@@ -401,9 +402,10 @@ const tekshirilmagan = [
 
   @media (max-width: 760px) {
     .vosita-karta { padding: var(--b-5); gap: var(--b-4); }
-    .sahna { order: -1; min-height: 190px; }
+    .sahna { order: -1; min-height: 190px; padding-top: var(--b-4); }
     .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.7); }
     .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.7); }
+    .pog .ust span { font-size: 18px; } /* scale(.7) dan keyin ~13px */
     .katta-tugma { width: 100%; }
     .chipta { --korishok: 96px; }
     .chipta-asosiy { flex-direction: column; padding: var(--b-4); }

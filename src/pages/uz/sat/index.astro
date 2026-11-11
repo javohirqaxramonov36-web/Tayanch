@@ -281,6 +281,8 @@ const qadamlar = [
     .yol { order: 2; }
     .tuzilma { order: 3; flex: none; }
     .qayerda { order: 4; }
+    /* Zina boshqa komponentda: order bermasa (0) hero'dan oldin chiqib qoladi */
+    .sat-kirish > :global(.zina) { order: 5; }
     .qayerda .bosh-qator p { display: block; }
     .qayerda-karta { border-radius: var(--r-orta); padding: var(--b-4); }
     .katta-tugma { width: 100%; }
