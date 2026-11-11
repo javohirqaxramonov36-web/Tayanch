@@ -1,0 +1,47 @@
+---
+// Yosh guruhi va 18 yoshgacha ota-ona (vasiy) roziligi. Ro'yxat va rozilik (Google) sahifalari uchun umumiy.
+// Qonun 21-modda (LX02), voyaga yetish 18 yosh (LX03); qiymatlar src/data/hisobSozlama.ts dan.
+// Mantiq: src/lib/hisobYosh.ts (yoshBloki), id lar `<prefiks>-yosh…`, `<prefiks>-ota-ona…`.
+import Maydon from './Maydon.astro';
+import { hisobSozlama } from '../../data/hisobSozlama';
+
+interface Props {
+  prefiks: string;
+  /** Yoshi yetmagan odam uchun izoh oxiri (masalan "hisob ocha olmaysiz"). */
+  kichikIzoh: string;
+}
+const { prefiks: p, kichikIzoh } = Astro.props;
+const { minYosh, voyagaYetmaganQoida: vq } = hisobSozlama;
+---
+{minYosh !== null && vq && (
+  <fieldset class="hisob-guruh" id={`${p}-yosh`} aria-describedby={`${p}-yosh-izoh ${p}-yosh-xato`}>
+    <legend>Yoshingiz</legend>
+    <p class="hisob-izoh" id={`${p}-yosh-izoh`}>{minYosh} yoshdan kichik bo'lsangiz, {kichikIzoh}. Sayt hisobsiz ham to'liq ishlaydi.</p>
+    <div class="hisob-belgi">
+      <input type="radio" id={`${p}-yosh-katta`} name={`${p}-yosh`} value="katta" />
+      <label for={`${p}-yosh-katta`}>{vq.yoshgacha} yosh yoki undan katta</label>
+    </div>
+    <div class="hisob-belgi">
+      <input type="radio" id={`${p}-yosh-kichik`} name={`${p}-yosh`} value="kichik" aria-controls={`${p}-ota-ona`} />
+      <label for={`${p}-yosh-kichik`}>{minYosh}–{vq.yoshgacha - 1} yosh</label>
+    </div>
+    <p class="hisob-xato" id={`${p}-yosh-xato`} hidden></p>
+  </fieldset>
+)}
+
+{minYosh !== null && vq && (
+  <fieldset class="hisob-guruh hisob-ota-ona" id={`${p}-ota-ona`} hidden>
+    <legend>Ota-ona yoki vasiy roziligi</legend>
+    <div class="hisob-ota-ona-ichki">
+      <p class="hisob-izoh">Qonun bo'yicha {vq.yoshgacha} yoshgacha bo'lganlarning ma'lumotiga ishlov berish uchun ota-ona yoki vasiy roziligi kerak. Bu qismni ota-onangiz yoki vasiyingiz to'ldirsin.</p>
+      <Maydon id={`${p}-ota-ona-ism`} nomi="Ota-ona yoki vasiyning ismi va familiyasi" autocomplete="off" maxlength={80} />
+      <div class="hisob-belgi-blok">
+        <div class="hisob-belgi">
+          <input type="checkbox" id={`${p}-ota-ona-rozilik`} name={`${p}-ota-ona-rozilik`} aria-describedby={`${p}-ota-ona-rozilik-xato`} />
+          <label for={`${p}-ota-ona-rozilik`}>Men ota-ona yoki vasiy sifatida farzandimning ma'lumotlariga Maxfiylik siyosatidagi tartibda ishlov berishga roziman.</label>
+        </div>
+        <p class="hisob-xato" id={`${p}-ota-ona-rozilik-xato`} hidden></p>
+      </div>
+    </div>
+  </fieldset>
+)}
