@@ -1,0 +1,259 @@
+---
+// P18 "Timing and retakes": qachon boshlash (muallif), rasmiy qoidalar va sanalar (CB31–CB35, 2026-11-11),
+// qachon qayta topshirish (rasmiy + muallif) va qayta topshirishdan oldingi ro'yxat (interaktiv checkbox).
+// Saqlash: localStorage tayanch:sat-retake-tekshiruv = { v: 1, belgilar: { [id]: true } } (faqat shu brauzer).
+// JS'siz: ro'yxat belgilanadi, lekin saqlanmaydi; sanalar jadvali to'liq ko'rinadi ("Passed" belgisi JS bilan).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import QollanmaBolim from '../../../../../components/sat/QollanmaBolim.astro';
+import { yol } from '../../../../../lib/yol';
+import { satSahifalar } from '../../../../../data/satSahifalar';
+import {
+  VAQT_MUALLIF, RASMIY_QOIDALAR, SANALAR_2026_27, SANALAR_2027_28_TAXMINIY, RETAKE_ROYXAT, KALIT_RETAKE,
+  TEKSHIRILGAN_P18, KEYINGI_TEKSHIRUV_P18,
+} from '../../../../../data/satStrategiya';
+
+const tayyor = new Set(satSahifalar.filter((s) => s.tayyor).map((s) => s.qism));
+const sanaMatn = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b.muallif.length === 0).map((b) => b.sarlavha);
+---
+<BolimQobiq
+  title="Timing and retakes · SAT"
+  description="When to start preparing, official SAT test dates, score sending rules and a checklist before you retake. No score is guaranteed."
+  turi="qollanma"
+  yol={['Guides']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki vr">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>SAT® timing and retakes</h1>
+      <p class="lead">When to start, which official rules matter for a retake, and a checklist to go through before you register again.</p>
+    </header>
+
+    <p class="ogoh" role="note"><b>No score is guaranteed.</b> Rules and dates are copied from College Board pages with the date we checked them. They can change: always confirm on the official page before you register.</p>
+
+    <QollanmaBolim bolim={VAQT_MUALLIF.boshlash}>
+      <p class="kichik ikkinchi">To plan your weeks: <a href={yol('/uz/sat/qollanma/qayerdan-boshlash/')}>Where to start</a> and the <a href={yol('/uz/sat/vosita/reja/')}>Study planner</a>.</p>
+    </QollanmaBolim>
+
+    <section class="qoidalar" aria-labelledby="qoida-h">
+      <h2 id="qoida-h">Official rules</h2>
+      <ul class="faktlar">
+        {RASMIY_QOIDALAR.map((f) => (
+          <li><span class="yorliq-rasmiy">Official · {f.manbalar.join(', ')}</span><p>{f.matn}</p></li>
+        ))}
+      </ul>
+
+      <h3 id="sana-h">SAT weekend test dates, 2026–27</h3>
+      <p class="kichik"><span class="yorliq-rasmiy">Official · CB34, CB35</span> <span class="ikkinchi">Checked {TEKSHIRILGAN_P18}.</span></p>
+      <table class="jadval" aria-labelledby="sana-h">
+        <thead>
+          <tr><th scope="col">Test date</th><th scope="col">Registration deadline</th><th scope="col">Late registration and changes</th><th scope="col">Scores released (students)</th></tr>
+        </thead>
+        <tbody>
+          {SANALAR_2026_27.map((s) => (
+            <tr data-test={s.test}>
+              <th scope="row" data-l="Test date">{sanaMatn(s.test)}<span class="otgan" hidden> · Passed</span></th>
+              <td data-l="Registration deadline">{sanaMatn(s.royxat)}</td>
+              <td data-l="Late registration and changes">{sanaMatn(s.kech)}</td>
+              <td data-l="Scores released (students)">{sanaMatn(s.ball)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="kichik ikkinchi">Anticipated 2027–28 dates (College Board, deadlines not published yet): {SANALAR_2027_28_TAXMINIY.map(sanaMatn).join('; ')}.</p>
+      <p class="kichik ikkinchi">Not checked: which dates a test center near you offers. Use Test Center Search on the <a href="https://satsuite.collegeboard.org/sat/dates-deadlines" rel="noopener" target="_blank">official dates page<span class="ekranda-yoq"> (opens in a new tab)</span></a>.</p>
+    </section>
+
+    <QollanmaBolim bolim={VAQT_MUALLIF.qachon} />
+
+    <section class="royxat" aria-labelledby="royxat-h">
+      <div class="r-bosh">
+        <h2 id="royxat-h">Before you retake: checklist</h2>
+        <p class="kichik"><span class="yorliq-tavsiya">Tayanch recommendation</span> <span class="ikkinchi">Built from official guidance; the author will review it.</span></p>
+        <div class="progress-qator">
+          <p class="kichik"><span id="rt-bajarildi">0</span> of {RETAKE_ROYXAT.length} done</p>
+          <div class="progress" aria-hidden="true"><span id="rt-chiziq"></span></div>
+        </div>
+        <p class="ekranda-yoq" id="rt-xabar" aria-live="polite"></p>
+      </div>
+      <ul class="bandlar">
+        {RETAKE_ROYXAT.map((b) => (
+          <li class="band" data-band={b.id}>
+            <div class="b-bosh">
+              <input type="checkbox" id={`rt-${b.id}`} data-belgi={b.id} />
+              <label for={`rt-${b.id}`}>{b.matn}</label>
+            </div>
+            {(b.manbalar.length > 0 || b.tayanch) && (
+              <p class="b-qosh kichik">
+                {b.manbalar.length > 0 && <span class="ikkinchi">Based on {b.manbalar.join(', ')}</span>}
+                {b.tayanch && tayyor.has(b.tayanch.qism) && <a href={yol(`/uz/sat/${b.tayanch.qism}`)}>{b.tayanch.matn}</a>}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+      <div class="tugmalar">
+        <button type="button" class="matn-tugma" id="rt-qayta">Start over</button>
+        <span class="tasdiq" id="rt-tasdiq" hidden>This clears your check marks.
+          <button type="button" class="matn-tugma" id="rt-ha">Yes, clear</button>
+          <button type="button" class="matn-tugma" id="rt-yoq">Cancel</button>
+        </span>
+      </div>
+      <p class="kichik ikkinchi" id="rt-saqlash">Saved only in this browser.</p>
+    </section>
+
+    <ManbaBlok
+      manbalar={['CB31', 'CB32', 'CB33', 'CB34', 'CB35', 'CB21', 'CB23', 'CB24', 'CB25']}
+      tekshirilgan={TEKSHIRILGAN_P18}
+      keyingiTekshiruv={KEYINGI_TEKSHIRUV_P18}
+      tekshirilmagan={[
+        ...(muallifBosh.length > 0 ? [`Author's experience is not written yet: ${muallifBosh.join(', ')}.`] : []),
+        'The checklist is a Tayanch recommendation built from official guidance, not an official College Board list.',
+        'The fee for sending scores after the free period and the late registration fee are not shown here: check the official pages.',
+        'Test center availability in Uzbekistan or your country is not checked.',
+        '2027–28 dates are marked "Anticipated" by College Board and may change.',
+      ]}
+    />
+  </div>
+  <script type="application/json" id="rt-sozlama" set:html={JSON.stringify({ kalit: KALIT_RETAKE, jami: RETAKE_ROYXAT.length })} />
+</BolimQobiq>
+
+<script>
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const { kalit, jami } = JSON.parse($('rt-sozlama').textContent || '{}') as { kalit: string; jami: number };
+
+  // Sanalar: o'tganlari "Passed" (qurilmaning mahalliy sanasi bo'yicha).
+  const d = new Date();
+  const bugun = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  document.querySelectorAll<HTMLTableRowElement>('tr[data-test]').forEach((tr) => {
+    const otgan = tr.dataset.test! < bugun;
+    tr.classList.toggle('otgan-qator', otgan);
+    tr.querySelector<HTMLElement>('.otgan')!.hidden = !otgan;
+  });
+
+  type Holat = { v: 1; belgilar: Record<string, true> };
+  const idlar = new Set([...document.querySelectorAll<HTMLInputElement>('[data-belgi]')].map((c) => c.dataset.belgi!));
+  const tekshir = (x: unknown): Holat => {
+    const belgilar: Record<string, true> = {};
+    const b = (x as { belgilar?: unknown } | null)?.belgilar;
+    if (b && typeof b === 'object') for (const k of Object.keys(b)) if (idlar.has(k) && (b as Record<string, unknown>)[k] === true) belgilar[k] = true;
+    return { v: 1, belgilar };
+  };
+  const oqi = (): Holat => {
+    try { return tekshir(JSON.parse(localStorage.getItem(kalit) || 'null')); } catch { return tekshir(null); }
+  };
+  let holat = oqi();
+  const saqla = () => {
+    let ok = true;
+    try { localStorage.setItem(kalit, JSON.stringify(holat)); } catch { ok = false; }
+    $('rt-saqlash').textContent = ok ? 'Saved only in this browser.' : 'This browser does not allow saving: your check marks will be lost when you leave the page.';
+  };
+  const qutilar = () => document.querySelectorAll<HTMLInputElement>('[data-belgi]');
+
+  const chiz = (elon: boolean) => {
+    qutilar().forEach((c) => {
+      c.checked = !!holat.belgilar[c.dataset.belgi!];
+      c.closest('.band')!.classList.toggle('bajarilgan', c.checked);
+    });
+    const n = Object.keys(holat.belgilar).length;
+    $('rt-bajarildi').textContent = String(n);
+    $('rt-chiziq').style.width = `${Math.round((n / jami) * 100)}%`;
+    if (elon) $('rt-xabar').textContent = n === jami ? `All ${jami} done.` : `${n} of ${jami} done.`;
+  };
+
+  qutilar().forEach((c) => c.addEventListener('change', () => {
+    if (c.checked) holat.belgilar[c.dataset.belgi!] = true; else delete holat.belgilar[c.dataset.belgi!];
+    saqla(); chiz(true);
+  }));
+
+  const qayta = $<HTMLButtonElement>('rt-qayta');
+  const tasdiq = $('rt-tasdiq');
+  const yop = (fokus: HTMLElement) => { tasdiq.hidden = true; qayta.hidden = false; fokus.focus(); };
+  qayta.addEventListener('click', () => { qayta.hidden = true; tasdiq.hidden = false; $('rt-yoq').focus(); });
+  $('rt-yoq').addEventListener('click', () => yop(qayta));
+  $('rt-ha').addEventListener('click', () => {
+    holat = tekshir(null);
+    try { localStorage.removeItem(kalit); } catch { /* ruxsat yo'q */ }
+    chiz(false);
+    $('rt-xabar').textContent = 'Your check marks are cleared.';
+    yop(qutilar()[0]);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !tasdiq.hidden) yop(qayta); });
+
+  chiz(false);
+</script>
+
+<style>
+  .vr { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--matn-h2); }
+  h3 { font-size: var(--matn-h3); font-weight: 800; margin-top: var(--b-4); }
+  .lead { font-size: var(--matn-katta); line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6; }
+  a { color: var(--rang-havola); font-weight: 700; }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+
+  .yorliq-rasmiy, .yorliq-tavsiya {
+    display: inline-block; padding: 1px 10px; border-radius: var(--r-toliq);
+    font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.02em;
+  }
+  .yorliq-rasmiy { border: 1.5px solid var(--rang-havola); color: var(--rang-havola); }
+  .yorliq-tavsiya { background: var(--sirt-ikkinchi); color: var(--matn); }
+
+  .qoidalar { display: flex; flex-direction: column; gap: var(--b-4); }
+  .faktlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .faktlar li { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6; }
+  .faktlar p { margin: 0; max-width: 68ch; }
+
+  .jadval { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); line-height: 1.5; font-variant-numeric: tabular-nums; }
+  .jadval th, .jadval td { text-align: left; vertical-align: top; padding: var(--b-3); border-bottom: 1px solid var(--chiziq); }
+  .jadval thead th { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); border-bottom: 1.5px solid var(--matn); }
+  .jadval tbody th { font-weight: 800; }
+  .otgan-qator th, .otgan-qator td { color: var(--matn-ikkinchi); }
+  .otgan { font-weight: 700; }
+  .otgan[hidden] { display: none; }
+
+  .royxat { display: flex; flex-direction: column; gap: var(--b-5); }
+  .r-bosh { display: flex; flex-direction: column; gap: var(--b-3); }
+  .progress-qator { display: flex; flex-direction: column; gap: var(--b-2); max-width: 420px; }
+  .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); }
+  .bandlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .band { border: 1.5px solid var(--matn); border-radius: var(--r-orta); padding: var(--b-3) var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
+  .b-bosh { display: flex; align-items: flex-start; gap: var(--b-3); }
+  .b-bosh input { width: 24px; height: 24px; margin: 10px 0 0; flex: none; accent-color: var(--rang-asosiy); cursor: pointer; }
+  .b-bosh input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .b-bosh label { display: flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: 700; line-height: 1.5; }
+  .bajarilgan .b-bosh label { color: var(--matn-ikkinchi); text-decoration: line-through; }
+  .b-qosh { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--b-4); margin: 0; padding-left: calc(24px + var(--b-3)); }
+  .b-qosh a { min-height: 44px; display: inline-flex; align-items: center; }
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
+  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
+  .matn-tugma:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+  .tasdiq[hidden], .matn-tugma[hidden] { display: none; }
+
+  @media (max-width: 760px) {
+    .jadval thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .jadval, .jadval tbody, .jadval tr, .jadval th, .jadval td { display: block; width: 100%; }
+    .jadval tr { border: 1.5px solid var(--matn); border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); margin-bottom: var(--b-3); }
+    .jadval th, .jadval td { border: 0; padding: var(--b-2) 0; }
+    .jadval td::before { content: attr(data-l); display: block; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+    .jadval tbody th { font-size: var(--matn-katta); }
+  }
+  @media (max-width: 640px) {
+    .vr { padding-top: 28px; gap: var(--b-8); }
+    .band { padding: var(--b-3) var(--b-4); }
+    .b-qosh { padding-left: 0; }
+  }
+</style>

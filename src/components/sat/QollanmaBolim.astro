@@ -1,0 +1,60 @@
+---
+// P18: qo'llanma bo'limi: sarlavha, faktlar (har birida yorliq: rasmiy manba ID / Tayanch hisobi / tavsiya) va muallif tajribasi.
+// Muallif matni bo'sh bo'lsa "The author will fill this in" ko'rinadi (matn o'ylab topilmaydi).
+import type { StrategiyaBolim, Fakt } from '../../data/satStrategiya';
+
+interface Props {
+  bolim: StrategiyaBolim;
+}
+const { bolim } = Astro.props;
+
+const yorliq = (f: Fakt) =>
+  f.turi === 'rasmiy'
+    ? `Official · ${f.manbalar.join(', ')}`
+    : f.turi === 'hisob'
+      ? `Tayanch calculation from ${f.manbalar.join(', ')}`
+      : 'Tayanch recommendation';
+---
+<section class="qb" aria-labelledby={`qb-${bolim.id}`}>
+  <h2 id={`qb-${bolim.id}`}>{bolim.sarlavha}</h2>
+  {bolim.faktlar.length > 0 && (
+    <ul class="faktlar">
+      {bolim.faktlar.map((f) => (
+        <li>
+          <span class:list={['yorliq', `yorliq-${f.turi}`]}>{yorliq(f)}</span>
+          <p>{f.matn}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+  <div class="muallif">
+    <span class="yorliq yorliq-muallif">Author's experience</span>
+    {bolim.muallif.length > 0 ? (
+      bolim.muallif.map((m) => <p>{m}</p>)
+    ) : (
+      <p class="bosh-joy">The author will fill this in.</p>
+    )}
+  </div>
+  <slot />
+</section>
+
+<style>
+  .qb { display: flex; flex-direction: column; gap: var(--b-4); }
+  .qb h2 { font-size: var(--matn-h2); }
+  .faktlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .faktlar li, .muallif {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2);
+    border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6;
+  }
+  .faktlar li { border: 1.5px solid var(--chiziq-kuchli); }
+  .muallif { border: 1.5px dashed var(--matn-sust); }
+  .faktlar p, .muallif p { margin: 0; max-width: 68ch; }
+  .yorliq {
+    display: inline-block; padding: 1px 10px; border-radius: var(--r-toliq);
+    font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.02em;
+  }
+  .yorliq-rasmiy { border: 1.5px solid var(--rang-havola); color: var(--rang-havola); }
+  .yorliq-hisob, .yorliq-tavsiya { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .yorliq-muallif { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .bosh-joy { color: var(--matn-ikkinchi); font-style: italic; }
+</style>
