@@ -171,19 +171,19 @@ const qadamlar = [
   .cta { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
   .katta-tugma {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    min-height: 52px; padding: 0 26px;
+    min-height: var(--control-height-md); padding: 0 26px;
     border-radius: var(--r-toliq);
     text-decoration: none; font-weight: 800; font-size: 16px;
   }
-  .katta-tugma.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta-tugma.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta-tugma.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta-tugma.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .katta-tugma.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); font-weight: 700; }
   .katta-tugma.ikkinchi:hover { background: var(--chiziq); }
 
   /* Qora karta: imtihon tuzilmasi (har ikki mavzuda qora) */
   .tuzilma {
     flex: 2 1 280px; min-width: 0;
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta);
     padding: 28px;
