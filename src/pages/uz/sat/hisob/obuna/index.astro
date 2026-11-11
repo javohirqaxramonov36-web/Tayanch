@@ -7,6 +7,7 @@
 // Brauzerda faqat tayanch:sat-tolov (oxirgi to'lov raqami).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import UsageBar from '../../../../../components/sat/UsageBar.astro';
 import { satTarif, usulNomi } from '../../../../../data/satTarif';
 import { yol } from '../../../../../lib/yol';
 
@@ -40,11 +41,10 @@ const usulMatn = usullar.length
         <h2 id="joriy-sarlavha" class="kichik-sarlavha">Your plan</h2>
         <p class="joriy-nom" data-joriy-nom>—</p>
         <p class="ikkinchi kichik" data-joriy-muddat hidden></p>
-        <div class="sarf" data-sarf hidden>
-          <h3 class="kichik-sarlavha">Usage</h3>
-          <ul class="sarf-royxat" data-sarf-royxat></ul>
+        <div class="sarf">
+          <h3 id="sarf-sarlavha" class="kichik-sarlavha">Usage</h3>
+          <UsageBar sarlavhaId="sarf-sarlavha" rejalar={false} />
         </div>
-        <p class="ikkinchi kichik" data-sarf-yoq hidden>No usage limits are set for your plan yet.</p>
       </section>
 
       <fieldset class="davr">
@@ -96,7 +96,7 @@ const usulMatn = usullar.length
       </section>
     </div>
 
-    <ManbaBlok manbalar={['IP03']} tekshirilgan="2026-11-10" keyingiTekshiruv="2026-12-10" tekshirilmagan={['A real payment has not been made through this page yet.', 'Prices and usage limits are not set yet.']} />
+    <ManbaBlok manbalar={['IP03']} tekshirilgan="2026-11-10" keyingiTekshiruv="2026-12-10" tekshirilmagan={['A real payment has not been made through this page yet.', 'Usage limits are not set yet.']} />
   </div>
 </BolimQobiq>
 
@@ -105,9 +105,9 @@ const usulMatn = usullar.length
   import { funksiya, narxYozuv, tolovXatoMatni, tolovniEsla } from '../../../../../lib/sat/tolov';
   import { kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
   import { tarifBayrogimi } from '../../../../../data/satAnalitika';
+  import { usageBarniChiz, type UsageJavob } from '../../../../../lib/sat/usageBar';
 
   interface Tarif { code: string; name: string; price_uzs: number | null; period_days: number | null; features: unknown }
-  interface Kvota { max: number; per: string; used: number; remaining: number }
 
   const $ = <T extends HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s);
   const kutish = $('[data-kutish]');
@@ -143,7 +143,7 @@ const usulMatn = usullar.length
     });
   }
 
-  function joriyniKorsat(nom: string, kod: string, tugash: string | null, limits: Record<string, Kvota>) {
+  function joriyniKorsat(nom: string, kod: string, tugash: string | null, usage: UsageJavob) {
     joriyKod = kod;
     $('[data-joriy-nom]')!.textContent = nom;
     const m = $('[data-joriy-muddat]')!;
@@ -152,20 +152,8 @@ const usulMatn = usullar.length
     document.querySelectorAll<HTMLElement>('[data-tarif]').forEach((k) => {
       $('[data-joriy-belgi]', k)!.hidden = k.dataset.tarif !== kod;
     });
-    const qatorlar = Object.entries(limits).map(([kalit, q]) => {
-      const li = document.createElement('li');
-      const nomi = kvotaNomi[kalit] ?? kalit;
-      const davrNomi = q.per === 'month' ? 'this month' : 'today';
-      const foiz = q.max > 0 ? Math.min(100, Math.round((q.used / q.max) * 100)) : 100;
-      li.innerHTML = '<p class="sarf-qator"><span></span><span class="ikkinchi"></span></p><div class="chiziq" aria-hidden="true"><span></span></div>';
-      li.querySelector('.sarf-qator span')!.textContent = nomi;
-      li.querySelector('.sarf-qator .ikkinchi')!.textContent = `${q.used} of ${q.max} ${davrNomi}`;
-      li.querySelector<HTMLElement>('.chiziq span')!.style.inlineSize = `${foiz}%`;
-      return li;
-    });
-    $('[data-sarf-royxat]')!.replaceChildren(...qatorlar);
-    $('[data-sarf]')!.hidden = qatorlar.length === 0;
-    $('[data-sarf-yoq]')!.hidden = qatorlar.length > 0;
+    const ub = $('[data-usage-bar]');
+    if (ub) usageBarniChiz(ub, usage, kvotaNomi);
   }
 
   async function yukla() {
@@ -185,10 +173,10 @@ const usulMatn = usullar.length
         .gt('ends_at', new Date().toISOString()).order('ends_at', { ascending: false }).limit(1),
     ]);
     tariflar = (p.data as Tarif[] | null) ?? [];
-    const plan = (u.data as { plan?: { code?: string; name?: string }; limits?: Record<string, Kvota> } | null) ?? {};
+    const plan = (u.data as UsageJavob | null) ?? {};
     const kod = plan.plan?.code ?? 'free';
     const tugash = kod !== 'free' ? (s.data?.find((x) => x.plan_code === kod)?.ends_at ?? null) : null;
-    joriyniKorsat(plan.plan?.name ?? 'Free', kod, tugash, plan.limits ?? {});
+    joriyniKorsat(plan.plan?.name ?? 'Free', kod, tugash, plan);
     if (p.error || u.error) xato('Some plan details could not be loaded. Refresh the page to try again.');
     kartalarniYangila();
     if (kutish) kutish.hidden = true;
@@ -261,10 +249,6 @@ const usulMatn = usullar.length
   .joriy { display: flex; flex-direction: column; gap: var(--b-2); padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); }
   .joriy-nom { font-size: var(--matn-h3); font-weight: 800; }
   .sarf { display: flex; flex-direction: column; gap: var(--b-3); margin-top: var(--b-3); }
-  .sarf-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
-  .sarf-royxat :global(.sarf-qator) { display: flex; justify-content: space-between; gap: var(--b-3); font-size: var(--matn-kichik); }
-  .sarf-royxat :global(.chiziq) { block-size: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .sarf-royxat :global(.chiziq span) { display: block; block-size: 100%; background: var(--rang-asosiy); border-radius: var(--r-toliq); }
 
   .davr { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
   .davr legend { padding: 0; margin-bottom: var(--b-3); }
