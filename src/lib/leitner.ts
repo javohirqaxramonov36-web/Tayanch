@@ -1,5 +1,5 @@
 // Leitner qutilari: Xato daftari takrorlashi (takrorlash.ts) va SAT lug'ati (sat/lugat.ts) uchun bitta qoida.
-// Serverdagi nusxasi: supabase/migrations/20261111120000_lugat_p15.sql, private.leitner_next (raqamlar bir xil bo'lishi shart).
+// Serverdagi nusxasi: supabase/migrations/20261111170000_lugat_p15.sql, private.leitner_next (raqamlar bir xil bo'lishi shart).
 // Oraliqlar (kun) Tayanch tanlovi, rasmiy qoida emas.
 
 /** 1–4: takrorlanadi; 5: o'zlashtirildi */

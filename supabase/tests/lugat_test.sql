@@ -1,4 +1,4 @@
--- P15 lug'at sinovlari (20261111120000_lugat_p15): Leitner, kunlik yangi so'z kvotasi va ertasi kuni tiklanish,
+-- P15 lug'at sinovlari (20261111170000_lugat_p15): Leitner, kunlik yangi so'z kvotasi va ertasi kuni tiklanish,
 -- yulduzcha, o'z so'zlarim bayrog'i, bir martalik import, RLS.
 -- rls_test.sql kabi: bitta tranzaksiya, oxirida ROLLBACK. 20 so'zli sinov to'plami faqat "SINOV" matnli soxta yozuvlar.
 \set ON_ERROR_STOP on

@@ -1,6 +1,6 @@
 // Lug'at CSV (P15): o'qish va tekshirish. Sof funksiyalar, faqat Node'ning o'z imkoniyatlari.
 // Shablon: docs/lugat-shablon.csv. Qoidalar: docs/lugat-import.md.
-// Chegaralar migratsiya bilan bir xil (20261111120000_lugat_p15.sql, 0005 vocab_words).
+// Chegaralar migratsiya bilan bir xil (20261111170000_lugat_p15.sql, 0005 vocab_words).
 
 export const USTUNLAR = ['word', 'part_of_speech', 'definition', 'example', 'difficulty', 'topic'];
 export const IXTIYORIY = ['uzbek'];

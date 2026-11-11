@@ -58,4 +58,5 @@ echo "security definer: hammasida search_path belgilangan"
 
 "${PSQL[@]}" -f "$ROOT/supabase/tests/rls_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/sessiya_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/analitika_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/lugat_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'

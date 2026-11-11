@@ -32,7 +32,6 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   tekshirilgan="2026-11-04"
   keyingiTekshiruv="2026-12-04"
   tekshirilmagan={[
-    "Stipendiya takliflari summasi ($1.1M+): tasdiqlovchi jadval hali tayyor emas",
     "Timeline bosqichlarining tartibi va yillari muallif tomonidan to'liq tasdiqlanishi kerak",
   ]}
 >
@@ -54,7 +53,8 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
               <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} href={yol(q.manzil)}>
                 <span class="qq-raqam" aria-hidden="true">{q.raqam}</span>
                 <span class="qq-nom"><span class="sr">{q.raqam}-qavat: </span>{q.nomi}</span>
-                {q.holat === 'tez-orada' && <span class="qq-pill">qurilmoqda</span>}
+                {q.holat === 'tez-orada' && <span class="qq-pill" lang="en">Coming soon</span>}
+                {(q.slug === 'sat' || q.slug === 'ielts') && <span class="qq-pill" lang="en">Beta</span>}
               </a>
             </li>
           ))}
@@ -120,7 +120,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
               </svg>
               <span class="karta-nom">{b.nomi}</span>
               <span class="karta-tavsif">{b.tavsif}</span>
-              <span class="karta-holat">{ochiq ? 'Boshlash' : 'Tez orada'}</span>
+              <span class="karta-holat">{ochiq ? 'Boshlash' : 'Coming soon'}</span>
             </a>
           </li>
         );

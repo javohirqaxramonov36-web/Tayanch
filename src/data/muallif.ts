@@ -18,7 +18,7 @@ export const yolBosqichlari: YolBosqichi[] = [
     matn: "\"Ikki marta o'lcha, bir marta kes.\" Beton quyish, kafel va material hisoblash. Muhandislikka qiziqishim shu yerdan boshlandi.",
   },
   {
-    sarlavha: 'IELTS 7.0',
+    sarlavha: 'IELTS 6.5',
     matn: "Oilamizdagi moliyaviy qiyinchiliklar sabab IELTS kursini tark etib, mustaqil tayyorlandim. Imtihon to'lovi uchun hovlimizdagi daraxtlar ham sotilgan.",
     katta: true,
   },

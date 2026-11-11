@@ -105,6 +105,7 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.get_session(uuid)', false, true, true),
   ('public.finish_session(uuid)', false, true, true),
   ('public.add_to_review(uuid)', false, true, true),
+  ('public.analytics_summary()', false, true, true),
   ('public.vocab_status()', false, true, true),
   ('public.vocab_rate(uuid,boolean,boolean)', false, true, true),
   ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
@@ -223,8 +224,9 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
 
   -- 9. Ma'lumot holati: tariflar bo'sh, savol yo'q, sinov qoldig'i yo'q
   union all
-  select 90, 'plans: free, pro, elite; limits = {}, price_uzs = null (P19 gacha)',
-         case when count(*) = 3 and bool_and(limits = '{}'::jsonb and price_uzs is null) then 'ok' else 'XATO' end,
+  select 90, 'plans: free, pro, elite; limits = {} (P19: hozircha cheklovsiz), narx faqat pro da (P19: 59000)',
+         case when count(*) = 3 and bool_and(limits = '{}'::jsonb)
+                   and bool_and(case code when 'pro' then price_uzs = 59000 else price_uzs is null end) then 'ok' else 'XATO' end,
          string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null'), '; ' order by code)
     from public.plans
    where code in ('free', 'pro', 'elite')

@@ -73,6 +73,7 @@ Hammasi `security definer`, `search_path = ''`, execute faqat `authenticated` da
 | `daily_question()` | kunning savoli (kuniga bitta sessiya) | `daily` +1, `questions` +1 (kunning birinchisida) |
 | `start_review_session(limit)` | muddati kelgan takrorlash savollari | `review_sessions` +1, `questions` +n |
 | `usage_status()` | tarif, cheklovlar, bugungi sarf | sarflamaydi |
+| `analytics_summary()` | analitika paneli (P14): jami, ko'nikma va bo'lim bo'yicha aniqlik, 90 kunlik faollik, streak, xato sababi teglari; `analytics_extended` bayrog'i bo'lsa qiyinlik bo'yicha aniqlik va median vaqt | sarflamaydi |
 | `can_read_question_figure(name)` | Storage policy yordamchisi | sarflamaydi |
 | `admin_grant_plan(...)`, `admin_hide_question(...)` | yangi obuna / yashirilgan savol id, `audit_log` | service role |
 
