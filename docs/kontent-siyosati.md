@@ -13,7 +13,7 @@ Tayanch repo'si ochiq va `main` ga push bo'lganda sayt joylanadi. Shuning uchun 
 
 Ikkala sahifada oxirgi yangilanish sanasi ko'rsatilmagan. Manba yozuvlari `src/data/manbalar.ts` da (izohda nima so'zma-so'z tekshirilgani yozilgan).
 
-Tayanch SAT bo'limida to'lov (Pro, Elite) rejalashtirilgan, ya'ni bu tijorat test-prep sharoiti. Yuqoridagi cheklovlar shu sharoitga to'g'ridan-to'g'ri tegishli deb qabul qilinadi (tekshirish kerak: yuridik baho berilmagan).
+Tayanch SAT bo'limida to'lov (Pro, Max) rejalashtirilgan, ya'ni bu tijorat test-prep sharoiti. Yuqoridagi cheklovlar shu sharoitga to'g'ridan-to'g'ri tegishli deb qabul qilinadi (tekshirish kerak: yuridik baho berilmagan).
 
 ## 2. Ruxsat etilgani
 

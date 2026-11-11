@@ -54,12 +54,13 @@ storage: question-figures     (yopiq bucket, imzolangan URL)
 | `payments` | to'lov (`provider_order_id` unique) | o'zini o'qiydi, `raw` siz | service role |
 | `payment_events` | webhook jurnali (`provider, event_id` unique) | **hech narsa** | service role |
 | `usage_counters` | kvota hisoblagichi | o'zini o'qiydi | RPC |
+| `daily_picks` | kun savoli tanlovi (`day` → `question_id`, hamma uchun bitta) | **hech narsa** | RPC (`daily_pick`) |
 | `reports` | savoldagi xato haqida xabar | o'zini o'qiydi, qo'shadi | mijoz |
 | `feedback` | fikr-mulohaza | o'zini o'qiydi, qo'shadi | mijoz |
 | `events` | analitika hodisasi (P25) | faqat qo'shadi | mijoz |
 | `audit_log` | admin amallari | **hech narsa** | admin funksiyalari |
 
-`anon` (hisobsiz): faqat faol `plans` va tasdiqlangan `vocab_words` ni o'qiydi. RPC yo'q; hisobsiz progress brauzerda (`tayanch:*`) qoladi.
+`anon` (hisobsiz): faqat faol `plans` va tasdiqlangan `vocab_words` ni o'qiydi. RPC faqat kun savoli uchun (`daily_question_public`, `check_daily_answer`, hech narsa yozmaydi); hisobsiz progress brauzerda (`tayanch:*`) qoladi.
 
 ## RPC'lar
 
@@ -70,9 +71,12 @@ Hammasi `security definer`, `search_path = ''`, execute faqat `authenticated` da
 | `question_counts(filters)` | mavzu/qiyinlik bo'yicha soni, javob berilgani | sarflamaydi |
 | `start_session(filters, volume, mode)` | sessiya + savollar (javobsiz) | `sessions` +1, `questions` +n |
 | `submit_answer(session, question, answer, time_ms)` | `is_correct`, `correct`, `explanation`, `already_answered` | `answers` +1 |
-| `daily_question()` | kunning savoli (kuniga bitta sessiya) | `daily` +1, `questions` +1 (kunning birinchisida) |
+| `daily_question()` | kunning savoli (kuniga bitta `daily` sessiya), natija, streak | **sarflamaydi** (P10) |
+| `daily_question_public()` | kunning savoli javobsiz (anon ham) | sarflamaydi, hech narsa yozmaydi |
+| `check_daily_answer(question, answer)` | faqat bugungi savol: `is_correct`, `correct`, `explanation` (anon ham) | sarflamaydi, hech narsa yozmaydi |
 | `start_review_session(limit)` | muddati kelgan takrorlash savollari | `review_sessions` +1, `questions` +n |
 | `usage_status()` | tarif, cheklovlar, bugungi sarf | sarflamaydi |
+| `analytics_summary()` | analitika paneli (P14): jami, ko'nikma va bo'lim bo'yicha aniqlik, 90 kunlik faollik, streak, xato sababi teglari; `analytics_extended` bayrog'i bo'lsa qiyinlik bo'yicha aniqlik va median vaqt | sarflamaydi |
 | `can_read_question_figure(name)` | Storage policy yordamchisi | sarflamaydi |
 | `admin_grant_plan(...)`, `admin_hide_question(...)` | yangi obuna / yashirilgan savol id, `audit_log` | service role |
 
@@ -133,6 +137,24 @@ inpay-holat (foydalanuvchi) / inpay-muvofiqlash (Cron, 15 daqiqa–48 soat pendi
 Holatlar: `created → pending → paid | failed | canceled`; `failed`/`canceled` dan keyin `succeeded` kelsa `paid`, `paid` yakuniy. Xato hodisa (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) `payment_events.error` bilan saqlanadi, obuna bermaydi. Obuna muddati `payments.raw.tayanch.period_days` (to'lov paytidagi tarif), shu tarifda faol obuna bo'lsa uning oxiridan boshlanadi.
 
 Brauzer to'lovni "tasdiqlay" olmaydi: `payments`, `subscriptions`, `payment_events` ga mijozda yozish huquqi yo'q, `payment_*` funksiyalarini faqat service_role chaqiradi. Batafsil: `supabase/README.md`, 10-bo'lim.
+
+### Kun savoli (P10, migratsiya `20261111220000_kun_savoli.sql`)
+
+```
+daily_pick(bugun, Toshkent) ─ daily_picks da bormi va yaroqlimi (verified, rasmsiz)? ─> o'sha
+                            └ yo'q: bo'lim = juft kun 'rw' / toq kun 'math' (2026-01-01 = 0-kun), shu bo'lim avval,
+                                    avval berilmagani, keyin eng uzoq berilgani, md5(external_id || sana) ─> daily_picks
+Mehmon ── daily_question_public ─> savol (javobsiz), next_at
+       ── check_daily_answer(question, answer) ─> faqat bugungi savol: is_correct, correct, explanation (yozuv yo'q)
+Kirgan ── daily_question ─> 'daily' sessiya (kuniga bitta) + result (javob berilgan bo'lsa) + streak
+       ── submit_answer(session, question, answer) ─> attempts, review_queue; kvota YO'Q; kun o'tsa 'daily_expired'
+```
+
+- **Sana chegarasi**: Asia/Tashkent (UTC+5, yozgi vaqt yo'q). Savol Toshkent vaqti 00:00 da (UTC 19:00) hamma uchun bir vaqtda almashadi. Boshqa mintaqada ham shu chegara: masalan Nyu-Yorkda (UTC−5) 14:00 da, Londonda (UTC+0) 19:00 da. Sahifa `next_at` ni foydalanuvchining mahalliy vaqtida ko'rsatadi.
+- **Streak**: faol kun = kun savoliga javob berilgan Toshkent kuni (to'g'ri yoki xato farqsiz). Bugun javob berilmagan bo'lsa kechagacha bo'lgan ketma-ketlik ko'rsatiladi (kun tugaguncha uzilmaydi). Hisob `practice_sessions` (`daily`) va `attempts` dan, alohida jadval yo'q.
+- **Kvota**: kun savoli hech qanday kalitni sarflamaydi (P19 bilan kelishilgan qoida). `daily` kaliti `usage_counters` da qoladi, lekin oshmaydi.
+- **Rasmli savol** kun savoli bo'lmaydi: mehmon `question-figures` dan rasm ocha olmaydi.
+- **Sinov**: `supabase/tests/kun_savoli_test.sql` (KS01–KS13, sana `private.today_tashkent` almashtirilib simulyatsiya qilinadi), `npm run db:tekshir`.
 
 ### Kvota
 
