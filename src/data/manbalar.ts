@@ -124,6 +124,15 @@ export const manbalar: Manba[] = [
     izoh: "College Board'ning kunlik rasmiy savol sahifasi (sahifa sarlavhasi: \"Official SAT Question of the Day – SAT Suite | College Board\"). Help Center \"What is Question of the Day?\" (satsuite.collegeboard.org/help-center/what-question-day) shu manzilga olib boradi. SAT kirishidagi Tayanch kun savoli (P10) pastida tashqi havola sifatida; Tayanch savoli emas. P16 resurslar xaritasi ham shu ID'ni ishlatadi. Bepulligi va savol almashish vaqti bu sahifalarda tekshirilmadi (tekshirish kerak).",
   },
   {
+    id: 'CB14',
+    nomi: 'SAT Suite Test Dates and Deadlines',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/dates-deadlines',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-11',
+    izoh: "SAT maqsad va sana sozlashi uchun (src/data/satSanalar.ts). 2026–27 SAT Weekend sanalari va ro'yxat muddatlari; sahifada \"apply to all students—U.S. and international\". 2027–28 sanalari \"anticipated\", kiritilmagan. HTML'da so'zma-so'z tekshirildi (2026-11-11, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q. CB12 boshqa branch'larda band (sat-kalkulyator, sat-savol-format-import), CB13 ehtiyot uchun qoldirildi.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',

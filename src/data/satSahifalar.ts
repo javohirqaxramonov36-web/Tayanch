@@ -243,6 +243,15 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Account',
     sahifalar: [
       {
+        qism: 'hisob/maqsad/',
+        tayyor: true,
+        nomi: 'Goal and test date',
+        tavsif: 'Set your target SAT score, your best score so far and your test date. You can change them any time.',
+        turi: 'vosita',
+        manbalar: ['CB04', 'CB14'],
+        tekshirilmagan: ['Whether every official date is offered at test centers in Uzbekistan.'],
+      },
+      {
         qism: 'hisob/obuna/',
         tayyor: true,
         nomi: 'Plans',
@@ -290,7 +299,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/obuna/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 

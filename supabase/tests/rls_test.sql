@@ -250,6 +250,24 @@ begin
   if (select consent_at from public.profiles where id = a) is null then
     raise exception 'FAIL 07: consent_at trigger ishlamadi';
   end if;
+  -- P12: SAT maqsad, hozirgi ball, sozlash vaqti; qadam 10 va oraliq tekshiruvi
+  update public.profiles set target_score = 1500, current_score = 1320, exam_date = '2026-12-05', sat_setup_at = now() where id = a;
+  begin
+    update public.profiles set current_score = 1325 where id = a;
+    raise exception 'FAIL 07: current_score qadam 10 tekshirilmadi';
+  exception when check_violation then null;
+  end;
+  begin
+    update public.profiles set current_score = 1610 where id = a;
+    raise exception 'FAIL 07: current_score oralig''i tekshirilmadi';
+  exception when check_violation then null;
+  end;
+  begin
+    update public.profiles set target_score = 1505 where id = a;
+    raise exception 'FAIL 07: target_score qadam 10 tekshirilmadi';
+  exception when check_violation then null;
+  end;
+  update public.profiles set current_score = null where id = a;
   insert into public.user_state (key, value) values ('tayanch:sat-lugat', '{"versiya": 1}');
   insert into public.bookmarks (question_id) values (q2);
   insert into public.official_tests (test_name, total_score) values ('SINOV test', 1300);
