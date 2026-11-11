@@ -423,6 +423,8 @@ select cron.schedule('inpay-muvofiqlash', '*/10 * * * *', $$
 $$);
 ```
 
+**Obuna muddati (P22, `20261112000000_obuna_holati.sql`):** migratsiyaning o'zi `cron.schedule('obuna-muddati', '5 19 * * *', 'select private.expire_subscriptions()')` ni qo'yadi (har kuni 00:05 Toshkent; sir va `pg_net` kerak emas, SQL to'g'ridan-to'g'ri). Funksiya `active` va `ends_at <= now()` obunani `expired` qiladi, har biri `audit_log` (`subscription_expired`, actor `cron:obuna-muddati`). Amaldagi tarif bunga bog'liq emas: `current_plan` muddati o'tganini allaqachon hisobga olmaydi. Tekshirish (faqat o'qish): `select jobid, schedule, command from cron.job where jobname = 'obuna-muddati';` va `cron.job_run_details`.
+
 Qo'lda ishga tushirish (lokal `.env` da `MUVOFIQLASH_SECRET` bo'lsa; qiymat ekranga chiqmaydi):
 
 ```bash
