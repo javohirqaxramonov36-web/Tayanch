@@ -598,7 +598,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
 
   .tanlov {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta); padding: 24px 28px;
   }
@@ -612,7 +612,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     min-height: 52px; padding: 0 26px; border-radius: var(--r-toliq); border: 0;
     text-decoration: none; font: inherit; font-weight: 800; font-size: 16px; white-space: nowrap; cursor: pointer;
   }
-  .katta-tugma.oq { background: var(--rang-asosiy-matn); color: var(--qora); }
+  .katta-tugma.oq { background: var(--qora-matn); color: var(--qora); }
   .katta-tugma.oq:focus-visible { outline-color: var(--rang-asosiy-qorada); }
   .katta-tugma:disabled { background: var(--qora-sirt); color: var(--qora-matn-ikkinchi); border: 1.5px dashed var(--qora-matn-ikkinchi); cursor: not-allowed; }
   .katta-tugma[aria-busy='true'] { cursor: progress; border-style: solid; }

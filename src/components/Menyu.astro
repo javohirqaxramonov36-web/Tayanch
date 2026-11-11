@@ -47,7 +47,8 @@ const hisobProfil = yol('/uz/hisob/profil/');
 </script>
 
 <style>
-  .menyu-qator { background: var(--sirt); border-bottom: 1px solid var(--chiziq); }
+  /* Liquid Glass (topbar) */
+  .menyu-qator { background: var(--glass-sheen), var(--glass-chrome-bg); -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop); box-shadow: var(--glass-edge), var(--glass-shadow); border-bottom: var(--border-width-1) solid var(--color-border); }
   .menyu-ichki {
     display: flex;
     flex-wrap: wrap;
@@ -73,10 +74,13 @@ const hisobProfil = yol('/uz/hisob/profil/');
   }
   ul a { text-decoration: none; display: inline-block; padding-block: 10px; }
   ul a:hover { color: var(--rang-havola); }
+  /* DS btn-primary, md */
   ul a.boshlash {
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-    border-radius: var(--r-toliq); padding: 9px 16px;
+    display: inline-flex; align-items: center; min-height: var(--control-height-md);
+    background: var(--btn-primary-bg); color: var(--btn-primary-text);
+    border-radius: var(--btn-radius); padding-block: 0; padding-inline: var(--control-pad-md);
+    font-weight: var(--text-button-weight);
   }
   ul a.hisob-menyu { display: inline-flex; align-items: center; gap: 6px; }
-  ul a.boshlash:hover { background: var(--rang-asosiy-toq); color: var(--rang-asosiy-matn); }
+  ul a.boshlash:hover { background: var(--btn-primary-bg-hover); color: var(--btn-primary-text); }
 </style>

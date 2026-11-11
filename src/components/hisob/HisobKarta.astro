@@ -51,7 +51,7 @@ const { sahifa, lead } = Astro.props;
     border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
     background: var(--fon); color: var(--matn); font: inherit; font-size: 17px;
   }
-  .hisob-kirit:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .hisob-kirit:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .hisob-kirit[aria-invalid='true'] { border-color: var(--rang-ogoh-matn); }
   .hisob-kirit:disabled { background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
   .hisob-xato { font-size: var(--matn-kichik); font-weight: 700; color: var(--rang-ogoh-matn); line-height: 1.5; }
@@ -62,7 +62,7 @@ const { sahifa, lead } = Astro.props;
     flex: none; width: 24px; height: 24px; margin: 0; margin-top: 1px;
     accent-color: var(--rang-asosiy); cursor: pointer;
   }
-  .hisob-belgi input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .hisob-belgi input:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .hisob-belgi label { font-weight: 500; line-height: 1.5; cursor: pointer; }
   .hisob-belgi-blok { display: flex; flex-direction: column; gap: var(--b-1); }
   .hisob-guruh {
@@ -92,7 +92,7 @@ const { sahifa, lead } = Astro.props;
   .hisob-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); align-items: center; }
   .hisob .tugma { width: 100%; }
   .hisob .tugma:disabled { cursor: not-allowed; opacity: 1; background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
-  .hisob .tugma-asosiy[aria-busy='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .hisob .tugma-asosiy[aria-busy='true'] { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
   .hisob-havola { color: var(--rang-havola); font-weight: 700; }
   .hisob-qator { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); flex-wrap: wrap; }
   .hisob-past { text-align: center; color: var(--matn-ikkinchi); }

@@ -239,7 +239,7 @@ import { yol } from '../../../../../lib/yol';
     cursor: pointer;
   }
   .variant input { position: absolute; opacity: 0; pointer-events: none; }
-  .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .variant:hover { border-color: var(--rang-asosiy); }
   .harf {
     width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);
@@ -261,7 +261,7 @@ import { yol } from '../../../../../lib/yol';
 
   .izoh {
     border-radius: var(--r-katta); padding: 24px 28px;
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     display: flex; flex-direction: column; gap: var(--b-2);
   }
@@ -278,14 +278,14 @@ import { yol } from '../../../../../lib/yol';
   }
   .matn-tugma:hover { background: var(--sirt-ikkinchi); }
   .katta {
-    min-height: 52px; padding: 0 32px; margin-left: auto;
+    min-height: var(--control-height-md); padding: 0 32px; margin-left: auto;
     border: 0; border-radius: var(--r-toliq);
     font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
   }
   .katta[hidden] { display: none; }
-  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .katta.qora { background: var(--matn); color: var(--fon); }
   .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); margin-left: 0; }

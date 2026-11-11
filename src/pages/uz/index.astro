@@ -8,18 +8,19 @@ import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
 import Zina from '../../components/Zina.astro';
+import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
 
 const sochilgan = [
-  { t: 'IELTS', x: 4, y: 6, r: -6 },
-  { t: 'Common App', x: 46, y: 0, r: 4 },
-  { t: 'Motivatsion esse', x: 20, y: 30, r: 3 },
-  { t: 'SAT', x: 68, y: 34, r: -8 },
-  { t: 'Tavsiyanoma', x: 2, y: 58, r: 5 },
-  { t: 'Stipendiya', x: 40, y: 62, r: -3 },
-  { t: 'Muddat?', x: 70, y: 76, r: 7, qora: true },
-  { t: 'Hujjatlar', x: 14, y: 84, r: -4 },
+  { t: 'IELTS', x: 6, y: 8, r: -6 },
+  { t: 'Common App', x: 66, y: 2, r: 4 },
+  { t: 'Motivatsion esse', x: 0, y: 32, r: 3 },
+  { t: 'SAT', x: 78, y: 30, r: -8 },
+  { t: 'Tavsiyanoma', x: 2, y: 56, r: 5 },
+  { t: 'Stipendiya', x: 72, y: 54, r: -3 },
+  { t: 'Muddat?', x: 74, y: 80, r: 7, qora: true },
+  { t: 'Hujjatlar', x: 8, y: 82, r: -4 },
 ];
 const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
 ---
@@ -50,7 +51,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
         <ul>
           {qavatlar.slice(1).map((q) => (
             <li>
-              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} href={yol(q.manzil)}>
+              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} data-floor={q.raqam} data-bino-yoq={q.raqam} href={yol(q.manzil)}>
                 <span class="qq-raqam" aria-hidden="true">{q.raqam}</span>
                 <span class="qq-nom"><span class="sr">{q.raqam}-qavat: </span>{q.nomi}</span>
                 {q.holat === 'tez-orada' && <span class="qq-pill" lang="en">Coming soon</span>}
@@ -63,6 +64,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
       </nav>
     </div>
     <div class="sochilgan" aria-hidden="true">
+      <Bino aktiv={1} class="sochilgan-bino" />
       {sochilgan.map((s) => (
         <span class={s.qora ? 'yorliq-katta qora' : 'yorliq-katta'} style={`left:${s.x}%;top:${s.y}%;transform:rotate(${s.r}deg)`}>{s.t}</span>
       ))}
@@ -108,11 +110,10 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
       {bolimlar.map((b) => {
         // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
         const ochiq = b.holat === 'ochiq';
-        const qora = b.slug === 'sat';
         return (
           <li>
-            <a class:list={['karta', { 'qora-karta': qora, tez: !ochiq }]} href={yol(`/uz/${b.slug}/`)}>
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka">
+            <a class:list={['ds-karta', 'karta', { tez: !ochiq }]} data-floor={qavatlar.find((q) => q.slug === b.slug)?.raqam} href={yol(`/uz/${b.slug}/`)}>
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka ds-karta-belgi">
                 {b.ikonka === 'qalpoq' && <><path d="M3 10l9-5 9 5-9 5z" /><path d="M7 12v5c3 2 7 2 10 0v-5" /></>}
                 {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
                 {b.ikonka === 'varaq' && <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h4" /></>}
@@ -149,8 +150,11 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   .muammo { padding-block: var(--b-24) 88px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
   .muammo-matn { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
   .muammo h1 { font-size: var(--matn-hero); line-height: 1.04; letter-spacing: var(--oraliq-hero); font-weight: 900; }
-  .xira { color: var(--matn-sust); }  /* katta matn: fon ustida 5.40:1 (qorong'ida 7.42:1), h1 dan ochroq */
+  .xira { color: var(--color-text-secondary); }
   .sochilgan { flex: 1 1 420px; min-width: 0; position: relative; height: 340px; }
+  /* DS shisha bino: yorliqlar uning atrofida, bino ularning ostida */
+  .sochilgan :global(.sochilgan-bino) { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: auto; height: 100%; }
+  .yorliq-katta { z-index: var(--z-raised); }
   .yorliq-katta {
     position: absolute; white-space: nowrap;
     background: var(--fon-ikkinchi); color: var(--matn-sust);
@@ -176,7 +180,6 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
     display: flex; align-items: center; justify-content: center; font-weight: 800;
     background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
   }
-  .qq-tugma.tez .qq-raqam { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
   .qq-pill { padding: 3px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: 12px; font-weight: 700; }
   .qq-test { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--rang-havola); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -203,22 +206,17 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   /* 5. Harakat */
   .harakat { padding-top: var(--b-6); }
   .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--b-4); }
+  /* DS link karta (global .ds-karta), urg'u borilayotgan qavatdan (data-floor) */
   .karta {
     height: 100%; box-sizing: border-box;
     display: flex; flex-direction: column; gap: 14px;
-    background: var(--sirt); color: var(--matn);
-    border: 1.5px solid var(--qora); border-radius: var(--r-katta); padding: 22px;
-    text-decoration: none;
+    padding: 22px;
   }
-  .karta .ikonka { color: var(--rang-asosiy); }
+  .karta .ikonka { width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3); }
   .karta-nom { font-weight: 900; font-size: var(--matn-h3); }
   .karta-tavsif { font-size: 15px; line-height: 1.5; color: var(--matn-ikkinchi); }
   .karta-holat { margin-top: auto; font-weight: 700; color: var(--rang-havola); }
   .karta.tez .karta-holat { color: var(--matn-sust); }
-  a.karta:hover { box-shadow: 4px 4px 0 var(--qora); transform: translate(-2px, -2px); }
-  .qora-karta { background: var(--qora); color: #ffffff; }
-  .qora-karta .ikonka, .qora-karta .karta-holat { color: #ffffff; }
-  .qora-karta .karta-tavsif, .qora-karta.tez .karta-holat { color: var(--qora-matn-ikkinchi); }
 
   .muddatlar { padding-top: 0; gap: var(--b-5); }
   .kichik-h2 { font-size: 1.75rem; }
