@@ -37,6 +37,8 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('payments', 'authenticated', 'SELECT(amount_uzs),SELECT(bolim),SELECT(created_at),SELECT(id),SELECT(paid_at),SELECT(plan_code),SELECT(provider),SELECT(provider_order_id),SELECT(status),SELECT(user_id)'),
   ('plan_tasks', 'anon', ''),
   ('plan_tasks', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('onboarding_profiles', 'anon', ''),
+  ('onboarding_profiles', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('plans', 'anon', 'SELECT'),
   ('plans', 'authenticated', 'SELECT'),
   ('practice_sessions', 'anon', ''),
@@ -109,8 +111,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 23 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 23); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 24 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 24); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 
@@ -215,9 +217,14 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
 
   -- 9. Ma'lumot holati: tariflar bo'sh, savol yo'q, sinov qoldig'i yo'q
   union all
-  select 90, 'plans: free, pro, elite; limits = {}, price_uzs = null (P19 gacha)',
-         case when count(*) = 3 and bool_and(limits = '{}'::jsonb and price_uzs is null) then 'ok' else 'XATO' end,
-         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null'), '; ' order by code)
+  select 90, 'plans: limits = {} (P19); pro 59000/30 kun faol, free va elite narxsiz, elite faol emas',
+         case when count(*) = 3 and bool_and(limits = '{}'::jsonb)
+                   and bool_and(case code when 'pro' then price_uzs = 59000 and period_days = 30 and is_active
+                                          when 'elite' then price_uzs is null and not is_active
+                                          else price_uzs is null and is_active end)
+              then 'ok' else 'XATO' end,
+         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null')
+                    || ' faol=' || is_active::text, '; ' order by code)
     from public.plans
    where code in ('free', 'pro', 'elite')
   union all
