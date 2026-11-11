@@ -353,7 +353,7 @@ Supabase Cron (10 daqiqa) ── POST inpay-muvofiqlash (X-Cron-Secret) ─> pay
 - **Takror bosish**: `tolov-yaratish` shu foydalanuvchi va tarif uchun 30 daqiqa ichida ochilgan `pending` to'lov bo'lsa (kalit rejimi bir xil), yangisini yaratmaydi, o'sha `checkout_url` ni qaytaradi. inPAY checkout havolasining amal muddati hujjatda yo'q: tekshirish kerak.
 - **Summa**: so'rov tanasida `amount`, `amount_uzs`, `price`... bo'lsa `400 amount_not_allowed`. Davr: hozir faqat `oylik` (`plans.period_days`); boshqasi `409 period_not_available` (3 oylik narx P19 da).
 - **Kassa faol emas** (`merchant_inactive`): brauzerga `503 payments_unavailable`, logda aniq sabab (kalitsiz).
-- **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. Hozir ikkalasi `null` va `pro`/`elite` faol emas (P19), shuning uchun `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
+- **Narx**: brauzer summa yubormaydi, `plans.price_uzs` va `period_days` olinadi. 2026-11-10 dan `pro` faol: 59000 so'm, 30 kun. `elite` faol emas (narx `null`, P19), unga `tolov-yaratish` `409 plan_not_available` qaytaradi. Narxni muallif beradi (7-bo'lim), inPAY minimumi 1000 so'm.
 - **Obuna muddati**: to'lov yaratilgan paytdagi `period_days` (`payments.raw.tayanch`). Shu tarifda faol obuna bo'lsa, yangisi uning oxiridan boshlanadi. Takroriy (avto) to'lov yo'q: har davr yangi to'lov. v2'da "Obunalar" bo'limi bor (IP03), keyingi vazifa.
 - **Holatlar**: `created → pending → paid | failed | canceled`. `failed` yoki `canceled` dan keyin `payment.succeeded` kelsa `paid` bo'ladi (pul olingan). `paid` yakuniy.
 - **Webhook javobi**: qayta ishlansa yoki xato bilan saqlansa 200; imzo yo'q, eskirgan yoki noto'g'ri bo'lsa 401 (P21 gacha yo'q/eskirgan 400 edi; tana parse qilinmaydi, bazaga yozilmaydi); baza xatosi 500 (inPAY 8 martagacha qayta yuboradi). Xato bilan saqlangan hodisalar (`unknown_order`, `amount_mismatch`, `livemode_mismatch`, `metadata_mismatch`) obuna bermaydi va qo'lda ko'riladi:
@@ -395,7 +395,7 @@ supabase functions deploy inpay-holat --no-verify-jwt --use-api
 supabase functions deploy inpay-muvofiqlash --no-verify-jwt --use-api
 ```
 
-**Muvofiqlashtirishni rejalashtirish** (deploy'dan keyin, muallif SQL Editor'da; Supabase Cron = `pg_cron` + `pg_net`, sir Vault'da). Dashboard → Integrations → Cron va `pg_net` ni yoqish kerak; aniq yo'l va sintaksis Supabase "Scheduling Edge Functions" hujjatidan tekshirilsin (tekshirish kerak):
+**Muvofiqlashtirishni rejalashtirish** (deploy'dan keyin, muallif SQL Editor'da; Supabase Cron = `pg_cron` + `pg_net`, sir Vault'da). Dashboard → Integrations → Cron va `pg_net` ni yoqish kerak. Quyidagi SQL jonli loyihada 2026-11-10 da qo'llangan (pg_cron 1.6.4, pg_net 0.20.4; `cron.job` jobid 1, har ishga tushish HTTP 200 `{"checked":0,"results":{}}`):
 
 ```sql
 -- 1) Sir Vault'ga: qiymatni shu yerga o'zingiz yozasiz (repoga, chatga emas), MUVOFIQLASH_SECRET bilan bir xil.
@@ -404,8 +404,9 @@ select vault.create_secret('<MUVOFIQLASH_SECRET qiymati>', 'muvofiqlash_secret')
 select cron.schedule('inpay-muvofiqlash', '*/10 * * * *', $$
   select net.http_post(
     url     := 'https://uvwejvjrsswssgydwevm.supabase.co/functions/v1/inpay-muvofiqlash',
-    headers := jsonb_build_object('x-cron-secret',
-                 (select decrypted_secret from vault.decrypted_secrets where name = 'muvofiqlash_secret')),
+    headers := jsonb_build_object(
+                 'Content-Type', 'application/json',
+                 'x-cron-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'muvofiqlash_secret')),
     body    := '{}'::jsonb,
     timeout_milliseconds := 70000);
 $$);
@@ -421,6 +422,21 @@ JWT tekshiruvi to'rttala funksiyada o'chiq: `inpay-webhook` ga inPAY Supabase JW
 
 **Sinov rejimi xavfi**: `INPAY_SECRET_KEY` `sk_test_` bo'lganda test karta (`8600 0000 0000 0001`) bilan to'lov "o'tadi" va obuna beriladi. Shuning uchun sinov paytida tarif faqat sinov uchun faol qilinadi va oxirida yana yashiriladi (`is_active = false`), jonli rejimga `sk_live_` bilan o'tiladi. Jonli kalit bilan yaratilgan to'lovga sinov hodisasi (`livemode: false`) obuna bermaydi (`livemode_mismatch`).
 
+### Jonli rejim (2026-11-10 dan)
+
+- **O'tish**: kod o'zgarmadi, Dashboard → Edge Functions → Secrets'da faqat `INPAY_SECRET_KEY` `sk_live_` ga almashtirildi (muallif). `INPAY_WEBHOOK_SECRET` sinov va jonli uchun bitta, almashtirilmadi. Funksiyalar qayta deploy qilinmadi: birinchi jonli to'lov `raw.inpay.livemode = true` bilan yaratildi, ya'ni yangi kalit qayta deploysiz o'qildi.
+- **Tartib** (shu yo'l bilan bajarildi): Pro o'chiq holda kalit almashtiriladi → Pro yoqiladi → muallif bitta to'lov qiladi → bazada tekshiriladi → narx haqiqiy qiymatga qaytariladi. Har `update` aniq `where` (masalan `code = 'pro' and is_active = false and price_uzs = 1000`) va `row_count = 1` tekshiruvi bilan, faqat muallif "ha" deganidan keyin.
+- **Birinchi jonli to'lovni tekshirish** (faqat o'qish): `payments` (`status = 'paid'`, `raw->'inpay'->>'livemode' = 'true'`), `payment_events` (`evt_` hodisalar, `error is null`), `subscriptions` (`active`, `period_days` kun), `audit_log` (`payment_paid`), ochiq `created`/`pending` to'lov yo'qligi, Cron (`cron.job_run_details`, `net._http_response`). `livemode` `false` chiqsa eski kalit ishlatilgan: funksiyalarni qayta deploy qilish va tarifni o'chirish.
+- **Sinov yozuvlari**: sinov to'lovlari (`livemode = false`) va bekor qilingan sinov obunalari (`status = 'canceled'`, `audit_log` `test_subscriptions_canceled`) tarix sifatida bazada qoldi, o'chirilmagan.
+- **Daromad faqat jonli to'lovlardan** hisoblanadi, sinov to'lovlari `paid` bo'lsa ham kirmaydi:
+
+```sql
+select date_trunc('month', paid_at) as oy, count(*) as tolovlar, sum(amount_uzs) as jami_uzs
+  from public.payments
+ where status = 'paid' and raw->'inpay'->>'livemode' = 'true'
+ group by 1 order by 1;
+```
+
 ### Sinov
 
 ```bash
@@ -432,7 +448,8 @@ npm run inpay:webhook-sinov   # P21: haqiqiy SQL + haqiqiy handler, 5 stsenariy 
 - **Sinalgan (2026-11-10, lokal, P21)**: `inpay:webhook-sinov` 7/7 guruh (noto'g'ri imzo, to'g'ri imzo, takror xabar, noto'g'ri summa, noma'lum to'lov, muvofiqlashtirish, loglar); 3 ta ataylab buzish ushlandi (imzo o'tkazib yuborilsa, payload tozalanmasa, paid to'lov qayta so'ralsa); SQL OK 21; Deno 49/49.
 
 - **Sinalgan (2026-11-09, lokal)**: SQL sinovlari (OK 16–20) va 3 ta ataylab buzish (summa tekshiruvi, takror hodisa, huquq) ushlandi; Deno testlari 29/29; `index.ts` supabase-js 2.118.0 bilan tur tekshiruvidan o'tdi; handler'lar vaqtinchalik Postgres'dagi haqiqiy SQL funksiyalari bilan birga (inPAY soxta): created → pending → paid, 30 kunlik obuna, takror webhook, soxta imzo.
-- **Sinalmagan (tekshirish kerak)**: Supabase'ga deploy, PostgREST orqali `rpc()` (lokal sinovda psql), haqiqiy inPAY (sinov kaliti bilan to'lov, webhook kelishi va imzo formati), `SUPABASE_SECRET_KEYS` tuzilishi, brauzerdan CORS, `/uz/sat/hisob/obuna/` va `/uz/sat/hisob/tolov-natija/` haqiqiy sessiya bilan (P20, faqat soxta holatda ko'rilgan).
+- **Sinalgan (2026-11-10, jonli loyiha)**: to'rttala funksiya deploy qilingan; `sk_test_` bilan 4 ta sinov to'lovi (3 ta `paid`: webhook va poll orqali; 1 ta `failed`: inPAY `payment.failed` webhook yubormadi, holat poll orqali yopildi). `sk_live_` bilan birinchi jonli to'lov (1000 so'm): `paid`, `livemode = true`, webhook `payment.created` va `payment.succeeded` imzo bilan, xatosiz; 30 kunlik obuna va `audit_log` `payment_paid` yozildi. Cron har 10 daqiqada 200.
+- **Sinalmagan (tekshirish kerak)**: Cron eskirgan `pending` to'lovni haqiqatan yopishi (hozircha shunday to'lov bo'lmagan); jonli rejimda `payment.failed` webhook kelishi; qaytarish (refund) yo'li (hujjatda topilmadi); inPAY checkout havolasining amal muddati.
 
 ## 11. Navigator onboarding (`onboarding_profiles`)
 
