@@ -11,6 +11,15 @@ update public.plans
  where code = 'elite'
    and not exists (select 1 from public.plans where code = 'max');
 
+-- Takror ishga tushirish (lokal db:tekshir 2-o'tishi): 0006 seed'i 'elite' qatorini qayta qo'shadi
+-- (on conflict (code) do nothing, 'elite' endi yo'q). max bor va elite'ga havola bo'lmasa, bu takror qator o'chiriladi.
+-- Havola bo'lsa o'chirilmaydi va pastdagi tekshiruv to'xtatadi (jim yo'qotish yo'q).
+delete from public.plans e
+ where e.code = 'elite'
+   and exists (select 1 from public.plans m where m.code = 'max')
+   and not exists (select 1 from public.subscriptions s where s.plan_code = 'elite')
+   and not exists (select 1 from public.payments p where p.plan_code = 'elite');
+
 do $$
 begin
   if exists (select 1 from public.plans where code = 'elite') then
