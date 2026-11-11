@@ -1,7 +1,7 @@
 // tolov-yaratish: hisobga kirgan foydalanuvchi uchun SAT tarifiga inPAY to'lovi yaratadi.
 //
 // So'rov:  POST, Authorization: Bearer <Supabase sessiya tokeni>,
-//          tana {"plan_code": "pro" | "elite", "period"?: "oylik"}  ("plan" ham qabul qilinadi)
+//          tana {"plan_code": "pro" | "max", "period"?: "oylik"}  ("plan" ham qabul qilinadi)
 // Javob:   200 {"payment_id", "checkout_url", "reused"}; xato {"error": "<kod>"}
 // Narx va muddat faqat bazadan (plans). Tanada summa (amount, amount_uzs, price...) bo'lsa so'rov rad etiladi.
 // Bir xil tarif uchun yaqinda ochilgan pending to'lov bo'lsa yangisi yaratilmaydi, o'sha havola qaytadi.

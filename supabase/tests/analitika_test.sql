@@ -57,14 +57,14 @@ $$;
 do $$
 begin
   if not (select features ? 'analytics_extended' from public.plans where code = 'pro')
-     or not (select features ? 'analytics_extended' from public.plans where code = 'elite')
+     or not (select features ? 'analytics_extended' from public.plans where code = 'max')
      or (select features ? 'analytics_extended' from public.plans where code = 'free') then
     raise exception 'FAIL A00: analytics_extended bayrog''i noto''g''ri tariflarda';
   end if;
   if (select jsonb_array_length(features) - jsonb_array_length(features - 'analytics_extended') from public.plans where code = 'pro') <> 1 then
     raise exception 'FAIL A00: bayroq takrorlangan (migratsiya 2 marta ishlaganda)';
   end if;
-  raise notice 'OK A00 analytics_extended: pro va elite da bitta, free da yo''q';
+  raise notice 'OK A00 analytics_extended: pro va max da bitta, free da yo''q';
 end
 $$;
 
