@@ -14,6 +14,7 @@ const brauzerKalitlari: [string, string][] = [
   ['tayanch:hisob-keyin', "Google bilan kirishda qaysi sahifaga qaytish (faqat shu oyna yopilguncha, sessionStorage)."],
   ['tayanch-topshirish-yoli', "Topshirish yo'li vositasidagi belgilaringiz."],
   ['tayanch:qavat', "qaysi qavatda ekaningiz (faqat shu oyna yopilguncha, sessionStorage)."],
+  ['tayanch:metrika:…', "statistika hodisasi oxirgi marta qachon yuborilgani, ortiqcha so'rov bo'lmasligi uchun (faqat shu oyna yopilguncha, sessionStorage)."],
 ];
 ---
 <Asosiy
@@ -22,7 +23,7 @@ const brauzerKalitlari: [string, string][] = [
   turi="umumiy"
   bolim="umumiy"
   holat="chop-etilgan"
-  tekshirilgan="2026-11-10"
+  tekshirilgan="2026-11-12"
   keyingiTekshiruv="2026-12-10"
   manbalar={['LX02', 'LX03', 'LX04']}
   tekshirilmagan={[
@@ -34,7 +35,7 @@ const brauzerKalitlari: [string, string][] = [
 >
   <section class="ichki sahifa">
     <h1>Maxfiylik siyosati</h1>
-    <p class="ikkinchi">Kuchga kirgan sana: 2026-yil 10-noyabr. Hisob ixtiyoriy: saytning hamma bepul qismi hisobsiz ham ishlaydi.</p>
+    <p class="ikkinchi">Kuchga kirgan sana: 2026-yil 12-noyabr. Hisob ixtiyoriy: saytning hamma bepul qismi hisobsiz ham ishlaydi.</p>
 
     <h2>Hisob ochsangiz nima saqlanadi</h2>
     <ul>
@@ -50,7 +51,18 @@ const brauzerKalitlari: [string, string][] = [
     <p>Dars va mashq natijalari hozircha faqat brauzeringizda. Ular hisobga ko'chirilganda shu sahifa yangilanadi.</p>
 
     <h2>Nima uchun ishlatiladi</h2>
-    <p>Faqat hisobingiz ishlashi uchun: kirish, profilingizni ko'rsatish va kerakli xatlarni yuborish. Ma'lumotingiz sotilmaydi, reklama uchun ishlatilmaydi va qonunda nazarda tutilgan holatlardan tashqari uchinchi shaxsga berilmaydi.</p>
+    <p>Hisobingiz ishlashi uchun: kirish, profilingizni ko'rsatish va kerakli xatlarni yuborish. Statistika bo'lsa (pastda), faqat umumiy sonlar uchun: nechta odam ro'yxatdan o'tgani, qaytib kelgani va pullik tarifga o'tgani. Ma'lumotingiz sotilmaydi, reklama uchun ishlatilmaydi va qonunda nazarda tutilgan holatlardan tashqari uchinchi shaxsga berilmaydi.</p>
+
+    <h2 id="statistika">Foydalanish statistikasi</h2>
+    <p>Sayt qanday ishlatilayotganini bilish uchun hisobga kirgan foydalanuvchilarning bir nechta hodisasi Tayanch'ning o'z bazasiga (Supabase, Frankfurt) yoziladi. Hisobsiz holatda hech narsa yozilmaydi. Uchinchi tomon analitika xizmati (masalan, Google Analytics) ishlatilmaydi.</p>
+    <ul>
+      <li><strong>Qaysi hodisalar</strong>: ro'yxatdan o'tish, birinchi mashq sessiyasi, mashq sessiyasini tugatish (rejim va savollar soni), kun savoliga javob (bo'lim va to'g'ri yoki noto'g'ri), tariflar sahifasini ochish, to'lovni boshlash va to'lov muvaffaqiyatli bo'lishi (tarif va summa).</li>
+      <li><strong>Har hodisada</strong>: hodisa nomi, vaqti va hisobingiz identifikatori (ID). ID qaytib kelganlar sonini hisoblash uchun kerak, shuning uchun bu yozuvlar anonim emas. Natijalarni faqat Tayanch muallifi umumiy sonlar ko'rinishida ko'radi.</li>
+      <li><strong>Yozilmaydi</strong>: savol matni, javobingiz, email, ism, IP manzil, brauzer yoki qurilma ma'lumoti (barmoq izi), qaysi sahifadan kelganingiz.</li>
+      <li><strong>Standart holatda yoqiq.</strong> <a href={yol('/uz/hisob/profil/')}>Profil sahifasida</a> "Foydalanish statistikasini ulashish" belgisini olib tashlasangiz, yangi hodisalar yozilmaydi va avvalgi yozuvlaringiz darhol o'chiriladi.</li>
+      <li><strong>To'lov hodisalari</strong> (to'lovni boshlash va muvaffaqiyatli to'lov) belgi o'chiq bo'lsa ham yoziladi: ular to'lov yozuvining o'zidan olinadi va to'lov hisobi uchun kerak.</li>
+      <li><strong>Saqlash muddati</strong>: hisob o'chirilguncha. Hisobni o'chirsangiz, bu yozuvlar ham o'chiriladi.</li>
+    </ul>
 
     <h2>Qayerda saqlanadi</h2>
     <p>Hisob ma'lumotlari <strong>Supabase</strong> xizmatida, <strong>Frankfurt (Germaniya)</strong> serverida saqlanadi. Tasdiqlash va parol tiklash xatlari Google'ning Gmail pochta xizmati orqali yuboriladi: buning uchun emailingiz Google'ga beriladi. Germaniya Vazirlar Mahkamasi tasdiqlagan, shaxsga doir ma'lumotlar bir xil himoya qilinadigan davlatlar ro'yxatida bor (LX04). Shuning uchun Qonun ma'lumotni u yerda saqlashga ruxsat beradi (15 va 27¹-moddalar, LX02). Tayanch biometrik yoki genetik ma'lumot yig'maydi.</p>
@@ -69,6 +81,7 @@ const brauzerKalitlari: [string, string][] = [
     <ul>
       <li>Qanday ma'lumotingiz borligini bilish: email va ismingiz <a href={yol('/uz/hisob/profil/')}>profil sahifasida</a> ko'rinadi.</li>
       <li>Ma'lumotni o'zgartirish: ism va taxallusni profil sahifasida, parolni "Parolni tiklash" orqali.</li>
+      <li>Statistikaga rozilikni chaqirib olish: profil sahifasidagi "Foydalanish statistikasini ulashish" belgisi.</li>
       <li>Rozilikni chaqirib olish va ma'lumotni o'chirish: pastdagi "Hisobni qanday o'chirish mumkin" bo'limi.</li>
       <li>Huquqingiz buzilgan deb hisoblasangiz, vakolatli davlat organiga yoki sudga murojaat qilish (30-modda, LX02).</li>
     </ul>
@@ -78,13 +91,13 @@ const brauzerKalitlari: [string, string][] = [
       <li>Hisobingizga kiring va <a href={yol('/uz/hisob/profil/')}>profil sahifasini</a> oching.</li>
       <li>"Hisobni o'chirish" tugmasini bosing va tasdiqlang.</li>
     </ol>
-    <p>Hisob, ism, taxallus va rozilik belgilari serverdan darhol o'chiriladi. Brauzerdagi natijalar o'zingizda qoladi: ularni yuqoridagi usul bilan tozalang.</p>
+    <p>Hisob, ism, taxallus, rozilik belgilari va statistika yozuvlari serverdan darhol o'chiriladi. Brauzerdagi natijalar o'zingizda qoladi: ularni yuqoridagi usul bilan tozalang.</p>
 
     <h2>Nima to'planmaydi</h2>
     <ul>
       <li>Hujjat (pasport, sertifikat) yoki insho yuklash imkoniyati yo'q.</li>
       <li>Karta ma'lumoti saytda so'ralmaydi.</li>
-      <li>Tayanch o'z analitika yoki reklama kodini ishlatmaydi. Shrift ham saytning o'zidan yuklanadi.</li>
+      <li>Uchinchi tomon analitika yoki reklama kodi yo'q. Statistika faqat yuqoridagi tartibda, Tayanch'ning o'z bazasida. Shrift ham saytning o'zidan yuklanadi.</li>
     </ul>
 
     <h2>Xosting</h2>

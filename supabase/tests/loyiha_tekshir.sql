@@ -26,7 +26,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('daily_picks', 'authenticated', ''),
   ('bookmarks', 'authenticated', 'DELETE,INSERT,SELECT'),
   ('events', 'anon', ''),
-  ('events', 'authenticated', 'INSERT(name),INSERT(page),INSERT(props)'),
+  ('events', 'authenticated', ''),
   ('feedback', 'anon', ''),
   ('feedback', 'authenticated', 'SELECT INSERT(message),INSERT(page),INSERT(rating)'),
   ('official_mistakes', 'anon', ''),
@@ -46,7 +46,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('practice_sessions', 'anon', ''),
   ('practice_sessions', 'authenticated', 'SELECT'),
   ('profiles', 'anon', ''),
-  ('profiles', 'authenticated', 'SELECT UPDATE(consent_version),UPDATE(country),UPDATE(display_name),UPDATE(exam_date),UPDATE(locale),UPDATE(nickname),UPDATE(target_score)'),
+  ('profiles', 'authenticated', 'SELECT UPDATE(consent_version),UPDATE(country),UPDATE(current_score),UPDATE(display_name),UPDATE(exam_date),UPDATE(locale),UPDATE(nickname),UPDATE(sat_setup_at),UPDATE(target_score),UPDATE(usage_analytics)'),
   ('questions', 'anon', ''),
   ('questions', 'authenticated', ''),
   ('reports', 'anon', ''),
@@ -114,7 +114,8 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.vocab_rate(uuid,boolean,boolean)', false, true, true),
   ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
   ('public.user_word_add(text,text,text,text)', false, true, true),
-  ('public.vocab_import_local(jsonb)', false, true, true)
+  ('public.vocab_import_local(jsonb)', false, true, true),
+  ('public.track_event(text,jsonb)', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
