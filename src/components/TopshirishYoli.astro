@@ -350,18 +350,18 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   }
   .yollar :global(.pasport-bosh) { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); border-bottom: 1.5px solid var(--matn); padding-bottom: 10px; }
   .yollar :global(.kod) { font-size: var(--matn-mayda); font-weight: 800; letter-spacing: .06em; color: var(--rang-havola); white-space: nowrap; }
-  .yollar :global(.karta.asosiy-yol .yuz.old) { background: var(--qora); color: var(--rang-asosiy-matn); border-color: var(--qora-chiziq); }
+  .yollar :global(.karta.asosiy-yol .yuz.old) { background: var(--qora); color: var(--qora-matn); border-color: var(--qora-chiziq); }
   .yollar :global(.karta.asosiy-yol:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--rang-asosiy); }
   .yollar :global(.karta.asosiy-yol .yuz.old .tavsif),
   .yollar :global(.karta.asosiy-yol .yuz.old .meta) { color: var(--qora-matn-ikkinchi); }
-  .yollar :global(.karta.asosiy-yol .yuz.old .pill-umumiy) { background: var(--qora-chiziq); color: var(--rang-asosiy-matn); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .pill-umumiy) { background: var(--qora-chiziq); color: var(--qora-matn); }
   .yollar :global(.karta.asosiy-yol .yuz.old .raqamcha) { border-color: var(--qora-matn-ikkinchi); }
   /* Qorong'i mavzu: asosiy karta fon bilan qo'shilib ketmasin (maket) */
   :global([data-mavzu='qorongi']) .yollar :global(.karta.asosiy-yol .yuz.old) { background: var(--fon-ikkinchi); border: 2px solid var(--rang-havola); }
   .yollar :global(.karta.asosiy-yol .yuz.old .ikonka) { color: var(--rang-asosiy-qorada); border-color: var(--qora-chiziq); background: var(--qora-sirt); }
   .yollar :global(.karta.asosiy-yol .yuz.old .tugma) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .yollar :global(.karta.asosiy-yol .yuz.old .tugma:hover) { background: var(--rang-asosiy-toq); }
-  .yollar :global(.karta.asosiy-yol .yuz.old .yopiq-xabar) { background: var(--qora-sirt); color: var(--rang-asosiy-matn); }
+  .yollar :global(.karta.asosiy-yol .yuz.old .yopiq-xabar) { background: var(--qora-sirt); color: var(--qora-matn); }
   .yollar :global(.karta-tepa) { display: flex; justify-content: space-between; align-items: start; gap: var(--b-3); }
   .yollar :global(.ikonka) { width: 48px; height: 48px; border-radius: var(--r-orta); border: 1.5px solid var(--chiziq-kuchli); display: grid; place-items: center; color: var(--rang-havola); flex: none; }
   .yollar :global(.ikonka svg) { width: 24px; height: 24px; }

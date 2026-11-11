@@ -61,6 +61,7 @@ echo "security definer: hammasida search_path belgilangan"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/analitika_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/lugat_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/kvota_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/kun_savoli_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 
 # P19 K06: parallel so'rovlar. 10 ta alohida ulanish bir vaqtda 1 birlikdan sarflaydi, limit 3:
 # aynan 3 tasi o'tishi, hisoblagich 3 bo'lishi kerak (hisoblagich qatori hali yo'q: insert poygasi ham sinaladi).

@@ -22,6 +22,8 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('audit_log', 'anon', ''),
   ('audit_log', 'authenticated', ''),
   ('bookmarks', 'anon', ''),
+  ('daily_picks', 'anon', ''),
+  ('daily_picks', 'authenticated', ''),
   ('bookmarks', 'authenticated', 'DELETE,INSERT,SELECT'),
   ('events', 'anon', ''),
   ('events', 'authenticated', 'INSERT(name),INSERT(page),INSERT(props)'),
@@ -93,6 +95,8 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.start_session(jsonb,integer,text)', false, true, true),
   ('public.submit_answer(uuid,uuid,text,integer)', false, true, true),
   ('public.daily_question()', false, true, true),
+  ('public.daily_question_public()', true, true, true),
+  ('public.check_daily_answer(uuid,text)', true, true, true),
   ('public.start_review_session(integer)', false, true, true),
   ('public.usage_status()', false, true, true),
   ('public.can_read_question_figure(text)', false, true, true),
@@ -118,8 +122,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 25 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 25); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 26 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 26); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 

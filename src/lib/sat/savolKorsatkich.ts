@@ -135,7 +135,8 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   const bayroq = el('button', 'sk-asbob sk-bayroq');
   bayroq.type = 'button';
   bayroq.append(ikonka(IK.bayroq), el('span', '', M.belgila));
-  asboblar.appendChild(bayroq);
+  // "Mark for review" faqat onFlag berilganda (kun savolida yo'q: bitta savol, ko'rib chiqish ro'yxati yo'q).
+  if (props.onFlag) asboblar.appendChild(bayroq);
 
   if (savol.figure) {
     const f = el('figure', 'sk-rasm');

@@ -299,7 +299,7 @@ const tekshirilmagan = [
   h2 { font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; }
   .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
   .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
-  a:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
   .kirish { display: grid; gap: var(--b-4); }
   .ustki-qator { display: flex; align-items: center; gap: var(--b-3); }
@@ -319,7 +319,7 @@ const tekshirilmagan = [
   .variantlar { display: flex; flex-wrap: wrap; gap: 6px; }
   .variant { padding: 3px 12px; border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli); font-size: 13px; font-weight: 700; }
   .vosita-past { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-4); padding-top: var(--b-1); }
-  .katta-tugma { min-height: 52px; padding-inline: 26px; font-weight: 800; }
+  .katta-tugma { min-height: var(--control-height-md); padding-inline: 26px; font-weight: 800; }
 
   /* Savol progressi (3D): saytdagi Zina emas */
   .sahna { flex: 1 1 300px; perspective: 900px; display: grid; place-items: center; gap: var(--b-2); min-height: 260px; }

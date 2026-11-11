@@ -331,7 +331,7 @@ update public.plans
  where code = 'free';
 ```
 
-Kvota kalitlari: `sessions`, `questions`, `answers`, `daily`, `review_sessions` (batafsil: `migrations/20261108000008_rpc.sql` boshida).
+Kvota kalitlari: `sessions`, `questions`, `answers`, `daily`, `review_sessions` (batafsil: `migrations/20261108000008_rpc.sql` boshida). Kun savoli (P10, `20261111220000_kun_savoli.sql`) hech qanday kalitni sarflamaydi: `daily` kaliti qoladi, lekin oshmaydi.
 
 ## 8. Admin amallari
 
