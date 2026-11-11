@@ -12,12 +12,16 @@ import { yol } from '../../../lib/yol';
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
 const reja = yol('/uz/ielts/vosita/reja/');
 const reading = yol('/uz/ielts/qollanma/reading/');
-const bolimlar = [
-  { nomi: 'Listening', vaqt: 'Taxminan 30 daqiqa', ikonka: IKONKA.listening },
-  { nomi: 'Reading', vaqt: "60 daqiqa (ko'chirish vaqti ichida)", ikonka: IKONKA.reading },
-  { nomi: 'Writing', vaqt: '60 daqiqa', ikonka: IKONKA.writing },
-  { nomi: 'Speaking', vaqt: '11–14 daqiqa', ikonka: IKONKA.speaking },
+// daqiqa: [eng kam, eng ko'p], matndagi raqamlardan (IE01). Davomiylik chizig'i shulardan, yangi raqam yo'q.
+const bolimlar: { nomi: string; vaqt: string; ikonka: string; daqiqa: [number, number]; href?: string }[] = [
+  { nomi: 'Listening', vaqt: 'Taxminan 30 daqiqa', ikonka: IKONKA.listening, daqiqa: [30, 30] },
+  { nomi: 'Reading', vaqt: "60 daqiqa (ko'chirish vaqti ichida)", ikonka: IKONKA.reading, daqiqa: [60, 60], href: reading },
+  { nomi: 'Writing', vaqt: '60 daqiqa', ikonka: IKONKA.writing, daqiqa: [60, 60] },
+  { nomi: 'Speaking', vaqt: '11–14 daqiqa', ikonka: IKONKA.speaking, daqiqa: [11, 14] },
 ];
+const engUzun = Math.max(...bolimlar.map((b) => b.daqiqa[1]));
+const ulush = (n: number) => Math.round((n / engUzun) * 1000) / 1000;
+const tezQollanmalar = qollanmalar.filter((q) => !q.qism).length;
 const qadamlar = [
   { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
   { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
@@ -54,15 +58,40 @@ const namunalar = [
       <div class="format" aria-labelledby="format-h">
         <h2 id="format-h" class="ustki-yorliq">Imtihon to'rt bo'limdan iborat</h2>
         <ul>
-          {bolimlar.map((x) => (
-            <li>
-              <span class="f-belgi" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} /></span>
-              <span><strong>{x.nomi}</strong><span class="f-vaqt">{x.vaqt}</span></span>
-            </li>
-          ))}
+          {bolimlar.map((x, i) => {
+            const Teg = x.href ? 'a' : 'div';
+            return (
+              <li>
+                <Teg class="f-qator" href={x.href}>
+                  <span class="f-belgi" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} /></span>
+                  <span class="f-matn">
+                    <strong>{x.nomi}</strong>{' '}<span class="f-vaqt">{x.vaqt}</span>
+                    <span class="vaqt-chiziq" aria-hidden="true" style={`--tartib: ${i}; --asos: ${ulush(x.daqiqa[0])}; --oraliq: ${ulush(x.daqiqa[1] - x.daqiqa[0])}`}>
+                      <span class="vc-asos"></span>{x.daqiqa[1] > x.daqiqa[0] && <span class="vc-oraliq"></span>}
+                    </span>
+                  </span>
+                  {x.href && <svg class="f-strelka" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>}
+                </Teg>
+              </li>
+            );
+          })}
         </ul>
         <p class="f-manba">IELTS Academic. Manba: <a href={m('IE01').havola} rel="noopener">ielts.org</a>, tekshirilgan {m('IE01').tekshirilganSana}.</p>
       </div>
+      <script is:inline>
+        // Davomiylik chizig'i karta ekranga kirganda bir marta to'ladi. JS yo'q yoki reduced motion: darhol to'liq.
+        (() => {
+          const karta = document.currentScript && document.currentScript.previousElementSibling;
+          if (!karta || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          karta.setAttribute('data-kutish', '');
+          const k = new IntersectionObserver((yozuvlar) => {
+            if (!yozuvlar.some((y) => y.isIntersecting)) return;
+            karta.removeAttribute('data-kutish');
+            k.disconnect();
+          }, { threshold: 0.4 });
+          k.observe(karta);
+        })();
+      </script>
     </section>
 
     <section id="boshla" class="boshla" aria-labelledby="boshla-h">
@@ -131,11 +160,11 @@ const namunalar = [
     <section class="qollanmalar" aria-labelledby="qol-h">
       <h2 id="qol-h">Qo'llanmalar</h2>
       <div class="q-tor">
-        <div class="kul-blok">
+        <div class="kul-blok bolim-qollanma">
           <h3 class="ustki-yorliq">IELTS bo'limlari</h3>
-          <ul>
+          <ul id="ielts-qollanma-royxat">
             {qollanmalar.map((q) => (
-              <li>
+              <li class={q.qism ? undefined : 'tez-band'}>
                 {q.qism ? (
                   <a class="q-qator" href={yol(`/uz/ielts/${q.qism}`)}>
                     <svg class="q-ikonka" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={q.ikonka} />
@@ -153,6 +182,25 @@ const namunalar = [
               </li>
             ))}
           </ul>
+          <button type="button" class="tez-tugma" aria-expanded="true" aria-controls="ielts-qollanma-royxat">
+            <span>Yana {tezQollanmalar} ta qo'llanma tez orada</span>
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+          <script is:inline>
+            // Telefonda (<= 640px) tez-oradagi qo'llanmalar yig'iladi, tugma ochadi/yopadi. Kengroq ekranda yoki JS'siz hammasi ko'rinadi. Holat saqlanmaydi.
+            (() => {
+              const tugma = document.currentScript && document.currentScript.previousElementSibling;
+              const blok = tugma && tugma.closest('.bolim-qollanma');
+              if (!blok) return;
+              tugma.setAttribute('aria-expanded', 'false');
+              tugma.addEventListener('click', () => {
+                const ochiq = tugma.getAttribute('aria-expanded') !== 'true';
+                tugma.setAttribute('aria-expanded', String(ochiq));
+                blok.toggleAttribute('data-ochiq', ochiq);
+              });
+              blok.setAttribute('data-yigma', '');
+            })();
+          </script>
         </div>
         <div class="kul-blok">
           <h3 class="ustki-yorliq">Asos</h3>
@@ -274,8 +322,25 @@ const namunalar = [
   }
   .format .ustki-yorliq { color: var(--rang-asosiy-qorada); }
   .format ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .format li { background: var(--qora-sirt); border: 1px solid var(--qora-chiziq); border-radius: var(--r-orta); padding: 12px 16px; display: flex; align-items: center; gap: var(--b-3); }
-  .format li > span:last-child { display: flex; flex-direction: column; }
+  .f-qator { background: var(--qora-sirt); border: 1px solid var(--qora-chiziq); border-radius: var(--r-orta); padding: 12px 16px; display: flex; align-items: center; gap: var(--b-3); color: var(--qora-matn); text-decoration: none; }
+  a.f-qator:hover { background: var(--qora-chiziq); }
+  .f-matn { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .f-strelka { flex: none; width: var(--size-icon-md); color: var(--qora-matn-ikkinchi); }
+  /* Havolasiz qatorda ham strelka joyi: hamma chiziq bir shkalada */
+  div.f-qator .f-matn { margin-right: calc(var(--size-icon-md) + var(--b-3)); }
+  /* Davomiylik chizig'i (bezak, aria-hidden): to'liq uzunlik = eng uzun bo'lim; oraliq (11–14) och bo'lak */
+  .vaqt-chiziq {
+    display: flex; height: var(--progress-height); margin-top: var(--space-2);
+    border-radius: var(--radius-full); background: var(--qora-chiziq); overflow: hidden;
+  }
+  .vaqt-chiziq > span {
+    transform-origin: left center;
+    transition: transform var(--duration-slow) var(--ease-enter);
+    transition-delay: calc(var(--tartib) * var(--duration-stagger));
+  }
+  .vc-asos { width: calc(var(--asos) * 100%); background: var(--floor-ui); border-radius: var(--radius-full); }
+  .vc-oraliq { width: calc(var(--oraliq) * 100%); background: var(--floor-ui-toq); border-radius: 0 var(--radius-full) var(--radius-full) 0; }
+  .format[data-kutish] .vaqt-chiziq > span { transform: scaleX(0); }
   .format strong { font-weight: 800; }
   .f-belgi { width: 36px; height: 36px; flex: none; border-radius: var(--r-kichik); background: var(--rang-asosiy); color: var(--rang-asosiy-matn); display: flex; align-items: center; justify-content: center; }
   .f-vaqt, .f-manba { font-size: var(--matn-kichik); color: var(--qora-matn-ikkinchi); }
@@ -285,15 +350,30 @@ const namunalar = [
   /* Qadamlar */
   .boshla, .qollanmalar, .rasmiy { display: flex; flex-direction: column; gap: var(--b-5); }
   .bosh-qator { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
-  .qadamlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
-  .qadamlar li { padding: var(--b-6) 28px; display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; column-gap: var(--b-5); }
-  .qadamlar li + li { border-top: 1px solid var(--chiziq); }
-  .raqam { width: 48px; height: 48px; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
+  .qadamlar {
+    --qadam-py: var(--space-6); --qadam-px: var(--space-7); --qadam-belgi: var(--space-12);
+    list-style: none; margin: 0; padding: 0; border: var(--border-width-1) solid var(--color-border); border-radius: var(--r-katta); overflow: hidden;
+  }
+  .qadamlar li {
+    position: relative; padding: var(--qadam-py) var(--qadam-px);
+    display: grid; grid-template-columns: var(--qadam-belgi) minmax(0, 1fr) auto; align-items: start; column-gap: var(--space-5);
+  }
+  .qadamlar li + li { border-top: var(--border-width-1) solid var(--color-border); }
+  /* Qadamlarni ulovchi chiziq: doira ostidan keyingi doiragacha */
+  .qadamlar li:not(:last-child)::after {
+    content: ''; position: absolute; pointer-events: none;
+    left: calc(var(--qadam-px) + var(--qadam-belgi) / 2 - var(--border-width-1));
+    top: calc(var(--qadam-py) + var(--qadam-belgi) + var(--space-1));
+    bottom: calc(var(--space-1) - var(--qadam-py) - var(--border-width-1));
+    width: var(--border-width-2); border-radius: var(--radius-full); background: var(--color-border);
+  }
+  .q-matn { align-self: center; }
+  .raqam { width: var(--qadam-belgi); height: var(--qadam-belgi); border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
   .kok-raqam { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .q-matn { display: flex; flex-direction: column; gap: var(--b-1); }
   .q-matn h3 { font-size: var(--matn-h3); font-weight: 800; }
   .q-matn p { line-height: 1.6; color: var(--matn-ikkinchi); }
-  .qadamlar a { font-weight: 700; white-space: nowrap; min-height: 48px; display: inline-flex; align-items: center; color: var(--rang-havola); }
+  .qadamlar a { align-self: center; font-weight: 700; white-space: nowrap; min-height: 48px; display: inline-flex; align-items: center; color: var(--rang-havola); }
   .qadamlar a:hover { color: var(--rang-asosiy-toq); }
 
   /* Reja kartasi: sahifadagi yagona soya */
@@ -330,6 +410,7 @@ const namunalar = [
   .q-nom span { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
   .nofaol { color: var(--matn-ikkinchi); }
   .nofaol .q-nom strong { font-weight: 700; }
+  .tez-tugma { display: none; }
   .asos { background: var(--fon); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-3); }
   .asos-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-2); }
   .asos > span:last-child { font-size: var(--matn-kichik); font-weight: 500; line-height: 1.5; }
@@ -369,10 +450,25 @@ const namunalar = [
     .hero h1 { font-size: 34px; }
     h2 { font-size: 24px; }
     .cta .katta, .rk-tugmalar .katta { width: 100%; }
-    .qadamlar li { grid-template-columns: 48px minmax(0, 1fr); row-gap: var(--b-1); padding: var(--b-5); }
-    .qadamlar a { grid-column: 2; min-height: 44px; }
-    .raqam { width: 40px; height: 40px; font-size: 16px; }
-    .q-matn h3 { font-size: 20px; }
+    /* Raqam sarlavha bilan bir qatorda, tavsif va havola to'liq kenglikda; ulovchi chiziq faqat kengroq ekranda */
+    .qadamlar { --qadam-py: var(--space-5); --qadam-px: var(--space-5); --qadam-belgi: var(--space-8); }
+    .qadamlar li { grid-template-columns: var(--qadam-belgi) minmax(0, 1fr); column-gap: var(--space-3); row-gap: var(--space-1); }
+    .qadamlar li:not(:last-child)::after { content: none; }
+    .q-matn { display: contents; }
+    .q-matn h3 { grid-column: 2; align-self: center; font-size: 20px; }
+    .q-matn p, .qadamlar a { grid-column: 1 / -1; }
+    .qadamlar a { justify-self: start; min-height: var(--size-touch-min); }
+    .raqam { font-size: 14px; }
+    /* Tez-oradagi qo'llanmalar yig'ilgan (JS bilan) */
+    .bolim-qollanma[data-yigma]:not([data-ochiq]) .tez-band { display: none; }
+    .bolim-qollanma[data-yigma] .tez-tugma {
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+      width: 100%; min-height: var(--size-touch-min); margin-top: var(--space-1); padding: var(--space-3) var(--space-4);
+      border: 0; border-radius: var(--r-orta); background: var(--fon); color: var(--matn-ikkinchi);
+      font: inherit; font-size: var(--matn-kichik); font-weight: 700; text-align: left; cursor: pointer;
+    }
+    .tez-tugma svg { flex: none; transition: transform var(--duration-fast) var(--ease-state); }
+    .tez-tugma[aria-expanded='true'] svg { transform: rotate(180deg); }
     .bosh-qator .izoh { display: none; }
     .q-qator .pill-ochiq { display: none; }
   }
