@@ -14,6 +14,8 @@
     "db:tekshir": "bash scripts/rls-tekshir.sh",
     "funksiyalar:tekshir": "deno test --no-lock --node-modules-dir=none supabase/functions/tests/ && deno check --no-lock --node-modules-dir=none supabase/functions/tolov-yaratish/index.ts supabase/functions/inpay-webhook/index.ts supabase/functions/inpay-holat/index.ts supabase/functions/inpay-muvofiqlash/index.ts",
     "inpay:webhook-sinov": "node scripts/inpay-webhook-sinov.mjs",
+    "lugat:import": "node scripts/lugat-import.mjs",
+    "lugat:sinov": "node --test scripts/lugat/*.test.mjs",
     "check": "astro check",
     "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
     "validate:tests": "node scripts/ielts-testlarni-tekshir.ts"
