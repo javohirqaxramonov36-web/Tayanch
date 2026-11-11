@@ -1,5 +1,5 @@
 // Xato daftari (P09) sof mantiqi: dars xatolari (brauzer, takrorlash.ts) va savol banki xatolari / saqlanganlar
-// (Supabase: review_overview, review_preview; 20261111120000_xato_daftari.sql) bitta ro'yxatga.
+// (Supabase: review_overview, review_preview; 20261111233000_xato_daftari.sql) bitta ro'yxatga.
 // Brauzer API'si yo'q: sahifa (src/pages/uz/sat/vosita/takrorlash/) va sinov (src/lib/testlar/xatoDaftari.test.ts) ishlatadi.
 // Ro'yxatlar: Due today (1–4-quti, muddati kelgan), All mistakes (1–4-quti), Saved (bookmarks), Mastered (5-quti).
 import { SABABLAR, type Sabab } from './sessiya.ts';

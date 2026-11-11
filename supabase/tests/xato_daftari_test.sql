@@ -1,4 +1,4 @@
--- P09 Xato daftari sinovlari (20261111120000_xato_daftari): review_overview, review_preview, reason_tag tegi,
+-- P09 Xato daftari sinovlari (20261111233000_xato_daftari): review_overview, review_preview, reason_tag tegi,
 -- bookmarks, va to'liq oqim xato → due → to'g'ri → mastered (submit_answer + start_review_session, 1/3/7/14 kun).
 -- sessiya_test.sql kabi: bitta tranzaksiya, oxirida ROLLBACK. Sinov savollari faqat "SINOV" matnli soxta yozuvlar.
 \set ON_ERROR_STOP on
