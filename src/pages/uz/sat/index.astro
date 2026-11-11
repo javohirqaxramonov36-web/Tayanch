@@ -8,6 +8,7 @@ import { manbalar } from '../../../data/manbalar';
 const cb03 = manbalar.find((m) => m.id === 'CB03')!;
 import { yol } from '../../../lib/yol';
 import Zina from '../../../components/Zina.astro';
+import QavatFoto from '../../../components/QavatFoto.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 
@@ -38,6 +39,7 @@ const qadamlar = [
   manbalar={['CB03', 'HV01', 'NY01', 'MT01', 'KY01']}
 >
   <div class="ichki sat-kirish">
+    <QavatFoto bolim="sat" />
     <section class="hero" aria-labelledby="sat-h">
       <div class="hero-matn">
         <p class="pill-qator"><span class="pill">Draft</span><span class="pill-izoh">Section home</span></p>

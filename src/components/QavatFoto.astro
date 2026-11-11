@@ -1,0 +1,50 @@
+---
+// Qavat kirish fotosi: bo'lim kirish sahifasining tepasida, matndan alohida (matn foto ustida emas).
+// Fotolar: Higgsfield gpt_image_2_6 (og:image bilan bir to'plam, uslub: docs/og-rasmlar.md).
+// Bezak foto: ma'lumot tashimaydi, shuning uchun alt="" (ekran o'quvchi o'tkazib yuboradi).
+// Fayllar public/qavat/<slug>-{800,1344}.webp (manba 1344×752, kattalashtirilmagan).
+import { yol } from '../lib/yol';
+
+type FotoSlug = 'navigator' | 'top-admission' | 'sat' | 'ielts' | 'eyuf';
+interface Props { bolim: FotoSlug }
+const { bolim } = Astro.props;
+
+// Kompyuterda 3:1 kesim: har fotoda asosiy predmet ko'rinadigan vertikal nuqta.
+const fokus: Record<FotoSlug, string> = {
+  navigator: '50% 40%',
+  'top-admission': '50% 75%',
+  sat: '50% 55%',
+  ielts: '50% 65%',
+  eyuf: '50% 55%',
+};
+const asos = yol(`/qavat/${bolim}`);
+---
+<img
+  class="qavat-foto"
+  src={`${asos}-1344.webp`}
+  srcset={`${asos}-800.webp 800w, ${asos}-1344.webp 1344w`}
+  sizes="(max-width: 640px) 100vw, 1160px"
+  width="1344"
+  height="752"
+  alt=""
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+  style={`--foto-fokus: ${fokus[bolim]}`}
+/>
+
+<style>
+  .qavat-foto {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 1;
+    object-fit: cover;
+    object-position: var(--foto-fokus);
+    border-radius: var(--r-katta);
+    background: var(--sirt-ikkinchi);
+  }
+  @media (max-width: 640px) {
+    .qavat-foto { aspect-ratio: 5 / 2; border-radius: var(--r-orta); }
+  }
+</style>
