@@ -5,7 +5,7 @@ Raqamlarni faqat muallif beradi. Ular kodga emas, `public.plans` qatoriga yozila
 
 ## Tariflar
 
-Tariflar: Free, Pro, Max (muallif qarori, 2026-11-11). Nom va kod `elite` → `max` alohida PR #101 da (`20261111200000_tarif_max.sql`); bu hujjat yangi kodni yozadi.
+Tariflar: Free, Pro, Max (muallif qarori, 2026-11-11). 2026-11-11 gacha nomi Elite edi; nom va kod `elite` → `max` PR #101 da (`20261111200000_tarif_max.sql`).
 
 | | Free (`free`) | Pro (`pro`) | Max (`max`) |
 | --- | --- | --- | --- |

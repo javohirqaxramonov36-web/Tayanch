@@ -3,7 +3,7 @@
 // Narxi yo'q yoki faol emas tarif ekranda "Not available yet" bo'ladi, to'lov tugmasi chiqmaydi.
 // Matn inglizcha (SAT bo'limi qoidasi); kod nomlari o'zbekcha.
 
-export type TarifKod = 'free' | 'pro' | 'elite';
+export type TarifKod = 'free' | 'pro' | 'max';
 export type DavrKod = 'oylik' | '3oylik';
 export type TolovUsuli = 'click' | 'payme' | 'uzcard-humo';
 
@@ -11,7 +11,7 @@ export const satTarif = {
   tariflar: [
     { kod: 'free', nomi: 'Free' },
     { kod: 'pro', nomi: 'Pro' },
-    { kod: 'elite', nomi: 'Elite' },
+    { kod: 'max', nomi: 'Max' },
   ] as { kod: TarifKod; nomi: string }[],
   /** Belgi qo'yiladigan tarif. Yorliq "Recommended": "most popular" foydalanuvchi soniga oid da'vo, raqam yo'q. */
   tavsiya: 'pro' as TarifKod,
