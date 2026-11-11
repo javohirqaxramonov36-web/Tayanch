@@ -104,6 +104,7 @@ const usulMatn = usullar.length
   import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
   import { funksiya, narxYozuv, tolovXatoMatni, tolovniEsla } from '../../../../../lib/sat/tolov';
   import { kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
+  import { tarifBayrogimi } from '../../../../../data/satAnalitika';
 
   interface Tarif { code: string; name: string; price_uzs: number | null; period_days: number | null; features: unknown }
   interface Kvota { max: number; per: string; used: number; remaining: number }
@@ -132,7 +133,7 @@ const usulMatn = usullar.length
         : !t ? 'This plan is not open yet.'
         : davrFaol ? 'The price will appear here once it is set.' : 'This billing period is not available yet.';
       const imk = $<HTMLUListElement>('[data-imkoniyat]', karta)!;
-      const royxat = t && Array.isArray(t.features) ? t.features.filter((f): f is string => typeof f === 'string') : [];
+      const royxat = t && Array.isArray(t.features) ? t.features.filter((f): f is string => typeof f === 'string' && !tarifBayrogimi(f)) : [];
       imk.replaceChildren(...royxat.map((f) => Object.assign(document.createElement('li'), { textContent: f })));
       imk.hidden = royxat.length === 0;
       const tugma = $<HTMLButtonElement>('[data-tolov]', karta)!;

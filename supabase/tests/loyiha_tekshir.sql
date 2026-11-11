@@ -100,7 +100,8 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.payment_pending_stale(integer,integer,integer)', false, false, true),
   ('public.get_session(uuid)', false, true, true),
   ('public.finish_session(uuid)', false, true, true),
-  ('public.add_to_review(uuid)', false, true, true)
+  ('public.add_to_review(uuid)', false, true, true),
+  ('public.analytics_summary()', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k

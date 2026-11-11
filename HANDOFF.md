@@ -74,6 +74,8 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 
 Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF. Artboard'lar: Main/Kirish (A, qurilgan), Burslar (B), Vosita (C, qurilgan), Lift* (D, qurilgan). Har birining yorug', qorong'i va telefon varianti bor.
 
+8. **SAT analitika paneli (P14, branch `sat-analitika`, 2026-11-11, PR kutilmoqda)**: `/uz/sat/vosita/natijalar/` hisobga ulandi. Server: `public.analytics_summary()` (migratsiya `20261111120000_analitika.sql`, **jonli bazaga hali qo'llanmagan**: merge'dan keyin muallif ruxsati bilan `db push`; qo'llanmaguncha saytda panel "Your results didn't load" ko'rsatadi). Sozlama `src/data/satAnalitika.ts`: Strong ≥ 85%, Developing ≥ 60%, N = 5 urinish, tavsiya 6 tagacha, mashq hajmi 10. Sof hisob `src/lib/sat/analitika.ts` (+ test). Kengaytirilgan bloklar (qiyinlik bo'yicha aniqlik, median vaqt) `plans.features` dagi `analytics_extended` kaliti bilan (Pro, Elite; muallif qarori 2026-11-11). `plans.features` da snake_case satr = mashina bayrog'i, Obuna sahifasi uni ko'rsatmaydi (`tarifBayrogimi`). Pacing o'rtacha emas, **median** (ochiq qolgan sahifa buzmasin). Dev sinov: `?mock=bosh|kam|kop|free|xato|uzilish|anon`. Hisobsiz: kirish taklifi + eski brauzer tarixi (`tayanch:sat-javoblar`) o'z holicha; hisob bilan va brauzerda javob yo'q bo'lsa namuna ko'rsatilmaydi. Sinalgan: lokal Postgres (A00–A05), axe 4.14 (390/1280, yorug'/qorong'i, 0 xato), build. Sinalmagan: haqiqiy Supabase bilan to'liq oqim, VoiceOver, haqiqiy telefon.
+
 ## 4. Qabul qilingan qarorlar
 
 - **Bitta sayt, 5 qavat.** Qavatlar `src/data/qavatlar.ts` da; 2–5 holati `bolimlar.ts` dan olinadi, qo'lda takrorlanmaydi.
