@@ -75,6 +75,15 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: [],
         tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
       },
+      {
+        qism: 'vosita/kalkulyator/',
+        tayyor: true,
+        nomi: 'Graph sketcher',
+        tavsif: 'Sketch up to 3 lines or parabolas and see where they intersect. Links to the official Desmos calculators. Saved in this browser only.',
+        turi: 'vosita',
+        manbalar: ['CB12'],
+        tekshirilmagan: ['How the Desmos calculator looks and behaves inside Bluebook was not checked: this page relies only on the College Board calculator policy (CB12).'],
+      },
     ],
   },
   {
@@ -197,8 +206,8 @@ export const satGuruhlar: SatGuruh[] = [
         nomi: 'Math and Desmos',
         tavsif: 'Ways to use the Desmos calculator and formulas in the Math section.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source on how Desmos is provided in the test has not been added to the source log yet.'],
+        manbalar: ['CB12'],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
       },
       {
         qism: 'qollanma/reading-writing/',

@@ -1,0 +1,464 @@
+---
+// SAT kalkulyator vositasi: rasmiy Desmos havolalari (CB12) va o'zimizning "Graph sketcher" (SVG, oflayn).
+// Desmos API, embed yoki iframe yo'q (API Terms: ochiq saytda bepul foydalanish mumkin emas), logo yo'q, faqat nom.
+// Sketcher: 3 tagacha funksiya, har biri to'g'ri chiziq y = mx + b yoki parabola y = a(x − h)² + k,
+// koeffitsientlar <input type="number"> bilan. Matnli formula parseri yo'q. Kesishish nuqtalari (x, y).
+// "Clear all": sahifa ichidagi tasdiq (confirm() yo'q), Esc bekor qiladi.
+// Saqlash: tayanch:sat-kalkulyator (faqat shu brauzer, try/catch: darsSaqlash.ts). Shakl: { v: 1, f: [{ tur, q }] }.
+// Matn inglizcha (SAT qoidasi), son yozuvi ham inglizcha: o'nli nuqta, minus "−". Kontent lang="en".
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import GrafikPanjara from '../../../../../components/GrafikPanjara.astro';
+import { SAHNA } from '../../../../../lib/grafikSahna';
+const vb = `0 0 ${SAHNA} ${SAHNA}`;
+---
+<BolimQobiq
+  title="Graph sketcher · SAT"
+  description="Sketch up to 3 lines or parabolas, see where they intersect, and open the official Desmos graphing and scientific calculators."
+  turi="vosita"
+  yol={['Mashq']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki kalk" lang="en">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>SAT® Math graph sketcher</h1>
+      <p class="lead">Type the numbers for a line or a parabola and the graph updates right away. Add up to 3 functions to see where they cross. For real calculator practice, use the official Desmos calculators.</p>
+    </header>
+
+    <section class="desmos-blok" aria-labelledby="desmos-h">
+      <h2 id="desmos-h" class="sr">Official Desmos calculators</h2>
+      <div class="desmos-qator">
+        <a class="desmos" href="https://www.desmos.com/calculator" target="_blank" rel="noopener">
+          Open Desmos Graphing<span class="sr"> (opens in a new tab)</span>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6" /><path d="M20 4l-9 9" /><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+        </a>
+        <a class="desmos" href="https://www.desmos.com/scientific" target="_blank" rel="noopener">
+          Open Desmos Scientific<span class="sr"> (opens in a new tab)</span>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6" /><path d="M20 4l-9 9" /><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+        </a>
+      </div>
+      <p class="kichik ikkinchi">On test day, Bluebook™ has a built-in Desmos calculator with graphing and scientific options, and you can switch between them at any point in the Math section (College Board calculator policy, CB12). The sketcher below is a Tayanch practice tool, not the Desmos calculator.</p>
+    </section>
+
+    <section class="ish" aria-labelledby="ish-h">
+      <h2 id="ish-h">Graph sketcher</h2>
+      <div class="ish-tor">
+        <div class="grafik-ustun">
+          <div class="grafik-quti">
+            <svg id="k-grafik" viewBox={vb} role="img" aria-labelledby="k-tavsif">
+              <defs><clipPath id="k-kesim"><rect x="0" y="0" width={SAHNA} height={SAHNA} /></clipPath></defs>
+              <GrafikPanjara />
+              <g clip-path="url(#k-kesim)">
+                <path id="k-egri-0" class="k-egri k-uslub-0" d="" />
+                <path id="k-egri-1" class="k-egri k-uslub-1" d="" />
+                <path id="k-egri-2" class="k-egri k-uslub-2" d="" />
+              </g>
+              <g id="k-belgilar"></g>
+            </svg>
+          </div>
+          <p class="sr" id="k-tavsif" aria-live="polite"></p>
+          <div class="kesishish">
+            <h3>Intersections</h3>
+            <ul id="k-kesishish"></ul>
+            <p class="kichik ikkinchi">Intersection points are rounded to 2 decimal places; "≈" marks a rounded value.</p>
+          </div>
+        </div>
+
+        <div class="boshqaruv">
+          <div id="k-qatorlar" class="qatorlar"></div>
+          <p class="bosh-holat ikkinchi" id="k-bosh" hidden>No functions yet. Add one to start.</p>
+          <div class="tugmalar">
+            <button type="button" class="katta asosiy" id="k-qosh" aria-describedby="k-chegara">Add function</button>
+            <button type="button" class="matn-tugma" id="k-tozala">Clear all</button>
+            <span class="tasdiq" id="k-tasdiq" hidden>Remove all functions?
+              <button type="button" class="matn-tugma" id="k-ha">Yes, clear</button>
+              <button type="button" class="matn-tugma" id="k-yoq">Cancel</button>
+            </span>
+          </div>
+          <p class="kichik ikkinchi" id="k-chegara">Up to 3 functions.</p>
+          <p class="sr" id="k-xabar" role="status"></p>
+          <p class="kichik ikkinchi" id="k-saqlash">Your functions are saved in this browser only.</p>
+        </div>
+      </div>
+    </section>
+
+    <ManbaBlok
+      manbalar={['CB12']}
+      tekshirilgan="2026-11-08"
+      keyingiTekshiruv="2026-12-08"
+      tekshirilmagan={[
+        'How the Desmos calculator looks and behaves inside Bluebook was not checked: this page relies only on the College Board calculator policy (CB12).',
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { korinadimi, egriYol, belgiQosh } from '../../../../../lib/grafikSahna';
+  import { kechikibElon } from '../../../../../lib/svgSudrash';
+  import { oqi, yoz } from '../../../../../lib/darsSaqlash';
+
+  type Tur = 'chiziq' | 'parabola';
+  type Kalit = 'm' | 'b' | 'a' | 'h' | 'k';
+  type Q = Record<Kalit, string>;
+  interface Fn { id: number; tur: Tur; q: Q }
+
+  const KALIT = 'tayanch:sat-kalkulyator';
+  const ENG_KOP = 3;
+  const MAKS = 1000;
+  const $ = (id: string) => document.getElementById(id)!;
+
+  // ---------- Son yozuvi (inglizcha: o'nli nuqta, minus "−") ----------
+  const fmt = (n: number) => {
+    if (!Number.isFinite(n)) return '—';
+    const r = Math.round(n * 100) / 100;
+    return (Object.is(r, -0) ? 0 : r).toFixed(2).replace(/\.?0+$/, '').replace('-', '−');
+  };
+  const had = (k: number, harf: string) => (k === 1 ? harf : k === -1 ? '−' + harf : fmt(k) + harf);
+  const qosh = (k: number) => (k === 0 ? '' : (k < 0 ? ' − ' : ' + ') + fmt(Math.abs(k)));
+  const kop = (h: number) => (h === 0 ? 'x' : `(x${qosh(-h)})`);
+  const taqribiy = (n: number) => Math.abs(n * 100 - Math.round(n * 100)) > 1e-9;
+  const nuqta = (x: number, y: number) => `${taqribiy(x) || taqribiy(y) ? '≈ ' : ''}(${fmt(x)}, ${fmt(y)})`;
+
+  // ---------- Funksiya ta'rifi ----------
+  const MAYDON: Record<Tur, { kalit: Kalit; yorliq: string }[]> = {
+    chiziq: [{ kalit: 'm', yorliq: 'm' }, { kalit: 'b', yorliq: 'b' }],
+    parabola: [{ kalit: 'a', yorliq: 'a' }, { kalit: 'h', yorliq: 'h' }, { kalit: 'k', yorliq: 'k' }],
+  };
+  const IZOH: Record<Tur, string> = {
+    chiziq: 'm is the slope, b is the y-intercept (0, b).',
+    parabola: 'The vertex is (h, k). If a > 0 it opens up, if a < 0 it opens down.',
+  };
+  const BOSH: { tur: Tur; q: Q }[] = [
+    { tur: 'chiziq', q: { m: '1', b: '1', a: '1', h: '0', k: '-4' } },
+    { tur: 'chiziq', q: { m: '-1', b: '3', a: '1', h: '0', k: '-4' } },
+    { tur: 'parabola', q: { m: '1', b: '0', a: '1', h: '0', k: '-4' } },
+  ];
+
+  let keyingiId = 1;
+  let fns: Fn[] = [];
+
+  const sonOl = (s: string) => (s.trim() === '' ? NaN : Number(s));
+  /** Xato matni yoki null. Birinchi xato maydon kaliti bilan. */
+  function tekshir(f: Fn): { kalit: Kalit; matn: string } | null {
+    for (const { kalit } of MAYDON[f.tur]) {
+      const v = sonOl(f.q[kalit]);
+      if (!Number.isFinite(v)) return { kalit, matn: `Enter a number for ${kalit}.` };
+      if (Math.abs(v) > MAKS) return { kalit, matn: `Use a number from −${MAKS} to ${MAKS} for ${kalit}.` };
+      if (f.tur === 'parabola' && kalit === 'a' && v === 0) return { kalit, matn: 'a can’t be 0 for a parabola. Use a line instead.' };
+    }
+    return null;
+  }
+  /** y = A x² + B x + C ko'rinishi (tekshirilgan funksiya uchun) */
+  function koef(f: Fn): [number, number, number] {
+    const n = (k: Kalit) => sonOl(f.q[k]);
+    if (f.tur === 'chiziq') return [0, n('m'), n('b')];
+    const a = n('a'), h = n('h'), k = n('k');
+    return [a, -2 * a * h, a * h * h + k];
+  }
+  function tenglama(f: Fn): string {
+    const n = (k: Kalit) => sonOl(f.q[k]);
+    if (f.tur === 'chiziq') { const m = n('m'), b = n('b'); return `y = ${m === 0 ? fmt(b) : had(m, 'x') + qosh(b)}`; }
+    const a = n('a'), h = n('h'), k = n('k');
+    return `y = ${a === 1 ? '' : a === -1 ? '−' : fmt(a)}${kop(h)}²${qosh(k)}`;
+  }
+
+  // ---------- Kesishish ----------
+  type Juft = { i: number; j: number; holat: 'nuqta' | 'yoq' | 'bir-xil'; nuqtalar: [number, number][] };
+  const nol = (v: number) => Math.abs(v) < 1e-9;
+  function kesishishlar(togri: { f: Fn; i: number }[]): Juft[] {
+    const nat: Juft[] = [];
+    for (let p = 0; p < togri.length; p++) for (let r = p + 1; r < togri.length; r++) {
+      const [A1, B1, C1] = koef(togri[p].f), [A2, B2, C2] = koef(togri[r].f);
+      const dA = A1 - A2, dB = B1 - B2, dC = C1 - C2;
+      const y = (x: number) => A1 * x * x + B1 * x + C1;
+      const juft: Juft = { i: togri[p].i, j: togri[r].i, holat: 'yoq', nuqtalar: [] };
+      if (nol(dA) && nol(dB)) juft.holat = nol(dC) ? 'bir-xil' : 'yoq';
+      else if (nol(dA)) { const x = -dC / dB; juft.holat = 'nuqta'; juft.nuqtalar.push([x, y(x)]); }
+      else {
+        const D = dB * dB - 4 * dA * dC;
+        if (D >= -1e-9) {
+          const s = Math.sqrt(Math.max(0, D));
+          const xs = nol(s) ? [-dB / (2 * dA)] : [(-dB - s) / (2 * dA), (-dB + s) / (2 * dA)].sort((u, v) => u - v);
+          juft.holat = 'nuqta'; xs.forEach((x) => juft.nuqtalar.push([x, y(x)]));
+        }
+      }
+      nat.push(juft);
+    }
+    return nat;
+  }
+
+  // ---------- Saqlash ----------
+  const TURLAR: Tur[] = ['chiziq', 'parabola'];
+  function yukla(): { tur: Tur; q: Q }[] | null {
+    const d = oqi<unknown>(KALIT, null);
+    if (!d || typeof d !== 'object' || (d as { v?: unknown }).v !== 1 || !Array.isArray((d as { f?: unknown }).f)) return null;
+    const nat: { tur: Tur; q: Q }[] = [];
+    for (const x of (d as { f: unknown[] }).f.slice(0, ENG_KOP)) {
+      if (!x || typeof x !== 'object') continue;
+      const { tur, q } = x as { tur?: unknown; q?: unknown };
+      if (!TURLAR.includes(tur as Tur) || !q || typeof q !== 'object') continue;
+      const toza = { ...BOSH[0].q };
+      (Object.keys(toza) as Kalit[]).forEach((k) => { const v = (q as Record<string, unknown>)[k]; if (typeof v === 'string' && v.length <= 20) toza[k] = v; });
+      nat.push({ tur: tur as Tur, q: toza });
+    }
+    return nat;
+  }
+  function saqla() {
+    const ok = yoz(KALIT, { v: 1, f: fns.map(({ tur, q }) => ({ tur, q })) });
+    $('k-saqlash').textContent = ok
+      ? 'Your functions are saved in this browser only.'
+      : 'This browser can’t save right now (private window or blocked storage). The sketcher still works, but your functions won’t be kept after you leave.';
+  }
+
+  // ---------- Qatorlar (forma) ----------
+  const qatorlar = $('k-qatorlar');
+  const xabar = $('k-xabar');
+  const xabarBer = (m: string) => { xabar.textContent = ''; window.setTimeout(() => { xabar.textContent = m; }, 50); };
+
+  function maydonlarniQur(f: Fn, quti: HTMLElement) {
+    quti.replaceChildren();
+    const tor = document.createElement('div'); tor.className = 'maydonlar';
+    const izohId = `k-${f.id}-izoh`;
+    MAYDON[f.tur].forEach(({ kalit, yorliq }) => {
+      const id = `k-${f.id}-${kalit}`;
+      const m = document.createElement('div'); m.className = 'maydon';
+      const l = document.createElement('label'); l.htmlFor = id; l.textContent = yorliq;
+      const inp = document.createElement('input');
+      Object.assign(inp, { type: 'number', id, step: 'any', min: String(-MAKS), max: String(MAKS), value: f.q[kalit] });
+      inp.setAttribute('inputmode', 'decimal');
+      inp.setAttribute('aria-describedby', izohId);
+      inp.dataset.kalit = kalit;
+      inp.addEventListener('input', () => { f.q[kalit] = inp.value; yangila(); });
+      m.append(l, inp); tor.append(m);
+    });
+    const iz = document.createElement('p'); iz.className = 'kichik ikkinchi'; iz.id = izohId; iz.textContent = IZOH[f.tur];
+    quti.append(tor, iz);
+  }
+
+  function qatorlarniQur() {
+    qatorlar.replaceChildren();
+    fns.forEach((f, i) => {
+      const fs = document.createElement('fieldset'); fs.className = 'qator'; fs.dataset.id = String(f.id);
+      const lg = document.createElement('legend');
+      lg.innerHTML = `<svg class="namuna" aria-hidden="true" width="28" height="12" viewBox="0 0 28 12"><line class="k-uslub-${i}" x1="2" y1="6" x2="26" y2="6" /></svg>`;
+      lg.append(`Function ${i + 1}`);
+      const tId = `k-${f.id}-tur`;
+      const tm = document.createElement('div'); tm.className = 'maydon';
+      const tl = document.createElement('label'); tl.htmlFor = tId; tl.textContent = 'Type';
+      const sel = document.createElement('select'); sel.id = tId;
+      sel.innerHTML = '<option value="chiziq">Line y = mx + b</option><option value="parabola">Parabola y = a(x − h)² + k</option>';
+      sel.value = f.tur;
+      tm.append(tl, sel);
+      const quti = document.createElement('div');
+      sel.addEventListener('change', () => { f.tur = sel.value as Tur; maydonlarniQur(f, quti); yangila(); });
+      maydonlarniQur(f, quti);
+      const pastki = document.createElement('div'); pastki.className = 'q-pastki';
+      const out = document.createElement('output'); out.className = 'q-tenglama'; out.id = `k-${f.id}-out`;
+      const xt = document.createElement('p'); xt.className = 'q-xato'; xt.id = `k-${f.id}-xato`; xt.hidden = true;
+      // Ogohlik ikonkasi (DESIGN.md "Xato xabari"): xato faqat rang bilan ko'rsatilmaydi
+      xt.innerHTML = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 7v6" /><path d="M12 17h.01" /></svg><span class="q-xato-matn"></span>';
+      const ol = document.createElement('button'); ol.type = 'button'; ol.className = 'matn-tugma';
+      ol.innerHTML = `Remove<span class="sr"> function ${i + 1}</span>`;
+      ol.addEventListener('click', () => olibTashla(f.id));
+      pastki.append(out, ol);
+      fs.append(lg, tm, quti, xt, pastki);
+      qatorlar.append(fs);
+    });
+  }
+
+  function qosh1() {
+    if (fns.length >= ENG_KOP) return;
+    const b = BOSH[fns.length];
+    const f: Fn = { id: keyingiId++, tur: b.tur, q: { ...b.q } };
+    fns.push(f);
+    qatorlarniQur(); yangila();
+    (qatorlar.querySelector(`[data-id="${f.id}"] select`) as HTMLSelectElement).focus();
+    xabarBer(`Function ${fns.length} added.`);
+  }
+  function olibTashla(id: number) {
+    const i = fns.findIndex((f) => f.id === id);
+    if (i < 0) return;
+    fns.splice(i, 1);
+    qatorlarniQur(); yangila();
+    const qolgan = qatorlar.querySelectorAll<HTMLSelectElement>('select');
+    (qolgan[Math.min(i, qolgan.length - 1)] ?? $('k-qosh')).focus();
+    xabarBer(`Function ${i + 1} removed.`);
+  }
+
+  // ---------- Chizish va matnlar ----------
+  const belgilar = $('k-belgilar');
+  const elon = kechikibElon($('k-tavsif'));
+
+  function yangila() {
+    belgilar.replaceChildren();
+    const togri: { f: Fn; i: number }[] = [];
+    const tavsifQism: string[] = [];
+    for (let i = 0; i < ENG_KOP; i++) {
+      const yol = $(`k-egri-${i}`);
+      const f = fns[i];
+      if (!f) { yol.setAttribute('d', ''); continue; }
+      const xato = tekshir(f);
+      const fs = qatorlar.querySelector<HTMLElement>(`[data-id="${f.id}"]`);
+      if (fs) {
+        const xt = fs.querySelector<HTMLElement>('.q-xato')!;
+        xt.hidden = !xato; xt.querySelector('.q-xato-matn')!.textContent = xato?.matn ?? '';
+        // Yordamchi matn doim bog'langan; xato bo'lsa xato matni birinchi o'qiladi
+        const izohId = `k-${f.id}-izoh`;
+        fs.querySelectorAll<HTMLInputElement>('input').forEach((inp) => {
+          const yomon = !!xato && inp.dataset.kalit === xato.kalit;
+          if (yomon) { inp.setAttribute('aria-invalid', 'true'); inp.setAttribute('aria-describedby', `${xt.id} ${izohId}`); }
+          else { inp.removeAttribute('aria-invalid'); inp.setAttribute('aria-describedby', izohId); }
+        });
+        fs.querySelector('output')!.textContent = xato ? '—' : tenglama(f);
+      }
+      if (xato) { yol.setAttribute('d', ''); tavsifQism.push(`Function ${i + 1} is not drawn: ${xato.matn}`); continue; }
+      const [A, B, C] = koef(f);
+      yol.setAttribute('d', egriYol((x) => A * x * x + B * x + C));
+      togri.push({ f, i });
+      tavsifQism.push(`Function ${i + 1}: ${tenglama(f)}.`);
+    }
+
+    // Kesishishlar: grafikda nuqta, ro'yxatda matn
+    const juftlar = kesishishlar(togri);
+    const hammasi = juftlar.flatMap((j) => j.nuqtalar);
+    const yozuvli = hammasi.filter(([x, y]) => korinadimi(x, y)).length <= 4;
+    hammasi.forEach(([x, y]) => belgiQosh(belgilar, x, y, yozuvli ? nuqta(x, y) : ''));
+    const ul = $('k-kesishish'); ul.replaceChildren();
+    const kesTavsif: string[] = [];
+    juftlar.forEach((j) => {
+      const nom = `Functions ${j.i + 1} and ${j.j + 1}`;
+      let m: string;
+      if (j.holat === 'bir-xil') m = `${nom} are the same graph.`;
+      else if (j.holat === 'yoq') m = `${nom} don’t intersect.`;
+      else m = `${nom}: ${j.nuqtalar.map(([x, y]) => nuqta(x, y) + (korinadimi(x, y) ? '' : ' (off the grid)')).join(' and ')}.`;
+      const li = document.createElement('li'); li.textContent = m; ul.append(li);
+      kesTavsif.push(m);
+    });
+    if (togri.length < 2) { const li = document.createElement('li'); li.className = 'ikkinchi'; li.textContent = 'Add a second function to see intersections.'; ul.append(li); }
+
+    const n = fns.length;
+    $('k-bosh').hidden = n > 0;
+    ($('k-qosh') as HTMLButtonElement).disabled = n >= ENG_KOP;
+    ($('k-tozala') as HTMLButtonElement).disabled = n === 0;
+    $('k-chegara').textContent = n >= ENG_KOP ? 'You have 3 functions, the maximum. Remove one to add another.' : 'Up to 3 functions.';
+    elon(n === 0
+      ? 'Empty coordinate grid, x and y from −10 to 10. No functions yet.'
+      : `Coordinate grid, x and y from −10 to 10. ${tavsifQism.join(' ')} ${kesTavsif.join(' ')}`.trim());
+    saqla();
+  }
+
+  // ---------- Tugmalar ----------
+  const tasdiq = $('k-tasdiq'), tozala = $('k-tozala') as HTMLButtonElement;
+  const tasdiqYop = (fokus = true) => { tasdiq.hidden = true; tozala.hidden = false; if (fokus) tozala.focus(); };
+  $('k-qosh').addEventListener('click', qosh1);
+  tozala.addEventListener('click', () => { tasdiq.hidden = false; tozala.hidden = true; $('k-yoq').focus(); });
+  $('k-yoq').addEventListener('click', () => tasdiqYop());
+  $('k-ha').addEventListener('click', () => {
+    fns = []; qatorlarniQur(); yangila(); tasdiqYop(false);
+    $('k-qosh').focus();
+    xabarBer('All functions removed.');
+  });
+  tasdiq.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); tasdiqYop(); } });
+
+  // ---------- Boshlash ----------
+  const saqlangan = yukla();
+  (saqlangan ?? [BOSH[0]]).forEach((b) => fns.push({ id: keyingiId++, tur: b.tur, q: { ...b.q } }));
+  qatorlarniQur();
+  yangila();
+</script>
+
+<style>
+  .kalk { padding-top: var(--b-10); padding-bottom: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .kalk :global(.sr) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  h2 { font-size: var(--matn-h3); }
+  h3 { font-size: var(--matn-asosiy); font-weight: 800; }
+  .lead { font-size: var(--matn-katta); line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+  .kichik { font-size: var(--matn-kichik); line-height: 1.5; }
+
+  .desmos-blok { display: flex; flex-direction: column; gap: var(--b-3); }
+  .desmos-qator { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .desmos {
+    min-height: 48px; padding: 0 var(--b-5);
+    border-radius: var(--r-toliq);
+    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+    font-weight: 800; text-decoration: none;
+    display: inline-flex; align-items: center; gap: var(--b-2);
+  }
+  .desmos:hover { background: var(--rang-asosiy-toq); }
+  .desmos:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 3px; }
+  .desmos-blok > p { max-width: 70ch; }
+
+  .ish { display: flex; flex-direction: column; gap: var(--b-5); }
+  .ish-tor { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--b-6); align-items: start; }
+  .grafik-ustun { display: flex; flex-direction: column; gap: var(--b-4); min-width: 0; }
+  .grafik-quti { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-3); }
+  .grafik-quti svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+  .kesishish { display: flex; flex-direction: column; gap: var(--b-2); }
+  .kesishish ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); line-height: 1.5; font-variant-numeric: tabular-nums; }
+
+  .boshqaruv { display: flex; flex-direction: column; gap: var(--b-4); min-width: 0; }
+  .qatorlar { display: flex; flex-direction: column; gap: var(--b-4); }
+  .bosh-holat[hidden] { display: none; }
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .katta { min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; cursor: pointer; }
+  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katta.asosiy:hover:not(:disabled) { background: var(--rang-asosiy-toq); }
+  .katta:disabled { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); cursor: not-allowed; }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+  .tasdiq[hidden] { display: none; }
+
+  /* JS quradigan qismlar */
+  .kalk :global(.matn-tugma) { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
+  .kalk :global(.matn-tugma:hover:not(:disabled)) { background: var(--sirt-ikkinchi); }
+  .kalk :global(.matn-tugma:disabled) { color: var(--matn-sust); cursor: not-allowed; opacity: 0.7; }
+  .kalk :global(.matn-tugma[hidden]) { display: none; }
+  .kalk :global(button:focus-visible), .kalk :global(select:focus-visible), .kalk :global(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .qatorlar :global(.qator) { margin: 0; min-width: 0; border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-3); }
+  .qatorlar :global(legend) { padding: 0 var(--b-1); font-weight: 800; display: inline-flex; align-items: center; gap: var(--b-2); }
+  .qatorlar :global(.namuna) { flex: none; }
+  .qatorlar :global(.maydon) { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  .qatorlar :global(label) { font-weight: 700; font-size: var(--matn-kichik); }
+  .qatorlar :global(.maydonlar) { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: var(--b-3); margin-bottom: var(--b-2); }
+  .qatorlar :global(select), .qatorlar :global(input) {
+    min-height: 48px; width: 100%; padding: 0 var(--b-3); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    background: var(--sirt); color: var(--matn); font: inherit; font-variant-numeric: tabular-nums;
+  }
+  .qatorlar :global(input[aria-invalid='true']) { border-color: var(--rang-ogoh-matn); }
+  .qatorlar :global(.q-xato) { margin: 0; display: flex; align-items: center; gap: var(--b-2); font-weight: 700; font-size: var(--matn-kichik); color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-kichik); padding: var(--b-2) var(--b-3); }
+  .qatorlar :global(.q-xato svg) { flex: none; }
+  .qatorlar :global(.q-xato[hidden]) { display: none; }
+  .qatorlar :global(.q-pastki) { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-2); }
+  .qatorlar :global(.q-tenglama) { font-weight: 800; font-size: var(--matn-katta); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+  /* Grafik (GrafikPanjara va JS elementlari) */
+  .grafik-quti :global(.g-panjara line) { stroke: var(--chiziq-kuchli); stroke-width: 1; }
+  .grafik-quti :global(.g-oqlar line) { stroke: var(--matn-sust); stroke-width: 1.5; }
+  .grafik-quti :global(.g-raqamlar text) { fill: var(--matn-ikkinchi); font-size: 11px; font-weight: 600; font-family: var(--shrift); }
+  .grafik-quti :global(.g-nuqta) { fill: var(--matn); stroke: var(--fon); stroke-width: 2; }
+  .grafik-quti :global(.g-yozuv) { fill: var(--matn); font-size: 13px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 4px; }
+  /* Uch funksiya rang bilan ham, chiziq naqshi bilan ham ajraladi (rangga tayanmaslik uchun) */
+  .kalk :global(.k-egri) { fill: none; stroke-linecap: round; }
+  .kalk :global(.k-uslub-0) { stroke: var(--rang-havola); stroke-width: 3.5; }
+  .kalk :global(.k-uslub-1) { stroke: var(--matn); stroke-width: 3; stroke-dasharray: 9 6; }
+  .kalk :global(.k-uslub-2) { stroke: var(--matn-ikkinchi); stroke-width: 3.5; stroke-dasharray: 1 7; stroke-linecap: round; }
+
+  @media (max-width: 900px) {
+    .ish-tor { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .kalk { padding-top: 28px; gap: var(--b-8); }
+    .grafik-quti { padding: var(--b-2); border-radius: var(--r-orta); }
+    .desmos { width: 100%; justify-content: center; }
+    .katta { width: 100%; }
+  }
+</style>

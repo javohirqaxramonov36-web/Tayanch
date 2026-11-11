@@ -1,0 +1,18 @@
+---
+// Koordinata tekisligining fon qismi (panjara, o'qlar, raqamlar). <svg viewBox="0 0 420 420"> ichiga qo'yiladi.
+// Ranglar sahifa CSS'ida: .g-panjara, .g-oqlar, .g-raqamlar. Koordinatalar: lib/grafikSahna.ts.
+import { X, Y, SAHNA, panjara, raqamlar, raqamYozuv } from '../lib/grafikSahna';
+const s = String(SAHNA);
+---
+<g class="g-panjara" aria-hidden="true">
+  {panjara.map((i) => <line x1={X(i)} y1="0" x2={X(i)} y2={s} />)}
+  {panjara.map((i) => <line x1="0" y1={Y(i)} x2={s} y2={Y(i)} />)}
+</g>
+<g class="g-oqlar" aria-hidden="true">
+  <line x1="0" y1={Y(0)} x2={s} y2={Y(0)} /><line x1={X(0)} y1="0" x2={X(0)} y2={s} />
+</g>
+<g class="g-raqamlar" aria-hidden="true">
+  {raqamlar.map((i) => <text x={X(i)} y={Y(0) + 14} text-anchor="middle">{raqamYozuv(i)}</text>)}
+  {raqamlar.map((i) => <text x={X(0) - 6} y={Y(i) + 4} text-anchor="end">{raqamYozuv(i)}</text>)}
+  <text x={SAHNA - 10} y={Y(0) - 10} text-anchor="end">x</text><text x={X(0) + 8} y="14">y</text>
+</g>
