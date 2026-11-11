@@ -295,8 +295,9 @@ begin
   if position('"correct"' in r::text) > 0 or position('"explanation"' in r::text) > 0 then
     raise exception 'FAIL 09: daily_question javobida to''g''ri javob bor';
   end if;
-  if (public.usage_status() -> 'today' ->> 'daily')::integer <> 1 then
-    raise exception 'FAIL 09: daily kvotasi ikki marta sarflandi';
+  -- P10 (20261111120000): kun savoli kvota sarflamaydi.
+  if coalesce((public.usage_status() -> 'today' ->> 'daily')::integer, 0) <> 0 then
+    raise exception 'FAIL 09: kun savoli daily kvotasini sarfladi';
   end if;
   raise notice 'OK 09 usage_status (limits bo''sh = cheklovsiz), question_counts, daily_question (kuniga bitta sessiya, javobsiz)';
 end
