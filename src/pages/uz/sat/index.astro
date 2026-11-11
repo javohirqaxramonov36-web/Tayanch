@@ -10,6 +10,7 @@ import { yol } from '../../../lib/yol';
 import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
 import KunSavoli from '../../../components/sat/KunSavoli.astro';
+import SatMaqsadSarlavha from '../../../components/sat/SatMaqsadSarlavha.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 
@@ -40,6 +41,7 @@ const qadamlar = [
   manbalar={['CB03', 'HV01', 'NY01', 'MT01', 'KY01']}
 >
   <div class="ichki sat-kirish">
+    <SatMaqsadSarlavha />
     <QavatFoto bolim="sat" />
     <section class="hero" aria-labelledby="sat-h">
       <div class="hero-matn">

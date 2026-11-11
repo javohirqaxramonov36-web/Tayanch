@@ -5,13 +5,12 @@
 // Fayllar public/qavat/<slug>-{800,1344}.webp (manba 1344×752, kattalashtirilmagan).
 import { yol } from '../lib/yol';
 
-type FotoSlug = 'navigator' | 'top-admission' | 'sat' | 'ielts' | 'eyuf';
+type FotoSlug = 'top-admission' | 'sat' | 'ielts' | 'eyuf';
 interface Props { bolim: FotoSlug }
 const { bolim } = Astro.props;
 
 // Kompyuterda 3:1 kesim: har fotoda asosiy predmet ko'rinadigan vertikal nuqta.
 const fokus: Record<FotoSlug, string> = {
-  navigator: '50% 40%',
   'top-admission': '50% 75%',
   sat: '50% 55%',
   ielts: '50% 65%',

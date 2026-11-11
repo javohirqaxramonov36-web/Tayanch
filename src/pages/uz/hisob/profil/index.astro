@@ -25,8 +25,10 @@ import { satBall } from '../../../../data/hisobSozlama';
           <p class="hisob-holat" id="profil-holat" role="status" hidden></p>
           <Maydon id="profil-ism" nomi="Ism" autocomplete="name" maxlength={60} izoh="Saytda sizga shu ism bilan murojaat qilamiz." />
           <Maydon id="profil-taxallus" nomi="Taxallus" autocomplete="nickname" maxlength={20} ixtiyoriy izoh="Reytinglarda ko'rinadi. 3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_)." />
-          <Maydon id="profil-ball" nomi="SAT maqsad ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} ixtiyoriy izoh={`${satBall.min} dan ${satBall.max} gacha butun son (SAT umumiy ball oralig'i).`} />
+          <Maydon id="profil-ball" nomi="SAT maqsad ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} step={10} ixtiyoriy izoh={`${satBall.min} dan ${satBall.max} gacha, 10 lik qadam bilan (SAT umumiy ball oralig'i).`} />
+          <Maydon id="profil-joriy" nomi="SAT: hozirgi eng yaxshi ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} step={10} ixtiyoriy izoh="Rasmiy SAT yoki to'liq mashq testidan. Hali bo'lmasa, bo'sh qoldiring." />
           <Maydon id="profil-sana" nomi="Imtihon sanasi" turi="date" autocomplete="off" ixtiyoriy izoh="Qaysi kuni imtihon topshirmoqchisiz." />
+          <p class="hisob-ogoh" id="profil-sana-otgan" hidden></p>
           <button type="submit" class="tugma tugma-asosiy" id="profil-tugma">Saqlash</button>
         </form>
       </section>
@@ -66,15 +68,21 @@ import { satBall } from '../../../../data/hisobSozlama';
 <script>
   import { hisobMijoz, hisobQorovul, hisobYoli, xatoMatni, maydonXatosi, yuklanish, xabar } from '../../../../lib/hisob';
   import { hisobSozlama, satBall } from '../../../../data/hisobSozlama';
+  import { ballXatosi as satBallXatosi, sanaXatosi, SANA_MAX_YIL, type BallXato } from '../../../../lib/satMaqsad';
+  import { toshkentBugun, yilQosh } from '../../../../lib/muddat';
 
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
   const ism = $<HTMLInputElement>('profil-ism');
   const taxallus = $<HTMLInputElement>('profil-taxallus');
   const ball = $<HTMLInputElement>('profil-ball');
+  const joriy = $<HTMLInputElement>('profil-joriy');
   const sana = $<HTMLInputElement>('profil-sana');
+  const otganEl = $('profil-sana-otgan');
+  const bugun = toshkentBugun();
+  let saqlanganSana = '';
   const tugma = $<HTMLButtonElement>('profil-tugma');
   const naqsh = new RegExp(`^${hisobSozlama.taxallusNaqsh}$`);
-  const maydonlar = [ism, taxallus, ball, sana];
+  const maydonlar = [ism, taxallus, ball, joriy, sana];
   let foydalanuvchiId = '';
 
   function formaYoq(yoq: boolean) {
@@ -92,7 +100,7 @@ import { satBall } from '../../../../data/hisobSozlama';
     if (!c) return;
     const { data, error } = await c
       .from('profiles')
-      .select('display_name, nickname, target_score, exam_date')
+      .select('display_name, nickname, target_score, current_score, exam_date')
       .eq('id', u.id)
       .maybeSingle();
     if (error || !data) {
@@ -102,16 +110,41 @@ import { satBall } from '../../../../data/hisobSozlama';
     ism.value = String(data.display_name ?? u.user_metadata?.display_name ?? '');
     taxallus.value = String(data.nickname ?? u.user_metadata?.nickname ?? '');
     ball.value = data.target_score == null ? '' : String(data.target_score);
+    joriy.value = data.current_score == null ? '' : String(data.current_score);
     sana.value = data.exam_date ?? '';
+    saqlanganSana = sana.value;
+    sanaEslatma();
     formaYoq(false);
   }).catch(() => undefined); // xatoni HisobQorovul ko'rsatadi
 
-  function ballXatosi(qiymat: string): string | null {
-    if (!qiymat) return ball.validity.badInput ? 'Faqat raqam kiriting.' : null;
-    const n = Number(qiymat);
-    if (!Number.isInteger(n) || n < satBall.min || n > satBall.max) {
-      return `${satBall.min} dan ${satBall.max} gacha butun son kiriting.`;
-    }
+  // SAT ball: 400–1600, qadam 10 (src/lib/satMaqsad.ts, SAT sozlash sahifasi bilan bir xil qoida).
+  const ballMatn: Record<BallXato, string> = {
+    bosh: 'Ballni kiriting.',
+    raqam: 'Faqat raqam kiriting, masalan 1400.',
+    oraliq: `${satBall.min} dan ${satBall.max} gacha son kiriting.`,
+    qadam: "SAT ball 10 lik qadam bilan boradi: eng yaqin 10 ga yaxlitlang, masalan 1450.",
+  };
+  function ballXatosi(el: HTMLInputElement): string | null {
+    const x = el.validity.badInput ? 'raqam' : satBallXatosi(el.value);
+    return x ? ballMatn[x] : null;
+  }
+
+  // Imtihon sanasi: yangi kiritilgan sana bugundan oldin yoki 2 yildan uzoq bo'lmaydi; saqlangan o'tgan sana haqida eslatma.
+  sana.max = yilQosh(bugun, SANA_MAX_YIL);
+  function sanaEslatma() {
+    const otgan = !!sana.value && sana.value < bugun && sana.value === saqlanganSana;
+    otganEl.textContent = otgan ? "Bu imtihon sanasi o'tib ketgan. Yangi sanani kiriting yoki maydonni bo'shating." : '';
+    otganEl.hidden = !otgan;
+    const tasvir = ['profil-sana-izoh', 'profil-sana-xato', otgan ? 'profil-sana-otgan' : ''].filter(Boolean).join(' ');
+    sana.setAttribute('aria-describedby', tasvir);
+  }
+  function sanaXatoMatni(): string | null {
+    if (sana.validity.badInput) return "Sanani to'liq kiriting.";
+    if (!sana.value || sana.value === saqlanganSana) return null;
+    const x = sanaXatosi(sana.value, bugun);
+    if (x === 'otgan') return "Bu sana o'tib ketgan. Bugungi yoki keyingi sanani tanlang.";
+    if (x === 'uzoq') return 'Keyingi ikki yil ichidagi sanani tanlang.';
+    if (x) return "Sanani to'liq kiriting.";
     return null;
   }
 
@@ -122,11 +155,13 @@ import { satBall } from '../../../../data/hisobSozlama';
     const i = ism.value.trim();
     const t = taxallus.value.trim();
     const b = ball.value.trim();
+    const j = joriy.value.trim();
     const xatolar: [HTMLInputElement, string | null][] = [
       [ism, i ? null : 'Ismingizni kiriting.'],
       [taxallus, !t || naqsh.test(t) ? null : '3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_) ishlating.'],
-      [ball, ballXatosi(b)],
-      [sana, sana.validity.badInput ? "Sanani to'liq kiriting." : null],
+      [ball, ballXatosi(ball)],
+      [joriy, ballXatosi(joriy)],
+      [sana, sanaXatoMatni()],
     ];
     xatolar.forEach(([el, m]) => maydonXatosi(el, m));
     const birinchi = xatolar.find(([, m]) => m)?.[0];
@@ -136,7 +171,7 @@ import { satBall } from '../../../../data/hisobSozlama';
     yuklanish(tugma, true, 'Saqlanmoqda…');
     const { data, error } = await c
       .from('profiles')
-      .update({ display_name: i, nickname: t || null, target_score: b ? Number(b) : null, exam_date: sana.value || null })
+      .update({ display_name: i, nickname: t || null, target_score: b ? Number(b) : null, current_score: j ? Number(j) : null, exam_date: sana.value || null })
       .eq('id', foydalanuvchiId)
       .select('id');
     yuklanish(tugma, false);
@@ -145,8 +180,11 @@ import { satBall } from '../../../../data/hisobSozlama';
       return taxallus.focus();
     }
     if (error || !data?.length) return xabar($('profil-xato'), xatoMatni((error ?? new Error('profil')) as Error, 'profil'));
+    saqlanganSana = sana.value;
+    sanaEslatma();
     xabar($('profil-holat'), 'Saqlandi.');
   });
+  sana.addEventListener('change', sanaEslatma);
   maydonlar.forEach((el) => el.addEventListener('input', () => maydonXatosi(el, null)));
 
   const chiqish = $<HTMLButtonElement>('chiqish-tugma');

@@ -8,7 +8,6 @@ import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
 import Zina from '../../components/Zina.astro';
-import QavatFoto from '../../components/QavatFoto.astro';
 import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
@@ -24,6 +23,11 @@ const sochilgan = [
   { t: 'Hujjatlar', x: 8, y: 82, r: -4 },
 ];
 const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
+// Bo'lim kartalari fotosi (Higgsfield, 2026-11-11; uslub: real foto, yuzsiz, matnsiz). Bezak: alt bo'sh.
+const kartaRasm = (slug: string) => ({
+  src: yol(`/rasmlar/bosh/${slug}-720.webp`),
+  srcset: `${yol(`/rasmlar/bosh/${slug}-400.webp`)} 400w, ${yol(`/rasmlar/bosh/${slug}-720.webp`)} 720w`,
+});
 ---
 <Asosiy
   title="Tayanch"
@@ -41,9 +45,6 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
 
   <!-- 0. Shaxsiy yo'l xaritasi (Navigator onboarding): faqat saqlangan profil bo'lsa ko'rinadi -->
   <YolXaritasi />
-
-  <!-- Qavat fotosi (bezak, matn ustida emas) -->
-  <div class="ichki bosh-foto"><QavatFoto bolim="navigator" /></div>
 
   <!-- 1. Muammo -->
   <section class="ichki muammo" aria-labelledby="s1">
@@ -87,6 +88,15 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
           </>
         ))}
       </ol>
+      <figure class="yol-rasm">
+        <img
+          src={yol('/rasmlar/bosh/yol-1344.webp')}
+          srcset={`${yol('/rasmlar/bosh/yol-720.webp')} 720w, ${yol('/rasmlar/bosh/yol-1344.webp')} 1344w`}
+          sizes="(min-width: 1200px) 1100px, 100vw"
+          width="1344" height="752" loading="lazy" decoding="async"
+          alt="Deraza yonidagi stolda ochiq daftar: qalam bilan chizilgan besh doirali yo'l, yonida Rishton piyolada choy va atlas mato."
+        />
+      </figure>
       <div class="vadalar">
         <p><strong>Rasmiy manba bilan.</strong> Har qoida va muddat yonida manba havolasi va tekshirilgan sana.</p>
         <p><strong>Ro'yxatsiz va to'lovsiz.</strong> Kiritgan narsangiz brauzeringizda qoladi. Ixtiyoriy hisobga kirsangiz, yo'l xaritangiz hisobingizda ham saqlanadi.</p>
@@ -117,6 +127,7 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
         return (
           <li>
             <a class:list={['ds-karta', 'karta', { tez: !ochiq }]} data-floor={qavatlar.find((q) => q.slug === b.slug)?.raqam} href={yol(`/uz/${b.slug}/`)}>
+              <img class="karta-rasm" {...kartaRasm(b.slug)} sizes="(min-width: 1100px) 280px, (min-width: 560px) 50vw, 100vw" width="720" height="542" loading="lazy" decoding="async" alt="" />
               <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka ds-karta-belgi">
                 {b.ikonka === 'qalpoq' && <><path d="M3 10l9-5 9 5-9 5z" /><path d="M7 12v5c3 2 7 2 10 0v-5" /></>}
                 {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
@@ -151,8 +162,6 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   .kulrang { background: var(--fon-ikkinchi); }
 
   /* 1. Muammo */
-  .bosh-foto { padding-top: var(--b-10); }
-  .bosh-foto + .muammo { padding-top: var(--b-14); }
   .muammo { padding-block: var(--b-24) 88px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
   .muammo-matn { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
   .muammo h1 { font-size: var(--matn-hero); line-height: 1.04; letter-spacing: var(--oraliq-hero); font-weight: 900; }
@@ -215,10 +224,33 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
   /* DS link karta (global .ds-karta), urg'u borilayotgan qavatdan (data-floor) */
   .karta {
     height: 100%; box-sizing: border-box;
-    display: flex; flex-direction: column; gap: 14px;
-    padding: 22px;
+    display: flex; flex-direction: column; gap: var(--space-3);
+    padding: var(--card-pad); overflow: hidden;
   }
-  .karta .ikonka { width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3); }
+  /* Foto karta tepasida chetma-chet; belgi doirasi foto va matn chegarasiga chiqadi */
+  .karta-rasm {
+    display: block; width: calc(100% + 2 * var(--card-pad)); max-width: none; height: auto;
+    aspect-ratio: 16 / 10; object-fit: cover;
+    margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0;
+    background: var(--color-surface-sunken);
+  }
+  .karta .ikonka {
+    width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3);
+    margin-top: calc(var(--control-height-md) / -2 - var(--space-3));
+    position: relative; box-shadow: 0 0 0 var(--space-1) var(--color-surface);
+  }
+
+  @media (max-width: 640px) { .karta-rasm { aspect-ratio: 2 / 1; } }
+
+  /* 2. Burilish: 5 bosqich ostidagi foto */
+  .yol-rasm { margin: 0; }
+  .yol-rasm img {
+    display: block; width: 100%; height: auto;
+    aspect-ratio: 21 / 9; object-fit: cover; object-position: 50% 68%;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-sunken);
+  }
+  @media (max-width: 640px) { .yol-rasm img { aspect-ratio: 4 / 3; object-position: 55% 72%; border-radius: var(--radius-lg); } }
   .karta-nom { font-weight: 900; font-size: var(--matn-h3); }
   .karta-tavsif { font-size: 15px; line-height: 1.5; color: var(--matn-ikkinchi); }
   .karta-holat { margin-top: auto; font-weight: 700; color: var(--rang-havola); }
