@@ -260,13 +260,10 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
 </BolimQobiq>
 
 <script>
+  import { toshkentBugun, kunFarqi } from '../../../../lib/muddat';
   // 1) Chiptadagi qolgan kun (kirish sahifasi bilan bir xil mantiq), bugun Toshkent bo'yicha.
   //    JS bo'lmasa "20-fevral / oxirgi kun" qoladi.
-  const bugun = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tashkent' }).format(new Date());
-  const kunFarqi = (a: string, b: string) => {
-    const k = (s: string) => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
-    return Math.round((k(b) - k(a)) / 864e5);
-  };
+  const bugun = toshkentBugun();
   document.querySelectorAll<HTMLElement>('.chipta[data-yopilish]').forEach((ch) => {
     const katta = ch.querySelector('.korishok-katta');
     const matn = ch.querySelector('.korishok-matn');

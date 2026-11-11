@@ -11,8 +11,10 @@ interface Props {
   maxlength?: number;
   min?: number | string;
   max?: number | string;
+  /** number maydoni uchun qadam (masalan SAT ball: 10) */
+  step?: number;
 }
-const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength, min, max } = Astro.props;
+const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength, min, max, step } = Astro.props;
 const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join(' ');
 ---
 <div class="hisob-maydon">
@@ -28,6 +30,7 @@ const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join('
     maxlength={maxlength}
     min={min}
     max={max}
+    step={step}
     spellcheck="false"
     autocapitalize={turi === 'email' ? 'none' : undefined}
     inputmode={turi === 'email' ? 'email' : turi === 'number' ? 'numeric' : undefined}

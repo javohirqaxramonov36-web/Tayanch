@@ -115,6 +115,15 @@ export const manbalar: Manba[] = [
     izoh: "Kontent siyosati uchun. 10-bo'lim: xizmatlar \"solely for your non-commercial use\", ularni pul ishlash yoki \"as part of any test prep or other business\" uchun ishlatib bo'lmaydi. 8-bo'lim: kontentni yozma ruxsatsiz tarqatish, yuklab olish, ko'paytirish, scrape yoki data-mine qilish taqiqlangan. \"non-commercial use\" va \"test prep\" iqtiboslari sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200); 8-bo'lim iqtiboslari faqat WebFetch xulosasidan. Sahifada kuchga kirish sanasi topilmadi.",
   },
   {
+    id: 'CB14',
+    nomi: 'SAT Suite Test Dates and Deadlines',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/dates-deadlines',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-11',
+    izoh: "SAT maqsad va sana sozlashi uchun (src/data/satSanalar.ts). 2026–27 SAT Weekend sanalari va ro'yxat muddatlari; sahifada \"apply to all students—U.S. and international\". 2027–28 sanalari \"anticipated\", kiritilmagan. HTML'da so'zma-so'z tekshirildi (2026-11-11, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q. CB12 boshqa branch'larda band (sat-kalkulyator, sat-savol-format-import), CB13 ehtiyot uchun qoldirildi.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',

@@ -37,7 +37,7 @@ storage: question-figures     (yopiq bucket, imzolangan URL)
 
 | Jadval | Nima | Mijoz (authenticated) | Kim yozadi |
 | --- | --- | --- | --- |
-| `profiles` | ism, taxallus, davlat, maqsad ball, imtihon sanasi, rozilik, til | o'zini o'qiydi; ruxsat etilgan ustunlarni yangilaydi | trigger yaratadi; `consent_at` ni trigger qo'yadi |
+| `profiles` | ism, taxallus, davlat, maqsad ball, hozirgi eng yaxshi ball (`current_score`), imtihon sanasi, SAT sozlash vaqti (`sat_setup_at`), rozilik, til | o'zini o'qiydi; ruxsat etilgan ustunlarni yangilaydi | trigger yaratadi; `consent_at` ni trigger qo'yadi |
 | `questions` | savol banki (`draft`/`verified`/`hidden`, `verified_by`, `version`) | **hech narsa** | service role |
 | `practice_sessions` | sessiya (`practice`, `timed`, `daily`, `review`) | o'zini o'qiydi | RPC |
 | `session_questions` | sessiyaga berilgan savollar | o'zini o'qiydi | RPC |

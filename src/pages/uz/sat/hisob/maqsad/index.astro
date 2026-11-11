@@ -1,0 +1,340 @@
+---
+// SAT · Account · Goal and test date (P12): hisob ochgandan keyin 3 savollik tez sozlash, keyin tahrirlash ham shu yerda.
+// Faqat kirgan foydalanuvchi (hisobQorovul: kirmagan bo'lsa kirish sahifasiga ?keyin= bilan, rozilik yo'q bo'lsa rozilikka).
+// Ma'lumot public.profiles: target_score, current_score, exam_date, sat_setup_at (migratsiya 20261111120000).
+// Ball 400–1600, qadam 10 (CB04). Rasmiy sanalar faqat src/data/satSanalar.ts dan (CB14); o'tganlari yashiriladi,
+// kelgusi rasmiy sana qolmasa "Official dates are being verified" belgisi va erkin sana.
+// Klaviatura: radio guruh strelkalar bilan; "Another date" tanlansa sana maydoni ochiladi.
+// Xatolar: tepada ro'yxat (role="alert", fokus unga), har maydon ostida matn va aria-invalid. Natija va'dasi yo'q.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { satSanalar } from '../../../../../data/satSanalar';
+import { maqsadMatn as M, sanaYoz } from '../../../../../data/satMaqsadMatn';
+import { rasmiyManbalar } from '../../../../../data/manbalar';
+import { BALL } from '../../../../../lib/satMaqsad';
+import { yol } from '../../../../../lib/yol';
+
+const cb14 = rasmiyManbalar(['CB14'])[0];
+if (!cb14) throw new Error('SAT maqsad: CB14 rasmiy manba topilmadi');
+const tekshirilmagan = ['Whether every official date is offered at test centers in Uzbekistan.'];
+---
+<BolimQobiq
+  title="Goal and test date · SAT"
+  description="Set your target SAT score, your best score so far and your test date. They set the countdown on the SAT home page."
+  turi="vosita"
+  yol={['Account']}
+  bolim="sat"
+  holat="qoralama"
+  manbalar={['CB04', 'CB14']}
+>
+  <div class="ichki maqsad">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Account</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>{M.sarlavha}</h1>
+      <p class="lead">{M.lead}</p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>{M.kutish}</p>
+    <p class="ogoh" data-yoq hidden>{M.hisobYoq}</p>
+    <p class="alert" role="alert" data-oqish-xato hidden></p>
+
+    <form class="forma" id="maqsad-forma" novalidate aria-labelledby="maqsad-h" data-ichi hidden data-sat={yol('/uz/sat/')}>
+      <h2 id="maqsad-h" class="ekranda-yoq">{M.sarlavha}</h2>
+      <div class="alert xatolar" id="maqsad-xatolar" role="alert" tabindex="-1" hidden>
+        <p>{M.xatolarSarlavha}</p>
+        <ul></ul>
+      </div>
+
+      <div class="maydon">
+        <label for="m-ball">{M.ballNomi}</label>
+        <p class="izoh" id="m-ball-izoh">{M.ballIzoh}</p>
+        <input class="kirit kirit-son" id="m-ball" name="ball" type="number" inputmode="numeric" autocomplete="off"
+          min={BALL.min} max={BALL.max} step={BALL.qadam} required aria-describedby="m-ball-izoh m-ball-xato" />
+        <p class="xato" id="m-ball-xato" hidden></p>
+      </div>
+
+      <div class="maydon">
+        <label for="m-joriy">{M.joriyNomi} <span class="ixtiyoriy">{M.ixtiyoriy}</span></label>
+        <p class="izoh" id="m-joriy-izoh">{M.joriyIzoh}</p>
+        <input class="kirit kirit-son" id="m-joriy" name="joriy" type="number" inputmode="numeric" autocomplete="off"
+          min={BALL.min} max={BALL.max} step={BALL.qadam} aria-describedby="m-joriy-izoh m-joriy-xato" />
+        <p class="xato" id="m-joriy-xato" hidden></p>
+      </div>
+
+      <fieldset class="guruh" aria-describedby="m-sana-izoh">
+        <legend>{M.sanaNomi} <span class="ixtiyoriy">{M.ixtiyoriy}</span></legend>
+        <p class="izoh" id="m-sana-izoh">{M.sanaIzoh}</p>
+        <p class="otgan-eslatma" id="m-otgan" hidden></p>
+        <p class="tekshirilmoqda" data-tekshirilmoqda hidden>
+          <span class="pill pill-chiziq">{M.tekshirilmoqda}</span>
+          <span class="izoh">{M.tekshirilmoqdaIzoh} <a href={cb14.havola} target="_blank" rel="noopener noreferrer">College Board<span class="ekranda-yoq"> (opens in a new tab)</span></a></span>
+        </p>
+        <div class="variantlar">
+          {satSanalar.sanalar.map((s) => (
+            <label class="variant" data-rasmiy={s.sana} data-royxat={s.royxat} data-kech={s.kechRoyxat} hidden>
+              <input type="radio" name="sana" value={s.sana} />
+              <span class="variant-matn">
+                <span class="variant-nom">{sanaYoz(s.sana, true)}</span>
+                <span class="variant-izoh" data-royxat-matn></span>
+              </span>
+            </label>
+          ))}
+          <label class="variant">
+            <input type="radio" name="sana" value="boshqa" />
+            <span class="variant-matn"><span class="variant-nom">{M.boshqaSana}</span></span>
+          </label>
+          <div class="maydon ichki-maydon" id="m-boshqa-blok" hidden>
+            <label for="m-sana">{M.boshqaSanaMaydon}</label>
+            <input class="kirit kirit-sana" id="m-sana" name="sanaQiymat" type="date" autocomplete="off" aria-describedby="m-sana-xato" />
+            <p class="xato" id="m-sana-xato" hidden></p>
+          </div>
+          <label class="variant">
+            <input type="radio" name="sana" value="" checked />
+            <span class="variant-matn"><span class="variant-nom">{M.bilmayman}</span></span>
+          </label>
+        </div>
+        <p class="manba-izoh" data-manba-izoh>
+          <a href={cb14.havola} target="_blank" rel="noopener noreferrer">{M.manba}<span class="ekranda-yoq"> (opens in a new tab)</span></a>
+          {' '}{M.tekshirildi(satSanalar.tekshirilganSana)}
+        </p>
+      </fieldset>
+
+      <p class="holat" id="maqsad-holat" role="status" hidden></p>
+      <div class="tugmalar">
+        <button type="submit" class="tugma tugma-asosiy" id="m-saqlash">{M.saqlash}</button>
+        <button type="button" class="tugma tugma-ikkinchi" id="m-otkazish">{M.otkazish}</button>
+      </div>
+    </form>
+
+    <ManbaBlok
+      manbalar={['CB04', 'CB14']}
+      tekshirilgan={satSanalar.tekshirilganSana}
+      keyingiTekshiruv={satSanalar.keyingiTekshiruv}
+      tekshirilmagan={tekshirilmagan}
+    />
+  </div>
+</BolimQobiq>
+
+<style>
+  .maqsad [hidden] { display: none !important; }
+  .maqsad { display: flex; flex-direction: column; gap: var(--b-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-chiziq { border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
+  .holat-matn { color: var(--matn-ikkinchi); }
+
+  .forma { display: flex; flex-direction: column; gap: var(--b-6); max-width: 560px; }
+  .maydon { display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
+  .maydon label, .guruh legend { font-weight: 700; }
+  .ixtiyoriy { font-weight: 500; color: var(--matn-sust); }
+  .izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
+  .kirit {
+    width: 100%; min-height: 48px; padding: 0 var(--b-4);
+    border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    background: var(--fon); color: var(--matn); font: inherit; font-size: 17px;
+  }
+  .kirit-son { max-width: 12rem; }
+  .kirit-sana { max-width: 16rem; }
+  .kirit:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .kirit[aria-invalid='true'] { border-color: var(--rang-ogoh-matn); }
+  .kirit:disabled { background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
+  .xato { font-size: var(--matn-kichik); font-weight: 700; color: var(--rang-ogoh-matn); line-height: 1.5; }
+  .xato::before { content: '! '; }
+
+  .guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .guruh legend { padding: 0; margin-bottom: var(--b-2); }
+  .variantlar { display: flex; flex-direction: column; gap: var(--b-2); }
+  .variant {
+    position: relative; display: flex; align-items: flex-start; gap: var(--b-3);
+    min-height: 56px; padding: var(--b-3) var(--b-4);
+    border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); cursor: pointer;
+  }
+  .variant:has(input:checked) { border-color: var(--rang-asosiy); }
+  .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant input { flex: none; width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--rang-asosiy); cursor: pointer; }
+  .variant input:focus-visible { outline: none; }
+  .variant-matn { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  .variant-nom { font-weight: 700; }
+  .variant-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
+  .ichki-maydon { padding: 0 0 var(--b-2) var(--b-4); }
+  .tekshirilmoqda { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); }
+  .otgan-eslatma { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; line-height: 1.5; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
+  .manba-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
+  .manba-izoh a, .tekshirilmoqda a { color: var(--rang-havola); }
+
+  .alert { font-weight: 700; line-height: 1.5; color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
+  .xatolar:focus { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .xatolar ul { margin: var(--b-2) 0 0; padding-left: 1.2em; }
+  .xatolar a { color: inherit; }
+  .holat { font-weight: 700; line-height: 1.5; color: var(--matn); background: var(--fon-ikkinchi); border-left: 4px solid var(--rang-asosiy); border-radius: var(--r-kichik); padding: var(--b-3) var(--b-4); }
+  .tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .tugma:disabled { cursor: not-allowed; background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
+  .tugma-asosiy[aria-busy='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  @media (max-width: 560px) {
+    .tugmalar .tugma { width: 100%; }
+  }
+</style>
+
+<script>
+  import { hisobMijoz, hisobQorovul, maydonXatosi, yuklanish, xabar } from '../../../../../lib/hisob';
+  import { toshkentBugun, yilQosh } from '../../../../../lib/muddat';
+  import { ballXatosi, sanaXatosi, kelgusiSanalar, SANA_MAX_YIL, type MaqsadProfil } from '../../../../../lib/satMaqsad';
+  import { satSanalar } from '../../../../../data/satSanalar';
+  import { maqsadMatn as M } from '../../../../../data/satMaqsadMatn';
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const forma = $<HTMLFormElement>('#maqsad-forma');
+  const ball = $<HTMLInputElement>('#m-ball');
+  const joriy = $<HTMLInputElement>('#m-joriy');
+  const sana = $<HTMLInputElement>('#m-sana');
+  const saqlash = $<HTMLButtonElement>('#m-saqlash');
+  const otkazish = $<HTMLButtonElement>('#m-otkazish');
+  const xatolar = $<HTMLElement>('#maqsad-xatolar');
+  const boshqaBlok = $<HTMLElement>('#m-boshqa-blok');
+  const radiolar = () => [...forma.querySelectorAll<HTMLInputElement>('input[name="sana"]')];
+  const tanlangan = () => forma.querySelector<HTMLInputElement>('input[name="sana"]:checked')?.value ?? '';
+  const satYoli = forma.dataset.sat!;
+  const bugun = toshkentBugun();
+  let foydalanuvchiId = '';
+  let sozlanganEdi = false;
+
+  // Rasmiy sanalar: faqat bugun va keyingilari, ro'yxat holati manba muddatlaridan.
+  const kelgusi = kelgusiSanalar(satSanalar.sanalar, bugun);
+  forma.querySelectorAll<HTMLElement>('[data-rasmiy]').forEach((el) => {
+    const s = kelgusi.find((k) => k.sana === el.dataset.rasmiy);
+    el.hidden = !s;
+    if (s) el.querySelector('[data-royxat-matn]')!.textContent = M.royxat(s.royxatHolati, s.royxat, s.kechRoyxat);
+    else el.querySelector('input')!.disabled = true;
+  });
+  $<HTMLElement>('[data-tekshirilmoqda]').hidden = kelgusi.length > 0;
+  $<HTMLElement>('[data-manba-izoh]').hidden = kelgusi.length === 0;
+  sana.min = bugun;
+  sana.max = yilQosh(bugun, SANA_MAX_YIL);
+
+  function boshqaniYangila() {
+    boshqaBlok.hidden = tanlangan() !== 'boshqa';
+    if (boshqaBlok.hidden) maydonXatosi(sana, null);
+  }
+  radiolar().forEach((r) => r.addEventListener('change', boshqaniYangila));
+
+  function formaYoq(yoq: boolean) {
+    [ball, joriy, sana, saqlash, otkazish].forEach((el) => (el.disabled = yoq));
+    radiolar().forEach((r) => { if (!r.closest<HTMLElement>('[data-rasmiy]')?.hidden) r.disabled = yoq; });
+  }
+
+  function toldir(p: MaqsadProfil) {
+    ball.value = p.target_score == null ? '' : String(p.target_score);
+    joriy.value = p.current_score == null ? '' : String(p.current_score);
+    const otgan = $<HTMLElement>('#m-otgan');
+    if (p.exam_date && p.exam_date < bugun) {
+      otgan.textContent = M.otganSana(p.exam_date);
+      otgan.hidden = false;
+    } else if (p.exam_date) {
+      const rasmiy = kelgusi.some((k) => k.sana === p.exam_date);
+      const r = radiolar().find((x) => x.value === (rasmiy ? p.exam_date : 'boshqa'));
+      if (r) r.checked = true;
+      if (!rasmiy) sana.value = p.exam_date;
+    }
+    boshqaniYangila();
+    sozlanganEdi = !!p.sat_setup_at;
+    otkazish.textContent = sozlanganEdi ? M.bekor : M.otkazish;
+  }
+
+  async function yukla() {
+    const c = hisobMijoz();
+    if (!c) {
+      $<HTMLElement>('[data-kutish]').hidden = true;
+      $<HTMLElement>('[data-yoq]').hidden = false;
+      return;
+    }
+    try {
+      const sessiya = await hisobQorovul();
+      if (!sessiya) return;
+      foydalanuvchiId = sessiya.user.id;
+      const { data, error } = await c.from('profiles')
+        .select('target_score, current_score, exam_date, sat_setup_at').eq('id', foydalanuvchiId).maybeSingle();
+      if (error || !data) throw error ?? new Error('profil');
+      toldir(data as MaqsadProfil);
+      $<HTMLElement>('[data-kutish]').hidden = true;
+      forma.hidden = false;
+      formaYoq(false);
+    } catch {
+      $<HTMLElement>('[data-kutish]').hidden = true;
+      xabar($('[data-oqish-xato]'), M.oqishXato);
+    }
+  }
+
+  function xatolarniKorsat(royxat: [HTMLInputElement, string][]) {
+    const ul = xatolar.querySelector('ul')!;
+    ul.replaceChildren(...royxat.map(([el, m]) => {
+      const li = document.createElement('li');
+      const a = Object.assign(document.createElement('a'), { href: `#${el.id}`, textContent: m });
+      a.addEventListener('click', (e) => { e.preventDefault(); el.focus(); });
+      li.append(a);
+      return li;
+    }));
+    xatolar.hidden = royxat.length === 0;
+    if (royxat.length) xatolar.focus();
+  }
+
+  async function yoz(qiymat: Partial<MaqsadProfil>, tugma: HTMLButtonElement) {
+    const c = hisobMijoz();
+    if (!c || !foydalanuvchiId) return false;
+    xabar($('#maqsad-holat'), null);
+    yuklanish(tugma, true, M.saqlanmoqda);
+    formaYoq(true);
+    const { data, error } = await c.from('profiles').update(qiymat).eq('id', foydalanuvchiId).select('id');
+    yuklanish(tugma, false);
+    formaYoq(false);
+    if (error || !data?.length) {
+      xatolarniKorsat([]);
+      xabar($('#maqsad-holat'), null);
+      const el = $<HTMLElement>('[data-oqish-xato]');
+      xabar(el, M.saqlashXato);
+      return false;
+    }
+    return true;
+  }
+
+  forma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    xabar($('[data-oqish-xato]'), null);
+    const t = tanlangan();
+    const sanaQiymat = t === 'boshqa' ? sana.value : t;
+    const bx = ball.validity.badInput ? 'raqam' : ballXatosi(ball.value, true);
+    const jx = joriy.validity.badInput ? 'raqam' : ballXatosi(joriy.value);
+    const sx = t !== 'boshqa' ? null
+      : sana.validity.badInput ? 'format'
+        : !sana.value ? 'bosh' : sanaXatosi(sana.value, bugun);
+    const juft: [HTMLInputElement, string | null][] = [
+      [ball, bx ? M.ballXato[bx] : null],
+      [joriy, jx ? M.ballXato[jx] : null],
+      [sana, sx === 'bosh' ? M.sanaTanlanmadi : sx ? M.sanaXato[sx] : null],
+    ];
+    juft.forEach(([el, m]) => maydonXatosi(el, m));
+    const bor = juft.filter((x): x is [HTMLInputElement, string] => !!x[1]);
+    xatolarniKorsat(bor);
+    if (bor.length) return;
+    const ok = await yoz({
+      target_score: Number(ball.value),
+      current_score: joriy.value.trim() ? Number(joriy.value) : null,
+      exam_date: sanaQiymat || null,
+      sat_setup_at: new Date().toISOString(),
+    }, saqlash);
+    if (ok) location.assign(satYoli);
+  });
+
+  otkazish.addEventListener('click', async () => {
+    if (sozlanganEdi) return location.assign(satYoli);
+    const ok = await yoz({ sat_setup_at: new Date().toISOString() }, otkazish);
+    if (ok) location.assign(satYoli);
+  });
+
+  [ball, joriy, sana].forEach((el) => el.addEventListener('input', () => maydonXatosi(el, null)));
+  formaYoq(true);
+  yukla();
+</script>

@@ -1,0 +1,142 @@
+---
+// SAT bosh sahifasi tepasidagi shaxsiy sarlavha (P12): "Goal: 1500 · 63 days left".
+// Faqat kirgan foydalanuvchiga ko'rinadi (Supabase sozlanmagan build, sessiya yo'q yoki profil o'qilmasa: yashirin qoladi,
+// sahifa avvalgidek). Kirish sahifasiga yo'naltirmaydi (hisobQorovul emas, faqat getSession).
+// Holatlar (src/lib/satMaqsad.ts, sarlavhaHolati): sozlanmagan → taklif ("Start" / "Not now"); kelajak → N days left;
+// bugun → Test day is today; o'tgan → "Set a new date"; maqsad yoki sana yo'q → qo'shish havolasi.
+// Qolgan kun Toshkent sanasi bo'yicha (src/lib/muddat.ts, 2-qavat chiptalari bilan bir xil). Natija va'dasi yo'q.
+import { maqsadMatn as M } from '../../data/satMaqsadMatn';
+import { yol } from '../../lib/yol';
+---
+<section class="ms" aria-label={M.bolimNomi} tabindex="-1" data-maqsad-sarlavha data-tahrir={yol('/uz/sat/hisob/maqsad/')} hidden>
+  <div class="ms-taklif" data-ms-taklif hidden>
+    <div class="ms-matn">
+      <p class="ms-asosiy">{M.taklifSarlavha}</p>
+      <p class="ms-izoh">{M.taklifMatn}</p>
+    </div>
+    <div class="ms-tugmalar">
+      <a class="tugma tugma-asosiy" href={yol('/uz/sat/hisob/maqsad/')}>{M.boshlash}</a>
+      <button type="button" class="tugma tugma-ikkinchi" data-ms-keyinroq>{M.keyinroq}</button>
+    </div>
+  </div>
+  <div class="ms-bor" data-ms-bor hidden>
+    <div class="ms-matn">
+      <p class="ms-asosiy" data-ms-asosiy></p>
+      <p class="ms-izoh" data-ms-izoh hidden></p>
+    </div>
+    <p class="ms-havolalar" data-ms-havolalar></p>
+  </div>
+  <p class="ms-xato" role="alert" data-ms-xato hidden></p>
+</section>
+
+<style>
+  .ms[hidden], .ms [hidden] { display: none !important; }
+  .ms {
+    display: flex; flex-direction: column; gap: var(--b-3);
+    padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta);
+    border-left: 4px solid var(--rang-asosiy);
+  }
+  .ms:focus { outline: none; }
+  .ms:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  [data-mavzu='qorongi'] .ms { background: var(--sirt-ikkinchi); }
+  .ms-taklif, .ms-bor { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4); }
+  .ms-matn { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  .ms-asosiy { font-size: var(--matn-katta); font-weight: 800; line-height: 1.3; }
+  .ms-asosiy :global(.ms-son) { font-variant-numeric: tabular-nums; }
+  .ms-asosiy :global(.ms-nuqta) { color: var(--matn-sust); }
+  .ms-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
+  .ms-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .ms-havolalar { display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5); }
+  .ms-havolalar :global(a) { display: inline-flex; align-items: center; min-height: 44px; color: var(--rang-havola); font-weight: 700; }
+  .ms-xato { font-weight: 700; color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-kichik); padding: var(--b-2) var(--b-3); }
+  @media (max-width: 560px) {
+    .ms-tugmalar, .ms-tugmalar .tugma { width: 100%; }
+  }
+</style>
+
+<script>
+  import { hisobMijoz } from '../../lib/hisob';
+  import { toshkentBugun } from '../../lib/muddat';
+  import { sarlavhaHolati, type MaqsadProfil } from '../../lib/satMaqsad';
+  import { maqsadMatn as M, sanaYoz } from '../../data/satMaqsadMatn';
+
+  const quti = document.querySelector<HTMLElement>('[data-maqsad-sarlavha]');
+  const el = (teg: string, cls?: string, matn?: string) => {
+    const e = document.createElement(teg);
+    if (cls) e.className = cls;
+    if (matn) e.textContent = matn;
+    return e;
+  };
+
+  function korsat(q: HTMLElement, p: MaqsadProfil) {
+    const tahrir = q.dataset.tahrir!;
+    const h = sarlavhaHolati(p, toshkentBugun());
+    q.querySelector<HTMLElement>('[data-ms-taklif]')!.hidden = h.tur !== 'sozlanmagan';
+    q.querySelector<HTMLElement>('[data-ms-bor]')!.hidden = h.tur === 'sozlanmagan';
+    q.hidden = false;
+    if (h.tur === 'sozlanmagan') return;
+
+    const asosiy = q.querySelector<HTMLElement>('[data-ms-asosiy]')!;
+    const qismlar: HTMLElement[] = [];
+    if (h.ball != null) {
+      const s = el('span', undefined, `${M.maqsad}: `);
+      s.append(el('span', 'ms-son', String(h.ball)));
+      qismlar.push(s);
+    } else qismlar.push(el('span', undefined, M.maqsadYoq));
+    if (!h.sana) qismlar.push(el('span', undefined, M.sanaYoq));
+    else if (h.sana.tur === 'kelajak') qismlar.push(el('span', 'ms-son', M.kunQoldi(h.sana.kun)));
+    else if (h.sana.tur === 'bugun') qismlar.push(el('span', undefined, M.bugun));
+    else qismlar.push(el('span', undefined, M.otdi));
+    const nuqta = () => { const n = el('span', 'ms-nuqta', '·'); n.setAttribute('aria-hidden', 'true'); return n; };
+    // Bo'sh joy matn sifatida: nuqta aria-hidden, ekran o'quvchi "1500" va "63" ni qo'shib o'qimasin.
+    asosiy.replaceChildren(...qismlar.flatMap((x, i) => (i ? [' ', nuqta(), ' ', x] : [x])));
+
+    const izohlar: string[] = [];
+    if (h.sana?.tur === 'kelajak' && p.exam_date) izohlar.push(M.imtihonKuni(p.exam_date));
+    if (p.current_score != null) izohlar.push(M.engYaxshi(p.current_score));
+    const izoh = q.querySelector<HTMLElement>('[data-ms-izoh]')!;
+    izoh.textContent = izohlar.join(' · ');
+    izoh.hidden = izohlar.length === 0;
+
+    const havola = (matn: string) => Object.assign(el('a', undefined, matn), { href: tahrir });
+    const havolalar: HTMLElement[] = [];
+    if (h.sana?.tur === 'otgan') havolalar.push(havola(M.yangiSana));
+    if (h.ball == null) havolalar.push(havola(M.maqsadQosh));
+    if (!h.sana) havolalar.push(havola(M.sanaQosh));
+    if (!havolalar.length) havolalar.push(havola(M.tahrirlash));
+    q.querySelector<HTMLElement>('[data-ms-havolalar]')!.replaceChildren(...havolalar);
+  }
+
+  async function ishga() {
+    const c = hisobMijoz();
+    if (!quti || !c) return;
+    try {
+      const { data: s } = await c.auth.getSession();
+      if (!s.session) return;
+      const uid = s.session.user.id;
+      const { data, error } = await c.from('profiles')
+        .select('target_score, current_score, exam_date, sat_setup_at').eq('id', uid).maybeSingle();
+      if (error || !data) return;
+      const profil = data as MaqsadProfil;
+      korsat(quti, profil);
+
+      const keyinroq = quti.querySelector<HTMLButtonElement>('[data-ms-keyinroq]')!;
+      keyinroq.addEventListener('click', async () => {
+        const xato = quti.querySelector<HTMLElement>('[data-ms-xato]')!;
+        xato.hidden = true;
+        keyinroq.disabled = true;
+        const vaqt = new Date().toISOString();
+        const { data: d, error: e } = await c.from('profiles').update({ sat_setup_at: vaqt }).eq('id', uid).select('id');
+        keyinroq.disabled = false;
+        if (e || !d?.length) {
+          xato.textContent = M.saqlashXato;
+          xato.hidden = false;
+          return;
+        }
+        korsat(quti, { ...profil, sat_setup_at: vaqt });
+        quti.focus();
+      });
+    } catch { /* sarlavha ixtiyoriy: xato bo'lsa sahifa avvalgidek qoladi */ }
+  }
+  ishga();
+</script>
