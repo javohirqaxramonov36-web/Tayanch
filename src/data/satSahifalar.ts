@@ -67,6 +67,18 @@ export const satGuruhlar: SatGuruh[] = [
         tekshirilmagan: ['The weekly tasks are a Tayanch recommendation, not an official plan.', 'The score step (10) is not stated on the official page: it is used in the input field for convenience.'],
       },
       {
+        qism: 'vosita/rasmiy-testlar/',
+        tayyor: true,
+        nomi: 'Test tracker',
+        tavsif: 'Log the scores and mistakes from your Bluebook practice tests and real SAT attempts, and see which skills you miss most. Only your own entries: no questions are stored and no score is estimated.',
+        turi: 'vosita',
+        manbalar: ['CB01', 'CB03', 'CB04'],
+        tekshirilmagan: [
+          'The score step (10) is not stated on the official page: it is used in the fields for convenience.',
+          'Questions per module (27 and 22) are the CB03 section totals split equally between two modules.',
+        ],
+      },
+      {
         qism: 'vosita/takrorlash/',
         tayyor: true,
         nomi: 'Mistake log: review',
@@ -277,7 +289,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     ],
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/obuna/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
