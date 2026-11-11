@@ -23,7 +23,8 @@ SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pu
 - **Obuna**: tarif (free, pro, elite), qavat (`bolim`), boshlanish va tugash sanasi, inPAY to'lov identifikatori.
 - **Foydalanish**: kvota hisoblagichi, javoblar, xato daftari va progress (hozirgi `tayanch:sat-*` kalitlarining server nusxasi).
 - **Saqlanmaydi**: karta ma'lumoti, pasport va boshqa hujjatlar, College Board kontenti.
-- Minimal yosh: 12 (muallif, 2026-11-08). Maxfiylik matni hali yozilmagan (HANDOFF §5, 12-savol).
+- Minimal yosh: 12 (muallif, 2026-11-08). 12–17 yosh: ota-ona yoki vasiy ismi va roziligi (Qonun 21-modda, LX02, LX03; HANDOFF §5, 12-savol). Maxfiylik siyosati `/uz/maxfiylik/`, Foydalanish shartlari `/uz/shartlar/` (P23, 2026-11-09).
+- Hisobni o'chirish: profil sahifasidan, `public.delete_own_account()` (o'z `auth.users` qatorini o'chiradi, cascade bilan bog'liq jadvallar ham).
 
 ## Kalit siyosati
 
@@ -39,9 +40,9 @@ SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pu
 - **inPAY hujjati**: 2026-11-09 da rasmiy hujjat topildi: v1 (IP04, webhook imzosiz) va v2 (IP03: sinov rejimi, imzolangan webhook, Idempotency-Key, Obunalar). Tayanch v2 ni ishlatadi. To'lov usullari Click va Payme (muallif, 2026-11-08). Takroriy to'lov v2'da bor, hozircha ishlatilmaydi: har davr yangi to'lov (HANDOFF §5, 13-savol).
 - **Repo ochiq/yopiq**: hozircha ochiq qoladi (2026-11-08). Pages sayti yopiq repoda ham ochiq bo'ladi va pullik tarif talab qiladi, shuning uchun himoya repo yopilishiga emas, Supabase RLS va secrets'ga tayanadi (HANDOFF §5, 11-savol). Kalitlar repoga tushmaydi.
 - **Bog'liqlik**: Supabase yoki inPAY ishlamasa hisob va to'lov to'xtaydi. Hisobsiz bepul qism brauzerda ishlashda davom etishi kerak.
-- **Shaxsiy ma'lumot**: minimal yosh va maxfiylik siyosati hal bo'lmaguncha hisob sahifasi "chop-etilgan" qilinmaydi.
+- **Shaxsiy ma'lumot**: minimal yosh, 18 yoshgacha qoida va maxfiylik siyosati hal bo'ldi (P23, 2026-11-09). Hisob sahifasini "chop-etilgan" qilish muallif qarori.
 - **Kontent huquqi**: savollar faqat original, muallif tasdig'i bilan (`verified_by`).
 
 ## Manbalar
 
-`src/data/manbalar.ts`: SB01 (API kalitlari), SB02 (Edge Functions secrets), SB03 (Row Level Security), SB04 (Google bilan kirish), IP01 (`inpayuz/inpay-php`, Packagist), IP02 (`inpay-python`, PyPI, tekshirilmoqda), IP03 (inPAY API v2), IP04 (inPAY API v1).
+`src/data/manbalar.ts`: LX02 (Shaxsga doir ma'lumotlar to'g'risidagi Qonun), LX03 (Fuqarolik kodeksi 22-modda), LX04 (VM 415-son, teng himoya ro'yxati), SB01 (API kalitlari), SB02 (Edge Functions secrets), SB03 (Row Level Security), SB04 (Google bilan kirish), IP01 (`inpayuz/inpay-php`, Packagist), IP02 (`inpay-python`, PyPI, tekshirilmoqda), IP03 (inPAY API v2), IP04 (inPAY API v1).

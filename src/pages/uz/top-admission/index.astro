@@ -293,7 +293,7 @@ const tekshirilmagan = [
 
 <style>
   .ta-sahifa { display: grid; gap: var(--b-14); padding-bottom: var(--b-10); }
-  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: -0.5px; }
+  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; }
   .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
   .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
@@ -321,7 +321,7 @@ const tekshirilmagan = [
 
   /* Savol progressi (3D): saytdagi Zina emas */
   .sahna { flex: 1 1 300px; perspective: 900px; display: grid; place-items: center; gap: var(--b-2); min-height: 260px; }
-  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s var(--harakat-egri); }
   .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
   .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
   .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; }

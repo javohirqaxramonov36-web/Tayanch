@@ -1,6 +1,7 @@
 ---
 // 1-qavat · Hisob · Ro'yxatdan o'tish. Email + parol, email tasdiqlash majburiy (Supabase "Confirm email").
-// Rozilik (Maxfiylik va Shartlar, P23) va yosh tasdig'i: qiymatlar src/data/hisobSozlama.ts dan.
+// Rozilik (Maxfiylik va Shartlar, P23) va yosh: qiymatlar src/data/hisobSozlama.ts dan.
+// 12–17 yosh: ota-ona (vasiy) ismi va roziligi (Qonun 21-modda, LX02; voyaga yetish 18 yosh, LX03). user_metadata'ga yoziladi.
 // Email allaqachon ro'yxatda bo'lsa ham bir xil "Emailingizni tekshiring" holati chiqadi (email borligi oshkor qilinmaydi).
 import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
 import Maydon from '../../../../components/hisob/Maydon.astro';
@@ -10,7 +11,7 @@ import { hisobSahifalar } from '../../../../data/hisobSahifalar';
 import { hisobSozlama } from '../../../../data/hisobSozlama';
 import { yol } from '../../../../lib/yol';
 
-const { minYosh, maxfiylikSahifa, shartlarSahifa, parolMinUzunlik } = hisobSozlama;
+const { minYosh, maxfiylikSahifa, shartlarSahifa, parolMinUzunlik, voyagaYetmaganQoida: vq } = hisobSozlama;
 const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
 ---
 <HisobKarta sahifa={hisobSahifalar.royxat} lead="Hisob ixtiyoriy. Hisobsiz natijalaringiz shu brauzerda saqlanadi.">
@@ -29,14 +30,37 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
       <Maydon id="royxat-email" nomi="Email" turi="email" autocomplete="email" />
       <ParolMaydon id="royxat-parol" nomi="Parol" autocomplete="new-password" izoh={`Kamida ${parolMinUzunlik} ta belgi.`} />
 
-      {minYosh !== null && (
-        <div class="hisob-belgi-blok">
+      {minYosh !== null && vq && (
+        <fieldset class="hisob-guruh" id="royxat-yosh" aria-describedby="royxat-yosh-izoh royxat-yosh-xato">
+          <legend>Yoshingiz</legend>
+          <p class="hisob-izoh" id="royxat-yosh-izoh">{minYosh} yoshdan kichik bo'lsangiz, hisob ocha olmaysiz. Sayt hisobsiz ham to'liq ishlaydi.</p>
           <div class="hisob-belgi">
-            <input type="checkbox" id="royxat-yosh" name="royxat-yosh" required aria-describedby="royxat-yosh-xato" />
-            <label for="royxat-yosh">Yoshim {minYosh} da yoki undan katta.</label>
+            <input type="radio" id="royxat-yosh-katta" name="royxat-yosh" value="katta" />
+            <label for="royxat-yosh-katta">{vq.yoshgacha} yosh yoki undan katta</label>
+          </div>
+          <div class="hisob-belgi">
+            <input type="radio" id="royxat-yosh-kichik" name="royxat-yosh" value="kichik" aria-controls="royxat-ota-ona" />
+            <label for="royxat-yosh-kichik">{minYosh}–{vq.yoshgacha - 1} yosh</label>
           </div>
           <p class="hisob-xato" id="royxat-yosh-xato" hidden></p>
-        </div>
+        </fieldset>
+      )}
+
+      {minYosh !== null && vq && (
+        <fieldset class="hisob-guruh hisob-ota-ona" id="royxat-ota-ona" hidden>
+          <legend>Ota-ona yoki vasiy roziligi</legend>
+          <div class="hisob-ota-ona-ichki">
+          <p class="hisob-izoh">Qonun bo'yicha {vq.yoshgacha} yoshgacha bo'lganlarning ma'lumotiga ishlov berish uchun ota-ona yoki vasiy roziligi kerak. Bu qismni ota-onangiz yoki vasiyingiz to'ldirsin.</p>
+          <Maydon id="royxat-ota-ona-ism" nomi="Ota-ona yoki vasiyning ismi va familiyasi" autocomplete="off" maxlength={80} />
+          <div class="hisob-belgi-blok">
+            <div class="hisob-belgi">
+              <input type="checkbox" id="royxat-ota-ona-rozilik" name="royxat-ota-ona-rozilik" aria-describedby="royxat-ota-ona-rozilik-xato" />
+              <label for="royxat-ota-ona-rozilik">Men ota-ona yoki vasiy sifatida farzandimning ma'lumotlariga Maxfiylik siyosatidagi tartibda ishlov berishga roziman.</label>
+            </div>
+            <p class="hisob-xato" id="royxat-ota-ona-rozilik-xato" hidden></p>
+          </div>
+          </div>
+        </fieldset>
       )}
 
       <div class="hisob-belgi-blok">
@@ -46,7 +70,7 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
             {maxfiylikSahifa ? <a class="hisob-havola" href={yol(maxfiylikSahifa)}>Maxfiylik siyosati</a> : 'Maxfiylik siyosati'}{' '}va {shartlarSahifa ? <a class="hisob-havola" href={yol(shartlarSahifa)}>Foydalanish shartlari</a> : 'Foydalanish shartlari'}ga roziman.
           </label>
         </div>
-        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Bu sahifalar yozilmoqda. Havolalar shu yerda paydo bo'ladi.</p>}
+        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Foydalanish shartlari sahifasi yozilmoqda. Havola shu yerda paydo bo'ladi.</p>}
         <p class="hisob-xato" id="royxat-rozilik-xato" hidden></p>
       </div>
 
@@ -72,7 +96,12 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
   const forma = $<HTMLFormElement>('royxat-forma');
   const email = $<HTMLInputElement>('royxat-email');
   const parol = $<HTMLInputElement>('royxat-parol');
-  const yosh = document.getElementById('royxat-yosh') as HTMLInputElement | null;
+  const yoshGuruh = document.getElementById('royxat-yosh') as HTMLFieldSetElement | null;
+  const yoshKatta = document.getElementById('royxat-yosh-katta') as HTMLInputElement | null;
+  const yoshKichik = document.getElementById('royxat-yosh-kichik') as HTMLInputElement | null;
+  const otaOnaBlok = document.getElementById('royxat-ota-ona') as HTMLFieldSetElement | null;
+  const otaOnaIsm = document.getElementById('royxat-ota-ona-ism') as HTMLInputElement | null;
+  const otaOnaRozilik = document.getElementById('royxat-ota-ona-rozilik') as HTMLInputElement | null;
   const rozilik = $<HTMLInputElement>('royxat-rozilik');
   const tugma = $<HTMLButtonElement>('royxat-tugma');
   const xato = $('royxat-xato');
@@ -95,9 +124,17 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
     xatolar.push([email, !e ? 'Emailingizni kiriting.' : !emailTogrimi(e) ? "Email shu ko'rinishda bo'lsin: ism@example.com." : null]);
     const min = hisobSozlama.parolMinUzunlik;
     xatolar.push([parol, !parol.value ? "Parol o'ylab toping." : parol.value.length < min ? `Kamida ${min} ta belgi ishlating.` : null]);
-    if (yosh) xatolar.push([yosh, yosh.checked ? null : `Hisob ochish uchun yoshingiz kamida ${hisobSozlama.minYosh} da bo'lishi kerak.`]);
+    if (yoshKatta && yoshKichik && yoshGuruh) {
+      const tanlangan = yoshKatta.checked || yoshKichik.checked;
+      guruhXatosi(yoshGuruh, [yoshKatta, yoshKichik], tanlangan ? null : 'Yoshingizni tanlang.');
+      if (!tanlangan) xatolar.push([yoshKatta, 'xato']);
+    }
+    if (yoshKichik?.checked && otaOnaIsm && otaOnaRozilik) {
+      xatolar.push([otaOnaIsm, otaOnaIsm.value.trim().length >= 3 ? null : 'Ota-ona yoki vasiyning ismi va familiyasini kiriting.']);
+      xatolar.push([otaOnaRozilik, otaOnaRozilik.checked ? null : "Ota-ona yoki vasiy rozilik belgisini qo'yishi kerak."]);
+    }
     xatolar.push([rozilik, rozilik.checked ? null : "Davom etish uchun rozilik belgisini qo'ying."]);
-    for (const [i, m] of xatolar) maydonXatosi(i, m);
+    for (const [i, m] of xatolar) if (i !== yoshKatta) maydonXatosi(i, m);
     const birinchi = xatolar.find(([, m]) => m)?.[0];
     birinchi?.focus();
     return !birinchi;
@@ -118,10 +155,15 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
         password: parol.value,
         options: {
           emailRedirectTo: qaytish,
-          // user_metadata: rozilik vaqti va tasdiqlangan minimal yosh (profil jadvali P12 da).
+          // user_metadata: rozilik vaqti, versiyasi va tasdiqlangan minimal yosh. consent_version ni
+          // birinchi kirishda rozilik darvozasi profiles'ga ko'chiradi (src/lib/hisob.ts, rozilikHolati).
           data: {
             terms_accepted_at: new Date().toISOString(),
+            consent_version: hisobSozlama.rozilikVersiya,
             min_age_confirmed: hisobSozlama.minYosh,
+            ...(yoshKichik?.checked && otaOnaIsm
+              ? { age_group: 'minor', guardian_name: otaOnaIsm.value.trim(), guardian_consent_at: new Date().toISOString() }
+              : { age_group: 'adult' }),
           },
         },
       });
@@ -154,6 +196,30 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
   });
 
   [email, parol].forEach((i) => i.addEventListener('input', () => maydonXatosi(i, null)));
-  [yosh, rozilik].forEach((i) => i?.addEventListener('change', () => i.checked && maydonXatosi(i, null)));
+  [rozilik, otaOnaRozilik].forEach((i) => i?.addEventListener('change', () => i.checked && maydonXatosi(i, null)));
+  otaOnaIsm?.addEventListener('input', () => maydonXatosi(otaOnaIsm, null));
+
+  // Yosh guruhi: 12–17 tanlansa ota-ona bloki ochiladi, aks holda yopiladi va tozalanadi.
+  function guruhXatosi(guruh: HTMLFieldSetElement, radiolar: HTMLInputElement[], matn: string | null) {
+    const p = document.getElementById(`${guruh.id}-xato`);
+    radiolar.forEach((r) => (matn ? r.setAttribute('aria-invalid', 'true') : r.removeAttribute('aria-invalid')));
+    if (p) { p.textContent = matn ?? ''; p.hidden = !matn; }
+  }
+  function otaOnaYangila() {
+    if (!otaOnaBlok) return;
+    const kerak = Boolean(yoshKichik?.checked);
+    otaOnaBlok.hidden = !kerak;
+    if (otaOnaIsm) otaOnaIsm.required = kerak;
+    if (otaOnaRozilik) otaOnaRozilik.required = kerak;
+    if (!kerak) {
+      if (otaOnaIsm) { otaOnaIsm.value = ''; maydonXatosi(otaOnaIsm, null); }
+      if (otaOnaRozilik) { otaOnaRozilik.checked = false; maydonXatosi(otaOnaRozilik, null); }
+    }
+  }
+  [yoshKatta, yoshKichik].forEach((r) => r?.addEventListener('change', () => {
+    if (yoshGuruh && yoshKatta && yoshKichik) guruhXatosi(yoshGuruh, [yoshKatta, yoshKichik], null);
+    otaOnaYangila();
+  }));
+  otaOnaYangila();
   boshla();
 </script>

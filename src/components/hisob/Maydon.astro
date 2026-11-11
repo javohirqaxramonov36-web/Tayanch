@@ -4,13 +4,15 @@
 interface Props {
   id: string;
   nomi: string;
-  turi?: 'text' | 'email';
+  turi?: 'text' | 'email' | 'number' | 'date';
   autocomplete: string;
   izoh?: string;
   ixtiyoriy?: boolean;
   maxlength?: number;
+  min?: number | string;
+  max?: number | string;
 }
-const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength } = Astro.props;
+const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength, min, max } = Astro.props;
 const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join(' ');
 ---
 <div class="hisob-maydon">
@@ -24,9 +26,11 @@ const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join('
     autocomplete={autocomplete}
     required={!ixtiyoriy}
     maxlength={maxlength}
+    min={min}
+    max={max}
     spellcheck="false"
     autocapitalize={turi === 'email' ? 'none' : undefined}
-    inputmode={turi === 'email' ? 'email' : undefined}
+    inputmode={turi === 'email' ? 'email' : turi === 'number' ? 'numeric' : undefined}
     aria-describedby={tasvir}
   />
   <p class="hisob-xato" id={`${id}-xato`} hidden></p>

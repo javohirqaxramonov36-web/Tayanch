@@ -67,12 +67,13 @@ Dashboard → Authentication → URL Configuration (`/dashboard/project/_/auth/u
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 ```
 
-**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod ikkita manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`. Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
+**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod uchta manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`, Google → `callback/` (query'siz, 2.5). Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
 
 ```
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/
+https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/callback/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/
 http://localhost:4321/Tayanch/**
@@ -102,25 +103,55 @@ Supabase'ning o'z pochta xizmati (hujjat bo'yicha, 2026-11-09; qisqasi 0-bo'limd
 
 Demak haqiqiy foydalanuvchilar uchun o'z SMTP kerak (P28). Shu paytgacha sinov faqat muallifning (jamoa a'zosi) email'i bilan.
 
-### 2.4 O'z SMTP (P28 da bajariladi)
+### 2.4 O'z SMTP (P28)
 
-1. SMTP xizmatini tanlash (masalan Resend; hujjatda Resend, AWS SES, Postmark, SendGrid, ZeptoMail, Brevo bor). Narx va bepul limitni xizmatning o'z sahifasidan tekshirish.
-2. Xizmatda yuboruvchi domenni tasdiqlash (DNS yozuvlari: SPF, DKIM). GitHub Pages'ning `github.io` domeni uchun DNS yozib bo'lmaydi: o'z domen kerak bo'ladi (**tekshirish kerak**: domen qarori muallifda).
-3. Xizmatdan SMTP host, port, username va parol (API kalit) olish. Ular faqat dashboard'ga kiritiladi, repoga va chatga yozilmaydi.
-4. Dashboard → Authentication → Settings → SMTP (`/dashboard/project/_/auth/smtp`): "Enable custom SMTP", host, port, username, password, From manzili (masalan `no-reply@<domen>`), yuboruvchi nomi ("Tayanch").
-5. Dashboard → Authentication → Rate Limits: o'z SMTP bilan boshlang'ich limit soatiga 30 ta xat (hujjat); kerak bo'lsa oshiriladi.
-6. Email shablonlari (Authentication → Emails): matnni inglizchaga moslash (SAT bo'limi), muallif tekshiradi.
-7. Sinov: yangi email bilan ro'yxat, tasdiqlash, kirish, parol tiklash.
+**Tanlov (2026-11-09): Gmail SMTP, alohida Gmail hisobi bilan.** Muallifda o'z domen yo'q (2026-11-09). Resend va boshqa xizmatlar yuboruvchi domenni tasdiqlashni (SPF, DKIM) talab qiladi, `github.io` ga DNS yozib bo'lmaydi. Gmail'ning o'z SMTP'si domen talab qilmaydi va xatni Google o'zi imzolaydi.
+
+- Server `smtp.gmail.com`, port 465 (SSL) yoki 587 (TLS), login: to'liq Gmail manzili va App Password (Google Workspace yordami "Send email from a printer, scanner, or app", 2026-11-09).
+- App Password uchun 2 bosqichli tasdiqlash yoqilgan bo'lishi kerak; yaratish joyi myaccount.google.com/apppasswords; Google parolini o'zgartirish hamma App Password'ni bekor qiladi (support.google.com/accounts/answer/185833).
+- Shaxsiy Gmail limiti: kuniga 500 xat (support.google.com/mail/answer/22839). Supabase o'z SMTP bilan boshlang'ich limiti soatiga 30 xat (supabase.com/docs/guides/auth/auth-smtp).
+- Nega Brevo emas: Brevo domensiz Gmail manzilini yuboruvchi qilib beradi, lekin xat Google imzosisiz ketadi (gmail.com DMARC: `p=none; sp=quarantine`, DNS, 2026-11-09) va Spam'ga tushish xavfi katta.
+- Keyin: foydalanuvchi ko'paysa yoki kuniga 500 dan oshsa, o'z domen + Resend (bepul: oyiga 3000, kuniga 100 xat, resend.com/pricing) ga o'tiladi.
+
+Muallif qiladi (parol chatga, repoga yozilmaydi):
+
+1. Yangi Gmail hisobi oching, faqat sayt uchun (masalan `tayanch.xat@gmail.com`; shaxsiy pochtangiz emas).
+2. Shu hisobda 2 bosqichli tasdiqlashni yoqing: myaccount.google.com → Security.
+3. myaccount.google.com/apppasswords → nom "Supabase" → Create. 16 belgili parol chiqadi: uni faqat 4-qadamga qo'ying.
+4. Supabase Dashboard → Authentication → Emails → SMTP Settings: "Enable custom SMTP"; Sender email: 1-qadamdagi Gmail; Sender name `Tayanch`; Host `smtp.gmail.com`; Port `465`; Username: shu Gmail; Password: 3-qadamdagi parol. Save.
+5. Claude'ga "tayyor" deng: shablonlarni qo'llaydi va sinovni bajaradi.
+
+**Holat (2026-11-10):** muallif SMTP'ni Dashboard'da yoqdi: `smtp.gmail.com`, port 465, yuboruvchi "Tayanch", login muallifning asosiy Gmail manzili (alohida hisob emas). Xat limiti (`rate_limit.email_sent`) soatiga 30. Shablonlar `config push` bilan qo'llandi (6 qiymat: 3 mavzu + 3 matn), keyin `config diff` e'lon qilingan farq 0. Sinov: muallif hisobiga parol tiklash so'rovi `/auth/v1/recover` → HTTP 200 (SMTP xatosi bo'lsa Supabase xato qaytaradi). Muallif tasdiqladi (2026-11-10): "Tayanch: yangi parol o'rnating" xati Gmail qutisiga keldi.
+
+**Xat shablonlari** (o'zbekcha): `supabase/templates/` (`tasdiqlash.html`, `parol-tiklash.html`, `email-almashtirish.html`), mavzular `config.toml` da. Qo'llash: `supabase config diff --remote=<ref>` (2026-11-09: 3 ta mavzu farqi, boshqa e'lon qilingan farq yo'q), so'ng `supabase config push --remote=<ref>`. Havola `{{ .ConfirmationURL }}` o'zgarmagan. `config.toml` da `/uz/hisob/callback/` Redirect URL ham bor (PR #64 Supabase'ga qo'llagan): faylda bo'lmasa push uni o'chirardi.
+
+Sinov (SMTP yoqilgach): yangi email bilan ro'yxat, tasdiqlash, kirish, parol tiklash; xat "Spam"ga tushmasligini ko'rish.
 
 ### 2.5 Google (P03B)
 
-SB04, https://supabase.com/docs/guides/auth/social-login/auth-google. Redirect URL'lar 2.1 dagi ro'yxatda.
+Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): supabase.com/docs/guides/auth/social-login/auth-google, developers.google.com/identity/branding-guidelines, support.google.com/cloud/answer/15549945. Client secret faqat Supabase Dashboard'ga kiritiladi: repoga, chatga, `config.toml` ga yozilmaydi.
 
-1. Google Cloud Console → Google Auth Platform: **Data Access (Scopes)** da `openid` (qo'lda qo'shiladi), `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi (tekshiruv jarayoni uzayadi).
-2. **Clients** → yangi OAuth client, turi **Web application**.
-3. **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz) va lokal `http://localhost:4321` (qo'llanma uni production'dan oldin olib tashlashni tavsiya qiladi).
-4. **Authorized redirect URIs**: Supabase Dashboard → Authentication → Providers → Google sahifasidagi **Callback URL** (nusxa ko'chiriladi, qo'lda yozilmaydi).
-5. Client ID va **Client Secret** faqat Supabase Dashboard'dagi Google provider sahifasiga kiritiladi, provider yoqiladi.
+**Google Cloud Console** (loyiha yaratilgan), Google Auth Platform:
+
+1. **Branding**: ilova nomi "Tayanch", support email (muallifniki), logo ixtiyoriy (logo qo'yilsa Google tekshiruvi uzayishi mumkin: tekshirish kerak). Authorized domains: Supabase qo'llanmasi `<ref>.supabase.co` ni qo'shishni aytadi (Supabase callback domeni); `github.io` kerakmi: **tekshirish kerak** (Console o'zi ogohlantiradi).
+2. **Audience**: User type **External**. Holat "Testing": faqat qo'shilgan test foydalanuvchilar kira oladi (100 tagacha); sinov uchun muallif email'i qo'shiladi.
+3. **Data Access (Scopes)**: `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi.
+4. **Clients** → Create client → turi **Web application**, nomi masalan "Tayanch web".
+   - **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz, oxirida `/` yo'q) va lokal `http://localhost:4321`.
+   - **Authorized redirect URIs**: Supabase Dashboard → Authentication → Sign In / Providers → Google sahifasidagi **Callback URL** (`https://<ref>.supabase.co/auth/v1/callback`; nusxa ko'chiriladi). Sayt manzili bu yerga **yozilmaydi**.
+   - Client ID va Client Secret chiqadi.
+
+**Supabase Dashboard** → Authentication → Sign In / Providers → **Google**: "Enable", Client ID va Client Secret qo'yiladi, Save. Qolgan maydonlar standart.
+
+**URL Configuration** (2.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/Tayanch/uz/hisob/callback/` qo'shiladi (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/Tayanch/**` allaqachon bor. **Qo'llangan (2026-11-09)**: `config diff` da yagona e'lon qilingan farq shu callback qatori edi; muallif "ha" degandan keyin `supabase config push --remote=<ref> --yes`, keyingi `config diff` da e'lon qilingan farq 0 (e'lon qilinmagan 8 ta sozlama o'zgarmadi).
+
+**Tartib**: provider yoqilmaguncha saytdagi Google tugmasi Supabase'ning `{"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}` sahifasini ochadi (2026-11-09, lokal sinov). Shuning uchun Google sozlamalari **merge va deploy'dan oldin** qilinadi.
+
+**Qo'llangan (2026-11-10)**: muallif Google Cloud loyihasi `tayanch-auth-2611` (Testing, External; test userlar 2 ta) Client ID/secret'ni Dashboard'ga qo'ydi va yoqdi. Tekshiruv: `/auth/v1/settings` → `external.google: true`; `/auth/v1/authorize?provider=google` → 302 `accounts.google.com`.
+
+**Sinov** (2026-11-10, lokal dev, muallif haqiqiy Google hisobi bilan; batafsil `docs/qarorlar/002-google-kirish.md` "Sinov"): yangi Google hisobi → rozilik sahifasi → "Davom etish": sinalgan; chiqish va `?keyin=` bilan qayta kirish (rozilik qayta so'ralmaydi, `keyin` ga qaytadi): sinalgan; tasdiqlangan email/parol hisobi bilan bir xil Google email → bitta hisob (`email` + `google` identity): sinalgan; bekor qilish: Supabase `?error=access_denied` ni callback'ga uzatishi va sahifa matni sinalgan, Google'dagi haqiqiy "Cancel" sinalmagan. Saytda (GitHub Pages) 2026-11-10 da PR #64 merge va deploy'dan keyin sinalgan: `kirish/?keyin=/Tayanch/uz/sat/` → Google → callback → `/uz/sat/` (mavjud hisob, rozilik qayta so'ralmadi). Sinalmagan: telefon, bog'langandan keyin parol bilan kirish, tasdiqlanmagan email/parol + Google.
+
+**P28**: Google Auth Platform → Audience → **Publish app** (In production). Asosiy scope'li ilovalarga Google tekshiruvi kerak emasligi: tekshirish kerak. Lokal JavaScript origin production'dan oldin olib tashlanishi mumkin (Supabase qo'llanmasi tavsiyasi).
 
 ### 2.6 Boshqa sozlamalar
 
@@ -130,10 +161,10 @@ SB04, https://supabase.com/docs/guides/auth/social-login/auth-google. Redirect U
 
 ### 2.7 Keyingi vazifalar
 
-- P03B: Google bilan kirish (2.5; client ID/secret faqat dashboard'da).
-- P12: `profiles` jadvali (RLS bilan), maqsad ball va imtihon sanasi. Jadval sxemada bor (`migrations/20261108000002_profiles.sql`), hisob sahifalari hali unga yozmaydi: hozircha `display_name`, `nickname` Supabase `user_metadata` da.
-- P23: Maxfiylik va Shartlar sahifalari (`hisobSozlama.maxfiylikSahifa`, `shartlarSahifa`).
-- P28: o'z SMTP (2.4).
+- P03B: Google bilan kirish: PR #64 da merge qilingan, sozlash 2.5 (provider 2026-11-10 da yoqilgan; lokal dev va saytda sinalgan).
+- P12: profil sahifasi `public.profiles` jadvalidan o'qiydi va unga yozadi (PR #69, 2026-11-10): ism, taxallus (unique, band bo'lsa 23505), SAT maqsad ball (400–1600, CB04), imtihon sanasi. Jadval: `migrations/20261108000002_profiles.sql`.
+- P23: Maxfiylik (`/uz/maxfiylik/`) va Foydalanish shartlari (`/uz/shartlar/`) PR #68 da (2026-11-10). Hisobni o'chirish: migratsiya `20261110210000_hisobni_ochirish.sql` (`delete_own_account`).
+- P28: o'z SMTP (2.4): Gmail SMTP yoqilgan, o'zbekcha shablonlar qo'llangan (PR #70, 2026-11-10).
 
 ## 3. Migratsiyalarni qo'llash (Supabase CLI)
 

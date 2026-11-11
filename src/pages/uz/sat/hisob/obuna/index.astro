@@ -232,7 +232,11 @@ const usulMatn = usullar.length
     });
   });
 
-  yukla();
+  // hisobQorovul rozilikni ham tekshiradi: profiles o'qib bo'lmasa va'da rad etiladi (darvoza yopiq).
+  yukla().catch(() => {
+    if (kutish) kutish.hidden = true;
+    xato("We couldn't read your account. Refresh the page to try again.");
+  });
 </script>
 
 <style>
