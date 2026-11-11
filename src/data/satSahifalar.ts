@@ -218,8 +218,8 @@ export const satGuruhlar: SatGuruh[] = [
         nomi: 'Math and Desmos',
         tavsif: 'Ways to use the Desmos calculator and formulas in the Math section.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source on how Desmos is provided in the test has not been added to the source log yet.'],
+        manbalar: ['CB26', 'DS01'],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The official source used here does not say which Desmos modes are available or whether Desmos is in Bluebook practice tests: still to be checked.'],
       },
       {
         qism: 'qollanma/reading-writing/',
