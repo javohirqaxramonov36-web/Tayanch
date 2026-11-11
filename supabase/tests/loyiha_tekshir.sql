@@ -224,10 +224,14 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
 
   -- 9. Ma'lumot holati: tariflar bo'sh, savol yo'q, sinov qoldig'i yo'q
   union all
-  select 90, 'plans: free, pro, elite; limits = {} (P19: hozircha cheklovsiz), narx faqat pro da (P19: 59000)',
+  select 90, 'plans: limits = {} (P19); pro 59000/30 kun faol, free va elite narxsiz, elite faol emas',
          case when count(*) = 3 and bool_and(limits = '{}'::jsonb)
-                   and bool_and(case code when 'pro' then price_uzs = 59000 else price_uzs is null end) then 'ok' else 'XATO' end,
-         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null'), '; ' order by code)
+                   and bool_and(case code when 'pro' then price_uzs = 59000 and period_days = 30 and is_active
+                                          when 'elite' then price_uzs is null and not is_active
+                                          else price_uzs is null and is_active end)
+              then 'ok' else 'XATO' end,
+         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null')
+                    || ' faol=' || is_active::text, '; ' order by code)
     from public.plans
    where code in ('free', 'pro', 'elite')
   union all
