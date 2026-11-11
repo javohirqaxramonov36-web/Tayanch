@@ -193,7 +193,7 @@ begin
     raise exception 'FAIL 06: A review_queue.box ni o''zgartirdi';
   exception when insufficient_privilege then null;
   end;
-  update public.review_queue set note = 'SINOV izoh', reason_tag = 'hisob' where question_id = q1;
+  update public.review_queue set note = 'SINOV izoh', reason_tag = 'concept_gap' where question_id = q1;
   begin
     insert into public.subscriptions (user_id, plan_code, source) values (a, 'elite', 'admin');
     raise exception 'FAIL 06: A subscriptions ga yozdi';
@@ -529,7 +529,7 @@ begin
            from public.review_queue where user_id = a and question_id = q1) <> 3 then
     raise exception 'FAIL 13: Leitner o''tishi noto''g''ri';
   end if;
-  if (select reason_tag from public.review_queue where user_id = a and question_id = q1) <> 'hisob' then
+  if (select reason_tag from public.review_queue where user_id = a and question_id = q1) <> 'concept_gap' then
     raise exception 'FAIL 13: reason_tag yo''qoldi';
   end if;
   raise notice 'OK 14 takrorlash sessiyasi: muddati kelgan savol, to''g''ri javob 1 -> 2-quti (+3 kun), reason_tag saqlanadi';

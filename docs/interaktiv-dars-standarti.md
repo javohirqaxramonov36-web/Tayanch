@@ -80,6 +80,7 @@ Turlar: `src/data/darsTurlar.ts`. Fayllar: `src/data/<bolim>Darslar/<modul>.ts`,
 
 - Faqat brauzerda. Kalitlar: `tayanch:<bolim>-dars-progress`, `tayanch:<bolim>-xato-daftari` (`darsKalitlari()`),
   takrorlash holati `tayanch:<bolim>-takrorlash` (`src/lib/takrorlash.ts`, daftarni faqat o'qiydi);
+  xato sababi va izohi `tayanch:<bolim>-xato-sabab` (`src/lib/xatoSabab.ts`, P09, muallif ruxsati 2026-11-11; qoidalar `docs/xato-daftari.md`);
   boshqasi kerak bo'lsa `tayanch:<bolim>-...` va avval muallifdan so'raladi. Bitta kalit = bitta shakl:
   boshqa sahifa shu kalitni o'qisa, shaklni o'zgartirmaydi.
 - Har o'qish va yozish `try/catch` ichida (`src/lib/darsSaqlash.ts`); saqlab bo'lmasa sahifa ishlaydi va buni aytadi.
