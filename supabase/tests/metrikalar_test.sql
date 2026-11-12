@@ -7,11 +7,11 @@
 begin;
 
 insert into public.questions
-  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, figure, status, author, verified_by)
+  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, figure, status, author, verified_by, verified_at)
 values
   ('mt-rw-1', 'rw', 'MT-domain', 'MT-skill', 2, 'mcq', 'SINOV savol',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "B"}', 'SINOV izoh', null, 'verified', 'sinov', 'sinov2');
+   '{"choice": "B"}', 'SINOV izoh', null, 'verified', 'sinov', 'sinov2', now());
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-4000-8000-0000000000e1', 'm1@sinov.invalid', '{}'),

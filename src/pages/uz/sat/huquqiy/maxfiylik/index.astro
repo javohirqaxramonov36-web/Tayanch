@@ -1,0 +1,140 @@
+---
+// SAT · Privacy Policy (inglizcha nusxa, P23 davomi, 2026-11-11). Asosiy matn: /uz/maxfiylik/ (mazmuni bir xil bo'lishi kerak).
+// QORALAMA: muallif inglizcha matnni, yurist mazmunni tekshiradi.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import HuquqiyMatn from '../../../../../components/huquqiy/HuquqiyMatn.astro';
+import { hisobSozlama } from '../../../../../data/hisobSozlama';
+import { huquqiyOchiq } from '../../../../../data/huquqiySahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const { minYosh, voyagaYetmaganQoida: vq } = hisobSozlama;
+const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
+---
+<BolimQobiq
+  title="Privacy Policy · SAT"
+  description="What Tayanch collects, why, where and for how long, and how to download or delete it."
+  turi="qollanma"
+  bolim="sat"
+  yol={['Legal']}
+  holat="qoralama"
+>
+  <HuquqiyMatn
+    til="en"
+    kalit="maxfiylik"
+    sana="2026-11-11"
+    kirish="An account is optional: the free part of the site works without one."
+    tekshirish={[
+      'What technical data (for example IP addresses) GitHub Pages records about visitors.',
+      'Whether Google LLC is on the EU-US Data Privacy Framework list (condition in point 2 of Cabinet of Ministers Resolution No. 415).',
+      'How long Supabase keeps data in its logs and backups.',
+      'How long and where inPAY, Click and Payme keep payment data.',
+      'Whether a parent\'s name and a checkbox in the form meet the "electronic document" requirement of Article 21 of the Law.',
+      'How long payment records must be kept after an account is deleted (accounting and tax law).',
+    ]}
+  >
+    <h2>What we keep if you create an account</h2>
+    <ul>
+      <li><strong>Email</strong>: for sign-in, confirmation and password reset emails.</li>
+      <li><strong>Password</strong>: checked by Supabase Auth. Tayanch does not keep passwords in its own tables.</li>
+      <li><strong>Name and nickname</strong> (nickname optional): you enter them on your profile. The nickname may later appear on leaderboards.</li>
+      <li><strong>SAT goal</strong> (optional): target score, current best score and test date.</li>
+      <li><strong>Consent records</strong>: when you agreed to this policy and the Terms of Use, which version, that you are {minYosh} or older, and your age group.</li>
+      {vq && <li><strong>If you are under {vq.yoshgacha}</strong>: your parent's or guardian's name and when they gave consent.</li>}
+      <li><strong>If you sign in with Google</strong>: the name, email and profile picture link Google provides (no other permissions are requested).</li>
+      <li><strong>Your answers on the home page road map</strong> (goals, deadline or date, daily time).</li>
+      <li><strong>Technical dates</strong>: when the account was created, the email confirmed and the last sign-in (written by Supabase Auth).</li>
+    </ul>
+
+    <h2>Question and answer history</h2>
+    <p>When you practise in the SAT section with an account, the server keeps:</p>
+    <ul>
+      <li>practice sessions: which questions, when, timed or untimed;</li>
+      <li>your answer to each question, whether it was correct and the time spent;</li>
+      <li>your review queue of missed questions and your bookmarks;</li>
+      <li>official test scores and mistakes (if you enter them), your study plan and vocabulary progress;</li>
+      <li>plan quota counters (how many questions you used today);</li>
+      <li>reports or feedback you send about a question.</li>
+    </ul>
+    <p>This data runs your results page, review and recommendations. Without an account, results stay only in your browser.</p>
+
+    <h2>Payments</h2>
+    <ul>
+      <li>You pay through inPAY, on the Click or Payme page. <strong>Your card details never reach Tayanch and are never asked for on this site.</strong></li>
+      <li>Tayanch keeps: the plan, amount, status (for example paid or canceled), date, the inPAY payment number and your subscription period.</li>
+      <li>Payment status is written only from inPAY's server message.</li>
+      <li>
+        {voyagaYetmaganTolov === null
+          ? <>Rule for payments by users under 18: <span class="tekshir">to be checked</span> (author and lawyer decision).</>
+          : voyagaYetmaganTolov === 'faqat-18'
+            ? <>Only users aged 18 or older can pay.</>
+            : <>If you are under 18, pay with your parent's or guardian's consent and their payment method.</>}
+      </li>
+    </ul>
+
+    <h2>Why we use it</h2>
+    <p>To run the service: sign-in, your profile, results and review, subscription and payment, and necessary emails. Usage statistics (below) are used only for totals: how many people signed up, came back and moved to a paid plan. Your data is not sold, not used for advertising and not given to third parties except where the law requires it.</p>
+
+    <h2 id="statistika">Usage statistics</h2>
+    <p>To understand how the site is used, a few events of signed-in users are written to Tayanch's own database (Supabase, Frankfurt). Nothing is written when you are not signed in. No third-party analytics service (for example, Google Analytics) is used.</p>
+    <ul>
+      <li><strong>Which events</strong>: sign-up, first practice session, finishing a practice session (mode and number of questions), answering the daily question (section and right or wrong), opening the plans page, starting a payment and a successful payment (plan and amount).</li>
+      <li><strong>Each event has</strong>: the event name, its time and your account ID. The ID is needed to count how many people come back, so these records are not anonymous. Only the Tayanch author sees the results, as totals.</li>
+      <li><strong>Never recorded</strong>: question text, your answers, email, name, IP address, browser or device details (fingerprint), or the page you came from.</li>
+      <li><strong>On by default.</strong> On your <a href={yol('/uz/hisob/profil/')}>account page</a>, untick "Foydalanish statistikasini ulashish" (Share usage statistics): new events are no longer written and your earlier records are deleted at once.</li>
+      <li><strong>Payment events</strong> (payment started and payment succeeded) are written even when the box is unticked: they come from the payment record itself and are needed for payment accounting.</li>
+      <li><strong>Kept</strong>: until you delete your account. Deleting the account deletes these records too.</li>
+    </ul>
+
+    <h2>Where it is stored</h2>
+    <p>Accounts, question history and payment records are stored with <strong>Supabase</strong> on a server in <strong>Frankfurt, Germany</strong>. Germany is on the Cabinet of Ministers' list of countries that protect personal data equally (LX04), so the Law allows storing data there (Articles 15 and 27¹, LX02). Confirmation and password reset emails are sent through Google's Gmail service, so your email is passed to Google. Payment data is also held by inPAY and the payment system you choose (Click or Payme). Tayanch does not collect biometric or genetic data.</p>
+
+    <h2>How long we keep it</h2>
+    <ul>
+      <li>Account, question history and usage statistics: while your account exists. If you delete your account, they are deleted at once.</li>
+      <li>
+        Payment records: when the account is deleted they are unlinked from it (who paid is removed); the amount, date and inPAY number
+        {tolovSaqlashYil === null
+          ? <> are kept for accounting. Period: <span class="tekshir">to be checked</span>.</>
+          : <> are kept for {tolovSaqlashYil} years.</>}
+      </li>
+      <li>A record that an account was deleted (account number and time, no email) stays in the security log.</li>
+    </ul>
+
+    <h2>{vq ? `Users under ${vq.yoshgacha}` : 'Age'}</h2>
+    <p>You can create an account from age {minYosh}.{vq && <> Under the Law, processing the data of minors (under {vq.yoshgacha}, LX03) needs the written consent of a parent or guardian, including in electronic form (Article 21, LX02). That is why the sign-up form asks a parent or guardian to enter their name and tick the consent box.</>}</p>
+
+    <h2>What is kept in your browser</h2>
+    <p>Some things (theme, answers, session) are kept in your browser under keys that start with <code>tayanch</code>. Tayanch does not use advertising or tracking cookies. Full list: <a href={yol('/uz/sat/huquqiy/saqlash/')}>Storage and Cookies</a>.</p>
+
+    <h2>Your rights</h2>
+    <ul>
+      <li><strong>Access and copy</strong>: the "Download my data" button on your <a href={yol('/uz/hisob/profil/')}>account page</a> gives you all your server data as a JSON file.</li>
+      <li><strong>Correction</strong>: change your name, nickname and SAT goal on the account page, and your password with "Reset password".</li>
+      <li><strong>Opt out of statistics</strong>: the "Foydalanish statistikasini ulashish" (Share usage statistics) box on your account page.</li>
+      <li><strong>Withdraw consent and delete</strong>: see "How to delete your account" below (Article 17, LX02).</li>
+      <li><strong>Complaint</strong>: if you believe your rights were violated, you can contact the competent state body or a court (Article 30, LX02).</li>
+    </ul>
+
+    <h2 id="ochirish">How to delete your account</h2>
+    <ol>
+      <li>Sign in and open your <a href={yol('/uz/hisob/profil/')}>account page</a>.</li>
+      <li>Press "Delete account".</li>
+      <li>Confirm it is you: enter your password or sign in with Google again.</li>
+      <li>Type your email to confirm the deletion.</li>
+    </ol>
+    <p>Your account, profile, question history, usage statistics and subscription are deleted from the server at once. An active subscription ends too (refunds: <a href={yol('/uz/sat/huquqiy/qaytarish/')}>Refund Policy</a>). Payment records stay as described above. Data in your browser stays with you: clear it in your browser settings.</p>
+
+    <h2>What we do not collect</h2>
+    <ul>
+      <li>You cannot upload documents (passport, certificates) or essays.</li>
+      <li>Card details are never asked for on the site.</li>
+      <li>Tayanch does not use advertising or third-party analytics code: usage statistics are kept only as described above, in Tayanch's own database. Fonts are also served from the site itself.</li>
+    </ul>
+
+    <h2>Hosting</h2>
+    <p>The site is hosted on GitHub Pages. When you open a page, the request goes to GitHub's servers.</p>
+
+    <h2>Changes and contact</h2>
+    <p>If this policy changes, the new date is shown at the top of this page and you are asked to agree again when you sign in. Contact: <a href={yol('/uz/sat/huquqiy/aloqa/')}>Contact</a>.</p>
+  </HuquqiyMatn>
+</BolimQobiq>
