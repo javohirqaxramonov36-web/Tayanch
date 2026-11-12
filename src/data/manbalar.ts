@@ -178,6 +178,15 @@ export const manbalar: Manba[] = [
     izoh: "\"Free Practice tests\": Listening, Reading, Writing familiarisation testlari va Speaking Part 1.",
   },
   {
+    id: 'IE06',
+    nomi: 'IELTS Academic: Speaking test format',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-speaking',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Imtihonchi bilan yuzma-yuz suhbat, yozib olinadi. 11–14 daqiqa, 3 qism. Part 1: tanishuv va tanish mavzular (uy, oila, ish, o'qish, qiziqishlar), 4–5 daqiqa. Part 2: kartochka (gapiriladigan bandlar va bitta jihatni tushuntirish), 1 daqiqa tayyorgarlik, qalam va qog'oz beriladi, 2 daqiqa gapirish, imtihonchi vaqt tugaganda to'xtatadi, keyin 1–2 savol bo'lishi mumkin; jami 3–4 daqiqa. Part 3: Part 2 mavzusiga bog'liq umumiyroq va chuqurroq muhokama, 4–5 daqiqa. To'rt mezon: Fluency and coherence, Lexical resource (so'zni bilmaganda boshqacha ifodalay olish ham), Grammatical range and accuracy, Pronunciation (ortiqcha kuchsiz tushuniladigan nutq).",
+  },
+  {
     id: 'ID02',
     nomi: 'IELTS common spelling mistakes',
     tashkilot: 'IDP IELTS',
