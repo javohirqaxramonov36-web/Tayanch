@@ -1,0 +1,157 @@
+---
+// 1-qavat · Hisob · Ro'yxatdan o'tish. Email + parol, email tasdiqlash majburiy (Supabase "Confirm email").
+// Rozilik (Maxfiylik va Shartlar, P23) va yosh: qiymatlar src/data/hisobSozlama.ts dan.
+// 12–17 yosh: ota-ona (vasiy) ismi va roziligi (Qonun 21-modda, LX02; voyaga yetish 18 yosh, LX03). user_metadata'ga yoziladi.
+// Email allaqachon ro'yxatda bo'lsa ham bir xil "Emailingizni tekshiring" holati chiqadi (email borligi oshkor qilinmaydi).
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import Maydon from '../../../../components/hisob/Maydon.astro';
+import ParolMaydon from '../../../../components/hisob/ParolMaydon.astro';
+import GoogleTugma from '../../../../components/hisob/GoogleTugma.astro';
+import YoshRozilik from '../../../../components/hisob/YoshRozilik.astro';
+import { hisobSahifalar } from '../../../../data/hisobSahifalar';
+import { hisobSozlama } from '../../../../data/hisobSozlama';
+import { yol } from '../../../../lib/yol';
+
+const { maxfiylikSahifa, shartlarSahifa, parolMinUzunlik } = hisobSozlama;
+const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
+---
+<HisobKarta sahifa={hisobSahifalar.royxat} lead="Hisob ixtiyoriy. Hisobsiz natijalaringiz shu brauzerda saqlanadi.">
+  <section class="hisob-karta" id="royxat-tayyor" aria-labelledby="tayyor-sarlavha" hidden>
+    <h2 id="tayyor-sarlavha" tabindex="-1">Emailingizni tekshiring</h2>
+    <p><strong id="tayyor-email"></strong> manziliga tasdiqlash havolasini yubordik. Hisob ochishni tugatish uchun uni oching.</p>
+    <p class="hisob-sust">Havola shu saytni ochadi. Xat ko'rinmasa, "Spam" papkasini ham tekshiring.</p>
+    <p class="hisob-holat" id="qayta-holat" role="status" hidden></p>
+    <p class="hisob-alert" id="qayta-xato" role="alert" hidden></p>
+    <button type="button" class="tugma tugma-ikkinchi" id="qayta-tugma">Xatni qayta yuborish</button>
+  </section>
+
+  <div class="hisob-karta" id="royxat-karta" data-hisob-bor>
+    <form class="hisob-forma" id="royxat-forma" novalidate aria-labelledby="hisob-sarlavha">
+      <p class="hisob-alert" id="royxat-xato" role="alert" hidden></p>
+      <Maydon id="royxat-email" nomi="Email" turi="email" autocomplete="email" />
+      <ParolMaydon id="royxat-parol" nomi="Parol" autocomplete="new-password" izoh={`Kamida ${parolMinUzunlik} ta belgi.`} />
+
+      <YoshRozilik prefiks="royxat" kichikIzoh="hisob ocha olmaysiz" />
+
+      <div class="hisob-belgi-blok">
+        <div class="hisob-belgi">
+          <input type="checkbox" id="royxat-rozilik" name="royxat-rozilik" required aria-describedby={hujjatlarTayyor ? 'royxat-rozilik-xato' : 'royxat-rozilik-izoh royxat-rozilik-xato'} />
+          <label for="royxat-rozilik">
+            {maxfiylikSahifa ? <a class="hisob-havola" href={yol(maxfiylikSahifa)}>Maxfiylik siyosati</a> : 'Maxfiylik siyosati'}{' '}va {shartlarSahifa ? <a class="hisob-havola" href={yol(shartlarSahifa)}>Foydalanish shartlari</a> : 'Foydalanish shartlari'}ga roziman.
+          </label>
+        </div>
+        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Foydalanish shartlari sahifasi yozilmoqda. Havola shu yerda paydo bo'ladi.</p>}
+        <p class="hisob-xato" id="royxat-rozilik-xato" hidden></p>
+      </div>
+
+      <button type="submit" class="tugma tugma-asosiy" id="royxat-tugma">Hisob ochish</button>
+    </form>
+    <p class="hisob-yoki" aria-hidden="true">yoki</p>
+    <GoogleTugma />
+  </div>
+
+  <p class="hisob-past" data-hisob-bor>
+    Hisobingiz bormi? <a class="hisob-havola" id="kirish-havola" href={yol('/uz/hisob/kirish/')}>Kirish</a>
+  </p>
+</HisobKarta>
+
+<script>
+  import {
+    hisobMijoz, hisobYoqBolsa, hisobYoli, toliqManzil, keyingiManzil,
+    xatoMatni, maydonXatosi, yuklanish, xabar, emailTogrimi,
+  } from '../../../../lib/hisob';
+  import { hisobSozlama } from '../../../../data/hisobSozlama';
+  import { yoshBloki } from '../../../../lib/hisobYosh';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const forma = $<HTMLFormElement>('royxat-forma');
+  const email = $<HTMLInputElement>('royxat-email');
+  const parol = $<HTMLInputElement>('royxat-parol');
+  const yosh = yoshBloki('royxat');
+  const rozilik = $<HTMLInputElement>('royxat-rozilik');
+  const tugma = $<HTMLButtonElement>('royxat-tugma');
+  const xato = $('royxat-xato');
+
+  // Tasdiqlash xatidagi havola kirish sahifasiga qaytaradi (u yerda "email tasdiqlandi" xabari), ?keyin= saqlanadi.
+  const keyinBor = new URLSearchParams(location.search).has('keyin');
+  const qaytish = toliqManzil(hisobYoli('kirish') + (keyinBor ? `?keyin=${encodeURIComponent(keyingiManzil())}` : ''));
+  if (keyinBor) $<HTMLAnchorElement>('kirish-havola').search = `?keyin=${encodeURIComponent(keyingiManzil())}`;
+
+  async function boshla() {
+    if (hisobYoqBolsa()) return;
+    // Allaqachon kirgan bo'lsa ro'yxat kerak emas: profilga.
+    const { data } = await hisobMijoz()!.auth.getSession();
+    if (data.session) location.replace(hisobYoli('profil'));
+  }
+
+  function tekshir(): boolean {
+    const xatolar: [HTMLInputElement, string | null][] = [];
+    const e = email.value.trim();
+    xatolar.push([email, !e ? 'Emailingizni kiriting.' : !emailTogrimi(e) ? "Email shu ko'rinishda bo'lsin: ism@example.com." : null]);
+    const min = hisobSozlama.parolMinUzunlik;
+    xatolar.push([parol, !parol.value ? "Parol o'ylab toping." : parol.value.length < min ? `Kamida ${min} ta belgi ishlating.` : null]);
+    xatolar.push([rozilik, rozilik.checked ? null : "Davom etish uchun rozilik belgisini qo'ying."]);
+    for (const [i, m] of xatolar) maydonXatosi(i, m);
+    // Tartib: email, parol, yosh bloki, rozilik.
+    const yoshXato = yosh.tekshir();
+    const birinchi = xatolar.slice(0, 2).find(([, m]) => m)?.[0] ?? yoshXato ?? xatolar.slice(2).find(([, m]) => m)?.[0];
+    birinchi?.focus();
+    return !birinchi;
+  }
+
+  let yuborilganEmail = '';
+
+  forma.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    xabar(xato, null);
+    if (!tekshir()) return;
+    const c = hisobMijoz();
+    if (!c) return;
+    yuklanish(tugma, true, 'Hisob ochilmoqda…');
+    try {
+      const { error } = await c.auth.signUp({
+        email: email.value.trim(),
+        password: parol.value,
+        options: {
+          emailRedirectTo: qaytish,
+          // user_metadata: rozilik vaqti, versiyasi va tasdiqlangan minimal yosh. consent_version ni
+          // birinchi kirishda rozilik darvozasi profiles'ga ko'chiradi (src/lib/hisob.ts, rozilikHolati).
+          data: {
+            terms_accepted_at: new Date().toISOString(),
+            consent_version: hisobSozlama.rozilikVersiya,
+            ...yosh.metadata(),
+          },
+        },
+      });
+      if (error) throw error;
+      yuborilganEmail = email.value.trim();
+      parol.value = '';
+      $('tayyor-email').textContent = yuborilganEmail;
+      $('royxat-karta').hidden = true;
+      document.querySelectorAll<HTMLElement>('[data-hisob-bor]').forEach((el) => (el.hidden = true));
+      $('royxat-tayyor').hidden = false;
+      $('tayyor-sarlavha').focus();
+      return;
+    } catch (e) {
+      xabar(xato, xatoMatni(e as Error, 'royxat'));
+    }
+    yuklanish(tugma, false);
+  });
+
+  const qayta = $<HTMLButtonElement>('qayta-tugma');
+  qayta.addEventListener('click', async () => {
+    const c = hisobMijoz();
+    if (!c || !yuborilganEmail) return;
+    xabar($('qayta-holat'), null);
+    xabar($('qayta-xato'), null);
+    yuklanish(qayta, true, 'Yuborilmoqda…');
+    const { error } = await c.auth.resend({ type: 'signup', email: yuborilganEmail, options: { emailRedirectTo: qaytish } });
+    yuklanish(qayta, false);
+    if (error) xabar($('qayta-xato'), xatoMatni(error, 'qayta-yuborish'));
+    else xabar($('qayta-holat'), 'Xat qayta yuborildi.');
+  });
+
+  [email, parol].forEach((i) => i.addEventListener('input', () => maydonXatosi(i, null)));
+  rozilik.addEventListener('change', () => rozilik.checked && maydonXatosi(rozilik, null));
+  boshla();
+</script>

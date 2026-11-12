@@ -1,14 +1,25 @@
 ---
 // Mening natijalarim. Dizayn: Tayanch-SAT-dizayn.md, "Natijalar" ekrani.
-// Haqiqiy javoblar localStorage'dan (tayanch:sat-javoblar). Javob yo'q bo'lsa, namuna ko'rsatiladi va belgilanadi.
+// 1) Analitika paneli (P14): hisob bilan kirganda public.analytics_summary() RPC javobi (yig'indi serverda hisoblanadi).
+//    Chegaralar va N: src/data/satAnalitika.ts. Sof hisob: src/lib/sat/analitika.ts. Kun chegarasi Asia/Tashkent.
+// 2) Brauzerdagi mashq testi tarixi: localStorage (tayanch:sat-javoblar). Javob yo'q va hisobsiz bo'lsa namuna
+//    ko'rsatiladi va belgilanadi; hisob bilan kirganda namuna ko'rsatilmaydi.
 // Ball hisoblanmaydi.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import { namunaJavoblar } from '../../../../../data/satNamuna';
+import { analitikaSozlama as A } from '../../../../../data/satAnalitika';
 import { yol } from '../../../../../lib/yol';
+
+const holatIzohi = [
+  { kalit: 'strong', nomi: 'Strong', izoh: `${A.kuchli}% or higher` },
+  { kalit: 'developing', nomi: 'Developing', izoh: `${A.rivojlanmoqda}% to ${A.kuchli - 1}%` },
+  { kalit: 'needs-work', nomi: 'Needs work', izoh: `below ${A.rivojlanmoqda}%` },
+  { kalit: 'low-data', nomi: 'Not enough data', izoh: `fewer than ${A.minUrinish} attempts` },
+];
 ---
 <BolimQobiq
   title="My results · SAT"
-  description="Your answers and mistakes in practice. The data is saved only in this browser. No score is calculated."
+  description="Your practice results by skill, difficulty and day: accuracy, pacing, study time and activity. No score is calculated."
   turi="vosita"
   yol={['Practice']}
   bolim="sat"
@@ -17,13 +28,126 @@ import { yol } from '../../../../../lib/yol';
   <script type="application/json" id="namuna-data" set:html={JSON.stringify(namunaJavoblar)} />
   <div class="ichki natija">
     <section class="bosh" aria-labelledby="nat-h">
-      <p class="pill-qator"><span class="pill">Tool</span><span class="pill pill-chiziq" id="namuna-pill">Sample data</span></p>
+      <p class="pill-qator"><span class="pill">Tool</span><span class="pill pill-chiziq" id="mock-pill" hidden>Sample data</span></p>
       <h1 id="nat-h">My results</h1>
-      <p class="lead">Your answers and mistakes in practice. The data is saved only in this browser and is not sent anywhere. No score is calculated: this is not an SAT score.</p>
+      <p class="lead">See where you are strong and what to practice next: accuracy by skill, pacing, study time and activity. No score is calculated: this is not an SAT score.</p>
+    </section>
+
+    <section
+      class="panel"
+      id="panel"
+      aria-labelledby="an-h"
+      data-bank-url={yol('/uz/sat/mashq/bank/')}
+      data-sessiya-url={yol('/uz/sat/mashq/sessiya/')}
+      data-obuna-url={yol('/uz/sat/hisob/obuna/')}
+    >
+      <h2 id="an-h" class="panel-h" tabindex="-1">Practice analytics</h2>
+      <div class="holat-quti" id="an-holat" role="status" aria-live="polite">
+        <p class="hq-sarlavha">Loading your results…</p>
+      </div>
+
+      <!-- Naqshlar: holat faqat rang bilan emas, to'ldirish naqshi bilan ham ajraladi. -->
+      <svg class="naqshlar" width="0" height="0" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="an-naqsh-chiziq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect class="nq-fon" width="6" height="6" />
+            <rect class="nq-kok" width="3" height="6" />
+          </pattern>
+          <pattern id="an-naqsh-nuqta" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect class="nq-fon" width="6" height="6" />
+            <circle class="nq-matn" cx="3" cy="3" r="1.5" />
+          </pattern>
+        </defs>
+      </svg>
+
+      <div class="tana" id="an-tana" hidden>
+        <dl class="plitkalar" aria-label="Summary">
+          <div class="plitka"><dt>Attempts</dt><dd id="pl-urinish"></dd><dd class="pl-izoh" id="pl-urinish-izoh"></dd></div>
+          <div class="plitka"><dt>Accuracy</dt><dd id="pl-aniqlik"></dd><dd class="pl-izoh" id="pl-aniqlik-izoh"></dd></div>
+          <div class="plitka"><dt>Saved questions</dt><dd id="pl-saqlangan"></dd><dd class="pl-izoh">Bookmarked in practice sessions</dd></div>
+          <div class="plitka"><dt>Day streak</dt><dd id="pl-streak"></dd><dd class="pl-izoh" id="pl-streak-izoh"></dd></div>
+        </dl>
+
+        <section class="blok" aria-labelledby="tav-h">
+          <h3 id="tav-h">Skills to practice</h3>
+          <p class="blok-izoh">Your lowest-accuracy skills, up to {A.maxTavsiya}. A skill is listed only after {A.minUrinish} attempts, so one or two answers do not decide it.</p>
+          <ul class="tavsiya" id="tavsiya"></ul>
+          <p class="bosh-blok" id="tavsiya-bosh" hidden></p>
+        </section>
+
+        <section class="blok" aria-labelledby="kon-h">
+          <h3 id="kon-h">Skill mastery</h3>
+          <p class="blok-izoh">Each skill gets a status from your accuracy on all attempts:</p>
+          <ul class="izohlar">
+            {holatIzohi.map((h) => (
+              <li><span class={`holat holat-${h.kalit}`}><span class="holat-belgi" aria-hidden="true"></span>{h.nomi}</span> <span class="izoh-matn">{h.izoh}</span></li>
+            ))}
+          </ul>
+          <div class="jadval-quti" id="jadval-rw" tabindex="0" role="group" aria-label="Reading and Writing skills table"></div>
+          <div class="jadval-quti" id="jadval-math" tabindex="0" role="group" aria-label="Math skills table"></div>
+        </section>
+
+        <section class="blok" aria-labelledby="qiy-h">
+          <h3 id="qiy-h">Accuracy and pacing by difficulty</h3>
+          <div id="keng" hidden>
+            <p class="blok-izoh">Easy, Medium and Hard are the same groups as in the question bank. Pacing is your median time per question, counted only for answers with a recorded time.</p>
+            <div class="ikki">
+              <figure class="chizma">
+                <figcaption>Accuracy</figcaption>
+                <div class="qatorlar-ch" id="ch-aniqlik"></div>
+              </figure>
+              <figure class="chizma">
+                <figcaption>Median time per question</figcaption>
+                <div class="qatorlar-ch" id="ch-vaqt"></div>
+              </figure>
+            </div>
+            <details class="jadval-muqobil"><summary>Show as a table</summary><div id="jm-qiyinlik" tabindex="0" role="group" aria-label="Accuracy and pacing by difficulty table"></div></details>
+          </div>
+          <div class="qulf" id="keng-qulf" hidden>
+            <p>Accuracy and pacing by difficulty are part of the Pro and Max plans.</p>
+            <a href={yol('/uz/sat/hisob/obuna/')}>See plans</a>
+          </div>
+        </section>
+
+        <section class="blok" aria-labelledby="vaqt-h">
+          <h3 id="vaqt-h">Study time by section</h3>
+          <p class="blok-izoh">Time recorded on the questions you answered in practice sessions.</p>
+          <figure class="chizma"><div class="qatorlar-ch" id="ch-bolim"></div></figure>
+          <details class="jadval-muqobil"><summary>Show as a table</summary><div id="jm-bolim" tabindex="0" role="group" aria-label="Study time by section table"></div></details>
+        </section>
+
+        <section class="blok" aria-labelledby="fao-h">
+          <h3 id="fao-h">Activity, last {A.kunlar} days</h3>
+          <p class="blok-izoh" id="fao-izoh"></p>
+          <div class="xarita-quti" tabindex="0" role="group" aria-label="Activity map"><div id="xarita"></div></div>
+          <p class="afsona" aria-hidden="true">
+            <span>Less</span>
+            {[0, 1, 2, 3, 4].map((d) => (<svg width="14" height="14"><rect class={`katak d${d}`} x="0.5" y="0.5" width="13" height="13" rx="3" /></svg>))}
+            <span>More</span>
+          </p>
+          <details class="jadval-muqobil"><summary>Show as a table</summary><div id="jm-faollik" tabindex="0" role="group" aria-label="Activity table"></div></details>
+        </section>
+
+        <section class="blok" aria-labelledby="sab-h">
+          <h3 id="sab-h">Mistake reasons</h3>
+          <p class="blok-izoh">The reasons you set for questions in your review queue.</p>
+          <figure class="chizma" id="sab-chizma"><div class="qatorlar-ch" id="ch-sabab"></div></figure>
+          <details class="jadval-muqobil" id="sab-jadval"><summary>Show as a table</summary><div id="jm-sabab" tabindex="0" role="group" aria-label="Mistake reasons table"></div></details>
+          <p class="bosh-blok" id="sabab-bosh" hidden>No questions are in your review queue yet. Wrong answers from practice sessions are added there.</p>
+        </section>
+
+        <p class="pastki-izoh">Days and streaks are counted in {A.vaqtMintaqasiYozuv}. You are never compared with other students.</p>
+      </div>
+    </section>
+
+    <section class="bosh mahalliy-bosh" id="mahalliy-bosh" aria-labelledby="mah-h">
+      <p class="pill-qator"><span class="pill pill-chiziq" id="namuna-pill">Sample data</span></p>
+      <h2 id="mah-h">Practice test in this browser</h2>
+      <p class="lead">Answers from the practice test are saved only in this browser and are not part of the analytics above.</p>
       <p class="namuna-izoh" id="namuna-izoh">You have not solved any practice questions yet, so a sample is shown below. <a href={yol('/uz/sat/mashq/test/')}>Start the practice test</a>, and your answers will appear here.</p>
     </section>
 
-    <section class="korsatkich" aria-label="Summary">
+    <section class="korsatkich mahalliy" aria-label="Practice test summary">
       <div class="qora-blok">
         <p class="ustki-yorliq kok-yorliq">By section</p>
         <div class="bolim-qator" data-bolim="Reading & Writing">
@@ -43,9 +167,9 @@ import { yol } from '../../../../../lib/yol';
       </div>
     </section>
 
-    <section class="tarix" aria-labelledby="royxat-h">
+    <section class="tarix mahalliy" aria-labelledby="royxat-h">
       <div class="tarix-bosh">
-        <h2 id="royxat-h">Answer history</h2>
+        <h3 id="royxat-h">Answer history</h3>
         <div class="segment" role="group" aria-label="Filter">
           <button type="button" aria-pressed="true" data-filtr="hammasi">All <span class="soni"></span></button>
           <button type="button" aria-pressed="false" data-filtr="xato">Mistakes <span class="soni"></span></button>
@@ -56,7 +180,7 @@ import { yol } from '../../../../../lib/yol';
       <p class="bosh-holat" id="bosh-holat" hidden>No answers for this filter.</p>
     </section>
 
-    <section class="malumot" aria-label="Data">
+    <section class="malumot mahalliy" aria-label="Data">
       <div>
         <p class="m-sarlavha">Data stays in this browser</p>
         <p class="m-matn">This list is not visible on another device or browser. If you delete it, it cannot be restored.</p>
@@ -79,7 +203,7 @@ import { yol } from '../../../../../lib/yol';
 </BolimQobiq>
 
 <script>
-  import { KALIT_JAVOBLAR, type Javob } from '../../../../../data/satNamuna';
+  import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
   import { holatOchir } from '../../../../../lib/holat';
 
   const namuna: Javob[] = JSON.parse(document.getElementById('namuna-data')!.textContent || '[]');
@@ -87,14 +211,20 @@ import { yol } from '../../../../../lib/yol';
   const oqi = (): Javob[] => {
     try {
       const x = JSON.parse(localStorage.getItem(KALIT_JAVOBLAR) || '[]');
-      return Array.isArray(x) ? x : [];
+      // Eski (o'zbekcha) mavzu va sana faqat ko'rsatishda moslanadi, saqlangani o'zgarmaydi.
+      return Array.isArray(x) ? x.map(javobniMosla) : [];
     } catch { return []; }
   };
   let filtr = 'hammasi';
+  /** Hisob bilan kirilgan va brauzerda javob yo'q: namuna ko'rsatilmaydi (haqiqiy panel yonida chalg'itmasin). */
+  let namunasiz = false;
 
   const chiz = () => {
     const haqiqiy = oqi();
     const namunami = haqiqiy.length === 0;
+    const yashir = namunami && namunasiz;
+    document.getElementById('mahalliy-bosh')!.hidden = yashir;
+    document.querySelectorAll<HTMLElement>('.mahalliy').forEach((x) => (x.hidden = yashir));
     const hammasi = namunami ? namuna : haqiqiy;
     (document.getElementById('namuna-pill') as HTMLElement).hidden = !namunami;
     (document.getElementById('namuna-izoh') as HTMLElement).hidden = !namunami;
@@ -162,6 +292,378 @@ import { yol } from '../../../../../lib/yol';
   });
   (document.getElementById('nat-h') as HTMLElement).setAttribute('tabindex', '-1');
   chiz();
+  document.addEventListener('tayanch:analitika-kirgan', () => { namunasiz = true; chiz(); });
+</script>
+
+<script>
+  // Analitika paneli (P14). Holatlar: loading → ready | empty | anon | no-supabase | error.
+  import { analitikaSozlama as A } from '../../../../../data/satAnalitika';
+  import { hisobMijoz, hisobYoli } from '../../../../../lib/hisob';
+  import { xatoTuri, SESSIYA_KALITI } from '../../../../../lib/savolBanki';
+  import { SABABLAR } from '../../../../../lib/sat/sessiya';
+  import {
+    xulosaOqi, bolimJadvali, tavsiyalar, faollikXaritasi, foiz, sanaYozuv, soniyaYozuv, davomYozuv, kop,
+    HOLAT_NOMI, BOLIM_NOMI, QIYINLIK_NOMI, type Xulosa, type SkillKorinish, type Holat,
+  } from '../../../../../lib/sat/analitika';
+
+  interface Api {
+    xulosa(): Promise<unknown>;
+    boshlash(section: string, skill: string): Promise<{ session_id?: string | null }>;
+  }
+
+  const panel = document.getElementById('panel')!;
+  const holatQuti = document.getElementById('an-holat')!;
+  const tana = document.getElementById('an-tana')!;
+  const $ = (id: string) => document.getElementById(id)!;
+  const SVG = 'http://www.w3.org/2000/svg';
+
+  function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', matn = ''): HTMLElementTagNameMap[K] {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (matn) e.textContent = matn;
+    return e;
+  }
+  function svg(tag: string, attrs: Record<string, string | number> = {}): SVGElement {
+    const e = document.createElementNS(SVG, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  }
+
+  let api: Api | null = null;
+
+  // ---------- Holat xabarlari ----------
+  function xabar(sarlavha: string, matn = '', amal?: { matn: string; href?: string; bos?: () => void }) {
+    const bolaklar: HTMLElement[] = [el('p', 'hq-sarlavha', sarlavha)];
+    if (matn) bolaklar.push(el('p', 'hq-matn', matn));
+    if (amal?.href) {
+      const a = el('a', 'hq-amal', amal.matn);
+      a.href = amal.href;
+      bolaklar.push(a);
+    } else if (amal?.bos) {
+      const b = el('button', 'hq-amal', amal.matn);
+      b.type = 'button';
+      b.addEventListener('click', amal.bos);
+      bolaklar.push(b);
+    }
+    holatQuti.replaceChildren(...bolaklar);
+    holatQuti.hidden = false;
+    tana.hidden = true;
+  }
+
+  // ---------- Chizma bo'laklari ----------
+  /** Gorizontal ustun: iz + to'ldirish. Naqsh holatga qarab (faqat rang emas). */
+  function ustun(ulush: number, naqsh: Holat | 'oddiy' = 'oddiy'): SVGElement {
+    const s = svg('svg', { class: 'ustun', width: '100%', height: 12, 'aria-hidden': 'true', focusable: 'false' });
+    s.append(svg('rect', { class: 'iz', x: 0, y: 0, width: '100%', height: 12, rx: 6 }));
+    const w = Math.max(0, Math.min(1, ulush)) * 100;
+    if (w > 0) s.append(svg('rect', { class: `tol tol-${naqsh}`, x: 0, y: 0, width: `${Math.max(w, 2)}%`, height: 12, rx: 6 }));
+    return s;
+  }
+
+  function holatBelgi(h: Holat): HTMLElement {
+    const s = el('span', `holat holat-${h}`);
+    const b = el('span', 'holat-belgi');
+    b.setAttribute('aria-hidden', 'true');
+    s.append(b, HOLAT_NOMI[h]);
+    return s;
+  }
+
+  function chQator(nom: string, ulush: number | null, qiymat: string, naqsh: Holat | 'oddiy' = 'oddiy'): HTMLElement {
+    const q = el('div', 'ch-qator');
+    q.append(el('span', 'ch-nom', nom), ulush === null ? el('span', 'ch-yoq') : ustun(ulush, naqsh), el('span', 'ch-qiymat', qiymat));
+    return q;
+  }
+
+  function jadval(sarlavha: string, ustunlar: string[], qatorlar: string[][]): HTMLTableElement {
+    const t = el('table', 'an-jadval');
+    t.append(el('caption', '', sarlavha));
+    const hr = el('tr');
+    ustunlar.forEach((u) => { const th = el('th', '', u); th.scope = 'col'; hr.append(th); });
+    const thead = el('thead');
+    thead.append(hr);
+    const tbody = el('tbody');
+    qatorlar.forEach((r) => {
+      const tr = el('tr');
+      r.forEach((c, i) => { const x = el(i === 0 ? 'th' : 'td', '', c); if (i === 0) (x as HTMLTableCellElement).scope = 'row'; tr.append(x); });
+      tbody.append(tr);
+    });
+    t.append(thead, tbody);
+    return t;
+  }
+
+  // ---------- "Practice this skill" ----------
+  function mashqTugma(s: SkillKorinish): HTMLElement {
+    const quti = el('div', 'mashq');
+    const b = el('button', 'mashq-tugma', 'Practice this skill');
+    b.type = 'button';
+    b.setAttribute('aria-label', `Practice this skill: ${s.skill}`);
+    const x = el('p', 'mashq-xabar');
+    x.setAttribute('role', 'status');
+    b.addEventListener('click', async () => {
+      if (!api || b.disabled) return;
+      b.disabled = true;
+      b.textContent = 'Starting…';
+      x.textContent = '';
+      try {
+        const j = await api.boshlash(s.section, s.skill);
+        if (j?.session_id) {
+          try { sessionStorage.setItem(SESSIYA_KALITI, JSON.stringify(j)); } catch { /* xotira yopiq: sessiya sahifasi id bilan qayta so'raydi */ }
+          location.assign(`${panel.dataset.sessiyaUrl}?id=${encodeURIComponent(j.session_id)}`);
+          return;
+        }
+        x.textContent = 'There are no checked questions for this skill yet.';
+      } catch (e) {
+        const tur = xatoTuri(e);
+        x.textContent = tur === 'kvota' ? 'Daily limit reached. Try again tomorrow.'
+          : tur === 'kirish' ? 'Your sign-in has expired. Sign in again to practice.'
+          : tur === 'tarmoq' ? "Couldn't reach the server. Check your connection and try again."
+          : "The session didn't start. Try again.";
+      }
+      b.disabled = false;
+      b.textContent = 'Practice this skill';
+    });
+    quti.append(b, x);
+    return quti;
+  }
+
+  const aniqlikMatni = (s: { correct: number; attempts: number }) => {
+    const f = foiz(s.correct, s.attempts);
+    return f === null ? 'No attempts yet' : `${f}% (${s.correct} of ${s.attempts})`;
+  };
+
+  // ---------- Bloklar ----------
+  function plitkalar(x: Xulosa) {
+    const t = x.totals;
+    $('pl-urinish').textContent = String(t.attempts);
+    $('pl-urinish-izoh').textContent = `on ${kop(t.active_days, 'day')}`;
+    $('pl-aniqlik').textContent = `${foiz(t.correct, t.attempts)}%`;
+    $('pl-aniqlik-izoh').textContent = `${t.correct} of ${t.attempts} correct`;
+    $('pl-saqlangan').textContent = String(t.bookmarks);
+    $('pl-streak').textContent = kop(t.streak, 'day');
+    $('pl-streak-izoh').textContent = t.streak > 0 ? 'Days in a row with at least one answer' : 'Answer a question today to start a streak';
+  }
+
+  function tavsiyaBlok(x: Xulosa) {
+    const r = tavsiyalar(x.skills);
+    const ul = $('tavsiya');
+    ul.replaceChildren(...r.map((s) => {
+      const li = el('li', 'tav-qator');
+      const bosh = el('div', 'tav-bosh');
+      bosh.append(el('span', 'tav-nom', s.skill), el('span', 'tav-bolim', `${BOLIM_NOMI[s.section] ?? s.section} · ${s.domain}`));
+      const orta = el('div', 'tav-orta');
+      orta.append(ustun(s.correct / s.attempts, s.holat), el('span', 'tav-son', aniqlikMatni(s)), holatBelgi(s.holat));
+      li.append(bosh, orta, mashqTugma(s));
+      return li;
+    }));
+    ul.hidden = r.length === 0;
+    const bosh = $('tavsiya-bosh');
+    bosh.hidden = r.length !== 0;
+    if (!r.length) {
+      bosh.textContent = x.skills.some((s) => s.attempts >= A.minUrinish)
+        ? `Every skill with ${A.minUrinish} or more attempts is Strong. Keep practicing the others to get a status for them.`
+        : `No skill has ${A.minUrinish} attempts yet. Keep practicing and your weakest skills will be listed here.`;
+    }
+  }
+
+  function konikmaBlok(x: Xulosa) {
+    (['rw', 'math'] as const).forEach((bolim) => {
+      const t = el('table', 'an-jadval kon-jadval');
+      t.append(el('caption', '', BOLIM_NOMI[bolim]));
+      const hr = el('tr');
+      ['Skill', 'Accuracy', 'Attempts', 'Status'].forEach((u) => { const th = el('th', '', u); th.scope = 'col'; hr.append(th); });
+      const thead = el('thead');
+      thead.append(hr);
+      t.append(thead);
+      for (const g of bolimJadvali(x.skills, bolim)) {
+        const tb = el('tbody');
+        const dr = el('tr', 'domen');
+        const dh = el('th', '', g.domain);
+        dh.colSpan = 4;
+        dh.scope = 'rowgroup';
+        dr.append(dh);
+        tb.append(dr);
+        for (const s of g.skills) {
+          const tr = el('tr');
+          const th = el('th', 'kon-nom', s.skill);
+          th.scope = 'row';
+          const an = el('td', 'kon-aniqlik');
+          if (s.foiz === null) an.append(el('span', 'sust', '–'));
+          else an.append(ustun(s.correct / s.attempts, s.holat), el('span', 'kon-foiz', `${s.foiz}%`));
+          const hol = el('td', 'kon-holat');
+          hol.append(holatBelgi(s.holat));
+          if (s.holat === 'needs-work') hol.append(mashqTugma(s));
+          tr.append(th, an, el('td', 'kon-son', String(s.attempts)), hol);
+          tb.append(tr);
+        }
+        t.append(tb);
+      }
+      $(`jadval-${bolim}`).replaceChildren(t);
+    });
+  }
+
+  function qiyinlikBlok(x: Xulosa) {
+    $('keng').hidden = !x.extended;
+    $('keng-qulf').hidden = x.extended;
+    if (!x.extended || !x.difficulty) return;
+    const d = ['easy', 'medium', 'hard'].map((band) => x.difficulty!.find((q) => q.band === band) ?? { band, attempts: 0, correct: 0, timed: 0, median_ms: null });
+    const engVaqt = Math.max(0, ...d.map((q) => q.median_ms ?? 0));
+    $('ch-aniqlik').replaceChildren(...d.map((q) =>
+      chQator(QIYINLIK_NOMI[q.band], q.attempts ? q.correct / q.attempts : null, q.attempts ? `${foiz(q.correct, q.attempts)}% · ${kop(q.attempts, 'attempt')}` : 'No attempts yet')));
+    $('ch-vaqt').replaceChildren(...d.map((q) =>
+      chQator(QIYINLIK_NOMI[q.band], q.median_ms && engVaqt ? q.median_ms / engVaqt : null, q.median_ms ? soniyaYozuv(q.median_ms) : 'No timed answers yet')));
+    $('jm-qiyinlik').replaceChildren(jadval('Accuracy and pacing by difficulty', ['Difficulty', 'Attempts', 'Correct', 'Accuracy', 'Median time per question', 'Answers with a time'],
+      d.map((q) => [QIYINLIK_NOMI[q.band], String(q.attempts), String(q.correct), q.attempts ? `${foiz(q.correct, q.attempts)}%` : '–', q.median_ms ? soniyaYozuv(q.median_ms) : '–', String(q.timed)])));
+  }
+
+  function bolimBlok(x: Xulosa) {
+    const b = ['rw', 'math'].map((section) => x.sections.find((q) => q.section === section) ?? { section, attempts: 0, correct: 0, time_ms: 0 });
+    const eng = Math.max(0, ...b.map((q) => q.time_ms));
+    $('ch-bolim').replaceChildren(...b.map((q) => chQator(BOLIM_NOMI[q.section], eng ? q.time_ms / eng : null, q.time_ms ? davomYozuv(q.time_ms) : 'No time recorded yet')));
+    $('jm-bolim').replaceChildren(jadval('Study time by section', ['Section', 'Time', 'Attempts', 'Accuracy'],
+      b.map((q) => [BOLIM_NOMI[q.section], q.time_ms ? davomYozuv(q.time_ms) : '–', String(q.attempts), q.attempts ? `${foiz(q.correct, q.attempts)}%` : '–'])));
+  }
+
+  function faollikBlok(x: Xulosa) {
+    const { kataklar, ustunlar } = faollikXaritasi(x.days, x.today);
+    const faol = kataklar.filter((k) => k.attempts > 0);
+    const jami = faol.reduce((a, k) => a + k.attempts, 0);
+    const xulosa = faol.length
+      ? `${kop(faol.length, 'active day')} and ${kop(jami, 'attempt')} from ${sanaYozuv(kataklar[0].date)} to ${sanaYozuv(x.today)}.`
+      : `No attempts from ${sanaYozuv(kataklar[0].date)} to ${sanaYozuv(x.today)}.`;
+    $('fao-izoh').textContent = `${xulosa} Darker squares mean more attempts on that day, compared with your own busiest day.`;
+
+    const K = 14, O = 3, CHAP = 34, TEPA = 18;
+    const s = svg('svg', { class: 'xarita', width: CHAP + ustunlar * (K + O), height: TEPA + 7 * (K + O), role: 'img', 'aria-label': `Activity map. ${xulosa} The same data is in the table below.` });
+    ['Mon', 'Wed', 'Fri'].forEach((nom, i) => {
+      const t = svg('text', { class: 'xr-yorliq', x: 0, y: TEPA + (i * 2) * (K + O) + K - 3 });
+      t.textContent = nom;
+      s.append(t);
+    });
+    let oldingiOy = '';
+    let oxirgiX = -100;
+    for (const k of kataklar) {
+      const oy = sanaYozuv(k.date).split(' ')[0];
+      const cx = CHAP + k.ustun * (K + O);
+      if (oy !== oldingiOy && cx - oxirgiX > 30) {
+        const t = svg('text', { class: 'xr-yorliq', x: cx, y: 11 });
+        t.textContent = oy;
+        s.append(t);
+        oxirgiX = cx;
+      }
+      oldingiOy = oy;
+      const r = svg('rect', { class: `katak d${k.daraja}`, x: cx + 0.5, y: TEPA + k.qator * (K + O) + 0.5, width: K - 1, height: K - 1, rx: 3 });
+      const title = svg('title');
+      title.textContent = `${sanaYozuv(k.date)}: ${k.attempts ? kop(k.attempts, 'attempt') : 'no attempts'}`;
+      r.append(title);
+      s.append(r);
+    }
+    $('xarita').replaceChildren(s);
+    $('jm-faollik').replaceChildren(faol.length
+      ? jadval('Days with attempts, newest first', ['Date', 'Attempts'], [...faol].reverse().map((k) => [sanaYozuv(k.date, true), String(k.attempts)]))
+      : el('p', 'sust', 'No days with attempts in this period.'));
+  }
+
+  function sababBlok(x: Xulosa) {
+    const malum = new Map<string, number>(SABABLAR.map((s) => [s.kalit, 0]));
+    let boshqa = 0;
+    for (const r of x.reasons) {
+      if (malum.has(r.tag)) malum.set(r.tag, malum.get(r.tag)! + r.count);
+      else boshqa += r.count;
+    }
+    const qatorlar: [string, number][] = SABABLAR.map((s) => [s.nomi, malum.get(s.kalit)!]);
+    if (boshqa) qatorlar.push(['Other', boshqa]);
+    qatorlar.push(['No reason set', x.reasons_untagged]);
+    const jami = qatorlar.reduce((a, [, n]) => a + n, 0);
+    $('sabab-bosh').hidden = jami > 0;
+    $('sab-chizma').hidden = jami === 0;
+    $('sab-jadval').hidden = jami === 0;
+    if (!jami) return;
+    $('ch-sabab').replaceChildren(...qatorlar.map(([nom, n]) => chQator(nom, n / jami, `${n} · ${Math.round((n / jami) * 100)}%`)));
+    $('jm-sabab').replaceChildren(jadval('Mistake reasons in your review queue', ['Reason', 'Questions', 'Share'],
+      qatorlar.map(([nom, n]) => [nom, String(n), `${Math.round((n / jami) * 100)}%`])));
+  }
+
+  function chiz(x: Xulosa) {
+    plitkalar(x);
+    tavsiyaBlok(x);
+    konikmaBlok(x);
+    qiyinlikBlok(x);
+    bolimBlok(x);
+    faollikBlok(x);
+    sababBlok(x);
+    holatQuti.replaceChildren(el('p', 'faqat-oquvchi', 'Your results are loaded.'));
+    holatQuti.classList.add('jim');
+    tana.hidden = false;
+  }
+
+  // ---------- Yuklash ----------
+  /** qayta = "Try again" bosilgan: tugma yo'qoladi, fokus panel sarlavhasiga o'tadi (yo'qolib qolmasin). */
+  async function yukla(qayta = false) {
+    await yuklaIch();
+    if (qayta) $('an-h').focus();
+  }
+
+  async function yuklaIch() {
+    holatQuti.classList.remove('jim');
+    xabar('Loading your results…');
+    let x: Xulosa | null;
+    try {
+      x = xulosaOqi(await api!.xulosa());
+    } catch (e) {
+      const tur = xatoTuri(e);
+      if (tur === 'kirish') return anon();
+      return xabar(
+        tur === 'tarmoq' ? "Couldn't reach the server" : "Your results didn't load",
+        tur === 'tarmoq' ? 'Check your connection and try again. Nothing was lost.' : 'Something went wrong on the server. Try again in a moment.',
+        { matn: 'Try again', bos: () => yukla(true) },
+      );
+    }
+    if (!x) return xabar("Your results didn't load", 'The server sent an answer this page could not read. Try again in a moment.', { matn: 'Try again', bos: () => yukla(true) });
+    if (x.totals.attempts === 0) {
+      return xabar('No practice attempts yet', 'Start a session in the question bank. Your accuracy, pacing and activity will appear here after your first answers.',
+        { matn: 'Go to the question bank', href: panel.dataset.bankUrl! });
+    }
+    chiz(x);
+  }
+
+  function anon() {
+    xabar('Sign in to see your analytics', 'Skill mastery, pacing and activity are calculated from practice sessions in your Tayanch account.',
+      { matn: 'Sign in', href: `${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname)}` });
+  }
+
+  async function boshla() {
+    const p = new URLSearchParams(location.search);
+    const mock = import.meta.env.DEV ? p.get('mock') : null;
+    if (mock === 'anon') return anon();
+    if (mock) {
+      // Faqat dev: ?mock=bosh|kam|kop|free|xato|uzilish|anon. Prod build'da bu shox va mock moduli yo'q.
+      const { mockApi, MOCK_TURLAR } = await import('../../../../../lib/sat/analitikaMock');
+      if (MOCK_TURLAR.includes(mock)) {
+        api = mockApi(mock as Parameters<typeof mockApi>[0]);
+        $('mock-pill').hidden = false;
+      }
+    }
+    if (!api) {
+      const c = hisobMijoz();
+      if (!c) return xabar('Accounts are not available yet', 'Analytics need a Tayanch account, and sign-in is not set up on this copy of the site.');
+      let kirgan = false;
+      try { kirgan = !!(await c.auth.getSession()).data.session; } catch { /* sessiyani o'qib bo'lmadi: kirish taklifi */ }
+      if (!kirgan) return anon();
+      const rpc = async <T,>(nom: string, args?: Record<string, unknown>): Promise<T> => {
+        const { data, error } = await c.rpc(nom, args);
+        if (error) throw error;
+        return data as T;
+      };
+      api = {
+        xulosa: () => rpc('analytics_summary'),
+        boshlash: (section, skill) => rpc('start_session', { p_filters: { section, skills: [skill] }, p_volume: A.mashqHajmi, p_mode: 'practice' }),
+      };
+    }
+    document.dispatchEvent(new CustomEvent('tayanch:analitika-kirgan'));
+    await yukla();
+  }
+
+  boshla();
 </script>
 
 <style>
@@ -171,7 +673,7 @@ import { yol } from '../../../../../lib/yol';
   .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
   .pill[hidden] { display: none; }
   .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 900; letter-spacing: -0.5px; }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
   h1:focus { outline: none; }
   .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
   .namuna-izoh { font-size: 15px; color: var(--matn-ikkinchi); background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); max-width: 70ch; }
@@ -182,7 +684,7 @@ import { yol } from '../../../../../lib/yol';
 
   .korsatkich { display: grid; grid-template-columns: 2fr 1fr; gap: var(--b-4); }
   .qora-blok {
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta); padding: var(--b-6);
     display: flex; flex-direction: column; gap: 14px;
@@ -199,7 +701,7 @@ import { yol } from '../../../../../lib/yol';
 
   .tarix { display: flex; flex-direction: column; gap: var(--b-4); }
   .tarix-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3); }
-  .tarix h2 { font-size: 28px; font-weight: 800; }
+  .tarix h3 { font-size: 22px; font-weight: 800; }
   .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); }
   .segment button {
     min-height: 44px; padding: 0 16px; border: 0; border-radius: var(--r-toliq);
@@ -254,6 +756,142 @@ import { yol } from '../../../../../lib/yol';
   .tasdiq h2 { font-size: var(--matn-h3); }
   .tasdiq p { color: var(--matn-ikkinchi); }
   .tasdiq-tugmalar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--b-2); }
+
+  /* ---------- Analitika paneli (P14) ---------- */
+  .panel { display: flex; flex-direction: column; gap: var(--b-6); }
+  .panel-h { font-size: 28px; font-weight: 800; }
+  .panel-h:focus { outline: none; }
+  .mahalliy-bosh h2 { font-size: 28px; font-weight: 800; }
+  .mahalliy-bosh[hidden], .mahalliy[hidden] { display: none; }
+  .naqshlar { position: absolute; }
+  .naqshlar .nq-fon { fill: var(--sirt-ikkinchi); }
+  .naqshlar .nq-kok { fill: var(--rang-havola); }
+  .naqshlar .nq-matn { fill: var(--matn); }
+
+  .holat-quti { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); padding: var(--b-6); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
+  .holat-quti[hidden] { display: none; }
+  .holat-quti.jim { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .holat-quti :global(.hq-sarlavha) { font-weight: 800; font-size: 18px; }
+  .holat-quti :global(.hq-matn) { color: var(--matn-ikkinchi); max-width: 60ch; }
+  .holat-quti :global(.hq-amal) {
+    display: inline-flex; align-items: center; min-height: 48px; margin-top: var(--b-2); padding: 0 22px;
+    border: 0; border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+    font: inherit; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer;
+  }
+  .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); }
+
+  .tana { display: flex; flex-direction: column; gap: var(--b-10); }
+  .tana[hidden] { display: none; }
+  .plitkalar { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--b-4); margin: 0; }
+  .plitka { display: flex; flex-direction: column; gap: var(--b-1); padding: var(--b-5); border: 1.5px solid var(--matn); border-radius: var(--r-katta); min-width: 0; }
+  .plitka dt { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
+  .plitka dd { margin: 0; font-size: 32px; font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .plitka dd.pl-izoh { font-size: var(--matn-kichik); font-weight: 400; line-height: 1.4; color: var(--matn-sust); }
+
+  .blok { display: flex; flex-direction: column; gap: var(--b-4); min-width: 0; }
+  .blok h3 { font-size: 22px; font-weight: 800; }
+  .blok-izoh, .pastki-izoh { font-size: 15px; color: var(--matn-ikkinchi); max-width: 70ch; }
+  .pastki-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); }
+  .bosh-blok { padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); color: var(--matn-ikkinchi); }
+  .bosh-blok[hidden], .tavsiya[hidden], .chizma[hidden], .jadval-muqobil[hidden], .qulf[hidden], #keng[hidden] { display: none; }
+  .panel :global(.sust) { color: var(--matn-sust); }
+  .panel :global(.faqat-oquvchi) { margin: 0; }
+
+  /* Holat belgisi: matn + shakl (to'liq doira, yarim doira, bo'sh halqa, uzuq halqa) */
+  .panel :global(.holat) { display: inline-flex; align-items: center; gap: 6px; font-size: var(--matn-kichik); font-weight: 700; white-space: nowrap; }
+  .panel :global(.holat-belgi) { width: 12px; height: 12px; flex: none; border-radius: var(--r-toliq); border: 2px solid var(--matn); box-sizing: border-box; }
+  .panel :global(.holat-strong .holat-belgi) { background: var(--matn); }
+  .panel :global(.holat-developing .holat-belgi) { box-shadow: inset 4px 0 0 var(--matn); }
+  .panel :global(.holat-low-data .holat-belgi), .panel :global(.holat-none .holat-belgi) { border-style: dashed; border-color: var(--matn-sust); }
+  .panel :global(.holat-low-data), .panel :global(.holat-none) { color: var(--matn-sust); font-weight: 600; }
+  .izohlar { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-6); }
+  .izohlar li { display: flex; align-items: center; gap: var(--b-2); }
+  .izoh-matn { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+
+  /* Ustunlar */
+  .panel :global(.ustun) { display: block; min-width: 60px; }
+  .panel :global(.ustun .iz) { fill: var(--sirt-ikkinchi); }
+  /* --rang-havola: yorug'da #4255ff, qorong'ida #8b97ff (iz ustida kamida 3:1) */
+  .panel :global(.ustun .tol) { fill: var(--rang-havola); }
+  .panel :global(.ustun .tol-developing) { fill: url(#an-naqsh-chiziq); stroke: var(--rang-havola); stroke-width: 1; }
+  .panel :global(.ustun .tol-needs-work) { fill: url(#an-naqsh-nuqta); stroke: var(--matn); stroke-width: 1; }
+  .panel :global(.ustun .tol-low-data) { fill: var(--matn-sust); }
+
+  .tavsiya { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .tavsiya :global(.tav-qator) { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr) auto; align-items: center; gap: var(--b-3) var(--b-5); padding: var(--b-4) var(--b-5); }
+  .tavsiya :global(.tav-qator + .tav-qator) { border-top: 1px solid var(--chiziq); }
+  .tavsiya :global(.tav-bosh) { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .tavsiya :global(.tav-nom) { font-weight: 700; }
+  .tavsiya :global(.tav-bolim) { font-size: var(--matn-kichik); color: var(--matn-sust); }
+  .tavsiya :global(.tav-orta) { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--b-1) var(--b-3); }
+  .tavsiya :global(.tav-orta .ustun) { grid-column: 1 / -1; }
+  .tavsiya :global(.tav-son) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); font-variant-numeric: tabular-nums; }
+  .panel :global(.mashq) { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-1); }
+  .panel :global(.mashq-tugma) {
+    min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--r-toliq);
+    background: var(--sirt-ikkinchi); color: var(--matn);
+    font: inherit; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap; cursor: pointer;
+  }
+  .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); }
+  .panel :global(.mashq-tugma:disabled) { opacity: 0.6; cursor: progress; }
+  .panel :global(.mashq-xabar) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 28ch; }
+  .panel :global(.mashq-xabar:empty) { display: none; }
+
+  /* Jadvallar */
+  .jadval-quti { overflow-x: auto; border: 1.5px solid var(--matn); border-radius: var(--r-katta); }
+  .panel :global(.an-jadval) { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .panel :global(.an-jadval caption) { text-align: left; font-weight: 800; font-size: 18px; padding: var(--b-4) var(--b-5) var(--b-2); }
+  .panel :global(.an-jadval th), .panel :global(.an-jadval td) { text-align: left; padding: var(--b-3) var(--b-5); border-top: 1px solid var(--chiziq); vertical-align: middle; }
+  .panel :global(.an-jadval thead th) { border-top: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
+  .panel :global(.an-jadval tbody th) { font-weight: 600; }
+  .panel :global(.an-jadval td) { font-variant-numeric: tabular-nums; }
+  .panel :global(.kon-jadval .domen th) { background: var(--fon-ikkinchi); font-size: var(--matn-kichik); font-weight: 800; color: var(--matn-ikkinchi); padding-block: var(--b-2); }
+  .panel :global(.kon-jadval) { min-width: 620px; }
+  .panel :global(.kon-aniqlik) { width: 32%; }
+  .panel :global(.kon-aniqlik .ustun) { display: inline-block; width: calc(100% - 52px); vertical-align: middle; }
+  .panel :global(.kon-foiz) { display: inline-block; width: 46px; text-align: right; font-weight: 700; }
+  .panel :global(.kon-holat .mashq) { margin-top: var(--b-2); }
+
+  .ikki { display: grid; grid-template-columns: 1fr 1fr; gap: var(--b-4); }
+  .chizma { margin: 0; padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-katta); display: flex; flex-direction: column; gap: var(--b-3); min-width: 0; }
+  .chizma figcaption { font-weight: 800; }
+  .qatorlar-ch { display: flex; flex-direction: column; gap: var(--b-3); }
+  .panel :global(.ch-qator) { display: grid; grid-template-columns: minmax(84px, 0.9fr) minmax(60px, 2fr) minmax(0, 1.6fr); align-items: center; gap: var(--b-3); font-size: 15px; }
+  .panel :global(.ch-nom) { font-weight: 700; }
+  .panel :global(.ch-qiymat) { color: var(--matn-ikkinchi); font-variant-numeric: tabular-nums; }
+  .chizma :global(.ustun .iz) { fill: var(--chiziq-kuchli); }
+  .jadval-muqobil summary { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: var(--matn-kichik); color: var(--rang-havola); cursor: pointer; }
+  .jadval-muqobil > div { overflow-x: auto; border: 1px solid var(--chiziq-kuchli); border-radius: var(--r-orta); margin-top: var(--b-2); }
+  .jadval-muqobil :global(p) { padding: var(--b-4); }
+  .qulf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3); padding: var(--b-5); border: 1.5px dashed var(--matn-sust); border-radius: var(--r-katta); color: var(--matn-ikkinchi); }
+  .qulf a { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* Faollik xaritasi: bitta ko'k tus, 4 daraja; son jadvalda va katak <title> ida */
+  .xarita-quti { overflow-x: auto; padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
+  .panel :global(.xarita) { display: block; }
+  .panel :global(.xr-yorliq) { font-size: var(--matn-mayda); fill: var(--matn-sust); }
+  .panel :global(.katak) { fill: var(--rang-havola); stroke: var(--rang-havola); stroke-width: 1; }
+  .panel :global(.katak.d0) { fill: var(--fon); stroke: var(--chiziq-kuchli); }
+  .panel :global(.katak.d1) { fill-opacity: 0.25; }
+  .panel :global(.katak.d2) { fill-opacity: 0.5; }
+  .panel :global(.katak.d3) { fill-opacity: 0.75; }
+  .afsona { display: flex; align-items: center; gap: var(--b-1); font-size: var(--matn-mayda); color: var(--matn-sust); }
+  .afsona span:first-child { margin-right: var(--b-1); }
+  .afsona span:last-child { margin-left: var(--b-1); }
+
+  @media (max-width: 900px) {
+    .plitkalar { grid-template-columns: repeat(2, 1fr); }
+    .ikki { grid-template-columns: 1fr; }
+    .tavsiya :global(.tav-qator) { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .plitka { padding: var(--b-4); }
+    .plitka dd { font-size: 26px; }
+    .panel :global(.ch-qator) { grid-template-columns: 1fr 1fr; }
+    .panel :global(.ch-qator .ustun), .panel :global(.ch-qator .ch-yoq) { grid-column: 1 / -1; grid-row: 2; }
+    .panel :global(.ch-qiymat) { text-align: right; }
+    .panel :global(.an-jadval th), .panel :global(.an-jadval td) { padding-inline: var(--b-4); }
+  }
 
   @media (max-width: 760px) {
     .korsatkich { grid-template-columns: 1fr; }

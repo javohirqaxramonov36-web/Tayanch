@@ -8,12 +8,34 @@ import { manbalar } from '../../../data/manbalar';
 const cb03 = manbalar.find((m) => m.id === 'CB03')!;
 import { yol } from '../../../lib/yol';
 import Zina from '../../../components/Zina.astro';
+import QavatFoto from '../../../components/QavatFoto.astro';
+import KunSavoli from '../../../components/sat/KunSavoli.astro';
+import SatMaqsadSarlavha from '../../../components/sat/SatMaqsadSarlavha.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
-const qadamlar = [
-  { yorliq: 'UNDERSTAND', nomi: 'Strategy', tavsif: 'Where to start your prep and how to plan it.', havola: 'Open the guide', qism: 'qollanma/strategiya/' },
-  { yorliq: 'PRACTICE', nomi: 'Tests and question bank', tavsif: 'Short tests by topic, with an explanation right after each answer.', havola: 'Start practicing', qism: 'mashq/test/' },
-  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'A list of your mistakes, saved only in this browser. No score is calculated.', havola: 'See your results', qism: 'vosita/natijalar/' },
+
+// Imtihon tuzilmasi (CB03). Vaqt chizig'i shu raqamlardan: bo'lak uzunligi daqiqaga mutanosib, ikkala bo'lim bir shkalada.
+const tuzilma = [
+  { nomi: 'Reading & Writing', belgi: 'kitob', modul: 2, daqiqa: 32, savol: 54 },
+  { nomi: 'Math', belgi: 'plyus', modul: 2, daqiqa: 35, savol: 44 },
+] as const;
+const engUzunVaqt = Math.max(...tuzilma.map((t) => t.modul * t.daqiqa));
+
+// "Where the SAT counts": har qator faqat rasmiy manbadan (manbalar.ts, 2026-11-09). Holat matn bilan, rang yagona belgi emas.
+type SatHolat = 'Required' | 'Optional' | 'Accepted';
+const qayerda: { manba: string; nomi: string; davlat: string; holat: SatHolat; matn: string }[] = [
+  { manba: 'HV01', nomi: 'Harvard College', davlat: 'USA', holat: 'Required', matn: 'The SAT or ACT is required, for international applicants too. Only if neither test is accessible does Harvard accept other results, such as A-Levels, IB or a national exam.' },
+  { manba: 'NY01', nomi: 'NYU Abu Dhabi', davlat: 'UAE', holat: 'Optional', matn: 'Test-optional through the 2027–2028 application cycle. Scores you choose to send are still reviewed.' },
+  { manba: 'MT01', nomi: 'METU', davlat: 'Türkiye', holat: 'Accepted', matn: 'The SAT is one of the exams you can apply with, alongside TR-YÖS and others. Scores are valid for two years.' },
+  { manba: 'KY01', nomi: 'Kyoto University iUP', davlat: 'Japan', holat: 'Accepted', matn: 'At least one standardized test is mandatory, and the SAT is on the list. For October 2027 entry, only tests taken by November 7, 2026 count. Engineering also needs physics and chemistry results, which the SAT does not cover.' },
+];
+const qayerdaQatorlar = qayerda.map((q) => ({ ...q, m: manbalar.find((m) => m.id === q.manba && m.tekshiruvDarajasi === 'rasmiy')! }));
+if (qayerdaQatorlar.some((q) => !q.m)) throw new Error('SAT kirish: "Where the SAT counts" manbasi topilmadi yoki rasmiy emas');
+type QadamBelgi = 'kompas' | 'qalam' | 'grafik';
+const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; qism: string; belgi: QadamBelgi }[] = [
+  { yorliq: 'UNDERSTAND', nomi: 'Strategy', tavsif: 'Where to start your prep and how to plan it.', havola: 'Open the guide', qism: 'qollanma/strategiya/', belgi: 'kompas' },
+  { yorliq: 'PRACTICE', nomi: 'Tests and question bank', tavsif: 'Short tests by topic, with an explanation right after each answer.', havola: 'Start practicing', qism: 'mashq/test/', belgi: 'qalam' },
+  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'A list of your mistakes, saved only in this browser. No score is calculated.', havola: 'See your results', qism: 'vosita/natijalar/', belgi: 'grafik' },
 ];
 ---
 <BolimQobiq
@@ -24,9 +46,11 @@ const qadamlar = [
   holat="qoralama"
   tekshirilgan="2026-11-04"
   keyingiTekshiruv="2026-12-04"
-  manbalar={['CB03']}
+  manbalar={['CB03', 'HV01', 'NY01', 'MT01', 'KY01']}
 >
   <div class="ichki sat-kirish">
+    <SatMaqsadSarlavha />
+    <QavatFoto bolim="sat" />
     <section class="hero" aria-labelledby="sat-h">
       <div class="hero-matn">
         <p class="pill-qator"><span class="pill">Draft</span><span class="pill-izoh">Section home</span></p>
@@ -45,18 +69,44 @@ const qadamlar = [
       <div class="tuzilma" aria-labelledby="tuzilma-h">
         <h2 id="tuzilma-h" class="ustki-yorliq">Test structure</h2>
         <ul>
-          <li>
-            <span class="tuzilma-belgi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" /></svg></span>
-            <span><strong>Reading &amp; Writing</strong><span class="tuzilma-izoh">2 modules, 32 minutes each · 54 questions</span></span>
-          </li>
-          <li>
-            <span class="tuzilma-belgi" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></span>
-            <span><strong>Math</strong><span class="tuzilma-izoh">2 modules, 35 minutes each · 44 questions</span></span>
-          </li>
+          {tuzilma.map((t) => (
+            <li>
+              <span class="tuzilma-belgi" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  {t.belgi === 'kitob' ? <path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" /> : <><path d="M5 12h14" /><path d="M12 5v14" /></>}
+                </svg>
+              </span>
+              <span class="tuzilma-matn">
+                <strong>{t.nomi}</strong>
+                <span class="tuzilma-izoh">{t.modul} modules, {t.daqiqa} minutes each · {t.savol} questions</span>
+                <span class="modul-chiziq" aria-hidden="true" style={`--ulush: ${(t.modul * t.daqiqa) / engUzunVaqt}`}>
+                  {Array.from({ length: t.modul }, (_, i) => (
+                    <span class="modul" style={`--tartib: ${i}`}><span class="modul-nom">Module {i + 1}</span></span>
+                  ))}
+                </span>
+              </span>
+            </li>
+          ))}
         </ul>
         <p class="tuzilma-izoh">Source: <a href={cb03.havola} rel="noopener">{cb03.tashkilot}</a>, checked {cb03.tekshirilganSana}.</p>
       </div>
+      <script is:inline>
+        // Vaqt chizig'i karta ekranga kirganda bir marta to'ladi. JS yo'q yoki reduced motion: darhol to'liq.
+        (() => {
+          const karta = document.currentScript && document.currentScript.previousElementSibling;
+          if (!karta || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          karta.setAttribute('data-kutish', '');
+          const k = new IntersectionObserver((yozuvlar) => {
+            if (!yozuvlar.some((y) => y.isIntersecting)) return;
+            karta.removeAttribute('data-kutish');
+            k.disconnect();
+          }, { threshold: 0.4 });
+          k.observe(karta);
+        })();
+      </script>
     </section>
+
+    <KunSavoli />
 
     <section class="yol" aria-labelledby="yol-h">
       <div class="bosh-qator">
@@ -67,8 +117,15 @@ const qadamlar = [
         {qadamlar.map((q, i) => (
           <li>
             <a href={sat(q.qism)} class="qadam">
-              <span class="qadam-yorliq"><span class="qadam-raqam">{i + 1}</span><span class="qadam-soz"> · {q.yorliq}</span></span>
+              <span class="qadam-belgi" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  {q.belgi === 'kompas' && <><circle cx="12" cy="12" r="9" /><path d="M15.5 8.5l-2 5-5 2 2-5z" /></>}
+                  {q.belgi === 'qalam' && <><path d="M12 20h8" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" /></>}
+                  {q.belgi === 'grafik' && <><path d="M3 20h18" /><path d="M7 16v-4" /><path d="M12 16V7" /><path d="M17 16v-6" /></>}
+                </svg>
+              </span>
               <span class="qadam-matn">
+                <span class="qadam-yorliq"><span class="qadam-raqam">{i + 1}</span><span class="qadam-soz"> · {q.yorliq}</span></span>
                 <span class="qadam-nom">{q.nomi}</span>
                 <span class="qadam-tavsif">{q.tavsif}</span>
               </span>
@@ -78,6 +135,53 @@ const qadamlar = [
           </li>
         ))}
       </ol>
+    </section>
+
+    <section class="qayerda" aria-labelledby="qayerda-h">
+      <div class="bosh-qator">
+        <h2 id="qayerda-h">Where the SAT counts</h2>
+        <p class="sust kichik">Four examples. Each university sets its own rules.</p>
+      </div>
+      <ul class="qayerda-royxat">
+        {qayerdaQatorlar.map((q, i) => (
+          <li class="qayerda-karta">
+            <div class="qayerda-bosh">
+              <span class="qayerda-nom"><strong>{q.nomi}</strong><span class="qayerda-davlat">{q.davlat}</span></span>
+              <span class:list={['holat', `holat-${q.holat.toLowerCase()}`]}>
+                {q.holat === 'Required' && <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v8" /><path d="M12 18v.5" /></svg>}
+                {q.holat === 'Accepted' && <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg>}
+                {q.holat === 'Optional' && <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h12" /></svg>}
+                {q.holat}
+              </span>
+              <button type="button" class="qayerda-ochish" aria-expanded="true" aria-controls={`qayerda-tana-${i}`} aria-label={`Details: ${q.nomi}`}>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+              </button>
+            </div>
+            <div class="qayerda-tana" id={`qayerda-tana-${i}`}>
+              <p class="qayerda-matn">{q.matn}</p>
+              <p class="qayerda-manba"><a href={q.m.havola} rel="noopener" aria-label={`Official page: ${q.nomi}`}>Official page</a> · checked {q.m.tekshirilganSana}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <script is:inline>
+        // Telefonda (<= 640px) kartalar yopiq boshlanadi, tugma ochadi/yopadi. Kengroq ekranda tugma yo'q, hammasi ochiq (CSS).
+        // JS yo'q: hamma karta ochiq, tugma ko'rinmaydi. Holat saqlanmaydi.
+        (() => {
+          const royxat = document.currentScript && document.currentScript.previousElementSibling;
+          if (!royxat) return;
+          royxat.querySelectorAll('.qayerda-ochish').forEach((t) => {
+            t.setAttribute('aria-expanded', 'false');
+            t.addEventListener('click', () => {
+              const ochiq = t.getAttribute('aria-expanded') !== 'true';
+              t.setAttribute('aria-expanded', String(ochiq));
+              t.closest('.qayerda-karta').toggleAttribute('data-ochiq', ochiq);
+            });
+          });
+          royxat.setAttribute('data-yigma', '');
+        })();
+      </script>
+      <p class="qayerda-izoh">Rules change every cycle. Check the official page before you apply.</p>
     </section>
 
     <section class="sahifalar" aria-labelledby="sahifa-h">
@@ -123,26 +227,26 @@ const qadamlar = [
   /* Hero */
   .hero { display: flex; flex-wrap: wrap; gap: var(--b-8); align-items: stretch; }
   .hero-matn { flex: 3 1 420px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); }
-  .hero h1 { font-size: 56px; line-height: 1.05; font-weight: 900; letter-spacing: -1px; }
+  .hero h1 { font-size: 56px; line-height: 1.05; font-weight: 900; letter-spacing: var(--oraliq-hero); }
   .lead { font-size: 19px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 58ch; }
   .lead-telefon { display: none; }
   .tuzilma a { color: var(--qora-matn-ikkinchi); }
   .cta { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
   .katta-tugma {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    min-height: 52px; padding: 0 26px;
+    min-height: var(--control-height-md); padding: 0 26px;
     border-radius: var(--r-toliq);
     text-decoration: none; font-weight: 800; font-size: 16px;
   }
-  .katta-tugma.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta-tugma.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta-tugma.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta-tugma.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .katta-tugma.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); font-weight: 700; }
   .katta-tugma.ikkinchi:hover { background: var(--chiziq); }
 
   /* Qora karta: imtihon tuzilmasi (har ikki mavzuda qora) */
   .tuzilma {
     flex: 2 1 280px; min-width: 0;
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta);
     padding: 28px;
@@ -155,7 +259,18 @@ const qadamlar = [
     border-radius: var(--r-orta); padding: 16px 18px;
     display: flex; align-items: center; gap: 14px;
   }
-  .tuzilma li > span:last-child { display: flex; flex-direction: column; gap: 2px; }
+  .tuzilma-matn { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  /* Modul vaqt chizig'i (bezak, aria-hidden: ma'lumot yuqoridagi matnda) */
+  .modul-chiziq { display: flex; gap: var(--space-1); width: calc(var(--ulush) * 100%); margin-top: var(--space-2); }
+  .modul { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+  .modul::before {
+    content: ''; height: var(--progress-height); border-radius: var(--radius-full);
+    background: var(--floor-ui); transform-origin: left center;
+    transition: transform var(--duration-slow) var(--ease-enter);
+    transition-delay: calc(var(--tartib) * var(--duration-slow));
+  }
+  .tuzilma[data-kutish] .modul::before { transform: scaleX(0); }
+  .modul-nom { font-size: var(--text-caption-size); line-height: var(--text-caption-lh); color: var(--qora-matn-ikkinchi); }
   .tuzilma strong { font-weight: 800; font-size: 17px; }
   .tuzilma-belgi {
     flex: none; width: 40px; height: 40px; border-radius: var(--r-yon);
@@ -168,24 +283,68 @@ const qadamlar = [
   /* Qadamlar */
   .yol, .sahifalar { display: flex; flex-direction: column; gap: var(--b-5); }
   .bosh-qator { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
-  .yol h2, .sahifalar h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
-  .qadamlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
-  .qadamlar li + li { border-top: 1px solid var(--chiziq); }
+  .yol h2, .sahifalar h2, .qayerda h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+  .qadamlar {
+    --qadam-py: var(--space-5); --qadam-px: var(--space-7); --qadam-belgi: var(--space-10);
+    list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden;
+  }
+  .qadamlar li { position: relative; }
+  .qadamlar li + li { border-top: var(--border-width-1) solid var(--color-border); }
+  /* Qadamlarni ulovchi chiziq: doira ostidan keyingi doiragacha (doiralar qator tepasiga tekislangan) */
+  .qadamlar li:not(:last-child)::after {
+    content: ''; position: absolute; pointer-events: none;
+    left: calc(var(--qadam-px) + var(--qadam-belgi) / 2 - var(--border-width-1));
+    top: calc(var(--qadam-py) + var(--qadam-belgi) + var(--space-1));
+    bottom: calc(var(--space-1) - var(--qadam-py) - var(--border-width-1));
+    width: var(--border-width-2); border-radius: var(--radius-full);
+    background: var(--color-border);
+  }
   .qadam {
-    display: grid; grid-template-columns: 140px minmax(0, 1fr) auto;
-    align-items: center; column-gap: var(--b-6); row-gap: var(--b-1);
-    padding: 22px 28px;
+    display: grid; grid-template-columns: var(--qadam-belgi) minmax(0, 1fr) auto;
+    align-items: start; column-gap: var(--space-5);
+    padding: var(--qadam-py) var(--qadam-px);
     text-decoration: none; color: var(--matn);
   }
   .qadam:hover { background: var(--fon-ikkinchi); }
+  .qadam-belgi {
+    width: var(--qadam-belgi); height: var(--qadam-belgi); border-radius: var(--radius-full);
+    background: var(--floor-ui); color: var(--floor-ui-text);
+    display: grid; place-items: center;
+  }
   .qadam-yorliq { font-size: var(--matn-mayda); font-weight: 700; color: var(--rang-havola); }
   .qadam-matn { display: flex; flex-direction: column; gap: var(--b-1); }
   .qadam-nom { font-size: 20px; font-weight: 800; }
   .qadam-tavsif { font-size: 15px; line-height: 1.55; color: var(--matn-ikkinchi); }
-  .qadam-havola { font-weight: 700; font-size: 15px; white-space: nowrap; color: var(--rang-havola); text-decoration: underline; text-underline-offset: 0.15em; }
+  .qadam-havola { align-self: center; font-weight: 700; font-size: 15px; white-space: nowrap; color: var(--rang-havola); text-decoration: underline; text-underline-offset: 0.15em; }
   .qadam:hover .qadam-havola { color: var(--rang-asosiy-toq); }
-  .qadam-strelka { display: none; color: var(--matn-sust); }
+  .qadam-strelka { display: none; align-self: center; color: var(--matn-sust); }
 
+
+  /* SAT qayerda kerak */
+  .qayerda { display: flex; flex-direction: column; gap: var(--b-5); }
+  .qayerda-royxat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: var(--b-4); }
+  .qayerda-karta {
+    background: var(--sirt); border: 1px solid var(--chiziq); border-radius: var(--r-katta);
+    padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); min-width: 0;
+  }
+  .qayerda-bosh { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--b-2); }
+  .qayerda-nom { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  .qayerda-nom strong { font-size: var(--matn-katta); font-weight: 800; }
+  .qayerda-davlat { font-size: var(--matn-kichik); color: var(--matn-sust); }
+  .holat {
+    display: inline-flex; align-items: center; gap: var(--b-1);
+    padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq);
+    font-size: var(--matn-mayda); font-weight: 800; white-space: nowrap;
+  }
+  .holat-required { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .holat-accepted { background: var(--sirt); color: var(--matn); border: 1.5px solid var(--matn); }
+  .holat-optional { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .qayerda-tana { display: flex; flex: 1; flex-direction: column; gap: var(--b-3); }
+  .qayerda-ochish { display: none; }
+  .qayerda-matn { font-size: var(--matn-asosiy); line-height: 1.55; color: var(--matn-ikkinchi); }
+  .qayerda-manba { margin-top: auto; font-size: var(--matn-mayda); color: var(--matn-sust); }
+  .qayerda-manba a { color: var(--rang-havola); font-weight: 700; display: inline-flex; align-items: center; min-height: 44px; }
+  .qayerda-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); }
 
   /* Barcha sahifalar */
   .guruhlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--b-4); align-items: start; }
@@ -212,24 +371,40 @@ const qadamlar = [
   /* Telefon ekrani */
   @media (max-width: 640px) {
     .sat-kirish { padding-top: 28px; gap: var(--b-10); }
-    .hero h1 { font-size: 38px; line-height: 1.08; letter-spacing: -0.5px; }
+    .hero h1 { font-size: 38px; line-height: 1.08; letter-spacing: var(--oraliq-hero); }
     .lead { display: none; }
     .lead-telefon { display: block; font-size: 17px; }
     .sahifalar, .pastki { display: none; }
     .hero { display: contents; }
+    /* Telefon tartibi. Tartib berilmagan bola (order 0) h1 dan yuqoriga chiqadi: Zina va kun savoli ham shu yerda */
     .hero-matn { order: 1; flex: none; }
-    .yol { order: 2; }
-    .tuzilma { order: 3; flex: none; }
-    .katta-tugma { width: 100%; }
-    .yol h2, .sahifalar h2 { font-size: 22px; }
-    .bosh-qator p { display: none; }
-    .qadamlar { border-color: var(--chiziq); border-radius: 20px; }
-    .qadam {
-      grid-template-columns: 16px minmax(0, 1fr) auto;
-      column-gap: 14px; min-height: 64px; padding: 12px 16px;
+    .sat-kirish > :global(.kun) { order: 2; }
+    .yol { order: 3; }
+    .tuzilma { order: 4; flex: none; }
+    .qayerda { order: 5; }
+    .sat-kirish > :global(.zina) { order: 6; }
+    .qayerda .bosh-qator p { display: block; }
+    .qayerda-karta { border-radius: var(--r-orta); padding: var(--b-4); }
+    /* Ixcham kartalar (JS ishlaganda): sarlavha qatori butunlay tugma, matn va havola ochilganda */
+    .qayerda-royxat[data-yigma] .qayerda-bosh { position: relative; flex-wrap: nowrap; align-items: center; }
+    .qayerda-royxat[data-yigma] .qayerda-nom { flex: 1; }
+    .qayerda-royxat[data-yigma] .qayerda-ochish {
+      flex: none; display: grid; place-items: center;
+      width: var(--size-touch-min); height: var(--size-touch-min); margin-right: calc(-1 * var(--space-2));
+      border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary);
+      cursor: pointer;
     }
-    .qadam-yorliq { font-weight: 800; }
-    .qadam-soz, .qadam-tavsif, .qadam-havola { display: none; }
+    .qayerda-royxat[data-yigma] .qayerda-ochish::after { content: ''; position: absolute; inset: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) calc(-1 * var(--space-3)); }
+    .qayerda-royxat[data-yigma] .qayerda-ochish svg { transition: transform var(--duration-fast) var(--ease-state); }
+    .qayerda-royxat[data-yigma] .qayerda-ochish[aria-expanded='true'] svg { transform: rotate(180deg); }
+    .qayerda-royxat[data-yigma] .qayerda-karta:not([data-ochiq]) .qayerda-tana { display: none; }
+    .katta-tugma { width: 100%; }
+    .yol h2, .sahifalar h2, .qayerda h2 { font-size: 22px; }
+    .bosh-qator p { display: none; }
+    .qadamlar { --qadam-py: var(--space-3); --qadam-px: var(--space-4); border-color: var(--chiziq); border-radius: 20px; }
+    .qadam { column-gap: var(--space-4); }
+    .qadam-matn { align-self: center; }
+    .qadam-yorliq, .qadam-tavsif, .qadam-havola { display: none; }
     .qadam-nom { font-size: 16px; font-weight: 700; }
     .qadam-strelka { display: block; }
     .tuzilma { border-radius: 20px; padding: 18px; }

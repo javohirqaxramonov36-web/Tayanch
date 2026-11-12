@@ -12,7 +12,7 @@ import { yol } from '../lib/yol';
       <p class="lead">Qimmat kurslarsiz, mustaqil tayyorgarlik bilan. Endi navbat sizda.</p>
       <div class="kim">
         <span class="avatar" aria-hidden="true">J</span>
-        <span><strong>Javohir</strong><span class="sust-qora">Tayanch muallifi</span></span>
+        <span><strong>Founder: Javohir Qaxramonov</strong><span class="sust-qora">Tayanch muallifi</span></span>
       </div>
     </div>
 
@@ -32,8 +32,6 @@ import { yol } from '../lib/yol';
 
       <li class="qadam oxirgi">
         <span class="nuqta oq" aria-hidden="true"></span>
-        <span class="sarlavha katta">{qabulXatlari.soni} ta qabul xati</span>
-        <span class="matn">Hujjat bilan tasdiqlangan qabul xatlari va {qabulXatlari.stipendiyaMatni}.</span>
         <ul class="previewlar">
           {qabulXatlari.previewlar.map((p) => (
             <li>
@@ -60,7 +58,7 @@ import { yol } from '../lib/yol';
   }
   .chap { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); align-self: flex-start; }
   @media (min-width: 900px) { .chap { position: sticky; top: 32px; } }
-  h2 { font-size: 3.25rem; line-height: 1.06; letter-spacing: -0.5px; font-weight: 900; }
+  h2 { font-size: 3.25rem; line-height: 1.06; letter-spacing: var(--oraliq-sarlavha); font-weight: 900; }
   @media (max-width: 640px) { h2 { font-size: 2.25rem; } .sahna-ichki { padding-block: 80px; } }
   .lead { font-size: var(--matn-katta); color: var(--qora-matn-ikkinchi); max-width: 440px; }
   .kim { display: flex; align-items: center; gap: 14px; padding-top: var(--b-2); }
