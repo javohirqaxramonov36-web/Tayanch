@@ -54,7 +54,7 @@ import { yol } from '../../lib/yol';
 </style>
 
 <script>
-  import { hisobMijoz } from '../../lib/hisob';
+  import { kirganFoydalanuvchi } from '../../lib/hisobHolat';
   import { toshkentBugun } from '../../lib/muddat';
   import { sarlavhaHolati, type MaqsadProfil } from '../../lib/satMaqsad';
   import { maqsadMatn as M, sanaYoz } from '../../data/satMaqsadMatn';
@@ -107,8 +107,12 @@ import { yol } from '../../lib/yol';
   }
 
   async function ishga() {
+    // Supabase klienti (~216KB) faqat brauzerda saqlangan sessiya bo'lsa yuklanadi: hisobsiz
+    // foydalanuvchida bu blok baribir yashirin qoladi (getSession bo'sh qaytardi).
+    if (!quti || !kirganFoydalanuvchi()) return;
+    const { hisobMijoz } = await import('../../lib/hisob');
     const c = hisobMijoz();
-    if (!quti || !c) return;
+    if (!c) return;
     try {
       const { data: s } = await c.auth.getSession();
       if (!s.session) return;
