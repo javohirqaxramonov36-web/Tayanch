@@ -233,6 +233,20 @@ export function maydonXatosi(input: HTMLInputElement, matn: string | null): void
   }
 }
 
+/** Forma tepasidagi xatolar ro'yxati (role="alert"): har xato maydonga havola, ro'yxat bo'lsa fokus unga. */
+export function xatolarRoyxati(blok: HTMLElement, royxat: [HTMLElement, string][]): void {
+  const ul = blok.querySelector('ul')!;
+  ul.replaceChildren(...royxat.map(([el, m]) => {
+    const li = document.createElement('li');
+    const a = Object.assign(document.createElement('a'), { href: `#${el.id}`, textContent: m });
+    a.addEventListener('click', (e) => { e.preventDefault(); el.focus(); });
+    li.append(a);
+    return li;
+  }));
+  blok.hidden = royxat.length === 0;
+  if (royxat.length) blok.focus();
+}
+
 /** Tugmani yuklanish holatiga o'tkazadi (qayta bosilmaydi, ekran o'quvchiga band ekani aytiladi). */
 export function yuklanish(tugma: HTMLButtonElement, band: boolean, matn?: string): void {
   if (!tugma.dataset.asl) tugma.dataset.asl = tugma.textContent ?? '';
