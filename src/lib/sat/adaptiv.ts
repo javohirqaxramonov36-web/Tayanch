@@ -70,7 +70,8 @@ export function tarmoqTanla(
   const h = adaptivHolat(bolim, savolSoni, sozlama);
   if (!h.yoqilgan) return { tarmoq: 'standart', sabab: h.sabab, aniqlik: a };
   if (a === null) return { tarmoq: 'standart', sabab: 'natija-yoq', aniqlik: null };
-  return a > (sozlama.chegara as number)
+  // Butun sonlar bilan taqqoslanadi: (togri / jami) × 100 float'da 7/10 → 70.00000000000001 bo'lib, tenglikni "ustida" qilardi.
+  return natija.togri * 100 > (sozlama.chegara as number) * natija.jami
     ? { tarmoq: 'qiyin', sabab: 'ustida', aniqlik: a }
     : { tarmoq: 'oson', sabab: 'ostida', aniqlik: a };
 }
