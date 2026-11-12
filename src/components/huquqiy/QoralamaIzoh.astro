@@ -1,0 +1,24 @@
+---
+// Huquqiy sahifa tepasidagi "qoralama" izohi (P23). Nashrdan oldin (yurist tasdig'idan keyin) olib tashlanadi.
+// Ranglar: ogohlik juftligi (DESIGN.md yagona istisno), tokens.css dan.
+interface Props { til?: 'uz' | 'en' }
+const { til = 'uz' } = Astro.props;
+---
+<aside class="qoralama-izoh" aria-label={til === 'en' ? 'Draft notice' : 'Qoralama izohi'}>
+  {til === 'en' ? (
+    <p><strong>Draft.</strong> This text has not been reviewed by a lawyer yet and is not legal advice. It may change before it is published. Places marked "to be checked" are still open.</p>
+  ) : (
+    <p><strong>Qoralama.</strong> Bu matnni hali yurist tekshirmagan, u yuridik maslahat emas. Nashrdan oldin o'zgarishi mumkin. "Tekshirish kerak" deb belgilangan joylar hali ochiq.</p>
+  )}
+</aside>
+
+<style>
+  .qoralama-izoh {
+    background: var(--rang-ogoh-fon);
+    color: var(--rang-ogoh-matn);
+    border-radius: var(--r-orta);
+    line-height: 1.5;
+    padding: var(--b-3) var(--b-4);
+  }
+  .qoralama-izoh p { margin: 0; }
+</style>
