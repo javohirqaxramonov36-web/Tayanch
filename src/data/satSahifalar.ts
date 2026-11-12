@@ -296,6 +296,19 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: [],
         tekshirilmagan: ['The daily message limit is a starting value and may change.'],
       },
+      {
+        // P34: o'quvchi guruhlari va ulashish; guruh tarifli o'qituvchi uchun guruhlar va natija (docs/qarorlar/004-guruhlar.md).
+        qism: 'guruh/',
+        tayyor: true,
+        nomi: 'Groups',
+        tavsif: "Join your teacher's group and choose what they can see. Teachers on the group plan can follow their students' practice.",
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: [
+          'The consent rules for students under 18 still need a lawyer\'s review.',
+          'The group plan is not on sale yet: the author opens it for teachers by hand.',
+        ],
+      },
     ],
   },
 ];
@@ -336,7 +349,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/mock/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/', 'guruh/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 
@@ -393,7 +406,18 @@ export const satIchkiSahifalar: SatSahifa[] = [
       'The estimated score is a simple Tayanch formula, not the College Board scoring method.',
     ],
   },
+  {
+    // P34: taklif kodi bilan guruhga qo'shilish (Groups sahifasidan va o'qituvchining havolasidan, ?kod=).
+    qism: 'guruh/qoshilish/',
+    tayyor: true,
+    nomi: 'Join a group',
+    tavsif: "Join your teacher's SAT group with an invite code and choose what they can see.",
+    turi: 'vosita',
+    manbalar: [],
+    tekshirilmagan: ['The consent rules for students under 18 still need a lawyer\'s review.'],
+  },
 ];
+
 
 export const ichkiSahifa = (qism: string): SatSahifa => {
   const t = satIchkiSahifalar.find((x) => x.qism === qism);

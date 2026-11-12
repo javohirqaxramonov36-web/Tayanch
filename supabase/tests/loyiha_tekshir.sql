@@ -31,6 +31,12 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('bookmarks', 'authenticated', 'DELETE,INSERT,SELECT'),
   ('events', 'anon', ''),
   ('events', 'authenticated', 'INSERT(name),INSERT(page),INSERT(props)'),
+  ('group_licenses', 'anon', ''),
+  ('group_licenses', 'authenticated', 'SELECT'),
+  ('group_members', 'anon', ''),
+  ('group_members', 'authenticated', 'SELECT'),
+  ('groups', 'anon', ''),
+  ('groups', 'authenticated', 'SELECT'),
   ('feedback', 'anon', ''),
   ('feedback', 'authenticated', 'SELECT INSERT(message),INSERT(page),INSERT(rating)'),
   ('official_mistakes', 'anon', ''),
@@ -146,7 +152,21 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.mock_submit_module(uuid,integer)', false, true, true),
   ('public.mock_abandon(uuid)', false, true, true),
   ('public.get_mock_result(uuid)', false, true, true),
-  ('public.admin_mock_readiness()', false, false, true)
+  ('public.admin_mock_readiness()', false, false, true),
+  ('public.admin_grant_group_license(uuid,integer,integer,integer,text,text)', false, false, true),
+  ('public.admin_revoke_group_license(uuid,text,text)', false, false, true),
+  ('public.group_teacher_overview()', false, true, true),
+  ('public.group_create(text,text)', false, true, true),
+  ('public.group_rotate_code(uuid)', false, true, true),
+  ('public.group_archive(uuid)', false, true, true),
+  ('public.group_delete(uuid)', false, true, true),
+  ('public.group_remove_member(uuid,uuid)', false, true, true),
+  ('public.group_progress(uuid)', false, true, true),
+  ('public.group_preview(text)', false, true, true),
+  ('public.group_join(text,text,boolean,boolean,text,text,boolean)', false, true, true),
+  ('public.group_my_memberships()', false, true, true),
+  ('public.group_update_sharing(uuid,boolean,boolean,text,text,boolean)', false, true, true),
+  ('public.group_leave(uuid)', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
@@ -154,8 +174,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 33 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 33); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 36 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 36); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 
