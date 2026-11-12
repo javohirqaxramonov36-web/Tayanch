@@ -8,7 +8,8 @@ import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
 import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
-import { qollanmalar, asos, mashqlar, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
+import { qollanmalar, asos, mashqlar, vositalar, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
+import { hammaSavollar } from '../../../data/ieltsDarslar';
 import { manbalar } from '../../../data/manbalar';
 import { saytTestlari } from '../../../lib/ielts/reading/saytTestlari';
 import { yol } from '../../../lib/yol';
@@ -19,6 +20,13 @@ const reading = yol('/uz/ielts/qollanma/reading/');
 const readingTest = yol('/uz/ielts/mashq/reading/');
 const testBor = (await saytTestlari()).length > 0;
 const tezNomlar = [...qollanmalar.filter((q) => !q.qism).map((q) => q.nomi), asos.nomi];
+// "Mening holatim": faqat brauzerdagi ma'lumot bo'lsa chiqadi. Takrorlash havolasi sahifa saytda bo'lsagina (vositalar ro'yxati).
+const holat = {
+  darsJami: hammaSavollar.length,
+  darslar: reading,
+  natija: yol('/uz/ielts/mashq/reading/natija/'),
+  takrorlash: vositalar.some((v) => v.qism === 'vosita/takrorlash/') ? yol('/uz/ielts/vosita/takrorlash/') : '',
+};
 // daqiqa: [eng kam, eng ko'p], matndagi raqamlardan (IE01). Davomiylik chizig'i shulardan, yangi raqam yo'q.
 const bolimlar: { nomi: string; vaqt: string; ikonka: string; daqiqa: [number, number]; href?: string }[] = [
   { nomi: 'Listening', vaqt: 'Taxminan 30 daqiqa', ikonka: IKONKA.listening, daqiqa: [30, 30] },
@@ -104,6 +112,14 @@ const namunalar = [
           k.observe(karta);
         })();
       </script>
+    </section>
+
+    <section class="qollanmalar holatim" id="holatim" aria-labelledby="holatim-h" data-holat={JSON.stringify(holat)} hidden>
+      <h2 id="holatim-h">Mening holatim</h2>
+      <div class="kul-blok">
+        <ul id="holatim-royxat"></ul>
+      </div>
+      <p class="izoh">Faqat shu brauzerdagi ma'lumot. Natija va band taxminiy, rasmiy IELTS natijasi emas.</p>
     </section>
 
     <section id="boshla" class="boshla" aria-labelledby="boshla-h">
@@ -279,6 +295,11 @@ const namunalar = [
 </BolimQobiq>
 
 <script>
+  import { URINISHLAR_KALIT } from '../../../lib/ielts/reading/ombor';
+  import { bandMatn } from '../../../lib/ielts/reading/band';
+  import { sanaMatn } from '../../../lib/ielts/reading/ekran/yollar';
+  import { darsKalitlari } from '../../../data/darsTurlar';
+
   // Reja kartasi: brauzerda reja bo'lsa, "davom etmoqda" holati.
   const karta = document.querySelector<HTMLElement>('.reja-karta')!;
   try {
@@ -292,6 +313,48 @@ const namunalar = [
       karta.setAttribute('aria-labelledby', 'reja-bor-h');
     }
   } catch { /* brauzer ruxsat bermadi: bo'sh holat qoladi */ }
+
+  // "Mening holatim": oxirgi Reading test natijasi, darslar progressi, takrorlash havolasi. Kalitlar faqat o'qiladi.
+  const holatim = document.getElementById('holatim')!;
+  const H = JSON.parse(holatim.dataset.holat || '{}') as { darsJami: number; darslar: string; natija: string; takrorlash: string };
+  const oqiJson = (k: string): unknown => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } };
+  const qatorlar: HTMLLIElement[] = [];
+  const qator = (href: string, nom: string, matn: string) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'q-qator';
+    a.href = href;
+    const n = document.createElement('span');
+    n.className = 'q-nom';
+    const b = document.createElement('strong'); b.textContent = nom;
+    const s = document.createElement('span'); s.textContent = matn;
+    n.append(b, s);
+    a.append(n);
+    li.append(a);
+    qatorlar.push(li);
+  };
+
+  const urinishlar = oqiJson(URINISHLAR_KALIT);
+  if (Array.isArray(urinishlar) && urinishlar.length > 0) {
+    const u = urinishlar[urinishlar.length - 1] as { id?: unknown; raw?: unknown; band?: unknown; finishedAt?: unknown };
+    if (typeof u.id === 'string' && typeof u.raw === 'number' && (u.band === null || typeof u.band === 'number')) {
+      const sana = typeof u.finishedAt === 'string' ? sanaMatn(u.finishedAt) : '';
+      qator(`${H.natija}?urinish=${encodeURIComponent(u.id)}`, 'Oxirgi Reading testi',
+        `${u.raw} / 40 · taxminiy band ${bandMatn(u.band as number | null, '2.0 dan past')}${sana ? ` · ${sana}` : ''} · jami ${urinishlar.length} ta test`);
+    }
+  }
+  const progress = oqiJson(darsKalitlari('ielts').progress);
+  if (progress && typeof progress === 'object' && !Array.isArray(progress)) {
+    const togri = Object.values(progress as Record<string, unknown>)
+      .flatMap((m) => (m && typeof m === 'object' ? Object.values(m as Record<string, unknown>) : []))
+      .filter((x) => x === 'togri').length;
+    if (togri > 0) qator(H.darslar, 'Reading darslari', `${H.darsJami} ta mashqdan ${togri} tasi to'g'ri yechilgan`);
+  }
+  if (qatorlar.length > 0) {
+    if (H.takrorlash) qator(H.takrorlash, 'Xatolarni takrorlash', "Xato qilgan savollaringni oraliq bilan qayta ishla");
+    document.getElementById('holatim-royxat')!.replaceChildren(...qatorlar);
+    holatim.hidden = false;
+  }
 </script>
 
 <style>
@@ -419,6 +482,13 @@ const namunalar = [
   .q-nom span { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
   .nofaol { color: var(--matn-ikkinchi); }
   .nofaol .q-nom strong { font-weight: 700; }
+  /* "Mening holatim" qatorlari JS bilan yaratiladi: scoped atribut yo'q, shuning uchun :global (yuqoridagi .q-qator bilan bir xil) */
+  #holatim-royxat :global(.q-qator) { background: var(--fon); border-radius: var(--r-orta); min-height: 64px; padding: 0 var(--b-4); display: flex; align-items: center; gap: var(--b-4); color: var(--matn); text-decoration: none; }
+  #holatim-royxat :global(a.q-qator:hover) { box-shadow: inset 0 0 0 1.5px var(--matn); }
+  #holatim-royxat :global(a.q-qator:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  #holatim-royxat :global(.q-nom) { flex: 1; min-width: 0; display: flex; flex-direction: column; padding-block: var(--b-2); }
+  #holatim-royxat :global(.q-nom strong) { font-weight: 800; }
+  #holatim-royxat :global(.q-nom span) { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
   .tez-tugma { display: none; }
   .asos { background: var(--fon); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-3); }
   .asos-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-2); }
