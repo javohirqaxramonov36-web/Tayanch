@@ -1,14 +1,20 @@
 ---
-// SAT Xato daftari: takrorlash (interaktiv darslar, 2-bosqich).
+// SAT Xato daftari: takrorlash (interaktiv darslar 2-bosqich, P09).
 // Darslardagi xatolar (tayanch:sat-xato-daftari, faqat o'qiladi) Leitner qutilariga tushadi: tayanch:sat-takrorlash.
 // Javob darsSaqlash.javobniYoz orqali yoziladi: dars progressi va daftar o'z shaklida yangilanadi.
-// Oraliqlar (1, 3, 7, 14 kun) Tayanch tanlovi. Ball hisoblanmaydi. Mantiq: src/lib/takrorlash.ts
-// Telefon: bitta ustun, tugmalar to'liq kenglikda. Klaviatura: variantlar radio guruhi (strelkalar), Enter tekshiradi.
+// P09: hisob bilan savol banki xatolari va saqlangan savollar ham shu ro'yxatda (review_overview, review_preview,
+// start_review_session → P08 sessiya sahifasi). Dars xatolari sababi: tayanch:sat-xato-sabab (src/lib/xatoSabab.ts).
+// Oraliqlar (1, 3, 7, 14 kun) Tayanch tanlovi. Ball hisoblanmaydi. Mantiq: src/lib/takrorlash.ts, src/lib/sat/xatoDaftari.ts.
+// Qoidalar: docs/xato-daftari.md. Dev mock: ?mock=toliq|bosh|xato|kvota (faqat DEV, src/lib/sat/xatoDaftariMock.ts).
+// Telefon: bitta ustun, tugmalar to'liq kenglikda. Klaviatura: tablar strelka/Home/End, variantlar radio guruhi, Enter tekshiradi.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
 import { yol } from '../../../../../lib/yol';
 import { hammaSavollar, modulNomi, type DarsModul } from '../../../../../data/satDarslar';
 import { matn as umumiyMatn } from '../../../../../data/umumiyMatn';
+import { TABLAR, TEG_FILTRLARI, IZOH_MAX } from '../../../../../lib/sat/xatoDaftari';
+import { SABABLAR } from '../../../../../lib/sat/sessiya';
 
 const T = umumiyMatn.en.dars;
 
@@ -41,36 +47,41 @@ const malumot = {
   }),
   darslar: Object.fromEntries(darslar.map((d) => [d.modul, { nomi: d.nomi, href: d.href }])),
 };
+const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
 ---
 <BolimQobiq
   title="Mistake log: review · SAT"
-  description="Spaced review of the exercises you got wrong in the SAT lessons: after 1, 3, 7 and 14 days. The data stays only in this browser. No score is calculated."
+  description="Spaced review of the questions you got wrong in the SAT lessons and the question bank: after 1, 3, 7 and 14 days. Lesson mistakes stay in this browser; question bank mistakes and saved questions are in your account. No score is calculated."
   turi="vosita"
   yol={['Practice']}
   bolim="sat"
   holat="qoralama"
 >
-  <div class="ichki takror">
+  <SavolUslub />
+  <div class="ichki takror" id="takror" data-sessiya-url={yol('/uz/sat/mashq/sessiya/')} data-kirish-url={yol('/uz/hisob/kirish/')} data-sahifa-url={sahifaUrl}>
     <header class="bosh">
       <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
       <h1>Mistake log: review</h1>
-      <p class="lead">Exercises you got wrong in the lessons land here and come back at intervals: tomorrow, then after 3, 7 and 14 days. Solve one correctly and it moves to the next box; get it wrong and it goes back to the start.</p>
+      <p class="lead">Questions you got wrong in the lessons and the question bank land here and come back at intervals: tomorrow, then after 3, 7 and 14 days. Solve one correctly and it moves to the next box; get it wrong and it goes back to the start. Note why you missed it, so you fix the cause, not just the answer.</p>
     </header>
 
     <p class="kichik ikkinchi">Sample questions written for Tayanch, not official SAT questions. No score is calculated. The intervals are Tayanch's choice.</p>
 
+    <div class="hisob-holat" id="hisob-holat" hidden>
+      <p id="hisob-matn" aria-live="polite"></p>
+      <a class="matn-tugma kok-tugma" id="kirish-havola" href="#" hidden>Sign in</a>
+      <button type="button" class="matn-tugma kok-tugma" id="hisob-qayta" hidden>Try again</button>
+    </div>
+
     <section class="royxat" id="royxat" aria-labelledby="royxat-h">
       <h2 id="royxat-h" tabindex="-1">Today's review</h2>
-      <dl class="qiymatlar">
-        <div><dt>Today</dt><dd id="son-bugun">0</dd></div>
-        <div><dt>Later</dt><dd id="son-keyin">0</dd></div>
-        <div><dt>Mastered</dt><dd id="son-ozl">0</dd></div>
-      </dl>
       <p class="holat-matn" id="holat-matn"></p>
       <div class="tugmalar">
         <button type="button" class="katta asosiy" id="boshla" hidden>Start review</button>
+        <button type="button" class="katta asosiy" id="bank-boshla" hidden>Review practice questions</button>
         <button type="button" class="katta ikkinchi" id="oldin" hidden>Review upcoming ones now</button>
       </div>
+      <p class="bank-xato" id="bank-xato" role="status"></p>
 
       <div class="darslar" id="darslar" hidden>
         <h3>Lessons</h3>
@@ -79,14 +90,30 @@ const malumot = {
         </ul>
       </div>
 
-      <details class="guruh" id="g-keyin" hidden>
-        <summary>Review later (<span id="g-keyin-son">0</span>)</summary>
-        <ul class="g-royxat" id="g-keyin-royxat"></ul>
-      </details>
-      <details class="guruh" id="g-ozl" hidden>
-        <summary>Mastered (<span id="g-ozl-son">0</span>)</summary>
-        <ul class="g-royxat" id="g-ozl-royxat"></ul>
-      </details>
+      <div class="tablar" role="tablist" aria-label="Mistake log lists" id="tablar">
+        {TABLAR.map((t, i) => (
+          <button type="button" role="tab" class="tab" id={`tab-${t.kalit}`} data-tab={t.kalit}
+            aria-selected={i === 0 ? 'true' : 'false'} aria-controls="tab-panel" tabindex={i === 0 ? '0' : '-1'}>
+            <span>{t.nomi}</span> <span class="tab-son" id={`son-${t.kalit}`}>0</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="filtr" role="group" aria-labelledby="filtr-h" id="filtr">
+        <p class="filtr-h" id="filtr-h">Reason</p>
+        <div class="filtr-chiplar">
+          {TEG_FILTRLARI.map((t, i) => (
+            <button type="button" class="chip" data-teg={t.kalit} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {t.nomi} <span class="chip-son" data-teg-son={t.kalit}>0</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-panel" role="tabpanel" aria-labelledby="tab-due" tabindex="0">
+        <p class="bosh-matn" id="bosh-matn" hidden></p>
+        <ul class="bandlar" id="bandlar"></ul>
+      </div>
     </section>
 
     <section class="sessiya" id="sessiya" aria-labelledby="sessiya-h" hidden>
@@ -141,31 +168,71 @@ const malumot = {
       ]}
     />
   </div>
+  <template id="sabab-shablon">
+    <fieldset class="sabab">
+      <legend class="sabab-h">Why I missed it</legend>
+      <div class="sabab-chiplar">
+        {SABABLAR.map((s) => <button type="button" class="chip" data-sabab={s.kalit} aria-pressed="false">{s.nomi}</button>)}
+      </div>
+      <label class="izoh-yorliq">Your note (optional)
+        <textarea class="izoh-maydon" rows="2" maxlength={IZOH_MAX}></textarea>
+      </label>
+      <p class="sabab-holat" aria-live="polite"></p>
+    </fieldset>
+  </template>
   <script type="application/json" id="takror-malumot" set:html={JSON.stringify(malumot)} />
 </BolimQobiq>
 
 <script>
   import { javobniYoz, bugun } from '../../../../../lib/darsSaqlash';
   import { sinxronla, guruhla, javobdanKeyin, holatniYoz, takrorKalit, type TakrorHolat } from '../../../../../lib/takrorlash';
+  import { sababOqi, sababYoz } from '../../../../../lib/xatoSabab';
+  import { hisobMijoz } from '../../../../../lib/hisob';
+  import { SESSIYA_KALITI, xatoTuri } from '../../../../../lib/savolBanki';
+  import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
+  import { SABABLAR, type Sabab } from '../../../../../lib/sat/sessiya';
+  import {
+    TABLAR, TEG_FILTRLARI, bankdanBand, tabBandlari, tabSonlari, tegSonlari, tegMos, tabTogrimi, holatMatni, dueSoni,
+    qisqaMatn, navbatda, sanaMatn,
+    type Band, type Tab, type TegFiltr, type DaftarApi, type BankSavol,
+  } from '../../../../../lib/sat/xatoDaftari';
 
   interface S {
     id: string; modul: string; mavzu: string; qiyinlik: string; verified: boolean;
     matn: string; yechim: string; togri: number; variantlar: string[]; xatolar: string[];
     korsatma: string;
   }
+  type HisobHolat = 'yoq' | 'anon' | 'yuklash' | 'xato' | 'tayyor';
   const BOLIM = 'sat';
   const HARF = 'ABCD';
-  const OYLAR = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const ildiz = $('takror');
   const M = JSON.parse($('takror-malumot').textContent || '{}') as { savollar: S[]; darslar: Record<string, { nomi: string; href: string }> };
   const savol = new Map(M.savollar.map((s) => [s.id, s]));
-  const sanaMatn = (s: string) => { const [, m, d] = s.split('-').map(Number); return `${OYLAR[m - 1]} ${d}`; };
   const qisqa = (t: string) => (t.length > 80 ? `${t.slice(0, 77)}…` : t);
+  const SABAB_NOMI = Object.fromEntries(SABABLAR.map((s) => [s.kalit, s.nomi])) as Record<Sabab, string>;
 
   let holat: TakrorHolat = sinxronla(BOLIM, new Set(savol.keys()));
   let navbat: string[] = [];
   let joriy = 0;
   let togriSoni = 0;
+
+  // ---------- Hisob (savol banki) ----------
+  let api: DaftarApi | null = null;
+  let mockTur: string | null = null;
+  let hisob: HisobHolat = 'yoq';
+  let bankBandlar: Band[] = [];
+  let serverKun: string | null = null;
+  let bankBand = false;
+  const ochishKesh = new Map<string, Promise<BankSavol>>();
+
+  // ---------- Ro'yxat holati ----------
+  const boshTab = new URLSearchParams(location.search).get('tab');
+  let tab: Tab = tabTogrimi(boshTab) ? boshTab : 'due';
+  let filtr: TegFiltr = 'all';
+  const ochiq = new Set<string>();
+
+  const kun = () => serverKun ?? bugun();
 
   const saqlashHolati = (ok: boolean) => {
     $('saqlash-holat').textContent = ok
@@ -173,46 +240,432 @@ const malumot = {
       : 'The browser did not allow saving: review progress will be lost when the page is closed.';
   };
 
-  // ---------- Ro'yxat ----------
-  function qator(id: string, sana?: string): HTMLLIElement {
-    const s = savol.get(id)!;
-    const li = document.createElement('li');
-    const nom = document.createElement('span');
-    nom.className = 'g-nom';
-    nom.textContent = `${M.darslar[s.modul]?.nomi ?? s.modul} · ${s.mavzu}`;
-    li.append(nom);
-    if (sana) { const t = document.createElement('span'); t.className = 'kichik ikkinchi'; t.textContent = sanaMatn(sana); li.append(t); }
-    return li;
+  function darsBandlari(): Band[] {
+    const sabab = sababOqi(BOLIM).savollar;
+    return Object.entries(holat.savollar).filter(([id]) => savol.has(id)).map(([id, y]) => {
+      const s = savol.get(id)!;
+      const sb = sabab[id];
+      return {
+        kalit: `dars:${id}`, manba: 'dars' as const, id,
+        mavzu: `${M.darslar[s.modul]?.nomi ?? s.modul} · ${s.mavzu}`,
+        qiyinlik: s.qiyinlik, qisqa: qisqaMatn(s.matn),
+        quti: y.quti, keyingi: y.keyingi,
+        teg: (sb?.teg ?? null) as Sabab | null, izoh: sb?.izoh ?? '', saqlangan: false,
+      };
+    });
+  }
+  const hammaBandlar = () => [...darsBandlari(), ...bankBandlar];
+
+  // ---------- Hisob holati ----------
+  function hisobChiz() {
+    const b = $('hisob-holat');
+    const k = $<HTMLAnchorElement>('kirish-havola');
+    const q = $<HTMLButtonElement>('hisob-qayta');
+    b.hidden = hisob === 'yoq';
+    k.hidden = hisob !== 'anon';
+    q.hidden = hisob !== 'xato';
+    $('hisob-matn').textContent = {
+      yoq: '',
+      anon: 'Question bank mistakes and saved questions need a Tayanch account. Lesson mistakes stay in this browser.',
+      yuklash: 'Loading your question bank mistakes…',
+      xato: "Couldn't load your question bank mistakes. Lesson mistakes are below.",
+      tayyor: 'Question bank mistakes and saved questions are in your account. Lesson mistakes stay in this browser.',
+    }[hisob];
   }
 
+  // ---------- Ro'yxat ----------
   function royxatniChiz() {
     const g = guruhla(holat, bugun());
-    $('son-bugun').textContent = String(g.bugun.length);
-    $('son-keyin').textContent = String(g.keyinroq.length);
-    $('son-ozl').textContent = String(g.ozlashtirildi.length);
-    const bosh = g.bugun.length + g.keyinroq.length + g.ozlashtirildi.length === 0;
-    $('holat-matn').textContent = bosh
-      ? 'The mistake log is empty. Exercises you get wrong in the lessons land here and are reviewed the next day.'
-      : g.bugun.length > 0
-        ? `Today you have ${g.bugun.length} ${g.bugun.length === 1 ? 'exercise' : 'exercises'} to review.`
-        : g.keyinroq.length > 0
-          ? `Nothing to review today. Next: ${sanaMatn(holat.savollar[g.keyinroq[0]].keyingi)}.`
-          : 'All mistakes are mastered. New mistakes will come from the lessons.';
-    $<HTMLButtonElement>('boshla').hidden = g.bugun.length === 0;
-    $<HTMLButtonElement>('boshla').textContent = `Start review (${g.bugun.length})`;
-    $<HTMLButtonElement>('oldin').hidden = !(g.bugun.length === 0 && g.keyinroq.length > 0);
-    $('darslar').hidden = !(bosh || (g.bugun.length === 0 && g.keyinroq.length === 0));
+    const hamma = hammaBandlar();
+    const sonlar = tabSonlari(hamma, kun());
+    const due = dueSoni(hamma, kun());
+    const keyin = hamma.filter((b) => navbatda(b) && b.quti! < 5 && b.keyingi! > kun()).sort((a, b) => a.keyingi!.localeCompare(b.keyingi!));
+    const jami = hamma.filter(navbatda).length;
+    const dueJami = due.dars + due.bank;
 
-    $('g-keyin').hidden = g.keyinroq.length === 0;
-    $('g-keyin-son').textContent = String(g.keyinroq.length);
-    $('g-keyin-royxat').replaceChildren(...g.keyinroq.map((id) => qator(id, holat.savollar[id].keyingi)));
-    $('g-ozl').hidden = g.ozlashtirildi.length === 0;
-    $('g-ozl-son').textContent = String(g.ozlashtirildi.length);
-    $('g-ozl-royxat').replaceChildren(...g.ozlashtirildi.map((id) => qator(id)));
+    $('holat-matn').textContent = jami === 0
+      ? 'The mistake log is empty. Exercises you get wrong in the lessons land here and are reviewed the next day.'
+      : dueJami > 0
+        ? `Today you have ${dueJami} ${dueJami === 1 ? 'exercise' : 'exercises'} to review.`
+        : keyin.length > 0
+          ? `Nothing to review today. Next: ${sanaMatn(keyin[0].keyingi!)}.`
+          : 'All mistakes are mastered. New mistakes will come from the lessons.';
+
+    const bankBor = hisob === 'tayyor';
+    const boshla = $<HTMLButtonElement>('boshla');
+    boshla.hidden = g.bugun.length === 0;
+    boshla.textContent = bankBor ? `Review lessons (${g.bugun.length})` : `Start review (${g.bugun.length})`;
+    const bb = $<HTMLButtonElement>('bank-boshla');
+    bb.hidden = !bankBor || due.bank === 0;
+    bb.textContent = `Review practice questions (${due.bank})`;
+    $<HTMLButtonElement>('oldin').hidden = !(g.bugun.length === 0 && g.keyinroq.length > 0);
+    $<HTMLButtonElement>('oldin').textContent = bankBor ? 'Review upcoming lessons now' : 'Review upcoming ones now';
+    $('darslar').hidden = !(g.bugun.length + g.keyinroq.length + g.ozlashtirildi.length === 0 || (g.bugun.length === 0 && g.keyinroq.length === 0));
+
+    for (const t of TABLAR) $(`son-${t.kalit}`).textContent = String(sonlar[t.kalit]);
+    tablarChiz();
+    panelChiz(hamma);
     return g;
   }
 
-  // ---------- Sessiya ----------
+  function tablarChiz() {
+    for (const t of TABLAR) {
+      const el = $(`tab-${t.kalit}`);
+      const tanlangan = t.kalit === tab;
+      el.setAttribute('aria-selected', String(tanlangan));
+      el.tabIndex = tanlangan ? 0 : -1;
+    }
+    $('tab-panel').setAttribute('aria-labelledby', `tab-${tab}`);
+  }
+
+  function filtrChiz(tabda: Band[]) {
+    const s = tegSonlari(tabda);
+    $('filtr').hidden = tabda.length === 0;
+    document.querySelectorAll<HTMLButtonElement>('#filtr [data-teg]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.teg === filtr));
+    });
+    document.querySelectorAll<HTMLElement>('#filtr [data-teg-son]').forEach((e) => {
+      e.textContent = String(s[e.dataset.tegSon as TegFiltr] ?? 0);
+    });
+  }
+
+  function boshMatni(tabda: number): string {
+    if (tabda > 0) return 'No questions with this reason in this list.';
+    if (tab === 'due') return 'Nothing is due today.';
+    if (tab === 'all') return 'No open mistakes. Questions you get wrong will appear here.';
+    if (tab === 'saved') {
+      return hisob === 'tayyor'
+        ? 'No saved questions yet. Use "Save question" in a practice session.'
+        : 'Saved questions come from the question bank and need a Tayanch account.';
+    }
+    return 'Nothing mastered yet. A question is mastered after 4 correct reviews in a row: tomorrow, then after 3, 7 and 14 days.';
+  }
+
+  function panelChiz(hamma = hammaBandlar()) {
+    const tabda = tabBandlari(hamma, tab, kun());
+    filtrChiz(tabda);
+    const korinadi = tabda.filter((b) => tegMos(b, filtr));
+    const bosh = $('bosh-matn');
+    bosh.hidden = korinadi.length > 0;
+    bosh.textContent = korinadi.length ? '' : boshMatni(tabda.length);
+    $('bandlar').replaceChildren(...korinadi.map((b, i) => bandQator(b, i)));
+  }
+
+  function pill(t: string, cls = 'pill') { const p = document.createElement('span'); p.className = cls; p.textContent = t; return p; }
+  function el<K extends keyof HTMLElementTagNameMap>(teg: K, cls?: string, matn?: string) {
+    const e = document.createElement(teg);
+    if (cls) e.className = cls;
+    if (matn !== undefined) e.textContent = matn;
+    return e;
+  }
+
+  function bandQator(b: Band, i: number): HTMLLIElement {
+    const li = el('li', 'band');
+    const meta = el('p', 'b-meta');
+    const mavzuEl = el('span', 'b-mavzu', b.mavzu);
+    mavzuEl.id = `band-${i}-mavzu`;
+    meta.append(pill(b.manba === 'dars' ? 'Lesson' : 'Question bank'), pill(b.qiyinlik), mavzuEl);
+    const holatEl = el('span', 'b-holat', holatMatni(b, kun()));
+    meta.append(holatEl);
+    const tegEl = el('span', 'pill pill-teg');
+    const tegYoz = () => { tegEl.hidden = !b.teg; tegEl.textContent = b.teg ? SABAB_NOMI[b.teg] : ''; };
+    tegYoz();
+    meta.append(tegEl);
+    li.append(meta, el('p', 'b-qisqa', b.qisqa));
+
+    const amal = el('div', 'b-amal');
+    const och = el('button', 'matn-tugma kok-tugma', 'Show question');
+    och.type = 'button';
+    const tanaId = `band-${i}`;
+    och.setAttribute('aria-controls', tanaId);
+    och.setAttribute('aria-describedby', mavzuEl.id);
+    amal.append(och);
+    li.append(amal);
+
+    const tana = el('div', 'b-tana');
+    tana.id = tanaId;
+    tana.hidden = true;
+    li.append(tana);
+
+    const ochGa = (on: boolean) => {
+      och.setAttribute('aria-expanded', String(on));
+      och.textContent = on ? 'Hide question' : 'Show question';
+      tana.hidden = !on;
+      if (on) ochiq.add(b.kalit); else ochiq.delete(b.kalit);
+      if (on && !tana.childElementCount) tanaQur(b, tana, tegYoz, mavzuEl.id);
+    };
+    och.addEventListener('click', () => ochGa(tana.hidden));
+    ochGa(ochiq.has(b.kalit));
+    return li;
+  }
+
+  function tanaQur(b: Band, tana: HTMLElement, tegYoz: () => void, mavzuId: string) {
+    const savolJoy = el('div', 'b-savol');
+    tana.append(savolJoy);
+    if (b.manba === 'dars') {
+      const s = savol.get(b.id)!;
+      if (s.korsatma) savolJoy.append(el('p', 's-korsatma', s.korsatma));
+      savolJoy.append(el('p', 'b-matn', s.matn));
+      const ol = el('ol', 'b-variantlar');
+      s.variantlar.forEach((t, j) => { const li = el('li'); li.append(el('span', 'harf', HARF[j]), el('span', 'v-matn', t)); ol.append(li); });
+      savolJoy.append(ol);
+    } else {
+      bankSavolChiz(b.id, savolJoy);
+    }
+    tana.append(el('p', 'kichik ikkinchi', 'The answer is hidden here. Check yourself in a review session.'));
+
+    if (navbatda(b)) tana.append(sababQur(b, tegYoz, mavzuId));
+    if (b.manba === 'bank') tana.append(saqlaQur(b, mavzuId));
+  }
+
+  async function bankSavolChiz(qid: string, joy: HTMLElement) {
+    if (!api) return;
+    const yukla = el('p', 'kichik ikkinchi', 'Loading the question…');
+    joy.replaceChildren(yukla);
+    try {
+      let p = ochishKesh.get(qid);
+      if (!p) { p = api.ochish(qid); ochishKesh.set(qid, p); }
+      const q = await p;
+      const parcha = q.passage ? el('div', 'b-parcha sk-parcha') : null;
+      const matn = el('div', 'b-matn');
+      const ol = el('ol', 'b-variantlar');
+      joy.replaceChildren(...[parcha, matn, ol].filter(Boolean) as HTMLElement[]);
+      if (q.figure) {
+        const src = await api.rasm(q.figure.path).catch(() => null);
+        const f = el('figure', 'b-rasm');
+        if (src) { const img = el('img'); img.src = src; img.alt = q.figure.alt ?? ''; f.append(img); }
+        else f.append(el('p', 'kichik ikkinchi', q.figure.alt ? `Figure: ${q.figure.alt}` : 'Figure not available.'));
+        if (q.figure.caption) f.append(el('figcaption', 'kichik ikkinchi', q.figure.caption));
+        joy.insertBefore(f, matn);
+      }
+      const ishlar: Promise<void>[] = [];
+      if (parcha) ishlar.push(xavfsizMatn(q.passage!, parcha));
+      ishlar.push(xavfsizMatn(q.stem, matn));
+      for (const o of q.options ?? []) {
+        const li = el('li');
+        const t = el('span', 'v-matn');
+        li.append(el('span', 'harf', o.key), t);
+        ol.append(li);
+        ishlar.push(xavfsizMatn(o.text, t));
+      }
+      if (!q.options?.length) ol.remove();
+      if (q.format === 'spr') joy.append(el('p', 'kichik ikkinchi', 'Student-produced response: you type the answer.'));
+      await Promise.all(ishlar);
+    } catch {
+      ochishKesh.delete(qid);
+      const p = el('p', 'b-xato', "Couldn't open this question. ");
+      const q = el('button', 'matn-tugma kok-tugma', 'Try again');
+      q.type = 'button';
+      q.addEventListener('click', () => bankSavolChiz(qid, joy));
+      p.append(q);
+      joy.replaceChildren(p);
+    }
+  }
+
+  function sababQur(b: Band, tegYoz: () => void, mavzuId: string): HTMLElement {
+    const f = ($<HTMLTemplateElement>('sabab-shablon').content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement;
+    f.setAttribute('aria-describedby', mavzuId);
+    const holatEl = f.querySelector<HTMLElement>('.sabab-holat')!;
+    const tugmalar = [...f.querySelectorAll<HTMLButtonElement>('[data-sabab]')];
+    const chiz = () => tugmalar.forEach((t) => t.setAttribute('aria-pressed', String(b.teg === t.dataset.sabab)));
+    chiz();
+    const maydon = f.querySelector<HTMLTextAreaElement>('textarea')!;
+    maydon.value = b.izoh;
+    const yangilash = () => { tegYoz(); filtrChiz(tabBandlari(hammaBandlar(), tab, kun())); };
+
+    tugmalar.forEach((t) => t.addEventListener('click', async () => {
+      const eski = b.teg;
+      const yangi = b.teg === t.dataset.sabab ? null : (t.dataset.sabab as Sabab);
+      b.teg = yangi;
+      chiz();
+      t.setAttribute('aria-busy', 'true');
+      const ok = await sababSaqla(b, { teg: yangi });
+      t.removeAttribute('aria-busy');
+      if (!ok) { b.teg = eski; chiz(); }
+      holatEl.textContent = ok ? (yangi ? `Reason saved: ${SABAB_NOMI[yangi]}.` : 'Reason cleared.') : "Couldn't save the reason. Try again.";
+      yangilash();
+    }));
+    maydon.addEventListener('change', async () => {
+      const eski = b.izoh;
+      const yangi = maydon.value.slice(0, 1000);
+      if (yangi === eski) return;
+      b.izoh = yangi;
+      const ok = await sababSaqla(b, { izoh: yangi });
+      if (!ok) b.izoh = eski;
+      holatEl.textContent = ok ? 'Note saved.' : "Couldn't save the note. It is still in the box: try again.";
+    });
+    return f;
+  }
+
+  async function sababSaqla(b: Band, o: { teg?: Sabab | null; izoh?: string }): Promise<boolean> {
+    if (b.manba === 'dars') return sababYoz(BOLIM, b.id, o);
+    if (!api) return false;
+    try {
+      if ('teg' in o) await api.teg(b.id, o.teg ?? null);
+      if ('izoh' in o) await api.izoh(b.id, o.izoh ?? '');
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function saqlaQur(b: Band, mavzuId: string): HTMLElement {
+    const qator = el('div', 'b-saqla');
+    const t = el('button', 'kichik-tugma', 'Save question');
+    t.type = 'button';
+    t.setAttribute('aria-describedby', mavzuId);
+    const xabar = el('p', 'sabab-holat');
+    xabar.setAttribute('aria-live', 'polite');
+    const chiz = () => t.setAttribute('aria-pressed', String(b.saqlangan));
+    chiz();
+    t.addEventListener('click', async () => {
+      if (!api || t.getAttribute('aria-busy')) return;
+      const on = !b.saqlangan;
+      b.saqlangan = on;
+      chiz();
+      t.setAttribute('aria-busy', 'true');
+      try {
+        await api.saqla(b.id, on);
+        xabar.textContent = on ? 'Saved.' : 'Removed from saved questions.';
+      } catch {
+        b.saqlangan = !on;
+        chiz();
+        xabar.textContent = "Couldn't update saved questions. Try again.";
+      }
+      t.removeAttribute('aria-busy');
+      $('son-saved').textContent = String(tabSonlari(hammaBandlar(), kun()).saved);
+    });
+    qator.append(t, xabar);
+    return qator;
+  }
+
+  // ---------- Tablar va filtr ----------
+  function tabTanla(t: Tab, fokus: boolean) {
+    tab = t;
+    filtr = 'all';
+    try {
+      const u = new URL(location.href);
+      if (t === 'due') u.searchParams.delete('tab'); else u.searchParams.set('tab', t);
+      history.replaceState(null, '', u.pathname + u.search + u.hash);
+    } catch { /* */ }
+    tablarChiz();
+    panelChiz();
+    if (fokus) $(`tab-${t}`).focus();
+  }
+  $('tablar').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tab]');
+    if (b && tabTogrimi(b.dataset.tab)) tabTanla(b.dataset.tab, false);
+  });
+  $('tablar').addEventListener('keydown', (e) => {
+    const i = TABLAR.findIndex((t) => t.kalit === tab);
+    const n = TABLAR.length;
+    const k = e.key === 'ArrowRight' ? (i + 1) % n : e.key === 'ArrowLeft' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
+    if (k < 0) return;
+    e.preventDefault();
+    tabTanla(TABLAR[k].kalit, true);
+  });
+  $('filtr').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-teg]');
+    if (!b) return;
+    const f = b.dataset.teg as TegFiltr;
+    filtr = filtr === f && f !== 'all' ? 'all' : f;
+    panelChiz();
+  });
+
+  // ---------- Savol banki: review sessiya (P08) ----------
+  $('bank-boshla').addEventListener('click', async () => {
+    const t = $<HTMLButtonElement>('bank-boshla');
+    if (!api || bankBand) return;
+    bankBand = true;
+    t.setAttribute('aria-busy', 'true');
+    $('bank-xato').textContent = 'Starting the review session…';
+    try {
+      const r = await api.takrorla();
+      if (!r.session_id) {
+        $('bank-xato').textContent = 'Nothing is due today in the question bank.';
+        await bankYukla();
+      } else {
+        try { sessionStorage.setItem(SESSIYA_KALITI, JSON.stringify(r)); } catch { /* sessiya sahifasi id bilan so'raydi */ }
+        const mock = mockTur ? '&mock=oddiy' : '';
+        location.assign(`${ildiz.dataset.sessiyaUrl}?id=${encodeURIComponent(r.session_id)}${mock}`);
+        return;
+      }
+    } catch (e) {
+      const tur = xatoTuri(e);
+      $('bank-xato').textContent = tur === 'kvota'
+        ? "You've reached today's limit for review sessions. Lesson review still works."
+        : tur === 'kirish' ? 'Sign in again to start a review session.'
+          : tur === 'tarmoq' ? "Couldn't reach the server. Check your connection and try again." : "The review session didn't start. Try again.";
+    }
+    bankBand = false;
+    t.removeAttribute('aria-busy');
+  });
+
+  async function bankYukla() {
+    if (!api) return;
+    hisob = 'yuklash';
+    hisobChiz();
+    try {
+      const r = await api.royxat();
+      serverKun = /^\d{4}-\d{2}-\d{2}$/.test(String(r.today)) ? r.today : null;
+      bankBandlar = (r.items ?? []).map(bankdanBand).filter((b): b is Band => !!b);
+      hisob = 'tayyor';
+    } catch (e) {
+      hisob = xatoTuri(e) === 'kirish' ? 'anon' : 'xato';
+      bankBandlar = [];
+    }
+    hisobChiz();
+    if ($('sessiya').hidden) royxatniChiz();
+  }
+  $('hisob-qayta').addEventListener('click', () => bankYukla());
+  $<HTMLAnchorElement>('kirish-havola').href = `${ildiz.dataset.kirishUrl}?keyin=${encodeURIComponent(ildiz.dataset.sahifaUrl!)}`;
+
+  async function hisobniUla() {
+    if (import.meta.env.DEV) {
+      const mock = new URLSearchParams(location.search).get('mock');
+      if (mock) {
+        const m = await import('../../../../../lib/sat/xatoDaftariMock');
+        if (new URLSearchParams(location.search).get('tozala') === '1') m.mockTozala();
+        api = m.mockApi(mock as Parameters<typeof m.mockApi>[0]);
+        mockTur = mock;
+        return bankYukla();
+      }
+    }
+    const c = hisobMijoz();
+    if (!c) { hisob = 'yoq'; return hisobChiz(); }
+    const { data } = await c.auth.getSession();
+    if (!data.session) { hisob = 'anon'; hisobChiz(); return royxatniChiz(); }
+    api = haqiqiyApi(c);
+    return bankYukla();
+  }
+
+  function haqiqiyApi(c: NonNullable<ReturnType<typeof hisobMijoz>>): DaftarApi {
+    const rpc = async <T,>(nom: string, args?: Record<string, unknown>): Promise<T> => {
+      const { data, error } = await c.rpc(nom, args);
+      if (error) throw error;
+      return data as T;
+    };
+    const tekshir = (error: unknown) => { if (error) throw error; };
+    return {
+      royxat: () => rpc('review_overview'),
+      ochish: (qid) => rpc('review_preview', { p_question: qid }),
+      teg: async (qid, teg) => tekshir((await c.from('review_queue').update({ reason_tag: teg }).eq('question_id', qid)).error),
+      izoh: async (qid, izoh) => tekshir((await c.from('review_queue').update({ note: izoh.trim() ? izoh : null }).eq('question_id', qid)).error),
+      saqla: async (qid, on) => {
+        const { error } = on
+          ? await c.from('bookmarks').insert({ question_id: qid })
+          : await c.from('bookmarks').delete().eq('question_id', qid);
+        if (error && error.code !== '23505') throw error;
+      },
+      takrorla: () => rpc('start_review_session', { p_limit: null }),
+      rasm: async (path) => {
+        const { data, error } = await c.storage.from('question-figures').createSignedUrl(path, 3600);
+        return error ? null : data.signedUrl;
+      },
+    };
+  }
+
+  // ---------- Sessiya (darslar, o'zgarmagan) ----------
   function boshla(ids: string[]) {
     navbat = ids; joriy = 0; togriSoni = 0;
     $('royxat').hidden = true;
@@ -228,7 +681,6 @@ const malumot = {
     $('s-hisob').textContent = `${joriy + 1} / ${navbat.length}`;
     $('s-legend').textContent = `Question ${joriy + 1} of ${navbat.length}`;
     const meta = $('s-meta');
-    const pill = (t: string, cls = 'pill') => { const p = document.createElement('span'); p.className = cls; p.textContent = t; return p; };
     const mavzu = document.createElement('span'); mavzu.className = 'kichik ikkinchi';
     mavzu.textContent = `${M.darslar[s.modul]?.nomi ?? s.modul} · ${s.mavzu}`;
     meta.replaceChildren(pill('Sample'), pill(s.qiyinlik), mavzu, ...(s.verified ? [] : [pill('not verified', 'pill pill-ogoh')]));
@@ -272,8 +724,8 @@ const malumot = {
     labellar[s.togri].classList.add('togri');
     if (!togrimi) labellar[j].classList.add('xato');
 
-    const kun = bugun();
-    const yangi = javobdanKeyin(holat.savollar[s.id], togrimi, kun);
+    const kunBugun = bugun();
+    const yangi = javobdanKeyin(holat.savollar[s.id], togrimi, kunBugun);
     holat.savollar[s.id] = yangi;
     const ok1 = javobniYoz(BOLIM, s.modul, s.id, togrimi, qisqa(s.variantlar[j]));
     const ok2 = holatniYoz(BOLIM, holat);
@@ -332,6 +784,7 @@ const malumot = {
   });
 
   royxatniChiz();
+  hisobniUla();
 </script>
 
 <style>
@@ -341,26 +794,87 @@ const malumot = {
   .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
   .takror :global(.pill) { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
   .takror :global(.pill-ogoh) { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .takror :global(.pill-teg) { background: var(--fon); border: 1.5px solid var(--chiziq-maydon); padding: 2.5px 10.5px; }
   .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
   h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: 32px; }
   h2:focus, .yakun-matn:focus { outline: none; }
   h3 { font-size: 20px; }
   .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
-  [hidden] { display: none !important; }
+  .takror [hidden], .takror :global([hidden]) { display: none !important; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+  .hisob-holat { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); font-weight: 600; }
+  .hisob-holat p { flex: 1 1 280px; min-width: 0; }
+
   .royxat { display: flex; flex-direction: column; gap: var(--b-5); }
-  .qiymatlar { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--b-2); max-width: 560px; }
-  .qiymatlar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
-  .qiymatlar dt { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .qiymatlar dd { margin: 0; font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
   .holat-matn { font-size: 18px; font-weight: 700; line-height: 1.5; }
+  .bank-xato { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .bank-xato:empty { display: none; }
   .darslar { display: flex; flex-direction: column; gap: var(--b-2); }
   .darslar ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--b-2); }
   .darslar a { min-height: 48px; display: flex; align-items: center; padding: 0 var(--b-4); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); color: var(--rang-havola); font-weight: 700; text-decoration: none; }
   .darslar a:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
   .darslar a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+
+  /* Tablar: segment ko'rinishi, telefonda 2×2 */
+  .tablar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--b-2); max-width: 720px; }
+  .tab {
+    min-height: 56px; padding: var(--b-2) var(--b-3); border-radius: var(--r-orta); cursor: pointer;
+    background: var(--fon-ikkinchi); color: var(--matn); border: 2px solid transparent; font: inherit; font-weight: 700;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--b-2); text-align: center;
+  }
+  .tab:hover { border-color: var(--chiziq-kuchli); }
+  .tab[aria-selected='true'] { background: var(--matn); color: var(--fon); }
+  .tab-son { font-variant-numeric: tabular-nums; font-weight: 800; }
+  .tab:focus-visible, .tab-panel:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+
+  .filtr { display: flex; flex-direction: column; gap: var(--b-2); }
+  .filtr-h { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); }
+  .filtr-chiplar, .sabab-chiplar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .takror :global(.chip) {
+    min-height: 44px; padding: 0 14px; border-radius: var(--r-toliq);
+    font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-maydon);
+  }
+  .takror :global(.chip[aria-pressed='true']) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
+  .takror :global(.chip:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .chip-son { font-variant-numeric: tabular-nums; }
+
+  .tab-panel { border-radius: var(--r-orta); }
+  .bosh-matn { font-weight: 700; color: var(--matn-ikkinchi); padding: var(--b-4) 0; }
+  .bandlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .bandlar :global(.band) { border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
+  .bandlar :global(.b-meta) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .bandlar :global(.b-mavzu) { font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+  .bandlar :global(.b-holat) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); font-variant-numeric: tabular-nums; }
+  .bandlar :global(.b-qisqa) { color: var(--matn-ikkinchi); overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .bandlar :global(.b-amal) { display: flex; flex-wrap: wrap; gap: var(--b-2); margin-left: calc(-1 * var(--b-4)); }
+  .bandlar :global(.b-tana) { display: flex; flex-direction: column; gap: var(--b-4); padding-top: var(--b-3); border-top: 1px solid var(--chiziq); }
+  .bandlar :global(.b-savol) { display: flex; flex-direction: column; gap: var(--b-3); min-width: 0; }
+  .bandlar :global(.b-matn) { font-size: 18px; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+  .bandlar :global(.b-parcha) { line-height: 1.6; overflow-wrap: anywhere; }
+  .bandlar :global(.b-rasm) { margin: 0; }
+  .bandlar :global(.b-rasm img) { max-width: 100%; height: auto; }
+  .bandlar :global(.b-variantlar) { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .bandlar :global(.b-variantlar li) { display: flex; align-items: center; gap: var(--b-3); padding: var(--b-2) var(--b-3); border: 1.5px solid var(--chiziq); border-radius: var(--r-orta); }
+  .bandlar :global(.b-variantlar .harf) { width: 28px; height: 28px; flex: none; border-radius: var(--r-logo); display: grid; place-items: center; font-size: var(--matn-kichik); font-weight: 800; background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
+  .bandlar :global(.b-variantlar .v-matn) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .bandlar :global(.b-xato) { font-weight: 700; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .takror :global(.sabab) { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .takror :global(.sabab-h) { padding: 0; font-weight: 800; margin-bottom: var(--b-2); }
+  .takror :global(.izoh-yorliq) { display: flex; flex-direction: column; gap: var(--b-1); font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .takror :global(.izoh-maydon) { font: inherit; font-weight: 400; color: var(--matn); background: var(--fon); border: 1.5px solid var(--chiziq-maydon); border-radius: var(--r-orta); padding: var(--b-2) var(--b-3); min-height: 64px; resize: vertical; width: 100%; box-sizing: border-box; }
+  .takror :global(.izoh-maydon:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .takror :global(.sabab-holat) { margin: 0; min-height: 1em; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .takror :global(.b-saqla) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .takror :global(.kichik-tugma) {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
+    border: 0; font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer; background: var(--sirt-ikkinchi); color: var(--matn);
+  }
+  .takror :global(.kichik-tugma[aria-pressed='true']) { background: var(--rang-asosiy-och); box-shadow: inset 0 0 0 1.5px var(--rang-asosiy); }
+  .takror :global(.kichik-tugma:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .takror :global([aria-busy='true']) { cursor: progress; }
   .guruh { border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
   .guruh summary { min-height: 56px; padding: var(--b-3) var(--b-4); display: flex; align-items: center; font-weight: 800; cursor: pointer; }
   .guruh summary:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--r-orta); }
@@ -376,10 +890,11 @@ const malumot = {
   .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
   .katta.qora { background: var(--matn); color: var(--fon); }
-  .katta:focus-visible, .matn-tugma:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; text-decoration: none; }
-  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
-  .kok-tugma { color: var(--rang-havola); margin-right: auto; }
+  .katta:focus-visible, .takror :global(.matn-tugma:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .takror :global(.matn-tugma) { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; text-decoration: none; }
+  .takror :global(.matn-tugma:hover) { background: var(--sirt-ikkinchi); }
+  .takror :global(.kok-tugma) { color: var(--rang-havola); }
+  .s-tugmalar .kok-tugma { margin-right: auto; }
   .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
   .tozalash { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); }
 
@@ -389,7 +904,7 @@ const malumot = {
   .savol-karta { align-self: stretch; background: var(--fon); border: 1px solid var(--chiziq); border-radius: var(--r-katta); box-shadow: var(--soya); padding: var(--b-8); }
   .savol { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); }
   .s-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .s-korsatma { font-weight: 700; color: var(--matn-ikkinchi); }
+  .takror :global(.s-korsatma) { font-weight: 700; color: var(--matn-ikkinchi); }
   .s-matn { font-size: 22px; font-weight: 700; line-height: 1.4; }
   .s-matn:focus { outline: none; }
   .variantlar { display: flex; flex-direction: column; gap: var(--b-3); }
@@ -425,8 +940,8 @@ const malumot = {
     .lead { font-size: 17px; }
     .savol-karta { padding: var(--b-5); }
     .s-matn { font-size: 19px; }
-    .qiymatlar dd { font-size: 22px; }
+    .tablar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .katta { width: 100%; }
-    .kok-tugma { margin-right: 0; }
+    .s-tugmalar .kok-tugma { margin-right: 0; }
   }
 </style>

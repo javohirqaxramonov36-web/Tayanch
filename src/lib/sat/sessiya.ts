@@ -73,6 +73,8 @@ export interface SessiyaApi {
   navbatgaQosh(qid: string): Promise<void>;
   navbatdanOl(qid: string): Promise<void>;
   sabab(qid: string, tag: string | null): Promise<void>;
+  /** Saqlangan savollar (public.bookmarks): true qo'shadi, false olib tashlaydi. Takror chaqiruv xavfsiz. */
+  saqla(qid: string, on: boolean): Promise<void>;
   rasm(path: string): Promise<string | null>;
 }
 
@@ -290,6 +292,7 @@ export const SABABLAR = [
   { kalit: 'concept_gap', nomi: 'Concept gap' },
   { kalit: 'time_pressure', nomi: 'Time pressure' },
   { kalit: 'misread', nomi: 'Misread' },
+  { kalit: 'other', nomi: 'Other' },
 ] as const;
 export type Sabab = (typeof SABABLAR)[number]['kalit'];
 export const sababTogrimi = (s: unknown): s is Sabab => SABABLAR.some((x) => x.kalit === s);

@@ -156,6 +156,10 @@ Kirgan ── daily_question ─> 'daily' sessiya (kuniga bitta) + result (javob
 - **Rasmli savol** kun savoli bo'lmaydi: mehmon `question-figures` dan rasm ocha olmaydi.
 - **Sinov**: `supabase/tests/kun_savoli_test.sql` (KS01–KS13, sana `private.today_tashkent` almashtirilib simulyatsiya qilinadi), `npm run db:tekshir`.
 
+### Mock imtihon (P30, migratsiya `20261113012418_mock_imtihon.sql`)
+
+Jadvallar `mock_forms`, `mock_form_questions`, `mock_attempts`, `mock_modules`, `mock_answers` (RLS yoqilgan, mijozga huquq yo'q, hammasi RPC orqali). RPC: `mock_status`, `start_mock`, `get_mock`, `mock_start_module`, `mock_save`, `mock_submit_module`, `mock_abandon`, `get_mock_result`; admin `admin_mock_readiness` (faqat service role). Modul yopilganda `practice_sessions` (`mode = 'mock'`) + `attempts` + `review_queue` (xatolar). `can_read_question_figure` mock formasidagi savol rasmini ham ochadi. Batafsil: `docs/mock-imtihon.md`.
+
 ### Kvota
 
 ```
