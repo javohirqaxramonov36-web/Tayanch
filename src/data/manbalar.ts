@@ -66,8 +66,8 @@ export const manbalar: Manba[] = [
     tashkilot: 'College Board',
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/reading-writing',
     tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-06',
-    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z. Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
+    tekshirilganSana: '2026-11-12',
+    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z (adabiyot, tarix/ijtimoiy fanlar, gumanitar, fan). Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Har ikki modulda to'rt domenning hammasi bor; o'xshash skill savollari guruhlangan va osondan qiyinga boradi (2026-11-12, WebFetch xulosasi). Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
   },
   {
     id: 'CB07',
