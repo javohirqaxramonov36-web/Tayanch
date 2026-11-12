@@ -6,8 +6,9 @@
 import { yol } from '../lib/yol';
 
 type FotoSlug = 'top-admission' | 'sat' | 'ielts' | 'eyuf';
-interface Props { bolim: FotoSlug }
-const { bolim } = Astro.props;
+// ixcham: kompyuterda pastroq kesim (4:1), h1 va CTA birinchi ekranda qolsin. Hozircha faqat SAT kirishida (vizual-sat-2).
+interface Props { bolim: FotoSlug; ixcham?: boolean }
+const { bolim, ixcham = false } = Astro.props;
 
 // Kompyuterda 3:1 kesim: har fotoda asosiy predmet ko'rinadigan vertikal nuqta.
 const fokus: Record<FotoSlug, string> = {
@@ -19,7 +20,7 @@ const fokus: Record<FotoSlug, string> = {
 const asos = yol(`/qavat/${bolim}`);
 ---
 <img
-  class="qavat-foto"
+  class:list={['qavat-foto', { ixcham }]}
   src={`${asos}-1344.webp`}
   srcset={`${asos}-800.webp 800w, ${asos}-1344.webp 1344w`}
   sizes="(max-width: 640px) 100vw, 1160px"
@@ -43,7 +44,8 @@ const asos = yol(`/qavat/${bolim}`);
     border-radius: var(--r-katta);
     background: var(--sirt-ikkinchi);
   }
+  .qavat-foto.ixcham { aspect-ratio: 4 / 1; }
   @media (max-width: 640px) {
-    .qavat-foto { aspect-ratio: 5 / 2; border-radius: var(--r-orta); }
+    .qavat-foto, .qavat-foto.ixcham { aspect-ratio: 5 / 2; border-radius: var(--r-orta); }
   }
 </style>

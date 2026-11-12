@@ -11,8 +11,36 @@ import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
 import KunSavoli from '../../../components/sat/KunSavoli.astro';
 import SatMaqsadSarlavha from '../../../components/sat/SatMaqsadSarlavha.astro';
+import { satIkonkalar } from '../../../data/satIkonkalar';
+import { darsSavollari, type DarsModul } from '../../../data/satDarslar';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
+
+// Shaxsiy holat (vizual-sat-2): dars sahifasi -> DarsQolip moduli. Savollar soni va id lari build vaqtida satDarslar dan.
+const darsModuli: Record<string, DarsModul> = {
+  'qollanma/math/hajm/': 'hajm',
+  'qollanma/math/grafik/': 'grafik',
+  'qollanma/math/birlik-aylana/': 'aylana',
+  'qollanma/math/statistika/': 'statistika',
+  'qollanma/reading-writing/xatoni-toping/': 'rw-xato',
+  'qollanma/reading-writing/dalil/': 'rw-dalil',
+  'qollanma/reading-writing/otish-sozlari/': 'rw-otish',
+  'qollanma/reading-writing/lugat-kontekstda/': 'rw-lugat',
+};
+// satGuruhlar tartibida (Math, keyin Reading & Writing): "Continue" kartasi shu tartibdagi birinchi tugamagan darsni oladi.
+const darslar = satGuruhlar.flatMap((g) => g.sahifalar).filter((s) => s.tayyor && darsModuli[s.qism]).map((s) => ({
+  modul: darsModuli[s.qism],
+  nomi: s.nomi,
+  href: sat(s.qism),
+  ikonka: satIkonkalar[s.qism] ?? '',
+  idlar: darsSavollari[darsModuli[s.qism]].map((q) => q.id),
+}));
+if (darslar.length !== Object.keys(darsModuli).length) throw new Error("SAT kirish: darsModuli va satGuruhlar dagi darslar mos emas");
+const holatSozlama = {
+  darslar,
+  mavjudId: Object.values(darsSavollari).flat().map((q) => q.id),
+  takrorHref: sat('vosita/takrorlash/'),
+};
 
 // Imtihon tuzilmasi (CB03). Vaqt chizig'i shu raqamlardan: bo'lak uzunligi daqiqaga mutanosib, ikkala bo'lim bir shkalada.
 const tuzilma = [
@@ -32,10 +60,11 @@ const qayerda: { manba: string; nomi: string; davlat: string; holat: SatHolat; m
 const qayerdaQatorlar = qayerda.map((q) => ({ ...q, m: manbalar.find((m) => m.id === q.manba && m.tekshiruvDarajasi === 'rasmiy')! }));
 if (qayerdaQatorlar.some((q) => !q.m)) throw new Error('SAT kirish: "Where the SAT counts" manbasi topilmadi yoki rasmiy emas');
 type QadamBelgi = 'kompas' | 'qalam' | 'grafik';
-const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; qism: string; belgi: QadamBelgi }[] = [
-  { yorliq: 'UNDERSTAND', nomi: 'Strategy', tavsif: 'Where to start your prep and how to plan it.', havola: 'Open the guide', qism: 'qollanma/strategiya/', belgi: 'kompas' },
-  { yorliq: 'PRACTICE', nomi: 'Tests and question bank', tavsif: 'Short tests by topic, with an explanation right after each answer.', havola: 'Start practicing', qism: 'mashq/test/', belgi: 'qalam' },
-  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'A list of your mistakes, saved only in this browser. No score is calculated.', havola: 'See your results', qism: 'vosita/natijalar/', belgi: 'grafik' },
+// holat: qaysi brauzer ma'lumoti qadam ostida ko'rsatiladi (I2; faqat o'qiladi).
+const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; qism: string; belgi: QadamBelgi; holat: 'yol' | 'javob' | 'xato' }[] = [
+  { yorliq: 'UNDERSTAND', nomi: 'Strategy', tavsif: 'Where to start your prep and how to plan it.', havola: 'Open the guide', qism: 'qollanma/strategiya/', belgi: 'kompas', holat: 'yol' },
+  { yorliq: 'PRACTICE', nomi: 'Tests and question bank', tavsif: 'Short tests by topic, with an explanation right after each answer.', havola: 'Start practicing', qism: 'mashq/test/', belgi: 'qalam', holat: 'javob' },
+  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'A list of your mistakes, saved only in this browser. No score is calculated.', havola: 'See your results', qism: 'vosita/natijalar/', belgi: 'grafik', holat: 'xato' },
 ];
 ---
 <BolimQobiq
@@ -50,7 +79,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
 >
   <div class="ichki sat-kirish">
     <SatMaqsadSarlavha />
-    <QavatFoto bolim="sat" />
+    <QavatFoto bolim="sat" ixcham />
     <section class="hero" aria-labelledby="sat-h">
       <div class="hero-matn">
         <p class="pill-qator"><span class="pill">Draft</span><span class="pill-izoh">Section home</span></p>
@@ -106,6 +135,39 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
       </script>
     </section>
 
+    <!-- I1. Davom etish: faqat shu brauzerdagi dars progressi va takrorlash navbatidan. Ma'lumot yo'q yoki JS'siz: yashirin. -->
+    <section class="davom" aria-labelledby="davom-h" data-davom hidden>
+      <h2 id="davom-h" class="ustki-yorliq">Continue where you left off</h2>
+      <ul class="davom-royxat">
+        <li data-davom-dars hidden>
+          <a class="davom-qator" href="">
+            <span class="davom-belgi" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-davom-ikonka></svg>
+            </span>
+            <span class="davom-matn">
+              <span class="davom-nom" data-davom-nom></span>
+              <span class="davom-izoh" data-davom-izoh></span>
+              <span class="davom-chiziq" aria-hidden="true"><span data-davom-toldirish></span></span>
+            </span>
+            <svg class="davom-strelka" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+          </a>
+        </li>
+        <li data-davom-takror hidden>
+          <a class="davom-qator" href={holatSozlama.takrorHref}>
+            <span class="davom-belgi" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={satIkonkalar['vosita/takrorlash/']} />
+            </span>
+            <span class="davom-matn">
+              <span class="davom-nom" data-davom-takror-matn></span>
+              <span class="davom-izoh">Mistake log: review</span>
+            </span>
+            <svg class="davom-strelka" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <script type="application/json" id="sat-kirish-holat" set:html={JSON.stringify(holatSozlama)} />
+
     <KunSavoli />
 
     <section class="yol" aria-labelledby="yol-h">
@@ -128,6 +190,10 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
                 <span class="qadam-yorliq"><span class="qadam-raqam">{i + 1}</span><span class="qadam-soz"> · {q.yorliq}</span></span>
                 <span class="qadam-nom">{q.nomi}</span>
                 <span class="qadam-tavsif">{q.tavsif}</span>
+                <span class="qadam-holat" data-qadam-holat={q.holat} hidden>
+                  {q.holat === 'yol' && <span class="qadam-tayyor" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>}
+                  <span data-qadam-holat-matn></span>
+                </span>
               </span>
               <span class="qadam-havola">{q.havola}</span>
               <svg class="qadam-strelka" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
@@ -138,9 +204,23 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     </section>
 
     <section class="qayerda" aria-labelledby="qayerda-h">
-      <div class="bosh-qator">
-        <h2 id="qayerda-h">Where the SAT counts</h2>
-        <p class="sust kichik">Four examples. Each university sets its own rules.</p>
+      <div class="qayerda-ust">
+        <div class="bosh-qator">
+          <h2 id="qayerda-h">Where the SAT counts</h2>
+          <p class="sust kichik">Four examples. Each university sets its own rules.</p>
+        </div>
+        <!-- Rasm: Canva (AI), manba va litsenziya docs/rasmlar.md. 720 + 400 WebP, jami sahifada <= 150 KB. -->
+        <img
+          class="qayerda-foto"
+          src={yol('/rasmlar/sat/qayerda-720.webp')}
+          srcset={`${yol('/rasmlar/sat/qayerda-400.webp')} 400w, ${yol('/rasmlar/sat/qayerda-720.webp')} 720w`}
+          sizes="(max-width: 640px) 100vw, 420px"
+          width="720"
+          height="360"
+          alt="A desk by a sunny window with a blank folder, a blank envelope, a pencil and a cup of green tea."
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <ul class="qayerda-royxat">
         {qayerdaQatorlar.map((q, i) => (
@@ -194,8 +274,18 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
               {g.sahifalar.map((s) => (
                 <li>
                   <a href={sat(s.qism)}>
+                    {satIkonkalar[s.qism]
+                      ? <svg class="s-ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={satIkonkalar[s.qism]} />
+                      : <span class="s-ikonka" aria-hidden="true"></span>}
                     <span class="s-nom">{s.nomi}</span>
                     {!s.tayyor && <span class="pill pill-kichik">coming soon</span>}
+                    {s.tayyor && darsModuli[s.qism] && (
+                      <span class="s-progress" data-dars-progress={darsModuli[s.qism]} hidden>
+                        <span class="s-tayyor" aria-hidden="true" hidden><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
+                        <span aria-hidden="true" data-progress-son></span>
+                        <span class="ekranda-yoq" data-progress-sr></span>
+                      </span>
+                    )}
                   </a>
                 </li>
               ))}
@@ -213,6 +303,95 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     </section>
   </div>
 </BolimQobiq>
+
+<script>
+  // Shaxsiy holat (vizual-sat-2, I1–I3): faqat shu brauzerdagi mavjud kalitlarni O'QIYDI, hech narsa yozmaydi.
+  // tayanch:sat-dars-progress, tayanch:sat-xato-daftari, tayanch:sat-takrorlash, tayanch:sat-javoblar, tayanch:sat-qayerdan-boshlash.
+  // Ma'lumot yo'q, kalit buzuq yoki saqlash bloklangan: sahifa oddiy ko'rinishda qoladi. "Orqaga" bilan qaytilganda (pageshow) yangilanadi.
+  import { oqi, progressniOqi, xatolarniOqi } from '../../../lib/darsSaqlash';
+  import { holatniOqi, xatolarniQosh, guruhla } from '../../../lib/takrorlash';
+  import { holatniTekshir } from '../../../lib/sat/yolXaritasi';
+  import { kirishHolati, sanoq } from '../../../lib/sat/kirishHolat';
+  import { KALIT_JAVOBLAR } from '../../../data/satNamuna';
+  import { KALIT_YOL_XARITASI } from '../../../data/satYolXaritasi';
+
+  interface Dars { modul: string; nomi: string; href: string; ikonka: string; idlar: string[] }
+  interface Sozlama { darslar: Dars[]; mavjudId: string[]; takrorHref: string }
+
+  const sozlamaEl = document.getElementById('sat-kirish-holat');
+  const sozlama: Sozlama | null = sozlamaEl ? JSON.parse(sozlamaEl.textContent || 'null') : null;
+  const $ = <T extends HTMLElement = HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s);
+  const matn = (el: Element | null, t: string) => { if (el) el.textContent = t; };
+
+  function yangila() {
+    if (!sozlama) return;
+    try {
+      const javoblar = oqi<unknown>(KALIT_JAVOBLAR, []);
+      const xatolar = xatolarniOqi('sat');
+      const takror = xatolarniQosh(holatniOqi('sat'), xatolar, new Set(sozlama.mavjudId)).h;
+      const yol = holatniTekshir(oqi<unknown>(KALIT_YOL_XARITASI, null)).javoblar;
+      const h = kirishHolati({
+        progress: progressniOqi('sat'),
+        modullar: sozlama.darslar,
+        testJavoblari: Array.isArray(javoblar) ? javoblar.length : 0,
+        xatolar: xatolar.length,
+        bugunTakror: guruhla(takror).bugun.length,
+        yolSaqlangan: Object.values(yol).some((v) => v !== undefined),
+      });
+
+      // I1: "Continue where you left off"
+      const karta = $('[data-davom]');
+      const darsQator = $('[data-davom-dars]');
+      const takrorQator = $('[data-davom-takror]');
+      const dars = h.davom && sozlama.darslar.find((d) => d.modul === h.davom!.modul);
+      if (darsQator) {
+        darsQator.hidden = !dars;
+        if (dars && h.davom) {
+          $('a', darsQator)?.setAttribute('href', dars.href);
+          const ikonka = $('[data-davom-ikonka]', darsQator);
+          if (ikonka) ikonka.innerHTML = dars.ikonka;
+          matn($('[data-davom-nom]', darsQator), dars.nomi);
+          matn($('[data-davom-izoh]', darsQator), `${h.davom.javob} of ${h.davom.jami} answered`);
+          $('[data-davom-toldirish]', darsQator)?.style.setProperty('--ulush', String(h.davom.javob / h.davom.jami));
+        }
+      }
+      if (takrorQator) {
+        takrorQator.hidden = h.bugunTakror === 0;
+        matn($('[data-davom-takror-matn]', takrorQator), `${h.bugunTakror} to review today`);
+      }
+      if (karta) karta.hidden = !dars && h.bugunTakror === 0;
+
+      // I2: qadamlar ostidagi holat
+      const qadamMatn: Record<string, string> = {
+        yol: h.yolSaqlangan ? 'Your path is saved' : '',
+        javob: h.javoblar > 0 ? `${sanoq(h.javoblar, 'answer')} saved` : '',
+        xato: h.xatolar > 0 ? `${sanoq(h.xatolar, 'mistake')} logged` : '',
+      };
+      document.querySelectorAll<HTMLElement>('[data-qadam-holat]').forEach((el) => {
+        const t = qadamMatn[el.dataset.qadamHolat || ''] || '';
+        el.hidden = !t;
+        matn($('[data-qadam-holat-matn]', el), t);
+      });
+
+      // I3: "All pages" dars bandlarida progress
+      document.querySelectorAll<HTMLElement>('[data-dars-progress]').forEach((el) => {
+        const d = h.darslar[el.dataset.darsProgress || ''];
+        el.hidden = !d || d.javob === 0;
+        if (!d || d.javob === 0) return;
+        const tugadi = d.javob >= d.jami;
+        const belgi = $('.s-tayyor', el);
+        if (belgi) belgi.hidden = !tugadi;
+        matn($('[data-progress-son]', el), tugadi ? '' : `${d.javob}/${d.jami}`);
+        matn($('[data-progress-sr]', el), tugadi ? 'completed' : `${d.javob} of ${d.jami} answered`);
+      });
+    } catch {
+      /* brauzer ruxsat bermadi yoki ma'lumot buzuq: oddiy ko'rinish qoladi */
+    }
+  }
+
+  yangila();
+  window.addEventListener('pageshow', (e) => { if (e.persisted) yangila(); });
+</script>
 
 <style>
   .sat-kirish { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-14); }
@@ -318,10 +497,67 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .qadam-havola { align-self: center; font-weight: 700; font-size: 15px; white-space: nowrap; color: var(--rang-havola); text-decoration: underline; text-underline-offset: 0.15em; }
   .qadam:hover .qadam-havola { color: var(--rang-asosiy-toq); }
   .qadam-strelka { display: none; align-self: center; color: var(--matn-sust); }
+  /* I2: qadam ostidagi brauzer holati (neytral matn; belgi --floor-ui doirada) */
+  .qadam-holat {
+    display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-1);
+    font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 600; color: var(--color-text-secondary);
+  }
+  .qadam-holat[hidden], .davom[hidden], .davom [hidden], .s-progress[hidden], .s-progress [hidden] { display: none; }
+  .qadam-tayyor, .s-tayyor {
+    flex: none; width: var(--space-5); height: var(--space-5); border-radius: var(--radius-full);
+    background: var(--floor-ui); color: var(--floor-ui-text); display: inline-grid; place-items: center;
+  }
+
+  /* I1: Continue where you left off */
+  .davom {
+    display: flex; flex-direction: column; gap: var(--space-3);
+    animation: davom-kel var(--duration-base) var(--ease-enter);
+  }
+  @keyframes davom-kel {
+    from { opacity: 0; transform: translateY(calc(var(--space-2) * var(--motion-distance))); }
+  }
+  .davom-royxat {
+    list-style: none; margin: 0; padding: 0;
+    background: var(--glass-card-bg); border: var(--border-width-1) solid var(--card-border);
+    border-radius: var(--r-katta); box-shadow: var(--glass-highlight); overflow: hidden;
+  }
+  .davom-royxat li + li { border-top: var(--border-width-1) solid var(--color-border); }
+  .davom-qator {
+    display: grid; grid-template-columns: var(--space-10) minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-4);
+    padding: var(--space-4) var(--space-5); min-height: var(--size-touch-min);
+    text-decoration: none; color: var(--color-text-primary);
+  }
+  .davom-qator:hover { background: var(--fon-ikkinchi); }
+  .davom-qator:hover .davom-nom { color: var(--color-link); text-decoration: underline; }
+  .davom-belgi {
+    width: var(--space-10); height: var(--space-10); border-radius: var(--radius-full);
+    background: var(--floor-ui); color: var(--floor-ui-text); display: grid; place-items: center;
+  }
+  .davom-matn { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .davom-nom { font-weight: 700; }
+  .davom-izoh { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
+  .davom-chiziq {
+    display: block; height: var(--progress-height); max-width: calc(var(--space-16) * 4);
+    border-radius: var(--radius-full); background: var(--color-surface-sunken); overflow: hidden;
+  }
+  .davom-chiziq > span {
+    display: block; height: 100%; border-radius: inherit; background: var(--floor-ui);
+    transform: scaleX(var(--ulush, 0)); transform-origin: left center;
+  }
+  .davom-strelka { color: var(--color-text-secondary); }
 
 
   /* SAT qayerda kerak */
   .qayerda { display: flex; flex-direction: column; gap: var(--b-5); }
+  .qayerda-ust { display: grid; gap: var(--b-5); }
+  .qayerda-foto {
+    display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover;
+    border-radius: var(--r-katta); background: var(--sirt-ikkinchi);
+  }
+  @media (min-width: 900px) {
+    .qayerda-ust { grid-template-columns: minmax(0, 1fr) minmax(0, calc(var(--space-16) * 7)); align-items: end; }
+    .qayerda-ust .bosh-qator { flex-direction: column; align-items: flex-start; }
+  }
   .qayerda-royxat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: var(--b-4); }
   .qayerda-karta {
     background: var(--sirt); border: 1px solid var(--chiziq); border-radius: var(--r-katta);
@@ -347,18 +583,30 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .qayerda-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); }
 
   /* Barcha sahifalar */
-  .guruhlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--b-4); align-items: start; }
-  .guruh { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-2); }
+  /* V1: guruhlar ustunlarda zich (bo'sh joy qolmaydi); DOM tartibi o'zgarmaydi. Karta foni ikkala mavzuda ko'rinadi. */
+  .guruhlar { columns: 2 300px; column-gap: var(--b-4); }
+  .guruh {
+    break-inside: avoid; margin-bottom: var(--b-4);
+    background: var(--glass-card-bg); border: var(--border-width-1) solid var(--card-border);
+    box-shadow: var(--glass-highlight); border-radius: var(--r-katta); padding: var(--b-2);
+  }
   .guruh h3 { margin: var(--b-3) var(--b-4) var(--b-2); }
   .guruh ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-1); }
   .guruh a {
     background: var(--fon); border-radius: var(--r-orta);
     padding: 14px 16px; min-height: 52px;
-    display: flex; align-items: center; justify-content: space-between; gap: var(--b-3);
+    display: flex; align-items: center; gap: var(--b-3);
     text-decoration: none; color: var(--matn);
   }
   .guruh a:hover .s-nom { color: var(--rang-havola); text-decoration: underline; }
-  .s-nom { font-weight: 700; }
+  .s-nom { font-weight: 700; flex: 1; min-width: 0; }
+  /* V3: yon paneldagi ikonkalar (satIkonkalar); "coming soon" bandida bo'sh joy, nomlar bir chiziqda */
+  .s-ikonka { flex: none; width: var(--space-5); height: var(--space-5); color: var(--color-link); }
+  /* I3: dars progressi */
+  .s-progress {
+    flex: none; display: inline-flex; align-items: center; gap: var(--space-1);
+    font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 600; color: var(--color-text-secondary);
+  }
 
   /* Pastki qator */
   .pastki {
@@ -378,11 +626,14 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     .hero { display: contents; }
     /* Telefon tartibi. Tartib berilmagan bola (order 0) h1 dan yuqoriga chiqadi: Zina va kun savoli ham shu yerda */
     .hero-matn { order: 1; flex: none; }
-    .sat-kirish > :global(.kun) { order: 2; }
-    .yol { order: 3; }
-    .tuzilma { order: 4; flex: none; }
-    .qayerda { order: 5; }
-    .sat-kirish > :global(.zina) { order: 6; }
+    .davom { order: 2; }
+    .sat-kirish > :global(.kun) { order: 3; }
+    .yol { order: 4; }
+    .tuzilma { order: 5; flex: none; }
+    .qayerda { order: 6; }
+    .sat-kirish > :global(.zina) { order: 7; }
+    .davom-qator { padding: var(--space-3) var(--space-4); }
+    .qayerda-foto { aspect-ratio: 5 / 2; border-radius: var(--r-orta); }
     .qayerda .bosh-qator p { display: block; }
     .qayerda-karta { border-radius: var(--r-orta); padding: var(--b-4); }
     /* Ixcham kartalar (JS ishlaganda): sarlavha qatori butunlay tugma, matn va havola ochilganda */
