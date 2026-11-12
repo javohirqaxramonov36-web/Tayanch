@@ -1,6 +1,8 @@
 // Mock imtihon uchun adaptive-style 2-modul sozlamalari (P31). Hujjat: docs/sat-adaptiv.md.
 // Bu College Board'ning rasmiy algoritmi (IRT) emas: oddiy qoida, 1-modul aniqligiga qarab to'plam tanlanadi.
 // Qiymatlar tasdiqlangan: Claude qarori, muallif topshirig'i bilan (2026-11-12). Sabablari: docs/sat-adaptiv.md.
+// chegara, tarmoqQiyinlik, minSavolTarmoq server nusxasi: private.adaptive_config() (supabase/migrations/*_adaptiv_tarmoq.sql),
+// bir xilligini src/lib/testlar/adaptiv.test.ts tekshiradi.
 
 export type SatBolim = 'rw' | 'math';
 

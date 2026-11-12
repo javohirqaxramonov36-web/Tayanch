@@ -1,6 +1,6 @@
 # SAT mock imtihon: adaptive-style 2-modul (P31)
 
-Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (branch `sat-adaptiv-qaror`). Mock imtihonga (P30, branch `sat-mock-imtihon`) ulash alohida kichik PR bo'ladi: P30 hali main'da emas. Migratsiya jonli bazaga **qo'llanmagan**, muallif ruxsati kutilmoqda.
+Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (branch `sat-adaptiv-qaror`). Mock imtihonga (P30, branch `sat-mock-imtihon`) ulash alohida kichik PR bo'ladi: P30 hali main'da emas. Migratsiyalar (`20261112163208_adaptiv_kalibr.sql`, `20261113072953_adaptiv_tarmoq.sql`) jonli bazaga **qo'llanmagan**, muallif ruxsati kutilmoqda.
 
 ## Bu nima va nima emas
 
@@ -16,7 +16,8 @@ Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqla
 | `src/lib/sat/adaptiv.ts` | Sof funksiyalar: `tarmoqTanla`, `adaptivHolat`, `tarmoqQiyinliklari`, `kalibrla`, `kalibrJadval` |
 | `src/lib/testlar/adaptiv.test.ts` | Sun'iy javoblar bilan sinov (`npm test`) |
 | `supabase/migrations/20261112163208_adaptiv_kalibr.sql` | `private.difficulty_calibration()` (hisobot), `private.apply_difficulty_calibration()` (yozish) |
-| `supabase/tests/adaptiv_test.sql` | SQL sinovi AD01–AD04 (`npm run db:tekshir`) |
+| `supabase/migrations/20261113072953_adaptiv_tarmoq.sql` | `private.adaptive_branch()`, `private.adaptive_difficulties()`, `private.adaptive_config()`: tarmoq tanlashning server nusxasi |
+| `supabase/tests/adaptiv_test.sql` | SQL sinovi AD01–AD06 (`npm run db:tekshir`) |
 
 ## Tarmoq tanlash qoidasi
 
@@ -26,6 +27,8 @@ Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqla
 2. Oson yoki qiyin tarmoqda savol `minSavolTarmoq[bolim]` dan kam → `standart`, sabab `savol-kam`.
 3. 1-modul natijasi yaroqsiz (0 savol, butun bo'lmagan son, to'g'ri > jami) → `standart`, sabab `natija-yoq`.
 4. Aniqlik (to'g'ri / jami × 100) chegaradan **qat'iy katta** → `qiyin`, aks holda (tenglik ham) → `oson`. Taqqoslash butun sonlarda: `to'g'ri × 100 > chegara × jami` (float xatosi tenglikni "ustida" qilmasin, masalan 7/10 × 100 = 70.00000000000001).
+
+Server nusxasi: `private.adaptive_branch(section, correct, total, easy_count, hard_count)` → `(branch, reason, accuracy)`, qoida, tartib va sabab nomlari bir xil; noto'g'ri bo'lim → xato `adaptive_bad_section`. `private.adaptive_difficulties(branch)` = `tarmoqQiyinliklari`. Qiymatlar `private.adaptive_config()` da; `adaptiv.test.ts` ularni `satAdaptiv.ts` bilan solishtiradi.
 
 Chegara 60 da: R&W 27 savolli 1-modulda 17+ to'g'ri (63,0%) → qiyin, 16 (59,3%) → oson; Math 22 savolda 14+ (63,6%) → qiyin, 13 (59,1%) → oson.
 
@@ -51,7 +54,7 @@ Kodni o'qib tekshirilgan, qiymatlarga e'tiroz yo'q. Bitta tuzatish kiritildi: ch
 
 Muallif uchun savollar: yopilgan (Claude qarori, muallif topshirig'i bilan, 2026-11-12). Ochiq qolganlari faqat ruxsatga oid: PR merge va migratsiyani jonli bazaga qo'llash.
 
-N yoki pog'ona o'zgarsa, ikki joy birga o'zgaradi: `src/data/satAdaptiv.ts` va migratsiyadagi standart qiymatlar (yangi migratsiya bilan). `adaptiv.test.ts` ularning bir xilligini tekshiradi.
+N yoki pog'ona o'zgarsa, ikki joy birga o'zgaradi: `src/data/satAdaptiv.ts` va `_adaptiv_kalibr.sql` dagi standart qiymatlar. Chegara, tarmoq qiyinliklari yoki eng kam savol soni o'zgarsa: `satAdaptiv.ts` va `private.adaptive_config()` (`_adaptiv_tarmoq.sql`). Jonli bazaga qo'llangandan keyin o'zgarish yangi migratsiya bilan. `adaptiv.test.ts` ularning bir xilligini tekshiradi.
 
 ## Kalibrlash
 
@@ -99,7 +102,7 @@ Faqat `change` qatorlari yoziladi, har biri `audit_log` ga (`action = 'difficult
 ## Sinov
 
 - `npm test` (`src/lib/testlar/adaptiv.test.ts`): standart chegara 60 (R&W 17/27 → qiyin, 16/27 → oson; Math 14/22 → qiyin, 13/22 → oson; `null` hali ham adaptivlikni o'chiradi), sun'iy javoblar bilan ikki tarmoq (R&W 22/27 → qiyin, 9/27 → oson; Math 18/22 → qiyin, 4/22 → oson), chegaraga teng natija → oson, chegara yo'q → standart, savol kam → standart, yaroqsiz chegara va natija, kalibrlash pog'onalari va N, SQL standart qiymatlari sozlama bilan bir xilligi. Boshqa chegaralar (50, 70) faqat sinov ichida.
-- `npm run db:tekshir` (`supabase/tests/adaptiv_test.sql`): AD01 birinchi javob qoidasi, AD02 N, versiya va draft, AD03 apply va `audit_log`, AD04 huquqlar.
+- `npm run db:tekshir` (`supabase/tests/adaptiv_test.sql`): AD01 birinchi javob qoidasi, AD02 N, versiya va draft, AD03 apply va `audit_log`, AD04 huquqlar, AD05 tarmoq tanlash (JS sinovidagi holatlar: 17/27, 16/27, 14/22, 13/22, aynan 60%, 70 va 7/10, null va 101 chegara, savol kam, yaroqsiz natija, noto'g'ri bo'lim, qiyinliklar), AD06 tarmoq funksiyalari huquqlari.
 
 ## P30 ga ulash rejasi (`sat-adaptiv-ulash`)
 
@@ -107,7 +110,7 @@ Claude qarori, muallif topshirig'i bilan (2026-11-12). 2026-11-13 holati: P30 ha
 
 P30 hozir ikkala modulni imtihon boshida yig'adi (`private.mock_build_form`: har soha uchun `b_per_module * 2` savol, qiyinlik bo'yicha tartiblanib 1- va 2-modulga galma-gal bo'linadi). Adaptivlik uchun 2-modul 1-modul yopilgandan **keyin** tanlanishi kerak, demak ulash server tomonda bo'ladi:
 
-1. **Qaror serverda.** Tarmoq brauzerda emas, `private.mock_close_module` da tanlanadi (1-modul R&W, 3-modul Math yopilganda). Brauzer natijani o'zgartira olmaydi. `tarmoqTanla` qoidasi SQL'ga bir xil ko'chiriladi (`private.mock_branch`), qiymatlar `mock_config()` da; `adaptiv.test.ts` dagi kabi sinov JS va SQL qiymatlari bir xilligini tekshiradi.
+1. **Qaror serverda.** Tarmoq brauzerda emas, `private.mock_close_module` da tanlanadi (1-modul R&W, 3-modul Math yopilganda). Brauzer natijani o'zgartira olmaydi. `tarmoqTanla` qoidasi SQL'ga ko'chirilgan: `private.adaptive_branch` va `private.adaptive_difficulties` (migratsiya `20261113072953_adaptiv_tarmoq.sql`, sinov AD05–AD06, qiymatlar mosligi `adaptiv.test.ts` da). Ulash PR'i ularni faqat chaqiradi.
 2. **`savolSoni`.** Shu bo'limda, har tarmoq qiyinliklariga mos, `verified`, shu urinishning 1-modulida ishlatilmagan savollar. Qo'shimcha shart: har soha (blueprint) bo'yicha ham 2-modulga yetarli bo'lishi kerak; biror sohada yetmasa → `standart` (`savol-kam`). Sabab: 2-modul blueprint tarkibini buzmasin.
 3. **2-modul.** `qiyin` / `oson`: P30 ning shu bo'lim uchun oldindan yig'ilgan 2-modul savollari `tarmoqQiyinliklari(tarmoq)` bo'yicha qayta tanlangan savollar bilan almashtiriladi (soha soni va tartib qoidasi P30 dagidek). `standart`: P30 ning oddiy tartibi o'zgarmaydi.
 4. **Muvozanat sharti.** P30 1-modulni qiyinlik bo'yicha pool'dagi taqsimotga qarab bo'ladi, har darajadan 20% emas. Chegara 60 to'g'ri ishlashi uchun 1-modulda 1–5 darajalar taxminan teng bo'lishi kerak; `admin_mock_readiness()` ga darajalar bo'yicha son qo'shish taklif qilinadi.
@@ -119,4 +122,4 @@ P30 hozir ikkala modulni imtihon boshida yig'adi (`private.mock_build_form`: har
 ## Keyingi qadam
 
 1. P30 (`sat-mock-imtihon`) merge bo'lgach kichik PR (branch `sat-adaptiv-ulash`): 1-modul tugaganda `tarmoqTanla` chaqiriladi, 2-modul savollari `tarmoqQiyinliklari()` bo'yicha olinadi, natija sahifasida "adaptive-style" izohi. P30 1-modulni qiyinlik bo'yicha muvozanatli tuzishi kerak (yuqoridagi shart).
-2. Migratsiya jonli bazaga faqat muallif ruxsati bilan (`db push --dry-run`, keyin push).
+2. Migratsiyalar (kalibr va tarmoq) jonli bazaga faqat muallif ruxsati bilan (`db push --dry-run`, keyin push).

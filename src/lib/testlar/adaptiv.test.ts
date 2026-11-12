@@ -107,3 +107,19 @@ test('SQL defaults match satAdaptiv.ts (N and bands)', () => {
   const bands = [...sql.matchAll(/p_bands numeric\[\] default '\{([\d,]+)\}'/g)].map((m) => m[1]);
   assert.deepEqual(bands, [pogonalar.join(','), pogonalar.join(',')]);
 });
+
+test('SQL branch config matches satAdaptiv.ts (threshold, branch difficulties, minimum counts)', () => {
+  const papka = new URL('../../../supabase/migrations/', import.meta.url);
+  const fayl = readdirSync(papka).find((f) => f.endsWith('_adaptiv_tarmoq.sql'));
+  assert.ok(fayl, 'adaptiv_tarmoq migratsiyasi topilmadi');
+  const sql = readFileSync(new URL(fayl, papka), 'utf8');
+  const son = (kalit: string) => Number(sql.match(new RegExp(`'${kalit}', (\\d+)`))?.[1]);
+  const royxat = (kalit: string) =>
+    sql.match(new RegExp(`'${kalit}', jsonb_build_array\\(([\\d, ]+)\\)`))?.[1].split(',').map(Number);
+  const s = adaptivSozlama;
+  assert.equal(son('threshold'), s.chegara);
+  assert.deepEqual(royxat('easy'), [...s.tarmoqQiyinlik.oson]);
+  assert.deepEqual(royxat('hard'), [...s.tarmoqQiyinlik.qiyin]);
+  assert.equal(son('min_rw'), s.minSavolTarmoq.rw);
+  assert.equal(son('min_math'), s.minSavolTarmoq.math);
+});

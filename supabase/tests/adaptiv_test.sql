@@ -1,4 +1,5 @@
 -- P31 kalibrlash sinovi (20261112163208_adaptiv_kalibr): private.difficulty_calibration, private.apply_difficulty_calibration.
+-- Tarmoq sinovi (20261113072953_adaptiv_tarmoq): private.adaptive_branch, private.adaptive_difficulties, private.adaptive_config.
 -- Bitta tranzaksiya, oxirida ROLLBACK. Savollar va javoblar soxta ("SINOV"); N = 30 (standart).
 \set ON_ERROR_STOP on
 \set QUIET on
@@ -146,6 +147,88 @@ begin
 end
 $$;
 
-do $$ begin raise notice 'ADAPTIV KALIBRLASH SINOVLARI O''TDI'; end $$;
+-- AD05: tarmoq tanlash (20261113072953_adaptiv_tarmoq), src/lib/sat/adaptiv.ts tarmoqTanla bilan bir xil holatlar
+do $$
+declare
+  r record;
+  kut record;
+begin
+  for kut in
+    select * from (values
+      -- section, correct, total, easy, hard, config (null = standart), branch, reason
+      ('rw',   17, 27, 40, 40, null::jsonb, 'qiyin',    'ustida'),       -- 63.0% > 60
+      ('rw',   16, 27, 40, 40, null,        'oson',     'ostida'),       -- 59.3%
+      ('math', 14, 22, 40, 40, null,        'qiyin',    'ustida'),       -- 63.6%
+      ('math', 13, 22, 40, 40, null,        'oson',     'ostida'),       -- 59.1%
+      ('rw',    3,  5, 40, 40, null,        'oson',     'ostida'),       -- aynan 60% → oson (qat'iy katta)
+      ('rw',    7, 10, 40, 40, '{"threshold":70,"easy":[1,2,3],"hard":[3,4,5],"min_rw":27,"min_math":22}', 'oson', 'ostida'),
+      ('rw',   27, 27, 40, 40, '{"threshold":null,"easy":[1,2,3],"hard":[3,4,5],"min_rw":27,"min_math":22}', 'standart', 'chegara-yoq'),
+      ('rw',   27, 27, 40, 40, '{"threshold":101,"easy":[1,2,3],"hard":[3,4,5],"min_rw":27,"min_math":22}', 'standart', 'chegara-yoq'),
+      ('rw',   20, 27, 26, 40, null,        'standart', 'savol-kam'),
+      ('math', 20, 22, 22, 21, null,        'standart', 'savol-kam'),
+      ('math', 20, 22, null, 40, null,      'standart', 'savol-kam'),
+      ('rw',    0,  0, 40, 40, null,        'standart', 'natija-yoq'),
+      ('rw',   28, 27, 40, 40, null,        'standart', 'natija-yoq'),
+      ('rw',   null, 27, 40, 40, null,      'standart', 'natija-yoq')
+    ) v(sec, c, t, e, h, cfg, br, rs)
+  loop
+    if kut.cfg is null then
+      select * into r from private.adaptive_branch(kut.sec, kut.c, kut.t, kut.e, kut.h);
+    else
+      select * into r from private.adaptive_branch(kut.sec, kut.c, kut.t, kut.e, kut.h, kut.cfg);
+    end if;
+    if r.branch is distinct from kut.br or r.reason is distinct from kut.rs then
+      raise exception 'FAIL AD05: % %/% (%/%) → % %, kutilgan % %', kut.sec, kut.c, kut.t, kut.e, kut.h, r.branch, r.reason, kut.br, kut.rs;
+    end if;
+    if kut.rs in ('ustida', 'ostida') and r.accuracy <> kut.c * 100.0 / kut.t then
+      raise exception 'FAIL AD05: aniqlik % noto''g''ri', r.accuracy;
+    end if;
+    if kut.rs = 'natija-yoq' and r.accuracy is not null then
+      raise exception 'FAIL AD05: yaroqsiz natijada aniqlik null emas';
+    end if;
+  end loop;
+  begin
+    perform private.adaptive_branch('ielts', 1, 2, 40, 40);
+    raise exception 'FAIL AD05: noto''g''ri bo''lim qabul qilindi';
+  exception when invalid_parameter_value then null;
+  end;
+  if private.adaptive_difficulties('oson') <> '{1,2,3}'::smallint[]
+     or private.adaptive_difficulties('qiyin') <> '{3,4,5}'::smallint[]
+     or private.adaptive_difficulties('standart') is not null then
+    raise exception 'FAIL AD05: adaptive_difficulties noto''g''ri';
+  end if;
+  raise notice 'OK AD05 tarmoq: 60%% chegara, tenglik → oson, 70 va 7/10, null chegara, savol kam, yaroqsiz natija, qiyinliklar';
+end
+$$;
+
+-- AD06: anon, authenticated, service_role tarmoq funksiyalarini chaqira olmaydi
+do $$
+declare
+  rol text;
+begin
+  foreach rol in array array['anon', 'authenticated', 'service_role'] loop
+    execute format('set local role %I', rol);
+    begin
+      perform private.adaptive_branch('rw', 20, 27, 40, 40, '{}'::jsonb);
+      raise exception 'FAIL AD06: % adaptive_branch ni chaqirdi', rol;
+    exception when insufficient_privilege then null;
+    end;
+    begin
+      perform private.adaptive_config();
+      raise exception 'FAIL AD06: % adaptive_config ni chaqirdi', rol;
+    exception when insufficient_privilege then null;
+    end;
+    begin
+      perform private.adaptive_difficulties('oson', '{}'::jsonb);
+      raise exception 'FAIL AD06: % adaptive_difficulties ni chaqirdi', rol;
+    exception when insufficient_privilege then null;
+    end;
+    reset role;
+  end loop;
+  raise notice 'OK AD06 anon, authenticated, service_role tarmoq funksiyalarini chaqira olmaydi';
+end
+$$;
+
+do $$ begin raise notice 'ADAPTIV KALIBRLASH VA TARMOQ SINOVLARI O''TDI'; end $$;
 
 rollback;
