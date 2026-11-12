@@ -33,6 +33,16 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('official_mistakes', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('official_tests', 'anon', ''),
   ('official_tests', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('mock_answers', 'anon', ''),
+  ('mock_answers', 'authenticated', ''),
+  ('mock_attempts', 'anon', ''),
+  ('mock_attempts', 'authenticated', ''),
+  ('mock_form_questions', 'anon', ''),
+  ('mock_form_questions', 'authenticated', ''),
+  ('mock_forms', 'anon', ''),
+  ('mock_forms', 'authenticated', ''),
+  ('mock_modules', 'anon', ''),
+  ('mock_modules', 'authenticated', ''),
   ('onboarding_profiles', 'anon', ''),
   ('onboarding_profiles', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('payment_events', 'anon', ''),
@@ -115,7 +125,16 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.vocab_rate(uuid,boolean,boolean)', false, true, true),
   ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
   ('public.user_word_add(text,text,text,text)', false, true, true),
-  ('public.vocab_import_local(jsonb)', false, true, true)
+  ('public.vocab_import_local(jsonb)', false, true, true),
+  ('public.mock_status()', false, true, true),
+  ('public.start_mock(uuid)', false, true, true),
+  ('public.get_mock(uuid)', false, true, true),
+  ('public.mock_start_module(uuid)', false, true, true),
+  ('public.mock_save(uuid,jsonb)', false, true, true),
+  ('public.mock_submit_module(uuid,integer)', false, true, true),
+  ('public.mock_abandon(uuid)', false, true, true),
+  ('public.get_mock_result(uuid)', false, true, true),
+  ('public.admin_mock_readiness()', false, false, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
@@ -123,8 +142,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 26 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 26); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 31 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 31); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 
