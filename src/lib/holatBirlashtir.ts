@@ -9,8 +9,9 @@ export const SINXRON_KALITLAR = [
   'tayanch:sat-xato-daftari',
   'tayanch:sat-takrorlash',
   'tayanch:sat-reja',
-  'tayanch:sat-lugat',
 ] as const;
+// tayanch:sat-lugat bu yerda yo'q: P15 (PR #99) dan beri lug'at o'z jadvallarida (vocab_progress, vocab_import_local).
+// tayanch:sat-rasmiy-testlar (P11) va tayanch:sat-xato-sabab hali yo'q: alohida PR (docs/sinxron-qoidalari.md).
 export type SinxronKalit = (typeof SINXRON_KALITLAR)[number];
 export const sinxronKalitmi = (k: string): k is SinxronKalit => (SINXRON_KALITLAR as readonly string[]).includes(k);
 
@@ -48,16 +49,6 @@ const royxat = (maks: number): Shakl => ({
       .map((e) => e.x);
   },
 });
-
-/** Oddiy obyekt { id: qiymat } */
-const lugatShakl: Shakl = {
-  ajrat(q) {
-    const m: Yozuvlar = new Map();
-    if (obyektmi(q)) for (const [k, v] of Object.entries(q)) m.set(k, v);
-    return m;
-  },
-  yig: (y) => Object.fromEntries(y),
-};
 
 const AJRATGICH = '\t';
 const SHAKLLAR: Record<SinxronKalit, Shakl> = {
@@ -103,8 +94,6 @@ const SHAKLLAR: Record<SinxronKalit, Shakl> = {
     },
     yig: (y) => (y.has('reja') ? y.get('reja') : null),
   },
-  // tayanch:sat-lugat: { soz: 'bilaman' | 'organ' }
-  'tayanch:sat-lugat': lugatShakl,
 };
 
 export const yozuvlar = (kalit: SinxronKalit, q: unknown): Yozuvlar => SHAKLLAR[kalit].ajrat(q);

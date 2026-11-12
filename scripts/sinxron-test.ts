@@ -67,7 +67,11 @@ const eskiTakror = { versiya: 1, savollar: {
   r1: { quti: 1, keyingi: '2026-11-05', xatoSana: '2026-11-04' },
 } };
 const eskiReja = { sana: '2026-11-01', hozirgi: null, maqsad: 1400, kunlar: 4, fokus: 'teng', belgilar: { 'h1-0': true } };
+// Lug'at (P15) endi o'z jadvallarida: P04 uni sinxronlamaydi, faqat tegmasligi tekshiriladi.
 const eskiLugat = { ambiguous: 'bilaman', candid: 'organ' };
+/** Takrorlash kartasi (Leitner): yozuv darajasidagi ziddiyat sinovlari uchun */
+const karta = (quti: number, keyingi: string) => ({ quti, keyingi, xatoSana: '2026-11-01' });
+const takror = (savollar: Record<string, unknown>) => ({ versiya: 1, savollar });
 const seed = () => {
   ls.clear();
   ls.setItem('tayanch:sat-javoblar', JSON.stringify(eskiJavoblar));
@@ -101,12 +105,12 @@ await sinov('Kirish: brauzerda ma\'lumot bor → dialog so\'raladi, rozilikgacha
   await kut();
   assert.deepEqual(sorov, {
     'tayanch:sat-javoblar': 2, 'tayanch:sat-dars-progress': 3, 'tayanch:sat-xato-daftari': 2,
-    'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1, 'tayanch:sat-lugat': 2,
+    'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1,
   });
   assert.equal(A.oqishlar + A.yozishlar, 0);
   // Rozilikdan oldingi yozish ham yuborilmaydi
-  H.holatYoz('tayanch:sat-lugat', { ...eskiLugat, lucid: 'organ' });
-  ls.setItem('tayanch:sat-lugat', JSON.stringify(eskiLugat));
+  H.holatYoz('tayanch:sat-takrorlash', takror({ ...eskiTakror.savollar, q9: karta(1, '2026-11-06') }));
+  ls.setItem('tayanch:sat-takrorlash', JSON.stringify(eskiTakror));
   await new Promise((r) => setTimeout(r, 50));
   assert.equal(A.oqishlar + A.yozishlar, 0);
 });
@@ -125,9 +129,11 @@ await sinov('Import: hamma kalit serverga, bayroq profilda, Leitner qutilari va 
   vaqt = 2_000_000;
   await H.importQil();
   await kut();
-  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-dars-progress', 'tayanch:sat-xato-daftari', 'tayanch:sat-takrorlash', 'tayanch:sat-reja', 'tayanch:sat-lugat']) {
+  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-dars-progress', 'tayanch:sat-xato-daftari', 'tayanch:sat-takrorlash', 'tayanch:sat-reja']) {
     assert.ok(A.q(k), `${k} serverda yo'q`);
   }
+  assert.equal(A.q('tayanch:sat-lugat'), undefined, "Lug'at (P15) user_state ga yozilmasin");
+  assert.deepEqual(oqi('tayanch:sat-lugat'), eskiLugat, "Lug'at kaliti o'zgarmasin");
   assert.deepEqual(A.q('tayanch:sat-takrorlash').qiymat, eskiTakror);
   assert.deepEqual(A.q('tayanch:sat-dars-progress').qiymat, eskiProgress);
   assert.deepEqual(A.q('tayanch:sat-javoblar').qiymat, eskiJavoblar);
@@ -152,40 +158,45 @@ await sinov('Takror import: dublikat yo\'q, ma\'lumot bir xil', async () => {
 await sinov('Sinxron: yangi yozish debounce bilan serverga ketadi', async () => {
   vaqt = 3_000_000;
   const yozishlar = A.yozishlar;
-  H.holatYoz('tayanch:sat-lugat', { ...eskiLugat, lucid: 'organ' });
-  assert.deepEqual(H._ichki.navbat(), ['tayanch:sat-lugat']);
+  H.holatYoz('tayanch:sat-takrorlash', takror({ ...eskiTakror.savollar, q9: karta(1, '2026-11-06') }));
+  assert.deepEqual(H._ichki.navbat(), ['tayanch:sat-takrorlash']);
   await H.sinxronlaHozir();
   assert.equal(A.yozishlar, yozishlar + 1);
-  assert.equal(A.q('tayanch:sat-lugat').qiymat.lucid, 'organ');
-  assert.equal(A.q('tayanch:sat-lugat').t.lucid, 3_000_000);
+  assert.deepEqual(A.q('tayanch:sat-takrorlash').qiymat.savollar.q9, karta(1, '2026-11-06'));
+  assert.equal(A.q('tayanch:sat-takrorlash').t.q9, 3_000_000);
   assert.deepEqual(H._ichki.navbat(), []);
+  // Lug'at yozuvi navbatga tushmaydi (P15 o'zi saqlaydi)
+  H.holatYoz('tayanch:sat-lugat', { ...eskiLugat, lucid: 'organ' });
+  assert.deepEqual(H._ichki.navbat(), []);
+  assert.equal(oqi('tayanch:sat-lugat').lucid, 'organ');
 });
 
 await sinov('Ziddiyat: yangiroq updatedAt yutadi (ikki qurilma)', async () => {
-  // 2-qurilma: serverdagi lugat'ni 4_000_000 da o'zgartirgan
-  const s = A.q('tayanch:sat-lugat');
-  s.qiymat.candid = 'bilaman'; s.t.candid = 4_000_000;
-  s.qiymat.lucid = 'bilaman'; s.t.lucid = 2_500_000; // eskiroq: shu qurilmaning 3_000_000 dagi qiymati yutishi kerak
-  A.qatorlar.set('tayanch:sat-lugat', JSON.stringify(s));
+  // 2-qurilma: serverdagi takrorlashni 4_000_000 da o'zgartirgan
+  const s = A.q('tayanch:sat-takrorlash');
+  s.qiymat.savollar.r1 = karta(2, '2026-11-09'); s.t.r1 = 4_000_000;
+  s.qiymat.savollar.q9 = karta(4, '2026-11-30'); s.t.q9 = 2_500_000; // eskiroq: shu qurilmaning 3_000_000 dagi qiymati yutishi kerak
+  A.qatorlar.set('tayanch:sat-takrorlash', JSON.stringify(s));
   vaqt = 3_500_000;
-  H.holatYoz('tayanch:sat-lugat', { ...oqi('tayanch:sat-lugat'), ambiguous: 'organ' }); // 3_500_000
+  const joriy = oqi('tayanch:sat-takrorlash');
+  H.holatYoz('tayanch:sat-takrorlash', takror({ ...joriy.savollar, m2: karta(4, '2026-12-01') })); // 3_500_000
   await H.sinxronlaHozir();
-  const l = oqi('tayanch:sat-lugat');
-  assert.equal(l.candid, 'bilaman', 'server (yangiroq) yutishi kerak');
-  assert.equal(l.lucid, 'organ', 'brauzer (yangiroq) yutishi kerak');
-  assert.equal(l.ambiguous, 'organ');
-  assert.deepEqual(A.q('tayanch:sat-lugat').qiymat, l);
+  const l = oqi('tayanch:sat-takrorlash');
+  assert.deepEqual(l.savollar.r1, karta(2, '2026-11-09'), 'server (yangiroq) yutishi kerak');
+  assert.deepEqual(l.savollar.q9, karta(1, '2026-11-06'), 'brauzer (yangiroq) yutishi kerak');
+  assert.deepEqual(l.savollar.m2, karta(4, '2026-12-01'));
+  assert.deepEqual(A.q('tayanch:sat-takrorlash').qiymat, l);
 });
 
 await sinov('Ziddiyat: vaqt teng bo\'lsa server yutadi', async () => {
-  const s = A.q('tayanch:sat-lugat');
-  s.qiymat.ambiguous = 'bilaman'; // brauzerdagi bilan bir xil vaqt (3_500_000)
-  A.qatorlar.set('tayanch:sat-lugat', JSON.stringify(s));
+  const s = A.q('tayanch:sat-takrorlash');
+  s.qiymat.savollar.m2 = karta(5, '2026-12-15'); // brauzerdagi bilan bir xil vaqt (3_500_000)
+  A.qatorlar.set('tayanch:sat-takrorlash', JSON.stringify(s));
   H.holatYoz('tayanch:sat-reja', { ...eskiReja, maqsad: 1450 }); // navbatga boshqa kalit
-  // lugat'ni ham navbatga qo'yish uchun (o'zgarishsiz yozish vaqtni o'zgartirmaydi)
-  H.holatYoz('tayanch:sat-lugat', oqi('tayanch:sat-lugat'));
+  // takrorlashni ham navbatga qo'yish uchun (o'zgarishsiz yozish vaqtni o'zgartirmaydi)
+  H.holatYoz('tayanch:sat-takrorlash', oqi('tayanch:sat-takrorlash'));
   await H.sinxronlaHozir();
-  assert.equal(oqi('tayanch:sat-lugat').ambiguous, 'bilaman');
+  assert.deepEqual(oqi('tayanch:sat-takrorlash').savollar.m2, karta(5, '2026-12-15'));
 });
 
 await sinov("Xato daftari: to'g'ri javob yozuvni olib tashlasa boshqa qurilmada ham o'chadi (tombstone)", async () => {
@@ -248,8 +259,9 @@ await sinov('Clear local copy: brauzer nusxasi o\'chadi, hisobdagi nusxa qoladi'
   await H.sinxronlaHozir();
   const serverOldin = new Map(B.qatorlar);
   assert.equal(await H.mahalliyNusxaniTozala(), true);
-  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-lugat', 'tayanch:sat-sinxron-vaqt']) assert.equal(ls.getItem(k), null);
+  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-takrorlash', 'tayanch:sat-sinxron-vaqt']) assert.equal(ls.getItem(k), null);
   assert.ok(ls.getItem('tayanch:ielts-xato-daftari'), 'IELTS kaliti qoladi');
+  assert.ok(ls.getItem('tayanch:sat-lugat'), "Lug'at kaliti (P15) qoladi");
   assert.deepEqual(new Map(B.qatorlar), serverOldin);
 });
 
