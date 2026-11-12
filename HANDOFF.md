@@ -148,6 +148,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 17. SAT `<title>` (brauzer tab nomi) da ®: CB08 da bu haqda qoida yo'q (faqat "next to the mark"; "meta tags" faqat taqiqlar ro'yxatida), tekshirildi 2026-11-08. Qo'yiladimi: muallif qarori. Shu bilan birga 1-qavatdagi SAT matni (bosh sahifa, MaqsadTesti, MuallifYoli, Lift) belgisiz qoladi (muallif 2026-11-08: hozircha tegilmaydi).
 18. Supabase email (2026-11-09): standart SMTP faqat loyiha jamoasi a'zolariga, soatiga 2 xabar yuboradi, production uchun emas (supabase.com/docs/guides/auth/auth-smtp). `/uz/hisob/` ochilishidan oldin o'z SMTP xizmati tanlanadi (bepul variant afzal): muallif qarori.
 19. Supabase bepul reja (2026-11-09): avtomatik backup yo'q, 7 kunlik faolsizlikdan keyin pauza (1 yil ichida tiklanadi). Pro qarori P28 da. Unga qadar muhim o'zgarishdan oldin qo'lda eksport (repo tashqarisida).
+20. SAT mock imtihon, adaptive-style 2-modul (P31, branch `sat-adaptiv`, 2026-11-12, PR kutilmoqda): 1-modul aniqlik chegarasi (`src/data/satAdaptiv.ts` `chegara`, hozir `null` = adaptivlik o'chiq), kalibrlash N = 30 va pog'onalar 80/60/40/20, tarmoqlar 1–3 / 3–5, eng kam savol R&W 27, Math 22: hammasi taklif, muallif qarori. Hujjat `docs/sat-adaptiv.md`. Migratsiya `20261112163208_adaptiv_kalibr.sql` jonli bazaga qo'llanmagan. P30 (`sat-mock-imtihon`) ga ulash alohida kichik PR.
 
 ## 6. Fayl nomlash qoidalari
 
