@@ -2,7 +2,7 @@
 
 Alohida admin sahifasi yo'q (MVP qarori). Hamma ish Supabase panelida: **SQL Editor** (pastdagi tayyor so'rovlar) va kerak bo'lsa **Table Editor**. Panel bo'limlarining aniq nomlari Supabase versiyasiga qarab o'zgarishi mumkin (tekshirish kerak).
 
-Sxema: `public.reports`, `public.feedback` (migratsiya `20261108000007_boshqa.sql`), cheklovlar `20261112143717_xabar_cheklov.sql`. Model: `docs/ma'lumotlar-modeli.md`.
+Sxema: `public.reports`, `public.feedback` (migratsiya `20261108000007_boshqa.sql`), cheklovlar `20261112151943_xabar_cheklov.sql`. Model: `docs/ma'lumotlar-modeli.md`.
 
 ## 0. Maxfiylik qoidasi
 

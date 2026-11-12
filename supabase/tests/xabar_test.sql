@@ -1,4 +1,4 @@
--- P24 sinovlari (20261112143717_xabar_cheklov): reports va feedback cheklovlari, RLS, admin_unhide_question.
+-- P24 sinovlari (20261112151943_xabar_cheklov): reports va feedback cheklovlari, RLS, admin_unhide_question.
 -- Bitta tranzaksiya, oxirida ROLLBACK. npm run db:tekshir ichida ishga tushadi.
 \set ON_ERROR_STOP on
 \set QUIET on

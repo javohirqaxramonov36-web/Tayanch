@@ -1,5 +1,5 @@
 // P24: savol xatosi haqida xabar (Report) va fikr-mulohaza (Send feedback). Sof mantiq: DOM va tarmoq yo'q.
-// Server qoidalari: supabase/migrations/20261112143717_xabar_cheklov.sql (takror, tezlik, RLS).
+// Server qoidalari: supabase/migrations/20261112151943_xabar_cheklov.sql (takror, tezlik, RLS).
 // Matn inglizcha (SAT bo'limi). Xato so'zlari migratsiyadagi bilan bir xil bo'lishi kerak.
 
 export type XabarSababi = 'wrong_answer' | 'unclear' | 'typo' | 'figure' | 'other';
