@@ -101,6 +101,21 @@ Faqat `change` qatorlari yoziladi, har biri `audit_log` ga (`action = 'difficult
 - `npm test` (`src/lib/testlar/adaptiv.test.ts`): standart chegara 60 (R&W 17/27 → qiyin, 16/27 → oson; Math 14/22 → qiyin, 13/22 → oson; `null` hali ham adaptivlikni o'chiradi), sun'iy javoblar bilan ikki tarmoq (R&W 22/27 → qiyin, 9/27 → oson; Math 18/22 → qiyin, 4/22 → oson), chegaraga teng natija → oson, chegara yo'q → standart, savol kam → standart, yaroqsiz chegara va natija, kalibrlash pog'onalari va N, SQL standart qiymatlari sozlama bilan bir xilligi. Boshqa chegaralar (50, 70) faqat sinov ichida.
 - `npm run db:tekshir` (`supabase/tests/adaptiv_test.sql`): AD01 birinchi javob qoidasi, AD02 N, versiya va draft, AD03 apply va `audit_log`, AD04 huquqlar.
 
+## P30 ga ulash rejasi (`sat-adaptiv-ulash`)
+
+Claude qarori, muallif topshirig'i bilan (2026-11-12). 2026-11-13 holati: P30 hali commit qilinmagan va boshqa sessiyada qurilmoqda, shuning uchun uning fayllariga tegilmadi. Reja P30 loyihasini (migratsiya `20261112153847_mock_imtihon.sql`, faqat o'qilgan) ko'rib yozilgan, P30 merge bo'lganda qayta tekshiriladi.
+
+P30 hozir ikkala modulni imtihon boshida yig'adi (`private.mock_build_form`: har soha uchun `b_per_module * 2` savol, qiyinlik bo'yicha tartiblanib 1- va 2-modulga galma-gal bo'linadi). Adaptivlik uchun 2-modul 1-modul yopilgandan **keyin** tanlanishi kerak, demak ulash server tomonda bo'ladi:
+
+1. **Qaror serverda.** Tarmoq brauzerda emas, `private.mock_close_module` da tanlanadi (1-modul R&W, 3-modul Math yopilganda). Brauzer natijani o'zgartira olmaydi. `tarmoqTanla` qoidasi SQL'ga bir xil ko'chiriladi (`private.mock_branch`), qiymatlar `mock_config()` da; `adaptiv.test.ts` dagi kabi sinov JS va SQL qiymatlari bir xilligini tekshiradi.
+2. **`savolSoni`.** Shu bo'limda, har tarmoq qiyinliklariga mos, `verified`, shu urinishning 1-modulida ishlatilmagan savollar. Qo'shimcha shart: har soha (blueprint) bo'yicha ham 2-modulga yetarli bo'lishi kerak; biror sohada yetmasa → `standart` (`savol-kam`). Sabab: 2-modul blueprint tarkibini buzmasin.
+3. **2-modul.** `qiyin` / `oson`: P30 ning shu bo'lim uchun oldindan yig'ilgan 2-modul savollari `tarmoqQiyinliklari(tarmoq)` bo'yicha qayta tanlangan savollar bilan almashtiriladi (soha soni va tartib qoidasi P30 dagidek). `standart`: P30 ning oddiy tartibi o'zgarmaydi.
+4. **Muvozanat sharti.** P30 1-modulni qiyinlik bo'yicha pool'dagi taqsimotga qarab bo'ladi, har darajadan 20% emas. Chegara 60 to'g'ri ishlashi uchun 1-modulda 1–5 darajalar taxminan teng bo'lishi kerak; `admin_mock_readiness()` ga darajalar bo'yicha son qo'shish taklif qilinadi.
+5. **Saqlash.** Tarmoq va sabab `mock_modules` (2- va 4-modul qatori) da: `branch text check (branch in ('standart','oson','qiyin'))`, `branch_reason text`. `localStorage` kerak emas.
+6. **Ekran.** Imtihon davomida tarmoq ko'rsatilmaydi (Tayanch qarori: o'quvchini chalg'itmaslik uchun). Natija ekranida har bo'lim uchun qisqa inglizcha izoh: "Module 2 was an easier / a harder set, based on your Module 1 accuracy (adaptive-style). This is Tayanch's own rule, not the official SAT algorithm, and scores are estimates." `standart` bo'lsa izoh chiqmaydi. Yangi tugma yo'q: klaviatura va telefon xatti-harakati o'zgarmaydi.
+7. **Sinov.** SQL: ikki tarmoq, tenglik (60%) → oson, savol kam / soha kam → standart, brauzer tarmoqni yoza olmaydi. Brauzer: P30 ning dev mock'i (`mockImtihonMock.ts`) ga `qiyin` va `oson` natijali holatlar qo'shiladi, axe 390 / 1280, yorug' va qorong'i.
+8. **Migratsiya.** Yangi fayl, raqam vaqt bilan (daqiqa/soniya tasodifiy), push oldidan boshqa branch'lar bilan solishtiriladi; jonli bazaga faqat muallif ruxsati bilan.
+
 ## Keyingi qadam
 
 1. P30 (`sat-mock-imtihon`) merge bo'lgach kichik PR (branch `sat-adaptiv-ulash`): 1-modul tugaganda `tarmoqTanla` chaqiriladi, 2-modul savollari `tarmoqQiyinliklari()` bo'yicha olinadi, natija sahifasida "adaptive-style" izohi. P30 1-modulni qiyinlik bo'yicha muvozanatli tuzishi kerak (yuqoridagi shart).
