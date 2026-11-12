@@ -9,9 +9,10 @@ export const SINXRON_KALITLAR = [
   'tayanch:sat-xato-daftari',
   'tayanch:sat-takrorlash',
   'tayanch:sat-reja',
+  'tayanch:sat-xato-sabab',
 ] as const;
 // tayanch:sat-lugat bu yerda yo'q: P15 (PR #99) dan beri lug'at o'z jadvallarida (vocab_progress, vocab_import_local).
-// tayanch:sat-rasmiy-testlar (P11) va tayanch:sat-xato-sabab hali yo'q: alohida PR (docs/sinxron-qoidalari.md).
+// tayanch:sat-rasmiy-testlar (P11) hali yo'q: alohida PR (docs/sinxron-qoidalari.md).
 export type SinxronKalit = (typeof SINXRON_KALITLAR)[number];
 export const sinxronKalitmi = (k: string): k is SinxronKalit => (SINXRON_KALITLAR as readonly string[]).includes(k);
 
@@ -50,6 +51,16 @@ const royxat = (maks: number): Shakl => ({
   },
 });
 
+/** { versiya: 1, savollar: { id: yozuv } }: har savol bitta yozuv (takrorlash, xato sababi) */
+const savollarShakl: Shakl = {
+  ajrat(q) {
+    const m: Yozuvlar = new Map();
+    if (obyektmi(q) && obyektmi(q.savollar)) for (const [id, y] of Object.entries(q.savollar)) if (obyektmi(y)) m.set(id, y);
+    return m;
+  },
+  yig: (y) => ({ versiya: 1, savollar: Object.fromEntries(y) }),
+};
+
 const AJRATGICH = '\t';
 const SHAKLLAR: Record<SinxronKalit, Shakl> = {
   // tayanch:sat-javoblar: Javob[] (satNamuna.ts), test sahifasi 500 tagacha saqlaydi
@@ -77,14 +88,10 @@ const SHAKLLAR: Record<SinxronKalit, Shakl> = {
   },
   // tayanch:sat-takrorlash: { versiya: 1, savollar: { id: { quti, keyingi, xatoSana } } } (takrorlash.ts).
   // Quti va keyingi sana o'zgarishsiz ko'chadi: oraliqlar (1, 3, 7, 14 kun) shu sanalarda saqlangan.
-  'tayanch:sat-takrorlash': {
-    ajrat(q) {
-      const m: Yozuvlar = new Map();
-      if (obyektmi(q) && obyektmi(q.savollar)) for (const [id, y] of Object.entries(q.savollar)) if (obyektmi(y)) m.set(id, y);
-      return m;
-    },
-    yig: (y) => ({ versiya: 1, savollar: Object.fromEntries(y) }),
-  },
+  'tayanch:sat-takrorlash': savollarShakl,
+  // tayanch:sat-xato-sabab: { versiya: 1, savollar: { id: { teg, izoh } } } (xatoSabab.ts, P09); izoh 1000 belgigacha,
+  // yozuvlar soni dars savollari soni bilan cheklangan.
+  'tayanch:sat-xato-sabab': savollarShakl,
   // tayanch:sat-reja: bitta obyekt yoki yo'q → bitta yozuv "reja"
   'tayanch:sat-reja': {
     ajrat(q) {

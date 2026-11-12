@@ -13,7 +13,7 @@ Holat: kod `sat-progress-sinxron` branch'ida (P04). Adapter hisob moduliga (P03,
 | `src/components/SatSinxron.astro` | "Import this device's progress?" dialogi (BolimQobiq `bolim="sat"` va SatFokus) |
 | `scripts/sinxron-test.ts` | Soxta server bilan sinov: `npm run sinxron:tekshir` |
 
-Yozish nuqtalari adapterga ulangan: `darsSaqlash.oqi/yoz` (dars progressi, xato daftari, takrorlash, reja), `mashq/test` (javoblar), `vosita/rasmiy-testlar` (faqat `darsSaqlash` orqali o'tadi, kalit ro'yxatda emas: pastga qarang), o'chirish tugmalari (`vosita/natijalar`, `vosita/reja`, `vosita/takrorlash`). Boshqa bo'limlar (IELTS, Top Admission) kalitlari faqat localStorage'da qoladi: adapter ularni kuzatmaydi.
+Yozish nuqtalari adapterga ulangan: `darsSaqlash.oqi/yoz` (dars progressi, xato daftari, takrorlash, reja, xato sababi `xatoSabab.ts`), `mashq/test` (javoblar), `vosita/rasmiy-testlar` (faqat `darsSaqlash` orqali o'tadi, kalit ro'yxatda emas: pastga qarang), o'chirish tugmalari (`vosita/natijalar`, `vosita/reja`, `vosita/takrorlash`). Boshqa bo'limlar (IELTS, Top Admission) kalitlari faqat localStorage'da qoladi: adapter ularni kuzatmaydi.
 
 ## Kalit → jadval xaritasi
 
@@ -26,6 +26,7 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 | `tayanch:sat-xato-daftari` | `XatoYozuv[]`, 300 tagacha | `XatoYozuv.id` | xuddi shu |
 | `tayanch:sat-takrorlash` | `{ versiya: 1, savollar: { id: { quti, keyingi, xatoSana } } }` | savol id | xuddi shu |
 | `tayanch:sat-reja` | bitta obyekt yoki yo'q | `reja` (bitta yozuv) | xuddi shu |
+| `tayanch:sat-xato-sabab` | `{ versiya: 1, savollar: { id: { teg, izoh } } }` (P09, `xatoSabab.ts`) | savol id | xuddi shu |
 | — | — | — | `tayanch:sat-import`: profil bayrog'i `{ versiya, migrated, birinchi, oxirgi, soni }` |
 
 `user_state.value` shakli: `{ versiya: 1, qiymat, t, o }`. `qiymat` brauzerdagi qiymatning o'zi, `t` har yozuvning oxirgi o'zgarish vaqti (ms), `o` o'chirilgan yozuvlar (tombstone, ms; har kalitda eng yangi 1000 tasi).
@@ -36,7 +37,6 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 | --- | --- | --- |
 | `tayanch:sat-lugat`, `tayanch:sat-lugat-takror` | P15 (PR #99) dan beri lug'at o'z jadvallarida: `vocab_progress` (RPC `vocab_rate`, `vocab_star`) va kirganda bir martalik `vocab_import_local`. Ikkinchi nusxa `user_state` da bo'lsa ikki manba bir-biriga zid bo'lardi. | Olib tashlandi (2026-11-12). `holatYoz` bu kalitni oddiy localStorage kabi yozadi, "Clear local copy" unga tegmaydi. |
 | `tayanch:sat-rasmiy-testlar` (P11 Test tracker) | Sahifa `darsSaqlash.oqi/yoz` orqali yozadi, ya'ni ro'yxatga qo'shish bilan sinxron boshlanadi. Lekin qiymat `{ versiya, testlar, xatolar }`: ikki ro'yxatli alohida shakl kerak (yozuv id'si `test`/`xato` + TAB + `id`), testlar va xatolar sonida chegara yo'q (izoh 2000 va 1000 belgigacha), `user_state` qatori esa 256 KB. Chegara va sinovsiz qo'shilsa katta tarixda `upsert` rad etiladi. | Qaror (2026-11-12): bu PR'da emas. P04 merge bo'lgach alohida PR: shakl, son chegarasi yoki hajm tekshiruvi, sinov. |
-| `tayanch:sat-xato-sabab` (P09 dars xatosi sababi) | P04 dan keyin qo'shilgan kalit. | `tayanch:sat-rasmiy-testlar` bilan bir PR'da. |
 
 **Nega `review_queue` emas:** `review_queue.question_id` `public.questions(id)` (uuid) ga bog'langan, darslardagi savol id'lari esa matn va bazada yo'q; mijozda bu jadvalga insert huquqi ham yo'q. Shuning uchun darslar takrorlashi (Leitner) `user_state` ga ko'chadi; `quti` va `keyingi` sanasi o'zgarishsiz saqlanadi, demak 1, 3, 7, 14 kunlik oraliqlar ham saqlanadi. `review_queue` savol banki (P02 `questions`) uchun qoladi.
 
@@ -79,7 +79,7 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 ## Mahalliy nusxa
 
 - Importdan keyin brauzerdagi nusxa qoladi (zaxira).
-- **Clear local copy** (dialogning yakuniy qadamida, tasdiq bilan): brauzerdagi 5 ta SAT kaliti (ro'yxatdagilar) va yordamchi kalitlarni o'chiradi, hisobdagi nusxaga tegmaydi (tombstone qo'yilmaydi). Yuborilmagan o'zgarish bo'lsa o'chirmaydi. Hisob bilan kirilgan holatda keyingi SAT sahifasida nusxa serverdan qayta yuklanadi.
+- **Clear local copy** (dialogning yakuniy qadamida, tasdiq bilan): brauzerdagi 6 ta SAT kaliti (ro'yxatdagilar) va yordamchi kalitlarni o'chiradi, hisobdagi nusxaga tegmaydi (tombstone qo'yilmaydi). Yuborilmagan o'zgarish bo'lsa o'chirmaydi. Hisob bilan kirilgan holatda keyingi SAT sahifasida nusxa serverdan qayta yuklanadi.
 - 1-qavatdagi "brauzer ma'lumotlarini o'chirish" tugmasi ham faqat brauzerni tozalaydi.
 
 ## Ma'lum cheklovlar

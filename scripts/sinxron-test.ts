@@ -66,6 +66,7 @@ const eskiTakror = { versiya: 1, savollar: {
   m2: { quti: 3, keyingi: '2026-11-20', xatoSana: '2026-11-01' },
   r1: { quti: 1, keyingi: '2026-11-05', xatoSana: '2026-11-04' },
 } };
+const eskiSabab = { versiya: 1, savollar: { m2: { teg: 'careless', izoh: '' }, r1: { teg: null, izoh: 'its / it\'s' } } };
 const eskiReja = { sana: '2026-11-01', hozirgi: null, maqsad: 1400, kunlar: 4, fokus: 'teng', belgilar: { 'h1-0': true } };
 // Lug'at (P15) endi o'z jadvallarida: P04 uni sinxronlamaydi, faqat tegmasligi tekshiriladi.
 const eskiLugat = { ambiguous: 'bilaman', candid: 'organ' };
@@ -79,6 +80,7 @@ const seed = () => {
   ls.setItem('tayanch:sat-xato-daftari', JSON.stringify(eskiDaftar));
   ls.setItem('tayanch:sat-takrorlash', JSON.stringify(eskiTakror));
   ls.setItem('tayanch:sat-reja', JSON.stringify(eskiReja));
+  ls.setItem('tayanch:sat-xato-sabab', JSON.stringify(eskiSabab));
   ls.setItem('tayanch:sat-lugat', JSON.stringify(eskiLugat));
   ls.setItem('tayanch:ielts-xato-daftari', JSON.stringify([{ id: 'x', modul: 'y', tanlangan: 'z', sana: '2026-11-01' }]));
 };
@@ -105,7 +107,7 @@ await sinov('Kirish: brauzerda ma\'lumot bor → dialog so\'raladi, rozilikgacha
   await kut();
   assert.deepEqual(sorov, {
     'tayanch:sat-javoblar': 2, 'tayanch:sat-dars-progress': 3, 'tayanch:sat-xato-daftari': 2,
-    'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1,
+    'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1, 'tayanch:sat-xato-sabab': 2,
   });
   assert.equal(A.oqishlar + A.yozishlar, 0);
   // Rozilikdan oldingi yozish ham yuborilmaydi
@@ -129,9 +131,10 @@ await sinov('Import: hamma kalit serverga, bayroq profilda, Leitner qutilari va 
   vaqt = 2_000_000;
   await H.importQil();
   await kut();
-  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-dars-progress', 'tayanch:sat-xato-daftari', 'tayanch:sat-takrorlash', 'tayanch:sat-reja']) {
+  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-dars-progress', 'tayanch:sat-xato-daftari', 'tayanch:sat-takrorlash', 'tayanch:sat-reja', 'tayanch:sat-xato-sabab']) {
     assert.ok(A.q(k), `${k} serverda yo'q`);
   }
+  assert.deepEqual(A.q('tayanch:sat-xato-sabab').qiymat, eskiSabab);
   assert.equal(A.q('tayanch:sat-lugat'), undefined, "Lug'at (P15) user_state ga yozilmasin");
   assert.deepEqual(oqi('tayanch:sat-lugat'), eskiLugat, "Lug'at kaliti o'zgarmasin");
   assert.deepEqual(A.q('tayanch:sat-takrorlash').qiymat, eskiTakror);
@@ -206,6 +209,16 @@ await sinov("Xato daftari: to'g'ri javob yozuvni olib tashlasa boshqa qurilmada 
   const s = A.q('tayanch:sat-xato-daftari');
   assert.deepEqual(s.qiymat.map((x: { id: string }) => x.id), ['m2']);
   assert.equal(s.o.r1, 5_000_000);
+});
+
+await sinov("Xato sababi: teg o'zgarishi va olib tashlangan sabab boshqa qurilmaga o'tadi", async () => {
+  vaqt = 5_500_000;
+  H.holatYoz('tayanch:sat-xato-sabab', { versiya: 1, savollar: { m2: { teg: 'misread', izoh: 'read too fast' } } });
+  await H.sinxronlaHozir();
+  const s = A.q('tayanch:sat-xato-sabab');
+  assert.deepEqual(s.qiymat.savollar, { m2: { teg: 'misread', izoh: 'read too fast' } });
+  assert.equal(s.t.m2, 5_500_000);
+  assert.equal(s.o.r1, 5_500_000);
 });
 
 await sinov('Oflayn: navbat saqlanadi, qayta urinadi, "online" bo\'lganda yuboradi', async () => {
