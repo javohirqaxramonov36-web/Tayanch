@@ -11,10 +11,11 @@ select ('00000000-0000-4000-8000-0000000a' || lpad(to_hex(i), 4, '0'))::uuid, 'a
 from generate_series(1, 31) i;
 
 insert into public.questions
-  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, status, author, verified_by)
+  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, status, author, verified_by, verified_at)
 select v.ext, 'math', 'AD-domain', 'AD-skill', v.d, 'mcq', 'SINOV savol ' || v.ext,
        '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]', '{"choice": "A"}', 'SINOV izoh', v.st, 'sinov',
-       case when v.st = 'verified' then 'sinov-tekshiruvchi' end
+       case when v.st = 'verified' then 'sinov-tekshiruvchi' end,
+       case when v.st = 'verified' then now() end
 from (values
   ('ad-oson',  3, 'verified'),  -- 30 foydalanuvchi, 27 to'g'ri (90%) → taklif 1, change
   ('ad-mos',   3, 'verified'),  -- 30 foydalanuvchi, 15 to'g'ri (50%) → 3, ok
