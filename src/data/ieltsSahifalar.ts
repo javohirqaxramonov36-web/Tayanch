@@ -24,7 +24,7 @@ export const IKONKA = {
 export const qollanmalar: IeltsBand[] = [
   { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", ikonka: IKONKA.listening },
   { nomi: 'Reading', tavsif: 'Skimming, scanning, True/False/Not Given', qism: 'qollanma/reading/', ikonka: IKONKA.reading },
-  { nomi: 'Writing Task 2', tavsif: 'Insho tuzilishi va reja', ikonka: IKONKA.writing },
+  { nomi: 'Writing Task 2', tavsif: "Mezonlar, insho tuzilmasi va o'zini tekshirish", qism: 'qollanma/writing-task-2/', ikonka: IKONKA.writing },
   { nomi: 'Speaking', tavsif: "Uch qism va o'zingni yozib eshitish", ikonka: IKONKA.speaking },
 ];
 
@@ -51,3 +51,5 @@ export const vositalar: IeltsBand[] = [
 ];
 
 export const KALIT_IELTS_REJA = 'tayanch:ielts-reja';
+/** Writing Task 2 insho mashqi qoralamasi (mavzu, matn, taymer, o'zini tekshirish belgilari) */
+export const KALIT_IELTS_WRITING_T2 = 'tayanch:ielts-writing-t2';
