@@ -72,6 +72,10 @@ verify_jwt = false
 [functions.inpay-muvofiqlash]
 verify_jwt = false
 
+# ai-tutor (P33): foydalanuvchi kod ichida auth.getUser bilan tekshiriladi; AI kaliti AI_API_KEY secret'da.
+[functions.ai-tutor]
+verify_jwt = false
+
 # hisob-malumot (P23): ma'lumot eksporti va hisobni o'chirish. Foydalanuvchi kod ichida auth.getUser bilan,
 # o'chirishda qayta autentifikatsiya JWT `amr` vaqti bilan tekshiriladi.
 [functions.hisob-malumot]

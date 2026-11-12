@@ -29,6 +29,8 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     "inPAY, Click va Payme to'lov ma'lumotini qancha va qayerda saqlashi: ularning shartlarida tekshirish kerak",
     "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: huquqshunos fikri kerak",
     "To'lov yozuvlarini hisob o'chirilgandan keyin qancha saqlash kerakligi (buxgalteriya va soliq qonunchiligi): yurist yoki buxgalter javobi kerak",
+    "AI Tutor: Anthropic API so'rov va javoblarni qancha muddat saqlashi va ularni model o'qitishda ishlatmasligi Anthropic tijorat shartlarida tekshirish kerak (AI yoqilishidan oldin)",
+    "AI Tutor: xabarni AQShdagi Anthropic xizmatiga uzatish Qonun 15 va 27¹-moddalari (LX02) va VM 415-son qarori (LX04) bo'yicha ruxsat etilganmi: huquqshunos fikri kerak (AI yoqilishidan oldin)",
   ]}
 >
   <HuquqiyMatn til="uz" kalit="maxfiylik" sana="2026-11-11" kirish="Hisob ixtiyoriy: saytning bepul qismi hisobsiz ham ishlaydi.">
@@ -56,6 +58,11 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>savol haqida yuborgan xabaringiz yoki fikringiz.</li>
     </ul>
     <p>Bu ma'lumot natijalar sahifasi, takrorlash va tavsiyalar ishlashi uchun kerak. Hisobsiz ishlasangiz, natijalar faqat brauzeringizda qoladi.</p>
+
+    <h2>O'qituvchi guruhlari</h2>
+    <p>O'qituvchingiz bergan kod bilan SAT guruhiga qo'shilsangiz, serverda saqlanadi: guruhdagi ismingiz, qo'shilgan sana, nimani ulashishni tanlaganingiz va rozilik vaqti, 18 yoshgacha bo'lsangiz ota-ona yoki vasiy ismi va tasdiq vaqti.</p>
+    <p>O'qituvchi faqat siz tanlagan qismni ko'radi (umumiy natija, mavzular bo'yicha aniqlik yoki ikkalasi), faqat qo'shilgan kundan keyingi mashqlar bo'yicha. Email, yosh, alohida javoblar, xato daftari, test ballari va to'lovlar ko'rsatilmaydi. Guruhdan chiqsangiz yoki o'qituvchi sizni chiqarsa, a'zolik yozuvi o'chadi va o'qituvchi endi hech narsa ko'rmaydi.</p>
+    <p>O'qituvchi uchun guruh nomi, o'quvchilarga ko'rinadigan ismi, taklif kodi va guruh tarifi muddati saqlanadi.</p>
 
     <h2>To'lov</h2>
     <ul>
@@ -91,6 +98,18 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
 
     <h2>{vq ? `${vq.yoshgacha} yoshgacha bo'lganlar` : 'Yosh'}</h2>
     <p>Hisobni {minYosh} yoshdan ochish mumkin.{vq && <> Qonun bo'yicha voyaga yetmaganlar ({vq.yoshgacha} yoshgacha, LX03) ma'lumotiga ishlov berish uchun ota-ona yoki vasiy yozma, shu jumladan elektron shaklda rozilik beradi (21-modda, LX02). Shuning uchun ro'yxatdan o'tish formasida ota-ona yoki vasiy o'z ismini yozib, rozilik belgisini qo'yadi.</>}</p>
+
+    <h2 id="ai-tutor">AI Tutor (SAT bo'limi)</h2>
+    <p>SAT bo'limidagi AI Tutor hozircha o'chiq. Yoqilganda u shunday ishlaydi (2026-yil 12-noyabrda qo'shildi):</p>
+    <ul>
+      <li><strong>Nima yuboriladi</strong>: siz yozgan xabar, shu suhbatdagi oxirgi 6 ta xabar va, xatoingiz haqida so'rasangiz, Tayanch'ning o'sha original savoli va sizning javobingiz. Ismingiz, emailingiz va hisob raqamingiz AI xizmatiga yuborilmaydi.</li>
+      <li><strong>Kim javob yozadi</strong>: Anthropic kompaniyasining (AQSh) Claude modeli. So'rov Tayanch serveri (Supabase Edge Function) orqali boradi: brauzeringiz AI xizmatiga to'g'ridan-to'g'ri ulanmaydi.</li>
+      <li><strong>Tozalash</strong>: yuborishdan oldin xabardagi email, telefon, karta va pasport raqami, havola va "@" taxallus avtomatik olib tashlanadi. Filtr hammasini ushlay olmaydi, shuning uchun shaxsiy ma'lumot yozmang.</li>
+      <li><strong>Rasmiy test materiali</strong>: College Board savoli yoki sizdirilgan material deb aniqlangan xabar AI'ga yuborilmaydi va saqlanmaydi.</li>
+      <li><strong>Saqlash</strong>: tozalangan xabaringiz va AI javobi hisobingizda (Supabase, Frankfurt) suhbat tarixi sifatida saqlanadi. Xarajatni hisoblash uchun matnsiz yozuv ham saqlanadi: vaqt, token soni va narx. Bir xil xabar takror yuborilganini aniqlash uchun xabarning qaytarib bo'lmaydigan izi (xesh) ko'pi bilan 1 soat saqlanadi.</li>
+      <li><strong>O'chirish</strong>: AI Tutor sahifasida har bir suhbatni yoki butun tarixni o'chirish mumkin. Hisobni o'chirsangiz, suhbatlar ham o'chadi; xarajat yozuvi hisobga bog'lanmagan holda qoladi.</li>
+      <li>AI xato qilishi mumkin. U ball yoki natijani bashorat qilmaydi va kafolatlamaydi.</li>
+    </ul>
 
     <h2>Brauzeringizda saqlanadigan narsa</h2>
     <p>Ba'zi narsalar (mavzu, javoblar, sessiya) brauzeringizda, <code>tayanch</code> bilan boshlanadigan kalitlarda saqlanadi. Tayanch reklama yoki kuzatuv cookie'larini ishlatmaydi. To'liq ro'yxat: <a href={yol('/uz/saqlash/')}>Brauzerda saqlash va cookie</a>.</p>
