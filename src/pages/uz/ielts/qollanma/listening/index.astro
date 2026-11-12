@@ -1,0 +1,381 @@
+---
+// IELTS Listening qo'llanmasi. Naqsh: reading/index.astro (Tayanch-IELTS-dizayn.md, "Qollanma" ekrani).
+// Faktlar: IE07 (ielts.org, format), ID02 (IDP, imlo), ID03 (IDP, sana). Strategiya Tayanch maslahati.
+// Mini-mashq va misollar Tayanch uchun yozilgan namuna.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { IKONKA, mashqlar } from '../../../../../data/ieltsSahifalar';
+import { manbalar } from '../../../../../data/manbalar';
+import { yol } from '../../../../../lib/yol';
+
+const ie07 = manbalar.find((x) => x.id === 'IE07')!;
+// Listening mashqlari ma'lumotdan: yangi mashq ieltsSahifalar.ts ga qo'shilsa, bu yerda o'zi chiqadi.
+const listeningMashqlar = mashqlar.filter((m) => m.qism?.startsWith('mashq/listening'));
+
+const mundarija = [
+  { id: 'qismlar', nomi: "To'rt qism" },
+  { id: 'turlar', nomi: 'Savol turlari' },
+  { id: 'cheklov', nomi: "So'z cheklovi" },
+  { id: 'imlo', nomi: 'Imlo va sana' },
+  { id: 'strategiya', nomi: 'Strategiya' },
+  { id: 'mashq', nomi: 'Mashqlar' },
+];
+// IE07: qism tavsifi
+const qismlar = [
+  ['Ikki kishi suhbati', 'Kundalik, ijtimoiy vaziyat.'],
+  ["Bitta asosiy so'zlovchi", 'Kundalik, ijtimoiy vaziyat.'],
+  ['Ikki asosiy so\'zlovchi suhbati', "Ta'lim va o'qish bilan bog'liq vaziyat."],
+  ['Bitta kishi, akademik mavzu', "Ta'lim va o'qish bilan bog'liq vaziyat."],
+];
+// [nomi, rasmiy tavsif (IE07), Tayanch maslahati]
+const turlar = [
+  ['Multiple choice', "Bitta to'g'ri javobni tanlaysan; ba'zan uzunroq ro'yxatdan bir nechtasini.", "Variantlar orasidagi farqni oldindan belgila. Yozuvda bir nechta variant tilga olinishi mumkin: so'zlovchi oxirida nimani tasdiqlaganini tingla."],
+  ['Matching', "Yozuvdagi bandlarni berilgan variantlar ro'yxatiga moslaysan.", "Variantlar ro'yxatini avval o'qib chiq. Yozuvda ular ko'pincha boshqa so'zlar bilan aytiladi."],
+  ['Plan, map, diagram labelling', "Rasm, xarita yoki chizmadagi belgilarni to'ldirasan; javob ro'yxatdan tanlanadi.", "Avval boshlang'ich nuqtani top. \"Opposite\", \"next to\", \"on your left\" kabi joy so'zlarini kut."],
+  ['Form, note, table, flow chart completion', "Yozuvning bir qismi yoki butun mazmuni berilgan sxemadagi bo'sh joylarni to'ldirasan.", "Bo'sh joy atrofiga qarab, qanday so'z kerakligini taxmin qil: son, ism, sana yoki narsa nomi."],
+  ['Sentence completion', "Har gapdagi bo'sh joyni yozuvdagi ma'lumot bilan to'ldirasan.", "Yozgan gaping grammatik jihatdan to'g'ri o'qilishini tekshir: birlik yoki ko'plik, artikl."],
+  ['Short-answer questions', "Savolni o'qib, yozuvdagi ma'lumot bilan qisqa javob yozasan.", "Savol so'ziga qara (who, when, how much): u javob turini aytadi. So'z chekloviga amal qil."],
+];
+// Tayanch maslahati (rasmiy qoida emas)
+const strategiyalar = [
+  ['Oldindan o\'qi.', "Yozuv boshlanishidan oldin savollarni o'qib chiq: qaysi so'z kutilayotganini bilsang, eshitish osonlashadi. Yozuv bir marta eshitiladi (IE07), shuning uchun tayyor turish muhim."],
+  ["Kalit so'zni belgila.", "Har savolda ism, son, sana yoki muhim otning tagiga chiz. Shu so'z yozuvda qayerda kelishini kutasan."],
+  ['Sinonimni kut.', "Savoldagi so'z yozuvda boshqacha aytilishi mumkin. Masalan, savolda \"cheap\", yozuvda \"it doesn't cost much\" (namuna)."],
+  ['"Distractor"ga tushma.', "So'zlovchi fikrini o'zgartirishi mumkin: \"Tuesday… actually, Wednesday is better\" (namuna). Birinchi eshitgan so'zni emas, oxirida tasdiqlanganini yoz."],
+  ["Bitta savolda qotib qolma.", "Javobni o'tkazib yuborsang, keyingi savolga o't. Yozuv to'xtamaydi."],
+];
+---
+<BolimQobiq
+  title="Listening qo'llanmasi · IELTS"
+  description="IELTS Listening: to'rt qism, olti savol turi, so'z cheklovi, imlo va sana yozish, oldindan o'qish va distractorlar."
+  turi="qollanma"
+  yol={["Qo'llanmalar"]}
+  bolim="ielts"
+  holat="qoralama"
+>
+  <div class="ichki qol">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Qo'llanma</span><span class="pill-ochiq">ochiq</span></p>
+      <h1>Listening: eshitishdan oldin <span class="kok">nimani kutishni bil</span></h1>
+      <p class="lead">Yozuv faqat bir marta eshitiladi. Bu qo'llanma tayyor turishni o'rgatadi: to'rt qism, savol turlari, so'z cheklovi, imlo va sana, oldindan o'qish va "distractor"lar.</p>
+    </header>
+
+    <section class="format" aria-label="Format kartasi">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Bo'lim</span><span class="f-qiymat">Listening</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">taxminan 30 daqiqa</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Savollar</span><span class="f-qiymat">40 ta</span><span class="f-izoh">har to'g'ri javob 1 ball</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7" /></svg>Qismlar</span><span class="f-qiymat">4 ta</span><span class="f-izoh">yozuv bir marta eshitiladi</span></div>
+    </section>
+
+    <details class="mundarija-tel">
+      <summary>
+        Mundarija
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </summary>
+      <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
+    </details>
+
+    <div class="ikki">
+      <article class="maqola">
+        <section id="qismlar" aria-labelledby="qismlar-h">
+          <h2 id="qismlar-h">To'rt qism</h2>
+          <p class="izoh-m">Birinchi ikki qism kundalik hayotdan, oxirgi ikkitasi o'qish va ta'limdan (<a href={ie07.havola} rel="noopener">ielts.org</a>).</p>
+          <ol class="raqamli">
+            {qismlar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{i + 1}-qism. {b}.</b> <span class="ikkinchi-m">{t}</span></p></li>)}
+          </ol>
+        </section>
+
+        <section id="turlar" aria-labelledby="turlar-h">
+          <h2 id="turlar-h">Savol turlari</h2>
+          <p class="izoh-m">Rasmiy sahifada oltita tur bor. "Nima qilasan" ielts.org'dan, "Maslahat" Tayanch tavsiyasi.</p>
+          <ul class="turlar">
+            {turlar.map(([n, r, m]) => (
+              <li>
+                <span class="t-nom" lang="en">{n}</span>
+                <div class="t-ong">
+                  <p><span class="t-yorliq">Nima qilasan.</span> {r}</p>
+                  <p class="ikkinchi-m"><span class="t-yorliq">Maslahat.</span> {m}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="cheklov" aria-labelledby="cheklov-h">
+          <h2 id="cheklov-h">So'z cheklovi</h2>
+          <div class="qoida" role="group" aria-label="Qoida va misol">
+            <div class="q-chap">
+              <p class="ustki-kok">Qoida</p>
+              <p class="q-asosiy">Topshiriqda so'z cheklovi beriladi, masalan <span lang="en">"NO MORE THAN TWO WORDS AND/OR A NUMBER"</span>. Ortiqcha so'z yozsang, javob to'g'ri bo'lsa ham ball yo'qoladi.</p>
+              <p class="ikkinchi-m">Manba: <a href={ie07.havola} rel="noopener">ielts.org</a>.</p>
+            </div>
+            <figure class="q-ong">
+              <figcaption class="ustki-yorliq">Qanday sanaladi</figcaption>
+              <ul class="sanash">
+                <li><span lang="en">check-in</span><span>1 so'z: defis bilan yozilgan so'z bitta hisoblanadi</span></li>
+                <li><span lang="en">train station</span><span>2 so'z</span></li>
+                <li><span lang="en">platform 2</span><span>1 so'z va 1 raqam</span></li>
+              </ul>
+              <p class="ikkinchi-m"><span lang="en">"they're"</span> kabi qisqartma so'zlar so'ralmaydi.</p>
+            </figure>
+          </div>
+
+          <section class="mashq" aria-labelledby="mashq-h">
+            <div class="m-bosh">
+              <p id="mashq-h" class="ustki-kok">Mini-mashq · namuna</p>
+              <span class="izoh">Ball hisoblanmaydi</span>
+            </div>
+            <p class="dawo">Cheklov: <span lang="en">NO MORE THAN TWO WORDS AND/OR A NUMBER</span>. Qaysi javob ballni yo'qotadi?</p>
+            <div class="variantlar" role="radiogroup" aria-labelledby="mashq-h">
+              <button type="button" role="radio" aria-checked="false" data-v="a" lang="en">train station</button>
+              <button type="button" role="radio" aria-checked="false" data-v="b" lang="en">the train station</button>
+              <button type="button" role="radio" aria-checked="false" data-v="c" lang="en">platform 2</button>
+            </div>
+            <div class="javob" id="javob" aria-live="polite" hidden>
+              <p class="j-sarlavha" id="j-sarlavha"></p>
+              <p class="ikkinchi-m"><span lang="en">"the train station"</span> uch so'z: <span lang="en">the</span> ham so'z hisoblanadi. <span lang="en">"train station"</span> ikki so'z, <span lang="en">"platform 2"</span> bir so'z va bir raqam: ikkalasi cheklovga sig'adi.</p>
+              <button type="button" class="chiziq-tugma" id="qayta">Qayta urinish</button>
+            </div>
+          </section>
+        </section>
+
+        <section id="imlo" aria-labelledby="imlo-h">
+          <h2 id="imlo-h">Imlo va sana</h2>
+          <div class="juft">
+            <div class="kul">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />
+              <h3>Imlo</h3>
+              <p>Xato yozilgan so'z noto'g'ri javob hisoblanadi, eshitgan bo'lsang ham.</p>
+              <p class="ikkinchi-m">Britancha va amerikancha imlo ikkalasi qabul qilinadi (<span lang="en">colour / color</span>), lekin bittasini izchil ishlat. Manba: IDP (ID02).</p>
+            </div>
+            <div class="kul">
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reja} />
+              <h3>Sana</h3>
+              <p>Britancha (kun, oy) va amerikancha (oy, kun) tartib ikkalasi qabul qilinadi.</p>
+              <p class="ikkinchi-m">To'g'ri: <span lang="en">24 April</span>, <span lang="en">April 24</span>, <span lang="en">24th April</span>; raqam bilan <span lang="en">19/02</span> yoki <span lang="en">02/19</span>. So'z chekloviga baribir amal qil. Manba: IDP (ID03).</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="strategiya" aria-labelledby="strategiya-h">
+          <h2 id="strategiya-h">Strategiya</h2>
+          <p class="izoh-m">Bu Tayanch tavsiyasi, rasmiy qoida emas. Misollar namuna.</p>
+          <ol class="raqamli">
+            {strategiyalar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span></p></li>)}
+          </ol>
+        </section>
+
+        <section id="mashq" class="keyingi" aria-labelledby="keyingi-h">
+          <p class="ustki-yorliq kok-q">Mashqlar</p>
+          <h2 id="keyingi-h">Quloq va qo'lni birga mashq qildir</h2>
+          <p class="k-matn">Imlo yoki raqamdagi bitta xato to'g'ri eshitilgan javobni ham noto'g'ri qiladi. Shu ikkisini alohida mashq qil.</p>
+          <ul class="k-royxat">
+            {listeningMashqlar.map((m) => (
+              <li>
+                <a class="k-havola" href={yol(`/uz/ielts/${m.qism}`)}>
+                  <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={m.ikonka} />
+                  <span class="k-nom"><strong>{m.nomi}</strong><span>{m.tavsif}</span></span>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </article>
+
+      <nav class="mundarija" aria-label="Sahifa mundarijasi">
+        <p class="ustki-yorliq">Mundarija</p>
+        {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
+      </nav>
+    </div>
+
+    <ManbaBlok
+      manbalar={['IE07', 'ID02', 'ID03']}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={[
+        "Qog'oz testda javoblarni ko'chirish vaqti: IE07 sahifasida yozilmagan, tekshirilmoqda.",
+        "Kompyuterdagi testda javob kiritish tartibi: tekshirilmoqda.",
+        "General Training Listening formati (bu sahifa Academic bo'yicha).",
+        "Strategiya va maslahatlar Tayanch tavsiyasi; mini-mashq va misollar Tayanch uchun yozilgan namuna, rasmiy IELTS materiali emas.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  // Mini-mashq: so'z cheklovi
+  const TOGRI = 'b';
+  const tugmalar = [...document.querySelectorAll<HTMLButtonElement>('.variantlar button')];
+  const javob = document.getElementById('javob')!;
+  const tanla = (b: HTMLButtonElement) => {
+    if (!javob.hidden) return;
+    const togrimi = b.dataset.v === TOGRI;
+    tugmalar.forEach((x) => {
+      x.setAttribute('aria-checked', String(x === b));
+      x.setAttribute('aria-disabled', 'true');
+      x.classList.toggle('togri', x.dataset.v === TOGRI);
+      x.classList.toggle('xato', x === b && !togrimi);
+      x.classList.toggle('sust', x.dataset.v !== TOGRI && x !== b);
+    });
+    javob.classList.toggle('j-togri', togrimi);
+    document.getElementById('j-sarlavha')!.textContent = togrimi ? "To'g'ri: \"the train station\"" : "Bu safar emas. Ballni \"the train station\" yo'qotadi";
+    javob.hidden = false;
+  };
+  tugmalar.forEach((b) => b.addEventListener('click', () => tanla(b)));
+  document.getElementById('qayta')!.addEventListener('click', () => {
+    javob.hidden = true;
+    tugmalar.forEach((x) => {
+      x.setAttribute('aria-checked', 'false');
+      x.removeAttribute('aria-disabled');
+      x.classList.remove('togri', 'xato', 'sust');
+    });
+    tugmalar[0].focus();
+  });
+
+  // Mundarija: joriy bo'limni belgilash
+  const havolalar = [...document.querySelectorAll<HTMLAnchorElement>('.mundarija a')];
+  const bolimlar = havolalar.map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!)!);
+  const yangila = () => {
+    let joriy = 0;
+    bolimlar.forEach((s, i) => { if (s.getBoundingClientRect().top < 160) joriy = i; });
+    havolalar.forEach((a, i) => { if (i === joriy) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', yangila, { passive: true });
+  yangila();
+  // Telefon mundarijasi: band bosilsa yopiladi
+  const tel = document.querySelector<HTMLDetailsElement>('.mundarija-tel')!;
+  tel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { tel.open = false; }));
+</script>
+
+<style>
+  .qol { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); max-width: calc(912px + 2 * var(--b-10)) !important; }
+  .kok { color: var(--rang-havola); }
+  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .ustki-yorliq { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--matn-ikkinchi); }
+  .izoh-m a, .q-chap a { color: var(--rang-havola); }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+  .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
+
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+
+  .format { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
+  .format > div { padding: var(--b-5) var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
+  .format > div + div { border-left: 1px solid var(--chiziq); }
+  .f-yorliq { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .f-yorliq svg { color: var(--rang-havola); }
+  .f-qiymat { font-size: 18px; font-weight: 800; }
+  .f-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+
+  .mundarija-tel { display: none; }
+
+  .ikki { display: flex; gap: var(--b-10); align-items: flex-start; }
+  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-14); }
+  .maqola > section { display: flex; flex-direction: column; gap: var(--b-4); scroll-margin-top: var(--b-6); }
+  #cheklov { gap: var(--b-5); }
+
+  .raqamli { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }
+  .raqamli li { display: flex; gap: var(--b-4); align-items: flex-start; }
+  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: var(--matn-kichik); }
+  .raqamli p { margin-top: var(--b-1); line-height: 1.6; }
+
+  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .turlar li { padding: var(--b-4) var(--b-5); display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: var(--b-4); row-gap: var(--b-2); }
+  .turlar li + li { border-top: 1px solid var(--chiziq); }
+  .t-nom { font-weight: 800; }
+  .t-ong { display: flex; flex-direction: column; gap: var(--b-2); }
+  .t-ong p { line-height: 1.6; }
+  .t-yorliq { font-weight: 700; color: var(--matn); }
+
+  .qoida { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); overflow: hidden; }
+  .q-chap { padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); }
+  .q-asosiy { font-size: 18px; font-weight: 800; line-height: 1.4; }
+  .q-ong { margin: 0; padding: var(--b-6); background: var(--fon-ikkinchi); display: flex; flex-direction: column; gap: var(--b-3); }
+  .sanash { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .sanash li { display: flex; flex-direction: column; gap: 2px; line-height: 1.5; }
+  .sanash li > span:first-child { font-weight: 800; }
+  .sanash li > span:last-child { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
+
+  /* Mini-mashq: sahifadagi yagona soya */
+  .mashq { background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya); padding: 28px; display: flex; flex-direction: column; gap: var(--b-5); }
+  .m-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
+  .dawo { font-size: 18px; line-height: 1.5; font-weight: 800; }
+  .variantlar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--b-3); }
+  .variantlar button {
+    min-height: 56px; padding: 0 12px; border-radius: var(--r-orta);
+    font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--matn);
+  }
+  .variantlar button:hover { background: var(--fon-ikkinchi); }
+  .variantlar button[aria-disabled='true'] { cursor: default; }
+  .variantlar button.togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variantlar button.xato { background: var(--fon-ikkinchi); border-style: dashed; text-decoration: line-through; }
+  .variantlar button.sust { color: var(--matn-ikkinchi); border-color: var(--chiziq-kuchli); }
+  .javob { border-radius: var(--r-orta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); background: var(--fon-ikkinchi); border: 1.5px dashed var(--matn); }
+  .javob[hidden] { display: none; }
+  .javob.j-togri { background: var(--rang-asosiy-och); border: 1.5px solid var(--rang-asosiy); }
+  .j-sarlavha { font-size: 18px; font-weight: 800; }
+  .javob p { line-height: 1.6; }
+  .chiziq-tugma { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
+
+  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .kul { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); }
+  .kul > svg { color: var(--rang-havola); }
+  .kul h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .kul p { line-height: 1.6; }
+
+  .keyingi { background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
+  .kok-q { color: var(--rang-asosiy-qorada); }
+  .keyingi h2 { font-size: 26px; line-height: 1.25; }
+  .k-matn { line-height: 1.6; color: var(--qora-matn-ikkinchi); }
+  .k-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .k-havola { display: flex; align-items: center; gap: var(--b-4); min-height: 64px; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--qora-sirt); color: var(--qora-matn); text-decoration: none; }
+  .k-havola:hover { background: var(--qora-chiziq); }
+  .k-havola > svg:first-child { flex: none; color: var(--rang-asosiy-qorada); }
+  .k-havola > svg:last-child { flex: none; margin-left: auto; }
+  .k-nom { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .k-nom span { color: var(--qora-matn-ikkinchi); font-size: var(--matn-kichik); }
+
+  .mundarija { flex: 0 0 240px; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1); border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-3); }
+  .mundarija .ustki-yorliq { margin: var(--b-2) var(--b-3); }
+  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
+  .mundarija a:hover { background: var(--fon-ikkinchi); }
+  .mundarija a[aria-current='true'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+
+  /* Telefon: QollanmaTelefon ekrani */
+  @media (max-width: 1180px) {
+    .mundarija { display: none; }
+    .mundarija-tel { display: block; border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
+    .mundarija-tel summary {
+      list-style: none; min-height: 52px; padding: 0 var(--b-4);
+      display: flex; align-items: center; justify-content: space-between;
+      font-weight: 800; cursor: pointer;
+    }
+    .mundarija-tel summary::-webkit-details-marker { display: none; }
+    .mundarija-tel[open] summary svg { transform: rotate(180deg); }
+    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--b-2) var(--b-2); display: flex; flex-direction: column; gap: 2px; }
+    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
+    .mundarija-tel a:hover { background: var(--fon-ikkinchi); }
+  }
+  @media (max-width: 760px) {
+    .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .format > div:nth-child(3) { border-left: 0; }
+    .format > div:nth-child(n + 3) { border-top: 1px solid var(--chiziq); }
+    .qoida, .juft { grid-template-columns: 1fr; }
+    .turlar li { grid-template-columns: 1fr; }
+    .variantlar { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .qol { padding-top: var(--b-6); gap: var(--b-8); }
+    h1 { font-size: 34px; }
+    h2 { font-size: 24px; }
+    .maqola { gap: var(--b-10); }
+    .mashq, .keyingi { padding: var(--b-5); }
+    .keyingi h2 { font-size: 22px; }
+  }
+</style>
