@@ -6,6 +6,7 @@ import BoshQism from '../components/BoshQism.astro';
 import { yol } from '../lib/yol';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
+import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import { matn } from '../data/umumiyMatn';
 // SAT bo'limi: matn inglizcha (CLAUDE.md).
@@ -28,7 +29,7 @@ export interface Props {
 const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish, liftPastki = true } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
     <BoshQism title={title} description={description} holat="qoralama" />
   </head>
@@ -63,12 +64,13 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
 </html>
 
 <style is:global>
-  body.fokus { background: var(--fon-ikkinchi); min-height: 100vh; display: flex; flex-direction: column; }
-  [data-mavzu='qorongi'] body.fokus { background: var(--fon); }
+  body.fokus { min-height: 100vh; display: flex; flex-direction: column; }
   .fokus-bosh {
     min-height: 72px; flex: none;
     padding: var(--b-3) var(--b-8);
-    background: var(--fon); border-bottom: 1px solid var(--chiziq);
+    /* Liquid Glass (topbar) */
+    background: var(--glass-sheen), var(--glass-chrome-bg); -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop); box-shadow: var(--glass-edge);
+    border-bottom: var(--border-width-1) solid var(--color-border);
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-6);
   }
   .fokus-bosh .yopish {

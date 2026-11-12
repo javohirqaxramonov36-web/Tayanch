@@ -17,7 +17,7 @@ const uz = {
   qavat: (n: number) => `${n}-qavat`,
   qavatYoli: 'Qayerdaman',
   lift: { nomi: 'Qavatlar (lift)', tezOrada: ', tez orada' },
-  zina: { nomi: "Zina: qo'shni qavatlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'qurilmoqda' },
+  zina: { nomi: "Zina: qo'shni qavatlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
   qavatlarAro: 'Boshqa qavatda',
   yon: {
     menyuOchish: 'Menyuni ochish',
@@ -112,7 +112,7 @@ const en: Matn = {
   qavat: (n) => `Floor ${n}`,
   qavatYoli: 'You are here',
   lift: { nomi: 'Floors (lift)', tezOrada: ', coming soon' },
-  zina: { nomi: 'Stairs: neighboring floors', past: 'Down', yuqori: 'Up', qurilmoqda: 'under construction' },
+  zina: { nomi: 'Stairs: neighboring floors', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
   qavatlarAro: 'On another floor',
   yon: {
     menyuOchish: 'Open menu',

@@ -33,6 +33,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
         <a
           href={yol(q.manzil)}
           class={q.holat === 'tez-orada' ? 'tez' : undefined}
+          data-floor={q.raqam}
           aria-current={q.raqam === joriy ? 'location' : undefined}
           aria-label={yorliq(q)}
           title={yorliq(q)}
@@ -120,17 +121,19 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
 
 <style>
   .lift-tugmalar { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--b-1); }
+  /* Har tugma o'z qavat rangida (a[data-floor]); joriy qavat DS chip tanlangan holatida.
+     Fon zich (--color-surface): qavat matn rangi shisha ustida 4.5:1 ga yetmasligi mumkin. */
   .lift-tugmalar a {
     position: relative;
     display: flex; align-items: center; justify-content: center;
-    width: 48px; height: 48px;
-    border-radius: var(--r-toliq);
-    background: var(--fon-ikkinchi); color: var(--matn);
-    text-decoration: none; font-weight: 800; font-size: 17px;
+    width: var(--control-height-md); height: var(--control-height-md);
+    border-radius: var(--radius-full);
+    background: var(--color-surface); color: var(--floor-text);
+    text-decoration: none; font-weight: var(--font-weight-extrabold); font-size: var(--text-body-size);
+    transition: background-color var(--duration-fast) var(--ease-state);
   }
-  .lift-tugmalar a:hover { background: var(--sirt-ikkinchi); }
-  .lift-tugmalar a[aria-current='location'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .lift-tugmalar a.tez .raqam { color: var(--matn-sust); }
+  .lift-tugmalar a:hover { background: var(--floor-subtle); }
+  .lift-tugmalar a[aria-current='location'] { background: var(--floor-ui); color: var(--floor-ui-text); }
   .lift-tugmalar a.tez[aria-current='location'] .raqam { color: var(--rang-asosiy-matn); }
   .lift-tugmalar a.tez[aria-current='location'] .nuqta { background: var(--rang-asosiy-matn); }
   .nuqta {
@@ -165,13 +168,17 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
 
   /* Menyu va fokus sarlavhasi */
   .lift-menyu, .lift-fokus { display: flex; align-items: center; gap: var(--b-2); }
-  .lift-fokus .lift-tugmalar a { width: 44px; height: 48px; font-size: 16px; }
+  .lift-fokus .lift-tugmalar a { width: var(--size-touch-min); height: var(--control-height-md); }
 
   /* Telefon: pastki panel */
   .lift-pastki {
     position: fixed; z-index: 25; left: 0; right: 0; bottom: 0;
-    background: var(--fon); border-top: 1px solid var(--chiziq);
-    padding: 6px var(--b-2) calc(6px + env(safe-area-inset-bottom));
+    /* Liquid Glass: shisha panelning o'zida (u harakatlanadi), ostidagi animatsiya ustida emas.
+       64px tugma + 2 x 4px = 72px: global.css dagi body pastki bo'shlig'iga mos. */
+    background: var(--glass-sheen), var(--glass-chrome-bg);
+    -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop);
+    box-shadow: var(--glass-edge), var(--glass-shadow);
+    padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
   }
   .lift-pastki { transition: transform var(--harakat-orta) var(--harakat-egri); }
   .lift-pastki.yashirin { transform: translateY(calc(100% + 1px)); }
@@ -180,13 +187,10 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
   }
   .lift-pastki .lift-tugmalar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--b-1); }
   .lift-pastki .lift-tugmalar a {
-    width: auto; height: 52px; border-radius: var(--r-orta);
+    width: auto; height: var(--size-bottombar); border-radius: var(--radius-md);
     flex-direction: column; gap: 0;
-    background: transparent;
   }
-  .lift-pastki .lift-tugmalar a:hover { background: var(--fon-ikkinchi); }
-  .lift-pastki .lift-tugmalar a[aria-current='location'] { background: var(--rang-asosiy); }
-  .lift-pastki .raqam { font-size: 17px; line-height: 1.1; }
+  .lift-pastki .raqam { font-size: var(--text-body-size); line-height: var(--text-button-lh); }
   .lift-pastki .qisqa { font-size: 11px; font-weight: 700; line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .lift-pastki .nuqta { top: 6px; right: calc(50% - 16px); }
   .lift-pastki .lift-harakat { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); box-shadow: var(--soya); }
