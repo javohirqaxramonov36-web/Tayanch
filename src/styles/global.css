@@ -1,28 +1,46 @@
-@import '@fontsource-variable/figtree';
+@import '@fontsource-variable/onest';
 @import './tokens.css';
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; background: var(--color-bg); }
 
+/* Studio foni (DS --gradient-studio): ekranga mahkamlangan qatlam, shunda uzun sahifada
+   pastki rang butun sahifaga cho'zilmaydi (background-attachment: fixed iOS'da ishlamaydi). */
 body {
   margin: 0;
-  background: var(--fon);
-  color: var(--matn);
-  font-family: var(--shrift);
-  font-size: var(--matn-asosiy);
-  line-height: 1.6;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  letter-spacing: var(--text-body-ls);
+  font-weight: var(--text-body-weight);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--gradient-studio);
+  pointer-events: none;
 }
 
-h1, h2, h3 { margin: 0; font-weight: 800; }
-h1 { font-size: var(--matn-h1); line-height: 1.12; }
-h2 { font-size: var(--matn-h2); line-height: 1.2; }
-h3 { font-size: var(--matn-h3); line-height: 1.25; }
-p { margin: 0; }
+/* Matn rollari (DS). Sarlavha qatorlari teng uzunlikda sinadi, oxirgi qatorda yolg'iz so'z qolmaydi */
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-size: var(--text-h1-size); line-height: var(--text-h1-lh); font-weight: var(--text-h1-weight); letter-spacing: var(--text-h1-ls); }
+h2 { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: var(--text-h2-weight); letter-spacing: var(--text-h2-ls); }
+h3 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: var(--text-h3-weight); letter-spacing: var(--text-h3-ls); }
+p { margin: 0; text-wrap: pretty; }
+
+::selection { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
 
 a { color: inherit; text-underline-offset: 0.15em; }
+
+/* DS fokus halqasi: halqa + fon rangidagi oraliq. outline forced-colors rejimida ham ko'rinadi. */
 a:focus-visible, button:focus-visible, summary:focus-visible {
-  outline: 3px solid var(--rang-asosiy);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-gap);
+  box-shadow: 0 0 0 var(--focus-ring-gap) var(--color-focus-gap);
 }
 
 .ichki {
@@ -41,36 +59,94 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 }
 .otish:focus { left: var(--b-2); }
 
-/* Tugmalar */
+/* Harakat: bosiladigan elementlar holati silliq almashadi (DESIGN.md "Harakat").
+   .variant: javob varianti (label yoki button). O'z transition'i bor komponent buni bosib o'tadi. */
+a, button, summary, .variant {
+  transition:
+    color var(--harakat-tez) var(--harakat-egri),
+    background-color var(--harakat-tez) var(--harakat-egri),
+    border-color var(--harakat-tez) var(--harakat-egri),
+    box-shadow var(--harakat-tez) var(--harakat-egri),
+    transform var(--harakat-tez) var(--harakat-egri);
+}
+/* Tugma bosilganda yengil cho'kadi; sahifalardagi tugma klasslari ham shu yerda */
+:is(a, button):is(.tugma, .katta-tugma, .katta, .tugma-l):active:not(:disabled) { transform: var(--bosilish); }
+
+/* Tugmalar (DS btn, md = 48px) */
 .tugma {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--b-2);
-  min-height: 48px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: var(--r-toliq);
+  gap: var(--space-2);
+  min-height: var(--control-height-md);
+  padding: 0 var(--control-pad-md);
+  border: var(--control-border) solid transparent;
+  border-radius: var(--btn-radius);
   font: inherit;
-  font-size: var(--matn-asosiy);
-  font-weight: 700;
+  font-size: var(--text-button-size);
+  line-height: var(--text-button-lh);
+  font-weight: var(--text-button-weight);
+  letter-spacing: var(--text-button-ls);
   text-decoration: none;
   cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-state), transform var(--duration-fast) var(--ease-state);
 }
-.tugma-asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-.tugma-asosiy:hover { background: var(--rang-asosiy-toq); }
-.tugma-ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
-.tugma-ikkinchi:hover { background: var(--chiziq); }
+.tugma:active { transform: translateY(var(--btn-press-shift)); }
+.tugma-asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+.tugma-asosiy:hover { background: var(--btn-primary-bg-hover); }
+.tugma-asosiy:active { background: var(--btn-primary-bg-pressed); }
+/* Asosiy tugma (A yo'nalish): ichki yuqori yorug' chiziq va kichik soya, bosilganda 1px pastga.
+   Sahifalardagi o'z klasslari ham shu yerda; fokusda soya o'rniga fokus oralig'i qoladi. */
+:is(.tugma-asosiy, .katta.asosiy, .katta-tugma.asosiy, .tugma-l.kok, a.boshlash) { box-shadow: var(--btn-primary-shadow); }
+:is(.katta.asosiy, .katta-tugma.asosiy, .tugma-l.kok, a.boshlash):active { background: var(--btn-primary-bg-pressed); transform: translateY(var(--btn-press-shift)); }
+:is(.tugma-asosiy, .katta.asosiy, .katta-tugma.asosiy, .tugma-l.kok, a.boshlash):focus-visible { box-shadow: 0 0 0 var(--focus-ring-gap) var(--color-focus-gap); }
+.tugma-ikkinchi { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); border-color: var(--btn-secondary-border); }
+.tugma-ikkinchi:hover { background: var(--btn-secondary-bg-hover); }
+.tugma-ikkinchi:active { background: var(--btn-secondary-bg-pressed); }
+.tugma:disabled, .tugma[aria-disabled='true'] { background: var(--btn-disabled-bg); color: var(--btn-disabled-text); border-color: var(--btn-disabled-border); cursor: not-allowed; transform: none; }
 
-/* Yorliq */
+/* Yorliq (DS badge) */
 .yorliq {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: var(--r-toliq);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--badge-height);
+  padding: 0 var(--badge-pad);
+  border-radius: var(--badge-radius);
   background: var(--sirt-ikkinchi);
   color: var(--matn-ikkinchi);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--text-caption-weight);
+}
+
+/* Liquid Glass: faqat topbar, sticky panel va Lift paneli. Bir ekranda ko'pi bilan 3 qatlam.
+   Uzun ro'yxat va animatsiya qilinayotgan element ostida ishlatilmaydi. */
+.shisha {
+  background: var(--glass-sheen), var(--glass-chrome-bg);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  backdrop-filter: var(--glass-backdrop);
+  box-shadow: var(--glass-edge), var(--glass-shadow);
+}
+
+/* DS link karta: blursiz shisha (faqat studio foni ustida). Qavat urg'usi kartaning data-floor'idan
+   (borilayotgan qavat): .ds-karta-belgi doirasi --floor-ui. Qavat matn rangi karta ustida 4.5:1 ga
+   yetmasligi mumkin, shuning uchun matn neytral, urg'u faqat belgi va ikonkada. */
+.ds-karta {
+  background: var(--glass-card-bg);
+  border: var(--border-width-1) solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow), var(--glass-highlight);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: box-shadow var(--duration-base) var(--ease-state), transform var(--duration-base) var(--ease-state);
+}
+a.ds-karta:hover { box-shadow: var(--card-shadow-hover), var(--glass-highlight); transform: translateY(var(--card-lift)); }
+.ds-karta-belgi {
+  flex: none;
+  width: var(--size-indicator-md); height: var(--size-indicator-md);
+  padding: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--floor-ui); color: var(--floor-ui-text);
 }
 
 .sust { color: var(--matn-sust); }

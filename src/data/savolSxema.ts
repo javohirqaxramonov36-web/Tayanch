@@ -3,7 +3,7 @@
 // Bu fayl scripts/savol/ skriptlari tomonidan to'g'ridan-to'g'ri import qilinadi (Node type stripping):
 // faqat o'chiriladigan TS sintaksisi (enum, namespace yo'q).
 //
-// Taksonomiya: rasmiy Digital SAT kontent domenlari va ko'nikmalari, manba CB12 (src/data/manbalar.ts).
+// Taksonomiya: rasmiy Digital SAT kontent domenlari va ko'nikmalari, manba CB40 (src/data/manbalar.ts).
 // Nomlar sahifadagidek; PSAT uchun qavs ichidagi izohlar olib tashlangan (SAT nomi qolgan).
 // "Command of Evidence" rasmiy ro'yxatda ikki qismga bo'lingan (Textual, Quantitative): bu yerda ikki alohida ko'nikma.
 
@@ -31,9 +31,9 @@ export interface Savol {
   /** Barqaror ID: kichik lotin harf, raqam, defis (3–64 belgi). Import shu bo'yicha upsert qiladi. */
   external_id: string;
   section: SavolBolim;
-  /** CB12 dagi domen nomi (savolTaksonomiya[section] kaliti). */
+  /** CB40 dagi domen nomi (savolTaksonomiya[section] kaliti). */
   domain: string;
-  /** CB12 dagi ko'nikma nomi (shu domen ichida). */
+  /** CB40 dagi ko'nikma nomi (shu domen ichida). */
   skill: string;
   difficulty: Qiyinlik;
   format: SavolFormat;

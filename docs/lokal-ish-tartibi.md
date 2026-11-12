@@ -54,7 +54,7 @@ PUBLIC_SUPABASE_URL=...
 PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
-Qiymat bo'lmasa sayt baribir quriladi: hisob sahifalari "Accounts are not available on this site yet" deydi, SAT yon panelida hisob bandi chiqmaydi, qolgan sahifalar hisobsiz ishlaydi.
+Qiymat bo'lmasa sayt baribir quriladi: hisob sahifalari "Hisob ochish saytda hali ishlamaydi" deydi, 1-qavat menyusida "Kirish" va yon panellarda hisob bandi chiqmaydi, qolgan sahifalar hisobsiz ishlaydi.
 
 **GitHub Actions.** Repo → Settings → Secrets and variables → Actions → **Variables** bo'limida (Secrets emas: qiymatlar ochiq va baribir sahifaga yoziladi) ikkita repository variable qo'shiladi: `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`. `.github/workflows/deploy.yml` ularni `vars.` orqali build qadamiga beradi. Holat: ikkalasi qo'shilgan (2026-11-09, publishable kalit). O'zgartirilgandan keyin sayt qayta qurilishi kerak (Actions → "Saytni joylash" → Run workflow).
 

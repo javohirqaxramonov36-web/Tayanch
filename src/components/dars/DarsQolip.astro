@@ -504,7 +504,7 @@ const qadamlar = [
   .dars .pill-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
   .dars .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
   .dars .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .dars h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; text-wrap: balance; }
+  .dars h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); text-wrap: balance; }
   .dars .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
 
   .dars .maqsad { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-wrap: wrap; gap: var(--b-6); justify-content: space-between; }
@@ -512,7 +512,7 @@ const qadamlar = [
   .dars .maqsad ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-1); }
   .dars .maqsad-progress { flex: 0 1 240px; display: flex; flex-direction: column; gap: var(--b-2); justify-content: flex-end; }
   .dars .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .dars .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); transition: width 0.3s; }
+  .dars .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); transition: width var(--harakat-orta) var(--harakat-egri); }
 
   /* Laboratoriya: kenglik yetsa sahna chapda, panel o'ngda; aks holda panel sahna ostida */
   .dars .lab { container-type: inline-size; }
@@ -543,7 +543,7 @@ const qadamlar = [
   .dars .qadamlar button[aria-selected='true'] .q-raqam { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .dars .panel { display: flex; flex-direction: column; gap: var(--b-4); }
   .dars .panel[hidden] { display: none; }
-  .dars .panel:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 4px; border-radius: var(--r-orta); }
+  .dars .panel:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 4px; border-radius: var(--r-orta); }
   .dars .panel p { line-height: 1.6; }
 
   /* Boshqaruv elementlari */
@@ -552,7 +552,7 @@ const qadamlar = [
   .dars .slayder label { font-weight: 700; }
   .dars .slayder output { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
   .dars input[type='range'] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--rang-asosiy); cursor: pointer; }
-  .dars input[type='range']:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
+  .dars input[type='range']:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--r-kichik); }
   .dars .segment { display: flex; flex-wrap: wrap; gap: var(--b-2); }
   .dars .segment button, .dars .kichik-tugma {
     min-height: 44px; padding: 0 var(--b-4);
@@ -597,7 +597,7 @@ const qadamlar = [
     font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: var(--b-4); cursor: pointer;
   }
   .dars .variant input { position: absolute; opacity: 0; pointer-events: none; }
-  .dars .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .dars .variant:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .dars .variant:hover { border-color: var(--rang-asosiy); }
   .dars .harf { width: 32px; height: 32px; flex: none; border-radius: var(--r-logo); display: grid; place-items: center; font-size: var(--matn-kichik); font-weight: 800; background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
   .dars .v-matn { flex: 1; min-width: 0; }
@@ -608,20 +608,20 @@ const qadamlar = [
   .dars .variant.togri, .dars .variant.togri:hover { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
   .dars .variant.xato, .dars .variant.xato:hover { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
   .dars .variant.xato .harf { background: var(--matn); color: var(--fon); }
-  .dars .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--rang-asosiy-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
+  .dars .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
   .dars .izoh[hidden] { display: none; }
   .dars .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
   .dars .izoh-sarlavha { font-size: 18px; font-weight: 800; }
   .dars .izoh-xato:empty { display: none; }
   .dars .s-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
   .dars .katta {
-    min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq);
+    min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq);
     font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; text-decoration: none;
     display: inline-flex; align-items: center; justify-content: center;
   }
   .dars .katta[hidden] { display: none; }
-  .dars .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .dars .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .dars .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .dars .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .dars .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .dars .katta.qora { background: var(--matn); color: var(--fon); }
   .dars .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
@@ -639,7 +639,7 @@ const qadamlar = [
     background: transparent; color: var(--matn); font: inherit; cursor: pointer;
   }
   .dars .bolak:hover:not(:disabled) { border-bottom-color: var(--rang-asosiy); background: var(--fon-ikkinchi); }
-  .dars .bolak:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .dars .bolak:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .dars .bolak:disabled { cursor: default; }
   .dars .bolak[aria-pressed='true'] { background: var(--rang-asosiy-och); border-bottom: 3px solid var(--matn); font-weight: 800; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
   /* Tinish belgisi: kenglik 32px (WCAG 2.5.8 dagi 24px dan katta), balandlik 44px; qo'shni so'zni yopmaydi */

@@ -23,8 +23,8 @@ Rasmlar savol fayli yonida (nisbiy yo'l bilan). `korib-chiqish/` papkasini `savo
 | --- | --- | --- |
 | `external_id` | matn | Barqaror, o'zgarmaydi. 3–64 belgi: kichik lotin harf, raqam, defis. Import shu bo'yicha upsert qiladi. Tavsiya: `<section>-<skill qisqa>-<raqam>`, masalan `math-lin1-001` |
 | `section` | `rw` \| `math` | |
-| `domain` | matn | Rasmiy domen nomi (CB12), §3 |
-| `skill` | matn | Shu domen ichidagi rasmiy ko'nikma nomi (CB12), §3 |
+| `domain` | matn | Rasmiy domen nomi (CB40), §3 |
+| `skill` | matn | Shu domen ichidagi rasmiy ko'nikma nomi (CB40), §3 |
 | `difficulty` | 1–5 | Butun son. Bu Tayanch'ning o'z shkalasi (rasmiy shkala emas) |
 | `format` | `mcq` \| `spr` | `spr` faqat `math` da |
 | `passage` | matn \| null | R&W da majburiy. Belgilash §4 |
@@ -52,7 +52,7 @@ Boshqa maydon bo'lsa xato (imlo xatosini ushlash uchun).
 - Ruxsat etilgan HTML ro'yxati.
 - `Command of Evidence` ikki ko'nikmaga bo'lingan (§3).
 
-## 3. Taksonomiya (CB12, tekshirildi 2026-11-09)
+## 3. Taksonomiya (CB40, tekshirildi 2026-11-09)
 
 Manba: [College Board, content domains](https://satsuite.collegeboard.org/higher-ed-professionals/test-validity/content-domains). Nomlar sahifadagidek. PSAT izohlari olib tashlangan.
 

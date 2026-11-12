@@ -4,17 +4,21 @@
 interface Props {
   id: string;
   nomi: string;
-  turi?: 'text' | 'email';
+  turi?: 'text' | 'email' | 'number' | 'date';
   autocomplete: string;
   izoh?: string;
   ixtiyoriy?: boolean;
   maxlength?: number;
+  min?: number | string;
+  max?: number | string;
+  /** number maydoni uchun qadam (masalan SAT ball: 10) */
+  step?: number;
 }
-const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength } = Astro.props;
+const { id, nomi, turi = 'text', autocomplete, izoh, ixtiyoriy = false, maxlength, min, max, step } = Astro.props;
 const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join(' ');
 ---
 <div class="hisob-maydon">
-  <label for={id}>{nomi}{ixtiyoriy && <span class="ixtiyoriy"> (optional)</span>}</label>
+  <label for={id}>{nomi}{ixtiyoriy && <span class="ixtiyoriy"> (ixtiyoriy)</span>}</label>
   {izoh && <p class="hisob-izoh" id={`${id}-izoh`}>{izoh}</p>}
   <input
     class="hisob-kirit"
@@ -24,9 +28,12 @@ const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join('
     autocomplete={autocomplete}
     required={!ixtiyoriy}
     maxlength={maxlength}
+    min={min}
+    max={max}
+    step={step}
     spellcheck="false"
     autocapitalize={turi === 'email' ? 'none' : undefined}
-    inputmode={turi === 'email' ? 'email' : undefined}
+    inputmode={turi === 'email' ? 'email' : turi === 'number' ? 'numeric' : undefined}
     aria-describedby={tasvir}
   />
   <p class="hisob-xato" id={`${id}-xato`} hidden></p>

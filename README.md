@@ -47,7 +47,7 @@ npm run build    # dist/ ga qurish
 - Ichki havolalar faqat `yol()` orqali yoziladi (`src/lib/yol.ts`).
 - Saytda qoida, talab yoki muddat faqat "rasmiy" darajadagi manba bilan chiqadi.
 - Ichki qoralamalar (`grants-qoralama.json`), `inbox/`, `.env`, kalit va tokenlar repoga qo'yilmaydi. Repo hozircha ochiq qoladi (HANDOFF §5, 11-savol).
-- Hisob butun sayt uchun bitta (Supabase Auth: email va Google). To'lov (inPAY) va tariflar (Free, Pro, Elite) hozircha faqat SAT bo'limida. Batafsil: `docs/qarorlar/001-hisob-tolov-server.md`.
+- Hisob butun sayt uchun bitta (Supabase Auth: email va Google). To'lov (inPAY) va tariflar (Free, Pro, Max) hozircha faqat SAT bo'limida. Batafsil: `docs/qarorlar/001-hisob-tolov-server.md`.
 - Hisob bilan kirgan foydalanuvchi ma'lumoti Supabase'da, hisobsiz holatda faqat brauzerda (`tayanch:` kalitlari). Hisob va to'lov formalaridan boshqa forma yo'q.
 - Brauzerda faqat Supabase ochiq (publishable/anon) kaliti bo'lishi mumkin; qolgan hamma kalit Supabase secrets va lokal `.env` da.
 - SAT bo'limi matni inglizcha, URL va kod nomlari o'zbekcha.

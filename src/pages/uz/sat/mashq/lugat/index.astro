@@ -1,146 +1,893 @@
 ---
-// Lug'at kartochkalari. Dizayn: Tayanch-SAT-dizayn.md, "Lug'at" ekrani.
-// Holat ("bilaman" / "o'rganyapman") faqat shu brauzerda saqlanadi (tayanch:sat-lugat).
+// Lug'at (P15): Library, Flashcards, Quizzes, My Words. Dizayn: Tayanch-SAT-dizayn.md, "Lug'at" ekrani (karta saqlangan).
+// So'zlar: Supabase vocab_words (tasdiqlangan, muallif CSV dan yuklaydi: scripts/lugat-import.mjs). Baza bo'sh yoki
+// ulanmasa: satNamuna.ts dagi namuna kartalar ("Sample").
+// Holat: hisobsiz brauzerda (tayanch:sat-lugat + tayanch:sat-lugat-takror), hisob bilan Supabase (vocab_progress, RPC).
+// Takrorlash Leitner (src/lib/leitner.ts), kunlik YANGI so'z kvotasi new_words (P19, hozircha cheklovsiz).
 import SatFokus from '../../../../../layouts/SatFokus.astro';
 import { kartalar } from '../../../../../data/satNamuna';
+import { yol } from '../../../../../lib/yol';
+import type { Soz } from '../../../../../lib/sat/lugat';
+
+// Namuna: brauzer kaliti avvalgidek so'zning o'zi (tayanch:sat-lugat).
+const namuna: Soz[] = kartalar.map((k) => ({
+  kalit: k.soz.toLowerCase(), id: null, word: k.soz, pos: k.turkum, definition: null, example: k.misol,
+  difficulty: null, topic: null, uzbek: k.tarjima, oz: false,
+}));
+const tablar = [
+  { kalit: 'flashcards', nomi: 'Flashcards' },
+  { kalit: 'library', nomi: 'Library' },
+  { kalit: 'quiz', nomi: 'Quizzes' },
+  { kalit: 'mywords', nomi: 'My Words' },
+];
+const qiyinliklar = [
+  { kalit: 'easy', nomi: 'Easy' },
+  { kalit: 'medium', nomi: 'Medium' },
+  { kalit: 'hard', nomi: 'Hard' },
+];
+const turkumlar = ['noun', 'verb', 'adjective', 'adverb', 'preposition', 'conjunction', 'pronoun', 'phrase'];
+const yulduzSvg = '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" /></svg>';
+const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 8v5M12 16.5v.5" /></svg>';
 ---
 <SatFokus
-  title="Vocabulary cards · SAT"
-  description="Cards for words that appear in Reading & Writing texts."
+  title="Vocabulary · SAT"
+  description="Vocabulary for Reading & Writing: a word library, flashcards with spaced review, quizzes and your own words."
   ustki="Vocabulary · Sample set"
   nomi="Reading & Writing words"
-  progressNomi="Set progress"
+  progressNomi="Today's cards"
   yol={['Reading']}
 >
-  <script type="application/json" id="kartalar-data" set:html={JSON.stringify(kartalar)} />
+  <script type="application/json" id="namuna-data" set:html={JSON.stringify(namuna)} />
 
-  <h1 class="ekranda-yoq">Vocabulary cards</h1>
-  <div class="lugat">
-    <div class="markaz">
-      <button type="button" class="karta" id="karta" aria-live="polite">
-        <span class="yuz-yorliq" id="yuz-yorliq">English</span>
-        <span class="oldi" id="oldi">
-          <span class="soz" id="soz">{kartalar[0].soz}</span>
-          <span class="turkum" id="turkum">{kartalar[0].turkum}</span>
-        </span>
-        <span class="orqasi" id="orqasi" hidden>
-          <span class="tarjima" lang="uz" id="tarjima"></span>
-          <span class="misol" id="misol"></span>
-        </span>
-        <span class="maslahat">Tap to flip</span>
-      </button>
-
-      <div class="boshqaruv">
-        <button type="button" class="dumaloq" id="oldingi" aria-label="Previous card">
-          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-        </button>
-        <button type="button" class="tugma-l chiziqli" id="bilmayman">Still learning</button>
-        <button type="button" class="tugma-l kok" id="bilaman">I know it</button>
-        <button type="button" class="dumaloq" id="keyingi" aria-label="Next card">
-          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
-        </button>
+  <h1 class="ekranda-yoq">Vocabulary</h1>
+  <div class="lugat-sahifa" id="lugat" data-holat="yuklanmoqda" data-tarif={yol('/uz/sat/hisob/obuna/')} data-sahifa={yol('/uz/sat/mashq/lugat/')}>
+    <div class="ustqator">
+      <div class="segment" role="tablist" aria-label="Vocabulary mode">
+        {tablar.map((t, i) => (
+          <button type="button" role="tab" id={`tab-${t.kalit}`} aria-controls={`panel-${t.kalit}`}
+            aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={t.kalit}>{t.nomi}</button>
+        ))}
       </div>
+      <p class="saqlash" id="saqlash" aria-live="polite">Loading words…</p>
     </div>
 
-    <aside class="holat" aria-label="Set status">
-      <div class="oq-blok">
-        <p class="ustki-yorliq">In this set</p>
-        <div class="sonlar">
-          <div class="son kok-son"><span class="raqam" id="bilgan-soni">0</span><span>I know it</span></div>
-          <div class="son chiziq-son"><span class="raqam" id="organ-soni">0</span><span>Still learning</span></div>
+    <div class="filtrlar" id="filtrlar">
+      <fieldset class="qator" id="qiyinlik-qator" hidden>
+        <legend class="qator-nom">Difficulty</legend>
+        {qiyinliklar.map((q) => <button type="button" class="chip" aria-pressed="false" data-qiyinlik={q.kalit}>{q.nomi}</button>)}
+      </fieldset>
+      <fieldset class="qator" id="mavzu-qator" hidden>
+        <legend class="qator-nom">Topic</legend>
+        <span class="chiplar" id="mavzu-chiplar"></span>
+      </fieldset>
+      <label class="belgi-qutisi"><input type="checkbox" id="yulduzli" /> Starred only</label>
+    </div>
+
+    <p class="ogoh" id="limit-xabar" hidden>
+      <span set:html={ogohSvg} />
+      <span>You've used today's new words. Reviews continue; new words open again tomorrow.</span>
+      <a href={yol('/uz/sat/hisob/obuna/')}>See plans</a>
+    </p>
+
+    <!-- Flashcards -->
+    <section class="panel" role="tabpanel" id="panel-flashcards" aria-labelledby="tab-flashcards">
+      <div class="lugat" id="kartalar-qism">
+        <div class="markaz">
+          <div class="karta-qobiq">
+            <button type="button" class="karta" id="karta" aria-live="polite">
+              <span class="yuz-yorliq" id="yuz-yorliq">English</span>
+              <span class="oldi" id="oldi">
+                <span class="soz" id="soz"></span>
+                <span class="turkum" id="turkum"></span>
+              </span>
+              <span class="orqasi" id="orqasi" hidden>
+                <span class="tarif" id="tarif"></span>
+                <span class="tarjima" id="tarjima"><span class="tarjima-yorliq" id="tarjima-yorliq">Uzbek: </span><span lang="uz" id="tarjima-matn"></span></span>
+                <span class="misol" id="misol"></span>
+              </span>
+              <span class="maslahat">Tap to flip</span>
+            </button>
+            <button type="button" class="yulduz" id="karta-yulduz" aria-pressed="false" aria-label="Star this word" set:html={yulduzSvg} />
+          </div>
+
+          <div class="boshqaruv">
+            <button type="button" class="dumaloq" id="oldingi" aria-label="Previous card">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            </button>
+            <button type="button" class="tugma-l chiziqli" id="bilmayman">Still learning</button>
+            <button type="button" class="tugma-l kok" id="bilaman">I know it</button>
+            <button type="button" class="dumaloq" id="keyingi" aria-label="Next card">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+          </div>
+          <p class="baho-xabar" id="baho-xabar" role="status"></p>
+        </div>
+
+        <aside class="holat" aria-label="Today's cards">
+          <div class="oq-blok">
+            <p class="ustki-yorliq">Today</p>
+            <div class="sonlar">
+              <div class="son kok-son"><span class="raqam" id="bilgan-soni">0</span><span>I know it</span></div>
+              <div class="son chiziq-son"><span class="raqam" id="organ-soni">0</span><span>Still learning</span></div>
+            </div>
+            <p class="bugun-matn" id="bugun-matn"></p>
+          </div>
+          <div class="oq-blok royxat-blok">
+            <p class="ustki-yorliq">Words</p>
+            <ul id="sozlar"></ul>
+          </div>
+          <button type="button" class="tugma-l ikkinchi" id="bilmaganga">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></svg>
+            Go to a word I don't know
+          </button>
+        </aside>
+      </div>
+
+      <div class="bosh-holat" id="karta-bosh" hidden>
+        <h2 class="bosh-sarlavha" id="karta-bosh-sarlavha" tabindex="-1">Nothing to review right now</h2>
+        <p class="bosh-matn" id="karta-bosh-matn"></p>
+        <button type="button" class="kichik-tugma" data-tabga="library">Open the Library</button>
+      </div>
+    </section>
+
+    <!-- Library -->
+    <section class="panel" role="tabpanel" id="panel-library" aria-labelledby="tab-library" hidden>
+      <p class="son-matn" id="kutubxona-son"></p>
+      <ul class="kutubxona" id="kutubxona"></ul>
+    </section>
+
+    <!-- Quizzes -->
+    <section class="panel" role="tabpanel" id="panel-quiz" aria-labelledby="tab-quiz" hidden>
+      <div class="quiz-blok" id="quiz-bosh">
+        <h2 class="bosh-sarlavha">Quiz</h2>
+        <p class="bosh-matn">Read a definition and choose the word that matches it. Questions are made from the words in your current filter. Quizzes don't change your review schedule.</p>
+        <button type="button" class="tugma-l kok" id="quiz-boshla">Start a quiz</button>
+        <p class="bosh-matn" id="quiz-kam" hidden></p>
+      </div>
+      <div class="quiz-blok" id="quiz-savol" hidden>
+        <p class="ustki-yorliq" id="quiz-raqam"></p>
+        <h2 class="quiz-tarif" id="quiz-tarif" tabindex="-1"></h2>
+        <div class="variantlar" id="quiz-variantlar" role="group" aria-labelledby="quiz-tarif"></div>
+        <p class="baho-xabar" id="quiz-javob" role="status"></p>
+        <button type="button" class="tugma-l kok" id="quiz-keyingi" hidden>Next question</button>
+      </div>
+      <div class="quiz-blok" id="quiz-yakun" hidden>
+        <h2 class="bosh-sarlavha" id="quiz-natija" tabindex="-1"></h2>
+        <p class="bosh-matn" id="quiz-xato-sarlavha" hidden>Words to review:</p>
+        <ul class="quiz-xatolar" id="quiz-xatolar"></ul>
+        <button type="button" class="tugma-l kok" id="quiz-qayta">New quiz</button>
+      </div>
+    </section>
+
+    <!-- My Words -->
+    <section class="panel" role="tabpanel" id="panel-mywords" aria-labelledby="tab-mywords" hidden>
+      <div class="bosh-holat" id="oz-yopiq">
+        <h2 class="bosh-sarlavha">My Words</h2>
+        <p class="bosh-matn" id="oz-yopiq-matn"></p>
+        <a class="kichik-tugma" id="oz-yopiq-havola" hidden></a>
+      </div>
+      <div class="oz-ochiq" id="oz-ochiq" hidden>
+        <form class="oz-forma" id="oz-forma" novalidate>
+          <h2 class="bosh-sarlavha">Add a word</h2>
+          <div class="xatolar ogoh" id="oz-xatolar" role="alert" tabindex="-1" hidden></div>
+          <div class="maydon">
+            <label for="oz-soz">Word</label>
+            <input id="oz-soz" name="word" type="text" maxlength="80" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="oz-soz-xato" />
+            <p class="maydon-xato" id="oz-soz-xato" hidden></p>
+          </div>
+          <div class="maydon">
+            <label for="oz-tarif">Definition</label>
+            <textarea id="oz-tarif" name="definition" maxlength="300" rows="3" aria-describedby="oz-tarif-izoh oz-tarif-xato"></textarea>
+            <p class="maydon-izoh" id="oz-tarif-izoh">In your own words, up to 300 characters.</p>
+            <p class="maydon-xato" id="oz-tarif-xato" hidden></p>
+          </div>
+          <div class="maydon">
+            <label for="oz-turkum">Part of speech (optional)</label>
+            <select id="oz-turkum" name="pos">
+              <option value="">Not set</option>
+              {turkumlar.map((t) => <option value={t}>{t}</option>)}
+            </select>
+          </div>
+          <div class="maydon">
+            <label for="oz-misol">Example sentence (optional)</label>
+            <textarea id="oz-misol" name="example" maxlength="300" rows="2"></textarea>
+          </div>
+          <button type="submit" class="tugma-l kok" id="oz-qosh">Add word</button>
+          <p class="baho-xabar" id="oz-natija" role="status"></p>
+        </form>
+        <div class="oz-royxat-blok">
+          <h2 class="bosh-sarlavha">Your words</h2>
+          <p class="son-matn" id="oz-son"></p>
+          <ul class="kutubxona" id="oz-royxat"></ul>
         </div>
       </div>
-      <div class="oq-blok royxat-blok">
-        <p class="ustki-yorliq">Words</p>
-        <ul id="sozlar">
-          {kartalar.map((k, idx) => (
-            <li>
-              <button type="button" data-idx={idx}>
-                <span>{k.soz}</span>
-                <span class="s-holat">—</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <button type="button" class="tugma-l ikkinchi" id="bilmaganga">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></svg>
-        Go to a word I don't know
-      </button>
-    </aside>
+    </section>
   </div>
 </SatFokus>
 
 <script>
-  import { KALIT_LUGAT, type Karta } from '../../../../../data/satNamuna';
+  import { hisobMijoz, hisobYoli } from '../../../../../lib/hisob';
+  import { kirganFoydalanuvchi } from '../../../../../lib/hisobHolat';
+  import { bugun } from '../../../../../lib/darsSaqlash';
+  import {
+    baholash, boshFiltr, filtrla, holatMatn, holatTuri, importRoyxati, lokalOqi, lokalYoz, mavzular, navbat,
+    quizMumkinmi, quizTuz, sanaMatn, BOSH_HOLAT, QIYINLIKLAR, type Navbat, type QuizSavol, type Soz, type SozHolat,
+  } from '../../../../../lib/sat/lugat';
+  import { haqiqiyApi, LugatXato, type LugatApi } from '../../../../../lib/sat/lugatApi';
 
-  const kartalar: Karta[] = JSON.parse(document.getElementById('kartalar-data')!.textContent || '[]');
-  const n = kartalar.length;
-  const $ = (id: string) => document.getElementById(id) as HTMLElement;
-  type Holat = 'bilaman' | 'organ';
-  let holat: Record<string, Holat> = {};
-  try { holat = JSON.parse(localStorage.getItem(KALIT_LUGAT) || '{}') || {}; } catch { holat = {}; }
-  let i = 0;
-  let orqa = false;
+  type Rejim = 'yuklanmoqda' | 'namuna' | 'lokal' | 'hisob';
+  type Tab = 'flashcards' | 'library' | 'quiz' | 'mywords';
 
-  const saqla = () => { try { localStorage.setItem(KALIT_LUGAT, JSON.stringify(holat)); } catch { /* saqlanmadi */ } };
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const ildiz = $('lugat');
+  const namuna: Soz[] = JSON.parse($('namuna-data').textContent || '[]');
+  const kirishUrl = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(ildiz.dataset.sahifa!)}`;
+  const QIY_NOMI: Record<string, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
 
-  const chiz = () => {
-    const k = kartalar[i];
-    const karta = $('karta');
-    karta.classList.toggle('orqa', orqa);
-    $('yuz-yorliq').textContent = orqa ? 'Uzbek:' : 'English';
-    $('oldi').hidden = orqa;
-    $('orqasi').hidden = !orqa;
-    $('soz').textContent = k.soz;
-    $('turkum').textContent = k.turkum;
-    $('tarjima').textContent = k.tarjima;
-    $('misol').textContent = `“${k.misol}”`;
-    // Nom karta matnidan olinadi (so'z yoki tarjima eshitiladi); aria-label uni yashirib qo'yardi
-    karta.setAttribute('aria-pressed', String(orqa));
-    $('fokus-progress-toldirish').style.width = Math.round(((i + 1) / n) * 100) + '%';
-    const p = $('fokus-progress');
-    p.setAttribute('aria-valuemax', String(n));
-    p.setAttribute('aria-valuenow', String(i + 1));
-    $('fokus-progress-matn').textContent = `${i + 1} / ${n}`;
-    $('bilgan-soni').textContent = String(kartalar.filter((x) => holat[x.soz] === 'bilaman').length);
-    $('organ-soni').textContent = String(kartalar.filter((x) => holat[x.soz] === 'organ').length);
-    document.querySelectorAll<HTMLButtonElement>('#sozlar button').forEach((b, idx) => {
-      const h = holat[kartalar[idx].soz];
-      const s = b.querySelector('.s-holat') as HTMLElement;
-      s.textContent = h === 'bilaman' ? 'I know it' : h === 'organ' ? 'still learning' : '—';
-      s.dataset.holat = h ?? '';
-      if (idx === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
-    });
+  const s = {
+    rejim: 'yuklanmoqda' as Rejim,
+    api: null as LugatApi | null,
+    sozlar: namuna as Soz[],
+    ozlari: [] as Soz[],
+    holat: new Map<string, SozHolat>(),
+    kun: bugun(),
+    yangiQoldiq: null as number | null,
+    yangiMax: null as number | null,
+    ozSozlarOchiq: false,
+    tab: 'flashcards' as Tab,
+    filtr: boshFiltr(),
+    // Kartalar: sessiya boshida yasaladi, baholangan so'z shu sessiyada qayta baholanmaydi.
+    navbat: null as Navbat | null,
+    deck: [] as Soz[],
+    i: 0,
+    orqa: false,
+    baholangan: new Map<string, SozHolat>(),
+    band: false,
+    quiz: { savollar: [] as QuizSavol[], j: 0, javob: null as number | null, togrilar: 0, xatolar: [] as Soz[] },
   };
 
-  const bor = (yangiI: number) => { i = (yangiI + n) % n; orqa = false; chiz(); };
-  const belgila = (h: Holat) => { holat[kartalar[i].soz] = h; saqla(); bor(i + 1); };
+  const hammasi = () => [...s.sozlar, ...s.ozlari];
+  const h = (x: Soz) => s.holat.get(x.kalit) ?? BOSH_HOLAT;
+  const ombor = (() => { try { return window.localStorage; } catch { return null; } })();
 
-  $('karta').addEventListener('click', () => { orqa = !orqa; chiz(); });
-  $('oldingi').addEventListener('click', () => bor(i - 1));
-  $('keyingi').addEventListener('click', () => bor(i + 1));
-  $('bilaman').addEventListener('click', () => belgila('bilaman'));
-  $('bilmayman').addEventListener('click', () => belgila('organ'));
+  function lokalSaqla() {
+    if (s.rejim === 'hisob' || !ombor) return;
+    const nomlar = new Map(s.sozlar.map((x) => [x.kalit, x.word]));
+    lokalYoz(ombor, s.holat, (k) => nomlar.get(k) ?? k);
+  }
+
+  // ---- Matn: holat qatori ----
+  function saqlashChiz() {
+    const p = $('saqlash');
+    p.replaceChildren();
+    if (s.rejim === 'yuklanmoqda') { p.textContent = 'Loading words…'; return; }
+    if (s.rejim === 'hisob') {
+      p.append('Saved to your account.');
+      if (s.yangiMax !== null) p.append(` New words left today: ${s.yangiQoldiq ?? 0} of ${s.yangiMax}.`);
+      return;
+    }
+    p.append(s.rejim === 'namuna' ? 'Sample set. Progress is saved in this browser only. ' : 'Progress is saved in this browser only. ');
+    if (s.rejim === 'lokal') {
+      const a = document.createElement('a');
+      a.href = kirishUrl;
+      a.textContent = 'Sign in to keep it in your account';
+      p.append(a, '.');
+    }
+  }
+
+  // ---- Filtr ----
+  function filtrChiz() {
+    const barcha = hammasi();
+    const qiyinlikBor = barcha.some((x) => x.difficulty);
+    $('qiyinlik-qator').hidden = !qiyinlikBor;
+    document.querySelectorAll<HTMLButtonElement>('[data-qiyinlik]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(s.filtr.qiyinlik.has(b.dataset.qiyinlik as never))));
+    const m = mavzular(barcha);
+    $('mavzu-qator').hidden = m.length === 0;
+    const joy = $('mavzu-chiplar');
+    if (joy.dataset.royxat !== m.join('|')) {
+      joy.dataset.royxat = m.join('|');
+      joy.replaceChildren(...m.map((t) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chip'; b.dataset.mavzu = t; b.textContent = t;
+        return b;
+      }));
+    }
+    joy.querySelectorAll<HTMLButtonElement>('[data-mavzu]').forEach((b) => b.setAttribute('aria-pressed', String(s.filtr.mavzu.has(b.dataset.mavzu!))));
+    ($('yulduzli') as HTMLInputElement).checked = s.filtr.yulduzli;
+    $('filtrlar').hidden = s.tab === 'mywords';
+  }
+  const filtrlangan = () => filtrla(hammasi(), s.holat, s.filtr);
+
+  // ---- Kartalar ----
+  function deckYasa() {
+    s.navbat = navbat(filtrlangan(), s.holat, s.kun, s.rejim === 'hisob' ? s.yangiQoldiq : null);
+    s.deck = [...s.navbat.takror, ...s.navbat.yangi];
+    s.i = 0; s.orqa = false;
+    s.baholangan.clear();
+    $('baho-xabar').textContent = '';
+  }
+
+  function kartaChiz() {
+    const n = s.deck.length;
+    const bosh = n === 0;
+    $('kartalar-qism').hidden = bosh;
+    $('karta-bosh').hidden = !bosh;
+    const limitTugadi = s.rejim === 'hisob' && s.yangiQoldiq === 0 && (s.navbat?.ushlangan ?? 0) > 0;
+    $('limit-xabar').hidden = !(s.tab === 'flashcards' && limitTugadi);
+    const p = $('fokus-progress');
+    $('fokus-progress-toldirish').style.width = n ? Math.round(((s.i + 1) / n) * 100) + '%' : '0%';
+    p.setAttribute('aria-valuemax', String(Math.max(n, 1)));
+    p.setAttribute('aria-valuenow', String(n ? s.i + 1 : 0));
+    $('fokus-progress-matn').textContent = n ? `${s.i + 1} / ${n}` : '0 / 0';
+    if (bosh) {
+      const qismlar: string[] = [];
+      if (!filtrlangan().length) qismlar.push('No words match the current filter.');
+      else if (s.navbat?.keyingiSana) qismlar.push(`Your next review is on ${sanaMatn(s.navbat.keyingiSana)}.`);
+      else qismlar.push('All words in this filter are mastered or waiting for review.');
+      if (limitTugadi) qismlar.push("Today's new words are used up; new words open again tomorrow.");
+      $('karta-bosh-matn').textContent = qismlar.join(' ');
+      return;
+    }
+    const k = s.deck[s.i];
+    const x = s.baholangan.get(k.kalit) ?? h(k);
+    const karta = $('karta');
+    karta.classList.toggle('orqa', s.orqa);
+    $('yuz-yorliq').textContent = s.orqa ? (k.definition ? 'Meaning' : 'Uzbek:') : k.oz ? 'My word' : 'English';
+    $('oldi').hidden = s.orqa;
+    $('orqasi').hidden = !s.orqa;
+    $('soz').textContent = k.word;
+    $('turkum').textContent = k.pos ?? '';
+    $('tarif').textContent = k.definition ?? '';
+    $('tarif').hidden = !k.definition;
+    // Namunada (ta'rifsiz) tarjima avvalgidek katta va yorliqsiz; to'liq so'zda "Uzbek:" yorlig'i bilan kichik.
+    $('tarjima').hidden = !k.uzbek;
+    $('tarjima').classList.toggle('kichik', !!k.definition);
+    $('tarjima-yorliq').hidden = !k.definition;
+    $('tarjima-matn').textContent = k.uzbek ?? '';
+    $('misol').textContent = k.example ? `“${k.example}”` : '';
+    $('misol').hidden = !k.example;
+    karta.setAttribute('aria-pressed', String(s.orqa));
+    const yul = $('karta-yulduz');
+    yul.setAttribute('aria-pressed', String(x.yulduz));
+    (yul as HTMLButtonElement).disabled = s.rejim === 'yuklanmoqda';
+    yul.setAttribute('aria-label', `Star “${k.word}”`);
+    const baholandi = s.baholangan.has(k.kalit) || s.rejim === 'yuklanmoqda';
+    ($('bilaman') as HTMLButtonElement).disabled = baholandi || s.band;
+    ($('bilmayman') as HTMLButtonElement).disabled = baholandi || s.band;
+
+    $('bilgan-soni').textContent = String(s.deck.filter((d) => (s.baholangan.get(d.kalit) ?? h(d)).baho === 'bilaman').length);
+    $('organ-soni').textContent = String(s.deck.filter((d) => (s.baholangan.get(d.kalit) ?? h(d)).baho === 'organ').length);
+    const nb = s.navbat!;
+    $('bugun-matn').textContent = `Reviews due: ${nb.takror.length} · New: ${nb.yangi.length} · Rated: ${s.baholangan.size}`;
+    const ul = $('sozlar');
+    if (ul.dataset.deck !== s.deck.map((d) => d.kalit).join('|')) {
+      ul.dataset.deck = s.deck.map((d) => d.kalit).join('|');
+      ul.replaceChildren(...s.deck.map((d, idx) => {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button'; b.dataset.idx = String(idx);
+        const nom = document.createElement('span'); nom.textContent = d.word;
+        const hol = document.createElement('span'); hol.className = 's-holat';
+        b.append(nom, hol); li.append(b);
+        return li;
+      }));
+    }
+    ul.querySelectorAll<HTMLButtonElement>('button').forEach((b, idx) => {
+      const d = s.deck[idx];
+      const baho = (s.baholangan.get(d.kalit) ?? h(d)).baho;
+      const hol = b.querySelector('.s-holat') as HTMLElement;
+      hol.textContent = baho === 'bilaman' ? 'I know it' : baho === 'organ' ? 'still learning' : '—';
+      hol.dataset.holat = baho ?? '';
+      if (idx === s.i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+    });
+  }
+
+  const bor = (yangiI: number) => {
+    if (!s.deck.length) return;
+    s.i = (yangiI + s.deck.length) % s.deck.length; s.orqa = false;
+    $('baho-xabar').textContent = '';
+    kartaChiz();
+  };
+
+  function bahoMatn(x: SozHolat): string {
+    const nima = x.baho === 'bilaman' ? 'I know it' : 'Still learning';
+    if (x.quti === 5) return `Saved: ${nima}. This word is mastered.`;
+    return `Saved: ${nima}. Next review: ${sanaMatn(x.keyingi!)}.`;
+  }
+
+  async function belgila(togri: boolean) {
+    const k = s.deck[s.i];
+    if (!k || s.baholangan.has(k.kalit) || s.band) return;
+    const xabar = $('baho-xabar');
+    let yangi: SozHolat;
+    if (s.rejim === 'hisob' && s.api && k.id) {
+      s.band = true; kartaChiz();
+      xabar.textContent = 'Saving…';
+      try {
+        const eskiYangi = h(k).quti === null && !k.oz;
+        yangi = await s.api.baholash(k, togri);
+        if (eskiYangi && s.yangiQoldiq !== null) s.yangiQoldiq = Math.max(0, s.yangiQoldiq - 1);
+      } catch (e) {
+        s.band = false;
+        const kod = e instanceof LugatXato ? e.kod : 'network';
+        if (kod === 'quota') {
+          s.yangiQoldiq = 0;
+          // Kvota tugadi: qolgan yangi so'zlar navbatdan olinadi, takrorlash qoladi.
+          s.deck = s.deck.filter((d) => s.baholangan.has(d.kalit) || h(d).quti !== null || d.oz);
+          if (s.navbat) s.navbat.ushlangan += 1;
+          s.i = Math.min(s.i, Math.max(s.deck.length - 1, 0));
+          saqlashChiz(); kartaChiz();
+          $('baho-xabar').textContent = "Today's new words are used up. Reviews continue.";
+          return;
+        }
+        kartaChiz();
+        xabar.textContent = kod === 'auth' ? 'You were signed out. Sign in again to save.' : 'Not saved. Check your connection and try again.';
+        return;
+      }
+      s.band = false;
+    } else {
+      yangi = baholash(h(k), togri, s.kun);
+    }
+    s.holat.set(k.kalit, yangi);
+    s.baholangan.set(k.kalit, yangi);
+    lokalSaqla();
+    saqlashChiz();
+    const keyingiBaholanmagan = s.deck.findIndex((d, idx) => idx > s.i && !s.baholangan.has(d.kalit));
+    const birinchi = s.deck.findIndex((d) => !s.baholangan.has(d.kalit));
+    const matn = bahoMatn(yangi);
+    if (birinchi === -1) {
+      kartaChiz();
+      xabar.textContent = `${matn} All of today's cards are done.`;
+      return;
+    }
+    bor(keyingiBaholanmagan >= 0 ? keyingiBaholanmagan : birinchi);
+    $('baho-xabar').textContent = matn;
+  }
+
+  async function yulduzla(k: Soz) {
+    if (s.rejim === 'yuklanmoqda') return;
+    const eski = h(k);
+    const qiymat = !eski.yulduz;
+    s.holat.set(k.kalit, { ...eski, yulduz: qiymat });
+    const b = s.baholangan.get(k.kalit);
+    if (b) s.baholangan.set(k.kalit, { ...b, yulduz: qiymat });
+    chiz();
+    if (s.rejim === 'hisob' && s.api && k.id) {
+      try { await s.api.yulduz(k, qiymat); } catch {
+        s.holat.set(k.kalit, eski);
+        chiz();
+        $('baho-xabar').textContent = 'Star not saved. Check your connection and try again.';
+      }
+    } else lokalSaqla();
+  }
+
+  // ---- Kutubxona ----
+  function yulduzTugma(k: Soz): HTMLButtonElement {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'yulduz kichik';
+    b.dataset.yulduz = k.kalit;
+    b.setAttribute('aria-pressed', String(h(k).yulduz));
+    b.setAttribute('aria-label', `Star “${k.word}”`);
+    b.innerHTML = $('karta-yulduz').innerHTML;
+    return b;
+  }
+
+  function sozQatori(k: Soz, ochir = false): HTMLLIElement {
+    const li = document.createElement('li');
+    li.className = 'k-qator';
+    const asosiy = document.createElement('div');
+    asosiy.className = 'k-matn';
+    const bosh = document.createElement('p');
+    bosh.className = 'k-bosh';
+    const soz = document.createElement('span'); soz.className = 'k-soz'; soz.textContent = k.word;
+    bosh.append(soz);
+    if (k.pos) { const t = document.createElement('span'); t.className = 'k-turkum'; t.textContent = k.pos; bosh.append(' ', t); }
+    if (k.oz && !ochir) { const y = document.createElement('span'); y.className = 'k-yorliq'; y.textContent = 'My word'; bosh.append(' ', y); }
+    asosiy.append(bosh);
+    if (k.definition) { const d = document.createElement('p'); d.className = 'k-tarif'; d.textContent = k.definition; asosiy.append(d); }
+    if (k.uzbek) { const u = document.createElement('p'); u.className = 'k-tarif'; u.append('Uzbek: '); const t = document.createElement('span'); t.lang = 'uz'; t.textContent = k.uzbek; u.append(t); asosiy.append(u); }
+    const meta = [k.difficulty ? QIY_NOMI[k.difficulty] : null, k.topic, holatMatn(s.holat.get(k.kalit), s.kun)].filter(Boolean);
+    const m = document.createElement('p'); m.className = 'k-meta'; m.textContent = meta.join(' · ');
+    asosiy.append(m);
+    const amallar = document.createElement('div');
+    amallar.className = 'k-amal';
+    amallar.append(yulduzTugma(k));
+    if (ochir) {
+      const o = document.createElement('button');
+      o.type = 'button'; o.className = 'kichik-tugma chiziqli'; o.dataset.ochir = k.id!;
+      o.textContent = 'Delete';
+      o.setAttribute('aria-label', `Delete “${k.word}”`);
+      amallar.append(o);
+    }
+    li.append(asosiy, amallar);
+    return li;
+  }
+
+  function kutubxonaChiz() {
+    const r = filtrlangan();
+    const yangi = r.filter((k) => holatTuri(s.holat.get(k.kalit), s.kun) === 'new').length;
+    $('kutubxona-son').textContent = r.length
+      ? `${r.length} ${r.length === 1 ? 'word' : 'words'} · ${yangi} new`
+      : 'No words match the current filter.';
+    $('kutubxona').replaceChildren(...r.map((k) => sozQatori(k)));
+  }
+
+  // ---- Quiz ----
+  function quizChiz() {
+    const q = s.quiz;
+    const bosh = q.savollar.length === 0;
+    const tugadi = !bosh && q.j >= q.savollar.length;
+    $('quiz-bosh').hidden = !bosh;
+    $('quiz-savol').hidden = bosh || tugadi;
+    $('quiz-yakun').hidden = !tugadi;
+    if (bosh) {
+      const mumkin = quizMumkinmi(filtrlangan());
+      ($('quiz-boshla') as HTMLButtonElement).hidden = !mumkin;
+      $('quiz-kam').hidden = mumkin;
+      $('quiz-kam').textContent = s.rejim === 'namuna'
+        ? "Quizzes use word definitions. The sample set doesn't have them, so quizzes open when the word list is published."
+        : 'A quiz needs at least 4 words with definitions in the current filter. Clear a filter to add more words.';
+      return;
+    }
+    if (tugadi) {
+      $('quiz-natija').textContent = `You got ${q.togrilar} of ${q.savollar.length} right.`;
+      $('quiz-xato-sarlavha').hidden = q.xatolar.length === 0;
+      $('quiz-xatolar').replaceChildren(...q.xatolar.map((k) => {
+        const li = document.createElement('li');
+        const b = document.createElement('strong'); b.textContent = k.word;
+        li.append(b, `: ${k.definition}`);
+        return li;
+      }));
+      return;
+    }
+    const sv = q.savollar[q.j];
+    $('quiz-raqam').textContent = `Question ${q.j + 1} of ${q.savollar.length}`;
+    $('quiz-tarif').textContent = sv.soz.definition ?? '';
+    const joy = $('quiz-variantlar');
+    joy.replaceChildren(...sv.variantlar.map((v, idx) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'variant'; b.dataset.variant = String(idx);
+      const harf = document.createElement('span'); harf.className = 'v-harf'; harf.textContent = 'ABCD'[idx]; harf.setAttribute('aria-hidden', 'true');
+      const nom = document.createElement('span'); nom.className = 'v-nom'; nom.textContent = v.word;
+      b.append(harf, nom);
+      if (q.javob !== null) {
+        b.disabled = true;
+        const belgi = idx === sv.togri ? 'Correct answer' : idx === q.javob ? 'Your answer' : '';
+        if (belgi) { const t = document.createElement('span'); t.className = 'v-belgi'; t.textContent = belgi; b.append(t); b.dataset.holat = idx === sv.togri ? 'togri' : 'tanlangan'; }
+      }
+      return b;
+    }));
+    $('quiz-keyingi').hidden = q.javob === null;
+    $('quiz-keyingi').textContent = q.j + 1 === q.savollar.length ? 'See results' : 'Next question';
+    $('quiz-javob').textContent = q.javob === null ? '' : q.javob === sv.togri ? 'Correct.' : `Not quite. The answer is “${sv.soz.word}”.`;
+  }
+
+  function quizBoshla() {
+    s.quiz = { savollar: quizTuz(filtrlangan(), 10), j: 0, javob: null, togrilar: 0, xatolar: [] };
+    quizChiz();
+    $('quiz-tarif').focus();
+  }
+
+  // ---- My Words ----
+  function ozChiz() {
+    const ochiq = s.rejim === 'hisob' && s.ozSozlarOchiq;
+    $('oz-yopiq').hidden = ochiq;
+    $('oz-ochiq').hidden = !ochiq;
+    const havola = $<HTMLAnchorElement>('oz-yopiq-havola');
+    havola.hidden = true;
+    if (!ochiq) {
+      const matn = $('oz-yopiq-matn');
+      if (s.rejim === 'hisob') {
+        matn.textContent = 'Adding your own words is not part of your current plan.';
+        havola.href = ildiz.dataset.tarif!; havola.textContent = 'See plans'; havola.hidden = false;
+      } else if (s.rejim === 'lokal' || (s.rejim === 'namuna' && s.api && !kirganFoydalanuvchi())) {
+        matn.textContent = 'Sign in to add your own words. They are saved in your account.';
+        havola.href = kirishUrl; havola.textContent = 'Sign in'; havola.hidden = false;
+      } else {
+        matn.textContent = "My Words needs a connection to your account, and it isn't available right now.";
+      }
+      return;
+    }
+    $('oz-son').textContent = s.ozlari.length ? `${s.ozlari.length} ${s.ozlari.length === 1 ? 'word' : 'words'}. They appear in Flashcards, the Library and Quizzes.` : 'No words yet.';
+    $('oz-royxat').replaceChildren(...s.ozlari.map((k) => sozQatori(k, true)));
+  }
+
+  function maydonXato(id: string, matn: string | null) {
+    const inp = $(id);
+    const p = $(`${id}-xato`);
+    p.hidden = !matn;
+    p.textContent = matn ?? '';
+    if (matn) inp.setAttribute('aria-invalid', 'true'); else inp.removeAttribute('aria-invalid');
+  }
+
+  async function ozQosh(e: SubmitEvent) {
+    e.preventDefault();
+    if (!s.api || s.band) return;
+    const word = ($('oz-soz') as HTMLInputElement).value.trim();
+    const definition = ($('oz-tarif') as HTMLTextAreaElement).value.trim();
+    const xatolar: [string, string][] = [];
+    if (!word) xatolar.push(['oz-soz', 'Type the word you want to learn.']);
+    if (!definition) xatolar.push(['oz-tarif', 'Write what the word means, in your own words.']);
+    maydonXato('oz-soz', xatolar.find((x) => x[0] === 'oz-soz')?.[1] ?? null);
+    maydonXato('oz-tarif', xatolar.find((x) => x[0] === 'oz-tarif')?.[1] ?? null);
+    const umumiy = $('oz-xatolar');
+    umumiy.hidden = !xatolar.length;
+    if (xatolar.length) {
+      umumiy.textContent = xatolar.length === 1 ? 'Fix 1 field to add the word.' : `Fix ${xatolar.length} fields to add the word.`;
+      umumiy.focus();
+      return;
+    }
+    const tugma = $('oz-qosh') as HTMLButtonElement;
+    s.band = true; tugma.disabled = true; tugma.textContent = 'Adding…';
+    try {
+      const yangi = await s.api.ozQosh({
+        word, definition,
+        pos: ($('oz-turkum') as HTMLSelectElement).value || null,
+        example: ($('oz-misol') as HTMLTextAreaElement).value.trim() || null,
+      });
+      s.ozlari.push(yangi);
+      ($('oz-forma') as HTMLFormElement).reset();
+      $('oz-natija').textContent = `Added “${yangi.word}”. It is in today's flashcards.`;
+      deckYasa();
+      chiz();
+      $('oz-soz').focus();
+    } catch (er) {
+      const kod = er instanceof LugatXato ? er.kod : 'network';
+      if (kod === 'duplicate') maydonXato('oz-soz', 'This word is already in your list.');
+      $('oz-natija').textContent = kod === 'duplicate' ? 'Not added: this word is already in your list.'
+        : kod === 'feature' ? 'Not added: your plan does not include My Words.'
+        : kod === 'invalid' ? 'Not added: check the fields, or your list may be full.'
+        : 'Not added. Check your connection and try again.';
+    } finally {
+      s.band = false; tugma.disabled = false; tugma.textContent = 'Add word';
+    }
+  }
+
+  const ochirishKutish = new Map<string, number>();
+  async function ozOchir(b: HTMLButtonElement) {
+    const id = b.dataset.ochir!;
+    const k = s.ozlari.find((x) => x.id === id);
+    if (!k || !s.api) return;
+    // Ikki bosqichli o'chirish: birinchi bosish so'raydi, 4 soniya ichida ikkinchisi o'chiradi.
+    if (!ochirishKutish.has(id)) {
+      b.textContent = 'Confirm delete';
+      ochirishKutish.set(id, window.setTimeout(() => { ochirishKutish.delete(id); b.textContent = 'Delete'; }, 4000));
+      return;
+    }
+    clearTimeout(ochirishKutish.get(id)); ochirishKutish.delete(id);
+    try {
+      await s.api.ozOchir(id);
+      s.ozlari = s.ozlari.filter((x) => x.id !== id);
+      s.holat.delete(k.kalit);
+      $('oz-natija').textContent = `Deleted “${k.word}”.`;
+      deckYasa();
+      chiz();
+      $('oz-soz').focus();
+    } catch {
+      $('oz-natija').textContent = 'Not deleted. Check your connection and try again.';
+    }
+  }
+
+  // ---- Umumiy chizish va tablar ----
+  function chiz() {
+    ildiz.dataset.holat = s.rejim;
+    saqlashChiz();
+    filtrChiz();
+    kartaChiz();
+    if (s.tab === 'library') kutubxonaChiz();
+    if (s.tab === 'quiz') quizChiz();
+    if (s.tab === 'mywords') ozChiz();
+    $('fokus-ustki').textContent = s.rejim === 'namuna' || s.rejim === 'yuklanmoqda' ? 'Vocabulary · Sample set' : 'Vocabulary';
+  }
+
+  const tablar = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+  function tabTanla(t: Tab, fokus = false) {
+    s.tab = t;
+    tablar.forEach((b) => {
+      const faol = b.dataset.tab === t;
+      b.setAttribute('aria-selected', String(faol));
+      b.tabIndex = faol ? 0 : -1;
+      if (faol && fokus) b.focus();
+    });
+    document.querySelectorAll<HTMLElement>('[role="tabpanel"]').forEach((p) => { p.hidden = p.id !== `panel-${t}`; });
+    chiz();
+  }
+  tablar.forEach((b, i) => {
+    b.addEventListener('click', () => tabTanla(b.dataset.tab as Tab));
+    b.addEventListener('keydown', (e) => {
+      const k = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tablar.length - 1 }[e.key];
+      if (k === undefined) return;
+      e.preventDefault();
+      tabTanla(tablar[(k + tablar.length) % tablar.length].dataset.tab as Tab, true);
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-tabga]').forEach((b) =>
+    b.addEventListener('click', () => tabTanla(b.dataset.tabga as Tab, true)));
+
+  // Filtr o'zgarsa kartalar va quiz qaytadan yasaladi.
+  function filtrOzgardi() {
+    deckYasa();
+    s.quiz.savollar = [];
+    chiz();
+  }
+  $('filtrlar').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-qiyinlik], button[data-mavzu]');
+    if (!b) return;
+    if (b.dataset.qiyinlik) {
+      const q = b.dataset.qiyinlik as (typeof QIYINLIKLAR)[number];
+      if (s.filtr.qiyinlik.has(q)) s.filtr.qiyinlik.delete(q); else s.filtr.qiyinlik.add(q);
+    } else {
+      const m = b.dataset.mavzu!;
+      if (s.filtr.mavzu.has(m)) s.filtr.mavzu.delete(m); else s.filtr.mavzu.add(m);
+    }
+    filtrOzgardi();
+  });
+  $('yulduzli').addEventListener('change', (e) => { s.filtr.yulduzli = (e.target as HTMLInputElement).checked; filtrOzgardi(); });
+
+  // Kartalar hodisalari
+  $('karta').addEventListener('click', () => { s.orqa = !s.orqa; kartaChiz(); });
+  $('oldingi').addEventListener('click', () => bor(s.i - 1));
+  $('keyingi').addEventListener('click', () => bor(s.i + 1));
+  $('bilaman').addEventListener('click', () => belgila(true));
+  $('bilmayman').addEventListener('click', () => belgila(false));
+  $('karta-yulduz').addEventListener('click', () => { const k = s.deck[s.i]; if (k) yulduzla(k); });
   $('bilmaganga').addEventListener('click', () => {
-    const k = kartalar.findIndex((x) => holat[x.soz] !== 'bilaman');
+    const k = s.deck.findIndex((d) => (s.baholangan.get(d.kalit) ?? h(d)).baho !== 'bilaman');
     if (k >= 0) bor(k);
   });
-  document.querySelectorAll<HTMLButtonElement>('#sozlar button').forEach((b) =>
-    b.addEventListener('click', () => bor(Number(b.dataset.idx))));
-  document.addEventListener('keydown', (e) => {
-    if ((e.target as HTMLElement).closest('input, textarea')) return;
-    if (e.key === 'ArrowLeft') bor(i - 1);
-    if (e.key === 'ArrowRight') bor(i + 1);
+  $('sozlar').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-idx]');
+    if (b) bor(Number(b.dataset.idx));
   });
+  document.addEventListener('keydown', (e) => {
+    if (s.tab !== 'flashcards' || e.altKey || e.ctrlKey || e.metaKey) return;
+    const t = e.target as HTMLElement;
+    if (t.closest('input, textarea, select, [role="tablist"]')) return;
+    if (e.key === 'ArrowLeft') bor(s.i - 1);
+    if (e.key === 'ArrowRight') bor(s.i + 1);
+  });
+
+  // Kutubxona va My Words: yulduzcha va o'chirish (hodisa delegatsiyasi)
+  ildiz.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const y = t.closest<HTMLButtonElement>('button[data-yulduz]');
+    if (y) {
+      const k = hammasi().find((x) => x.kalit === y.dataset.yulduz);
+      if (k) { yulduzla(k).then(() => document.querySelector<HTMLButtonElement>(`button[data-yulduz="${CSS.escape(k.kalit)}"]`)?.focus()); }
+      return;
+    }
+    const o = t.closest<HTMLButtonElement>('button[data-ochir]');
+    if (o) ozOchir(o);
+  });
+
+  // Quiz hodisalari
+  $('quiz-boshla').addEventListener('click', quizBoshla);
+  $('quiz-qayta').addEventListener('click', quizBoshla);
+  $('quiz-variantlar').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-variant]');
+    const q = s.quiz;
+    if (!b || q.javob !== null) return;
+    q.javob = Number(b.dataset.variant);
+    const sv = q.savollar[q.j];
+    if (q.javob === sv.togri) q.togrilar++; else q.xatolar.push(sv.soz);
+    quizChiz();
+    $('quiz-keyingi').focus();
+  });
+  $('quiz-keyingi').addEventListener('click', () => {
+    s.quiz.j++; s.quiz.javob = null;
+    quizChiz();
+    (s.quiz.j >= s.quiz.savollar.length ? $('quiz-natija') : $('quiz-tarif')).focus();
+  });
+
+  $('oz-forma').addEventListener('submit', ozQosh);
+
+  // ---- Yuklash ----
+  async function yukla() {
+    let api: LugatApi | null = null;
+    if (import.meta.env.DEV) {
+      const mock = new URLSearchParams(location.search).get('mock');
+      if (mock) {
+        const { mockApi } = await import('../../../../../lib/sat/lugatMock');
+        api = mockApi(mock as Parameters<typeof mockApi>[0]);
+      }
+    }
+    if (!api) { const c = hisobMijoz(); if (c) api = haqiqiyApi(c); }
+    s.api = api;
+    const lokal = ombor ? lokalOqi(ombor, bugun()) : new Map<string, SozHolat>();
+
+    let sozlar: Soz[] = [];
+    if (api) { try { sozlar = await api.sozlar(); } catch { sozlar = []; } }
+    if (!sozlar.length) {
+      // Baza bo'sh yoki ulanmadi: namuna kartalar, holat faqat brauzerda.
+      s.rejim = 'namuna'; s.sozlar = namuna; s.holat = lokal;
+      deckYasa(); chiz();
+      return;
+    }
+    s.sozlar = sozlar;
+    const userId = await api!.foydalanuvchi().catch(() => null);
+    if (!userId) {
+      s.rejim = 'lokal'; s.holat = lokal;
+      deckYasa(); chiz();
+      return;
+    }
+    try {
+      let st = await api!.holat();
+      // Brauzerdagi holat hisobga bir marta ko'chiriladi (server ikkinchi marta yozmaydi).
+      const royxat = importRoyxati(lokal);
+      if (!st.importQilingan && royxat.length) {
+        await api!.importLokal(royxat);
+        st = await api!.holat();
+      }
+      const p = await api!.progress();
+      s.rejim = 'hisob';
+      s.kun = st.today;
+      s.yangiQoldiq = st.yangiQoldiq;
+      s.yangiMax = st.yangiMax;
+      s.ozSozlarOchiq = st.ozSozlar;
+      s.holat = p.holat;
+      s.ozlari = p.ozlari;
+    } catch {
+      // Server holati o'qilmadi: brauzer rejimida davom etiladi, xabar bilan.
+      s.rejim = 'lokal'; s.holat = lokal;
+      deckYasa(); chiz();
+      $('saqlash').textContent = "Couldn't reach your account. Progress is saved in this browser for now.";
+      return;
+    }
+    deckYasa(); chiz();
+  }
+
+  s.holat = ombor ? lokalOqi(ombor, s.kun) : new Map();
+  deckYasa();
   chiz();
+  yukla();
 </script>
 
 <style>
-  .lugat { display: flex; gap: var(--b-8); max-width: 1184px; margin: 0 auto; }
+  .lugat-sahifa { max-width: 1184px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
+  .lugat-sahifa [hidden] { display: none !important; }
+  .ustqator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3) var(--b-6); }
+  .saqlash { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
+  .saqlash :global(a) { color: var(--rang-havola); font-weight: 700; }
+
+  .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon); border-radius: var(--r-toliq); }
+  :global([data-mavzu='qorongi']) .segment { background: var(--fon-ikkinchi); }
+  .segment button {
+    min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--r-toliq);
+    background: transparent; color: var(--matn-ikkinchi);
+    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
+  }
+  .segment button[aria-selected='true'] { background: var(--matn); color: var(--fon); }
+
+  .filtrlar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-6); }
+  fieldset.qator { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .qator-nom { float: left; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); margin-right: var(--b-2); padding: 0; }
+  .chiplar { display: contents; }
+  .filtrlar :global(.chip) {
+    min-height: 44px; padding: 0 16px; border-radius: var(--r-toliq);
+    font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
+    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
+  }
+  .filtrlar :global(.chip:hover) { border-color: var(--rang-asosiy); }
+  .filtrlar :global(.chip[aria-pressed='true']) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
+  .belgi-qutisi { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--rang-asosiy); }
+  input[type='checkbox']:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+
+  .ogoh {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-3);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
+  }
+  .ogoh > span:first-child { display: inline-flex; }
+  .ogoh a { color: inherit; font-weight: 800; min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* Kartalar: avvalgi ekran */
+  .lugat { display: flex; gap: var(--b-8); }
   .markaz { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: var(--b-6); }
+  .karta-qobiq { position: relative; width: 100%; max-width: 760px; }
   .karta {
-    position: relative; width: 100%; max-width: 760px; min-height: 440px;
+    position: relative; width: 100%; min-height: 440px;
     padding: 64px 40px; border-radius: var(--r-katta);
     font: inherit; text-align: center;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -148,23 +895,40 @@ import { kartalar } from '../../../../../data/satNamuna';
     background: var(--fon); color: var(--matn);
     border: 1.5px solid var(--matn); box-shadow: var(--soya);
   }
-  .karta.orqa { background: var(--qora); color: var(--rang-asosiy-matn); border-color: var(--qora-chiziq); box-shadow: none; }
+  .karta.orqa { background: var(--qora); color: var(--qora-matn); border-color: var(--qora-chiziq); box-shadow: none; }
   .yuz-yorliq {
     position: absolute; top: 20px; left: 24px;
     padding: 4px 12px; border-radius: var(--r-toliq);
     font-size: var(--matn-mayda); font-weight: 700;
     background: var(--sirt-ikkinchi); color: var(--matn);
   }
-  .karta.orqa .yuz-yorliq { background: var(--qora-chiziq); color: var(--rang-asosiy-matn); }
+  .karta.orqa .yuz-yorliq { background: var(--qora-chiziq); color: var(--qora-matn); }
   .oldi, .orqasi { display: flex; flex-direction: column; align-items: center; gap: var(--b-3); }
-  .oldi[hidden], .orqasi[hidden] { display: none; }
-  .orqasi { gap: 18px; max-width: 520px; }
-  .soz { font-size: 56px; font-weight: 900; letter-spacing: -1px; overflow-wrap: anywhere; }
+  .orqasi { gap: 18px; max-width: 560px; }
+  .soz { font-size: 56px; font-weight: 900; letter-spacing: var(--oraliq-hero); overflow-wrap: anywhere; }
   .turkum { font-size: 16px; font-weight: 600; color: var(--matn-sust); }
+  .tarif { font-size: 26px; font-weight: 800; line-height: 1.35; }
   .tarjima { font-size: 36px; font-weight: 800; line-height: 1.2; }
+  .tarjima.kichik { font-size: 18px; font-weight: 700; }
+  .tarjima-yorliq { color: var(--qora-matn-ikkinchi); }
   .misol { font-size: 18px; line-height: 1.6; color: var(--qora-matn-ikkinchi); font-style: italic; }
   .maslahat { position: absolute; bottom: 20px; left: 0; right: 0; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
   .karta.orqa .maslahat { color: var(--qora-matn-ikkinchi); }
+
+  .lugat-sahifa :global(.yulduz) {
+    width: 48px; height: 48px; border: 0; border-radius: var(--r-toliq); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    background: var(--sirt-ikkinchi); color: var(--matn);
+  }
+  .lugat-sahifa :global(.yulduz svg) { fill: none; }
+  .lugat-sahifa :global(.yulduz[aria-pressed='true']) { color: var(--rang-asosiy); }
+  :global([data-mavzu='qorongi']) .lugat-sahifa :global(.yulduz[aria-pressed='true']) { color: var(--rang-havola); }
+  .lugat-sahifa :global(.yulduz[aria-pressed='true'] svg) { fill: currentColor; }
+  .lugat-sahifa :global(.yulduz:hover) { background: var(--chiziq); }
+  .karta-qobiq > .yulduz { position: absolute; top: 12px; right: 12px; }
+  .karta.orqa ~ .yulduz, :global([data-mavzu='qorongi']) .karta.orqa ~ .yulduz[aria-pressed='true'], .lugat-sahifa .karta.orqa ~ :global(.yulduz) { background: var(--qora-chiziq); color: var(--rang-asosiy-matn); }
+  .karta.orqa ~ .yulduz[aria-pressed='true'] { color: var(--rang-asosiy-matn); }
+  .lugat-sahifa :global(.yulduz.kichik) { width: 44px; height: 44px; }
 
   .boshqaruv { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--b-3); }
   .dumaloq {
@@ -175,16 +939,18 @@ import { kartalar } from '../../../../../data/satNamuna';
   :global([data-mavzu='qorongi']) .dumaloq { background: var(--fon-ikkinchi); }
   .dumaloq:hover { background: var(--sirt-ikkinchi); }
   .tugma-l {
-    min-height: 52px; padding: 0 26px; border-radius: var(--r-toliq);
+    min-height: var(--control-height-md); padding: 0 26px; border-radius: var(--r-toliq);
     font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2);
   }
+  .tugma-l:disabled { cursor: default; opacity: 0.55; }
   .tugma-l.chiziqli { border: 1.5px solid var(--matn); background: var(--fon); color: var(--matn); }
-  .tugma-l.chiziqli:hover { background: var(--fon-ikkinchi); }
-  .tugma-l.kok { border: 0; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .tugma-l.kok:hover { background: var(--rang-asosiy-toq); }
+  .tugma-l.chiziqli:hover:not(:disabled) { background: var(--fon-ikkinchi); }
+  .tugma-l.kok { border: 0; background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .tugma-l.kok:hover:not(:disabled) { background: var(--btn-primary-bg-hover); }
   .tugma-l.ikkinchi { min-height: 48px; border: 0; background: var(--sirt-ikkinchi); color: var(--matn); font-weight: 700; font-size: 15px; }
   .tugma-l.ikkinchi:hover { background: var(--chiziq); }
+  .baho-xabar { min-height: 1.5em; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); text-align: center; }
 
   .holat { width: 300px; flex: none; display: flex; flex-direction: column; gap: var(--b-4); }
   .oq-blok { background: var(--fon); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4); }
@@ -197,27 +963,113 @@ import { kartalar } from '../../../../../data/satNamuna';
   .raqam { font-size: 32px; font-weight: 900; line-height: 1.2; }
   .kok-son { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .chiziq-son { border: 1.5px solid var(--matn); }
-  #sozlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
-  #sozlar button {
+  .bugun-matn { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
+  #sozlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; max-height: 420px; overflow-y: auto; }
+  #sozlar :global(button) {
     width: 100%; min-height: 44px; padding: 0 16px;
     border: 0; border-radius: 14px; background: transparent; color: var(--matn);
     font: inherit; font-size: 15px; font-weight: 700;
-    display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: var(--b-2); cursor: pointer;
   }
-  #sozlar button:hover, #sozlar button[aria-current='true'] { background: var(--fon-ikkinchi); }
-  :global([data-mavzu='qorongi']) #sozlar button:hover, :global([data-mavzu='qorongi']) #sozlar button[aria-current='true'] { background: var(--sirt-ikkinchi); }
-  .s-holat { font-size: 12px; font-weight: 700; color: var(--matn-sust); }
-  .s-holat[data-holat='bilaman'] { color: var(--rang-havola); }
-  .s-holat[data-holat='organ'] { color: var(--matn); }
+  #sozlar :global(button:hover), #sozlar :global(button[aria-current='true']) { background: var(--fon-ikkinchi); }
+  :global([data-mavzu='qorongi']) #sozlar :global(button:hover), :global([data-mavzu='qorongi']) #sozlar :global(button[aria-current='true']) { background: var(--sirt-ikkinchi); }
+  #sozlar :global(.s-holat) { font-size: 12px; font-weight: 700; color: var(--matn-sust); }
+  #sozlar :global(.s-holat[data-holat='bilaman']) { color: var(--rang-havola); }
+  #sozlar :global(.s-holat[data-holat='organ']) { color: var(--matn); }
+
+  .bosh-holat, .quiz-blok, .oz-forma, .oz-royxat-blok {
+    background: var(--fon); border-radius: var(--r-katta); padding: var(--b-8);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-4);
+  }
+  :global([data-mavzu='qorongi']) :is(.bosh-holat, .quiz-blok, .oz-forma, .oz-royxat-blok) { background: var(--fon-ikkinchi); }
+  .bosh-sarlavha { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .bosh-matn { max-width: 62ch; color: var(--matn-ikkinchi); line-height: 1.6; }
+  .lugat-sahifa :global(.kichik-tugma) {
+    min-height: 44px; padding: 0 20px; border-radius: var(--r-toliq);
+    border: 0; background: var(--matn); color: var(--fon); font: inherit; font-weight: 800; cursor: pointer;
+    display: inline-flex; align-items: center; text-decoration: none;
+  }
+  .lugat-sahifa :global(.kichik-tugma.chiziqli) { background: transparent; color: var(--matn); border: 1.5px solid var(--matn); }
+
+  /* Kutubxona */
+  .son-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .kutubxona { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); width: 100%; }
+  .kutubxona :global(.k-qator) {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: var(--b-4);
+    background: var(--fon); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5);
+  }
+  :global([data-mavzu='qorongi']) .kutubxona :global(.k-qator) { background: var(--fon-ikkinchi); }
+  .oz-royxat-blok .kutubxona :global(.k-qator) { background: var(--fon-ikkinchi); }
+  :global([data-mavzu='qorongi']) .oz-royxat-blok .kutubxona :global(.k-qator) { background: var(--fon); }
+  .kutubxona :global(.k-matn) { min-width: 0; display: flex; flex-direction: column; gap: var(--b-1); }
+  .kutubxona :global(.k-bosh) { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-2); }
+  .kutubxona :global(.k-soz) { font-size: var(--matn-katta); font-weight: 800; overflow-wrap: anywhere; }
+  .kutubxona :global(.k-turkum) { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
+  .kutubxona :global(.k-yorliq) { padding: 2px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  .kutubxona :global(.k-tarif) { color: var(--matn-ikkinchi); line-height: 1.5; overflow-wrap: anywhere; }
+  .kutubxona :global(.k-meta) { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
+  .kutubxona :global(.k-amal) { display: flex; align-items: center; gap: var(--b-2); flex: none; }
+
+  /* Quiz */
+  .quiz-blok { max-width: 760px; width: 100%; }
+  .quiz-tarif { font-size: 24px; font-weight: 800; line-height: 1.4; }
+  .variantlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--b-3); width: 100%; }
+  .variantlar :global(.variant) {
+    min-height: 56px; padding: var(--b-2) var(--b-4); border-radius: var(--r-orta);
+    border: 2px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn);
+    font: inherit; font-size: 17px; font-weight: 700; text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: var(--b-3);
+  }
+  :global([data-mavzu='qorongi']) .variantlar :global(.variant) { background: var(--fon); }
+  .variantlar :global(.variant:hover:not(:disabled)) { border-color: var(--rang-asosiy); }
+  .variantlar :global(.variant:disabled) { cursor: default; }
+  .variantlar :global(.variant[data-holat='togri']) { border-color: var(--rang-asosiy); }
+  .variantlar :global(.variant[data-holat='tanlangan']) { border-color: var(--matn); border-style: dashed; }
+  .variantlar :global(.v-harf) {
+    width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi);
+    display: inline-flex; align-items: center; justify-content: center; font-size: var(--matn-kichik); font-weight: 800;
+  }
+  .variantlar :global(.variant[data-holat='togri'] .v-harf) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variantlar :global(.v-nom) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .variantlar :global(.v-belgi) { font-size: var(--matn-mayda); font-weight: 800; color: var(--matn-ikkinchi); }
+  .quiz-blok .baho-xabar { text-align: left; }
+  .quiz-xatolar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.5; color: var(--matn-ikkinchi); }
+
+  /* My Words */
+  .oz-ochiq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--b-6); align-items: start; }
+  .oz-forma .baho-xabar { text-align: left; }
+  .maydon { display: flex; flex-direction: column; gap: var(--b-2); width: 100%; }
+  .maydon label { font-weight: 700; }
+  .maydon input, .maydon textarea, .maydon select {
+    min-height: 48px; padding: 10px 14px; width: 100%;
+    background: var(--sirt); color: var(--matn); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    font: inherit; font-size: var(--matn-asosiy);
+  }
+  .maydon textarea { resize: vertical; line-height: 1.5; }
+  .maydon :is(input, textarea, select):focus-visible { outline: none; border: 3px solid var(--rang-asosiy); padding: 9px 13px; }
+  .maydon-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .maydon-xato {
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-kichik);
+    padding: var(--b-2) var(--b-3); font-size: var(--matn-kichik); font-weight: 600;
+  }
+  .maydon-xato::before { content: '! '; font-weight: 900; }
+  .xatolar { width: 100%; }
 
   @media (max-width: 1023.98px) {
     .lugat { flex-direction: column; }
     .holat { width: 100%; }
+    .oz-ochiq { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .karta { min-height: 340px; padding: 56px 20px; }
     .soz { font-size: 40px; }
+    .tarif { font-size: 20px; }
     .tarjima { font-size: 26px; }
     .boshqaruv .tugma-l { flex: 1 1 140px; padding: 0 16px; }
+    .bosh-holat, .quiz-blok, .oz-forma, .oz-royxat-blok { padding: var(--b-5); }
+    .quiz-tarif { font-size: 20px; }
+    .kutubxona :global(.k-qator) { padding: var(--b-3) var(--b-4); }
+    .segment { width: 100%; flex-wrap: nowrap; gap: 2px; }
+    .segment button { flex: 1 1 0; min-width: 0; padding: 0 6px; font-size: 14px; white-space: nowrap; }
   }
 </style>
