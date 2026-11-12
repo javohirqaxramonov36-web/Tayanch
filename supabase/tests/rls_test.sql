@@ -18,19 +18,19 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-4000-8000-00000000000c', 'c@sinov.invalid', '{}');
 
 insert into public.questions
-  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, figure, status, author, verified_by)
+  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, figure, status, author, verified_by, verified_at)
 values
   ('sinov-mcq-1', 'math', 'SINOV-domain', 'SINOV-skill', 2, 'mcq', 'SINOV savol 1',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2", "is_correct": true}]',
-   '{"choice": "B"}', 'SINOV tushuntirish', '{"path": "sinov/fig1.png", "alt": "SINOV rasm"}', 'verified', 'sinov', 'sinov'),
+   '{"choice": "B"}', 'SINOV tushuntirish', '{"path": "sinov/fig1.png", "alt": "SINOV rasm"}', 'verified', 'sinov', 'sinov-tekshiruvchi', now()),
   ('sinov-mcq-2', 'math', 'SINOV-domain', 'SINOV-skill', 3, 'mcq', 'SINOV savol 2',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "A"}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov'),
+   '{"choice": "A"}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov-tekshiruvchi', now()),
   ('sinov-spr-1', 'math', 'SINOV-domain', 'SINOV-skill', 3, 'spr', 'SINOV savol 3',
-   null, '{"accepted": ["1/2"]}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov'),
+   null, '{"accepted": ["1/2"]}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov-tekshiruvchi', now()),
   ('sinov-draft-1', 'math', 'SINOV-domain', 'SINOV-skill', 1, 'mcq', 'SINOV qoralama',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "A"}', 'SINOV tushuntirish', null, 'draft', 'sinov', null);
+   '{"choice": "A"}', 'SINOV tushuntirish', null, 'draft', 'sinov', null, null);
 
 insert into storage.objects (bucket_id, name) values
   ('question-figures', 'sinov/fig1.png'),
@@ -197,7 +197,7 @@ begin
     raise exception 'FAIL 06: A review_queue.box ni o''zgartirdi';
   exception when insufficient_privilege then null;
   end;
-  update public.review_queue set note = 'SINOV izoh', reason_tag = 'hisob' where question_id = q1;
+  update public.review_queue set note = 'SINOV izoh', reason_tag = 'concept_gap' where question_id = q1;
   begin
     insert into public.subscriptions (user_id, plan_code, source) values (a, 'max', 'admin');
     raise exception 'FAIL 06: A subscriptions ga yozdi';
@@ -552,7 +552,7 @@ begin
            from public.review_queue where user_id = a and question_id = q1) <> 3 then
     raise exception 'FAIL 13: Leitner o''tishi noto''g''ri';
   end if;
-  if (select reason_tag from public.review_queue where user_id = a and question_id = q1) <> 'hisob' then
+  if (select reason_tag from public.review_queue where user_id = a and question_id = q1) <> 'concept_gap' then
     raise exception 'FAIL 13: reason_tag yo''qoldi';
   end if;
   raise notice 'OK 14 takrorlash sessiyasi: muddati kelgan savol, to''g''ri javob 1 -> 2-quti (+3 kun), reason_tag saqlanadi';
@@ -930,6 +930,80 @@ begin
   raise notice 'OK 21 muvofiqlash: faqat 15 daqiqa-48 soatlik pending, faqat service_role; payment_events.payload da mijoz ma''lumoti yo''q';
 end
 $$;
+
+-- 7. P05 qoidalari (0010): tasdiqlash, draft, rasm alt, source, versiya, import upsert
+------------------------------------------------------------------------------
+set role service_role;
+
+do $$
+declare
+  holat  record;
+  v_ver  integer;
+  v_tags text[];
+begin
+  -- Har holat CHECK bilan rad etilishi kerak.
+  for holat in
+    select * from (values
+      ('verified, verified_by = author (harf va bo''shliq farqi)',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author, verified_by, verified_at)
+          values ('sinov-p05-1', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'verified', 'Sinov Inson', ' sinov inson ', now())$q$),
+      ('verified, verified_at yo''q',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author, verified_by)
+          values ('sinov-p05-2', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'verified', 'Claude (AI)', 'Sinov Inson')$q$),
+      ('draft, verified_by bor',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author, verified_by)
+          values ('sinov-p05-3', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'draft', 'Claude (AI)', 'Sinov Inson')$q$),
+      ('rasm alt siz',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, figure)
+          values ('sinov-p05-4', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', '{"path": "math/x.png"}')$q$),
+      ('source original emas',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, source)
+          values ('sinov-p05-5', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'boshqa')$q$),
+      ('drafted_by noto''g''ri',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, drafted_by)
+          values ('sinov-p05-6', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'robot')$q$)
+    ) t (nom, q)
+  loop
+    begin
+      execute holat.q;
+      raise exception 'FAIL 22: rad etilmadi: %', holat.nom;
+    exception when check_violation then null;
+    end;
+  end loop;
+
+  -- Import shaklidagi upsert (external_id bo'yicha): draft yaratiladi, keyin versiya oshirilib verified bo'ladi.
+  insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, explanation,
+                                figure, tags, source, drafted_by, author, verified_by, verified_at, version, status, content_hash)
+  values ('sinov-p05-ok', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'SINOV tushuntirish',
+          '{"path": "math/sinov-p05-ok/abc.svg", "alt": "SINOV rasm", "type": "svg"}', '{sinov}', 'original', 'ai',
+          'Claude (AI)', null, null, 1, 'draft', 'h1')
+  on conflict (external_id) do update set stem = excluded.stem;
+
+  insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, explanation,
+                                figure, tags, source, drafted_by, author, verified_by, verified_at, version, status, content_hash)
+  values ('sinov-p05-ok', 'math', 'D', 'S', 2, 'spr', 'SINOV yangi', '{"accepted": ["1"]}', 'SINOV tushuntirish',
+          '{"path": "math/sinov-p05-ok/abc.svg", "alt": "SINOV rasm", "type": "svg"}', '{sinov,p05}', 'original', 'ai',
+          'Claude (AI)', 'Sinov Inson', now(), 3, 'verified', 'h2')
+  on conflict (external_id) do update
+    set stem = excluded.stem, tags = excluded.tags, verified_by = excluded.verified_by, verified_at = excluded.verified_at,
+        version = excluded.version, status = excluded.status, content_hash = excluded.content_hash;
+
+  select version, tags into v_ver, v_tags from public.questions where external_id = 'sinov-p05-ok';
+  if v_ver <> 3 or v_tags <> '{sinov,p05}' then
+    raise exception 'FAIL 22: import versiyasi saqlanmadi (kutilgan 3, keldi %)', v_ver;
+  end if;
+
+  -- Versiyani bermasdan mazmun o'zgarsa trigger +1 qiladi (0003 xatti-harakati saqlanadi).
+  update public.questions set explanation = 'SINOV tushuntirish 2' where external_id = 'sinov-p05-ok';
+  if (select version from public.questions where external_id = 'sinov-p05-ok') <> 4 then
+    raise exception 'FAIL 22: mazmun o''zgarganda versiya oshmadi';
+  end if;
+
+  raise notice 'OK 22 P05: verified/draft/alt/source/drafted_by qoidalari, import upsert va versiya';
+end
+$$;
+
+reset role;
 
 do $$ begin raise notice 'HAMMASI O''TDI'; end $$;
 

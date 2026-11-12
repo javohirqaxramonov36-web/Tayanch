@@ -10,10 +10,11 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-4000-8000-0000000000e2', 'x2@sinov.invalid', '{}');
 
 insert into public.questions
-  (external_id, section, domain, skill, difficulty, format, stem, options, correct, status, author, verified_by)
+  (external_id, section, domain, skill, difficulty, format, stem, options, correct, status, author, verified_by, verified_at)
 select 'xabar-sinov-' || g, 'math', 'SINOV-domain', 'SINOV-skill', 2, 'mcq', 'SINOV savol ' || g,
        '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]', '{"choice": "A"}',
-       case when g = 12 then 'draft' else 'verified' end, 'sinov', case when g = 12 then null else 'sinov' end
+       case when g = 12 then 'draft' else 'verified' end, 'sinov',
+       case when g = 12 then null else 'sinov-tekshiruvchi' end, case when g = 12 then null else now() end
   from generate_series(1, 12) g;
 
 insert into public.practice_sessions (id, user_id, mode) values
