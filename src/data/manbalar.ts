@@ -187,6 +187,15 @@ export const manbalar: Manba[] = [
     izoh: "Listening imlo mashqi uchun. Sahifada: \"Both British and American spellings are accepted in IELTS\", lekin bittasiga izchil amal qilish kerak; \"words with spelling mistakes in the Reading and Listening tests will be marked as incorrect\". Maqola sanasi 18/05/2023 (IDP Staff). British Council blogi (takeielts.britishcouncil.org) bu mashinadan ochilmadi.",
   },
   {
+    id: 'ID03',
+    nomi: 'How to write the date correctly in IELTS',
+    tashkilot: 'IDP IELTS',
+    havola: 'https://ielts.idp.com/ghana/prepare/article-how-to-write-the-date-correctly',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Harf va raqam diktanti uchun. Sahifada: \"For IELTS, you can use both date formats\" (britancha kun-oy, amerikancha oy-kun); Listening javobida sana bir necha to'g'ri ko'rinishda yozilishi mumkin (24th April, April 24, 24 April), raqam bilan ham (19/02 yoki 02/19). Maqola 28/06/2021, IDP Staff. Vaqt yozilishi (7.30 / 7:30) sahifada yo'q.",
+  },
+  {
     id: 'CA01',
     nomi: 'Understanding application fees & fee waivers (2026-yil sentabr)',
     tashkilot: 'Common App',
