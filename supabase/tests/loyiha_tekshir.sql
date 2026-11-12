@@ -17,6 +17,10 @@ jadvallar as (
    where n.nspname = 'public' and c.relkind in ('r', 'p')
 ),
 kutilgan_huquq (jadval, rol, huquqlar) as (values
+  ('ai_conversations', 'anon', ''),
+  ('ai_conversations', 'authenticated', 'DELETE,SELECT'),
+  ('ai_messages', 'anon', ''),
+  ('ai_messages', 'authenticated', 'DELETE,SELECT'),
   ('attempts', 'anon', ''),
   ('attempts', 'authenticated', 'SELECT UPDATE(flagged)'),
   ('audit_log', 'anon', ''),
@@ -126,6 +130,14 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
   ('public.user_word_add(text,text,text,text)', false, true, true),
   ('public.vocab_import_local(jsonb)', false, true, true),
+  ('public.ai_tutor_status()', false, true, true),
+  ('public.ai_recent_mistakes(integer)', false, true, true),
+  ('public.ai_begin(uuid,text,integer,integer)', false, false, true),
+  ('public.ai_finish(bigint,integer,integer,integer,boolean,text)', false, false, true),
+  ('public.ai_reject(text)', false, false, true),
+  ('public.ai_attempt_context(uuid,bigint)', false, false, true),
+  ('public.ai_conversation_history(uuid,uuid,integer)', false, false, true),
+  ('public.ai_save_turn(uuid,uuid,text,bigint,uuid,text,text,text,text)', false, false, true),
   ('public.mock_status()', false, true, true),
   ('public.start_mock(uuid)', false, true, true),
   ('public.get_mock(uuid)', false, true, true),
@@ -142,8 +154,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 31 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 31); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 33 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 33); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 

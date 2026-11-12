@@ -101,6 +101,18 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: [],
         tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
       },
+      {
+        qism: 'vosita/ai-tutor/',
+        tayyor: true,
+        nomi: 'AI tutor',
+        tavsif: 'Ask an AI tutor about a mistake on a Tayanch practice question or about an SAT skill in your own words. Answers can be wrong; explanations of your mistakes are checked against the answer key.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: [
+          'The tutor is off until the author sets the AI key, a monthly budget and plan limits.',
+          'Answers come from an AI model and can contain mistakes. Only the final answer of a mistake explanation is checked, not every step.',
+        ],
+      },
     ],
   },
   {
@@ -323,7 +335,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     ],
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/mock/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
