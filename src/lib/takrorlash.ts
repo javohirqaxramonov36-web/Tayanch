@@ -44,18 +44,25 @@ export const holatniYoz = (bolim: DarsBolim, h: TakrorHolat) => yoz(takrorKalit(
  * O'zgarish bo'lsa yozadi. Saqlash ishlamasa ham holatni qaytaradi.
  */
 export function sinxronla(bolim: DarsBolim, mavjudId: Set<string>): TakrorHolat {
-  const h = holatniOqi(bolim);
+  const { h, ozgardi } = xatolarniQosh(holatniOqi(bolim), xatolarniOqi(bolim), mavjudId);
+  if (ozgardi) holatniYoz(bolim, h);
+  return h;
+}
+
+/** sinxronla ning sof qismi: hech narsa yozmaydi (masalan, SAT kirishidagi "N to review today" hisobi uchun). */
+export function xatolarniQosh(h: TakrorHolat, xatolar: unknown[], mavjudId: Set<string>): { h: TakrorHolat; ozgardi: boolean } {
+  const natija: TakrorHolat = { versiya: 1, savollar: { ...h.savollar } };
   let ozgardi = false;
-  for (const x of xatolarniOqi(bolim)) {
+  for (const x of xatolar as { id?: unknown; sana?: unknown }[]) {
     if (!x || typeof x.id !== 'string' || !mavjudId.has(x.id) || !SANA.test(String(x.sana))) continue;
-    const y = h.savollar[x.id];
-    if (!y || x.sana > y.xatoSana) {
-      h.savollar[x.id] = { quti: 1, keyingi: sanaQosh(x.sana, BIRINCHI_ORALIQ), xatoSana: x.sana };
+    const sana = String(x.sana);
+    const y = natija.savollar[x.id];
+    if (!y || sana > y.xatoSana) {
+      natija.savollar[x.id] = { quti: 1, keyingi: sanaQosh(sana, BIRINCHI_ORALIQ), xatoSana: sana };
       ozgardi = true;
     }
   }
-  if (ozgardi) holatniYoz(bolim, h);
-  return h;
+  return { h: natija, ozgardi };
 }
 
 /** Javobdan keyingi yozuv (sof funksiya). */
