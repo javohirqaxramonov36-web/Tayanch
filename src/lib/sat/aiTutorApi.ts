@@ -1,7 +1,7 @@
 // AI Tutor: brauzer API'si (Supabase RPC, RLS bilan o'z tarixi, Edge Function ai-tutor).
 // Dev mock (aiTutorMock.ts) xuddi shu interfeysni beradi.
 import { hisobMijoz } from '../hisob';
-import { funksiya, type FunksiyaNatija } from './tolov';
+import { funksiya, type FunksiyaNatija } from '../funksiya';
 import type { Suhbat, Tekshiruv, TutorXabar, XatoTanlov } from './aiTutor';
 import type { UsageJavob } from './usageBar';
 

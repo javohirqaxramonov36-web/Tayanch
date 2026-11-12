@@ -66,8 +66,8 @@ export const manbalar: Manba[] = [
     tashkilot: 'College Board',
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/reading-writing',
     tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-06',
-    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z. Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
+    tekshirilganSana: '2026-11-12',
+    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z (adabiyot, tarix/ijtimoiy fanlar, gumanitar, fan). Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Har ikki modulda to'rt domenning hammasi bor; o'xshash skill savollari guruhlangan va osondan qiyinga boradi (2026-11-12, WebFetch xulosasi). Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
   },
   {
     id: 'CB07',
@@ -133,6 +133,15 @@ export const manbalar: Manba[] = [
     izoh: "SAT maqsad va sana sozlashi uchun (src/data/satSanalar.ts). 2026–27 SAT Weekend sanalari va ro'yxat muddatlari; sahifada \"apply to all students—U.S. and international\". 2027–28 sanalari \"anticipated\", kiritilmagan. HTML'da so'zma-so'z tekshirildi (2026-11-11, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q. CB12 boshqa branch'larda band (sat-kalkulyator, sat-savol-format-import), CB13 ehtiyot uchun qoldirildi.",
   },
   {
+    id: 'CB40',
+    nomi: 'Digital SAT Suite content domains (Reading and Writing, Math)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/higher-ed-professionals/test-validity/content-domains',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-09',
+    izoh: "Original savollar taksonomiyasi (src/data/savolSxema.ts) uchun: R&W 4 domen (Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions) va 10 ko'nikma; Math 4 domen (Algebra, Advanced Math, Problem-Solving and Data Analysis, Geometry and Trigonometry) va 19 ko'nikma. Nomlar WebFetch xulosasidan (2026-11-09), sahifada sana yo'q. PSAT izohlari olib tashlangan, SAT nomi qolgan.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',
@@ -176,6 +185,15 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
     izoh: "\"Free Practice tests\": Listening, Reading, Writing familiarisation testlari va Speaking Part 1.",
+  },
+  {
+    id: 'ID02',
+    nomi: 'IELTS common spelling mistakes',
+    tashkilot: 'IDP IELTS',
+    havola: 'https://ielts.idp.com/prepare/article-ielts-common-spelling-mistakes',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Listening imlo mashqi uchun. Sahifada: \"Both British and American spellings are accepted in IELTS\", lekin bittasiga izchil amal qilish kerak; \"words with spelling mistakes in the Reading and Listening tests will be marked as incorrect\". Maqola sanasi 18/05/2023 (IDP Staff). British Council blogi (takeielts.britishcouncil.org) bu mashinadan ochilmadi.",
   },
   {
     id: 'CA01',

@@ -1,40 +1,14 @@
 // SAT to'lovi: brauzer tomoni. Faqat Edge Function'larni chaqiradi; summa yubormaydi, to'lovni "tasdiqlamaydi".
 //   tolov-yaratish  {plan_code, period}  -> {payment_id, checkout_url}
 //   inpay-holat     {payment_id}         -> {status: pending | success | failed}
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
-import { hisobMijoz } from '../hisob';
 import { TOLOV_KALITI } from '../../data/satTarif';
+import { funksiya as umumiyFunksiya, type FunksiyaNatija } from '../funksiya';
 
-export type FunksiyaNatija<T> = { ok: true; data: T } | { ok: false; kod: string; status: number };
+export type { FunksiyaNatija };
 
-export async function funksiya<T>(nomi: 'tolov-yaratish' | 'inpay-holat' | 'ai-tutor', tana: Record<string, unknown>): Promise<FunksiyaNatija<T>> {
-  const c = hisobMijoz();
-  if (!c || !PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) return { ok: false, kod: 'server_not_configured', status: 0 };
-  const { data } = await c.auth.getSession();
-  const token = data.session?.access_token;
-  if (!token) return { ok: false, kod: 'not_signed_in', status: 401 };
-  let res: Response;
-  try {
-    res = await fetch(`${PUBLIC_SUPABASE_URL}/functions/v1/${nomi}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, apikey: PUBLIC_SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify(tana),
-    });
-  } catch {
-    return { ok: false, kod: 'network_error', status: 0 };
-  }
-  let json: unknown = null;
-  try {
-    json = await res.json();
-  } catch {
-    json = null;
-  }
-  if (res.ok && json && typeof json === 'object') return { ok: true, data: json as T };
-  const kod = json && typeof json === 'object' && typeof (json as { error?: unknown }).error === 'string'
-    ? (json as { error: string }).error
-    : `http_${res.status}`;
-  return { ok: false, kod, status: res.status };
-}
+/** Umumiy chaqiruv (src/lib/funksiya.ts): bu yerda faqat to'lov funksiyalari. */
+export const funksiya = <T>(nomi: 'tolov-yaratish' | 'inpay-holat', tana: Record<string, unknown>): Promise<FunksiyaNatija<T>> =>
+  umumiyFunksiya<T>(nomi, tana);
 
 /** Xato kodi -> foydalanuvchi matni (inglizcha). Sabab tafsiloti faqat server logida. */
 export function tolovXatoMatni(kod: string): string {

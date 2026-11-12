@@ -106,6 +106,7 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.can_read_question_figure(text)', false, true, true),
   ('public.admin_grant_plan(uuid,text,integer,text,text)', false, false, true),
   ('public.admin_hide_question(text,text,text)', false, false, true),
+  ('public.admin_unhide_question(text,text,text)', false, false, true),
   ('public.payment_create(uuid,text)', false, false, true),
   ('public.payment_set_invoice(uuid,text,jsonb)', false, false, true),
   ('public.payment_apply_event(jsonb)', false, false, true),

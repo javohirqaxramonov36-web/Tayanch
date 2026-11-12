@@ -235,11 +235,12 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'qollanma/reading-writing/',
+        tayyor: true,
         nomi: 'Reading & Writing',
-        tavsif: 'Working with Reading & Writing question types and analyzing mistakes.',
+        tavsif: 'The four Reading & Writing question domains, a way to work each one, and what to do after a mistake. Linked to Tayanch lessons and the question bank.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source for the list of question types has not been added to the source log yet.'],
+        manbalar: ['CB06'],
+        tekshirilmagan: ['The steps are a Tayanch recommendation, not official advice. The official page does not give the number of questions per domain.'],
       },
       {
         qism: 'qollanma/vaqt/',
@@ -272,6 +273,15 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: ['IP03'],
         tekshirilmagan: ['Prices and usage limits are not set yet.'],
       },
+      {
+        qism: 'hisob/fikr/',
+        tayyor: true,
+        nomi: 'Send feedback',
+        tavsif: 'Send a short message to the Tayanch author about the SAT section: what works, what is missing, what to fix.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['The daily message limit is a starting value and may change.'],
+      },
     ],
   },
 ];
@@ -302,6 +312,7 @@ const s = (qism: string) => {
 
 export const satYonGuruhlar: SatYonGuruh[] = [
   { nomi: 'Start here', qismlar: [{ sahifalar: ['qollanma/qayerdan-boshlash/'].map(s) }] },
+  { nomi: 'Guides', qismlar: [{ sahifalar: ['qollanma/reading-writing/'].map(s) }] },
   {
     nomi: 'Lessons',
     qismlar: [
@@ -311,7 +322,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 

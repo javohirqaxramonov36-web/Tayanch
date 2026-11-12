@@ -219,9 +219,9 @@ declare
   r jsonb;
 begin
   insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, options, correct,
-                                explanation, status, author, verified_by)
+                                explanation, status, author, verified_by, verified_at)
   values ('ai-sinov-1', 'math', 'AI-domain', 'AI-skill', 2, 'mcq', 'SINOV: 2 + 3 = ?',
-          '[{"key": "A", "text": "4"}, {"key": "B", "text": "5"}]', '{"choice": "B"}', 'SINOV izoh', 'verified', 'sinov', 'sinov2')
+          '[{"key": "A", "text": "4"}, {"key": "B", "text": "5"}]', '{"choice": "B"}', 'SINOV izoh', 'verified', 'sinov', 'sinov2', now())
   returning id into q;
   insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author)
   values ('ai-sinov-2', 'math', 'AI-domain', 'AI-skill', 2, 'spr', 'SINOV qoralama', '{"accepted": ["1"]}', 'draft', 'sinov')
