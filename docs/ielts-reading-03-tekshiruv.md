@@ -70,5 +70,14 @@ Matching headings javoblari ketma-ket emas (v, ii, vi, vii, iv, i), 2 ta chalg'i
   natija 38/40, taxminiy band 8.5, 26 to'g'ri hisoblandi, 3 va 39 xato. Turlar: TFNG 11/12, MCQ 10/10, headings 6/6, gap-fill 11/12.
 - "Faqat xato va javobsiz" filtri (faqat 3 va 39), o'zbekcha tushuntirish (`lang="uz"`), dalil bloki. Gorizontal scroll yo'q.
 
-Sinalmagan: 1280px kenglik (dvigatel o'zgarmagan), haqiqiy telefon, VoiceOver, taymer tugashi.
+## Birlashma sinovi (2026-11-13, hamma IELTS PR'lari lokal birlashtirilgan, `astro dev`)
+
+- PR #121, #123, #124, #126, #128, #133, #146, #147 bitta lokal branch'da: `npm test` 192/192, `validate:tests` 3 test, `repo:tekshir`, build (78 sahifa) o'tdi.
+- 1280px qorong'i: tasodifiy tanlov `reading-03` ni berdi, ikki ustunli ko'rinish. Ataylab xato 6 (TRUE), 22 (B), 31–32 (B va C) va 25 da "Detailed Forecasts":
+  37/40, band 8.5; xato 6, 22, 32; "Choose TWO" da bitta to'g'ri harf 1 ball; `acceptedAnswers` ishladi.
+- Takrorlash (#123) shu 3 xatoni oladi va `reading-03` savolini matni bilan ko'rsatadi; kirish (#128) "Mening holatim" oxirgi natijani ko'rsatadi.
+- Keyingi "Yangi test boshlash" boshqa testni (`reading-02`) berdi: oxirgi test takrorlanmaydi.
+- Konsolda xato yo'q.
+
+Sinalmagan: haqiqiy telefon, VoiceOver, axe, taymer tugashi.
 Javoblarning bir qismi brauzerda skript bilan to'ldirildi (1 va 3 qo'lda bosildi).
