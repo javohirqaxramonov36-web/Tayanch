@@ -30,6 +30,8 @@ const brauzerKalitlari: [string, string][] = [
     "Xat yuborish uchun email Google'ning Gmail xizmatiga beriladi: Google LLC EU-US Data Privacy Framework ro'yxatida ekani (VM 415-son qarori, 2-band sharti) tekshirish kerak",
     "Supabase o'z jurnallarida (masalan, kirish jurnali) qanday texnik ma'lumot va qancha muddat saqlashi: Supabase hujjatida tekshirish kerak",
     "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: huquqshunos fikri kerak",
+    "AI Tutor: Anthropic API so'rov va javoblarni qancha muddat saqlashi va ularni model o'qitishda ishlatmasligi Anthropic tijorat shartlarida tekshirish kerak (AI yoqilishidan oldin)",
+    "AI Tutor: xabarni AQShdagi Anthropic xizmatiga uzatish Qonun 15 va 27¹-moddalari (LX02) va VM 415-son qarori (LX04) bo'yicha ruxsat etilganmi: huquqshunos fikri kerak (AI yoqilishidan oldin)",
   ]}
 >
   <section class="ichki sahifa">
@@ -57,6 +59,18 @@ const brauzerKalitlari: [string, string][] = [
 
     <h2>{vq ? `${vq.yoshgacha} yoshgacha bo'lganlar` : 'Yosh'}</h2>
     <p>Hisobni {minYosh} yoshdan ochish mumkin.{vq && <> Qonun bo'yicha voyaga yetmaganlar ({vq.yoshgacha} yoshgacha, LX03) ma'lumotiga ishlov berish uchun ota-ona yoki vasiy yozma, shu jumladan elektron shaklda rozilik beradi (21-modda, LX02). Shuning uchun ro'yxatdan o'tish formasida ota-ona yoki vasiy o'z ismini yozib, rozilik belgisini qo'yadi.</>}</p>
+
+    <h2 id="ai-tutor">AI Tutor (SAT bo'limi)</h2>
+    <p>SAT bo'limidagi AI Tutor hozircha o'chiq. Yoqilganda u shunday ishlaydi (2026-yil 12-noyabrda qo'shildi):</p>
+    <ul>
+      <li><strong>Nima yuboriladi</strong>: siz yozgan xabar, shu suhbatdagi oxirgi 6 ta xabar va, xatoingiz haqida so'rasangiz, Tayanch'ning o'sha original savoli va sizning javobingiz. Ismingiz, emailingiz va hisob raqamingiz AI xizmatiga yuborilmaydi.</li>
+      <li><strong>Kim javob yozadi</strong>: Anthropic kompaniyasining (AQSh) Claude modeli. So'rov Tayanch serveri (Supabase Edge Function) orqali boradi: brauzeringiz AI xizmatiga to'g'ridan-to'g'ri ulanmaydi.</li>
+      <li><strong>Tozalash</strong>: yuborishdan oldin xabardagi email, telefon, karta va pasport raqami, havola va "@" taxallus avtomatik olib tashlanadi. Filtr hammasini ushlay olmaydi, shuning uchun shaxsiy ma'lumot yozmang.</li>
+      <li><strong>Rasmiy test materiali</strong>: College Board savoli yoki sizdirilgan material deb aniqlangan xabar AI'ga yuborilmaydi va saqlanmaydi.</li>
+      <li><strong>Saqlash</strong>: tozalangan xabaringiz va AI javobi hisobingizda (Supabase, Frankfurt) suhbat tarixi sifatida saqlanadi. Xarajatni hisoblash uchun matnsiz yozuv ham saqlanadi: vaqt, token soni va narx. Bir xil xabar takror yuborilganini aniqlash uchun xabarning qaytarib bo'lmaydigan izi (xesh) ko'pi bilan 1 soat saqlanadi.</li>
+      <li><strong>O'chirish</strong>: AI Tutor sahifasida har bir suhbatni yoki butun tarixni o'chirish mumkin. Hisobni o'chirsangiz, suhbatlar ham o'chadi; xarajat yozuvi hisobga bog'lanmagan holda qoladi.</li>
+      <li>AI xato qilishi mumkin. U ball yoki natijani bashorat qilmaydi va kafolatlamaydi.</li>
+    </ul>
 
     <h2>Brauzeringizda saqlanadigan narsa</h2>
     <p>Hisob bilan ham, hisobsiz ham ba'zi narsalar faqat brauzeringizda, <code>tayanch</code> bilan boshlanadigan kalitlarda saqlanadi. Ular serverga yuborilmaydi (sessiya kaliti faqat Supabase'ga kirish uchun ishlatiladi):</p>

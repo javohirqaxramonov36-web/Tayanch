@@ -22,9 +22,12 @@ Tariflar: Free, Pro, Max (muallif qarori, 2026-11-11). 2026-11-11 gacha nomi Eli
 | Kengaytirilgan analitika (`analytics_extended`) | yo'q | bor | bor |
 | O'z so'zlarim (`vocab_my_words`, P15) | belgilanmagan | belgilanmagan | belgilanmagan |
 | Rasmiy test yozuvlari | cheklovsiz (kvota kaliti yo'q) | cheklovsiz | cheklovsiz |
+| AI Tutor (`ai_messages` kunlik, `ai_messages_month` oylik, P33) | yopiq (limit yo'q) | yopiq (limit yo'q) | yopiq |
 | Pro va Max farqi | — | — | belgilanmagan |
 
 "Cheklovsiz" degani `plans.limits` da shu kalit yo'q (muallif qarori, 2026-11-11: "hozircha cheklovsiz"). Hisoblagich baribir yuritiladi, `UsageBar` sarfni ko'rsatadi.
+
+**Istisno: AI Tutor (P33).** `ai_messages` va `ai_messages_month` uchun kalit yo'qligi "cheklovsiz" emas, **"yopiq"** degani: cheksiz bepul foydalanish yo'q. AI faqat ikkala kalit ham `max > 0` bilan yozilganda ochiladi (umumiy byudjet va kalit ham kerak). Taklif (muallif qarori kerak): Free kuniga 3 / oyiga 30, Pro kuniga 30 / oyiga 300. Batafsil: `docs/ai-tutor.md`.
 
 ## Hisoblash qoidalari
 

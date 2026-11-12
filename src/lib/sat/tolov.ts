@@ -7,7 +7,7 @@ import { TOLOV_KALITI } from '../../data/satTarif';
 
 export type FunksiyaNatija<T> = { ok: true; data: T } | { ok: false; kod: string; status: number };
 
-export async function funksiya<T>(nomi: 'tolov-yaratish' | 'inpay-holat', tana: Record<string, unknown>): Promise<FunksiyaNatija<T>> {
+export async function funksiya<T>(nomi: 'tolov-yaratish' | 'inpay-holat' | 'ai-tutor', tana: Record<string, unknown>): Promise<FunksiyaNatija<T>> {
   const c = hisobMijoz();
   if (!c || !PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) return { ok: false, kod: 'server_not_configured', status: 0 };
   const { data } = await c.auth.getSession();

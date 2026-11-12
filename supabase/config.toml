@@ -71,3 +71,7 @@ verify_jwt = false
 # inpay-muvofiqlash (P21): Supabase Cron JWT yubormaydi; X-Cron-Secret (MUVOFIQLASH_SECRET) kod ichida tekshiriladi.
 [functions.inpay-muvofiqlash]
 verify_jwt = false
+
+# ai-tutor (P33): foydalanuvchi kod ichida auth.getUser bilan tekshiriladi; AI kaliti AI_API_KEY secret'da.
+[functions.ai-tutor]
+verify_jwt = false
