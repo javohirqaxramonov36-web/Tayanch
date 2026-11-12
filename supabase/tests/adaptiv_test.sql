@@ -1,4 +1,4 @@
--- P31 kalibrlash sinovi (20261112143717_adaptiv_kalibr): private.difficulty_calibration, private.apply_difficulty_calibration.
+-- P31 kalibrlash sinovi (20261112163208_adaptiv_kalibr): private.difficulty_calibration, private.apply_difficulty_calibration.
 -- Bitta tranzaksiya, oxirida ROLLBACK. Savollar va javoblar soxta ("SINOV"); N = 30 (standart).
 \set ON_ERROR_STOP on
 \set QUIET on

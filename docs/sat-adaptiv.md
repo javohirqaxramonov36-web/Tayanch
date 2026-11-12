@@ -15,7 +15,7 @@ Holat: yadro qurilgan (branch `sat-adaptiv`, 2026-11-12). Mock imtihonga (P30, b
 | `src/data/satAdaptiv.ts` | Sozlama: chegara, tarmoq qiyinliklari, eng kam savol soni, kalibrlash N va pog'onalar |
 | `src/lib/sat/adaptiv.ts` | Sof funksiyalar: `tarmoqTanla`, `adaptivHolat`, `tarmoqQiyinliklari`, `kalibrla`, `kalibrJadval` |
 | `src/lib/testlar/adaptiv.test.ts` | Sun'iy javoblar bilan sinov (`npm test`) |
-| `supabase/migrations/20261112143717_adaptiv_kalibr.sql` | `private.difficulty_calibration()` (hisobot), `private.apply_difficulty_calibration()` (yozish) |
+| `supabase/migrations/20261112163208_adaptiv_kalibr.sql` | `private.difficulty_calibration()` (hisobot), `private.apply_difficulty_calibration()` (yozish) |
 | `supabase/tests/adaptiv_test.sql` | SQL sinovi AD01–AD04 (`npm run db:tekshir`) |
 
 ## Tarmoq tanlash qoidasi
