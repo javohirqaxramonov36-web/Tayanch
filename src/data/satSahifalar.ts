@@ -38,6 +38,20 @@ export const satGuruhlar: SatGuruh[] = [
         tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The practice questions have not been written yet; they are not copied from other sites.'],
       },
       {
+        // P30: hisob bilan ishlaydi. Imtihon ekrani satIchkiSahifalar dagi 'mashq/mock/imtihon/'.
+        qism: 'mashq/mock/',
+        tayyor: true,
+        nomi: 'Mock test',
+        tavsif: 'A full-length, timed practice test in four modules, built from questions written and checked by the author. The score is a rough estimate, not an official SAT score.',
+        turi: 'mashq',
+        manbalar: ['CB03', 'CB41', 'CB42'],
+        tekshirilmagan: [
+          'The mock test is not adaptive: the second module of each section has the same mix of difficulty as the first.',
+          'The estimated score is a simple Tayanch formula, not the College Board scoring method.',
+          'The test opens only when the bank has at least 8 checked questions in every skill.',
+        ],
+      },
+      {
         qism: 'mashq/bank/',
         tayyor: true,
         nomi: 'Question bank',
@@ -86,6 +100,18 @@ export const satGuruhlar: SatGuruh[] = [
         turi: 'vosita',
         manbalar: [],
         tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
+      },
+      {
+        qism: 'vosita/ai-tutor/',
+        tayyor: true,
+        nomi: 'AI tutor',
+        tavsif: 'Ask an AI tutor about a mistake on a Tayanch practice question or about an SAT skill in your own words. Answers can be wrong; explanations of your mistakes are checked against the answer key.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: [
+          'The tutor is off until the author sets the AI key, a monthly budget and plan limits.',
+          'Answers come from an AI model and can contain mistakes. Only the final answer of a mistake explanation is checked, not every step.',
+        ],
       },
     ],
   },
@@ -223,11 +249,12 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'qollanma/reading-writing/',
+        tayyor: true,
         nomi: 'Reading & Writing',
-        tavsif: 'Working with Reading & Writing question types and analyzing mistakes.',
+        tavsif: 'The four Reading & Writing question domains, a way to work each one, and what to do after a mistake. Linked to Tayanch lessons and the question bank.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source for the list of question types has not been added to the source log yet.'],
+        manbalar: ['CB06'],
+        tekshirilmagan: ['The steps are a Tayanch recommendation, not official advice. The official page does not give the number of questions per domain.'],
       },
       {
         qism: 'qollanma/vaqt/',
@@ -260,6 +287,28 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: ['IP03'],
         tekshirilmagan: ['Prices and usage limits are not set yet.'],
       },
+      {
+        qism: 'hisob/fikr/',
+        tayyor: true,
+        nomi: 'Send feedback',
+        tavsif: 'Send a short message to the Tayanch author about the SAT section: what works, what is missing, what to fix.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['The daily message limit is a starting value and may change.'],
+      },
+      {
+        // P34: o'quvchi guruhlari va ulashish; guruh tarifli o'qituvchi uchun guruhlar va natija (docs/qarorlar/004-guruhlar.md).
+        qism: 'guruh/',
+        tayyor: true,
+        nomi: 'Groups',
+        tavsif: "Join your teacher's group and choose what they can see. Teachers on the group plan can follow their students' practice.",
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: [
+          'The consent rules for students under 18 still need a lawyer\'s review.',
+          'The group plan is not on sale yet: the author opens it for teachers by hand.',
+        ],
+      },
     ],
   },
 ];
@@ -290,6 +339,7 @@ const s = (qism: string) => {
 
 export const satYonGuruhlar: SatYonGuruh[] = [
   { nomi: 'Start here', qismlar: [{ sahifalar: ['qollanma/qayerdan-boshlash/'].map(s) }] },
+  { nomi: 'Guides', qismlar: [{ sahifalar: ['qollanma/reading-writing/'].map(s) }] },
   {
     nomi: 'Lessons',
     qismlar: [
@@ -297,9 +347,9 @@ export const satYonGuruhlar: SatYonGuruh[] = [
       { nomi: 'Reading & Writing', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
     ],
   },
-  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/'].map(s) }] },
+  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/mock/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/', 'guruh/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 
@@ -343,7 +393,31 @@ export const satIchkiSahifalar: SatSahifa[] = [
       'The time limit is kept by this page. The server does not yet reject answers sent after the time is up.',
     ],
   },
+  {
+    // P30: manzil ?id=<attempt_id>. Holat serverda (mock_attempts), brauzerda faqat yuborilmagan javoblar navbati.
+    qism: 'mashq/mock/imtihon/',
+    tayyor: true,
+    nomi: 'Mock test',
+    tavsif: 'Take a full-length mock test: two Reading and Writing modules, a 10-minute break, then two Math modules.',
+    turi: 'mashq',
+    manbalar: ['CB03', 'CB41', 'CB42'],
+    tekshirilmagan: [
+      'Module times (32 and 35 minutes) and the break (10 minutes) follow the official test. The real test also has unscored pretest questions; this mock does not.',
+      'The estimated score is a simple Tayanch formula, not the College Board scoring method.',
+    ],
+  },
+  {
+    // P34: taklif kodi bilan guruhga qo'shilish (Groups sahifasidan va o'qituvchining havolasidan, ?kod=).
+    qism: 'guruh/qoshilish/',
+    tayyor: true,
+    nomi: 'Join a group',
+    tavsif: "Join your teacher's SAT group with an invite code and choose what they can see.",
+    turi: 'vosita',
+    manbalar: [],
+    tekshirilmagan: ['The consent rules for students under 18 still need a lawyer\'s review.'],
+  },
 ];
+
 
 export const ichkiSahifa = (qism: string): SatSahifa => {
   const t = satIchkiSahifalar.find((x) => x.qism === qism);
