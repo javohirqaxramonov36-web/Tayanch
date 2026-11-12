@@ -1,0 +1,42 @@
+---
+// 1-qavat · Aloqa (P23 davomi, 2026-11-11). QORALAMA. Ommaviy email muallifdan kutilmoqda (huquqiyOchiq.aloqaEmail):
+// o'ylab topilgan manzil yozilmaydi. Shaxsiy email bu sahifaga muallif aytmaguncha qo'yilmaydi.
+import Asosiy from '../../../layouts/Asosiy.astro';
+import HuquqiyMatn from '../../../components/huquqiy/HuquqiyMatn.astro';
+import { huquqiyOchiq } from '../../../data/huquqiySahifalar';
+import { yol } from '../../../lib/yol';
+
+const { aloqaEmail, sotuvchi } = huquqiyOchiq;
+---
+<Asosiy
+  title="Aloqa"
+  description="Tayanch bilan qanday bog'lanish mumkin: savol, to'lov, ma'lumot va o'chirish bo'yicha murojaat."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="qoralama"
+  tekshirilgan="2026-11-11"
+  keyingiTekshiruv="2026-12-11"
+  tekshirilmagan={["Ommaviy murojaat emaili va javob muddati: muallif beradi"]}
+>
+  <HuquqiyMatn til="uz" kalit="aloqa" sana="2026-11-11">
+    <h2>Murojaat manzili</h2>
+    {aloqaEmail
+      ? <p>Email: <a href={`mailto:${aloqaEmail}`}>{aloqaEmail}</a></p>
+      : <p>Email: <span class="tekshir">tekshirish kerak</span> (muallif ommaviy manzilni beradi).</p>}
+    {sotuvchi && <p>Sotuvchi: {sotuvchi.nomi}, {sotuvchi.manzil}.</p>}
+
+    <h2>Nima haqida yozish mumkin</h2>
+    <ul>
+      <li>To'lov, obuna yoki pulni qaytarish (<a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>).</li>
+      <li>Shaxsiy ma'lumot, uni tuzatish yoki o'chirish (<a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>).</li>
+      <li>Saytdagi xato yoki savoldagi xato.</li>
+    </ul>
+
+    <h2>Yozishdan oldin</h2>
+    <ul>
+      <li>Hisobingiz emailini yozing, shunda murojaatni hisobingizga bog'lay olamiz.</li>
+      <li>Parol, karta raqami yoki SMS kodni hech qachon yubormang. Tayanch ularni so'ramaydi.</li>
+      <li>Ma'lumotlaringiz nusxasini profil sahifasidagi "Ma'lumotlarimni yuklab olish" tugmasi bilan o'zingiz olishingiz mumkin.</li>
+    </ul>
+  </HuquqiyMatn>
+</Asosiy>

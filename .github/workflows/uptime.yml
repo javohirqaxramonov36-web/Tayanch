@@ -1,0 +1,49 @@
+# Oddiy uptime tekshiruvi (P28, docs/chiqarish-royxati.md, 5-bo'lim).
+# Kuniga 4 marta: sayt sahifalari va Supabase Auth health javob beradimi.
+# Yiqilsa, GitHub workflow egasiga xat yuboradi (bildirishnoma sozlamasiga qarab).
+# Faqat o'qiydi: kod checkout qilinmaydi, maxfiy kalit ishlatilmaydi.
+# Supabase'ga faqat ochiq (publishable) kalit yuboriladi: u build'da ham saytga qo'yiladi.
+name: Uptime tekshiruvi
+
+on:
+  schedule:
+    # UTC 01:17, 07:17, 13:17, 19:17 (Toshkent 06:17, 12:17, 18:17, 00:17).
+    - cron: '17 1,7,13,19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uptime
+  cancel-in-progress: true
+
+jobs:
+  tekshir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SAYT: https://javohirqaxramonov36-web.github.io/Tayanch
+      SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+      SUPABASE_OCHIQ_KALIT: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - name: Sayt sahifalari
+        run: |
+          xato=0
+          for yol in / /uz/sat/ /uz/hisob/kirish/ /uz/sat/hisob/obuna/; do
+            kod=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 --retry 2 --retry-delay 10 "$SAYT$yol" || echo 000)
+            echo "$yol -> $kod"
+            [ "$kod" = "200" ] || xato=1
+          done
+          exit $xato
+
+      - name: Supabase Auth health
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_OCHIQ_KALIT" ]; then
+            echo "::warning::PUBLIC_SUPABASE_URL yoki PUBLIC_SUPABASE_ANON_KEY o'zgaruvchisi yo'q, tekshiruv o'tkazib yuborildi."
+            exit 0
+          fi
+          kod=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 --retry 2 --retry-delay 10 \
+            -H "apikey: $SUPABASE_OCHIQ_KALIT" "$SUPABASE_URL/auth/v1/health" || echo 000)
+          echo "auth/v1/health -> $kod"
+          [ "$kod" = "200" ]

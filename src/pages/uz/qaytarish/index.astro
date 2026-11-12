@@ -1,0 +1,49 @@
+---
+// 1-qavat · Pulni qaytarish siyosati (P23 davomi, 2026-11-11). QORALAMA.
+// Muddat va shartlar muallif/yurist qarori (huquqiyOchiq.qaytarishKun): o'ylab topilgan raqam yozilmaydi.
+// Texnik holat: refund yo'li (inPAY orqali) hali sinalmagan (HANDOFF, "Keyingi (to'lov)").
+import Asosiy from '../../../layouts/Asosiy.astro';
+import HuquqiyMatn from '../../../components/huquqiy/HuquqiyMatn.astro';
+import { huquqiyOchiq } from '../../../data/huquqiySahifalar';
+import { yol } from '../../../lib/yol';
+
+const { qaytarishKun } = huquqiyOchiq;
+---
+<Asosiy
+  title="Pulni qaytarish siyosati"
+  description="Tayanch SAT pullik tarifi uchun pulni qaytarish tartibi (qoralama)."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="qoralama"
+  tekshirilgan="2026-11-11"
+  keyingiTekshiruv="2026-12-11"
+  manbalar={['IP03']}
+  tekshirilmagan={[
+    "Qaytarish muddati va qaysi holatlarda qaytariladi: muallif va yurist qarori kerak",
+    "Raqamli xizmat uchun qaytarish bo'yicha qonun talabi (\"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonun): lex.uz da tekshirish kerak",
+    "inPAY orqali qaytarish qanday qilinadi va pul kartaga necha kunda tushadi: inPAY hujjati va sinov kerak",
+  ]}
+>
+  <HuquqiyMatn til="uz" kalit="qaytarish" sana="2026-11-11" kirish="Bu siyosat SAT bo'limidagi pullik tariflarga tegishli.">
+    <h2>Qachon pul qaytariladi</h2>
+    {qaytarishKun === null ? (
+      <p>Qaytarish muddati va shartlari hali belgilanmagan: <span class="tekshir">tekshirish kerak</span> (muallif va yurist qarori). Belgilangunga qadar har murojaat alohida ko'rib chiqiladi.</p>
+    ) : (
+      <p>To'lovdan keyin {qaytarishKun} kun ichida murojaat qilsangiz, pul qaytarilishi mumkin. Batafsil shartlar shu yerda yoziladi.</p>
+    )}
+    <p>Ikki marta yechilgan yoki xato bilan yechilgan to'lov (masalan, to'lov o'tgan, lekin tarif yoqilmagan) har doim tekshiriladi va tasdiqlansa qaytariladi.</p>
+
+    <h2>Qanday so'raladi</h2>
+    <ol>
+      <li><a href={yol('/uz/aloqa/')}>Aloqa</a> sahifasidagi manzilga yozing.</li>
+      <li>Hisobingiz emailini, to'lov sanasini va summasini ko'rsating. Karta raqamini yozmang.</li>
+      <li>Javob va qaytarish tartibi shu manzilga yuboriladi.</li>
+    </ol>
+
+    <h2>Pul qanday qaytariladi</h2>
+    <p>Pul to'lov qilingan usulga (Click yoki Payme orqali kartaga) inPAY orqali qaytariladi. Qancha vaqtda tushishi: <span class="tekshir">tekshirish kerak</span>.</p>
+
+    <h2>Hisobni o'chirish va qaytarish</h2>
+    <p>Hisobni o'chirsangiz, faol obuna ham tugaydi. Pulni qaytarishni xohlasangiz, hisobni o'chirishdan <strong>oldin</strong> murojaat qiling: o'chirilgandan keyin to'lovni hisobingizga bog'lab bo'lmaydi.</p>
+  </HuquqiyMatn>
+</Asosiy>

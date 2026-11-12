@@ -1,0 +1,79 @@
+---
+// 1-qavat · Ommaviy oferta (P23 davomi, 2026-11-11). QORALAMA: tuzilma Claude yozgan, matnni yurist tayyorlaydi yoki tasdiqlaydi.
+// inPAY merchant shartnomasidagi talablar (til, majburiy bandlar) muallifdan kutilmoqda. Sotuvchi rekvizitlari: huquqiyOchiq.sotuvchi.
+// Narx va muddat bu yerda yozilmaydi: ular tarif sahifasidan (bazadagi plans) olinadi, ikki joyda farq qilmasligi uchun.
+import Asosiy from '../../../layouts/Asosiy.astro';
+import HuquqiyMatn from '../../../components/huquqiy/HuquqiyMatn.astro';
+import { huquqiyOchiq } from '../../../data/huquqiySahifalar';
+import { yol } from '../../../lib/yol';
+
+const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
+---
+<Asosiy
+  title="Ommaviy oferta"
+  description="Tayanch SAT pullik tariflarini sotib olish shartlari (qoralama)."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="qoralama"
+  tekshirilgan="2026-11-11"
+  keyingiTekshiruv="2026-12-11"
+  manbalar={['IP03']}
+  tekshirilmagan={[
+    "Sotuvchi rekvizitlari (YaTT yoki MChJ nomi, STIR, manzil): muallif beradi",
+    "inPAY merchant shartnomasi oferta tili va majburiy bandlarini talab qiladimi: muallif shartnomadan aniqlaydi",
+    "Oferta qaysi tilda yuridik kuchga ega (o'zbek, rus, ingliz): yurist javobi kerak",
+    "Fuqarolik kodeksi va \"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonundagi tegishli moddalar: lex.uz da tekshirish kerak, hozircha matnda modda raqami yo'q",
+    "Raqamli xizmat uchun elektron chek yoki hisob-faktura talabi: buxgalter javobi kerak",
+  ]}
+>
+  <HuquqiyMatn til="uz" kalit="oferta" sana="2026-11-11" kirish="Bu oferta tarif sahifasidagi pullik tariflarga tegishli.">
+    <h2>1. Taraflar</h2>
+    <p>
+      Sotuvchi:
+      {sotuvchi
+        ? <> {sotuvchi.nomi}, STIR {sotuvchi.stir}, manzil: {sotuvchi.manzil}.</>
+        : <> <span class="tekshir">tekshirish kerak</span> (nomi, STIR va manzil muallifdan kutilmoqda).</>}
+    </p>
+    <p>Xaridor: tarifni to'lagan, Tayanch hisobiga ega foydalanuvchi.</p>
+
+    <h2>2. Oferta qanday qabul qilinadi</h2>
+    <p>Tarif sahifasida to'lovni tugatsangiz, shu ofertani to'liq qabul qilgan bo'lasiz. Oferta qabul qilingan vaqt: to'lov muvaffaqiyatli o'tgan vaqt.</p>
+
+    <h2>3. Xizmat</h2>
+    <ul>
+      <li>Xizmat: Tayanch saytining SAT bo'limidagi pullik tarif imkoniyatlaridan (masalan, savol kvotasi va kengaytirilgan natijalar) tanlangan muddat davomida foydalanish.</li>
+      <li>Tarif tarkibi, narxi va muddati to'lovdan oldin <a href={yol('/uz/sat/hisob/obuna/')}>tarif sahifasida</a> ko'rsatiladi. To'lov qilingan paytdagi ko'rsatilgan shartlar amal qiladi.</li>
+      <li>Xizmat to'lov tasdiqlangandan keyin hisobingizda avtomatik yoqiladi.</li>
+      <li>Obuna faqat SAT bo'limiga tegishli va boshqa bo'limlarni ochmaydi.</li>
+      <li>Tayanch ball, qabul yoki grant olishni kafolatlamaydi.</li>
+    </ul>
+
+    <h2>4. To'lov</h2>
+    <ul>
+      <li>To'lov so'mda, inPAY orqali Click yoki Payme bilan qilinadi. Karta ma'lumotini Tayanch ko'rmaydi.</li>
+      <li>Avtomatik takroriy to'lov hozircha yo'q: muddat tugagach, xohlasangiz yangi to'lov qilasiz.</li>
+      <li>
+        {voyagaYetmaganTolov === null
+          ? <>18 yoshgacha bo'lgan xaridorlar: <span class="tekshir">tekshirish kerak</span> (muallif va yurist qarori).</>
+          : voyagaYetmaganTolov === 'faqat-18'
+            ? <>Xaridor 18 yoshga to'lgan bo'lishi kerak.</>
+            : <>18 yoshgacha bo'lsangiz, to'lovni ota-ona yoki vasiy roziligi bilan va ularning to'lov vositasidan qilasiz.</>}
+      </li>
+    </ul>
+
+    <h2>5. Pulni qaytarish</h2>
+    <p>Qaytarish shartlari alohida sahifada: <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>.</p>
+
+    <h2>6. Taraflarning majburiyatlari</h2>
+    <ul>
+      <li>Sotuvchi: to'langan muddat davomida tarif imkoniyatlarini taqdim etadi, shaxsiy ma'lumotni <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a> bo'yicha himoya qiladi.</li>
+      <li>Xaridor: <a href={yol('/uz/shartlar/')}>Foydalanish shartlari</a>ga amal qiladi, hisobini boshqalarga bermaydi va pullik materiallarni tarqatmaydi.</li>
+    </ul>
+
+    <h2>7. Nizolar</h2>
+    <p>Nizolar avval muzokara yo'li bilan hal qilinadi: <a href={yol('/uz/aloqa/')}>Aloqa</a>. Hal bo'lmasa, O'zbekiston Respublikasi qonunchiligiga muvofiq ko'riladi. Aniq tartib: <span class="tekshir">tekshirish kerak</span> (yurist).</p>
+
+    <h2>8. O'zgarishlar</h2>
+    <p>Oferta o'zgarsa, yangi sana shu sahifa boshida yoziladi. Avval to'langan muddat to'lov paytidagi shartlar bilan tugaydi.</p>
+  </HuquqiyMatn>
+</Asosiy>

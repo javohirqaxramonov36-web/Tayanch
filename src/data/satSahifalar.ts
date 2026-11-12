@@ -223,11 +223,12 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'qollanma/reading-writing/',
+        tayyor: true,
         nomi: 'Reading & Writing',
-        tavsif: 'Working with Reading & Writing question types and analyzing mistakes.',
+        tavsif: 'The four Reading & Writing question domains, a way to work each one, and what to do after a mistake. Linked to Tayanch lessons and the question bank.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source for the list of question types has not been added to the source log yet.'],
+        manbalar: ['CB06'],
+        tekshirilmagan: ['The steps are a Tayanch recommendation, not official advice. The official page does not give the number of questions per domain.'],
       },
       {
         qism: 'qollanma/vaqt/',
@@ -290,6 +291,7 @@ const s = (qism: string) => {
 
 export const satYonGuruhlar: SatYonGuruh[] = [
   { nomi: 'Start here', qismlar: [{ sahifalar: ['qollanma/qayerdan-boshlash/'].map(s) }] },
+  { nomi: 'Guides', qismlar: [{ sahifalar: ['qollanma/reading-writing/'].map(s) }] },
   {
     nomi: 'Lessons',
     qismlar: [

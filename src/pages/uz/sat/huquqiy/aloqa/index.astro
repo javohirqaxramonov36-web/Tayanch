@@ -1,0 +1,39 @@
+---
+// SAT · Contact (inglizcha nusxa, P23 davomi, 2026-11-11). Asosiy matn: /uz/aloqa/. QORALAMA. Email muallifdan kutilmoqda.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import HuquqiyMatn from '../../../../../components/huquqiy/HuquqiyMatn.astro';
+import { huquqiyOchiq } from '../../../../../data/huquqiySahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const { aloqaEmail, sotuvchi } = huquqiyOchiq;
+---
+<BolimQobiq
+  title="Contact · SAT"
+  description="How to reach Tayanch about payments, your data, deletion or errors."
+  turi="qollanma"
+  bolim="sat"
+  yol={['Legal']}
+  holat="qoralama"
+>
+  <HuquqiyMatn til="en" kalit="aloqa" sana="2026-11-11" tekshirish={['Public contact email and reply time: from the author.']}>
+    <h2>Where to write</h2>
+    {aloqaEmail
+      ? <p>Email: <a href={`mailto:${aloqaEmail}`}>{aloqaEmail}</a></p>
+      : <p>Email: <span class="tekshir">to be checked</span> (the author will provide a public address).</p>}
+    {sotuvchi && <p>Seller: {sotuvchi.nomi}, {sotuvchi.manzil}.</p>}
+
+    <h2>What you can write about</h2>
+    <ul>
+      <li>Payments, subscriptions or refunds (<a href={yol('/uz/sat/huquqiy/qaytarish/')}>Refund Policy</a>).</li>
+      <li>Your personal data, correcting it or deleting it (<a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>).</li>
+      <li>An error on the site or in a question.</li>
+    </ul>
+
+    <h2>Before you write</h2>
+    <ul>
+      <li>Include your account email so we can match your request to your account.</li>
+      <li>Never send a password, card number or SMS code. Tayanch never asks for them.</li>
+      <li>You can get a copy of your data yourself with the "Download my data" button on your account page.</li>
+    </ul>
+  </HuquqiyMatn>
+</BolimQobiq>

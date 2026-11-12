@@ -1,0 +1,67 @@
+---
+// Huquqiy sahifa matni qolipi (P23): qoralama izohi, sarlavha, sana, mundarija bo'yicha bo'limlar (slot),
+// pastda "tekshirish kerak" ro'yxati va boshqa huquqiy sahifalarga havolalar. Til: uz (1-qavat) yoki en (SAT).
+import QoralamaIzoh from './QoralamaIzoh.astro';
+import { huquqiySahifalar, type HuquqiyKalit } from '../../data/huquqiySahifalar';
+import { yol } from '../../lib/yol';
+
+interface Props {
+  til: 'uz' | 'en';
+  kalit: HuquqiyKalit;
+  /** Kuchga kirish sanasi yoki "qoralama sanasi" (ISO) */
+  sana: string;
+  kirish?: string;
+  tekshirish?: string[];
+}
+const { til, kalit, sana, kirish, tekshirish = [] } = Astro.props;
+const joriy = huquqiySahifalar.find((s) => s.kalit === kalit)!;
+const boshqalar = huquqiySahifalar.filter((s) => s.kalit !== kalit);
+const t = til === 'en'
+  ? { sana: 'Draft dated', ochiq: 'To be checked before publishing', yana: 'Other legal pages', tilda: 'Uzbek version (main text)', tilYol: joriy.uz.yol }
+  : { sana: 'Qoralama sanasi', ochiq: "Nashrdan oldin tekshirish kerak", yana: 'Boshqa huquqiy sahifalar', tilda: 'English version (SAT)', tilYol: joriy.en.yol };
+const nomi = til === 'en' ? joriy.en.nomi : joriy.uz.nomi;
+---
+<section class="ichki huquqiy">
+  <QoralamaIzoh til={til} />
+  <h1>{nomi}</h1>
+  <p class="ikkinchi">{t.sana}: <time datetime={sana}>{sana}</time>.{kirish && <> {kirish}</>}</p>
+  <p class="ikkinchi"><a href={yol(t.tilYol)} lang={til === 'en' ? 'uz' : 'en'} hreflang={til === 'en' ? 'uz' : 'en'}>{t.tilda}</a></p>
+
+  <slot />
+
+  {tekshirish.length > 0 && (
+    <div class="ochiq">
+      <h2>{t.ochiq}</h2>
+      <ul>{tekshirish.map((x) => <li>{x}</li>)}</ul>
+    </div>
+  )}
+
+  <nav aria-label={t.yana}>
+    <h2>{t.yana}</h2>
+    <ul class="boshqalar">
+      {boshqalar.map((s) => <li><a href={yol(til === 'en' ? s.en.yol : s.uz.yol)}>{til === 'en' ? s.en.nomi : s.uz.nomi}</a></li>)}
+    </ul>
+  </nav>
+</section>
+
+<style>
+  .huquqiy { padding-block: var(--b-10) var(--b-14); display: flex; flex-direction: column; gap: var(--b-4); max-width: 820px; }
+  .huquqiy :global(h2) { font-size: var(--matn-h3); margin-top: var(--b-4); }
+  .huquqiy :global(ul), .huquqiy :global(ol) { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); }
+  .huquqiy :global(code) { overflow-wrap: anywhere; }
+  .huquqiy :global(.ikkinchi) { color: var(--matn-ikkinchi); }
+  .huquqiy :global(.tekshir) { color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-kichik); padding-inline: var(--b-1); }
+  .huquqiy :global(table) { border-collapse: collapse; width: 100%; }
+  .huquqiy :global(th), .huquqiy :global(td) { text-align: left; vertical-align: top; padding: var(--b-2); border-bottom: 1px solid var(--chiziq); }
+  .huquqiy :global(.jadval-orami) { overflow-x: auto; }
+  /* Telefonda jadval qatorlari bloklarga aylanadi: kalit tepada, izoh va muddat ostida. */
+  @media (max-width: 640px) {
+    .huquqiy :global(thead) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .huquqiy :global(tr), .huquqiy :global(td) { display: block; }
+    .huquqiy :global(tr) { padding-block: var(--b-3); border-bottom: 1px solid var(--chiziq); }
+    .huquqiy :global(td) { border: 0; padding: 0; }
+    .huquqiy :global(td + td) { margin-top: var(--b-1); }
+    .huquqiy :global(td:last-child) { color: var(--matn-ikkinchi); }
+  }
+  .huquqiy nav .boshqalar { list-style: none; padding: 0; flex-direction: row; flex-wrap: wrap; gap: var(--b-2) var(--b-5); }
+</style>
