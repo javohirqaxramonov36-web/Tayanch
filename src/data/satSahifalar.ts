@@ -38,6 +38,20 @@ export const satGuruhlar: SatGuruh[] = [
         tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The practice questions have not been written yet; they are not copied from other sites.'],
       },
       {
+        // P30: hisob bilan ishlaydi. Imtihon ekrani satIchkiSahifalar dagi 'mashq/mock/imtihon/'.
+        qism: 'mashq/mock/',
+        tayyor: true,
+        nomi: 'Mock test',
+        tavsif: 'A full-length, timed practice test in four modules, built from questions written and checked by the author. The score is a rough estimate, not an official SAT score.',
+        turi: 'mashq',
+        manbalar: ['CB03', 'CB41', 'CB42'],
+        tekshirilmagan: [
+          'The mock test is not adaptive: the second module of each section has the same mix of difficulty as the first.',
+          'The estimated score is a simple Tayanch formula, not the College Board scoring method.',
+          'The test opens only when the bank has at least 8 checked questions in every skill.',
+        ],
+      },
+      {
         qism: 'mashq/bank/',
         tayyor: true,
         nomi: 'Question bank',
@@ -320,7 +334,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
       { nomi: 'Reading & Writing', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
     ],
   },
-  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
+  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/mock/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
@@ -364,6 +378,19 @@ export const satIchkiSahifalar: SatSahifa[] = [
     tekshirilmagan: [
       'Timed mode gives about 71 seconds per Reading and Writing question and about 95 seconds per Math question, worked out from the official section times. The real test times each module, not each question.',
       'The time limit is kept by this page. The server does not yet reject answers sent after the time is up.',
+    ],
+  },
+  {
+    // P30: manzil ?id=<attempt_id>. Holat serverda (mock_attempts), brauzerda faqat yuborilmagan javoblar navbati.
+    qism: 'mashq/mock/imtihon/',
+    tayyor: true,
+    nomi: 'Mock test',
+    tavsif: 'Take a full-length mock test: two Reading and Writing modules, a 10-minute break, then two Math modules.',
+    turi: 'mashq',
+    manbalar: ['CB03', 'CB41', 'CB42'],
+    tekshirilmagan: [
+      'Module times (32 and 35 minutes) and the break (10 minutes) follow the official test. The real test also has unscored pretest questions; this mock does not.',
+      'The estimated score is a simple Tayanch formula, not the College Board scoring method.',
     ],
   },
 ];
