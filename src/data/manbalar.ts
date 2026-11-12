@@ -66,8 +66,8 @@ export const manbalar: Manba[] = [
     tashkilot: 'College Board',
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/reading-writing',
     tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-06',
-    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z. Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
+    tekshirilganSana: '2026-11-12',
+    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z (adabiyot, tarix/ijtimoiy fanlar, gumanitar, fan). Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Har ikki modulda to'rt domenning hammasi bor; o'xshash skill savollari guruhlangan va osondan qiyinga boradi (2026-11-12, WebFetch xulosasi). Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
   },
   {
     id: 'CB07',
@@ -602,6 +602,34 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
     izoh: "Rasmiy emas (College Board emas). Google blogi, 2026-01-21: \"partnering with The Princeton Review to bring full-length, no-cost practice SATs\" Gemini ilovasida. Gemini AI izohlari xato bo'lishi mumkin. Sifati tekshirilmagan.",
+  },
+  // P30 (mock imtihon). CB30–CB35 va CB40 boshqa branch'larda band. Matnlar WebFetch xulosasidan (2026-11-12).
+  {
+    id: 'CB41',
+    nomi: 'Reading and Writing Specifications (SAT Suite)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/k12-educators/about/alignment/reading',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "SAT R&W: har modulda \"25 operational questions and 2 pretest questions\", modul 32 daqiqa. Soha ulushi: Information and Ideas ≈26%, Craft and Structure ≈28%, Expression of Ideas ≈20%, Standard English Conventions ≈26%. Sohalar bo'yicha savol soni sahifada yozilmagan. Tayanch mocki: pretestsiz, modulda 27 savol hisoblanadi.",
+  },
+  {
+    id: 'CB42',
+    nomi: 'Math Specifications (SAT Suite)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/k12-educators/about/alignment/math',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "SAT Math: har modulda 20 operational + 2 pretest = 22 savol, modul 35 daqiqa. Soha ulushi: Algebra ≈35%, Advanced Math ≈35%, Problem-Solving and Data Analysis ≈15%, Geometry and Trigonometry ≈15%. Ko'p tanlovli va talaba kiritadigan javoblar ulushi yozilmagan.",
+  },
+  {
+    id: 'CB43',
+    nomi: 'The SAT Math Section: Overview',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/math/overview',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Sohalar bo'yicha savol soni: Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7; \"Questions from all four categories appear in each test module.\" Pretest soni bu sahifada yo'q.",
   },
 ];
 

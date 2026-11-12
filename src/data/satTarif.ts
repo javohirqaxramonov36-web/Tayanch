@@ -22,9 +22,9 @@ export const satTarif = {
   ] as { kod: DavrKod; nomi: string }[],
   /** Serverda (tolov-yaratish, DAVRLAR) qabul qilinadigan davrlar. 3 oylik narx P19 da beriladi. */
   faolDavrlar: ['oylik'] as DavrKod[],
-  /** inPAY kassasida yoqilgan usullar (muallif to'ldiradi). Bo'sh: usullar nomi aytilmaydi. */
-  tolovUsullari: [] as TolovUsuli[],
-  /** To'lov tasdiqlanmasa aloqa yo'li (muallif to'ldiradi). null: faqat to'lov raqamini saqlash so'raladi. */
+  /** inPAY kassasida yoqilgan usullar (muallif javobi, 2026-11-11). Bo'sh bo'lsa usullar nomi aytilmaydi. */
+  tolovUsullari: ['click', 'payme', 'uzcard-humo'] as TolovUsuli[],
+  /** To'lov tasdiqlanmasa aloqa yo'li. Hozircha yo'q (muallif, 2026-11-11). null: faqat to'lov raqamini saqlash so'raladi. */
   aloqa: null as null | { matn: string; havola: string },
   /** Qaytarish (refund) siyosati sahifasi, yol() ga beriladigan yo'l (P23). null: havola chiqmaydi, "not published yet". */
   // P23 (2026-11-11): Refund Policy qoralamasi (inglizcha nusxa; asosiy matn /uz/qaytarish/).
@@ -53,6 +53,8 @@ export const kvotaNomi: Record<string, string> = {
   review_sessions: 'Review sessions',
   new_words: 'New words', // P15
   plan_rebuilds: 'Plan rebuilds', // P13
+  ai_messages: 'AI tutor messages', // P33
+  ai_messages_month: 'AI tutor messages this month', // P33
 };
 
 /** plans.features dagi mashina bayrog'i -> Free ga tushganda "nima cheklanadi" ro'yxatidagi nom (P22). */
