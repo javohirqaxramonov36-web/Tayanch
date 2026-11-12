@@ -61,7 +61,7 @@ export const satGuruhlar: SatGuruh[] = [
         qism: 'vosita/reja/',
         tayyor: true,
         nomi: 'Study planner',
-        tavsif: 'A weekly prep list built from your test date and target score. Data is saved only in this browser. No score is guaranteed.',
+        tavsif: 'A week-by-week plan built from your test date, weekly hours and weak skills; every task links to its page. Saved in this browser, or in your account when you sign in. No score is guaranteed.',
         turi: 'vosita',
         manbalar: ['CB01', 'CB04'],
         tekshirilmagan: ['The weekly tasks are a Tayanch recommendation, not an official plan.', 'The score step (10) is not stated on the official page: it is used in the input field for convenience.'],
