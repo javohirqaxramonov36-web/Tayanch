@@ -137,10 +137,10 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   import { hisobMijoz, hisobYoli, yuklanish } from '../../../../../lib/hisob';
   import {
     filtrJson, skillSonlari, bolimJami, faolSkilllar, mosSon, domenHolati, sessiyaHajmi, hajmIzohi,
-    kvotaHolati, kvotaTugadiMatni, xatoTuri, boshlashSababi, sonMatni, SESSIYA_KALITI,
+    kvotaHolati, kvotaTugadiMatni, xatoTuri, boshlashSababi, sonMatni, SESSIYA_KALITI, urlTanlov,
     type BankFiltr, type BankHolat, type Hajm, type Kvota, type Qiyinlik, type Rejim, type SonJavob, type UsageJavob,
   } from '../../../../../lib/savolBanki';
-  import type { SavolBolim } from '../../../../../data/satTaksonomiya';
+  import { savolTaksonomiya, type SavolBolim } from '../../../../../data/satTaksonomiya';
 
   interface Api {
     sonlar(f: Record<string, unknown>): Promise<SonJavob>;
@@ -508,6 +508,23 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     if (!data.session) { s.holat = 'anon'; return chiz(); }
     api = haqiqiyApi(c);
     return yukla();
+  }
+  // Reja havolasidan oldindan tanlov (P13): filtr URL'dan, sessiyani foydalanuvchi o'zi boshlaydi.
+  // Bo'lim berilib skill berilmasa, shu bo'limning hamma skill'i tanlanadi.
+  {
+    const t = urlTanlov(location.search);
+    if (t) {
+      if (t.section) {
+        s.filtr.section = t.section;
+        const hammasi = Object.values(savolTaksonomiya[t.section]).flat();
+        s.tanlangan[t.section] = new Set(t.skills.length ? t.skills : hammasi);
+      }
+      s.filtr.qiyinlik = t.qiyinlik;
+      s.filtr.qaytaYechish = t.qaytaYechish;
+      $<HTMLInputElement>('qayta-yechish').checked = t.qaytaYechish;
+      if (t.rejim) s.rejim = t.rejim;
+      if (t.hajm) s.hajm = t.hajm;
+    }
   }
   chiz();
   ishgaTushir();

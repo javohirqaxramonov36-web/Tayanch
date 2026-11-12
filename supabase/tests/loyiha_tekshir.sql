@@ -40,7 +40,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('payments', 'anon', ''),
   ('payments', 'authenticated', 'SELECT(amount_uzs),SELECT(bolim),SELECT(created_at),SELECT(id),SELECT(paid_at),SELECT(plan_code),SELECT(provider),SELECT(provider_order_id),SELECT(status),SELECT(user_id)'),
   ('plan_tasks', 'anon', ''),
-  ('plan_tasks', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('plan_tasks', 'authenticated', 'DELETE,SELECT UPDATE(done_at),UPDATE(due_on),UPDATE(position),UPDATE(week)'),
   ('plans', 'anon', 'SELECT'),
   ('plans', 'authenticated', 'SELECT'),
   ('practice_sessions', 'anon', ''),
@@ -56,7 +56,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('session_questions', 'anon', ''),
   ('session_questions', 'authenticated', 'SELECT'),
   ('study_plans', 'anon', ''),
-  ('study_plans', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('study_plans', 'authenticated', 'DELETE,SELECT'),
   ('subscriptions', 'anon', ''),
   ('subscriptions', 'authenticated', 'SELECT'),
   ('usage_counters', 'anon', ''),
@@ -114,7 +114,9 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.vocab_rate(uuid,boolean,boolean)', false, true, true),
   ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
   ('public.user_word_add(text,text,text,text)', false, true, true),
-  ('public.vocab_import_local(jsonb)', false, true, true)
+  ('public.vocab_import_local(jsonb)', false, true, true),
+  ('public.save_study_plan(jsonb,jsonb)', false, true, true),
+  ('public.plan_skill_stats()', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
