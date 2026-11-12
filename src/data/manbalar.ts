@@ -178,6 +178,15 @@ export const manbalar: Manba[] = [
     izoh: "\"Free Practice tests\": Listening, Reading, Writing familiarisation testlari va Speaking Part 1.",
   },
   {
+    id: 'ID02',
+    nomi: 'IELTS common spelling mistakes',
+    tashkilot: 'IDP IELTS',
+    havola: 'https://ielts.idp.com/prepare/article-ielts-common-spelling-mistakes',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Listening imlo mashqi uchun. Sahifada: \"Both British and American spellings are accepted in IELTS\", lekin bittasiga izchil amal qilish kerak; \"words with spelling mistakes in the Reading and Listening tests will be marked as incorrect\". Maqola sanasi 18/05/2023 (IDP Staff). British Council blogi (takeielts.britishcouncil.org) bu mashinadan ochilmadi.",
+  },
+  {
     id: 'CA01',
     nomi: 'Understanding application fees & fee waivers (2026-yil sentabr)',
     tashkilot: 'Common App',
