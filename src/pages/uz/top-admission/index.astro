@@ -8,6 +8,7 @@
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import SahifaOxiri from '../../../components/SahifaOxiri.astro';
 import Zina from '../../../components/Zina.astro';
+import QavatFoto from '../../../components/QavatFoto.astro';
 import { deadlinelar } from '../../../data/deadline';
 import { manbalar } from '../../../data/manbalar';
 import { qabulXatlari } from '../../../data/muallif';
@@ -90,6 +91,7 @@ const tekshirilmagan = [
   tekshirilmagan={tekshirilmagan}
 >
   <div class="ichki ta-sahifa">
+    <QavatFoto bolim="top-admission" />
 
     <section class="kirish" aria-labelledby="ta-sarlavha">
       <p class="ustki-qator"><span class="yorliq">Qoralama</span> <span class="sust kichik">Bo'lim kirishi</span></p>
