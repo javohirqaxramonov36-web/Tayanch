@@ -1,0 +1,447 @@
+---
+// IELTS Listening imlo mashqi: so'zni brauzer ovozi (speechSynthesis, en-GB) o'qiydi, o'quvchi yozadi.
+// So'zlar: src/data/ielts/imloToplamlar.ts (Tayanch tanlagan, "Namuna"). Imlo qoidasi: ID02.
+// Holatlar: to'plam tanlash -> savol (yozish) -> tekshirildi -> natija. Eng yaxshi natija: tayanch:ielts-imlo.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { imloToplamlar } from '../../../../../data/ielts/imloToplamlar';
+
+const IK = {
+  tinglash: '<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
+  oq: '<path d="M9 6l6 6-6 6"/>',
+  info: '<path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 8v5M12 16.5v.5"/>',
+};
+---
+<BolimQobiq
+  title="Listening imlo mashqi · IELTS"
+  description="IELTS Listening uchun imlo mashqi: so'zni tinglang va to'g'ri yozing. Kunlar, pul, o'qish, joylar va kundalik hayot mavzulari."
+  turi="mashq"
+  bolim="ielts"
+  holat="qoralama"
+>
+  <div class="ichki imlo">
+    <header class="bosh">
+      <p class="ustki-kok">Mashq · Listening</p>
+      <h1>Listening: imlo mashqi</h1>
+      <p class="lead">
+        So'zni tinglang va yozing. IELTS Listening va Reading'da imlo xatosi bo'lgan javob noto'g'ri hisoblanadi.
+        Britancha (<span lang="en">centre</span>) va amerikancha (<span lang="en">center</span>) yozilish ikkalasi ham qabul qilinadi, faqat bittasiga izchil amal qiling.
+      </p>
+      <p class="eslatma">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.info} />
+        <span><strong>Namuna.</strong> So'zlarni Tayanch tanlagan. Ovozni brauzeringiz o'qiydi, bu haqiqiy IELTS audiosi emas.</span>
+      </p>
+    </header>
+
+    <p id="ovoz-yoq" class="ogoh" role="status" hidden>
+      Brauzeringizda inglizcha ovoz topilmadi. Shuning uchun so'z o'rniga uning o'zbekcha ma'nosi ko'rsatiladi.
+    </p>
+
+    <section id="toplamlar" aria-labelledby="toplam-h">
+      <h2 id="toplam-h" class="bolim-sarlavha">To'plamni tanlang</h2>
+      <ul class="toplam-royxat">
+        {imloToplamlar.map((t) => (
+          <li>
+            <button type="button" class="toplam" data-toplam={t.id}>
+              <span class="t-matn">
+                <strong class="t-nom">{t.nomi}</strong>
+                <span class="t-tavsif">{t.tavsif}</span>
+              </span>
+              <span class="t-meta">
+                <span>{t.sozlar.length} ta so'z</span>
+                <span class="t-eng" data-eng={t.id}></span>
+              </span>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.oq} />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="mashq" class="panel" aria-labelledby="mashq-sarlavha" hidden>
+      <div class="panel-ust">
+        <h2 id="mashq-sarlavha" class="bolim-sarlavha"></h2>
+        <p class="hisob" id="hisob"></p>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="progress-ichi"></span></div>
+
+      <form id="imlo-forma" novalidate autocomplete="off">
+        <div class="tinglash-qator">
+          <button type="button" class="tugma tugma-ikkinchi" id="tinglash">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.tinglash} />
+            <span id="tinglash-matn">Tinglash</span>
+          </button>
+          <p class="ovozsiz-sorov" id="ovozsiz-sorov" hidden></p>
+        </div>
+
+        <label for="javob" class="javob-yorliq">Eshitgan so'zingizni yozing</label>
+        <input
+          id="javob"
+          name="javob"
+          type="text"
+          lang="en"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          enterkeyhint="done"
+          aria-describedby="xabar"
+        />
+        <div id="xabar" class="xabar" role="status" aria-live="polite"></div>
+
+        <div class="amallar">
+          <button type="submit" class="tugma tugma-asosiy" id="asosiy-tugma">Tekshirish</button>
+          <button type="button" class="tugma tugma-ikkinchi" id="toplamga-qaytish">To'plamlar ro'yxatiga</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="natija" class="panel" aria-labelledby="natija-h" hidden>
+      <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Natija</h2>
+      <p class="natija-son" id="natija-son"></p>
+      <div id="xatolar-blok" hidden>
+        <h3 class="kichik-sarlavha">Xato yozilgan so'zlar</h3>
+        <ul id="xatolar" class="xatolar"></ul>
+      </div>
+      <div class="amallar">
+        <button type="button" class="tugma tugma-asosiy" id="xatolarni-qayta">Xatolarni qayta mashq qilish</button>
+        <button type="button" class="tugma tugma-ikkinchi" id="qaytadan">To'plamni qaytadan boshlash</button>
+        <button type="button" class="tugma tugma-ikkinchi" id="boshqa">Boshqa to'plam</button>
+      </div>
+    </section>
+
+    <ManbaBlok
+      manbalar={['ID02']}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={[
+        "So'zlarni Tayanch tanlagan: IELTS'da aynan shu so'zlar chiqishi kafolatlanmaydi.",
+        "Talaffuzni brauzer ovozi beradi, u qurilmaga qarab farq qiladi va haqiqiy IELTS audiosi emas.",
+        "O'zbekcha tarjima va maslahatlar muallif tekshiruvida.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { imloToplamlar, KALIT_IELTS_IMLO, type ImloSoz, type ImloToplam } from '../../../../../data/ielts/imloToplamlar';
+
+  interface Javob { soz: ImloSoz; yozgan: string; togri: boolean }
+  interface Saqlangan { v: 1; toplamlar: Record<string, { eng: number; jami: number; sana: string }> }
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const toplamBolim = $('toplamlar');
+  const mashqBolim = $('mashq');
+  const natijaBolim = $('natija');
+  const sarlavha = $('mashq-sarlavha');
+  const hisob = $('hisob');
+  const progressIchi = $('progress-ichi');
+  const forma = $<HTMLFormElement>('imlo-forma');
+  const tinglashTugma = $<HTMLButtonElement>('tinglash');
+  const tinglashMatn = $('tinglash-matn');
+  const ovozsizSorov = $('ovozsiz-sorov');
+  const javobInput = $<HTMLInputElement>('javob');
+  const xabar = $('xabar');
+  const asosiyTugma = $<HTMLButtonElement>('asosiy-tugma');
+  const natijaSon = $('natija-son');
+  const xatolarBlok = $('xatolar-blok');
+  const xatolarRoyxat = $('xatolar');
+  const xatolarniQayta = $<HTMLButtonElement>('xatolarni-qayta');
+
+  // ---------- Saqlash (faqat eng yaxshi natija) ----------
+  function oqi(): Saqlangan {
+    try {
+      const x = JSON.parse(localStorage.getItem(KALIT_IELTS_IMLO) ?? 'null');
+      if (x && x.v === 1 && typeof x.toplamlar === 'object') return x;
+    } catch { /* bo'sh holat */ }
+    return { v: 1, toplamlar: {} };
+  }
+  function yoz(s: Saqlangan) {
+    try { localStorage.setItem(KALIT_IELTS_IMLO, JSON.stringify(s)); } catch { /* xotira yopiq */ }
+  }
+  function engYaxshilarniKorsat() {
+    const s = oqi();
+    document.querySelectorAll<HTMLElement>('[data-eng]').forEach((el) => {
+      const r = s.toplamlar[el.dataset.eng ?? ''];
+      el.textContent = r ? `Eng yaxshi: ${r.eng}/${r.jami}` : '';
+    });
+  }
+
+  // ---------- Mashq holati ----------
+  let toplam: ImloToplam | null = null;
+  let navbat: ImloSoz[] = [];
+  let i = 0;
+  let tekshirildi = false;
+  let javoblar: Javob[] = [];
+  let toliq = true; // to'liq to'plam (eng yaxshi natija faqat shunda yoziladi)
+
+  // ---------- Ovoz ----------
+  const ss: SpeechSynthesis | null = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  let ovoz: SpeechSynthesisVoice | null = null;
+  let ovozsiz = !ss;
+  function ovozTanla() {
+    if (!ss) return;
+    const v = ss.getVoices();
+    if (!v.length) return; // ro'yxat hali yuklanmagan: lang bilan baribir urinib ko'riladi
+    const en = (x: SpeechSynthesisVoice, p: string) => x.lang.toLowerCase().replace('_', '-').startsWith(p);
+    // macOS'dagi o'yin ovozlari (Bubbles, Zarvox va h.k.) so'zni buzib o'qiydi: chetlatiladi.
+    const OYIN = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Grandma|Grandpa|Rocko)\b/;
+    const toza = v.filter((x) => en(x, 'en') && !OYIN.test(x.name));
+    const yaxshi = /Daniel|Google UK|United Kingdom|Kate|Serena|Arthur/;
+    ovoz = toza.find((x) => en(x, 'en-gb') && yaxshi.test(x.name))
+      ?? toza.find((x) => en(x, 'en-gb'))
+      ?? toza.find((x) => x.default)
+      ?? toza[0] ?? null;
+    ovozsiz = !ovoz;
+    ovozHolatiniKorsat();
+  }
+  function ovozHolatiniKorsat() {
+    $('ovoz-yoq').hidden = !ovozsiz;
+    tinglashTugma.hidden = ovozsiz;
+    ovozsizSorov.hidden = !ovozsiz;
+    if (navbat.length && ovozsiz) ovozsizSorov.textContent = `Ma'nosi: ${navbat[i].tarjima}`;
+  }
+  let tinglashSoni = 0;
+  function gapir() {
+    if (!ss || ovozsiz || !navbat.length) return;
+    ss.cancel();
+    const u = new SpeechSynthesisUtterance(navbat[i].soz);
+    u.lang = ovoz?.lang ?? 'en-GB';
+    if (ovoz) u.voice = ovoz;
+    u.rate = tinglashSoni === 0 ? 0.85 : 0.6;
+    ss.speak(u);
+    tinglashSoni++;
+    tinglashMatn.textContent = 'Yana tinglash (sekinroq)';
+  }
+  if (ss) {
+    ovozTanla();
+    ss.addEventListener?.('voiceschanged', ovozTanla);
+    window.addEventListener('pagehide', () => ss.cancel());
+  }
+
+  const norm = (s: string) => s.trim().toLowerCase().replace(/[’‘`]/g, "'").replace(/\s+/g, ' ');
+
+  function boshla(t: ImloToplam, sozlar: ImloSoz[], toliqMi: boolean) {
+    toplam = t; navbat = sozlar; i = 0; javoblar = []; toliq = toliqMi;
+    sarlavha.textContent = toliqMi ? t.nomi : `${t.nomi}: xatolar`;
+    toplamBolim.hidden = true; natijaBolim.hidden = true; mashqBolim.hidden = false;
+    sozniKorsat();
+    gapir();
+  }
+
+  function sozniKorsat() {
+    tekshirildi = false;
+    tinglashSoni = 0;
+    tinglashMatn.textContent = 'Tinglash';
+    javobInput.value = '';
+    javobInput.readOnly = false;
+    javobInput.removeAttribute('aria-invalid');
+    xabar.replaceChildren();
+    xabar.className = 'xabar';
+    asosiyTugma.textContent = 'Tekshirish';
+    hisob.textContent = `${i + 1} / ${navbat.length}`;
+    progressIchi.style.width = `${(i / navbat.length) * 100}%`;
+    ovozHolatiniKorsat();
+    javobInput.focus();
+  }
+
+  function qism(teg: string, matn: string, sinf?: string, til?: string) {
+    const el = document.createElement(teg);
+    el.textContent = matn;
+    if (sinf) el.className = sinf;
+    if (til) el.lang = til;
+    return el;
+  }
+
+  function tekshir() {
+    const yozgan = javobInput.value;
+    if (!yozgan.trim()) {
+      xabar.replaceChildren(qism('p', "Avval so'zni yozing."));
+      xabar.className = 'xabar xabar-ogoh';
+      javobInput.focus();
+      return;
+    }
+    const s = navbat[i];
+    const togriShakllar = [s.soz, ...(s.variantlar ?? [])];
+    const topilgan = togriShakllar.find((x) => norm(x) === norm(yozgan));
+    const togri = Boolean(topilgan);
+    javoblar.push({ soz: s, yozgan: yozgan.trim(), togri });
+    tekshirildi = true;
+    javobInput.readOnly = true;
+    javobInput.setAttribute('aria-invalid', String(!togri));
+
+    const qatorlar: HTMLElement[] = [];
+    const bosh = document.createElement('p');
+    bosh.className = 'x-bosh';
+    bosh.append(qism('span', togri ? '✓' : '✗', 'x-belgi'), qism('strong', togri ? "To'g'ri." : "Noto'g'ri."));
+    // Belgi ekran o'quvchiga o'qilmaydi: matn o'zi yetarli.
+    (bosh.firstChild as HTMLElement).setAttribute('aria-hidden', 'true');
+    qatorlar.push(bosh);
+
+    const yozilish = document.createElement('p');
+    yozilish.append(qism('span', "To'g'ri yozilishi: "), qism('strong', s.soz, 'x-soz', 'en'));
+    if (s.variantlar?.length) yozilish.append(qism('span', ` (amerikancha: `), qism('span', s.variantlar.join(', '), undefined, 'en'), qism('span', ')'));
+    if (!togri || (topilgan && topilgan !== s.soz)) qatorlar.push(yozilish);
+    if (!togri) {
+      const siz = document.createElement('p');
+      siz.append(qism('span', 'Siz yozdingiz: '), qism('s', yozgan.trim(), 'x-xato', 'en'));
+      qatorlar.push(siz);
+      if (s.maslahat) qatorlar.push(qism('p', s.maslahat, 'x-maslahat'));
+    }
+    if (!ovozsiz) qatorlar.push(qism('p', `Ma'nosi: ${s.tarjima}`, 'x-mano'));
+
+    xabar.replaceChildren(...qatorlar);
+    xabar.className = togri ? 'xabar xabar-togri' : 'xabar xabar-xato';
+    asosiyTugma.textContent = i === navbat.length - 1 ? "Natijani ko'rish" : "Keyingi so'z";
+  }
+
+  function natijaniKorsat() {
+    ss?.cancel();
+    const togriSoni = javoblar.filter((j) => j.togri).length;
+    const xatolar = javoblar.filter((j) => !j.togri);
+    natijaSon.textContent = `${javoblar.length} tadan ${togriSoni} ta to'g'ri.`;
+    xatolarRoyxat.replaceChildren(...xatolar.map((j) => {
+      const li = document.createElement('li');
+      const oq = qism('span', ' → ');
+      oq.setAttribute('aria-hidden', 'true');
+      li.append(qism('s', j.yozgan, 'x-xato', 'en'), oq, qism('span', ", to'g'risi: ", 'ekranda-yoq'), qism('strong', j.soz.soz, undefined, 'en'), qism('span', ` · ${j.soz.tarjima}`, 'x-mano'));
+      return li;
+    }));
+    xatolarBlok.hidden = xatolar.length === 0;
+    xatolarniQayta.hidden = xatolar.length === 0;
+
+    if (toliq && toplam) {
+      const s = oqi();
+      const oldin = s.toplamlar[toplam.id];
+      if (!oldin || togriSoni > oldin.eng) {
+        s.toplamlar[toplam.id] = { eng: togriSoni, jami: javoblar.length, sana: new Date().toISOString().slice(0, 10) };
+        yoz(s);
+      }
+      engYaxshilarniKorsat();
+    }
+    progressIchi.style.width = '100%';
+    mashqBolim.hidden = true;
+    natijaBolim.hidden = false;
+    $('natija-h').focus();
+  }
+
+  function royxatgaQayt() {
+    ss?.cancel();
+    mashqBolim.hidden = true;
+    natijaBolim.hidden = true;
+    toplamBolim.hidden = false;
+    const btn = toplam ? document.querySelector<HTMLButtonElement>(`[data-toplam="${toplam.id}"]`) : null;
+    (btn ?? $('toplam-h')).focus();
+  }
+
+  // ---------- Hodisalar ----------
+  document.querySelectorAll<HTMLButtonElement>('[data-toplam]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const t = imloToplamlar.find((x) => x.id === b.dataset.toplam);
+      if (t) boshla(t, t.sozlar, true);
+    });
+  });
+  tinglashTugma.addEventListener('click', () => { gapir(); javobInput.focus(); });
+  forma.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!tekshirildi) { tekshir(); return; }
+    i++;
+    if (i >= navbat.length) { natijaniKorsat(); return; }
+    sozniKorsat();
+    gapir();
+  });
+  $('toplamga-qaytish').addEventListener('click', royxatgaQayt);
+  $('boshqa').addEventListener('click', royxatgaQayt);
+  $('qaytadan').addEventListener('click', () => { if (toplam) boshla(toplam, toplam.sozlar, true); });
+  xatolarniQayta.addEventListener('click', () => {
+    if (!toplam) return;
+    boshla(toplam, javoblar.filter((j) => !j.togri).map((j) => j.soz), false);
+  });
+
+  engYaxshilarniKorsat();
+  ovozHolatiniKorsat();
+</script>
+
+<style>
+  .imlo { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-8); max-width: var(--size-measure); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .bosh p { margin: 0; }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; }
+  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .eslatma, .ogoh {
+    align-self: flex-start; margin: 0; padding: var(--b-2) var(--b-4); border-radius: var(--r-yon);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); font-weight: 500; line-height: 1.5;
+  }
+  .eslatma svg { flex: none; }
+  .ogoh[hidden], .panel[hidden], section[hidden] { display: none; }
+
+  .bolim-sarlavha { margin: 0 0 var(--b-4); font-size: var(--matn-h3); font-weight: 800; }
+  .kichik-sarlavha { margin: 0 0 var(--b-2); font-size: var(--matn-asosiy); font-weight: 800; }
+
+  /* To'plamlar: ro'yxat qatorlari (bir xil kartalar qatori emas) */
+  .toplam-royxat { list-style: none; margin: 0; padding: var(--b-2); display: flex; flex-direction: column; gap: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
+  .toplam {
+    width: 100%; min-height: var(--control-height-lg); padding: var(--b-3) var(--b-4); border: 0; border-radius: var(--r-orta);
+    background: transparent; color: var(--matn); font: inherit; text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: var(--b-4);
+  }
+  .toplam:hover { background: var(--sirt); }
+  .t-matn { flex: 1; display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  .t-nom { font-weight: 800; }
+  .t-tavsif { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .t-meta { display: flex; flex-direction: column; align-items: flex-end; gap: var(--b-1); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); white-space: nowrap; }
+  .t-eng { font-weight: 700; color: var(--matn); }
+  .toplam svg { flex: none; color: var(--matn-ikkinchi); }
+
+  /* Mashq paneli */
+  .panel { padding: var(--b-6); border-radius: var(--r-katta); background: var(--sirt); box-shadow: var(--soya); display: flex; flex-direction: column; gap: var(--b-4); }
+  .panel-ust { display: flex; align-items: baseline; justify-content: space-between; gap: var(--b-4); }
+  .panel-ust .bolim-sarlavha { margin: 0; }
+  .hisob { margin: 0; font-weight: 700; color: var(--matn-ikkinchi); font-variant-numeric: tabular-nums; }
+  .progress { height: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); transition: width var(--duration-base) var(--ease-state); }
+
+  form { display: flex; flex-direction: column; gap: var(--b-3); }
+  .tinglash-qator { display: flex; align-items: center; gap: var(--b-4); flex-wrap: wrap; }
+  .tinglash-qator .tugma[hidden] { display: none; }
+  .ovozsiz-sorov { margin: 0; font-size: var(--matn-katta); font-weight: 700; }
+  .javob-yorliq { font-weight: 700; margin-top: var(--b-2); }
+  #javob {
+    min-height: var(--control-height-lg); padding: 0 var(--b-4); border: var(--border-width-2) solid var(--matn-sust); border-radius: var(--r-orta);
+    background: var(--fon); color: var(--matn); font: inherit; font-size: var(--matn-katta); font-weight: 600;
+  }
+  #javob:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); border-color: var(--matn); }
+  #javob[readonly] { background: var(--fon-ikkinchi); }
+
+  .xabar:empty { display: none; }
+  .xabar { padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); display: flex; flex-direction: column; gap: var(--b-1); line-height: 1.5; }
+  .xabar :global(p) { margin: 0; }
+  .xabar-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .xabar :global(.x-bosh) { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-katta); }
+  .xabar :global(.x-belgi) {
+    display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--r-toliq);
+    background: var(--matn); color: var(--fon); font-weight: 800;
+  }
+  .xabar :global(.x-soz) { font-size: var(--matn-katta); letter-spacing: 0.02em; }
+  .xabar :global(.x-maslahat) { font-weight: 600; }
+  :global(.x-mano) { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
+  :global(.x-xato) { color: var(--matn-ikkinchi); }
+
+  .amallar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-2); }
+  .amallar .tugma[hidden] { display: none; }
+
+  .natija-son { margin: 0; font-size: var(--matn-h3); font-weight: 800; }
+  #natija-h:focus { outline: none; }
+  .xatolar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .xatolar :global(li) { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+
+  @media (max-width: 640px) {
+    .imlo { padding-top: var(--b-6); gap: var(--b-6); }
+    h1 { font-size: var(--matn-h2); }
+    .panel { padding: var(--b-4); }
+    .toplam { padding: var(--b-3); gap: var(--b-3); }
+    .amallar .tugma { flex: 1 1 100%; }
+  }
+</style>
