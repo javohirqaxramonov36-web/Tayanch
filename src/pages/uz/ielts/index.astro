@@ -1,18 +1,24 @@
 ---
 // IELTS bo'limi kirishi. Dizayn: Tayanch-IELTS-dizayn.md, "Main" va "KirishTelefon" ekranlari.
-// Vaqtlar: IE01 (ielts.org). Rasmiy namunalar: IE03 (ielts.org), ID01 (IDP).
-// British Council sahifasi tekshirib bo'lmadi: havolasiz, "tekshirilmoqda".
+// Vaqtlar: IE01 (ielts.org). Rasmiy namunalar: IE03 (ielts.org), ID01 (IDP), BC01 (British Council).
+// Savdo belgisi eslatmasi: IE07 (ielts.org sahifa osti).
+// Qayta tuzish (2026-11-12, muallif qarorni Claude'ga topshirdi): Reading test bor bo'lsa (build vaqtida)
+// asosiy tugma testga olib boradi, aks holda 30 kunlik rejaga.
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
 import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
 import { qollanmalar, asos, mashqlar, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
 import { manbalar } from '../../../data/manbalar';
+import { saytTestlari } from '../../../lib/ielts/reading/saytTestlari';
 import { yol } from '../../../lib/yol';
 
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
 const reja = yol('/uz/ielts/vosita/reja/');
 const reading = yol('/uz/ielts/qollanma/reading/');
+const readingTest = yol('/uz/ielts/mashq/reading/');
+const testBor = (await saytTestlari()).length > 0;
+const tezNomlar = [...qollanmalar.filter((q) => !q.qism).map((q) => q.nomi), asos.nomi];
 // daqiqa: [eng kam, eng ko'p], matndagi raqamlardan (IE01). Davomiylik chizig'i shulardan, yangi raqam yo'q.
 const bolimlar: { nomi: string; vaqt: string; ikonka: string; daqiqa: [number, number]; href?: string }[] = [
   { nomi: 'Listening', vaqt: 'Taxminan 30 daqiqa', ikonka: IKONKA.listening, daqiqa: [30, 30] },
@@ -25,18 +31,20 @@ const ulush = (n: number) => Math.round((n / engUzun) * 1000) / 1000;
 const tezQollanmalar = qollanmalar.filter((q) => !q.qism).length;
 const qadamlar = [
   { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
-  { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
+  testBor
+    ? { nomi: 'Reading testini ishla', tavsif: "60 daqiqa, 40 savol. Natija va taxminiy band darhol chiqadi, qaysi savol turi qiyinligi ham ko'rinadi.", havola: 'Testni boshlash', href: readingTest }
+    : { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
   { nomi: '30 kunlik reja tuz', tavsif: "Uchta savolga javob ber: reja qiyin bo'limingga ko'proq kun ajratadi.", havola: 'Reja tuzish', href: reja },
 ];
 const namunalar = [
   { nomi: 'IELTS.org', tavsif: "Academic namuna topshiriqlari: to'rt ko'nikma, Listening va Reading uchun javob kalitlari.", manba: m('IE03') },
   { nomi: 'IDP', tavsif: 'Bepul tanishuv testlari: Listening, Reading, Writing va Speaking 1-qism.', manba: m('ID01') },
-  { nomi: 'British Council', tavsif: "Bepul mashq testlari sahifasi tekshirilmoqda, havola tekshiruvdan keyin qo'yiladi.", manba: null },
+  { nomi: 'British Council', tavsif: "Academic, General Training va UKVI uchun to'rt ko'nikma bo'yicha bepul mashq testlari, kompyuter formati bilan tanishish testi ham bor.", manba: m('BC01') },
 ];
 ---
 <BolimQobiq
   title="IELTS"
-  description="IELTS'ga mustaqil tayyorgarlik: har bo'lim uchun strategiya va 30 kunlik mashq rejasi."
+  description="IELTS'ga mustaqil tayyorgarlik: har bo'lim uchun strategiya, IELTS formatidagi mashq testi va 30 kunlik reja. Bepul, ro'yxatdan o'tmasdan."
   turi="bolim-kirishi"
   bolim="ielts"
   holat="qoralama"
@@ -47,13 +55,15 @@ const namunalar = [
       <div class="hero-matn">
         <p class="ustki-kok">IELTS bo'limi · mustaqil tayyorgarlik</p>
         <h1 id="ielts-h">IELTS'ga o'zing tayyorlan,<br /><span class="kok">reja bilan.</span></h1>
-        <p class="lead">Bu yerda har bo'lim uchun strategiya va kunma-kun mashq rejasi bor. Natijani esa hech kim kafolatlay olmaydi, biz ham: u sening mashqingga bog'liq.</p>
+        <p class="lead">{testBor
+          ? "Bu yerda har bo'lim uchun strategiya, IELTS formatidagi Reading testi va kunma-kun reja bor. Bepul, ro'yxatdan o'tmasdan, telefonda ham. Natijani esa hech kim kafolatlay olmaydi, biz ham: u sening mashqingga bog'liq."
+          : "Bu yerda har bo'lim uchun strategiya va kunma-kun mashq rejasi bor. Natijani esa hech kim kafolatlay olmaydi, biz ham: u sening mashqingga bog'liq."}</p>
         <div class="cta">
-          <a class="katta asosiy" href={reja}>
-            30 kunlik reja tuzish
+          <a class="katta asosiy" href={testBor ? readingTest : reja}>
+            {testBor ? 'Bepul Reading testi' : '30 kunlik reja tuzish'}
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </a>
-          <a class="katta ikkinchi" href="#boshla">Qayerdan boshlayman?</a>
+          <a class="katta ikkinchi" href={testBor ? reja : '#boshla'}>{testBor ? '30 kunlik reja' : 'Qayerdan boshlayman?'}</a>
         </div>
       </div>
 
@@ -250,22 +260,19 @@ const namunalar = [
         <span class="t-matn"><strong>Telegram kanal</strong><span class="pill-tez">tez orada</span></span>
       </div>
       <div class="eslatma">
-        <span class="pill-tez">matn tekshiriladi</span>
-        <p>IELTS – British Council, IDP va Cambridge'ning savdo belgisi. Tayanch ular bilan bog'liq emas.</p>
+        <p>IELTS British Council, IDP IELTS va Cambridge University Press & Assessment'ning birgalikdagi mulki va ro'yxatdan o'tgan savdo belgisi (<a href={m('IE07').havola} rel="noopener">ielts.org</a>). Tayanch ular bilan bog'liq emas, mashqlar rasmiy IELTS materiali emas.</p>
       </div>
     </section>
 
     <Zina />
 
     <ManbaBlok
-      manbalar={['IE01', 'IE03', 'ID01']}
-      tekshirilgan="2026-11-05"
-      keyingiTekshiruv="2026-12-05"
+      manbalar={['IE01', 'IE03', 'ID01', 'BC01', 'IE07']}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "British Council'ning bepul mashq testlari sahifasi (saytga ulanib bo'lmadi).",
         "IELTS.org namunalari bepulligi sahifada yozilmagan.",
-        "Savdo belgisi haqidagi eslatma matni.",
-        "Listening, Writing Task 2, Speaking va General English qo'llanmalari hali yozilmagan.",
+        `${tezNomlar.join(', ')} qo'llanmalari hali yozilmagan.`,
       ]}
     />
   </div>
