@@ -33,6 +33,8 @@ const JADVALLAR: Array<{ nomi: string; ustun: string; tanlov?: string }> = [
   { nomi: 'reports', ustun: 'user_id' },
   { nomi: 'feedback', ustun: 'user_id' },
   { nomi: 'events', ustun: 'user_id' },
+  { nomi: 'xp_events', ustun: 'user_id' },
+  { nomi: 'leaderboard_members', ustun: 'user_id' },
   {
     nomi: 'payments',
     ustun: 'user_id',

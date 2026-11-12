@@ -201,6 +201,11 @@ import { yol } from '../../../../lib/yol';
       maydonXatosi(taxallus, "Bu taxallus band. Boshqasini tanlang.");
       return taxallus.focus();
     }
+    // P32: server laqabni moderatsiya qiladi (private.nickname_allowed, profiles triggeri).
+    if (error?.message === 'nickname_not_allowed') {
+      maydonXatosi(taxallus, "Bu taxallusni ishlatib bo'lmaydi. Boshqasini tanlang.");
+      return taxallus.focus();
+    }
     if (error || !data?.length) return xabar($('profil-xato'), xatoMatni((error ?? new Error('profil')) as Error, 'profil'));
     saqlanganSana = sana.value;
     sanaEslatma();

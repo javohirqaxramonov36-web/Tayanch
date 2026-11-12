@@ -12,6 +12,8 @@ Holat: **qoralama**, yurist tekshirmagan. "Tekshirish kerak" ustunidagi savollar
 | Ism, taxallus, SAT maqsad, joriy ball, imtihon sanasi, rozilik versiyasi va vaqti, yosh guruhi, ota-ona ismi | `profiles` | Profil, rozilik dalili (LX02 21-modda) | Hisob ochiq turguncha | O'chadi (cascade) | Ha |
 | Yo'l xaritasi javoblari | `onboarding_profiles` | Bosh sahifadagi yo'l xaritasi | Hisob ochiq turguncha | O'chadi | Ha |
 | Mashq sessiyalari, javoblar, to'g'riligi, vaqt | `practice_sessions`, `attempts` (savollar ro'yxati `session_questions` da, sessiya bilan) | Natijalar, takrorlash, tavsiyalar | Hisob ochiq turguncha | O'chadi | Ha (`session_questions` alohida emas) |
+| XP yozuvlari (tur, XP, kun) | `xp_events` (faqat trigger yozadi, P32) | Reyting va o'z XP'si | Hisob ochiq turguncha | O'chadi (cascade) | Ha |
+| Reytingda qatnashish: qo'shilgan vaqt (rozilik), mamlakatni ko'rsatish, moderator yashirgani | `leaderboard_members` (P32) | Ixtiyoriy reyting: boshqa kattalarga faqat laqab, XP, o'rin va ruxsat bo'lsa mamlakat ko'rinadi | Chiqquncha yoki hisob ochiq turguncha | O'chadi (cascade) | Ha |
 | Takrorlash navbati, belgilangan savollar | `review_queue`, `bookmarks` | Takrorlash | Hisob ochiq turguncha | O'chadi | Ha |
 | Rasmiy test natijalari va xatolari | `official_tests`, `official_mistakes` | Test tracker | Hisob ochiq turguncha | O'chadi | Ha |
 | O'quv reja | `study_plans`, `plan_tasks` | Reja tuzgich | Hisob ochiq turguncha | O'chadi | Ha |

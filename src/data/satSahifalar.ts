@@ -87,6 +87,15 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: [],
         tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
       },
+      {
+        qism: 'vosita/reyting/',
+        tayyor: true,
+        nomi: 'Leaderboard',
+        tavsif: 'Weekly and monthly XP from practice, review and the question of the day. Joining is optional and only your nickname is shown. Needs an account.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['The XP numbers and the daily limit are starting values chosen by Tayanch and may change.'],
+      },
     ],
   },
   {
@@ -300,7 +309,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     ],
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/reyting/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
