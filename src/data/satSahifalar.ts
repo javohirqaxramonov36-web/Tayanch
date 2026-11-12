@@ -218,8 +218,8 @@ export const satGuruhlar: SatGuruh[] = [
         nomi: 'Math and Desmos',
         tavsif: 'Ways to use the Desmos calculator and formulas in the Math section.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source on how Desmos is provided in the test has not been added to the source log yet.'],
+        manbalar: ['CB26', 'DS01'],
+        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'The official source used here does not say which Desmos modes are available or whether Desmos is in Bluebook practice tests: still to be checked.'],
       },
       {
         qism: 'qollanma/reading-writing/',
@@ -242,6 +242,15 @@ export const satGuruhlar: SatGuruh[] = [
   {
     nomi: 'Account',
     sahifalar: [
+      {
+        qism: 'hisob/maqsad/',
+        tayyor: true,
+        nomi: 'Goal and test date',
+        tavsif: 'Set your target SAT score, your best score so far and your test date. You can change them any time.',
+        turi: 'vosita',
+        manbalar: ['CB04', 'CB14'],
+        tekshirilmagan: ['Whether every official date is offered at test centers in Uzbekistan.'],
+      },
       {
         qism: 'hisob/obuna/',
         tayyor: true,
@@ -290,7 +299,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/obuna/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 

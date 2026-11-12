@@ -203,14 +203,15 @@ const holatIzohi = [
 </BolimQobiq>
 
 <script>
-  import { KALIT_JAVOBLAR, type Javob } from '../../../../../data/satNamuna';
+  import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
 
   const namuna: Javob[] = JSON.parse(document.getElementById('namuna-data')!.textContent || '[]');
   const testUrl = (document.querySelector('.chiziq-blok a') as HTMLAnchorElement).href;
   const oqi = (): Javob[] => {
     try {
       const x = JSON.parse(localStorage.getItem(KALIT_JAVOBLAR) || '[]');
-      return Array.isArray(x) ? x : [];
+      // Eski (o'zbekcha) mavzu va sana faqat ko'rsatishda moslanadi, saqlangani o'zgarmaydi.
+      return Array.isArray(x) ? x.map(javobniMosla) : [];
     } catch { return []; }
   };
   let filtr = 'hammasi';
@@ -682,7 +683,7 @@ const holatIzohi = [
 
   .korsatkich { display: grid; grid-template-columns: 2fr 1fr; gap: var(--b-4); }
   .qora-blok {
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta); padding: var(--b-6);
     display: flex; flex-direction: column; gap: 14px;

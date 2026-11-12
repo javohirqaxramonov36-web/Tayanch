@@ -76,7 +76,7 @@ export function sahnaYarat(quti: HTMLElement, canvas: HTMLCanvasElement): HajmSa
     let k = kesh.get(kalit);
     if (!k) {
       const fs = 56, pad = 22, c = document.createElement('canvas'), ctx = c.getContext('2d')!;
-      const font = `700 ${fs}px "Figtree Variable", system-ui, sans-serif`;
+      const font = `700 ${fs}px "Onest Variable", system-ui, sans-serif`;
       ctx.font = font;
       const w = Math.ceil(ctx.measureText(matn).width + pad * 2), hgt = Math.ceil(fs + pad * 1.2);
       c.width = w; c.height = hgt; ctx.font = font;

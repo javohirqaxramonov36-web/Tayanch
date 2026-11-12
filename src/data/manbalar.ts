@@ -124,6 +124,15 @@ export const manbalar: Manba[] = [
     izoh: "College Board'ning kunlik rasmiy savol sahifasi (sahifa sarlavhasi: \"Official SAT Question of the Day – SAT Suite | College Board\"). Help Center \"What is Question of the Day?\" (satsuite.collegeboard.org/help-center/what-question-day) shu manzilga olib boradi. SAT kirishidagi Tayanch kun savoli (P10) pastida tashqi havola sifatida; Tayanch savoli emas. P16 resurslar xaritasi ham shu ID'ni ishlatadi. Bepulligi va savol almashish vaqti bu sahifalarda tekshirilmadi (tekshirish kerak).",
   },
   {
+    id: 'CB14',
+    nomi: 'SAT Suite Test Dates and Deadlines',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/dates-deadlines',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-11',
+    izoh: "SAT maqsad va sana sozlashi uchun (src/data/satSanalar.ts). 2026–27 SAT Weekend sanalari va ro'yxat muddatlari; sahifada \"apply to all students—U.S. and international\". 2027–28 sanalari \"anticipated\", kiritilmagan. HTML'da so'zma-so'z tekshirildi (2026-11-11, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q. CB12 boshqa branch'larda band (sat-kalkulyator, sat-savol-format-import), CB13 ehtiyot uchun qoldirildi.",
+  },
+  {
     id: 'IE01',
     nomi: 'IELTS Academic test (format)',
     tashkilot: 'IELTS (ielts.org)',
@@ -167,6 +176,15 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
     izoh: "\"Free Practice tests\": Listening, Reading, Writing familiarisation testlari va Speaking Part 1.",
+  },
+  {
+    id: 'ID02',
+    nomi: 'IELTS common spelling mistakes',
+    tashkilot: 'IDP IELTS',
+    havola: 'https://ielts.idp.com/prepare/article-ielts-common-spelling-mistakes',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Listening imlo mashqi uchun. Sahifada: \"Both British and American spellings are accepted in IELTS\", lekin bittasiga izchil amal qilish kerak; \"words with spelling mistakes in the Reading and Listening tests will be marked as incorrect\". Maqola sanasi 18/05/2023 (IDP Staff). British Council blogi (takeielts.britishcouncil.org) bu mashinadan ochilmadi.",
   },
   {
     id: 'CA01',
@@ -530,6 +548,15 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
     izoh: "Sahifa sarlavhasi \"Desmos | Graphing Calculator\" (HTTP 200). Narx sahifa HTML'ida yozilmagan: tekshirish kerak. SAT'da Desmos borligi CB26 da.",
+  },
+  {
+    id: 'DS02',
+    nomi: 'Desmos API Terms of Service',
+    tashkilot: 'Desmos Studio',
+    havola: 'https://www.desmos.com/api-terms',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-11',
+    izoh: "Version 1.0, July 11, 2025 (sahifa JavaScript bilan yuklanadi, brauzerda o'qildi). §2a: bepul Trial faqat shaxsiy notijorat foydalanish yoki 90 kunlik ichki sinov; production ilova tijoriy foydalanish. §3a: tijoriy foydalanishdan oldin pullik reja yoki Commercial Addendum. §5b-iii: Desmos brendingini yashirish mumkin emas. §5c: API kaliti maxfiy saqlanadi. Tayanch API ishlatmaydi, faqat desmos.com/calculator ga havola (docs/qarorlar/003-desmos.md).",
   },
   {
     id: 'PR01',

@@ -8,6 +8,7 @@
 import SatFokus from '../../../../../layouts/SatFokus.astro';
 import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
 
@@ -40,6 +41,7 @@ const IK = {
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.saqla.map((d) => <path d={d} />)}</svg>
       Save question
     </button>
+    <DesmosHavola id="desmos" hidden />
     <button type="button" class="kichik-tugma kulrang" id="xarita-och" aria-haspopup="dialog" hidden>
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.xarita.map((d) => <path d={d} />)}</svg>
       Questions
@@ -210,6 +212,7 @@ const IK = {
     const ishda = e === 'savol';
     $('xarita-och').hidden = !ishda;
     $('saqla-tugma').hidden = !ishda;
+    desmosYangila();
     $('taymer').hidden = !(ishda && taymerli()) || $('taymer-yashir').getAttribute('aria-pressed') === 'true';
     $('taymer-yashir').hidden = !(ishda && taymerli());
     // .jarayon da display: flex bor, shuning uchun hidden emas, style
@@ -316,9 +319,15 @@ const IK = {
     else if (!inp.value.trim()) delete m.qoralama[q.id];
   }
 
+  // Desmos havolasi faqat savol ekranida va Math savolida (P29). Tashqi skript yo'q, holat saqlanmaydi.
+  function desmosYangila() {
+    $('desmos').hidden = !(ekran === 'savol' && joriySavol()?.section === 'math');
+  }
+
   async function savolChizish(fokus: boolean) {
     const q = joriySavol();
     if (!q) return;
+    desmosYangila();
     let rasm: string | null = null;
     if (q.figure) {
       if (!rasmlar.has(q.figure.path)) rasmlar.set(q.figure.path, await api!.rasm(q.figure.path).catch(() => null));

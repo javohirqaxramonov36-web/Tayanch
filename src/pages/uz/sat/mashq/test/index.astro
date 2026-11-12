@@ -2,6 +2,7 @@
 // Mashq testi: savol ekrani. Dizayn: Tayanch-SAT-dizayn.md, "Mashq" ekrani.
 // Javoblar faqat shu brauzerda saqlanadi (tayanch:sat-javoblar). Ball hisoblanmaydi.
 import SatFokus from '../../../../../layouts/SatFokus.astro';
+import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
 import { savollar } from '../../../../../data/satNamuna';
 import { yol } from '../../../../../lib/yol';
 ---
@@ -13,10 +14,7 @@ import { yol } from '../../../../../lib/yol';
   progressNomi="Practice progress"
   yol={['Practice']}
 >
-  <a slot="amal" class="desmos" href="https://www.desmos.com/calculator" target="_blank" rel="noopener">
-    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" /><path d="M8 6h8" /><path d="M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2" /></svg>
-    Desmos<span class="sr">(opens in a new tab)</span>
-  </a>
+  <DesmosHavola slot="amal" id="desmos" hidden={savollar[0].bolim !== 'Math'} />
 
   <script type="application/json" id="savollar-data" set:html={JSON.stringify(savollar)} />
 
@@ -67,10 +65,10 @@ import { yol } from '../../../../../lib/yol';
 </SatFokus>
 
 <script>
-  import { KALIT_JAVOBLAR, type Savol, type Javob } from '../../../../../data/satNamuna';
+  import { KALIT_JAVOBLAR, mavzuNomi, type Savol, type Javob } from '../../../../../data/satNamuna';
 
   const hamma: Savol[] = JSON.parse(document.getElementById('savollar-data')!.textContent || '[]');
-  const tanlanganMavzular = new URLSearchParams(location.search).get('mavzular')?.split('|').filter(Boolean) ?? [];
+  const tanlanganMavzular = new URLSearchParams(location.search).get('mavzular')?.split('|').filter(Boolean).map(mavzuNomi) ?? [];
   const filtrlangan = hamma.filter((s) => tanlanganMavzular.includes(s.mavzu));
   const toplam = filtrlangan.length > 0 ? filtrlangan : hamma;
 
@@ -108,6 +106,7 @@ import { yol } from '../../../../../lib/yol';
     const s = toplam[i];
     tekshirildi = false;
     $('fokus-ustki').textContent = `${s.bolim} · Sample`;
+    $('desmos').hidden = s.bolim !== 'Math';
     $('fokus-nomi').textContent = s.mavzu;
     $('savol-raqam').textContent = `Question ${i + 1}`;
     $('savol').textContent = s.matn;
@@ -195,15 +194,6 @@ import { yol } from '../../../../../lib/yol';
 </script>
 
 <style>
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .desmos {
-    min-height: 44px; padding: 0 18px;
-    border-radius: var(--r-toliq);
-    background: var(--sirt-ikkinchi); color: var(--matn);
-    font-weight: 700; font-size: var(--matn-kichik); text-decoration: none;
-    display: inline-flex; align-items: center; gap: var(--b-2);
-  }
-  .desmos:hover { background: var(--chiziq); }
 
   .ustun, .tugadi { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
   .savol-karta {
@@ -239,7 +229,7 @@ import { yol } from '../../../../../lib/yol';
     cursor: pointer;
   }
   .variant input { position: absolute; opacity: 0; pointer-events: none; }
-  .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .variant:hover { border-color: var(--rang-asosiy); }
   .harf {
     width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);
@@ -261,7 +251,7 @@ import { yol } from '../../../../../lib/yol';
 
   .izoh {
     border-radius: var(--r-katta); padding: 24px 28px;
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     display: flex; flex-direction: column; gap: var(--b-2);
   }
@@ -278,14 +268,14 @@ import { yol } from '../../../../../lib/yol';
   }
   .matn-tugma:hover { background: var(--sirt-ikkinchi); }
   .katta {
-    min-height: 52px; padding: 0 32px; margin-left: auto;
+    min-height: var(--control-height-md); padding: 0 32px; margin-left: auto;
     border: 0; border-radius: var(--r-toliq);
     font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
   }
   .katta[hidden] { display: none; }
-  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .katta.qora { background: var(--matn); color: var(--fon); }
   .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); margin-left: 0; }
@@ -301,6 +291,5 @@ import { yol } from '../../../../../lib/yol';
   @media (max-width: 640px) {
     .savol-karta, .tugadi { padding: 22px; }
     #savol { font-size: 20px; }
-    .desmos { padding: 0 14px; }
   }
 </style>
