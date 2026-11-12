@@ -1,0 +1,75 @@
+---
+// SAT · Terms of Use (inglizcha nusxa, P23 davomi, 2026-11-11). Asosiy matn: /uz/shartlar/. QORALAMA.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import HuquqiyMatn from '../../../../../components/huquqiy/HuquqiyMatn.astro';
+import { hisobSozlama } from '../../../../../data/hisobSozlama';
+import { yol } from '../../../../../lib/yol';
+
+const { minYosh, voyagaYetmaganQoida: vq } = hisobSozlama;
+---
+<BolimQobiq
+  title="Terms of Use · SAT"
+  description="Rules for using the Tayanch site, your account and paid plans."
+  turi="qollanma"
+  bolim="sat"
+  yol={['Legal']}
+  holat="qoralama"
+>
+  <HuquqiyMatn
+    til="en"
+    kalit="shartlar"
+    sana="2026-11-11"
+    kirish="By using the site or creating an account, you agree to these terms."
+    tekshirish={[
+      'Whether the limitation of liability clause fits Uzbek consumer protection law.',
+      'Which court handles disputes.',
+    ]}
+  >
+    <h2>What Tayanch is</h2>
+    <p>Tayanch is an independent site for preparing for the SAT®, IELTS and studying abroad. It is not affiliated with the College Board, the owners of IELTS, universities or scholarship bodies, and does not speak for them.</p>
+
+    <h2>No guaranteed results</h2>
+    <ul>
+      <li>Tayanch does not guarantee a score, admission or a scholarship and does not calculate your chances. This also applies to paid plans.</li>
+      <li>Rules, requirements and deadlines come from official sources, with the source and the date checked. They can change: check the official site before you decide. If they differ, the official site is right.</li>
+      <li>Questions and practice are original materials written by Tayanch. They are not official test questions.</li>
+    </ul>
+
+    <h2>Your account</h2>
+    <ul>
+      <li>An account is optional. One account works for the whole site.</li>
+      <li>You can create an account from age {minYosh}.{vq && <> If you are under {vq.yoshgacha}, your parent or guardian gives consent (<a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>).</>}</li>
+      <li>Use a working email that belongs to you and do not share your password. One account is for one person.</li>
+      <li>You can delete your account and download your data at any time from your account page.</li>
+    </ul>
+
+    <h2>Paid plans</h2>
+    <ul>
+      <li>Right now only the SAT section has paid plans. The plan, price and period are shown on the <a href={yol('/uz/sat/hisob/obuna/')}>plans page</a> before you pay.</li>
+      <li>Payment terms: <a href={yol('/uz/sat/huquqiy/oferta/')}>Public Offer</a>. Refunds: <a href={yol('/uz/sat/huquqiy/qaytarish/')}>Refund Policy</a>.</li>
+      <li>A subscription works only in the section it was bought for: an SAT subscription does not unlock other sections.</li>
+    </ul>
+
+    <h2>Not allowed</h2>
+    <ul>
+      <li>Signing in to someone else's account or creating an account in their name.</li>
+      <li>Trying to break the site or its server, or to get around plan limits.</li>
+      <li>Sending mass automated requests or copying questions in bulk.</li>
+      <li>Sharing or selling paid materials.</li>
+      <li>Using offensive words or someone else's personal data in your nickname.</li>
+    </ul>
+    <p>If these rules are broken, the account may be suspended or deleted.</p>
+
+    <h2>Materials</h2>
+    <p>The text, questions and explanations on the site belong to Tayanch. You may use them for your own preparation; copying them for others needs permission.</p>
+
+    <h2>Liability</h2>
+    <p>The site is provided "as is": outages or errors can happen. Limit of liability: <span class="tekshir">to be checked</span> (lawyer).</p>
+
+    <h2>Personal data</h2>
+    <p>What is stored, where and how to delete it is described in the <a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>.</p>
+
+    <h2>Changes</h2>
+    <p>If these terms change, the new date is shown at the top of this page and you are asked to agree again when you sign in. Questions: <a href={yol('/uz/sat/huquqiy/aloqa/')}>Contact</a>.</p>
+  </HuquqiyMatn>
+</BolimQobiq>

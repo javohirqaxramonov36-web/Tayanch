@@ -1,0 +1,379 @@
+---
+// P16 "Where to start": 4 savollik "My path" -> 7 bosqichli shaxsiy ro'yxat (checkbox) va bepul resurslar xaritasi.
+// Spetsifikatsiya muallif tasdiqlagan (2026-11-11). Topshirish yo'li g'oyasi (savol -> yo'l), lekin alohida kod.
+// Saqlash: localStorage tayanch:sat-qayerdan-boshlash (faqat shu brauzer). JS'siz: umumiy 7 bosqich va jadvallar ko'rinadi.
+// Ball bashorat qilinmaydi. Har fakt manbalar.ts ID si bilan (CB20–CB29, CB07); norasmiy resurslar "Not official".
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { yol } from '../../../../../lib/yol';
+import { satSahifalar } from '../../../../../data/satSahifalar';
+import {
+  SAVOLLAR, BOSQICHLAR, RASMIY_RESURSLAR, BOSHQA_RESURSLAR, TADQIQOT, KALIT_YOL_XARITASI, type Resurs,
+} from '../../../../../data/satYolXaritasi';
+import { bosqichMatnlari } from '../../../../../lib/sat/yolXaritasi';
+
+const TEKSHIRILGAN = '2026-11-11';
+const tayyor = new Set(satSahifalar.filter((s) => s.tayyor).map((s) => s.qism));
+const umumiy = bosqichMatnlari({}, TEKSHIRILGAN);
+const savolKalitlari = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
+const rasmiyMatn: Record<Resurs['rasmiy'], string> = { ha: 'Yes: College Board', hamkor: 'Official partner', yoq: 'No' };
+const sanaQisqa = (s: string) => s.split('-').reverse().join('.');
+---
+<BolimQobiq
+  title="Where to start · SAT"
+  description="A step-by-step path for SAT self-study: answer four questions and get your own checklist, plus a map of free official resources. No score is guaranteed."
+  turi="qollanma"
+  yol={['Guides']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki yx">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>Where to start with the SAT®</h1>
+      <p class="lead">Studying on your own and not sure what comes first? Answer four questions: you get a step-by-step list you can tick off. Below it is a map of free resources, official ones first.</p>
+    </header>
+
+    <p class="ogoh" role="note"><b>No score is guaranteed.</b> The steps and their order are a Tayanch recommendation, not an official College Board plan. Your answers and check marks stay only in this browser.</p>
+
+    <section class="karta savollar" aria-labelledby="savol-h">
+      <h2 id="savol-h">My path</h2>
+      {savolKalitlari.map((k, i) => (
+        <fieldset class="savol" data-savol={k}>
+          <legend><span class="raqam" aria-hidden="true">{i + 1}</span>{SAVOLLAR[k].sarlavha}</legend>
+          <div class="variantlar">
+            {SAVOLLAR[k].variantlar.map((v) => (
+              <label class="variant">
+                <input type="radio" name={`yx-${k}`} value={v.qiymat} />
+                <span>{v.matn}</span>
+              </label>
+            ))}
+          </div>
+          {k === 'sana' && (
+            <div class="sana-maydon" id="sana-maydon" hidden>
+              <label for="yx-sana-qiymat">Test date</label>
+              <input type="date" id="yx-sana-qiymat" />
+              <p class="kichik ikkinchi">Enter the date yourself. The official list of dates is on the College Board website.</p>
+            </div>
+          )}
+        </fieldset>
+      ))}
+      <p class="kichik ikkinchi">You can skip any question: the list below updates as you answer.</p>
+    </section>
+
+    <section class="natija" aria-labelledby="yol-h">
+      <div class="n-bosh">
+        <h2 id="yol-h">Your path</h2>
+        <div class="progress-qator">
+          <p class="kichik"><span id="bajarildi">0</span> of {BOSQICHLAR.length} steps done</p>
+          <div class="progress" aria-hidden="true"><span id="progress-chiziq"></span></div>
+        </div>
+        <p class="ekranda-yoq" id="yx-xabar" aria-live="polite"></p>
+      </div>
+
+      <ol class="bosqichlar">
+        {BOSQICHLAR.map((b, i) => {
+          const tayanchTayyor = b.tayanch && tayyor.has(b.tayanch.qism);
+          return (
+            <li class="bosqich" data-bosqich={b.id}>
+              <div class="b-bosh">
+                <input type="checkbox" id={`yx-b-${b.id}`} data-belgi={b.id} />
+                <label for={`yx-b-${b.id}`}><span class="b-raqam">Step {i + 1}</span><span class="b-nom">{b.sarlavha}</span></label>
+              </div>
+              <div class="b-matn" data-matn={b.id}>
+                {umumiy[b.id].map((m) => <p>{m}</p>)}
+              </div>
+              {(b.tayanch || b.tashqi.length > 0) && (
+                <ul class="b-havolalar">
+                  {b.tayanch && (tayanchTayyor ? (
+                    <li><a class="havola-tayanch" href={yol(`/uz/sat/${b.tayanch.qism}`)}>{b.tayanch.matn}</a></li>
+                  ) : (
+                    <li><span class="tez-orada">{b.tayanch.matn}: coming soon</span></li>
+                  ))}
+                  {b.tashqi.map((t) => (
+                    <li><a href={t.havola} rel="noopener" target="_blank">{t.matn}<span class="ekranda-yoq"> (opens in a new tab)</span></a></li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      <div class="tugmalar">
+        <button type="button" class="matn-tugma" id="yx-qayta">Start over</button>
+        <span class="tasdiq" id="yx-tasdiq" hidden>This clears your answers and check marks.
+          <button type="button" class="matn-tugma" id="yx-ha">Yes, clear</button>
+          <button type="button" class="matn-tugma" id="yx-yoq">Cancel</button>
+        </span>
+      </div>
+      <p class="kichik ikkinchi" id="yx-saqlash">Saved only in this browser.</p>
+    </section>
+
+    <aside class="tadqiqot" aria-labelledby="tadqiqot-h">
+      <div class="muhr" aria-hidden="true"><b>VERIFIED</b><span>{sanaQisqa(TADQIQOT.sana)}</span></div>
+      <div>
+        <h2 id="tadqiqot-h" class="h3">Why start with a full practice test?</h2>
+        <p>{TADQIQOT.matn}</p>
+        <p class="ikkinchi"><b>Correlation, not cause.</b> {TADQIQOT.ogohlik}</p>
+        <p class="kichik ikkinchi">Source: <a href="https://research.collegeboard.org/media/pdf/DigitalSATPracticeTests_052025.pdf" rel="noopener">College Board Research, May 2025 (PDF)</a>. Checked {TADQIQOT.sana}.</p>
+      </div>
+    </aside>
+
+    <section class="resurslar" aria-labelledby="resurs-h">
+      <h2 id="resurs-h">Free resources map</h2>
+      <p class="ikkinchi">Every row was checked on the page it links to. Tayanch does not copy College Board questions or tests: open them on the official sites.</p>
+
+      <h3 id="rasmiy-h">Official free resources</h3>
+      <table class="jadval" aria-labelledby="rasmiy-h">
+        <thead>
+          <tr><th scope="col">Name</th><th scope="col">Why use it</th><th scope="col">Cost</th><th scope="col">Official?</th><th scope="col">Link</th><th scope="col">Checked</th></tr>
+        </thead>
+        <tbody>
+          {RASMIY_RESURSLAR.map((r) => (
+            <tr>
+              <th scope="row" data-l="Name">{r.nomi}</th>
+              <td data-l="Why use it">{r.nimaUchun}{r.izoh && <span class="izoh">{r.izoh}</span>}</td>
+              <td data-l="Cost">{r.narx}</td>
+              <td data-l="Official?">{rasmiyMatn[r.rasmiy]}</td>
+              <td data-l="Link"><a href={r.havola} rel="noopener" target="_blank">Open<span class="ekranda-yoq"> {r.nomi} (new tab)</span></a></td>
+              <td data-l="Checked"><div class="tekshiruv">
+                {r.tekshirish ? (
+                  <span class="ogoh-yorliq">needs verification</span>
+                ) : (
+                  <span class="muhr kichik-muhr" role="img" aria-label={`Verified on the official page, ${r.sana}`}><b>VERIFIED</b><span>{sanaQisqa(r.sana)}</span></span>
+                )}
+                <span class="kichik ikkinchi manba-id">{r.manbalar.join(', ')}</span>
+              </div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3 id="boshqa-h">Not official: free parts, quality not checked</h3>
+      <p class="ogoh" role="note">These are commercial or non-College Board products. Tayanch has not checked their quality or how close they are to the real test. They may ask you to sign up. Use them only after the official tests.</p>
+      <table class="jadval" aria-labelledby="boshqa-h">
+        <thead>
+          <tr><th scope="col">Name</th><th scope="col">Why use it</th><th scope="col">Cost</th><th scope="col">Official?</th><th scope="col">Link</th><th scope="col">Checked</th></tr>
+        </thead>
+        <tbody>
+          {BOSHQA_RESURSLAR.map((r) => (
+            <tr>
+              <th scope="row" data-l="Name">{r.nomi}</th>
+              <td data-l="Why use it">{r.nimaUchun}{r.izoh && <span class="izoh">{r.izoh}</span>}</td>
+              <td data-l="Cost">{r.narx}</td>
+              <td data-l="Official?">{rasmiyMatn[r.rasmiy]}</td>
+              <td data-l="Link"><a href={r.havola} rel="noopener" target="_blank">Open<span class="ekranda-yoq"> {r.nomi} (new tab)</span></a></td>
+              <td data-l="Checked"><div class="tekshiruv">
+                <span class="ogoh-yorliq">{r.tekshirish ? 'needs verification' : 'quality not checked'}</span>
+                <span class="kichik ikkinchi">Provider's page, {r.sana}</span>
+              </div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="kichik ikkinchi">Not listed on purpose: files sold or shared as "leaked", "prediction" or "actual test with key", and Dropbox or Telegram links. Copying real test material breaks College Board rules.</p>
+    </section>
+
+    <ManbaBlok
+      manbalar={['CB20', 'CB21', 'CB22', 'CB23', 'CB24', 'CB25', 'CB26', 'CB27', 'CB28', 'CB29', 'CB07', 'CB10']}
+      tekshirilgan={TEKSHIRILGAN}
+      keyingiTekshiruv="2026-12-11"
+      tekshirilmagan={[
+        'The seven steps, their order and the advice in each step are a Tayanch recommendation, not an official plan.',
+        'The number of full-length practice tests in Bluebook is not stated on the College Board page: check Practice and Prepare in the app.',
+        'The cost of the Desmos calculator is not stated on its page.',
+        'Non-official resources: cost and sign-up are as the provider\'s page says; their quality and how close they are to the real test are not checked.',
+        'The Khan Academy and Question of the Day pages load with JavaScript: only the College Board description of them was checked.',
+        'The Tayanch test tracker (step 2) and the retake guide (step 7) are not built yet.',
+      ]}
+    />
+  </div>
+  <script type="application/json" id="yx-sozlama" set:html={JSON.stringify({ kalit: KALIT_YOL_XARITASI, jami: BOSQICHLAR.length })} />
+</BolimQobiq>
+
+<script>
+  import { bosqichMatnlari, holatniTekshir, xulosa, type Holat, type Javoblar } from '../../../../../lib/sat/yolXaritasi';
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const { kalit, jami } = JSON.parse($('yx-sozlama').textContent || '{}') as { kalit: string; jami: number };
+
+  const bugun = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const oqi = (): Holat => {
+    try { return holatniTekshir(JSON.parse(localStorage.getItem(kalit) || 'null')); } catch { return holatniTekshir(null); }
+  };
+  let saqlanadi = true;
+  const saqla = () => {
+    try { localStorage.setItem(kalit, JSON.stringify(holat)); } catch { saqlanadi = false; }
+    $('yx-saqlash').textContent = saqlanadi ? 'Saved only in this browser.' : 'This browser does not allow saving: your answers will be lost when you leave the page.';
+  };
+
+  let holat = oqi();
+  const sanaMaydon = $('sana-maydon');
+  const sanaInput = $<HTMLInputElement>('yx-sana-qiymat');
+
+  const formagaQoy = () => {
+    const j = holat.javoblar as Record<string, string | undefined>;
+    document.querySelectorAll<HTMLInputElement>('.savol input[type="radio"]').forEach((r) => {
+      const k = r.name.replace('yx-', '');
+      r.checked = j[k] === r.value;
+    });
+    sanaInput.value = holat.javoblar.sanaQiymat ?? '';
+    document.querySelectorAll<HTMLInputElement>('[data-belgi]').forEach((c) => { c.checked = !!holat.belgilar[c.dataset.belgi!]; });
+  };
+
+  const chiz = (elon: boolean) => {
+    sanaMaydon.hidden = holat.javoblar.sana !== 'bor';
+    const m = bosqichMatnlari(holat.javoblar, bugun());
+    document.querySelectorAll<HTMLElement>('[data-matn]').forEach((el) => {
+      const qatorlar = m[el.dataset.matn!] ?? [];
+      el.replaceChildren(...qatorlar.map((t) => { const p = document.createElement('p'); p.textContent = t; return p; }));
+    });
+    const bajarildi = Object.keys(holat.belgilar).filter((k) => holat.belgilar[k]).length;
+    $('bajarildi').textContent = String(bajarildi);
+    $('progress-chiziq').style.width = `${Math.round((bajarildi / jami) * 100)}%`;
+    document.querySelectorAll<HTMLElement>('.bosqich').forEach((li) => li.classList.toggle('bajarilgan', !!holat.belgilar[li.dataset.bosqich!]));
+    if (elon) $('yx-xabar').textContent = xulosa(holat.javoblar, bugun(), jami, bajarildi);
+  };
+
+  document.querySelectorAll<HTMLInputElement>('.savol input[type="radio"]').forEach((r) => r.addEventListener('change', () => {
+    const k = r.name.replace('yx-', '') as keyof Javoblar;
+    (holat.javoblar as Record<string, string>)[k] = r.value;
+    saqla(); chiz(true);
+  }));
+  sanaInput.addEventListener('change', () => {
+    holat.javoblar.sanaQiymat = sanaInput.value || undefined;
+    saqla(); chiz(true);
+  });
+  document.querySelectorAll<HTMLInputElement>('[data-belgi]').forEach((c) => c.addEventListener('change', () => {
+    if (c.checked) holat.belgilar[c.dataset.belgi!] = true; else delete holat.belgilar[c.dataset.belgi!];
+    saqla(); chiz(true);
+  }));
+
+  const qayta = $<HTMLButtonElement>('yx-qayta');
+  const tasdiq = $('yx-tasdiq');
+  const tasdiqYop = (fokus: HTMLElement) => { tasdiq.hidden = true; qayta.hidden = false; fokus.focus(); };
+  qayta.addEventListener('click', () => { qayta.hidden = true; tasdiq.hidden = false; $('yx-yoq').focus(); });
+  $('yx-yoq').addEventListener('click', () => tasdiqYop(qayta));
+  $('yx-ha').addEventListener('click', () => {
+    holat = holatniTekshir(null);
+    try { localStorage.removeItem(kalit); } catch { /* ruxsat yo'q */ }
+    formagaQoy(); chiz(false);
+    $('yx-xabar').textContent = 'Your answers and check marks are cleared.';
+    tasdiqYop(document.querySelector<HTMLInputElement>('.savol input[type="radio"]')!);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !tasdiq.hidden) tasdiqYop(qayta); });
+
+  formagaQoy();
+  chiz(false);
+</script>
+
+<style>
+  .yx { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--matn-h2); }
+  h3, .h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .lead { font-size: var(--matn-katta); line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6; }
+  a { color: var(--rang-havola); }
+
+  /* Savollar */
+  .karta { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-6); }
+  .savol { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .savol legend { display: flex; align-items: center; gap: var(--b-3); font-weight: 800; font-size: var(--matn-katta); padding: 0; margin-bottom: var(--b-3); }
+  .raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-size: var(--matn-kichik); }
+  .variantlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .variant { position: relative; display: inline-flex; }
+  .variant input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .variant span { min-height: 44px; padding: var(--b-2) var(--b-4); display: inline-flex; align-items: center; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font-weight: 700; cursor: pointer; }
+  .variant:hover span { border-color: var(--rang-asosiy); }
+  .variant input:checked + span { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variant input:focus-visible + span { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .sana-maydon { display: flex; flex-direction: column; gap: var(--b-2); margin-top: var(--b-2); }
+  .sana-maydon[hidden] { display: none; }
+  .sana-maydon label { font-weight: 700; }
+  .sana-maydon input { min-height: 48px; max-width: 100%; width: 16rem; padding: 0 var(--b-4); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta); background: var(--fon); color: var(--matn); font: inherit; }
+  .sana-maydon input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+
+  /* Natija */
+  .natija { display: flex; flex-direction: column; gap: var(--b-6); }
+  .n-bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .progress-qator { display: flex; flex-direction: column; gap: var(--b-2); max-width: 420px; }
+  .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); }
+  .bosqichlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .bosqich { border: 1.5px solid var(--matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); }
+  .b-bosh { display: flex; align-items: flex-start; gap: var(--b-3); }
+  .b-bosh input { width: 24px; height: 24px; margin: 2px 0 0; flex: none; accent-color: var(--rang-asosiy); cursor: pointer; }
+  .b-bosh input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .b-bosh label { display: flex; flex-direction: column; gap: 2px; cursor: pointer; min-height: 44px; }
+  .b-raqam { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .b-nom { font-weight: 800; font-size: var(--matn-katta); }
+  .bajarilgan .b-nom { color: var(--matn-ikkinchi); text-decoration: line-through; }
+  .b-matn { display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.6; padding-left: calc(24px + var(--b-3)); }
+  .b-havolalar { list-style: none; margin: 0; padding: 0 0 0 calc(24px + var(--b-3)); display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5); }
+  .b-havolalar a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; }
+  .havola-tayanch { color: var(--rang-havola); }
+  .tez-orada { min-height: 44px; display: inline-flex; align-items: center; color: var(--matn-ikkinchi); font-weight: 700; }
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
+  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
+  .matn-tugma:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+  .tasdiq[hidden], .matn-tugma[hidden] { display: none; }
+
+  /* Muhr va yorliq (DESIGN.md: VERIFIED + sana; tekshirilmaganida "needs verification") */
+  .muhr {
+    width: 72px; height: 72px; flex: none; border-radius: 50%;
+    border: 2px dashed var(--rang-asosiy); outline: 1.5px solid var(--rang-asosiy); outline-offset: -6px;
+    color: var(--rang-havola); background: var(--fon);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+    transform: rotate(-8deg); text-align: center;
+  }
+  :global([data-mavzu='qorongi']) .muhr { border-color: var(--rang-havola); outline-color: var(--rang-havola); }
+  .muhr b { font-size: 9px; letter-spacing: .04em; font-weight: 800; }
+  .muhr span { font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .kichik-muhr { width: 68px; height: 68px; }
+  .kichik-muhr b { font-size: 7.5px; letter-spacing: .02em; }
+  .kichik-muhr span { font-size: 8px; white-space: nowrap; }
+  .ogoh-yorliq { display: inline-block; padding: 1px 8px; border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+
+  .tadqiqot { display: flex; gap: var(--b-5); align-items: flex-start; background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); }
+  .tadqiqot > div:last-child { display: flex; flex-direction: column; gap: var(--b-3); line-height: 1.6; min-width: 0; }
+
+  /* Resurslar jadvali */
+  .resurslar { display: flex; flex-direction: column; gap: var(--b-4); }
+  .resurslar h3 { margin-top: var(--b-4); }
+  .jadval { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); line-height: 1.5; }
+  .jadval th, .jadval td { text-align: left; vertical-align: top; padding: var(--b-3); border-bottom: 1px solid var(--chiziq); }
+  .jadval thead th { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); border-bottom: 1.5px solid var(--matn); }
+  .jadval tbody th { font-weight: 800; }
+  .tekshiruv { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); }
+  .jadval a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; }
+  .izoh { display: block; margin-top: var(--b-1); color: var(--matn-ikkinchi); }
+  .manba-id { font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 760px) {
+    .jadval thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .jadval, .jadval tbody, .jadval tr, .jadval th, .jadval td { display: block; width: 100%; }
+    .jadval tr { border: 1.5px solid var(--matn); border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); margin-bottom: var(--b-3); }
+    .jadval th, .jadval td { border: 0; padding: var(--b-2) 0; }
+    .jadval td::before { content: attr(data-l); display: block; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+    .jadval tbody th { font-size: var(--matn-katta); }
+  }
+  @media (max-width: 640px) {
+    .yx { padding-top: 28px; gap: var(--b-8); }
+    .karta { padding: var(--b-5); }
+    .bosqich { padding: var(--b-4); }
+    .b-matn, .b-havolalar { padding-left: 0; }
+    .tadqiqot { flex-direction: column; padding: var(--b-5); }
+  }
+</style>

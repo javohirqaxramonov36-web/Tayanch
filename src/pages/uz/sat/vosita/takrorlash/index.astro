@@ -8,6 +8,9 @@ import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import { yol } from '../../../../../lib/yol';
 import { hammaSavollar, modulNomi, type DarsModul } from '../../../../../data/satDarslar';
+import { matn as umumiyMatn } from '../../../../../data/umumiyMatn';
+
+const T = umumiyMatn.en.dars;
 
 const darsQism: Record<DarsModul, string> = {
   hajm: 'qollanma/math/hajm/',
@@ -21,22 +24,18 @@ const darsQism: Record<DarsModul, string> = {
 };
 // Dars sahifalaridagi savolKorsatma bilan bir xil; "Xatoni toping" da joy belgilash bosqichi bu yerda yo'q.
 const korsatma: Partial<Record<DarsModul, string>> = {
-  'rw-xato': "Gapdagi xatoni to'g'ri tuzatadigan variantni tanlang.",
-  'rw-otish': "Bo'sh joyga eng mantiqiy o'tish so'zini tanlang.",
-  'rw-lugat': "Gapni o'qing va eng mantiqiy, aniq so'z yoki ma'noni tanlang.",
+  'rw-xato': 'Choose the option that correctly fixes the error in the sentence.',
+  'rw-otish': 'Choose the most logical transition word for the blank.',
+  'rw-lugat': 'Read the sentence and choose the most logical and precise word or meaning.',
 };
 const darslar = (Object.keys(darsQism) as DarsModul[]).map((m) => ({ modul: m, nomi: modulNomi[m], href: yol(`/uz/sat/${darsQism[m]}`) }));
 
 const malumot = {
   savollar: hammaSavollar.map((s) => {
-    const rw = s.modul.startsWith('rw-');
     return {
-      id: s.id, modul: s.modul, mavzu: s.mavzu, qiyinlik: s.qiyinlik, verified: s.verified,
+      id: s.id, modul: s.modul, mavzu: s.mavzu, qiyinlik: T.qiyinlik[s.qiyinlik], verified: s.verified,
       matn: s.matn, yechim: s.yechim, togri: s.togri,
       variantlar: s.variantlar.map((v) => v.matn), xatolar: s.variantlar.map((v) => v.xato ?? ''),
-      // R&W: variantlar inglizcha; savol matni "Dalil" darsida o'zbekcha, qolganida inglizcha
-      matnTili: rw && s.belgilash?.tur !== 'gap' ? 'en' : '',
-      variantTili: rw ? 'en' : '',
       korsatma: korsatma[s.modul] ?? '',
     };
   }),
@@ -44,55 +43,55 @@ const malumot = {
 };
 ---
 <BolimQobiq
-  title="Xato daftari: takrorlash · SAT"
-  description="SAT darslarida xato qilingan mashqlarni oraliqli takrorlash: 1, 3, 7 va 14 kundan keyin. Ma'lumot faqat shu brauzerda. Ball hisoblanmaydi."
+  title="Mistake log: review · SAT"
+  description="Spaced review of the exercises you got wrong in the SAT lessons: after 1, 3, 7 and 14 days. The data stays only in this browser. No score is calculated."
   turi="vosita"
-  yol={['Mashq']}
+  yol={['Practice']}
   bolim="sat"
   holat="qoralama"
 >
   <div class="ichki takror">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Vosita</span><span class="pill pill-chiziq">Qoralama</span></p>
-      <h1>Xato daftari: takrorlash</h1>
-      <p class="lead">Darslarda xato qilingan mashqlar shu yerga tushadi va oraliq bilan qaytadi: ertaga, keyin 3, 7 va 14 kundan so'ng. To'g'ri yechsangiz keyingi qutiga o'tadi, xato qilsangiz boshiga qaytadi.</p>
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>Mistake log: review</h1>
+      <p class="lead">Exercises you got wrong in the lessons land here and come back at intervals: tomorrow, then after 3, 7 and 14 days. Solve one correctly and it moves to the next box; get it wrong and it goes back to the start.</p>
     </header>
 
-    <p class="kichik ikkinchi">Tayanch uchun yozilgan namuna savollar, rasmiy SAT savoli emas. Ball hisoblanmaydi. Oraliqlar Tayanch tanlovi.</p>
+    <p class="kichik ikkinchi">Sample questions written for Tayanch, not official SAT questions. No score is calculated. The intervals are Tayanch's choice.</p>
 
     <section class="royxat" id="royxat" aria-labelledby="royxat-h">
-      <h2 id="royxat-h" tabindex="-1">Bugungi takrorlash</h2>
+      <h2 id="royxat-h" tabindex="-1">Today's review</h2>
       <dl class="qiymatlar">
-        <div><dt>Bugun</dt><dd id="son-bugun">0</dd></div>
-        <div><dt>Keyinroq</dt><dd id="son-keyin">0</dd></div>
-        <div><dt>O'zlashtirildi</dt><dd id="son-ozl">0</dd></div>
+        <div><dt>Today</dt><dd id="son-bugun">0</dd></div>
+        <div><dt>Later</dt><dd id="son-keyin">0</dd></div>
+        <div><dt>Mastered</dt><dd id="son-ozl">0</dd></div>
       </dl>
       <p class="holat-matn" id="holat-matn"></p>
       <div class="tugmalar">
-        <button type="button" class="katta asosiy" id="boshla" hidden>Takrorlashni boshlash</button>
-        <button type="button" class="katta ikkinchi" id="oldin" hidden>Keyingilarini hozir takrorlash</button>
+        <button type="button" class="katta asosiy" id="boshla" hidden>Start review</button>
+        <button type="button" class="katta ikkinchi" id="oldin" hidden>Review upcoming ones now</button>
       </div>
 
       <div class="darslar" id="darslar" hidden>
-        <h3>Darslar</h3>
+        <h3>Lessons</h3>
         <ul>
           {darslar.map((d) => <li><a href={d.href}>{d.nomi}</a></li>)}
         </ul>
       </div>
 
       <details class="guruh" id="g-keyin" hidden>
-        <summary>Keyinroq takrorlanadi (<span id="g-keyin-son">0</span>)</summary>
+        <summary>Review later (<span id="g-keyin-son">0</span>)</summary>
         <ul class="g-royxat" id="g-keyin-royxat"></ul>
       </details>
       <details class="guruh" id="g-ozl" hidden>
-        <summary>O'zlashtirildi (<span id="g-ozl-son">0</span>)</summary>
+        <summary>Mastered (<span id="g-ozl-son">0</span>)</summary>
         <ul class="g-royxat" id="g-ozl-royxat"></ul>
       </details>
     </section>
 
     <section class="sessiya" id="sessiya" aria-labelledby="sessiya-h" hidden>
       <div class="s-bosh">
-        <h2 id="sessiya-h">Takrorlash</h2>
+        <h2 id="sessiya-h">Review</h2>
         <p class="kichik ikkinchi" id="s-hisob" aria-live="polite"></p>
       </div>
       <form class="savol-karta" id="karta" novalidate>
@@ -106,29 +105,29 @@ const malumot = {
             <p class="izoh-sarlavha" id="izoh-sarlavha"></p>
             <p class="izoh-xato" id="izoh-xato"></p>
             <p class="izoh-keyingi" id="izoh-keyingi"></p>
-            <p><b>Yechim.</b> <span id="izoh-yechim"></span></p>
+            <p><b>Solution.</b> <span id="izoh-yechim"></span></p>
           </div>
           <div class="s-tugmalar">
-            <a class="matn-tugma kok-tugma" id="s-dars" href="#">Darsga o'tish</a>
-            <button type="submit" class="katta asosiy" id="tekshir" disabled>Tekshirish</button>
-            <button type="button" class="katta qora" id="keyingi" hidden>Keyingisi</button>
+            <a class="matn-tugma kok-tugma" id="s-dars" href="#">Go to the lesson</a>
+            <button type="submit" class="katta asosiy" id="tekshir" disabled>Check</button>
+            <button type="button" class="katta qora" id="keyingi" hidden>Next</button>
           </div>
         </fieldset>
       </form>
       <div class="yakun" id="yakun" hidden>
         <p class="yakun-matn" id="yakun-matn" tabindex="-1"></p>
-        <button type="button" class="katta asosiy" id="qaytish">Ro'yxatga qaytish</button>
+        <button type="button" class="katta asosiy" id="qaytish">Back to the list</button>
       </div>
-      <button type="button" class="matn-tugma" id="toxtat">Takrorlashni to'xtatish</button>
+      <button type="button" class="matn-tugma" id="toxtat">Stop review</button>
     </section>
 
     <div class="tozalash">
-      <button type="button" class="matn-tugma" id="tozala">Takrorlash tarixini o'chirish</button>
-      <span class="tasdiq" id="tasdiq" hidden>Qutilar va sanalar o'chirilsinmi? Darslardagi xato daftari qoladi.
-        <button type="button" class="matn-tugma" id="tasdiq-ha">Ha, o'chirish</button>
-        <button type="button" class="matn-tugma" id="tasdiq-yoq">Bekor qilish</button>
+      <button type="button" class="matn-tugma" id="tozala">Delete review history</button>
+      <span class="tasdiq" id="tasdiq" hidden>Delete the boxes and dates? The mistake log in the lessons stays.
+        <button type="button" class="matn-tugma" id="tasdiq-ha">Yes, delete</button>
+        <button type="button" class="matn-tugma" id="tasdiq-yoq">Cancel</button>
       </span>
-      <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite">Takrorlash holati faqat shu brauzerda saqlanadi.</p>
+      <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite">Review progress is saved only in this browser.</p>
     </div>
 
     <ManbaBlok
@@ -136,9 +135,9 @@ const malumot = {
       tekshirilgan="2026-11-06"
       keyingiTekshiruv="2026-12-06"
       tekshirilmagan={[
-        "Takrorlash oraliqlari (1, 3, 7, 14 kun) Tayanch tanlovi, rasmiy tavsiya emas.",
-        "Savollar Tayanch uchun yozilgan namuna; muallif tekshirmaganlari \"tekshirilmagan\" yorlig'i bilan.",
-        "\"Xatoni toping\" savollarida xato joyini belgilash bosqichi bu sahifada yo'q: faqat tuzatish tanlanadi.",
+        "The review intervals (1, 3, 7, 14 days) are Tayanch's choice, not an official recommendation.",
+        'The questions are samples written for Tayanch; those not yet reviewed by the author are labeled "not verified".',
+        "On this page, \"Find the error\" questions have no step for marking the error's location: only the revision is chosen.",
       ]}
     />
   </div>
@@ -152,15 +151,15 @@ const malumot = {
   interface S {
     id: string; modul: string; mavzu: string; qiyinlik: string; verified: boolean;
     matn: string; yechim: string; togri: number; variantlar: string[]; xatolar: string[];
-    matnTili: string; variantTili: string; korsatma: string;
+    korsatma: string;
   }
   const BOLIM = 'sat';
   const HARF = 'ABCD';
-  const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+  const OYLAR = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const M = JSON.parse($('takror-malumot').textContent || '{}') as { savollar: S[]; darslar: Record<string, { nomi: string; href: string }> };
   const savol = new Map(M.savollar.map((s) => [s.id, s]));
-  const sanaMatn = (s: string) => { const [, m, d] = s.split('-').map(Number); return `${d}-${OYLAR[m - 1]}`; };
+  const sanaMatn = (s: string) => { const [, m, d] = s.split('-').map(Number); return `${OYLAR[m - 1]} ${d}`; };
   const qisqa = (t: string) => (t.length > 80 ? `${t.slice(0, 77)}…` : t);
 
   let holat: TakrorHolat = sinxronla(BOLIM, new Set(savol.keys()));
@@ -170,8 +169,8 @@ const malumot = {
 
   const saqlashHolati = (ok: boolean) => {
     $('saqlash-holat').textContent = ok
-      ? 'Takrorlash holati faqat shu brauzerda saqlanadi.'
-      : "Brauzer saqlashga ruxsat bermadi: takrorlash holati sahifa yopilganda yo'qoladi.";
+      ? 'Review progress is saved only in this browser.'
+      : 'The browser did not allow saving: review progress will be lost when the page is closed.';
   };
 
   // ---------- Ro'yxat ----------
@@ -193,14 +192,14 @@ const malumot = {
     $('son-ozl').textContent = String(g.ozlashtirildi.length);
     const bosh = g.bugun.length + g.keyinroq.length + g.ozlashtirildi.length === 0;
     $('holat-matn').textContent = bosh
-      ? "Xato daftari bo'sh. Darslarda xato qilingan mashqlar shu yerga tushadi va ertasi kuni takrorlanadi."
+      ? 'The mistake log is empty. Exercises you get wrong in the lessons land here and are reviewed the next day.'
       : g.bugun.length > 0
-        ? `Bugun ${g.bugun.length} ta mashqni takrorlash kerak.`
+        ? `Today you have ${g.bugun.length} ${g.bugun.length === 1 ? 'exercise' : 'exercises'} to review.`
         : g.keyinroq.length > 0
-          ? `Bugun takrorlanadigan mashq yo'q. Keyingisi: ${sanaMatn(holat.savollar[g.keyinroq[0]].keyingi)}.`
-          : "Hamma xatolar o'zlashtirildi. Yangi xatolar darslardan tushadi.";
+          ? `Nothing to review today. Next: ${sanaMatn(holat.savollar[g.keyinroq[0]].keyingi)}.`
+          : 'All mistakes are mastered. New mistakes will come from the lessons.';
     $<HTMLButtonElement>('boshla').hidden = g.bugun.length === 0;
-    $<HTMLButtonElement>('boshla').textContent = `Takrorlashni boshlash (${g.bugun.length})`;
+    $<HTMLButtonElement>('boshla').textContent = `Start review (${g.bugun.length})`;
     $<HTMLButtonElement>('oldin').hidden = !(g.bugun.length === 0 && g.keyinroq.length > 0);
     $('darslar').hidden = !(bosh || (g.bugun.length === 0 && g.keyinroq.length === 0));
 
@@ -227,17 +226,16 @@ const malumot = {
   function korsat() {
     const s = savol.get(navbat[joriy])!;
     $('s-hisob').textContent = `${joriy + 1} / ${navbat.length}`;
-    $('s-legend').textContent = `${joriy + 1}-savol, jami ${navbat.length}`;
+    $('s-legend').textContent = `Question ${joriy + 1} of ${navbat.length}`;
     const meta = $('s-meta');
     const pill = (t: string, cls = 'pill') => { const p = document.createElement('span'); p.className = cls; p.textContent = t; return p; };
     const mavzu = document.createElement('span'); mavzu.className = 'kichik ikkinchi';
     mavzu.textContent = `${M.darslar[s.modul]?.nomi ?? s.modul} · ${s.mavzu}`;
-    meta.replaceChildren(pill('Namuna'), pill(s.qiyinlik), mavzu, ...(s.verified ? [] : [pill('tekshirilmagan', 'pill pill-ogoh')]));
+    meta.replaceChildren(pill('Sample'), pill(s.qiyinlik), mavzu, ...(s.verified ? [] : [pill('not verified', 'pill pill-ogoh')]));
     $('s-korsatma').textContent = s.korsatma;
     $('s-korsatma').hidden = !s.korsatma;
     const matn = $('s-matn');
     matn.textContent = s.matn;
-    if (s.matnTili) matn.lang = s.matnTili; else matn.removeAttribute('lang');
 
     const v = $('variantlar');
     v.replaceChildren(...s.variantlar.map((t, j) => {
@@ -246,7 +244,6 @@ const malumot = {
       inp.addEventListener('change', () => { $<HTMLButtonElement>('tekshir').disabled = false; });
       const h = document.createElement('span'); h.className = 'harf'; h.setAttribute('aria-hidden', 'true'); h.textContent = HARF[j];
       const m = document.createElement('span'); m.className = 'v-matn'; m.textContent = t;
-      if (s.variantTili) m.lang = s.variantTili;
       l.append(inp, h, m);
       return l;
     }));
@@ -254,7 +251,7 @@ const malumot = {
     $<HTMLButtonElement>('tekshir').hidden = false;
     $<HTMLButtonElement>('tekshir').disabled = true;
     $<HTMLButtonElement>('keyingi').hidden = true;
-    $<HTMLButtonElement>('keyingi').textContent = joriy < navbat.length - 1 ? 'Keyingisi' : 'Yakunlash';
+    $<HTMLButtonElement>('keyingi').textContent = joriy < navbat.length - 1 ? 'Next' : 'Finish';
     $<HTMLAnchorElement>('s-dars').href = M.darslar[s.modul]?.href ?? '#';
     matn.focus({ preventScroll: true });
     $('sessiya').scrollIntoView({ block: 'start', behavior: 'auto' });
@@ -284,13 +281,13 @@ const malumot = {
 
     const izoh = $('izoh');
     izoh.classList.toggle('izoh-togri', togrimi);
-    $('izoh-sarlavha').textContent = togrimi ? "To'g'ri." : `Xato. To'g'ri javob: ${HARF[s.togri]}) ${s.variantlar[s.togri]}`;
-    $('izoh-xato').textContent = !togrimi && s.xatolar[j] ? `Tipik xato: ${s.xatolar[j]}.` : '';
+    $('izoh-sarlavha').textContent = togrimi ? 'Correct.' : `Wrong. The correct answer: ${HARF[s.togri]}) ${s.variantlar[s.togri]}`;
+    $('izoh-xato').textContent = !togrimi && s.xatolar[j] ? `Typical mistake: ${s.xatolar[j]}.` : '';
     $('izoh-keyingi').textContent = yangi.quti === 5
-      ? "O'zlashtirildi: bu mashq endi takrorlanmaydi."
+      ? 'Mastered: this exercise will not be reviewed again.'
       : togrimi
-        ? `${yangi.quti}-quti. Keyingi takrorlash: ${sanaMatn(yangi.keyingi)}.`
-        : `1-qutiga qaytdi. Keyingi takrorlash: ${sanaMatn(yangi.keyingi)}.`;
+        ? `Box ${yangi.quti}. Next review: ${sanaMatn(yangi.keyingi)}.`
+        : `Back to box 1. Next review: ${sanaMatn(yangi.keyingi)}.`;
     $('izoh-yechim').textContent = s.yechim;
     izoh.hidden = false;
     $<HTMLButtonElement>('tekshir').hidden = true;
@@ -306,7 +303,7 @@ const malumot = {
     $('yakun').hidden = false;
     $('s-hisob').textContent = '';
     const g = guruhla(holat, bugun());
-    $('yakun-matn').textContent = `${navbat.length} ta mashqdan ${togriSoni} tasi to'g'ri. ${g.bugun.length > 0 ? `Bugun yana ${g.bugun.length} ta qoldi.` : 'Bugungi takrorlash tugadi.'}`;
+    $('yakun-matn').textContent = `${togriSoni} of ${navbat.length} correct. ${g.bugun.length > 0 ? `${g.bugun.length} more left for today.` : "Today's review is done."}`;
     $('yakun-matn').focus();
   });
 
@@ -330,7 +327,7 @@ const malumot = {
     holat = sinxronla(BOLIM, new Set(savol.keys()));
     $('tasdiq').hidden = true; tozala.hidden = false;
     if (!$('sessiya').hidden) royxatgaQayt(); else royxatniChiz();
-    $('saqlash-holat').textContent = "Takrorlash tarixi o'chirildi. Daftardagi xatolar 1-qutidan qayta boshlandi.";
+    $('saqlash-holat').textContent = 'Review history deleted. The mistakes in the log start again from box 1.';
     tozala.focus();
   });
 
@@ -345,7 +342,7 @@ const malumot = {
   .takror :global(.pill) { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
   .takror :global(.pill-ogoh) { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
   .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: 32px; }
   h2:focus, .yakun-matn:focus { outline: none; }
   h3 { font-size: 20px; }
@@ -362,24 +359,24 @@ const malumot = {
   .darslar { display: flex; flex-direction: column; gap: var(--b-2); }
   .darslar ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--b-2); }
   .darslar a { min-height: 48px; display: flex; align-items: center; padding: 0 var(--b-4); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); color: var(--rang-havola); font-weight: 700; text-decoration: none; }
-  .darslar a:hover { border-color: var(--rang-asosiy); }
-  .darslar a:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .darslar a:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
+  .darslar a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .guruh { border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
   .guruh summary { min-height: 56px; padding: var(--b-3) var(--b-4); display: flex; align-items: center; font-weight: 800; cursor: pointer; }
-  .guruh summary:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-orta); }
+  .guruh summary:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--r-orta); }
   .g-royxat { list-style: none; margin: 0; padding: 0 var(--b-4) var(--b-3); }
   .g-royxat :global(li) { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--b-2); padding: var(--b-3) 0; border-top: 1px solid var(--chiziq); }
   .g-royxat :global(.g-nom) { flex: 1 1 240px; min-width: 0; }
 
   .tugmalar, .s-tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .s-tugmalar { justify-content: flex-end; }
-  .katta { min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
-  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta { min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
   .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
   .katta.qora { background: var(--matn); color: var(--fon); }
-  .katta:focus-visible, .matn-tugma:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .katta:focus-visible, .matn-tugma:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; text-decoration: none; }
   .matn-tugma:hover { background: var(--sirt-ikkinchi); }
   .kok-tugma { color: var(--rang-havola); margin-right: auto; }
@@ -402,7 +399,7 @@ const malumot = {
     font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: var(--b-4); cursor: pointer;
   }
   .variantlar :global(.variant input) { position: absolute; opacity: 0; pointer-events: none; }
-  .variantlar :global(.variant:has(input:focus-visible)) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variantlar :global(.variant:has(input:focus-visible)) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .variantlar :global(.variant:hover) { border-color: var(--rang-asosiy); }
   .variantlar :global(.harf) { width: 32px; height: 32px; flex: none; border-radius: var(--r-logo); display: grid; place-items: center; font-size: var(--matn-kichik); font-weight: 800; background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
   .variantlar :global(.v-matn) { flex: 1; min-width: 0; }
@@ -413,7 +410,7 @@ const malumot = {
   .variantlar :global(.variant.togri), .variantlar :global(.variant.togri:hover) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
   .variantlar :global(.variant.xato), .variantlar :global(.variant.xato:hover) { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
   .variantlar :global(.variant.xato .harf) { background: var(--matn); color: var(--fon); }
-  .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--rang-asosiy-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
+  .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
   .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
   .izoh-sarlavha { font-size: 18px; font-weight: 800; }
   .izoh-keyingi { font-weight: 700; }

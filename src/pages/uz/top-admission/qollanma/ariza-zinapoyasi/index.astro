@@ -31,7 +31,7 @@ const MISOL = 'turkiye';
   lead="Ariza bir kunda yuborilmaydi: u pog'onama-pog'ona ko'tariladi. Har pog'ona oldingisiga tayanadi, bittasini tashlab ketsangiz, keyingisi ham qiyinlashadi. Kartani bosing, keyin uni zinapoyadagi o'z joyiga qo'ying."
   qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
   savolKorsatma="Savolni o'qing va zinapoyaga qarab to'g'ri javobni tanlang."
-  keyingi={{ nomi: "Topshirish yo'li", href: yol('/uz/top-admission/vosita/topshirish-yoli/') }}
+  keyingi={{ nomi: "Topshirish yo'li", href: yol('/uz/top-admission/vosita/topshirish-yoli/'), turi: 'qadam' }}
   maqsadlar={[
     "Türkiye Bursları kalendaridagi to'rt bosqichni tartib bilan aytasiz.",
     "Common App va UCAS arizasida qaysi qadam qaysisiga tayanishini tushunasiz.",
@@ -300,11 +300,11 @@ const MISOL = 'turkiye';
     text-align: left; font: inherit; font-weight: 700; cursor: pointer;
     background: var(--fon); color: var(--matn-sust);
     border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-orta);
-    transition: background-color .2s, border-color .2s;
+    transition: background-color var(--harakat-orta) var(--harakat-egri), border-color var(--harakat-orta) var(--harakat-egri);
   }
   .zp-pogona:disabled { cursor: default; }
   .zp-pogona:hover:not(:disabled) { border-color: var(--rang-asosiy); }
-  .zp-pogona:focus-visible, .zp-karta:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .zp-pogona:focus-visible, .zp-karta:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .zp-pogona.zp-tola { border-style: solid; border-color: var(--matn); color: var(--matn); }
   .zp-pogona.zp-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
   .zp-pogona.zp-xato { border-style: dashed; border-color: var(--matn); }

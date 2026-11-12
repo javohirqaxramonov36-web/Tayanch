@@ -7,8 +7,10 @@ import BoshQism from '../components/BoshQism.astro';
 import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
+import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import type { BolimSlug } from '../data/bolimlar';
+import { bolimTili, matn } from '../data/umumiyMatn';
 
 export interface Props {
   title: string;
@@ -25,16 +27,18 @@ export interface Props {
   yol?: string[];
 }
 
-const { title, description, til = 'uz', holat, bolim = 'sat', yol: bandlar = [] } = Astro.props;
+const { title, description, holat, bolim = 'sat', yol: bandlar = [] } = Astro.props;
+// Til bo'limdan: SAT inglizcha (CLAUDE.md), qolganlari o'zbekcha.
+const til = Astro.props.til ?? bolimTili(bolim);
 const sahifaNomi = title.split(' · ')[0];
 ---
 <!doctype html>
-<html lang={til}>
+<html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
     <BoshQism title={title} description={description} holat={holat} />
   </head>
   <body class="bolim-qobiq">
-    <a class="otish" href="#asosiy" data-panel-tashqari>Asosiy matnga o'tish</a>
+    <a class="otish" href="#asosiy" data-panel-tashqari>{matn[til].otish}</a>
     <BolimYon bolim={bolim} />
     <div class="kontent-ustun" data-panel-tashqari>
       <main id="asosiy">
@@ -42,6 +46,7 @@ const sahifaNomi = title.split(' · ')[0];
         <slot />
       </main>
       {bolim === 'sat' && <SatEslatma />}
+      <p class="ichki beta-holat" lang="en">Beta — in development</p>
     </div>
     <Lift variant="pastki" />
   </body>
@@ -50,6 +55,7 @@ const sahifaNomi = title.split(' · ')[0];
 <style is:global>
   .bolim-qobiq .kontent-ustun { min-width: 0; }
   .bolim-qobiq .kontent-ustun .ichki { max-width: 960px; padding-inline: var(--b-4); padding-bottom: var(--b-16); }
+  .bolim-qobiq .kontent-ustun .beta-holat { margin: 0; padding-block: var(--b-4) var(--b-6); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
 
   @media (min-width: 1024px) {
     .bolim-qobiq {

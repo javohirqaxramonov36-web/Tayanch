@@ -1,0 +1,94 @@
+---
+// 1-qavat · Hisob · Google'dan qaytish (P03B). Supabase Redirect URLs ro'yxatida aniq shu manzil (query'siz).
+// ?code= → PKCE mijozi exchangeCodeForSession (implicit mijoz bu sahifada yaratilmaydi: u ?code= ni xato deb biladi).
+// "Keyin qayerga": sessionStorage (tayanch:hisob-keyin), xavfsizKeyin qoidasi bilan qayta tekshiriladi.
+// Rozilik yo'q bo'lsa (yoki o'qib bo'lmasa) rozilik sahifasiga, bor bo'lsa keyingi sahifaga (location.replace).
+// Xato: ?error= (masalan access_denied) yoki almashtirish xatosi → role="alert" va "Qayta urinish" (kirish ?keyin= bilan).
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import { hisobSahifalar } from '../../../../data/hisobSahifalar';
+import { yol } from '../../../../lib/yol';
+---
+<HisobKarta sahifa={hisobSahifalar.callback}>
+  <p class="hisob-holat" id="callback-holat" role="status">Google hisobingiz bilan kirilmoqda…</p>
+
+  <section class="hisob-karta" id="callback-xato-karta" aria-labelledby="callback-xato-sarlavha" hidden>
+    <h2 id="callback-xato-sarlavha" tabindex="-1">Kirib bo'lmadi</h2>
+    <p class="hisob-alert" id="callback-xato" role="alert"></p>
+    <div class="hisob-tugmalar">
+      <a class="tugma tugma-asosiy" id="callback-qayta" href={yol('/uz/hisob/kirish/')}>Qayta urinish</a>
+    </div>
+  </section>
+</HisobKarta>
+
+<script>
+  import {
+    googleMijoz, googleXatoTuri, googleXatoMatni, hisobYoli, xavfsizKeyin,
+    rozilikHolati, rozilikYoli, xabar, type RozilikHolati,
+  } from '../../../../lib/hisob';
+  import { hisobSozlama } from '../../../../data/hisobSozlama';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  // "Keyin qayerga" bir marta o'qiladi va o'chiriladi.
+  let saqlangan: string | null = null;
+  try {
+    saqlangan = sessionStorage.getItem(hisobSozlama.keyinKaliti);
+    sessionStorage.removeItem(hisobSozlama.keyinKaliti);
+  } catch {
+    // sessionStorage yopiq: profilga.
+  }
+  const keyin = xavfsizKeyin(saqlangan);
+
+  const qidiruv = new URLSearchParams(location.search);
+  const hash = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const kod = qidiruv.get('code');
+  const urlXato = qidiruv.get('error') ?? hash.get('error');
+  const urlXatoKod = qidiruv.get('error_code') ?? hash.get('error_code');
+  // Kod va xato URL'da qolmasin (yangilash yoki "Orqaga" uni qayta ishlatmaydi).
+  history.replaceState(null, '', location.pathname);
+
+  function xatoKorsat(matn: string) {
+    $('callback-holat').hidden = true;
+    $<HTMLAnchorElement>('callback-qayta').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(keyin)}`;
+    xabar($('callback-xato'), matn);
+    $('callback-xato-karta').hidden = false;
+    $('callback-xato-sarlavha').focus();
+  }
+
+  async function boshla() {
+    const c = googleMijoz();
+    if (!c) {
+      location.replace(hisobYoli('kirish'));
+      return;
+    }
+    if (urlXato) {
+      xatoKorsat(googleXatoMatni[googleXatoTuri({ error: urlXato, code: urlXatoKod ?? undefined })]);
+      return;
+    }
+    let sessiya;
+    if (kod) {
+      const { data, error } = await c.auth.exchangeCodeForSession(kod);
+      if (error) {
+        xatoKorsat(googleXatoMatni[googleXatoTuri(error as { name?: string; code?: string })]);
+        return;
+      }
+      sessiya = data.session;
+    } else {
+      // Kodsiz ochilgan (masalan, qayta yuklangan): sessiya bo'lsa davom etadi, bo'lmasa kirish sahifasiga.
+      sessiya = (await c.auth.getSession()).data.session;
+      if (!sessiya) {
+        location.replace(`${hisobYoli('kirish')}?keyin=${encodeURIComponent(keyin)}`);
+        return;
+      }
+    }
+    let holat: RozilikHolati | 'xato';
+    try {
+      holat = await rozilikHolati(c, sessiya);
+    } catch {
+      holat = 'xato'; // rozilik sahifasi qayta urinadi va xatoni ko'rsatadi
+    }
+    location.replace(holat === 'bor' ? keyin : rozilikYoli(keyin));
+  }
+
+  boshla().catch((e) => xatoKorsat(googleXatoMatni[googleXatoTuri(e)]));
+</script>

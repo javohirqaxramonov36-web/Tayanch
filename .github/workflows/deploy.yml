@@ -24,7 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # Taqiqlangan fayl yoki kalit qiymati repoda bo'lsa, build va joylash to'xtaydi (docs/kontent-siyosati.md).
+      - name: Repo tekshiruvi
+        run: node scripts/repo-tekshir.mjs
+      # Hisob (Supabase): faqat ochiq qiymatlar, repo Settings → Secrets and variables → Actions → Variables.
+      # Berilmasa sayt baribir quriladi, hisob sahifalari "hali ishlamaydi" deydi (docs/lokal-ish-tartibi.md).
       - uses: withastro/action@v6
+        env:
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
 
   deploy:
     needs: build

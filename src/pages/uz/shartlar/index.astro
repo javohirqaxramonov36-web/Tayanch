@@ -1,0 +1,74 @@
+---
+// 1-qavat · Foydalanish shartlari. P23 (2026-11-09), to'lov bandi P23 davomida (2026-11-11) yangilandi.
+// QORALAMA: muallif va yurist tasdiqlaydi. Inglizcha nusxa: /uz/sat/huquqiy/shartlar/.
+// Google OAuth consent ekranidagi "Terms of service" manzili shu sahifa (o'zgartirilmaydi).
+import Asosiy from '../../../layouts/Asosiy.astro';
+import HuquqiyMatn from '../../../components/huquqiy/HuquqiyMatn.astro';
+import { hisobSozlama } from '../../../data/hisobSozlama';
+import { yol } from '../../../lib/yol';
+
+const { minYosh, voyagaYetmaganQoida: vq } = hisobSozlama;
+---
+<Asosiy
+  title="Foydalanish shartlari"
+  description="Tayanch saytidan, hisobdan va pullik tariflardan foydalanish qoidalari."
+  turi="umumiy"
+  bolim="umumiy"
+  holat="qoralama"
+  tekshirilgan="2026-11-11"
+  keyingiTekshiruv="2026-12-11"
+  manbalar={['LX02', 'LX03', 'CB08']}
+  tekshirilmagan={[
+    "Javobgarlikni cheklash bandi O'zbekiston qonunchiligi (iste'molchilar huquqlarini himoya qilish) bilan mosligi: yurist fikri kerak",
+    "Nizolar qaysi sudda ko'rilishi: yurist fikri kerak",
+  ]}
+>
+  <HuquqiyMatn til="uz" kalit="shartlar" sana="2026-11-11" kirish="Saytdan foydalanib yoki hisob ochib, shu shartlarga rozi bo'lasiz.">
+    <h2>Tayanch nima</h2>
+    <p>Tayanch: SAT, IELTS va xorijda o'qishga tayyorlanish uchun mustaqil sayt. U College Board, IELTS egalari, universitetlar yoki grant beruvchi tashkilotlar bilan bog'liq emas va ular nomidan gapirmaydi.</p>
+
+    <h2>Natija kafolatlanmaydi</h2>
+    <ul>
+      <li>Tayanch ball, qabul yoki grant olishingizni kafolatlamaydi va ularning ehtimolini hisoblamaydi. Bu pullik tariflarga ham tegishli.</li>
+      <li>Qoida, talab va muddatlar rasmiy manbadan, manba va tekshirilgan sana bilan yoziladi. Ular o'zgarishi mumkin: qaror qilishdan oldin rasmiy saytni tekshiring. Farq bo'lsa, rasmiy sayt to'g'ri.</li>
+      <li>Savol va mashqlar Tayanch'ning o'zi yozgan original materiallar. Ular rasmiy imtihon savollari emas.</li>
+    </ul>
+
+    <h2>Hisob</h2>
+    <ul>
+      <li>Hisob ixtiyoriy. Bitta hisob butun sayt uchun ishlaydi.</li>
+      <li>Hisobni {minYosh} yoshdan ochish mumkin.{vq && <> {vq.yoshgacha} yoshgacha bo'lsangiz, ota-ona yoki vasiyingiz rozilik beradi (<a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>).</>}</li>
+      <li>O'zingizga tegishli, ishlaydigan email kiriting va parolni hech kimga bermang. Bitta hisobdan bir nechta odam foydalanmaydi.</li>
+      <li>Hisobingizni istalgan vaqtda profil sahifasidan o'chirishingiz va ma'lumotlaringizni yuklab olishingiz mumkin.</li>
+    </ul>
+
+    <h2>Pullik tariflar</h2>
+    <ul>
+      <li>Hozir pullik qism faqat SAT bo'limida. Tarif, narx va muddat to'lovdan oldin <a href={yol('/uz/sat/hisob/obuna/')}>tarif sahifasida</a> ko'rsatiladi.</li>
+      <li>To'lov shartlari: <a href={yol('/uz/oferta/')}>Ommaviy oferta</a>. Pulni qaytarish: <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>.</li>
+      <li>Obuna faqat o'zi sotib olingan qavatda (bo'limda) ishlaydi: SAT obunasi boshqa bo'limni ochmaydi.</li>
+    </ul>
+
+    <h2>Mumkin emas</h2>
+    <ul>
+      <li>Boshqa odamning hisobiga kirish yoki uning nomidan hisob ochish.</li>
+      <li>Saytni yoki uning serverini buzishga, tarif cheklovlarini chetlab o'tishga urinish.</li>
+      <li>Saytga avtomatik dastur bilan ommaviy so'rov yuborish yoki savollarni ommaviy ko'chirib olish.</li>
+      <li>Pullik materiallarni boshqalarga tarqatish yoki sotish.</li>
+      <li>Taxallusda haqoratli so'z yoki boshqa odamning shaxsiy ma'lumotini ishlatish.</li>
+    </ul>
+    <p>Bu qoidalar buzilsa, hisob to'xtatilishi yoki o'chirilishi mumkin.</p>
+
+    <h2>Materiallar</h2>
+    <p>Saytdagi matn, savol va tushuntirishlar Tayanch'ga tegishli. Ularni shaxsiy tayyorgarlik uchun ishlatasiz; ko'chirib tarqatish uchun ruxsat kerak.</p>
+
+    <h2>Javobgarlik</h2>
+    <p>Sayt "qanday bo'lsa, shunday" beriladi: texnik uzilish yoki xato bo'lishi mumkin. Javobgarlik chegarasi: <span class="tekshir">tekshirish kerak</span> (yurist).</p>
+
+    <h2>Shaxsiy ma'lumot</h2>
+    <p>Qanday ma'lumot saqlanishi, qayerda turishi va qanday o'chirilishi <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>da yozilgan.</p>
+
+    <h2>O'zgarishlar</h2>
+    <p>Shartlar o'zgarsa, yangi sana shu sahifa boshida yoziladi va hisobga kirganingizda roziligingiz qayta so'raladi. Savollar: <a href={yol('/uz/aloqa/')}>Aloqa</a>.</p>
+  </HuquqiyMatn>
+</Asosiy>

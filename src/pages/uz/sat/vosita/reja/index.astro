@@ -19,82 +19,82 @@ const havolalar = {
 };
 ---
 <BolimQobiq
-  title="Reja tuzgich · SAT"
-  description="SAT tayyorgarligi uchun haftalik reja: imtihon sanasi va maqsad balldan checklist. Ma'lumot faqat shu brauzerda. Ball kafolatlanmaydi."
+  title="Study planner · SAT"
+  description="A weekly plan for SAT preparation: a checklist from your test date and target score. The data stays only in this browser. No score is guaranteed."
   turi="vosita"
-  yol={['Mashq']}
+  yol={['Practice']}
   bolim="sat"
   holat="qoralama"
 >
   <div class="ichki reja">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Vosita</span><span class="pill pill-chiziq">Qoralama</span></p>
-      <h1>SAT® reja tuzgich</h1>
-      <p class="lead">Imtihon sanasi va maqsad ballingizni kiriting: vosita qolgan haftalarni bosqichlarga bo'lib, har haftaga bajariladigan ro'yxat tuzadi. Belgilaringiz shu brauzerda saqlanadi.</p>
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>SAT® Study Planner</h1>
+      <p class="lead">Enter your test date and target score: the tool divides the remaining weeks into stages and makes a to-do list for each week. Your check marks are saved in this browser.</p>
     </header>
 
-    <p class="ogoh" role="note"><b>Ball kafolatlanmaydi.</b> Bu reja tayyorgarlikni tartibga soladi, natijani bashorat qilmaydi. Haftalik vazifalar Tayanch tavsiyasi, rasmiy reja emas.</p>
+    <p class="ogoh" role="note"><b>No score is guaranteed.</b> This plan organizes your preparation; it does not predict your result. The weekly tasks are a Tayanch recommendation, not an official plan.</p>
 
     <form class="forma" id="forma" novalidate>
       <div class="maydon">
-        <label for="r-sana">Imtihon sanasi</label>
+        <label for="r-sana">Test date</label>
         <input type="date" id="r-sana" required />
-        <p class="kichik ikkinchi">Sanani o'zingiz kiriting. Rasmiy sanalar ro'yxati: College Board sayti.</p>
+        <p class="kichik ikkinchi">Enter the date yourself. The official list of dates is on the College Board website.</p>
       </div>
       <div class="maydon-qator">
         <div class="maydon">
-          <label for="r-hozirgi">Hozirgi ball (ixtiyoriy)</label>
-          <input type="number" id="r-hozirgi" inputmode="numeric" min="400" max="1600" step="10" placeholder="masalan, 1150" />
+          <label for="r-hozirgi">Current score (optional)</label>
+          <input type="number" id="r-hozirgi" inputmode="numeric" min="400" max="1600" step="10" placeholder="for example, 1150" />
         </div>
         <div class="maydon">
-          <label for="r-maqsad">Maqsad ball</label>
-          <input type="number" id="r-maqsad" inputmode="numeric" min="400" max="1600" step="10" required placeholder="masalan, 1350" />
+          <label for="r-maqsad">Target score</label>
+          <input type="number" id="r-maqsad" inputmode="numeric" min="400" max="1600" step="10" required placeholder="for example, 1350" />
         </div>
       </div>
-      <p class="kichik ikkinchi">SAT umumiy ball oralig'i: 400–1600 (College Board, CB04).</p>
+      <p class="kichik ikkinchi">SAT total score range: 400–1600 (College Board, CB04).</p>
       <fieldset class="maydon">
-        <legend>Haftada necha kun shug'ullanasiz</legend>
+        <legend>How many days a week you study</legend>
         <div class="segment" id="r-kunlar">
-          {[3, 4, 5, 6].map((k) => <button type="button" data-kun={k} aria-pressed={k === 4 ? 'true' : 'false'}>{k} kun</button>)}
+          {[3, 4, 5, 6].map((k) => <button type="button" data-kun={k} aria-pressed={k === 4 ? 'true' : 'false'}>{k} days</button>)}
         </div>
       </fieldset>
       <fieldset class="maydon">
-        <legend>Ko'proq e'tibor</legend>
+        <legend>More focus on</legend>
         <div class="segment" id="r-fokus">
           <button type="button" data-fokus="math" aria-pressed="false">Math</button>
           <button type="button" data-fokus="rw" aria-pressed="false">Reading and Writing</button>
-          <button type="button" data-fokus="teng" aria-pressed="true">Teng</button>
+          <button type="button" data-fokus="teng" aria-pressed="true">Both equally</button>
         </div>
       </fieldset>
       <p class="xato-xabar" id="r-xato" role="alert" hidden></p>
       <div class="tugmalar">
-        <button type="submit" class="katta asosiy">Reja tuzish</button>
-        <span class="tasdiq" id="qayta-tasdiq" hidden>Yangi reja eski belgilarni o'chiradi.
-          <button type="button" class="matn-tugma" id="qayta-ha">Davom etish</button>
-          <button type="button" class="matn-tugma" id="qayta-yoq">Bekor qilish</button>
+        <button type="submit" class="katta asosiy">Make a plan</button>
+        <span class="tasdiq" id="qayta-tasdiq" hidden>A new plan deletes your old check marks.
+          <button type="button" class="matn-tugma" id="qayta-ha">Continue</button>
+          <button type="button" class="matn-tugma" id="qayta-yoq">Cancel</button>
         </span>
       </div>
     </form>
 
     <section class="natija" id="natija" aria-labelledby="natija-h" hidden>
       <div class="n-bosh">
-        <h2 id="natija-h" tabindex="-1">Sizning rejangiz</h2>
+        <h2 id="natija-h" tabindex="-1">Your plan</h2>
         <dl class="qiymatlar" id="xulosa"></dl>
         <div class="progress-qator">
-          <p class="kichik"><span id="bajarildi">0</span> / <span id="jami">0</span> vazifa bajarildi</p>
+          <p class="kichik"><span id="bajarildi">0</span> / <span id="jami">0</span> tasks done</p>
           <div class="progress" aria-hidden="true"><span id="progress-chiziq"></span></div>
         </div>
         <p class="kichik ikkinchi" id="izoh-uzoq" hidden></p>
       </div>
       <ol class="haftalar" id="haftalar"></ol>
       <div class="tugmalar">
-        <button type="button" class="matn-tugma" id="ochir">Rejani o'chirish</button>
-        <span class="tasdiq" id="ochir-tasdiq" hidden>O'chirilsinmi?
-          <button type="button" class="matn-tugma" id="ochir-ha">Ha, o'chirish</button>
-          <button type="button" class="matn-tugma" id="ochir-yoq">Bekor qilish</button>
+        <button type="button" class="matn-tugma" id="ochir">Delete plan</button>
+        <span class="tasdiq" id="ochir-tasdiq" hidden>Delete it?
+          <button type="button" class="matn-tugma" id="ochir-ha">Yes, delete</button>
+          <button type="button" class="matn-tugma" id="ochir-yoq">Cancel</button>
         </span>
       </div>
-      <p class="kichik ikkinchi" id="saqlash-holat">Reja faqat shu brauzerda saqlanadi.</p>
+      <p class="kichik ikkinchi" id="saqlash-holat">The plan is saved only in this browser.</p>
     </section>
 
     <ManbaBlok
@@ -102,9 +102,9 @@ const havolalar = {
       tekshirilgan="2026-11-05"
       keyingiTekshiruv="2026-12-05"
       tekshirilmagan={[
-        "Haftalik vazifalar va bosqichlar Tayanch tavsiyasi, rasmiy reja emas.",
-        "Ball qadami (10) rasmiy sahifada yozilmagan: maydonda qulaylik uchun olingan.",
-        "Imtihon sanalari bu sahifada berilmaydi: rasmiy ro'yxat College Board saytida.",
+        'The weekly tasks and stages are a Tayanch recommendation, not an official plan.',
+        'The score step (10) is not stated on the official page: it is used in the field for convenience.',
+        'Test dates are not given on this page: the official list is on the College Board website.',
       ]}
     />
   </div>
@@ -121,7 +121,7 @@ const havolalar = {
 
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const H = JSON.parse($('reja-havolalar').textContent || '{}') as Record<string, string>;
-  const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+  const OYLAR = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const KUN = 86400000;
   const MAKS_HAFTA = 16;
 
@@ -130,7 +130,7 @@ const havolalar = {
   if (reja && (typeof reja.sana !== 'string' || typeof reja.maqsad !== 'number')) reja = null;
 
   const sanaUTC = (s: string) => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
-  const sanaMatn = (t: number) => { const d = new Date(t); return `${d.getUTCDate()}-${OYLAR[d.getUTCMonth()]}`; };
+  const sanaMatn = (t: number) => { const d = new Date(t); return `${OYLAR[d.getUTCMonth()]} ${d.getUTCDate()}`; };
 
   // ---------- Segment tugmalari ----------
   const segment = (id: string, attr: string, qoy: (v: string) => void) => {
@@ -149,18 +149,18 @@ const havolalar = {
   function vazifalar(r: Reja): { boshi: number; vazifa: Vazifa[]; bosqich: string }[] {
     const N = Math.min(MAKS_HAFTA, Math.max(1, haftalarSoni(r.sana)));
     const math: Vazifa[] = [
-      { matn: 'Hajm darsini o\'ting va 6 ta mashqni yeching', havola: H.hajm, havolaMatn: 'Hajm laboratoriyasi' },
-      { matn: 'Funksiya grafigi darsini o\'ting va 5 ta mashqni yeching', havola: H.grafik, havolaMatn: 'Funksiya grafigi' },
-      { matn: 'Birlik aylana darsini o\'ting va 5 ta mashqni yeching', havola: H.aylana, havolaMatn: 'Birlik aylana' },
-      { matn: 'Statistika darsini o\'ting va 5 ta mashqni yeching', havola: H.statistika, havolaMatn: 'Statistika' },
+      { matn: 'Complete the Volume lesson and solve its 6 exercises', havola: H.hajm, havolaMatn: 'Volume lab' },
+      { matn: 'Complete the Function graphs lesson and solve its 5 exercises', havola: H.grafik, havolaMatn: 'Function graphs' },
+      { matn: 'Complete the Unit circle lesson and solve its 5 exercises', havola: H.aylana, havolaMatn: 'Unit circle' },
+      { matn: 'Complete the Statistics lesson and solve its 5 exercises', havola: H.statistika, havolaMatn: 'Statistics' },
     ];
-    const mathMashq: Vazifa = { matn: "Savol bankidan Math savollari: zaif mavzu bo'yicha bitta to'plam", havola: H.bank, havolaMatn: 'Savol banki' };
+    const mathMashq: Vazifa = { matn: 'Math questions from the question bank: one set on a weak topic', havola: H.bank, havolaMatn: 'Question bank' };
     const rw: Vazifa[] = [
-      { matn: "Savol bankidan Reading and Writing savollari: bitta to'plam", havola: H.bank, havolaMatn: 'Savol banki' },
-      { matn: "Lug'at kartochkalari: 20 ta so'z", havola: H.lugat, havolaMatn: "Lug'at" },
+      { matn: 'Reading and Writing questions from the question bank: one set', havola: H.bank, havolaMatn: 'Question bank' },
+      { matn: 'Vocabulary cards: 20 words', havola: H.lugat, havolaMatn: 'Vocabulary' },
     ];
-    const xatoDaftar: Vazifa = { matn: 'Xato daftaridagi bugungi savollarni takrorlang', havola: H.takrorlash, havolaMatn: 'Takrorlash' };
-    const mock: Vazifa = { matn: "Bluebook™ ilovasida to'liq practice test ishlang (CB01) va xatolarni yozib chiqing" };
+    const xatoDaftar: Vazifa = { matn: "Review today's questions in the mistake log", havola: H.takrorlash, havolaMatn: 'Review' };
+    const mock: Vazifa = { matn: 'Take a full practice test in the Bluebook™ app (CB01) and write down your mistakes' };
     const ulush = r.fokus === 'math' ? 0.65 : r.fokus === 'rw' ? 0.35 : 0.5;
 
     const natija: { boshi: number; vazifa: Vazifa[]; bosqich: string }[] = [];
@@ -170,15 +170,15 @@ const havolalar = {
       let bosqich: string;
       const oxirgi = k === N - 1;
       if (k === 0 && N > 1) {
-        bosqich = 'Diagnostika';
-        v.push(mock, { matn: "Xatolarni Math va Reading and Writing bo'yicha ajrating, eng ko'p xato qilingan 3 mavzuni yozing" });
+        bosqich = 'Diagnostic';
+        v.push(mock, { matn: 'Sort your mistakes into Math and Reading and Writing, and write down the 3 topics with the most mistakes' });
       } else if (oxirgi) {
-        bosqich = 'Oxirgi hafta';
-        v.push(xatoDaftar, { matn: 'Yengil takrorlash: yangi mavzu boshlamang' }, { matn: "Imtihon kuni talablari va kerakli hujjatlarni College Board saytidan tekshiring" });
+        bosqich = 'Final week';
+        v.push(xatoDaftar, { matn: 'Light review: do not start a new topic' }, { matn: 'Check the test day requirements and the documents you need on the College Board website' });
       } else if (k / N < 0.6) {
-        bosqich = 'Asos';
+        bosqich = 'Foundation';
       } else {
-        bosqich = 'Mashq';
+        bosqich = 'Practice';
         if ((k - Math.ceil(N * 0.6)) % 2 === 0) v.push(mock);
         v.push(xatoDaftar);
       }
@@ -189,7 +189,7 @@ const havolalar = {
         const qoldiq = Math.max(0, r.kunlar - bosh);
         const mathSoni = Math.round(qoldiq * ulush);
         for (let t = 0; t < qoldiq; t++) {
-          if (t < mathSoni) v.push(bosqich === 'Asos' && mathI < math.length ? math[mathI++] : mathMashq);
+          if (t < mathSoni) v.push(bosqich === 'Foundation' && mathI < math.length ? math[mathI++] : mathMashq);
           else v.push(rw[rwI++ % rw.length]);
         }
       }
@@ -207,15 +207,15 @@ const havolalar = {
     const qolganHafta = haftalarSoni(r.sana);
     const dl = $('xulosa'); dl.replaceChildren();
     const qator: [string, string][] = [
-      ['Imtihon', sanaMatn(sanaUTC(r.sana))],
-      ['Qolgan hafta', String(Math.max(0, qolganHafta))],
-      ['Maqsad ball', String(r.maqsad)],
+      ['Test date', sanaMatn(sanaUTC(r.sana))],
+      ['Weeks left', String(Math.max(0, qolganHafta))],
+      ['Target score', String(r.maqsad)],
     ];
-    if (r.hozirgi) qator.push(['Farq', `${r.maqsad - r.hozirgi >= 0 ? '+' : '−'}${Math.abs(r.maqsad - r.hozirgi)} ball`]);
+    if (r.hozirgi) qator.push(['Difference', `${r.maqsad - r.hozirgi >= 0 ? '+' : '−'}${Math.abs(r.maqsad - r.hozirgi)} points`]);
     qator.forEach(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); dl.append(d); });
     const uzoq = $('izoh-uzoq');
     uzoq.hidden = qolganHafta <= MAKS_HAFTA;
-    uzoq.textContent = `Imtihongacha ${qolganHafta} hafta: reja birinchi ${MAKS_HAFTA} haftaga tuzildi. Tugagach, rejani qayta tuzing.`;
+    uzoq.textContent = `${qolganHafta} weeks until the test: the plan covers the first ${MAKS_HAFTA} weeks. When they are over, make a new plan.`;
 
     const ol = $('haftalar'); ol.replaceChildren();
     let jami = 0, bajarildi = 0;
@@ -228,7 +228,7 @@ const havolalar = {
       const sum = document.createElement('summary');
       const oxiri = Math.min(h.boshi + 6 * KUN, sanaUTC(r.sana));
       const raqam = document.createElement('span'); raqam.className = 'h-raqam'; raqam.textContent = String(k + 1);
-      const nom = document.createElement('span'); nom.className = 'h-nom'; nom.textContent = `${k + 1}-hafta · ${sanaMatn(h.boshi)} – ${sanaMatn(oxiri)}`;
+      const nom = document.createElement('span'); nom.className = 'h-nom'; nom.textContent = `Week ${k + 1} · ${sanaMatn(h.boshi)} – ${sanaMatn(oxiri)}`;
       const bos = document.createElement('span'); bos.className = 'pill'; bos.textContent = h.bosqich;
       const hisob = document.createElement('span'); hisob.className = 'kichik ikkinchi h-hisob';
       sum.append(raqam, nom, bos, hisob);
@@ -246,7 +246,7 @@ const havolalar = {
         const sp = document.createElement('span'); sp.textContent = v.matn;
         lab.append(inp, sp);
         li2.append(lab);
-        if (v.havola) { const a = document.createElement('a'); a.href = v.havola; a.className = 'v-havola'; a.textContent = v.havolaMatn ?? 'Ochish'; li2.append(a); }
+        if (v.havola) { const a = document.createElement('a'); a.href = v.havola; a.className = 'v-havola'; a.textContent = v.havolaMatn ?? 'Open'; li2.append(a); }
         ul.append(li2);
       });
       hisob.textContent = `${hb} / ${h.vazifa.length}`;
@@ -259,7 +259,7 @@ const havolalar = {
 
   function saqla() {
     const ok = yoz(KALIT_REJA, reja);
-    $('saqlash-holat').textContent = ok ? 'Reja faqat shu brauzerda saqlanadi.' : "Brauzer saqlashga ruxsat bermadi: reja sahifa yopilganda yo'qoladi.";
+    $('saqlash-holat').textContent = ok ? 'The plan is saved only in this browser.' : 'The browser did not allow saving: the plan will be lost when the page is closed.';
   }
 
   // ---------- Forma ----------
@@ -269,13 +269,13 @@ const havolalar = {
     const sana = $<HTMLInputElement>('r-sana').value;
     const hozirgiS = $<HTMLInputElement>('r-hozirgi').value.trim();
     const maqsad = Number($<HTMLInputElement>('r-maqsad').value);
-    if (!sana) { xato('Imtihon sanasini kiriting.'); $('r-sana').focus(); return null; }
-    if (sanaUTC(sana) <= sanaUTC(bugun())) { xato("Imtihon sanasi bugundan keyin bo'lishi kerak."); $('r-sana').focus(); return null; }
-    if (!Number.isFinite(maqsad) || maqsad < 400 || maqsad > 1600) { xato("Maqsad ballni 400 dan 1600 gacha kiriting."); $('r-maqsad').focus(); return null; }
+    if (!sana) { xato('Enter the test date.'); $('r-sana').focus(); return null; }
+    if (sanaUTC(sana) <= sanaUTC(bugun())) { xato('The test date must be after today.'); $('r-sana').focus(); return null; }
+    if (!Number.isFinite(maqsad) || maqsad < 400 || maqsad > 1600) { xato('Enter a target score from 400 to 1600.'); $('r-maqsad').focus(); return null; }
     let hozirgi: number | null = null;
     if (hozirgiS) {
       hozirgi = Number(hozirgiS);
-      if (!Number.isFinite(hozirgi) || hozirgi < 400 || hozirgi > 1600) { xato("Hozirgi ballni 400 dan 1600 gacha kiriting yoki bo'sh qoldiring."); $('r-hozirgi').focus(); return null; }
+      if (!Number.isFinite(hozirgi) || hozirgi < 400 || hozirgi > 1600) { xato('Enter a current score from 400 to 1600, or leave it blank.'); $('r-hozirgi').focus(); return null; }
     }
     xato('');
     return { sana, hozirgi, maqsad, kunlar: tanlov.kunlar, fokus: tanlov.fokus, belgilar: {} };
@@ -318,7 +318,7 @@ const havolalar = {
   .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
   .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
   .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: 32px; }
   h2:focus { outline: none; }
   .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
@@ -329,10 +329,10 @@ const havolalar = {
   .maydon label, .maydon legend { font-weight: 700; padding: 0; margin-bottom: var(--b-1); }
   .maydon-qator { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--b-4); }
   .forma input[type='date'], .forma input[type='number'] {
-    min-height: 48px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
+    min-height: 48px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
     background: var(--fon); color: var(--matn); font: inherit; font-size: 17px; max-width: 100%;
   }
-  .forma input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .forma input:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .segment { display: flex; flex-wrap: wrap; gap: var(--b-2); }
   .segment button { min-height: 44px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
   .segment button:hover { border-color: var(--rang-asosiy); }
@@ -340,9 +340,9 @@ const havolalar = {
   .xato-xabar { font-weight: 700; color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
   .xato-xabar[hidden] { display: none; }
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .katta { min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
-  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
+  .katta { min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
   .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
   .matn-tugma:hover { background: var(--sirt-ikkinchi); }
   .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
@@ -363,7 +363,7 @@ const havolalar = {
   .haftalar :global(details) { border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
   .haftalar :global(summary) { min-height: 56px; padding: var(--b-3) var(--b-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); cursor: pointer; list-style: none; }
   .haftalar :global(summary::-webkit-details-marker) { display: none; }
-  .haftalar :global(summary:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-orta); }
+  .haftalar :global(summary:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--r-orta); }
   .haftalar :global(.h-raqam) { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-weight: 800; font-size: var(--matn-kichik); }
   .haftalar :global(.h-nom) { font-weight: 800; flex: 1 1 200px; min-width: 0; }
   .haftalar :global(.h-hisob) { font-variant-numeric: tabular-nums; }

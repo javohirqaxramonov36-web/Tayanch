@@ -1,0 +1,479 @@
+---
+// 2-qavat · Top Admission · yo'nalish sahifasi: Türkiye Bursları.
+// Dizayn: Claude Design "Tayanch Top Admission maketi", B artboard'lari (Burslar, BurslarTelefon, qorong'i variantlari):
+// https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF
+// Viza kartasi, muhr, chipta, MRZ: DESIGN.md ("Viza sahifasi" va boshqalar).
+// Faktlar faqat TB01–TB05 (manbalar.ts, rasmiy, 2026-11-09). Muddat: deadline.ts "turkiye-burslari-2027-ariza".
+// Maketdan farq: (1) "Keyingi qadam" bloki qora emas (DESIGN.md: qora sahna faqat bosh sahifada),
+// (2) "Rasmiy manbalar / Tekshirilgan sana / Tekshirilmagan joylar" umumiy SahifaOxiri blokida.
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import SahifaOxiri from '../../../../components/SahifaOxiri.astro';
+import { deadlinelar } from '../../../../data/deadline';
+import { rasmiyManbalar } from '../../../../data/manbalar';
+import { yol } from '../../../../lib/yol';
+
+const MANBALAR = ['TB01', 'TB02', 'TB03', 'TB04', 'TB05'];
+const rasmiy = rasmiyManbalar(MANBALAR);
+// Rasmiy bo'lmagan yoki topilmagan manba bo'lsa build to'xtaydi (fakt manbasiz chiqmasin).
+if (rasmiy.length !== MANBALAR.length) throw new Error('Türkiye Bursları: TB01–TB05 rasmiy manbalari topilmadi');
+const m = (id: string) => rasmiy.find((x) => x.id === id)!;
+
+const tb = deadlinelar.find((x) => x.id === 'turkiye-burslari-2027-ariza');
+if (!tb) throw new Error("deadline.ts: 'turkiye-burslari-2027-ariza' topilmadi");
+// TB01: ariza har yili 10-yanvarda ochiladi; yil deadline.ts dagi yopilish yilidan olinadi.
+const ochilish = `${tb.sana.slice(0, 4)}-01-10`;
+
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+const zinapoya = yol('/uz/top-admission/qollanma/ariza-zinapoyasi/');
+const sana = '2026-11-09';
+const keyingi = '2026-12-09';
+
+const mundarija = [
+  { id: 'kimga', nomi: 'Kimga mos' },
+  { id: 'qabul', nomi: 'Qabul tizimi' },
+  { id: 'moliya', nomi: 'Moliyaviy yordam' },
+  { id: 'hujjat', nomi: 'Hujjatlar' },
+  { id: 'muddat', nomi: 'Deadline' },
+  { id: 'imtihon', nomi: 'Imtihon va til' },
+  { id: 'oxiri-sarlavha', nomi: 'Manbalar va tekshiruv' },
+];
+
+const shartlar = [
+  { daraja: "Bakalavriat (associate, bachelor's)", ball: '70%', yosh: '21 dan kichik' },
+  { daraja: 'Magistratura', ball: '75%', yosh: '30 dan kichik' },
+  { daraja: 'Doktorantura (PhD)', ball: '75%', yosh: '35 dan kichik' },
+];
+const bosqichlar = [
+  { nomi: 'Ariza', vaqt: '10-yanvar – 20-fevral' },
+  { nomi: 'Baholash', vaqt: 'mart – aprel' },
+  { nomi: 'Intervyu', vaqt: 'aprel – iyun' },
+  { nomi: 'Natija', vaqt: 'avgust boshi' },
+];
+const qoplanadi = [
+  "O'qish to'lovi",
+  'Yotoqxona (bakalavriat talabalari uchun)',
+  "Tibbiy sug'urta",
+  'Bir martalik aviachipta',
+  "1 yillik bepul turk tili kursi",
+];
+const stipendiya = [
+  { daraja: 'Bakalavriat', summa: '6.500 TL' },
+  { daraja: 'Magistratura', summa: '9.500 TL' },
+  { daraja: 'Doktorantura', summa: '13.000 TL' },
+];
+const hujjatlar = [
+  'Shaxsni tasdiqlovchi hujjat (ID karta yoki pasport)',
+  "Oxirgi 1 yil ichida tushgan foto",
+  "Milliy imtihon natijasi (bo'lsa)",
+  'Diplom yoki vaqtinchalik bitiruv guvohnomasi',
+  'Transkript',
+  "Xalqaro imtihon natijasi (GRE, GMAT, SAT va boshqalar): tanlangan universitet yoki dastur talab qilsa",
+  "Xalqaro til testi natijasi (TOEFL, DELF va boshqalar): tanlangan universitet yoki dastur talab qilsa",
+];
+const tekshirilmagan = [
+  "2027-yil e'loni (rasmiy taqvimda yil yozilmagan)",
+  "Yosh chegarasi qaysi sanaga qarab hisoblanishi (TB02 da yozilmagan)",
+  "Ariza 5 qadami: rasmiy sahifada faqat rasm sifatida berilgan",
+  "Turk tili kursidan ozod qilish shartlari (TB04 va TB05 matni bir-biridan farq qiladi)",
+  "Magistratura va doktorantura uchun yotoqxona va uy-joy puli",
+];
+
+const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tekshirilganSana}`, sana: m(id).tekshirilganSana });
+---
+<BolimQobiq
+  title="Türkiye Bursları · Top Admission"
+  description="Türkiye Bursları: kimga mos, qabul taqvimi, stipendiya, hujjatlar va muddat. Faqat rasmiy manbadan, natija kafolatlanmaydi."
+  turi="qollanma"
+  bolim="top-admission"
+  holat="qoralama"
+  tekshirilgan={sana}
+  keyingiTekshiruv={keyingi}
+  manbalar={MANBALAR}
+  tekshirilmagan={tekshirilmagan}
+  yol={["Yo'nalishlar"]}
+>
+  <div class="ichki tb-sahifa">
+
+    <section class="viza" aria-labelledby="tb-sarlavha">
+      <div class="viza-ichki">
+        <div class="viza-bosh">
+          <div class="viza-kod">
+            <p class="kod" aria-label="O'zbekistondan Türkiye'ga">UZ → TR</p>
+            <p class="ustki">Yo'nalish sahifasi</p>
+          </div>
+          <span class="yorliq">Qoralama</span>
+        </div>
+        <h1 id="tb-sarlavha">Türkiye Bursları</h1>
+        <dl class="viza-maydon">
+          <div><dt class="ustki">Dastur</dt><dd>Türkiye Bursları (YTB)</dd></div>
+          <div><dt class="ustki">Daraja</dt><dd>Bakalavriat, magistratura, doktorantura</dd></div>
+          <div class="muhrli">
+            <dt class="ustki">Ariza oynasi</dt>
+            <dd><span>10-yanvar – 20-fevral</span><span class="muhr" role="img" aria-label={Muhr('TB01').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB01').sana}</span></span></dd>
+          </div>
+          <div><dt class="ustki">Manba</dt><dd><a href="https://www.turkiyeburslari.gov.tr/" rel="noopener">turkiyeburslari.gov.tr</a></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <details class="mund-telefon">
+      <summary>
+        Mundarija
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </summary>
+      <nav aria-label="Sahifa mundarijasi">
+        {mundarija.map((b) => <a href={`#${b.id}`}>{b.nomi}</a>)}
+      </nav>
+    </details>
+
+    <div class="ikki-ustun">
+      <div class="asosiy-ustun">
+
+        <section id="kimga" class="bolim bolim-birinchi" aria-labelledby="kimga-h">
+          <div class="bolim-bosh">
+            <h2 id="kimga-h">Kimga mos</h2>
+            <span class="muhr muhr-kichik" role="img" aria-label={Muhr('TB02').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB02').sana}</span></span>
+          </div>
+          <div class="jadval-quti">
+            <table>
+              <caption class="sust kichik">Rasmiy minimal shartlar (TB02)</caption>
+              <thead><tr><th scope="col">Daraja</th><th scope="col">Minimal o'zlashtirish</th><th scope="col">Yosh</th></tr></thead>
+              <tbody>
+                {shartlar.map((s) => <tr><th scope="row">{s.daraja}</th><td>{s.ball}</td><td>{s.yosh}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+          <ul class="royxat">
+            <li>Tibbiyot, stomatologiya va farmatsiya uchun minimal o'zlashtirish 90%.</li>
+            <li>Barcha davlat fuqarolari ariza bera oladi. Türkiye fuqarolari va Türkiye universitetida shu darajada o'qiyotganlar bera olmaydi.</li>
+            <li>Bitirganlar va joriy o'quv yili oxirida (avgustgacha) bitiradiganlar ariza bera oladi.</li>
+          </ul>
+          <p class="izoh"><span class="yorliq yorliq-ogoh">tekshirish kerak</span> Yosh qaysi sanaga qarab hisoblanishi rasmiy sahifada yozilmagan.</p>
+        </section>
+
+        <section id="qabul" class="bolim" aria-labelledby="qabul-h">
+          <h2 id="qabul-h">Qabul tizimi</h2>
+          <p class="matn">
+            Ariza onlayn, Türkiye Bursları tizimida (TBBS) topshiriladi:{' '}
+            <a class="havola-matn" href="https://tbbs.turkiyeburslari.gov.tr/" rel="noopener">tbbs.turkiyeburslari.gov.tr</a>.
+            Onlayn arizada 12 tagacha tanlov qilish mumkin.
+          </p>
+          <div class="taqvim">
+            <div class="taqvim-bosh">
+              <p class="ustki">Ariza bosqichlari · har yilgi taqvim</p>
+              <span class="muhr muhr-kichik" role="img" aria-label={Muhr('TB01').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB01').sana}</span></span>
+            </div>
+            <ol class="bosqichlar">
+              {bosqichlar.map((b, i) => (
+                <li class:list={[i === 0 && 'birinchi', i === bosqichlar.length - 1 && 'oxirgi']}>
+                  <span class="chiziq-qator" aria-hidden="true"><span class="nuqta"></span><span class="chiziq"></span></span>
+                  <b>{b.nomi}</b>
+                  <span class="ikkinchi">{b.vaqt}</span>
+                </li>
+              ))}
+            </ol>
+            <p class="ikkinchi kichik">Natijadan keyin: avgustda dastlabki rasmiylashtirish, sentabrda Türkiye'ga kelish.</p>
+          </div>
+        </section>
+
+        <section id="moliya" class="bolim" aria-labelledby="moliya-h">
+          <div class="bolim-bosh">
+            <h2 id="moliya-h">Moliyaviy yordam</h2>
+            <span class="muhr muhr-kichik" role="img" aria-label={Muhr('TB03').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB03').sana}</span></span>
+          </div>
+          <ul class="royxat">{qoplanadi.map((q) => <li>{q}</li>)}</ul>
+          <dl class="stipendiya">
+            {stipendiya.map((s) => <div><dt class="ustki">{s.daraja}</dt><dd>{s.summa}<span class="sust kichik"> / oy</span></dd></div>)}
+          </dl>
+          <p class="ikkinchi kichik">Oylik stipendiya summasi {m('TB03').tekshirilganSana} dagi rasmiy sahifadan. Summa o'zgarishi mumkin: ariza oldidan rasmiy saytda qarang.</p>
+        </section>
+
+        <section id="hujjat" class="bolim" aria-labelledby="hujjat-h">
+          <div class="bolim-bosh">
+            <h2 id="hujjat-h">Hujjatlar</h2>
+            <span class="muhr muhr-kichik" role="img" aria-label={Muhr('TB04').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB04').sana}</span></span>
+          </div>
+          <p class="matn">TBBS tizimiga yuklanadi:</p>
+          <ul class="royxat">{hujjatlar.map((h) => <li>{h}</li>)}</ul>
+          <p class="ikkinchi kichik">Faqat doktorantura uchun: tadqiqot mavzusi taklifi va bajargan tadqiqotingizdan yozma namuna.</p>
+        </section>
+
+        <section id="muddat" class="bolim" aria-labelledby="muddat-h">
+          <h2 id="muddat-h">Deadline</h2>
+          <article class="chipta" data-yopilish={tb.sana} data-ochilish={ochilish} aria-labelledby="chipta-h">
+            <span class="teshik teshik-tepa" aria-hidden="true"></span>
+            <span class="teshik teshik-past" aria-hidden="true"></span>
+            <div class="chipta-asosiy">
+              <div class="chipta-matn">
+                <p class="ustki" id="chipta-h">Umumiy ariza</p>
+                <p class="chipta-sana"><span class="nw">10-yanvar</span> – <span class="nw">20-fevral</span></p>
+                <p class="ikkinchi kichik">Har yilgi taqvim, 2027 e'loni kutilmoqda</p>
+              </div>
+              <span class="muhr" role="img" aria-label={Muhr('TB01').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB01').sana}</span></span>
+            </div>
+            <div class="korishok">
+              <span class="korishok-katta">20-fevral</span>
+              <span class="korishok-matn">oxirgi kun</span>
+            </div>
+          </article>
+          <p><a class="havola" href={yol('/uz/deadline/')}>Barcha muddatlar</a></p>
+        </section>
+
+        <section id="imtihon" class="bolim" aria-labelledby="imtihon-h">
+          <div class="bolim-bosh">
+            <h2 id="imtihon-h">Imtihon va til</h2>
+            <span class="muhr muhr-kichik" role="img" aria-label={Muhr('TB04').label}><b>TEKSHIRILGAN</b><span>{Muhr('TB04').sana}</span></span>
+          </div>
+          <ul class="royxat">
+            <li>GRE, GMAT, SAT kabi xalqaro imtihon va TOEFL, DELF kabi til testi faqat tanlangan universitet yoki dastur talab qilsa kerak.</li>
+            <li>Turkcha C1 sertifikati bo'lmagan grant oluvchilar (ingliz tilidagi dasturga joylashganlar ham) 1 yillik turk tili kursida o'qiydi va yil oxirigacha C1 sertifikatini olishi kerak (TB04).</li>
+            <li>Turk tili kursi dastur tilidan qat'i nazar hamma grant oluvchilarga bepul (TB05).</li>
+          </ul>
+          <p class="izoh"><span class="yorliq yorliq-ogoh">tekshirish kerak</span> Kursdan ozod qilish shartlari rasmiy sahifalarda aniq yozilmagan.</p>
+        </section>
+
+        <section class="keyingi" aria-labelledby="keyingi-h">
+          <div class="keyingi-matn">
+            <p class="ustki">Keyingi qadam</p>
+            <p id="keyingi-h" class="keyingi-sarlavha">Bu yo'l sizga mosmi? 3 savolda tekshiring.</p>
+            <a class="havola" href={zinapoya}>Ariza zinapoyasi: Türkiye Bursları bosqichma-bosqich</a>
+          </div>
+          <a class="tugma tugma-asosiy katta-tugma" href={vosita}>Topshirish yo'li</a>
+        </section>
+      </div>
+
+      <nav class="mund" aria-label="Sahifa mundarijasi" data-mundarija>
+        <p class="ustki">Mundarija</p>
+        {mundarija.map((b) => <a href={`#${b.id}`} data-bolim={b.id}>{b.nomi}</a>)}
+      </nav>
+    </div>
+
+    <div class="tb-oxir">
+      <p class="ikkinchi kichik"><strong class="qalin">Natija kafolatlanmaydi.</strong> Tayanch Türkiye Bursları (YTB) bilan bog'liq emas. Qabul yoki grant ehtimoli hisoblanmaydi.</p>
+      <div class="mrz" aria-hidden="true">
+        <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+        <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+      </div>
+    </div>
+  </div>
+  <SahifaOxiri manbalar={MANBALAR} tekshirilgan={sana} keyingiTekshiruv={keyingi} tekshirilmagan={tekshirilmagan} />
+</BolimQobiq>
+
+<script>
+  import { toshkentBugun, kunFarqi } from '../../../../lib/muddat';
+  // 1) Chiptadagi qolgan kun (kirish sahifasi bilan bir xil mantiq), bugun Toshkent bo'yicha.
+  //    JS bo'lmasa "20-fevral / oxirgi kun" qoladi.
+  const bugun = toshkentBugun();
+  document.querySelectorAll<HTMLElement>('.chipta[data-yopilish]').forEach((ch) => {
+    const katta = ch.querySelector('.korishok-katta');
+    const matn = ch.querySelector('.korishok-matn');
+    const korishok = ch.querySelector('.korishok');
+    if (!katta || !matn || !korishok) return;
+    const { yopilish = '', ochilish } = ch.dataset;
+    if (ochilish && bugun < ochilish) {
+      katta.textContent = String(kunFarqi(bugun, ochilish));
+      matn.textContent = 'kun ochilishiga';
+    } else if (bugun <= yopilish) {
+      const n = kunFarqi(bugun, yopilish);
+      katta.textContent = n === 0 ? 'Bugun' : String(n);
+      matn.textContent = n === 0 ? 'oxirgi kun' : 'kun qoldi';
+    } else {
+      katta.textContent = "O'tgan";
+      matn.textContent = 'muddat tugagan';
+      korishok.classList.add('otgan');
+    }
+    korishok.classList.add('son');
+  });
+
+  // 2) Mundarija: ekrandagi bo'lim aria-current="location" bilan belgilanadi (faqat desktop mundarijasi).
+  const mund = document.querySelector<HTMLElement>('[data-mundarija]');
+  if (mund && 'IntersectionObserver' in window) {
+    const havolalar = [...mund.querySelectorAll<HTMLAnchorElement>('a[data-bolim]')];
+    const belgila = (id: string) => havolalar.forEach((a) => {
+      if (a.dataset.bolim === id) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+    const kuzatuvchi = new IntersectionObserver((yozuvlar) => {
+      const korinadi = yozuvlar.filter((y) => y.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (korinadi) belgila(korinadi.target.id);
+    }, { rootMargin: '0px 0px -65% 0px' });
+    havolalar.forEach((a) => {
+      const el = document.getElementById(a.dataset.bolim || '');
+      if (el) kuzatuvchi.observe(el);
+    });
+  }
+</script>
+
+<style>
+  .tb-sahifa { display: grid; gap: var(--b-10); padding-bottom: var(--b-6); }
+  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
+  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  a:focus-visible, summary:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .qalin { color: var(--matn); }
+  .matn { max-width: 62ch; }
+
+  /* Viza kartasi: 24px katakli to'r (DESIGN.md), 2×2 maydon */
+  .viza {
+    border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-8) 36px;
+    background-color: var(--fon);
+    background-image:
+      linear-gradient(to right, var(--sirt-ikkinchi) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--sirt-ikkinchi) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .viza-ichki { display: grid; gap: 22px; }
+  .viza-bosh { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--b-4); }
+  .viza-kod { display: grid; gap: 6px; }
+  .kod { font-size: 40px; font-weight: 900; letter-spacing: .04em; color: var(--rang-havola); line-height: 1.1; }
+  .viza-maydon { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1.5px solid var(--matn); }
+  .viza-maydon > div { padding: var(--b-4) var(--b-5) var(--b-4) 0; display: grid; gap: var(--b-1); align-content: start; }
+  .viza-maydon > div:nth-child(even) { padding: var(--b-4) 0 var(--b-4) var(--b-5); border-left: 1px solid var(--chiziq-kuchli); }
+  .viza-maydon > div:nth-child(-n+2) { border-bottom: 1px solid var(--chiziq-kuchli); }
+  .viza-maydon .muhrli dd { display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); margin-top: calc(-1 * var(--b-6)); }
+  .viza-maydon dt { font-size: 12px; }
+  .viza-maydon dd { margin: 0; font-size: 18px; font-weight: 800; }
+  .viza-maydon dd a { color: var(--rang-havola); }
+
+  /* Muhr: faqat rasmiy manbada tekshirilgan faktda (DESIGN.md) */
+  .muhr {
+    width: 84px; height: 84px; flex: none; border-radius: 50%;
+    border: 2px dashed var(--rang-havola); outline: 1.5px solid var(--rang-havola); outline-offset: -8px;
+    color: var(--rang-havola); background: var(--fon);
+    display: grid; place-content: center; justify-items: center; gap: 2px; transform: rotate(-8deg); text-align: center;
+  }
+  .muhr b { font-size: 7.5px; letter-spacing: .03em; font-weight: 800; }
+  .muhr span { font-size: 10.5px; font-weight: 700; }
+  .muhr-kichik { width: 64px; height: 64px; outline-offset: -6px; }
+  .muhr-kichik b { font-size: 6px; letter-spacing: .02em; }
+  .muhr-kichik span { font-size: 8.5px; }
+
+  /* Ikki ustun: matn + yopishqoq mundarija (desktop) */
+  .ikki-ustun { display: flex; gap: var(--b-10); align-items: flex-start; }
+  .asosiy-ustun { flex: 1; min-width: 0; display: grid; gap: var(--b-8); }
+  .mund { width: 220px; flex: none; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: 2px; border-left: 1.5px solid var(--chiziq); padding-left: var(--b-3); }
+  .mund .ustki { margin: 0 0 var(--b-2) var(--b-3); font-size: 12px; }
+  .mund a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--b-3); border-radius: 10px; text-decoration: none; color: var(--matn-ikkinchi); font-weight: 600; font-size: var(--matn-kichik); }
+  .mund a:hover { background: var(--fon-ikkinchi); color: var(--matn); }
+  .mund a[aria-current='location'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .mund-telefon { display: none; }
+
+  .bolim { display: grid; gap: var(--b-3); padding-top: var(--b-8); border-top: 1px solid var(--chiziq); scroll-margin-top: var(--b-6); }
+  .bolim-birinchi { border-top: 0; padding-top: 0; }
+  .bolim-bosh { display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); }
+  .royxat { margin: 0; padding-left: 1.2em; display: grid; gap: var(--b-2); max-width: 62ch; }
+  .izoh { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .yorliq-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+
+  .jadval-quti { overflow-x: auto; border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  caption { text-align: left; padding: var(--b-3) var(--b-4) 0; }
+  th, td { text-align: left; padding: var(--b-3) var(--b-4); border-bottom: 1px solid var(--chiziq); }
+  thead th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  tbody th { font-weight: 700; }
+  tbody td { font-weight: 800; }
+  tbody tr:last-child > * { border-bottom: 0; }
+
+  /* Taqvim: 4 bosqich */
+  .taqvim { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: 28px var(--b-6) var(--b-6); display: grid; gap: var(--b-5); }
+  .taqvim-bosh { display: flex; justify-content: space-between; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
+  .taqvim .muhr { background: var(--fon-ikkinchi); }
+  .bosqichlar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .bosqichlar li { display: grid; gap: 10px; align-content: start; padding-right: var(--b-3); }
+  .bosqichlar li.oxirgi { padding-right: 0; }
+  .bosqichlar b { font-size: 17px; }
+  .chiziq-qator { display: flex; align-items: center; }
+  .nuqta { width: 18px; height: 18px; flex: none; border-radius: var(--r-toliq); background: var(--fon); border: 1.5px solid var(--matn); }
+  .birinchi .nuqta { background: var(--rang-asosiy); border: 3px solid var(--fon-ikkinchi); outline: 1.5px solid var(--rang-asosiy); }
+  .oxirgi .nuqta { background: var(--matn); }
+  .chiziq { flex: 1; height: 2px; background: var(--matn); }
+  .oxirgi .chiziq { display: none; }
+
+  .stipendiya { margin: 0; display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .stipendiya > div { flex: 1 1 160px; border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4); display: grid; gap: var(--b-1); }
+  .stipendiya dt { font-size: 12px; }
+  .stipendiya dd { margin: 0; font-size: 22px; font-weight: 900; }
+
+  /* Chipta: faqat muddat kartalari */
+  .chipta { --korishok: 150px; position: relative; overflow: hidden; display: flex; min-height: 160px; border: 1.5px solid var(--matn); border-radius: var(--r-orta); background: var(--fon); }
+  .teshik { position: absolute; right: calc(var(--korishok) - 11px); width: 22px; height: 22px; border-radius: 50%; background: var(--fon); border: 1.5px solid var(--matn); }
+  .teshik-tepa { top: -12px; }
+  .teshik-past { bottom: -12px; }
+  .chipta-asosiy { flex: 1; min-width: 0; padding: 22px var(--b-6); display: flex; justify-content: space-between; gap: var(--b-3); }
+  .chipta-matn { display: grid; gap: 6px; align-content: start; }
+  .chipta-sana { font-size: 32px; font-weight: 900; line-height: 1.1; }
+  .nw { white-space: nowrap; }
+  .korishok { width: var(--korishok); flex: none; border-left: 2px dashed var(--chiziq-kuchli); display: grid; place-content: center; justify-items: center; gap: 2px; padding: var(--b-4); text-align: center; }
+  .korishok-katta { font-size: 20px; font-weight: 800; line-height: 1.15; }
+  .korishok-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .korishok.son .korishok-katta { font-size: 44px; font-weight: 900; line-height: 1; }
+  .korishok.otgan .korishok-katta { font-size: 20px; color: var(--matn-sust); }
+
+  /* Keyingi qadam: qora sahna emas (DESIGN.md), oddiy chegarali karta */
+  .keyingi { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--b-4); }
+  .keyingi-matn { display: grid; gap: 6px; justify-items: start; }
+  .keyingi-sarlavha { font-size: 22px; font-weight: 800; }
+  .katta-tugma { min-height: var(--control-height-md); padding-inline: 26px; font-weight: 800; }
+
+  .tb-oxir { border-top: 1.5px solid var(--matn); padding-top: var(--b-6); display: grid; gap: 18px; }
+  /* MRZ: pasport metaforasi, shaxsiy ma'lumot yo'q (DESIGN.md) */
+  .mrz { background: var(--fon-ikkinchi); border-radius: var(--r-orta) var(--r-orta) 0 0; padding: 18px var(--b-6); display: grid; gap: var(--b-1); overflow: hidden; }
+  .mrz p { font-weight: 700; font-size: 16px; letter-spacing: .22em; color: var(--matn-ikkinchi); white-space: nowrap; overflow: hidden; }
+
+  @media (max-width: 1180px) {
+    .mund { display: none; }
+    .mund-telefon { display: block; border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-1) var(--b-2); }
+    .mund-telefon summary { min-height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--b-2); font-weight: 800; cursor: pointer; list-style: none; }
+    .mund-telefon summary::-webkit-details-marker { display: none; }
+    .mund-telefon[open] summary svg { transform: rotate(180deg); }
+    .mund-telefon nav { display: grid; padding-bottom: var(--b-2); }
+    .mund-telefon a { display: flex; align-items: center; min-height: 44px; padding: 0 var(--b-3); border-radius: 10px; text-decoration: none; color: var(--matn); font-weight: 600; }
+    .mund-telefon a:hover { background: var(--fon-ikkinchi); }
+  }
+
+  @media (max-width: 760px) {
+    .tb-sahifa { gap: var(--b-6); }
+    .viza { padding: var(--b-5); background-size: 20px 20px; }
+    .viza-ichki { gap: 14px; }
+    .viza-bosh { align-items: center; }
+    .kod { font-size: 28px; }
+    .viza-kod .ustki { display: none; }
+    .viza-maydon { grid-template-columns: 1fr; }
+    .viza-maydon > div, .viza-maydon > div:nth-child(even) { padding: var(--b-3) 0; border-left: 0; border-bottom: 1px solid var(--chiziq-kuchli); }
+    .viza-maydon > div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .viza-maydon dt { font-size: 11px; }
+    .viza-maydon dd { font-size: 16px; }
+    .viza-maydon .muhr { width: 64px; height: 64px; outline-offset: -6px; }
+    .viza-maydon .muhr b { font-size: 6px; letter-spacing: .02em; }
+    .viza-maydon .muhr span { font-size: 8.5px; }
+    .bolim { padding-top: var(--b-6); scroll-margin-top: 80px; }
+    h2 { font-size: 22px; }
+    table { font-size: 14px; }
+    th, td { padding: var(--b-2) var(--b-3); }
+    .taqvim { padding: var(--b-5); }
+    .bosqichlar { grid-template-columns: 1fr; }
+    .bosqichlar li { grid-template-columns: 18px 1fr; column-gap: 14px; row-gap: 0; padding: 0 0 14px; }
+    .bosqichlar li.oxirgi { padding-bottom: 0; }
+    .chiziq-qator { grid-row: 1 / span 2; flex-direction: column; align-self: stretch; }
+    .chiziq { width: 2px; height: auto; flex: 1; min-height: 36px; margin-bottom: -14px; }
+    .bosqichlar b { font-size: 16px; }
+    .bosqichlar .ikkinchi { font-size: var(--matn-kichik); }
+    .chipta { --korishok: 96px; min-height: 0; }
+    .teshik { width: 20px; height: 20px; right: calc(var(--korishok) - 10px); }
+    .chipta-asosiy { flex-direction: column; padding: var(--b-4); }
+    .chipta-sana { font-size: 22px; }
+    .chipta .muhr { width: 64px; height: 64px; outline-offset: -6px; }
+    .chipta .muhr b { font-size: 6px; letter-spacing: .02em; }
+    .chipta .muhr span { font-size: 8.5px; }
+    .korishok { padding: var(--b-3) var(--b-2); }
+    .korishok-katta { font-size: 14px; white-space: nowrap; }
+    .korishok.son .korishok-katta { font-size: 36px; }
+    .korishok.otgan .korishok-katta { font-size: 14px; }
+    .keyingi { padding: 22px; flex-direction: column; align-items: stretch; }
+    .katta-tugma { width: 100%; }
+    .mrz { padding: 14px var(--b-4); }
+    .mrz p { font-size: 13px; letter-spacing: .18em; }
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+// Navigator tepasidagi shaxsiy blok: salom, "Keyingi qadam" kartasi, yo'l xaritasi va "qayta tuzish".
+// Ko'rinishi <html data-yol="bor"> ga bog'liq (YolBelgisi.astro). Mazmunni skript chizadi.
+// Qadam "tayyor"ligi shu yerda, build paytida hisoblanadi: sahifa fayli src/pages da bo'lishi kerak.
+// Qoidalarda noma'lum ID bo'lsa build to'xtaydi (to'qima havola chiqmasligi uchun).
+import { globSync } from 'node:fs';
+import { sep } from 'node:path';
+import Onboarding from './Onboarding.astro';
+import { navigatorMatni } from '../../data/navigatorMatn';
+import { navigatorSahifalar } from '../../data/navigatorSahifalar';
+import { qoidalar, UMUMIY_REJA } from '../../data/yolXaritasiQoidalar';
+import { faylManzili, nomalumIdlar, tayyorlikniBelgila } from '../../lib/navigator/yolXaritasi';
+
+const nomalum = nomalumIdlar(qoidalar, UMUMIY_REJA, navigatorSahifalar);
+if (nomalum.length) throw new Error(`yolXaritasiQoidalar: noma'lum sahifa ID: ${nomalum.join(', ')}`);
+
+// Build loyiha ildizidan ishga tushadi (statik sayt): sahifa fayllari ro'yxati shu yerdan olinadi.
+const fayllar = globSync('src/pages/**/index.astro', { cwd: process.cwd() }).map((f) => '/' + f.split(sep).join('/'));
+const mavjud = new Set(fayllar.map(faylManzili).filter((x): x is string => !!x));
+const sahifalar = tayyorlikniBelgila(navigatorSahifalar, mavjud);
+const m = navigatorMatni('uz');
+---
+<section class="ichki yol-blok" data-yol-blok aria-labelledby="yol-salom">
+  <div class="yol-bosh">
+    <h2 id="yol-salom" class="yol-salom" tabindex="-1" data-yol-salom></h2>
+    <p class="yol-meta">
+      <span data-yol-bugun hidden></span>
+      <span class="yorliq" data-yol-muddat hidden></span>
+    </p>
+  </div>
+
+  <div class="keyingi" data-yol-keyingi hidden>
+    <div class="keyingi-matn">
+      <p class="keyingi-yorliq">{m.keyingiQadam}</p>
+      <p class="keyingi-nom" id="keyingi-nom" data-yol-k-nom></p>
+      <p class="keyingi-izoh" data-yol-k-izoh></p>
+    </div>
+    <a class="tugma tugma-asosiy keyingi-tugma" data-yol-k-havola aria-describedby="keyingi-nom">{m.boshlash}</a>
+  </div>
+
+  <div class="yol-royxat">
+    <h3 class="yol-sarlavha">{m.yolXaritasi}</h3>
+    <p class="yol-asosiy ikkinchi" data-yol-asosiy hidden></p>
+    <ol class="qadamlar" aria-label={m.yolXaritasiRoyxat} data-yol-qadamlar></ol>
+    <p class="yol-ogoh" data-yol-ogoh hidden></p>
+    <p class="sust kichik" data-yol-izoh></p>
+    <p class="sust kichik" data-yol-saqlanmadi hidden>{m.saqlanmadi}</p>
+    <div>
+      <button type="button" class="tugma tugma-ikkinchi" data-yol-qayta>{m.qaytaTuzish}</button>
+    </div>
+  </div>
+</section>
+
+<Onboarding />
+<script type="application/json" id="navigator-sahifalar" set:html={JSON.stringify(sahifalar)} />
+
+<script>
+  import { navigatorniIshgaTushir } from '../../lib/navigator/boshqaruv';
+  navigatorniIshgaTushir();
+</script>
+
+<style>
+  .yol-blok { display: none; }
+  :global(html[data-yol='bor']) .yol-blok {
+    display: flex; flex-direction: column; gap: var(--b-6);
+    padding-block: var(--b-6) var(--b-10);
+  }
+  .yol-bosh { display: flex; flex-direction: column; gap: var(--b-2); }
+  .yol-salom { font-size: var(--matn-h2); font-weight: 900; line-height: 1.15; min-height: 1.15em; }
+  .yol-salom:focus { outline: none; }
+  .yol-salom:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
+  .yol-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-3); color: var(--matn-ikkinchi); font-size: var(--matn-katta); }
+  .yol-meta [hidden] { display: none; }
+
+  .keyingi {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
+    padding: var(--b-5) var(--b-6);
+    background: var(--sirt); border: 1.5px solid var(--matn); border-radius: var(--r-katta);
+  }
+  .keyingi[hidden] { display: none; }
+  .keyingi-matn { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-1); }
+  .keyingi-yorliq { font-size: var(--matn-kichik); font-weight: 800; color: var(--rang-havola); }
+  .keyingi-nom { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .keyingi-izoh { color: var(--matn-ikkinchi); }
+  .keyingi-izoh:empty { display: none; }
+  .keyingi-tugma { flex: none; }
+
+  .yol-royxat { display: flex; flex-direction: column; gap: var(--b-3); }
+  .yol-sarlavha { font-size: var(--matn-h3); font-weight: 800; }
+  .yol-royxat [hidden] { display: none; }
+  .qadamlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .qadamlar :global(li) {
+    display: flex; align-items: flex-start; gap: var(--b-3);
+    padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi);
+  }
+  .qadamlar :global(.q-raqam) {
+    flex: none; width: 32px; height: 32px; border-radius: var(--r-toliq);
+    display: flex; align-items: center; justify-content: center; font-weight: 800;
+    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+  }
+  .qadamlar :global(li.tez .q-raqam) { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
+  .qadamlar :global(.q-matn) { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .qadamlar :global(.q-nom) { font-weight: 800; }
+  .qadamlar :global(a.q-nom) {
+    color: var(--rang-havola); display: inline-flex; align-items: center; min-height: 44px; margin-block: -6px;
+  }
+  .qadamlar :global(.q-qator) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
+  .qadamlar :global(.q-izoh) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .yol-ogoh {
+    padding: var(--b-2) var(--b-3); border-radius: var(--r-kichik);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-kichik);
+  }
+
+  @media (max-width: 640px) {
+    .keyingi { padding: var(--b-4); }
+    .keyingi-tugma { width: 100%; }
+  }
+</style>

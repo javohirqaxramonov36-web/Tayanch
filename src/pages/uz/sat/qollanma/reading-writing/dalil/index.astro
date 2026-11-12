@@ -7,12 +7,12 @@ import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 
 // Laboratoriya matni (o'ylab topilgan vaziyat, mashq emas)
-const davo = "Somon qatlami tuproqni namroq saqlashga yordam beradi.";
+const davo = 'A layer of straw helps soil stay moist.';
 const gaplar = [
-  { matn: 'The school garden club wanted to know whether a layer of straw helps soil stay moist.', rol: 'Savol', sabab: "Tadqiqot savoli: nima tekshirilganini aytadi, natijani emas." },
-  { matn: 'The members covered half of one garden bed with straw and left the other half bare.', rol: 'Usul', sabab: "Tajriba usuli: nima qilinganini aytadi, natijani emas." },
-  { matn: 'After a week without rain, the soil under the straw was still damp, while the bare soil had dried and cracked.', rol: 'Dalil', sabab: "Kuzatilgan natija va aynan da'vo omili (namlik): bu dalil." },
-  { matn: 'The club plans to plant tomatoes in the bed next spring.', rol: 'Aloqasiz', sabab: "Kelajak rejasi: mavzuga yaqin, lekin da'voga aloqasi yo'q." },
+  { matn: 'The school garden club wanted to know whether a layer of straw helps soil stay moist.', rol: 'Question', sabab: 'The research question: it tells what was tested, not the result.' },
+  { matn: 'The members covered half of one garden bed with straw and left the other half bare.', rol: 'Method', sabab: 'The experimental method: it tells what was done, not the result.' },
+  { matn: 'After a week without rain, the soil under the straw was still damp, while the bare soil had dried and cracked.', rol: 'Evidence', sabab: 'An observed result about exactly the factor in the claim (moisture): this is the evidence.' },
+  { matn: 'The club plans to plant tomatoes in the bed next spring.', rol: 'Unrelated', sabab: 'A plan for the future: close to the topic, but unrelated to the claim.' },
 ];
 const DALIL = 2;
 ---
@@ -21,44 +21,44 @@ const DALIL = 2;
   takrorlashHref={yol('/uz/sat/vosita/takrorlash/')}
   modul="rw-dalil"
   savollar={darsSavollari['rw-dalil']}
-  yolBandlari={['Reading & Writing darslari']}
-  darsTuri="Reading & Writing darsi"
+  yolBandlari={['Reading & Writing lessons']}
+  darsTuri="Reading & Writing lesson"
   imtihon="SAT"
   manbalar={['CB06']}
   tekshirilgan="2026-11-06"
   keyingiTekshiruv="2026-12-06"
-  title="Dalilni belgilang · SAT"
-  description="SAT Reading & Writing: qisqa matnda da'voni qo'llab-quvvatlaydigan gapni belgilang. Kontekst, usul, takror va mavzuga yaqin gaplarni dalildan ajrating. 5 ta mashq."
+  title="Mark the evidence · SAT"
+  description="SAT Reading & Writing: in a short text, mark the sentence that supports the claim. Tell context, method, restatement and close-to-the-topic sentences apart from evidence. 5 exercises."
   yonalish="Information and Ideas"
-  sarlavha="Dalilni belgilang: da'voni qaysi gap isbotlaydi"
-  lead="Dalil savolida hamma gap mavzuga yaqin ko'rinadi. Farqi: dalil kuzatilgan fakt bo'ladi va aynan da'vodagi omilga tegadi. Matndagi gapni bosing, keyin nega u dalil ekanini yoki emasligini ko'ring."
-  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
-  keyingi={{ nomi: "O'tish so'zlari", href: yol('/uz/sat/qollanma/reading-writing/otish-sozlari/') }}
+  sarlavha="Mark the evidence: which sentence proves the claim"
+  lead="In an evidence question, every sentence seems close to the topic. The difference: evidence is an observed fact, and it is about exactly the factor in the claim. Tap a sentence in the text, then see why it is or is not evidence."
+  qadamNomlari={['Example', 'Rule', 'Try it']}
+  keyingi={{ nomi: 'Transition words', href: yol('/uz/sat/qollanma/reading-writing/otish-sozlari/') }}
   maqsadlar={[
-    "Da'voning asosiy omilini (nima, kim, qanday o'zgarish) bir qarashda ajratasiz.",
-    "Kontekst, usul va xulosani takrorlovchi gapni dalildan farqlaysiz.",
-    "Mavzuga yaqin, lekin da'voga aloqasi yo'q gap tuzog'iga tushmaysiz.",
+    'You spot the main factor of a claim (what, who, what change) at a glance.',
+    'You tell context, method and a sentence that restates the conclusion apart from evidence.',
+    'You do not fall for the trap of a sentence that is close to the topic but unrelated to the claim.',
   ]}
   xulosa={[
-    "Avval da'voni o'qing va uning omilini ajrating: aynan nima isbotlanishi kerak.",
-    "Dalil kuzatilgan fakt yoki natija bo'ladi. Savol, usul va kontekst gaplari dalil emas.",
-    "Da'voni boshqa so'zlar bilan takrorlagan gap dalil emas: u xulosaning o'zi.",
-    "Mavzuga yaqin gap tuzoq: da'vodagi omilga tegmasa, u dalil emas.",
+    'First read the claim and pick out its factor: what exactly needs to be proved.',
+    'Evidence is an observed fact or result. Question, method and context sentences are not evidence.',
+    'A sentence that restates the claim in other words is not evidence: it is the conclusion itself.',
+    'A sentence close to the topic is a trap: if it is not about the factor in the claim, it is not evidence.',
   ]}
   tekshirilmagan={[
-    "Matnlar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-    "Tuzoq turlari (kontekst, usul, takror, mavzuga yaqin) Tayanch tavsiyasi, rasmiy tasnif emas.",
+    'The texts and questions were written for Tayanch, and the situations are made up; those not yet reviewed by the author are marked "not verified".',
+    'The trap types (context, method, restatement, close to the topic) are a Tayanch recommendation, not an official classification.',
   ]}
 >
   <div slot="sahna">
     <div class="sahna-quti rw-quti">
-      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi">O'ylab topilgan vaziyat</span></p>
-      <p class="rw-davo"><span class="kichik ikkinchi">Da'vo</span> {davo}</p>
-      <div class="bolaklar gap-bolaklar" id="rw-matn" role="group" aria-label="Matn gaplari" lang="en">
+      <p class="rw-namuna"><span class="pill">Sample</span> <span class="kichik ikkinchi">Made-up situation</span></p>
+      <p class="rw-davo"><span class="kichik ikkinchi">Claim</span> {davo}</p>
+      <div class="bolaklar gap-bolaklar" id="rw-matn" role="group" aria-label="Sentences of the text">
         {gaplar.map((g, k) => (
           <button type="button" class="bolak gap" data-bolak={k} aria-pressed="false">
             <span class="gap-matn">{g.matn}</span>
-            <span class="gap-yorliq" lang="uz" hidden></span>
+            <span class="gap-yorliq" hidden></span>
           </button>
         ))}
       </div>
@@ -68,27 +68,27 @@ const DALIL = 2;
   </div>
 
   <div slot="animatsiya">
-    <p>Sahnadagi har gap rolini ko'rsatuvchi yorliq bilan belgilangan. Dalil gap ko'k chegara va tagchiziq bilan, qolganlari uzuq chegara bilan ajratilgan.</p>
-    <div class="formula"><span class="kichik ikkinchi">Nega aynan shu gap</span><span class="f-qiymat rw-qoida">{gaplar[DALIL].sabab}</span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+    <p>Each sentence in the scene has a label that shows its role. The evidence sentence has a blue border and an underline; the others have a dashed border.</p>
+    <div class="formula"><span class="kichik ikkinchi">Why this sentence</span><span class="f-qiymat rw-qoida">{gaplar[DALIL].sabab}</span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
     <dl class="rw-qoidalar">
-      <div><dt>Dalil</dt><dd>Kuzatilgan fakt yoki natija, va u da'vodagi omilga to'g'ridan-to'g'ri tegadi.</dd></div>
-      <div><dt>Kontekst, savol, usul</dt><dd>Vaziyatni yoki nima qilinganini aytadi, natijani emas.</dd></div>
-      <div><dt>Da'vo takrori</dt><dd>Xulosani boshqa so'zlar bilan aytadi. U isbot emas, isbotlanadigan narsa.</dd></div>
-      <div><dt>Mavzuga yaqin</dt><dd>Shu mavzuda, lekin da'vodagi omilga tegmaydi.</dd></div>
-      <div><dt>Teskari fikr</dt><dd>Muallif rad etayotgan qarash. U da'voga qarshi.</dd></div>
+      <div><dt>Evidence</dt><dd>An observed fact or result, and it is directly about the factor in the claim.</dd></div>
+      <div><dt>Context, question, method</dt><dd>Tells the situation or what was done, not the result.</dd></div>
+      <div><dt>Restated claim</dt><dd>Says the conclusion in other words. It is not proof; it is what needs to be proved.</dd></div>
+      <div><dt>Close to the topic</dt><dd>On the same topic, but not about the factor in the claim.</dd></div>
+      <div><dt>Opposing view</dt><dd>A view the author rejects. It goes against the claim.</dd></div>
     </dl>
   </div>
 
   <div slot="sinab">
     <div class="vazifa">
-      <p><b>Vazifa.</b> Da'voni o'qing va sahnadagi matnda uni qo'llab-quvvatlaydigan gapni bosing. Klaviaturada: Tab bilan matnga kiring, strelkalar bilan yuring, Enter bilan belgilang.</p>
-      <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Hali belgilanmagan.</p>
+      <p><b>Task.</b> Read the claim and tap the sentence in the scene's text that supports it. With a keyboard: press Tab to enter the text, move with the arrow keys, press Enter to mark.</p>
+      <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Nothing marked yet.</p>
     </div>
-    <div class="segment"><button type="button" class="kichik-tugma" id="rw-qayta">Qayta urinish</button></div>
+    <div class="segment"><button type="button" class="kichik-tugma" id="rw-qayta">Try again</button></div>
   </div>
 </DarsQolip>
 
@@ -104,15 +104,15 @@ const DALIL = 2;
   const g = belgilashGuruhi($('rw-matn'), (k) => {
     if (qadam !== 'sinab') return;
     tozala(false);
-    if (k < 0) { holat.textContent = 'Hali belgilanmagan.'; holat.dataset.ok = ''; return; }
+    if (k < 0) { holat.textContent = 'Nothing marked yet.'; holat.dataset.ok = ''; return; }
     if (k === dalil) {
       g.faol(false);
-      yorliq(k, "To'g'ri dalil", 'gap-togri');
-      holat.textContent = `To'g'ri. ${gaplar[k].sabab}`;
+      yorliq(k, 'Correct evidence', 'gap-togri');
+      holat.textContent = `Correct. ${gaplar[k].sabab}`;
       holat.dataset.ok = '1';
     } else {
-      yorliq(k, 'Siz tanlagan', 'gap-xato');
-      holat.textContent = `Bu dalil emas. ${gaplar[k].sabab} Yana urinib ko'ring.`;
+      yorliq(k, 'Your choice', 'gap-xato');
+      holat.textContent = `This is not evidence. ${gaplar[k].sabab} Try again.`;
       holat.dataset.ok = '';
     }
   });
@@ -135,12 +135,12 @@ const DALIL = 2;
     tozala(true);
     if (qadam === 'sinab') {
       g.faol(true);
-      holat.textContent = 'Hali belgilanmagan.'; holat.dataset.ok = '';
-      $('rw-holat').textContent = "Da'voni qo'llab-quvvatlaydigan gapni toping.";
+      holat.textContent = 'Nothing marked yet.'; holat.dataset.ok = '';
+      $('rw-holat').textContent = 'Find the sentence that supports the claim.';
     } else {
       g.faol(false);
       gaplar.forEach((x, k) => yorliq(k, x.rol, k === dalil ? 'gap-togri' : 'gap-xato'));
-      $('rw-holat').textContent = `Dalil: ${dalil + 1}-gap. Qolganlari: ${gaplar.filter((_, k) => k !== dalil).map((x) => x.rol.toLowerCase()).join(', ')}.`;
+      $('rw-holat').textContent = `Evidence: sentence ${dalil + 1}. The others: ${gaplar.filter((_, k) => k !== dalil).map((x) => x.rol.toLowerCase()).join(', ')}.`;
     }
   }
 

@@ -1,0 +1,140 @@
+---
+// inPAY'dan qaytish sahifasi (return_url: ?tolov=<payments.id>). Faqat kirgan foydalanuvchi.
+// inpay-holat ni har satTarif.sorovOraligiS soniyada, jami satTarif.kutishS soniya so'raydi.
+// Holatlar: tekshirilmoqda, success, failed, kutish (vaqt tugadi, hali pending), topilmadi.
+// Holatni faqat server aytadi; bu sahifa obunani hech qachon o'zi yoqmaydi. Matn aria-live (role="status") bilan.
+// Brauzerda: tayanch:sat-tolov (?tolov= yo'q bo'lsa oxirgi to'lov raqami), success yoki failed bo'lgach o'chiriladi.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { satTarif } from '../../../../../data/satTarif';
+import { yol } from '../../../../../lib/yol';
+
+const obuna = yol('/uz/sat/hisob/obuna/');
+---
+<BolimQobiq
+  title="Payment status · SAT"
+  description="Checks the status of your Tayanch SAT payment with inPAY after you return from the checkout page."
+  turi="vosita"
+  yol={['Account']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki natija">
+    <p class="ogoh" data-yoq hidden>Accounts are not available on this site yet.</p>
+
+    <section class="karta" aria-labelledby="natija-sarlavha" data-oyna hidden>
+      <span class="belgi" data-belgi aria-hidden="true"></span>
+      <div class="xabar" role="status" aria-live="polite">
+        <h1 id="natija-sarlavha" tabindex="-1" data-sarlavha>Checking your payment…</h1>
+        <p class="lead" data-matn>This usually takes a few seconds. You can keep this page open.</p>
+      </div>
+      <p class="kichik ikkinchi" data-raqam hidden></p>
+      {satTarif.aloqa && (
+        <p class="kichik" data-aloqa hidden>
+          Questions about a payment? <a href={satTarif.aloqa.havola} rel="noopener">{satTarif.aloqa.matn}</a>
+        </p>
+      )}
+      <div class="amallar">
+        <button type="button" class="tugma tugma-asosiy" data-qayta hidden>Check again</button>
+        <a class="tugma tugma-ikkinchi" href={obuna} data-obuna>Back to plans</a>
+      </div>
+    </section>
+  </div>
+</BolimQobiq>
+
+<script>
+  import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
+  import { UUID, funksiya, oxirgiTolov, tolovniUnut } from '../../../../../lib/sat/tolov';
+  import { satTarif } from '../../../../../data/satTarif';
+
+  type Holat = 'tekshirilmoqda' | 'success' | 'failed' | 'kutish' | 'topilmadi';
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const oyna = $('[data-oyna]');
+  const qayta = $<HTMLButtonElement>('[data-qayta]');
+  const obunaHavola = $<HTMLAnchorElement>('[data-obuna]');
+  const raqamEl = $('[data-raqam]');
+  const aloqa = document.querySelector<HTMLElement>('[data-aloqa]');
+
+  const MATN: Record<Holat, [string, string]> = {
+    tekshirilmoqda: ['Checking your payment…', 'This usually takes a few seconds. You can keep this page open.'],
+    success: ['Payment confirmed', 'Your plan is active. Thank you.'],
+    failed: ['Payment did not go through', 'Your plan has not changed. You can try again from the plans page.'],
+    kutish: ['Payment not confirmed yet', 'We will update your plan as soon as the payment is confirmed.'],
+    topilmadi: ['No payment to check', 'We could not find a payment for this account. Open the plans page to start one.'],
+  };
+  const BELGI: Record<Holat, string> = { tekshirilmoqda: '…', success: '✓', failed: '!', kutish: '…', topilmadi: '?' };
+
+  let taymer: number | undefined;
+  let tugash = 0;
+
+  function korsat(h: Holat, paymentId?: string) {
+    $('[data-sarlavha]').textContent = MATN[h][0];
+    $('[data-matn]').textContent = MATN[h][1];
+    $('[data-belgi]').textContent = BELGI[h];
+    oyna.dataset.holat = h;
+    qayta.hidden = h !== 'kutish';
+    if (aloqa) aloqa.hidden = h !== 'kutish' && h !== 'failed';
+    raqamEl.hidden = !(paymentId && (h === 'kutish' || h === 'failed'));
+    if (paymentId) raqamEl.textContent = `Payment reference: ${paymentId}. Keep it if you contact us.`;
+    obunaHavola.textContent = h === 'success' ? 'Go to your plan' : 'Back to plans';
+    obunaHavola.className = `tugma ${h === 'kutish' ? 'tugma-ikkinchi' : 'tugma-asosiy'}`;
+  }
+
+  async function sora(paymentId: string) {
+    const r = await funksiya<{ status: string }>('inpay-holat', { payment_id: paymentId });
+    if (r.ok && r.data.status === 'success') { tolovniUnut(); return korsat('success', paymentId); }
+    if (r.ok && r.data.status === 'failed') { tolovniUnut(); return korsat('failed', paymentId); }
+    if (!r.ok && r.kod === 'not_found') return korsat('topilmadi');
+    if (!r.ok && r.kod === 'not_signed_in') return location.reload();
+    if (Date.now() >= tugash) return korsat('kutish', paymentId);
+    taymer = window.setTimeout(() => sora(paymentId), satTarif.sorovOraligiS * 1000);
+  }
+
+  function boshla(paymentId: string) {
+    window.clearTimeout(taymer);
+    tugash = Date.now() + satTarif.kutishS * 1000;
+    korsat('tekshirilmoqda');
+    sora(paymentId);
+  }
+
+  async function yukla() {
+    if (!hisobMijoz()) { $('[data-yoq]').hidden = false; return; }
+    const sessiya = await hisobQorovul();
+    if (!sessiya) return;
+    oyna.hidden = false;
+    const url = new URLSearchParams(location.search).get('tolov');
+    const paymentId = url && UUID.test(url) ? url : oxirgiTolov();
+    if (!paymentId) return korsat('topilmadi');
+    qayta.addEventListener('click', () => { boshla(paymentId); $('[data-sarlavha]').focus(); });
+    boshla(paymentId);
+  }
+
+  window.addEventListener('pagehide', () => window.clearTimeout(taymer));
+  // hisobQorovul rozilikni ham tekshiradi: profiles o'qib bo'lmasa va'da rad etiladi (darvoza yopiq).
+  yukla().catch(() => {
+    const el = $('[data-yoq]');
+    el.textContent = "We couldn't read your account. Refresh the page to try again.";
+    el.setAttribute('role', 'alert');
+    el.hidden = false;
+  });
+</script>
+
+<style>
+  .natija [hidden] { display: none !important; }
+  .natija { padding-top: var(--b-6); }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
+  .karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-4); max-width: 640px; padding: var(--b-8) var(--b-6); border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--sirt); }
+  .belgi { display: inline-grid; place-items: center; inline-size: var(--b-14); block-size: var(--b-14); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-h3); font-weight: 800; }
+  .karta[data-holat='success'] .belgi { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .karta[data-holat='failed'] .belgi, .karta[data-holat='kutish'] .belgi { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .xabar { display: flex; flex-direction: column; gap: var(--b-2); }
+  h1 { font-size: var(--matn-h3); }
+  h1:focus { outline: none; }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+  .karta a:not(.tugma) { color: var(--rang-havola); }
+  .amallar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-2); }
+  @media (max-width: 479.98px) { .amallar { flex-direction: column; align-self: stretch; } .amallar .tugma { width: 100%; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .karta[data-holat='tekshirilmoqda'] .belgi { animation: nafas 1.6s ease-in-out infinite; }
+  }
+  @keyframes nafas { 50% { opacity: 0.45; } }
+</style>

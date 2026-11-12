@@ -2,12 +2,12 @@
 // Kalit tayanch:<bolim>-takrorlash, shakli: { versiya: 1, savollar: { [id]: { quti, keyingi, xatoSana } } }.
 // Xato daftari (tayanch:<bolim>-xato-daftari) bu yerda faqat o'qiladi; javob darsSaqlash.javobniYoz orqali yoziladi,
 // shuning uchun daftar shakli o'zgarmaydi ("bitta kalit = bitta shakl").
-// Oraliqlar (kun) Tayanch tanlovi, rasmiy qoida emas.
+// Oraliqlar (kun) Tayanch tanlovi, rasmiy qoida emas; qoida o'zi leitner.ts da (SAT lug'ati bilan umumiy).
 import { oqi, yoz, xatolarniOqi, bugun } from './darsSaqlash';
 import type { DarsBolim } from '../data/darsTurlar';
+import { ORALIQ, BIRINCHI_ORALIQ, sanaQosh, keyingiQuti, type Quti } from './leitner';
 
-/** 1–4: takrorlanadi; 5: o'zlashtirildi */
-export type Quti = 1 | 2 | 3 | 4 | 5;
+export { ORALIQ, BIRINCHI_ORALIQ, sanaQosh, type Quti };
 export interface TakrorYozuv {
   quti: Quti;
   /** Keyingi takrorlash sanasi, YYYY-MM-DD (Toshkent) */
@@ -17,18 +17,9 @@ export interface TakrorYozuv {
 }
 export interface TakrorHolat { versiya: 1; savollar: Record<string, TakrorYozuv> }
 
-/** To'g'ri javobdan keyin keyingi qutigacha oraliq: 1→2 uchun 3 kun, 2→3 7, 3→4 14. 4-qutida to'g'ri = o'zlashtirildi. */
-export const ORALIQ: Record<1 | 2 | 3, number> = { 1: 3, 2: 7, 3: 14 };
-/** Yangi xato ertaga takrorlanadi */
-export const BIRINCHI_ORALIQ = 1;
-
 export const takrorKalit = (bolim: DarsBolim) => `tayanch:${bolim}-takrorlash`;
 
 const SANA = /^\d{4}-\d{2}-\d{2}$/;
-export function sanaQosh(sana: string, kun: number): string {
-  const [y, m, d] = sana.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d) + kun * 86400000).toISOString().slice(0, 10);
-}
 
 function yozuvTogrimi(y: unknown): y is TakrorYozuv {
   if (!y || typeof y !== 'object') return false;
@@ -69,10 +60,8 @@ export function sinxronla(bolim: DarsBolim, mavjudId: Set<string>): TakrorHolat 
 
 /** Javobdan keyingi yozuv (sof funksiya). */
 export function javobdanKeyin(y: TakrorYozuv, togrimi: boolean, kun: string): TakrorYozuv {
-  if (!togrimi) return { quti: 1, keyingi: sanaQosh(kun, BIRINCHI_ORALIQ), xatoSana: kun };
-  if (y.quti >= 4) return { ...y, quti: 5, keyingi: kun };
-  const q = y.quti as 1 | 2 | 3;
-  return { ...y, quti: (q + 1) as Quti, keyingi: sanaQosh(kun, ORALIQ[q]) };
+  if (!togrimi) return { ...keyingiQuti(y.quti, false, kun), xatoSana: kun };
+  return { ...y, ...keyingiQuti(y.quti, true, kun) };
 }
 
 export interface Guruhlar { bugun: string[]; keyinroq: string[]; ozlashtirildi: string[] }

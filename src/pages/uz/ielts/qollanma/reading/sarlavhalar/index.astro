@@ -66,7 +66,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
   qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
   savolTili="en"
   savolKorsatma="Paragrafni o'qing va uning asosiy fikrini eng yaxshi umumlashtiradigan sarlavhani tanlang."
-  keyingi={{ nomi: 'True / False / Not Given', href: yol('/uz/ielts/qollanma/reading/tfng/') }}
+  keyingi={{ nomi: '30 kunlik reja', href: yol('/uz/ielts/vosita/reja/'), turi: 'qadam' }}
   maqsadlar={[
     "Paragrafning asosiy fikrini qo'llab-quvvatlovchi detallardan ajratasiz.",
     "Matndagi so'z sarlavhada takrorlangani uchun uni tanlamaysiz.",
@@ -261,7 +261,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
     border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
   }
   .ir-paragraf:hover:not(:disabled) { border-color: var(--rang-asosiy); }
-  .ir-paragraf:focus-visible, .ir-sarlavha:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .ir-paragraf:focus-visible, .ir-sarlavha:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .ir-paragraf[aria-pressed='true'] { border-color: var(--rang-asosiy); box-shadow: inset 4px 0 0 var(--rang-asosiy); }
   .ir-paragraf:disabled { cursor: default; }
   .ir-paragraf.ir-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }

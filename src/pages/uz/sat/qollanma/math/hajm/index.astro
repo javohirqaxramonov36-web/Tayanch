@@ -1,6 +1,6 @@
 ---
 // Hajm laboratoriyasi (3D). Three.js faqat sahna ekranga yaqinlashganda yuklanadi (src/lib/hajmSahna.ts).
-// Prototip: docs/prototip/tayanch-3d-laboratoriya.html (SAT bo'limi).
+// Prototip: docs/prototip/tayanch-3d-laboratoriya.html (SAT bo'limi). Matn inglizcha (CLAUDE.md).
 import { darsSavollari } from '../../../../../../data/satDarslar';
 import { yol } from '../../../../../../lib/yol';
 import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
@@ -10,89 +10,89 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   takrorlashHref={yol('/uz/sat/vosita/takrorlash/')}
   modul="hajm"
   savollar={darsSavollari.hajm}
-  yolBandlari={['Math darslari']}
-  darsTuri="Math darsi"
+  yolBandlari={['Math lessons']}
+  darsTuri="Math lesson"
   imtihon="SAT"
   manbalar={['CB05']}
   tekshirilgan="2026-11-05"
   keyingiTekshiruv="2026-12-05"
-  title="Hajm laboratoriyasi · SAT"
-  description="SAT Math: silindr, konus, shar va prizma hajmi 3D sahnada. Disklar animatsiyasi, formula, sinov va 6 ta mashq."
+  title="Volume lab · SAT"
+  description="SAT Math: the volume of a cylinder, cone, sphere and prism in a 3D scene. A disk animation, the formula, a try-it step and 6 exercises."
   yonalish="Geometry and Trigonometry"
-  sarlavha="Hajm: asos yuzi marta balandlik"
-  lead="Silindrni yupqa disklardan yig'ib ko'ring: formula o'zi chiqadi. Keyin konus, shar va prizmada o'lchamlarni o'zgartirib, hajm qanday o'sishini kuzating."
+  sarlavha="Volume: base area times height"
+  lead="Build a cylinder from thin disks and the formula appears on its own. Then change the dimensions of a cone, a sphere and a prism and watch how the volume grows."
   maqsadlar={[
-    "Silindr hajmi nega πr²h ekanini disklar orqali tushuntira olasiz.",
-    "Konus, shar va prizma hajmini to'g'ri formula bilan hisoblaysiz.",
-    "Radius va diametrni, r² va r³ ni adashtirmaysiz.",
+    "You can explain with disks why the volume of a cylinder is πr²h.",
+    "You calculate the volume of a cone, a sphere and a prism with the right formula.",
+    "You do not confuse the radius with the diameter, or r² with r³.",
   ]}
   xulosa={[
-    "Silindr va prizma: V = asos yuzi × balandlik. Silindrda asos yuzi πr².",
-    "Konus o'sha asos va balandlikdagi silindrning uchdan biri: V = ⅓πr²h.",
-    "Shar faqat radiusga bog'liq: V = ⁴⁄₃πr³. Radius 2 marta oshsa, hajm 8 marta oshadi.",
-    "Savolda diametr berilsa, avval uni 2 ga bo'ling.",
+    "Cylinder and prism: V = base area × height. For a cylinder, the base area is πr².",
+    "A cone is one third of the cylinder with the same base and height: V = ⅓πr²h.",
+    "A sphere depends only on the radius: V = ⁴⁄₃πr³. If the radius doubles, the volume becomes 8 times as large.",
+    "If a question gives the diameter, divide it by 2 first.",
   ]}
-  keyingi={{ nomi: 'Funksiya grafigi', href: yol('/uz/sat/qollanma/math/grafik/') }}
+  keyingi={{ nomi: 'Function graphs', href: yol('/uz/sat/qollanma/math/grafik/') }}
   tekshirilmagan={[
-    "Mashq savollari Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-    "Imtihonda formulalar varag'i berilishi bu sahifada da'vo qilinmaydi: rasmiy manba hali jurnalga qo'shilmagan.",
+    'The exercise questions were written for Tayanch; those not yet reviewed by the author are marked "not verified".',
+    'This page makes no claim about whether a formula sheet is provided in the test: an official source has not been added to the source log yet.',
   ]}
 >
   <div slot="sahna">
-    <div class="sahna-quti hajm-quti" id="hajm-quti" tabindex="0" role="application" aria-roledescription="3D sahna" aria-label="Hajm sahnasi. Strelkalar bilan aylantiring, plyus va minus bilan yaqinlashtiring." aria-describedby="hajm-tavsif">
+    <div class="sahna-quti hajm-quti" id="hajm-quti" tabindex="0" role="application" aria-roledescription="3D scene" aria-label="Volume scene. Rotate with the arrow keys, zoom with plus and minus." aria-describedby="hajm-tavsif">
       <canvas id="hajm-canvas" aria-hidden="true"></canvas>
       <svg class="hajm-poster" id="hajm-poster" viewBox="0 0 200 150" aria-hidden="true">
         <ellipse cx="100" cy="40" rx="45" ry="12" fill="none" stroke="currentColor" stroke-width="2" />
         <path d="M55 40v70c0 7 20 12 45 12s45-5 45-12V40" fill="none" stroke="currentColor" stroke-width="2" />
         <path d="M100 40h45" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
       </svg>
-      <p class="hajm-holat" id="hajm-holat">3D sahna yuklanmoqda…</p>
+      <p class="hajm-holat" id="hajm-holat">Loading the 3D scene…</p>
     </div>
     <p class="sr" id="hajm-tavsif" aria-live="polite"></p>
     <div class="sahna-tugmalar">
-      <button type="button" class="belgi-t" data-amal="chap" aria-label="Chapga aylantirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></svg></button>
-      <button type="button" class="belgi-t" data-amal="ong" aria-label="O'ngga aylantirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg></button>
-      <button type="button" class="belgi-t" data-amal="yaqin" aria-label="Yaqinlashtirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
-      <button type="button" class="belgi-t" data-amal="uzoq" aria-label="Uzoqlashtirish"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg></button>
-      <button type="button" class="kichik-tugma" data-amal="tikla">Kamerani tiklash</button>
+      <button type="button" class="belgi-t" data-amal="chap" aria-label="Rotate left"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></svg></button>
+      <button type="button" class="belgi-t" data-amal="ong" aria-label="Rotate right"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg></button>
+      <button type="button" class="belgi-t" data-amal="yaqin" aria-label="Zoom in"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+      <button type="button" class="belgi-t" data-amal="uzoq" aria-label="Zoom out"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+      <button type="button" class="kichik-tugma" data-amal="tikla">Reset camera</button>
     </div>
-    <p class="sahna-izoh">Sichqoncha bilan sudrang. Telefonda bir barmoqni yonga suring, ikki barmoq bilan yaqinlashtiring. Poldagi katak = 1 birlik.</p>
+    <p class="sahna-izoh">Drag with the mouse. On a phone, swipe sideways with one finger and pinch with two fingers to zoom. One floor square = 1 unit.</p>
   </div>
 
   <div slot="animatsiya">
-    <p>Silindrni qalinligi 1 bo'lgan bir xil disklardan yig'amiz. Har disk hajmi: asos yuzi × qalinlik = πr² × 1. Nechta disk bo'lsa, hajm shuncha marta πr².</p>
+    <p>We build the cylinder from identical disks with a thickness of 1. The volume of each disk is base area × thickness = πr² × 1. The volume is πr² times the number of disks.</p>
     <div class="segment">
-      <button type="button" class="katta asosiy" id="disk-boshla">Disklarni yig'ish</button>
-      <button type="button" class="kichik-tugma" id="disk-tikla">Butun silindr</button>
+      <button type="button" class="katta asosiy" id="disk-boshla">Stack the disks</button>
+      <button type="button" class="kichik-tugma" id="disk-tikla">Whole cylinder</button>
     </div>
     <div class="formula">
-      <span class="f-qiymat" id="disk-matn" aria-live="polite">r = 3, h = 6 bo'lgan silindr: tugmani bosing.</span>
+      <span class="f-qiymat" id="disk-matn" aria-live="polite">A cylinder with r = 3, h = 6: press the button.</span>
     </div>
-    <p class="kichik ikkinchi">r va h ni "Sinab ko'r" qadamida o'zgartirish mumkin.</p>
+    <p class="kichik ikkinchi">You can change r and h in the "Try it" step.</p>
   </div>
 
   <div slot="formula">
     <div class="formula">
-      <span class="kichik ikkinchi" id="f-nomi">Silindr</span>
+      <span class="kichik ikkinchi" id="f-nomi">Cylinder</span>
       <span class="f-asosiy" id="f-asosiy">V = πr²h</span>
       <span class="f-qiymat" id="f-qiymat"></span>
       <span class="kichik ikkinchi" id="f-izoh"></span>
     </div>
     <dl class="qiymatlar formula-jadval">
-      <div><dt>Silindr</dt><dd>πr²h</dd></div>
-      <div><dt>Konus</dt><dd>⅓πr²h</dd></div>
-      <div><dt>Shar</dt><dd>⁴⁄₃πr³</dd></div>
-      <div><dt>Prizma</dt><dd>l · w · h</dd></div>
+      <div><dt>Cylinder</dt><dd>πr²h</dd></div>
+      <div><dt>Cone</dt><dd>⅓πr²h</dd></div>
+      <div><dt>Sphere</dt><dd>⁴⁄₃πr³</dd></div>
+      <div><dt>Prism</dt><dd>l · w · h</dd></div>
     </dl>
   </div>
 
   <div slot="sinab">
     <div class="boshqaruv">
-      <div class="segment" role="group" aria-label="Shakl">
-        <button type="button" data-shakl="silindr" aria-pressed="true">Silindr</button>
-        <button type="button" data-shakl="konus" aria-pressed="false">Konus</button>
-        <button type="button" data-shakl="shar" aria-pressed="false">Shar</button>
-        <button type="button" data-shakl="prizma" aria-pressed="false">Prizma</button>
+      <div class="segment" role="group" aria-label="Shape">
+        <button type="button" data-shakl="silindr" aria-pressed="true">Cylinder</button>
+        <button type="button" data-shakl="konus" aria-pressed="false">Cone</button>
+        <button type="button" data-shakl="shar" aria-pressed="false">Sphere</button>
+        <button type="button" data-shakl="prizma" aria-pressed="false">Prism</button>
       </div>
       <div class="slayder" data-uchun="r"><label for="hajm-r">r</label><input type="range" id="hajm-r" min="1" max="5" step="1" value="3" /><output for="hajm-r" id="hajm-r-o">3</output></div>
       <div class="slayder" data-uchun="h"><label for="hajm-h">h</label><input type="range" id="hajm-h" min="1" max="10" step="1" value="6" /><output for="hajm-h" id="hajm-h-o">6</output></div>
@@ -103,8 +103,8 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
       <span class="f-qiymat" id="sinab-natija" aria-live="polite"></span>
     </div>
     <div class="vazifa">
-      <p><b>Vazifa.</b> Hajmi 48π bo'lgan silindrni toping: r va h ni tanlang.</p>
-      <p class="vazifa-holat" id="vazifa-holat" aria-live="polite">Hali topilmadi.</p>
+      <p><b>Task.</b> Find a cylinder with a volume of 48π: choose r and h.</p>
+      <p class="vazifa-holat" id="vazifa-holat" aria-live="polite">Not found yet.</p>
     </div>
   </div>
 </DarsQolip>
@@ -123,10 +123,10 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   const piKasr = (surat: number, maxraj: number) => { const g = ekub(surat, maxraj); const s = surat / g, m = maxraj / g; return m === 1 ? `${s}π` : `${s}π/${m}`; };
   function hisob() {
     const { shakl, r, h, l, w } = holat;
-    if (shakl === 'silindr') return { nomi: 'Silindr', asosiy: 'V = πr²h', qiymat: `V = π · ${r}² · ${h} = ${piKasr(r * r * h, 1)} ≈ ${son(Math.PI * r * r * h)}`, izoh: 'Asos yuzi (πr²) × balandlik.' };
-    if (shakl === 'konus') return { nomi: 'Konus', asosiy: 'V = ⅓πr²h', qiymat: `V = ⅓ · π · ${r}² · ${h} = ${piKasr(r * r * h, 3)} ≈ ${son(Math.PI * r * r * h / 3)}`, izoh: "Xuddi shu r va h dagi silindrning uchdan biri." };
-    if (shakl === 'shar') return { nomi: 'Shar', asosiy: 'V = ⁴⁄₃πr³', qiymat: `V = ⁴⁄₃ · π · ${r}³ = ${piKasr(4 * r * r * r, 3)} ≈ ${son(4 * Math.PI * r ** 3 / 3)}`, izoh: "Faqat radiusga bog'liq: r ikki marta oshsa, hajm 8 marta oshadi." };
-    return { nomi: "To'g'ri burchakli prizma", asosiy: 'V = l · w · h', qiymat: `V = ${l} · ${w} · ${h} = ${l * w * h}`, izoh: "Poldagi kataklar soni (l · w) × qatlamlar soni (h)." };
+    if (shakl === 'silindr') return { nomi: 'Cylinder', asosiy: 'V = πr²h', qiymat: `V = π · ${r}² · ${h} = ${piKasr(r * r * h, 1)} ≈ ${son(Math.PI * r * r * h)}`, izoh: 'Base area (πr²) × height.' };
+    if (shakl === 'konus') return { nomi: 'Cone', asosiy: 'V = ⅓πr²h', qiymat: `V = ⅓ · π · ${r}² · ${h} = ${piKasr(r * r * h, 3)} ≈ ${son(Math.PI * r * r * h / 3)}`, izoh: "One third of the cylinder with the same r and h." };
+    if (shakl === 'shar') return { nomi: 'Sphere', asosiy: 'V = ⁴⁄₃πr³', qiymat: `V = ⁴⁄₃ · π · ${r}³ = ${piKasr(4 * r * r * r, 3)} ≈ ${son(4 * Math.PI * r ** 3 / 3)}`, izoh: "Depends only on the radius: if r doubles, the volume becomes 8 times as large." };
+    return { nomi: 'Rectangular prism', asosiy: 'V = l · w · h', qiymat: `V = ${l} · ${w} · ${h} = ${l * w * h}`, izoh: "Number of floor squares (l · w) × number of layers (h)." };
   }
   function matnlarniYangila() {
     const x = hisob();
@@ -136,7 +136,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
     const topildi = holat.shakl === 'silindr' && holat.r * holat.r * holat.h === 48;
     const v = $('vazifa-holat');
     v.dataset.ok = topildi ? '1' : '0';
-    v.textContent = topildi ? `Topildi: r = ${holat.r}, h = ${holat.h}. Tekshirish: ${holat.r}² · ${holat.h} = 48.` : 'Hali topilmadi. Maslahat: r² · h = 48 bo\'lishi kerak.';
+    v.textContent = topildi ? `Found: r = ${holat.r}, h = ${holat.h}. Check: ${holat.r}² · ${holat.h} = 48.` : 'Not found yet. Hint: r² · h must equal 48.';
   }
   function yangila() { matnlarniYangila(); sahna?.yangila({ ...holat }); }
 
@@ -159,8 +159,8 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   function diskMatn(n: number) {
     const { r, h } = holat;
     $('disk-matn').textContent = n < h
-      ? `${n}-disk: hajm = ${n} · π · ${r}² = ${piKasr(n * r * r, 1)}`
-      : `${h} ta disk: V = ${h} · π · ${r}² = ${piKasr(h * r * r, 1)}. Bu πr²h.`;
+      ? `Disk ${n}: volume = ${n} · π · ${r}² = ${piKasr(n * r * r, 1)}`
+      : `${h} disks: V = ${h} · π · ${r}² = ${piKasr(h * r * r, 1)}. This is πr²h.`;
   }
   $('disk-boshla').addEventListener('click', () => {
     diskniToxtat();
@@ -173,7 +173,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
       holat.disklar++; diskMatn(holat.disklar); yangila();
     }, 600);
   });
-  $('disk-tikla').addEventListener('click', () => { diskniToxtat(); holat.disklar = null; $('disk-matn').textContent = 'Butun silindr ko\'rsatilmoqda.'; yangila(); });
+  $('disk-tikla').addEventListener('click', () => { diskniToxtat(); holat.disklar = null; $('disk-matn').textContent = 'Showing the whole cylinder.'; yangila(); });
   document.addEventListener('dars:qadam', (e) => {
     if ((e as CustomEvent).detail.qadam !== 'animatsiya' && holat.disklar !== null) { diskniToxtat(); holat.disklar = null; yangila(); }
   });
@@ -208,7 +208,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
       quti.classList.add('tayyor');
       $('hajm-holat').hidden = true;
     } catch {
-      $('hajm-holat').textContent = "3D sahnani ochib bo'lmadi (brauzer WebGL'ni qo'llamaydi yoki o'chirilgan). Formula va mashqlar ishlayveradi.";
+      $('hajm-holat').textContent = "The 3D scene could not be opened (the browser does not support WebGL or it is turned off). The formula and exercises still work.";
       document.querySelectorAll('[data-amal]').forEach((b) => b.setAttribute('disabled', ''));
     }
   };
@@ -224,7 +224,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 <style is:global>
   .dars .hajm-quti { height: 320px; touch-action: pan-y; }
   @container (min-width: 780px) { .dars .hajm-quti { height: 460px; } }
-  .dars .hajm-quti:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 3px; }
+  .dars .hajm-quti:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
   .dars .hajm-quti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
   .dars .hajm-quti.ushlangan canvas { cursor: grabbing; }
   .dars .hajm-poster { position: absolute; inset: 15% 20%; width: 60%; height: 60%; color: var(--matn-sust); }
