@@ -1,6 +1,6 @@
 # AI Tutor (SAT, P33)
 
-Holat: 2026-11-12, branch `sat-ai-tutor`. **Standart holatda AI o'chiq**: muallif uch shartni qo'ymaguncha hech qanday so'rov AI provayderiga ketmaydi.
+Holat: 2026-11-13. PR #142 merge qilingan; migratsiya jonli bazaga 2026-11-13 da qo'llangan (`enabled=false`, byudjet `null`), Edge Function `ai-tutor` deploy qilinmagan. **Standart holatda AI o'chiq**: muallif uch shartni qo'ymaguncha hech qanday so'rov AI provayderiga ketmaydi.
 
 Qarorlar (2026-11-12; muallif boshqaruvchi chat orqali topshirgan, keyin rejani o'zi tasdiqlagan):
 
