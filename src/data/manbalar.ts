@@ -160,15 +160,6 @@ export const manbalar: Manba[] = [
     izoh: "To'rt ko'nikma bo'yicha namuna topshiriqlar; Listening va Reading uchun javob kalitlari PDF. Sahifada bepulligi yozilmagan.",
   },
   {
-    id: 'IE04',
-    nomi: 'IELTS scoring in detail: band scores explained',
-    tashkilot: 'IELTS (ielts.org)',
-    havola: 'https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail',
-    tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-10',
-    izoh: "Listening va Reading: 40 savol, har to'g'ri javob 1 ball; xom ball 9 bandli shkalaga o'tkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yo'q. Kerakli ball test versiyasiga qarab biroz o'zgaradi.",
-  },
-  {
     id: 'IE07',
     nomi: 'IELTS Academic: Listening test format',
     tashkilot: 'IELTS (ielts.org)',
@@ -176,6 +167,15 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
     izoh: "Listening qo'llanmasi uchun. \"Approximately 30 minutes\", 40 savol, 4 qism: 1-qism ikki kishi suhbati va 2-qism bitta asosiy so'zlovchi (kundalik, ijtimoiy vaziyatlar), 3-qism ikki asosiy so'zlovchi suhbati va 4-qism bitta kishi akademik mavzuda (ta'lim va o'qish vaziyatlari). Yozuv \"once only\" eshitiladi. 6 savol turi: Multiple choice; Matching; Plan, map, diagram labelling; Form, note, table, flow chart completion; Sentence completion; Short-answer questions. So'z cheklovi masalan \"NO MORE THAN TWO WORDS AND/OR A NUMBER\": ortiq yozilsa ball yo'qoladi; \"they're\" kabi qisqartmalar so'ralmaydi; \"check-in\" kabi defisli so'z bitta hisoblanadi. Har to'g'ri javob 1 ball, natija butun va yarim bandlarda. Ko'chirish vaqti (qog'oz test) bu sahifada yo'q. Sahifada yangilanish sanasi yo'q (faqat ©2026). 2026-11-12 da o'qildi. IE05 (ielts-writing-task2) va IE06 (ielts-speaking) boshqa branch'larda band.",
+  },
+  {
+    id: 'IE04',
+    nomi: 'IELTS scoring in detail: band scores explained',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-10',
+    izoh: "Listening va Reading: 40 savol, har to'g'ri javob 1 ball; xom ball 9 bandli shkalaga o'tkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yo'q. Kerakli ball test versiyasiga qarab biroz o'zgaradi.",
   },
   {
     id: 'ID01',
