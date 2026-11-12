@@ -270,6 +270,15 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: ['IP03'],
         tekshirilmagan: ['Prices and usage limits are not set yet.'],
       },
+      {
+        qism: 'hisob/fikr/',
+        tayyor: true,
+        nomi: 'Send feedback',
+        tavsif: 'Send a short message to the Tayanch author about the SAT section: what works, what is missing, what to fix.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['The daily message limit is a starting value and may change.'],
+      },
     ],
   },
 ];
@@ -310,7 +319,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/reyting/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 
