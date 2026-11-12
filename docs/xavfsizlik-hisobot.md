@@ -13,7 +13,7 @@ Holat belgilari: **tuzatildi** (shu PR'da), **ochiq** (qaror yoki alohida ish ke
   Lokal sinovlar va jonli katalog bir xil natija berdi.
 - O'rta: (F01) sayt boshqa 3 ta GitHub Pages sayti bilan bitta origin'da turadi, shuning uchun sessiya tokeni ular bilan umumiy;
   (F02) kirish va ro'yxatdan o'tishda CAPTCHA yo'q.
-- Tuzatildi: `repo:tekshir` inPAY kaliti, Supabase access token va parolli Postgres manzilini ham ushlaydi (F15).
+- Tuzatildi: `repo:tekshir` inPAY kaliti, Supabase access token va parolli Postgres manzilini ham ushlaydi (F15). Har yangi jadval yoki RPC uchun ruxsat ro'yxati sinovi qo'shildi (F16). `events` ga kunlik chegara va xatcho'p sharti qo'shildi (F03 qisman, F09; migratsiya `20261112143817_cheklovlar_p26`).
   Har yangi jadval yoki RPC uchun ruxsat ro'yxati sinovi qo'shildi (F16).
 
 ## 2. Topilmalar
@@ -22,13 +22,13 @@ Holat belgilari: **tuzatildi** (shu PR'da), **ochiq** (qaror yoki alohida ish ke
 | --- | --- | --- | --- | --- |
 | F01 | O'rta | Origin | ochiq | `javohirqaxramonov36-web.github.io` shu GitHub hisobidagi yana 3 ta Pages sayti bilan umumiy. `localStorage` ham umumiy, demak sessiya (`tayanch:auth`: access va refresh token) ular uchun ham ochiq |
 | F02 | O'rta | Bot himoyasi | ochiq | Kirish va ro'yxatda CAPTCHA yo'q. Parol bilan kirish `/token` orqali o'tadi: bitta IP'dan 5 daqiqada 150 so'rov (Supabase standarti). Hisob qulflanmaydi |
-| F03 | Past | Cheklov | ochiq | `reports`, `feedback`, `events`: authenticated to'g'ridan-to'g'ri yozadi, foydalanuvchiga kunlik chegara yo'q (hajm `check` bilan cheklangan). Hozir saytda bu jadvallarni ishlatadigan forma yo'q |
+| F03 | Past | Cheklov | qisman tuzatildi | `events`: kuniga 500 ta (Toshkent kuni), oshsa `events_rate_limited`; migratsiya `20261112143817_cheklovlar_p26` (K3). `reports` va `feedback` chegarasi PR #130 (P24) da: 24 soatda 10 va 5 ta, o'z xato kodlari bilan. Bu yerda takror trigger qo'yilmadi: ikki xil chegara va xato kodi mijozni chalg'itadi. P24 merge bo'lgunicha `reports`/`feedback` ochiq |
 | F04 | Past | XSS chuqur himoyasi | ochiq | CSP yo'q: GitHub Pages sarlavha bermaydi, `<meta http-equiv>` qo'yilmagan. Sessiya `localStorage` da, flow `implicit` (token URL hash'da keladi). XSS bo'lsa token o'g'irlanishi mumkin. Hozir XSS topilmagan (5-bo'lim) |
 | F05 | Past | CORS | ochiq | Edge Function'larda `TOLOV_ORIGINLAR` secret'i o'rnatilmagan, shuning uchun standart ro'yxat ishlaydi va unda `http://localhost:4321` ham bor. Hammasi JWT talab qiladi, shuning uchun bu avtorizatsiyani chetlab o'tmaydi |
 | F06 | Past | Redirect | ochiq | Auth Redirect URL ro'yxatida `http://localhost:4321/Tayanch/**` bor (lokal ishlab chiqish uchun). Qolgan manzillar sayt ichida. `xavfsizKeyin` ochiq redirectni yopadi |
 | F07 | Past | Cheklov | ochiq | `inpay-holat`: foydalanuvchi bo'yicha so'rov chegarasi yo'q. `pending` to'lov bo'lsa har chaqiruv inPAY API'ga boradi (faqat o'z to'lovi) |
 | F08 | Info | Kun savoli | muammo yo'q | `check_daily_answer` anon uchun cheklovsiz va to'g'ri javobni qaytaradi. Bu dizayn bo'yicha: faqat bugungi ochiq savol, boshqa savol rad etiladi |
-| F09 | Past | Kvota | ochiq | `review_preview` (jonli bazada, main'da emas; branch `sat-xato-daftari-sync`): `bookmarks` ga istalgan `question_id` qo'shib, savol matnini kvotasiz ochish mumkin. UUID'ni taxmin qilib bo'lmaydi. Javob va tushuntirish berilmaydi |
+| F09 | Past | Kvota | tuzatildi | `review_preview` `bookmarks` dagi savol matnini beradi. Endi `bookmarks` ga faqat foydalanuvchi o'z sessiyasida ko'rgan savol yoziladi (RLS, K6). `reports` ga bu shart qo'yilmadi: report savol matnini ochmaydi, tekshiruvi P24 triggerida |
 | F10 | Info | Supabase | muammo yo'q (tekshirish kerak) | `public.rls_auto_enable()` (Supabase'ning `ensure_rls` event trigger'i) anon'da EXECUTE bilan turadi. Funksiya `event_trigger` turida, RPC orqali chaqirilmaydi. Repo uni boshqarmaydi |
 | F11 | Info | Migratsiya | muammo yo'q | Jonli bazada main'da yo'q 2 ta migratsiya bor (`20261109120000_questions_p05`, `20261111233000_xato_daftari`). Ikkalasi ham ko'rib chiqildi: `search_path=''`, huquqlar to'g'ri, `correct` va `explanation` qaytarilmaydi |
 | F12 | Info | Parol | sinalmagan | Minimal uzunlik 8 (jonli bilan mos). Harf/raqam talabi yo'q. Sizib chiqqan parol tekshiruvi (HaveIBeenPwned) yoqilganmi va Free tarifda bormi: tekshirish kerak |
@@ -123,7 +123,9 @@ Tavsiya: yangi versiyaga chiqqanidan kamida 7 kun o'tgach o'tish.
    Sinovning o'zi ham tekshirildi: 8 ta huquq ataylab ochilganda (masalan `questions.stem` ga SELECT, admin RPC,
    `using (true)` policy, view, ochiq bucket) har birini tegishli X ushladi.
 
-Migratsiya, Edge Function yoki sayt kodi o'zgarmadi. Deploy va `db push` kerak emas.
+3. `supabase/migrations/20261112143817_cheklovlar_p26.sql` (K3 + K6): `private.kunlik_chegara()` trigger (advisory lock, service_role cheklanmaydi), `events` ga 500/kun; `bookmarks_insert_own` policy'si ko'rilgan savol sharti bilan. Sinov `supabase/tests/cheklov_test.sql` (C01–C05) va parallel C06 (`rls-tekshir.sh`): 495 ta yozuvdan keyin 30 ta bir vaqtdagi so'rovdan aynan 5 tasi o'tadi. Qulf olib tashlangan nusxada C06 30/30 bilan yiqildi, ya'ni sinov poygani ushlaydi. P24 (PR #130) migratsiyasi va `xabar_test.sql` bilan birga sinaldi: hammasi o'tdi (P24 sinovidagi soxta savolga `questions_verified_rule` uchun tuzatish kerak, 6-bo'lim).
+
+Edge Function va sayt kodi o'zgarmadi.
 
 ## 5. Katta o'zgarishlar (tasdiq kerak)
 
@@ -131,10 +133,10 @@ Migratsiya, Edge Function yoki sayt kodi o'zgarmadi. Deploy va `db push` kerak e
 | --- | --- | --- | --- |
 | K1 (F01) | Tayanch uchun alohida origin: o'z domeni (masalan `tayanch.uz`, GitHub Pages custom domain). Yoki hech bo'lmasa qolgan 3 ta Pages saytida begona skript bo'lmasligini qoida qilish | Sessiya boshqa saytlardan ajraladi. Domen pullik. `astro.config.mjs` base, Supabase Site URL va Redirect URL'lar, Google OAuth origin, inPAY return URL o'zgaradi | Katta |
 | K2 (F02) | CAPTCHA (Cloudflare Turnstile yoki hCaptcha) | Pastda | O'rta |
-| K3 (F03) | `reports`/`feedback`/`events` uchun trigger bilan kunlik chegara (masalan 20 / 10 / 1000; raqamlar muallif qarori) | Migratsiya va jonli bazaga push | Kichik |
+| K3 (F03) | Kunlik chegara | Bajarildi: `events` 500/kun (shu PR). `reports`/`feedback`: PR #130 | — |
 | K4 (F04) | `<meta http-equiv="Content-Security-Policy">`: `script-src 'self'` (+ `is:inline` skriptlar uchun hash), `connect-src` Supabase va Edge Function manzillari | Inline skriptlarni xeshlash yoki faylga ko'chirish kerak. Noto'g'ri sozlansa sahifalar buziladi | O'rta |
 | K5 (F05) | `TOLOV_ORIGINLAR` secret'ini faqat sayt origin'i bilan o'rnatish (kod o'zgarmaydi) | Lokal dev'da to'lovni sinash uchun secret'ga localhost qo'shib qo'yish kerak bo'ladi | Kichik, muallif secret qo'yadi |
-| K6 (F09) | `bookmarks` insert policy'sini faqat foydalanuvchi sessiyada ko'rgan savollar bilan cheklash | Migratsiya. Xatcho'p UI'sini tekshirish kerak | Kichik |
+| K6 (F09) | `bookmarks` faqat ko'rilgan savolga | Bajarildi (shu PR). Hozir saytda xatcho'p qo'shadigan UI yo'q | — |
 
 ### CAPTCHA taklifi (K2)
 Supabase rasmiy hujjati (supabase.com/docs/guides/auth/auth-captcha, 2026-11-12) ikkita provayderni sanaydi: **hCaptcha** va **Cloudflare Turnstile**.
@@ -155,7 +157,7 @@ Tarif cheklovi hujjatda aytilmagan: tekshirish kerak. Provayder hisobi va kaliti
 
 1. K1: o'z domeni olinadimi? Agar yo'q bo'lsa, qolgan 3 ta Pages saytida begona skript yo'qligini qoida qilamizmi?
 2. K2: CAPTCHA kerakmi? Kerak bo'lsa Turnstile (tavsiya) yoki hCaptcha? Qaysi formalarda: kirish, ro'yxat, tiklash (hammasi tavsiya)?
-3. K3 va K6: bitta kichik migratsiya PR'ida qilinadimi? Chegara raqamlarini siz berasizmi yoki men taklif qilaymi?
+3. K3 va K6 bajarildi (muallif tasdiqladi 2026-11-12; `reports`/`feedback` P24 ga qoldirildi, Claude qarori, sababi F03 da). PR #130 uchun: `xabar_test.sql` dagi soxta savollar main'dagi `questions_verified_rule` dan o'tmaydi (author ≠ verified_by va verified_at kerak), merge oldidan tuzatilishi kerak.
 4. K4: CSP alohida PR'da qilinadimi? Saytning hamma sahifasini qayta tekshirishni talab qiladi.
 5. K5 va F06: prod'da localhost'ni olib tashlaymizmi? Lokal to'lov sinovi uchun alohida yo'l kerak bo'ladi.
 6. F12: Dashboard'da "Leaked password protection" bormi? Bo'lsa yoqamizmi?
@@ -177,8 +179,8 @@ Ochiq kalit (anon yoki publishable) dizayn bo'yicha ochiq: uni bilish RLS'ni che
 
 ## 8. Tekshiruv natijalari (2026-11-12)
 
-- `npm run db:tekshir`: 22 migratsiya 2 marta xatosiz; RLS 26/26; security definer'larning hammasida `search_path`;
-  rls, sessiya, analitika, lug'at, kvota, kun savoli, obuna sinovlari va yangi `XAVFSIZLIK SINOVLARI O'TDI` (X1–X9); K06 parallel 3/10.
+- `npm run db:tekshir`: main bilan birlashtirilgandan keyin 26 migratsiya 2 marta xatosiz; RLS 26/26; security definer'larning hammasida `search_path`;
+  rls, sessiya, analitika, lug'at, kvota, kun savoli, obuna, xato daftari sinovlari, `XAVFSIZLIK SINOVLARI O'TDI` (X1–X9), `CHEKLOV SINOVLARI O'TDI` (C01–C05); K06 parallel 3/10, C06 parallel 5/30.
 - `npm run funksiyalar:tekshir`: 49 passed, 0 failed (Deno).
 - `npm audit`: 0 vulnerabilities.
 - `npm run repo:tekshir`: muammo yo'q.
