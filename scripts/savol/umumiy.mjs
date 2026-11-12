@@ -372,3 +372,60 @@ export function joyNomi(n) {
 
 /** Markdown jadval katagi uchun: | va yangi qator qochiriladi. */
 export const katak = (x) => String(x ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+
+// ---------- Kalit muvozanati (fayl bo'yicha) ----------
+// Bitta fayl = bitta to'plam (masalan mock testning bitta moduli), savollar fayldagi tartibda ko'rsatiladi.
+// Sabab: Stage 4 qoralamasida R&W'ning 54 savolidan 34 tasida javob A edi, D umuman yo'q edi
+// ("har doim A" strategiyasi 63% berardi). Bu tekshiruv bloklamaydi, faqat ogohlantiradi.
+
+/** Chegaralar. Kichik to'plamda (min dan kam mcq) foiz tekshirilmaydi, faqat ketma-ketlik. */
+export const kalitChegara = { min: 8, maxUlush: 0.35, minUlush: 0.15, maxKetma: 3, uzunUlush: 0.4 };
+
+const variantUzunligi = (o) => String(o?.text ?? '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().length;
+
+/** To'g'ri javob yagona eng uzun variantmi (teng uzunlik bo'lsa: yo'q). */
+export function engUzunTogrimi(s) {
+  if (s?.format !== 'mcq' || !Array.isArray(s.options) || s.options.length !== 4) return false;
+  const u = s.options.map(variantUzunligi);
+  const i = variantKalitlari.indexOf(s.answer);
+  if (i < 0) return false;
+  return u.every((x, j) => j === i || x < u[i]);
+}
+
+/**
+ * Fayl bo'yicha mcq kalitlari taqsimoti. Faqat xatosiz natijalar hisoblanadi.
+ * Natija: [{ fayl, soni, sanoq: {A,B,C,D}, ketma: {harf, uzunlik}, uzun: [external_id], ogohlar: string[] }].
+ */
+export function kalitMuvozanati(natijalar, chegara = kalitChegara) {
+  const guruhlar = new Map();
+  for (const n of natijalar) {
+    if (n.xatolar?.length || n.savol?.format !== 'mcq') continue;
+    if (!guruhlar.has(n.fayl)) guruhlar.set(n.fayl, []);
+    guruhlar.get(n.fayl).push(n.savol);
+  }
+  const natija = [];
+  for (const [fayl, savollar] of guruhlar) {
+    const sanoq = Object.fromEntries(variantKalitlari.map((k) => [k, 0]));
+    let ketma = { harf: null, uzunlik: 0 };
+    let joriy = { harf: null, uzunlik: 0 };
+    for (const s of savollar) {
+      sanoq[s.answer]++;
+      joriy = s.answer === joriy.harf ? { harf: joriy.harf, uzunlik: joriy.uzunlik + 1 } : { harf: s.answer, uzunlik: 1 };
+      if (joriy.uzunlik > ketma.uzunlik) ketma = { ...joriy };
+    }
+    const uzun = savollar.filter(engUzunTogrimi).map((s) => s.external_id);
+    const soni = savollar.length;
+    const ogohlar = [];
+    if (soni >= chegara.min) {
+      for (const k of variantKalitlari) {
+        const ulush = sanoq[k] / soni;
+        if (ulush > chegara.maxUlush) ogohlar.push(`${k}: ${sanoq[k]}/${soni} (${Math.round(ulush * 100)}%), ${Math.round(chegara.maxUlush * 100)}% dan ko'p`);
+        if (ulush < chegara.minUlush) ogohlar.push(`${k}: ${sanoq[k]}/${soni} (${Math.round(ulush * 100)}%), ${Math.round(chegara.minUlush * 100)}% dan kam`);
+      }
+      if (uzun.length / soni > chegara.uzunUlush) ogohlar.push(`to'g'ri javob ${uzun.length}/${soni} savolda eng uzun variant (tasodifan ~25%): ${uzun.join(', ')}`);
+    }
+    if (ketma.uzunlik > chegara.maxKetma) ogohlar.push(`${ketma.harf} ketma-ket ${ketma.uzunlik} marta (ko'pi bilan ${chegara.maxKetma})`);
+    natija.push({ fayl, soni, sanoq, ketma, uzun, ogohlar });
+  }
+  return natija;
+}

@@ -6,7 +6,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'n
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, describe, it } from 'node:test';
-import { REPO, bazaQatori, mazmunHash, savolHolati, savolniTekshir, sprSon } from './umumiy.mjs';
+import { REPO, bazaQatori, engUzunTogrimi, kalitMuvozanati, mazmunHash, savolHolati, savolniTekshir, sprSon } from './umumiy.mjs';
 
 const namunalar = JSON.parse(readFileSync(join(REPO, 'docs/namuna-savol.json'), 'utf8'));
 const nusxa = (i = 1) => structuredClone(namunalar[i]);
@@ -29,6 +29,54 @@ describe('namuna savollar', () => {
       assert.equal(savolHolati(s), 'draft');
       assert.ok(s.tags.includes('namuna'));
     }
+  });
+});
+
+describe('kalit muvozanati', () => {
+  // Bir xil uzunlikdagi variantlar: "eng uzun" ishorasi faqat ataylab yaratilganda chiqadi.
+  const mcq = (i, javob, uzun = false) => {
+    const s = nusxa(1);
+    s.external_id = `sinov-kalit-${String(i).padStart(3, '0')}`;
+    s.answer = javob;
+    s.options = ['A', 'B', 'C', 'D'].map((k) => ({ key: k, text: k === javob && uzun ? `variant ${k} uzunroq matn` : `variant ${k}` }));
+    return s;
+  };
+  const natija = (javoblar, uzun = false) => javoblar.split('').map((j, i) => ({ fayl: 'modul.json', joy: i + 1, savol: mcq(i, j, uzun), xatolar: [], ogohlar: [] }));
+
+  it('muvozanatli modul: ogohlantirish yo\'q', () => {
+    const [m] = kalitMuvozanati(natija('ABCDBADCCADBDCBAABCDBADCCAD')); // 27 ta: A7 B6 C7 D7
+    assert.equal(m.soni, 27);
+    assert.deepEqual(m.ogohlar, []);
+  });
+
+  it('Stage 4 holati (63% A, D yo\'q) ushlanadi', () => {
+    const javoblar = 'A'.repeat(17).split('').flatMap((a, i) => [a, 'BC'[i % 2]]).join('').slice(0, 27);
+    const [m] = kalitMuvozanati(natija(javoblar));
+    const x = m.ogohlar.join('\n');
+    assert.match(x, /A: \d+\/27/);
+    assert.match(x, /D: 0\/27/);
+  });
+
+  it('ketma-ket 4 ta bir harf ushlanadi (kichik to\'plamda ham)', () => {
+    const [m] = kalitMuvozanati(natija('BBBBA'));
+    assert.deepEqual(m.ketma, { harf: 'B', uzunlik: 4 });
+    assert.match(m.ogohlar.join('\n'), /ketma-ket 4/);
+  });
+
+  it("to'g'ri javob ko'pincha eng uzun variant: ogohlantirish", () => {
+    assert.equal(engUzunTogrimi(mcq(1, 'C', true)), true);
+    assert.equal(engUzunTogrimi(mcq(1, 'C')), false); // teng uzunlik
+    const [m] = kalitMuvozanati(natija('ABCDBADCCADB', true));
+    assert.equal(m.uzun.length, 12);
+    assert.match(m.ogohlar.join('\n'), /eng uzun variant/);
+  });
+
+  it('xatoli va spr savollar hisoblanmaydi', () => {
+    const n = natija('ABCD');
+    n[0].xatolar = ['xato'];
+    n.push({ fayl: 'modul.json', joy: 9, savol: nusxa(2), xatolar: [], ogohlar: [] });
+    const [m] = kalitMuvozanati(n);
+    assert.equal(m.soni, 3);
   });
 });
 

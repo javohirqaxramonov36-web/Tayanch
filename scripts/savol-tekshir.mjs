@@ -3,7 +3,7 @@
 //   TAYANCH_SAVOLLAR_DIR=~/Tayanch-savollar npm run savol:tekshir     (papkadagi hamma .json/.jsonl)
 //   npm run savol:tekshir -- --fayl docs/namuna-savol.json            (alohida fayl, faqat o'qiladi)
 // Xato bo'lsa chiqish kodi 1. Dars savollari (scripts/savollarni-tekshir.ts) bu skriptga aloqasi yo'q.
-import { argumentlar, hammasiniTekshir, joyNomi, katak, savolFayllari, savolHolati, savollarPapkasi, savolTaksonomiya } from './savol/umumiy.mjs';
+import { argumentlar, hammasiniTekshir, joyNomi, kalitMuvozanati, katak, savolFayllari, savolHolati, savollarPapkasi, savolTaksonomiya } from './savol/umumiy.mjs';
 
 const a = argumentlar();
 const fayllar = a.fayl ? String(a.fayl).split(',').map((x) => x.trim()).filter(Boolean) : savolFayllari(savollarPapkasi(a));
@@ -26,6 +26,18 @@ const ogohli = natijalar.filter((n) => n.ogohlar.length);
 if (ogohli.length) {
   console.log('### Ogohlantirishlar\n\n| external_id | Izoh |\n| --- | --- |');
   for (const n of ogohli) for (const x of n.ogohlar) console.log(`| ${katak(n.savol?.external_id ?? '-')} | ${katak(x)} |`);
+  console.log('');
+}
+
+// ---------- Kalit muvozanati: fayl bo'yicha (bloklamaydi) ----------
+const muvozanat = kalitMuvozanati(natijalar);
+if (muvozanat.length) {
+  console.log("### Kalit muvozanati (fayl bo'yicha, mcq)\n\n| Fayl | MCQ | A | B | C | D | Eng uzun ketma-ketlik | To'g'ri = eng uzun | Izoh |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  for (const m of muvozanat) {
+    const joy = joyNomi({ fayl: m.fayl, joy: '' }).replace(/:$/, '');
+    const s = m.sanoq;
+    console.log(`| ${katak(joy)} | ${m.soni} | ${s.A} | ${s.B} | ${s.C} | ${s.D} | ${m.ketma.harf ?? '-'} × ${m.ketma.uzunlik} | ${m.uzun.length} | ${m.ogohlar.length ? katak('Ogohlantirish: ' + m.ogohlar.join('; ')) : 'OK'} |`);
+  }
   console.log('');
 }
 

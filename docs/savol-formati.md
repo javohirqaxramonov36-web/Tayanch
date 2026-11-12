@@ -85,6 +85,16 @@ Rad etiladi:
 
 **Ogohlantirish (xato emas):** musbat javob 5 belgidan, manfiy javob 6 belgidan oshsa. Bu qoida va "aralash son yo'q" qoidasi **tekshirish kerak**: rasmiy SPR yo'riqnomasi matni 2026-11-09 da o'qilmadi (PDF matni ajratib olinmadi). Tasdiqlansa, ogohlantirish xatoga aylantiriladi va manba `manbalar.ts` ga qo'shiladi.
 
+## 5a. Kalit muvozanati (fayl bo'yicha)
+
+`savol:tekshir` har fayldagi xatosiz `mcq` savollarni fayldagi tartibda bitta to'plam (masalan mock testning bitta moduli) deb ko'radi va jadval chiqaradi. Bloklamaydi, faqat ogohlantiradi. Chegaralar `kalitChegara` (`scripts/savol/umumiy.mjs`):
+
+- 8 va undan ko'p mcq bo'lsa: har harf ulushi 15–35% oralig'ida (27 savolda 5–9 ta);
+- bir harf ketma-ket ko'pi bilan 3 marta (har qanday to'plamda);
+- to'g'ri javob yagona eng uzun variant bo'lgan savollar 40% dan oshmasin (tasodifan ~25%).
+
+Sabab (2026-11-09): Stage 4 qoralamasida R&W'ning 54 savolidan 34 tasida javob A, birortasida D yo'q edi. "Har doim A" strategiyasi 63% berardi. Tuzatish: variant matnini o'zgartirmay tartibini almashtirish va `answer` ni yangilash; tasdiqlangan savolda bu mazmun o'zgarishi (`version` oshiriladi, qayta tasdiqlanadi).
+
 ## 6. Holat va ish jarayoni
 
 1. **Qoralama.** AI qoralama yozadi (03-Savol-yozish-prompti; promptga College Board materiali qo'yilmaydi) yoki muallif o'zi yozadi. Faylga `verified_by: null` bilan saqlanadi.
