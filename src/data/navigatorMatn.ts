@@ -9,6 +9,11 @@ export type MuddatJavob = '15d' | '1m' | '3m' | 'date' | 'unknown';
 
 const uz = {
   dialogSarlavha: "Yo'l xaritangizni tuzamiz",
+  /** Birinchi tashrif kartasi (oyna o'zi ochilmaydi, 2026-11-12) */
+  taklifSarlavha: "Yo'l xaritangizni 1 daqiqada tuzing",
+  taklifIzoh: "3 ta savol: maqsad, qolgan vaqt va kunlik vaqt. Javobga qarab keyingi qadamni ko'rsatamiz.",
+  taklifBoshlash: 'Boshlash',
+  taklifKeyin: 'Hozir emas',
   qadamHisob: (n: number, jami: number) => `${n}/${jami}-qadam`,
   orqaga: 'Orqaga',
   keyingi: 'Keyingi',

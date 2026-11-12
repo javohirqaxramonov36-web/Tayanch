@@ -47,6 +47,7 @@ export function navigatorniIshgaTushir(): void {
   const sanaXato = $('[data-onb-sana-xato]', dialog);
   const qaytaBtn = $<HTMLButtonElement>('[data-yol-qayta]', blok);
   const salomEl = $('[data-yol-salom]', blok);
+  const taklif = document.querySelector<HTMLElement>('[data-yol-taklif]');
 
   let profil = profilniOqi(ombor);
   let rejim: Rejim = 'birinchi';
@@ -264,6 +265,16 @@ export function navigatorniIshgaTushir(): void {
   });
 
   qaytaBtn.addEventListener('click', () => och('qayta'));
+  // Birinchi tashrif kartasi: "Boshlash" oynani ochadi, "Hozir emas" oynadagi "O'tkazib yuborish" bilan bir xil.
+  taklif?.querySelector('[data-yol-taklif-boshla]')?.addEventListener('click', () => och('birinchi'));
+  taklif?.querySelector('[data-yol-taklif-keyin]')?.addEventListener('click', () => {
+    if (profil) return;
+    profil = otkazilganProfil(new Date());
+    profilniYoz(ombor, profil);
+    yuborish();
+    chiz();
+    salomEl.focus();
+  });
 
   // ---------- roadmap rendering ----------
   function el<K extends keyof HTMLElementTagNameMap>(teg: K, klass?: string, matn?: string) {
@@ -275,6 +286,7 @@ export function navigatorniIshgaTushir(): void {
 
   function chiz() {
     document.documentElement.setAttribute('data-yol', profil ? 'bor' : 'yoq');
+    if (taklif && profil) taklif.hidden = true;
     if (!profil) return;
     const hozir = new Date();
     const holat = muddatHolati(profil, hozir);
@@ -353,7 +365,7 @@ export function navigatorniIshgaTushir(): void {
       });
       if (!profil) await Promise.race([sinxron, new Promise((r) => setTimeout(r, SINXRON_KUTISH_MS))]);
     }
-    if (!profil && !dialog.open) och('birinchi');
+    if (!profil && !dialog.open && taklif) taklif.hidden = false;
   })();
 
   // Re-render when another tab/module changes the profile or the override, and when the tab
