@@ -68,6 +68,11 @@ for (const fayl of fayllar) {
   }
   if (buf.subarray(0, 8000).includes(0)) continue; // binar fayl
 
+  // 3. Original savollar repoda emas (javoblar oshkor bo'ladi): faqat namuna fayli ruxsat etilgan (docs/savol-formati.md).
+  if (/\.jsonl?$/i.test(fayl) && fayl !== 'docs/namuna-savol.json' && /"source"\s*:\s*"original"/.test(buf.toString('utf8'))) {
+    xatolar.push(`${fayl}  [Original savol fayli (source: "original") repoda; TAYANCH_SAVOLLAR_DIR ga ko'chiring]`);
+  }
+
   const qatorlar = buf.toString('utf8').split('\n');
   qatorlar.forEach((qator, i) => {
     for (const q of matnQoidalari) {

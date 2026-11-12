@@ -29,7 +29,7 @@ interface Yozuv {
   limit: number | null;
   attempts: Record<string, { answer: string; is_correct: boolean; time_ms: number; at: number }>;
 }
-interface Holat { sessiyalar: Record<string, Yozuv>; review: Record<string, string | null> }
+interface Holat { sessiyalar: Record<string, Yozuv>; review: Record<string, string | null>; saqlangan?: string[] }
 
 const kut = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const oqi = (): Holat => {
@@ -107,7 +107,7 @@ export function mockApi(tur: MockTur): SessiyaApi {
       return {
         session_id: id, mode: y.mode, started_at: y.started_at, finished_at: y.finished_at,
         server_now: new Date().toISOString(), time_limit_ms: y.limit,
-        questions: hammasi.map((s) => ({ ...s.q, answered: !!y.attempts[s.q.id] })),
+        questions: hammasi.map((s) => ({ ...s.q, answered: !!y.attempts[s.q.id], bookmarked: (h.saqlangan ?? []).includes(s.q.id) })),
         results: Object.entries(y.attempts).sort((a, b) => a[1].at - b[1].at).map(([qid, a]) => {
           const s = topSavol(qid)!;
           return { question_id: qid, answer: a.answer, is_correct: a.is_correct, correct: s.q.format === 'mcq' ? s.togri[0] : s.togri, explanation: s.izoh, time_ms: a.time_ms };
@@ -152,6 +152,12 @@ export function mockApi(tur: MockTur): SessiyaApi {
     async sabab(qid, tag) {
       await kut(300); tarmoq();
       const h = oqi(); if (qid in h.review) h.review[qid] = tag; yoz(h);
+    },
+    async saqla(qid, on) {
+      await kut(300); tarmoq();
+      const h = oqi(); const b = new Set(h.saqlangan ?? []);
+      if (on) b.add(qid); else b.delete(qid);
+      h.saqlangan = [...b]; yoz(h);
     },
     async rasm() {
       return namunaRasm;

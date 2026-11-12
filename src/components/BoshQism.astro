@@ -7,8 +7,16 @@ interface Props {
   description: string;
   holat: 'qoralama' | 'chop-etilgan';
 }
+import { yol } from '../lib/yol';
+import { ogRasmlar, ogQavat, OG_KENGLIK, OG_BALANDLIK } from '../data/ogRasmlar';
+
 const { title, description, holat } = Astro.props;
 const toliqSarlavha = title === 'Tayanch' ? 'Tayanch' : `${title} · Tayanch`;
+// Ulashish rasmi: sahifa qaysi qavatda bo'lsa, o'sha qavat rasmi. URL absolyut (site + base).
+const ogRasm = ogRasmlar[ogQavat(Astro.url.pathname)];
+const ogRasmUrl = new URL(yol(ogRasm.fayl), Astro.site).href;
+const sahifaUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogTil = /\/uz\/sat(\/|$)/.test(Astro.url.pathname) ? 'en_US' : 'uz_UZ';
 ---
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -16,7 +24,20 @@ const toliqSarlavha = title === 'Tayanch' ? 'Tayanch' : `${title} · Tayanch`;
 <meta name="description" content={description} />
 {holat === 'qoralama' && <meta name="robots" content="noindex" />}
 <meta name="color-scheme" content="light dark" />
-<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+<link rel="canonical" href={sahifaUrl} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Tayanch" />
+<meta property="og:locale" content={ogTil} />
+<meta property="og:title" content={toliqSarlavha} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={sahifaUrl} />
+<meta property="og:image" content={ogRasmUrl} />
+<meta property="og:image:type" content="image/webp" />
+<meta property="og:image:width" content={String(OG_KENGLIK)} />
+<meta property="og:image:height" content={String(OG_BALANDLIK)} />
+<meta property="og:image:alt" content={ogRasm.alt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image:alt" content={ogRasm.alt} />
 <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
 <script is:inline>
   (function () {

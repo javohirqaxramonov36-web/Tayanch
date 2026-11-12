@@ -156,7 +156,8 @@ export async function rozilikHolati(c: SupabaseClient, sessiya: Session): Promis
   const { data, error } = await c.from('profiles').select('consent_version').eq('id', sessiya.user.id).maybeSingle();
   if (error) throw error;
   if (!data) throw new Error('Profil topilmadi');
-  if (data.consent_version) return 'bor';
+  // Hujjatlar o'zgarsa (rozilikVersiya yangi sana) eski rozilik yetmaydi: qayta so'raladi.
+  if (data.consent_version === hisobSozlama.rozilikVersiya) return 'bor';
   if (sessiya.user.user_metadata?.consent_version === hisobSozlama.rozilikVersiya) {
     await rozilikYoz(c, sessiya);
     return 'bor';
@@ -211,11 +212,7 @@ export function xatoMatni(e: AuthError | Error, amal: Amal): string {
     return "Email yoki parol noto'g'ri.";
   }
   if (amal === 'royxat') return "Hisob ochilmadi. Qayta urinib ko'ring.";
-  if (amal === 'ochirish') {
-    // 23503: hisobga "on delete restrict" bilan bog'langan yozuv bor (masalan to'lov tarixi).
-    if (x.code === '23503') return "Hisobingizda to'lov yozuvlari bor, shuning uchun uni bu yerdan o'chirib bo'lmaydi.";
-    return "Hisob o'chirilmadi. Qayta urinib ko'ring.";
-  }
+  if (amal === 'ochirish') return "Hisob o'chirilmadi. Qayta urinib ko'ring.";
   if (amal === 'yangilash') return "Yangi parol saqlanmadi. Havolaning muddati o'tgan bo'lishi mumkin: yangisini so'rang.";
   return "Nimadir xato ketdi. Qayta urinib ko'ring.";
 }

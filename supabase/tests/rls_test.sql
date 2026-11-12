@@ -18,19 +18,19 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-4000-8000-00000000000c', 'c@sinov.invalid', '{}');
 
 insert into public.questions
-  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, figure, status, author, verified_by)
+  (external_id, section, domain, skill, difficulty, format, stem, options, correct, explanation, figure, status, author, verified_by, verified_at)
 values
   ('sinov-mcq-1', 'math', 'SINOV-domain', 'SINOV-skill', 2, 'mcq', 'SINOV savol 1',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2", "is_correct": true}]',
-   '{"choice": "B"}', 'SINOV tushuntirish', '{"path": "sinov/fig1.png", "alt": "SINOV rasm"}', 'verified', 'sinov', 'sinov'),
+   '{"choice": "B"}', 'SINOV tushuntirish', '{"path": "sinov/fig1.png", "alt": "SINOV rasm"}', 'verified', 'sinov', 'sinov-tekshiruvchi', now()),
   ('sinov-mcq-2', 'math', 'SINOV-domain', 'SINOV-skill', 3, 'mcq', 'SINOV savol 2',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "A"}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov'),
+   '{"choice": "A"}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov-tekshiruvchi', now()),
   ('sinov-spr-1', 'math', 'SINOV-domain', 'SINOV-skill', 3, 'spr', 'SINOV savol 3',
-   null, '{"accepted": ["1/2"]}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov'),
+   null, '{"accepted": ["1/2"]}', 'SINOV tushuntirish', null, 'verified', 'sinov', 'sinov-tekshiruvchi', now()),
   ('sinov-draft-1', 'math', 'SINOV-domain', 'SINOV-skill', 1, 'mcq', 'SINOV qoralama',
    '[{"key": "A", "text": "SINOV 1"}, {"key": "B", "text": "SINOV 2"}]',
-   '{"choice": "A"}', 'SINOV tushuntirish', null, 'draft', 'sinov', null);
+   '{"choice": "A"}', 'SINOV tushuntirish', null, 'draft', 'sinov', null, null);
 
 insert into storage.objects (bucket_id, name) values
   ('question-figures', 'sinov/fig1.png'),
@@ -93,7 +93,11 @@ begin
   if not exists (select 1 from public.plans where code = 'free') then
     raise exception 'FAIL 02: anon faol tarifni ko''rmadi';
   end if;
-  if exists (select 1 from public.plans where code in ('pro', 'elite')) then
+  -- P19 (20261111090000): pro faol, max (20261111200000 gacha elite) faol emas ("Coming soon").
+  if not exists (select 1 from public.plans where code = 'pro') then
+    raise exception 'FAIL 02: anon faol pro tarifini ko''rmadi';
+  end if;
+  if exists (select 1 from public.plans where code = 'max') then
     raise exception 'FAIL 02: anon faol bo''lmagan tarifni ko''rdi';
   end if;
   if exists (select 1 from storage.objects where bucket_id = 'question-figures') then
@@ -193,9 +197,9 @@ begin
     raise exception 'FAIL 06: A review_queue.box ni o''zgartirdi';
   exception when insufficient_privilege then null;
   end;
-  update public.review_queue set note = 'SINOV izoh', reason_tag = 'hisob' where question_id = q1;
+  update public.review_queue set note = 'SINOV izoh', reason_tag = 'concept_gap' where question_id = q1;
   begin
-    insert into public.subscriptions (user_id, plan_code, source) values (a, 'elite', 'admin');
+    insert into public.subscriptions (user_id, plan_code, source) values (a, 'max', 'admin');
     raise exception 'FAIL 06: A subscriptions ga yozdi';
   exception when insufficient_privilege then null;
   end;
@@ -230,7 +234,7 @@ begin
   exception when insufficient_privilege then null;
   end;
   begin
-    perform public.admin_grant_plan(a, 'elite', 30, 'sinov', 'sinov');
+    perform public.admin_grant_plan(a, 'max', 30, 'sinov', 'sinov');
     raise exception 'FAIL 06: A admin_grant_plan ni chaqirdi';
   exception when insufficient_privilege then null;
   end;
@@ -246,6 +250,24 @@ begin
   if (select consent_at from public.profiles where id = a) is null then
     raise exception 'FAIL 07: consent_at trigger ishlamadi';
   end if;
+  -- P12: SAT maqsad, hozirgi ball, sozlash vaqti; qadam 10 va oraliq tekshiruvi
+  update public.profiles set target_score = 1500, current_score = 1320, exam_date = '2026-12-05', sat_setup_at = now() where id = a;
+  begin
+    update public.profiles set current_score = 1325 where id = a;
+    raise exception 'FAIL 07: current_score qadam 10 tekshirilmadi';
+  exception when check_violation then null;
+  end;
+  begin
+    update public.profiles set current_score = 1610 where id = a;
+    raise exception 'FAIL 07: current_score oralig''i tekshirilmadi';
+  exception when check_violation then null;
+  end;
+  begin
+    update public.profiles set target_score = 1505 where id = a;
+    raise exception 'FAIL 07: target_score qadam 10 tekshirilmadi';
+  exception when check_violation then null;
+  end;
+  update public.profiles set current_score = null where id = a;
   insert into public.user_state (key, value) values ('tayanch:sat-lugat', '{"versiya": 1}');
   insert into public.bookmarks (question_id) values (q2);
   insert into public.official_tests (test_name, total_score) values ('SINOV test', 1300);
@@ -295,8 +317,9 @@ begin
   if position('"correct"' in r::text) > 0 or position('"explanation"' in r::text) > 0 then
     raise exception 'FAIL 09: daily_question javobida to''g''ri javob bor';
   end if;
-  if (public.usage_status() -> 'today' ->> 'daily')::integer <> 1 then
-    raise exception 'FAIL 09: daily kvotasi ikki marta sarflandi';
+  -- P10 (20261111220000): kun savoli kvota sarflamaydi.
+  if coalesce((public.usage_status() -> 'today' ->> 'daily')::integer, 0) <> 0 then
+    raise exception 'FAIL 09: kun savoli daily kvotasini sarfladi';
   end if;
   raise notice 'OK 09 usage_status (limits bo''sh = cheklovsiz), question_counts, daily_question (kuniga bitta sessiya, javobsiz)';
 end
@@ -529,7 +552,7 @@ begin
            from public.review_queue where user_id = a and question_id = q1) <> 3 then
     raise exception 'FAIL 13: Leitner o''tishi noto''g''ri';
   end if;
-  if (select reason_tag from public.review_queue where user_id = a and question_id = q1) <> 'hisob' then
+  if (select reason_tag from public.review_queue where user_id = a and question_id = q1) <> 'concept_gap' then
     raise exception 'FAIL 13: reason_tag yo''qoldi';
   end if;
   raise notice 'OK 14 takrorlash sessiyasi: muddati kelgan savol, to''g''ri javob 1 -> 2-quti (+3 kun), reason_tag saqlanadi';
@@ -563,9 +586,9 @@ $$;
 -- 6. To'lov (inPAY): payment_create, payment_set_invoice, payment_apply_event (0010)
 ------------------------------------------------------------------------------
 -- SINOV qiymatlari (haqiqiy narx emas, tranzaksiya oxirida qaytariladi): pro 1000 so'm / 30 kun,
--- elite faol, lekin narxsiz. inPAY id va evt_ id lari soxta.
+-- max faol, lekin narxsiz. inPAY id va evt_ id lari soxta.
 update public.plans set is_active = true, price_uzs = 1000, period_days = 30 where code = 'pro';
-update public.plans set is_active = true, price_uzs = null, period_days = null where code = 'elite';
+update public.plans set is_active = true, price_uzs = null, period_days = null where code = 'max';
 
 set local role anon;
 select set_config('request.jwt.claims', '{"role": "anon"}', true) \gset
@@ -634,7 +657,7 @@ begin
     if sqlerrm <> 'plan_not_available' then raise; end if;
   end;
   begin
-    perform public.payment_create(c, 'elite');
+    perform public.payment_create(c, 'max');
     raise exception 'FAIL 17: narxsiz tarif uchun to''lov yaratildi';
   exception when others then
     if sqlerrm <> 'plan_price_not_set' then raise; end if;
@@ -907,6 +930,80 @@ begin
   raise notice 'OK 21 muvofiqlash: faqat 15 daqiqa-48 soatlik pending, faqat service_role; payment_events.payload da mijoz ma''lumoti yo''q';
 end
 $$;
+
+-- 7. P05 qoidalari (0010): tasdiqlash, draft, rasm alt, source, versiya, import upsert
+------------------------------------------------------------------------------
+set role service_role;
+
+do $$
+declare
+  holat  record;
+  v_ver  integer;
+  v_tags text[];
+begin
+  -- Har holat CHECK bilan rad etilishi kerak.
+  for holat in
+    select * from (values
+      ('verified, verified_by = author (harf va bo''shliq farqi)',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author, verified_by, verified_at)
+          values ('sinov-p05-1', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'verified', 'Sinov Inson', ' sinov inson ', now())$q$),
+      ('verified, verified_at yo''q',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author, verified_by)
+          values ('sinov-p05-2', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'verified', 'Claude (AI)', 'Sinov Inson')$q$),
+      ('draft, verified_by bor',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, status, author, verified_by)
+          values ('sinov-p05-3', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'draft', 'Claude (AI)', 'Sinov Inson')$q$),
+      ('rasm alt siz',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, figure)
+          values ('sinov-p05-4', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', '{"path": "math/x.png"}')$q$),
+      ('source original emas',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, source)
+          values ('sinov-p05-5', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'boshqa')$q$),
+      ('drafted_by noto''g''ri',
+       $q$insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, drafted_by)
+          values ('sinov-p05-6', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'robot')$q$)
+    ) t (nom, q)
+  loop
+    begin
+      execute holat.q;
+      raise exception 'FAIL 22: rad etilmadi: %', holat.nom;
+    exception when check_violation then null;
+    end;
+  end loop;
+
+  -- Import shaklidagi upsert (external_id bo'yicha): draft yaratiladi, keyin versiya oshirilib verified bo'ladi.
+  insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, explanation,
+                                figure, tags, source, drafted_by, author, verified_by, verified_at, version, status, content_hash)
+  values ('sinov-p05-ok', 'math', 'D', 'S', 2, 'spr', 'SINOV', '{"accepted": ["1"]}', 'SINOV tushuntirish',
+          '{"path": "math/sinov-p05-ok/abc.svg", "alt": "SINOV rasm", "type": "svg"}', '{sinov}', 'original', 'ai',
+          'Claude (AI)', null, null, 1, 'draft', 'h1')
+  on conflict (external_id) do update set stem = excluded.stem;
+
+  insert into public.questions (external_id, section, domain, skill, difficulty, format, stem, correct, explanation,
+                                figure, tags, source, drafted_by, author, verified_by, verified_at, version, status, content_hash)
+  values ('sinov-p05-ok', 'math', 'D', 'S', 2, 'spr', 'SINOV yangi', '{"accepted": ["1"]}', 'SINOV tushuntirish',
+          '{"path": "math/sinov-p05-ok/abc.svg", "alt": "SINOV rasm", "type": "svg"}', '{sinov,p05}', 'original', 'ai',
+          'Claude (AI)', 'Sinov Inson', now(), 3, 'verified', 'h2')
+  on conflict (external_id) do update
+    set stem = excluded.stem, tags = excluded.tags, verified_by = excluded.verified_by, verified_at = excluded.verified_at,
+        version = excluded.version, status = excluded.status, content_hash = excluded.content_hash;
+
+  select version, tags into v_ver, v_tags from public.questions where external_id = 'sinov-p05-ok';
+  if v_ver <> 3 or v_tags <> '{sinov,p05}' then
+    raise exception 'FAIL 22: import versiyasi saqlanmadi (kutilgan 3, keldi %)', v_ver;
+  end if;
+
+  -- Versiyani bermasdan mazmun o'zgarsa trigger +1 qiladi (0003 xatti-harakati saqlanadi).
+  update public.questions set explanation = 'SINOV tushuntirish 2' where external_id = 'sinov-p05-ok';
+  if (select version from public.questions where external_id = 'sinov-p05-ok') <> 4 then
+    raise exception 'FAIL 22: mazmun o''zgarganda versiya oshmadi';
+  end if;
+
+  raise notice 'OK 22 P05: verified/draft/alt/source/drafted_by qoidalari, import upsert va versiya';
+end
+$$;
+
+reset role;
 
 do $$ begin raise notice 'HAMMASI O''TDI'; end $$;
 
