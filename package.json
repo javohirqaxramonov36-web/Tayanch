@@ -18,7 +18,12 @@
     "lugat:sinov": "node --test scripts/lugat/*.test.mjs",
     "check": "astro check",
     "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
-    "validate:tests": "node scripts/ielts-testlarni-tekshir.ts"
+    "validate:tests": "node scripts/ielts-testlarni-tekshir.ts",
+    "savol:tekshir": "node scripts/savol-tekshir.mjs",
+    "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",
+    "savol:tasdiqla": "node scripts/savol-tasdiqla.mjs",
+    "savol:import": "node --env-file-if-exists=.env scripts/savol-import.mjs",
+    "savol:sinov": "node --test scripts/savol/savol.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/onest": "^5.3.1",
@@ -28,6 +33,7 @@
     "three": "0.186.1"
   },
   "devDependencies": {
+    "katex": "^0.19.1",
     "@astrojs/check": "^0.9.12",
     "@types/node": "^26.6.6",
     "typescript": "^6.0.3"

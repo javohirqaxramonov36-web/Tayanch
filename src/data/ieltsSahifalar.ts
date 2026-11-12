@@ -44,6 +44,7 @@ export const darslar: IeltsBand[] = [
 export const mashqlar: IeltsBand[] = [
   { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
   { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+  { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
 ];
 
 export const vositalar: IeltsBand[] = [
