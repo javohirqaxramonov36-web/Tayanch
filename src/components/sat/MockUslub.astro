@@ -27,30 +27,13 @@
     border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
   }
   .mk-ogoh a { color: inherit; font-weight: 800; min-height: 44px; display: inline-flex; align-items: center; }
-
-  .mk-tugma, .mk-tugma2 {
-    min-height: 52px; padding: 0 28px; border: 0; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 800; cursor: pointer; text-decoration: none;
-    display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2);
-  }
-  .mk-tugma { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .mk-tugma:hover { background: var(--rang-asosiy-toq); }
-  .mk-tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .mk-tugma2 { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .mk-tugma2:hover { background: var(--chiziq-kuchli); }
-  .mk-tugma2:disabled { color: var(--matn-sust); cursor: not-allowed; }
-  .mk-tugma[aria-busy='true'], .mk-tugma2[aria-busy='true'] { cursor: progress; }
   .mk-kichik {
     display: inline-flex; align-items: center; gap: var(--b-2);
     min-height: 48px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
     border: 0; font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
     background: var(--sirt-ikkinchi); color: var(--matn); text-decoration: none;
   }
-  .mk-kichik:hover { background: var(--chiziq-kuchli); }
-  .mk-matn-tugma {
-    min-height: 48px; padding: 0 var(--b-2); border: 0; background: transparent; color: inherit;
-    font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; display: inline-flex; align-items: center;
-  }
+  @media (hover: hover) and (pointer: fine) { .mk-kichik:hover { background: var(--chiziq-kuchli); } }
   .mk-tugma:focus-visible, .mk-tugma2:focus-visible, .mk-kichik:focus-visible, .mk-matn-tugma:focus-visible,
   .mk-katak:focus-visible, .mk-yopish:focus-visible, .mk-chip:focus-visible, .mk details summary:focus-visible, .mk a:focus-visible {
     outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
