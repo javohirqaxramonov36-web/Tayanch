@@ -155,6 +155,7 @@ const qaytarish = satTarif.qaytarishHavola;
 
 <script>
   import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
+  import { track } from '../../../../../lib/metrika';
   import { funksiya, narxYozuv, tolovXatoMatni, tolovniEsla } from '../../../../../lib/sat/tolov';
   import { bayroqNomi, kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
   import { tarifBayrogimi } from '../../../../../data/satAnalitika';
@@ -322,6 +323,7 @@ const qaytarish = satTarif.qaytarishHavola;
     }
     const sessiya = await hisobQorovul();
     if (!sessiya) return; // kirish sahifasiga yo'naltirildi
+    void track('plan_viewed'); // P25: birinchi tomon metrikasi, javobi kutilmaydi
 
     const [p, u, s, t] = await Promise.all([
       c.from('plans').select('code, name, price_uzs, period_days, features, limits').eq('bolim', 'sat'),
