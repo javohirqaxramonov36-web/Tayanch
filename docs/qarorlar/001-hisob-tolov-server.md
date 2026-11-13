@@ -5,7 +5,7 @@
 
 ## Nima uchun
 
-SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pullik tariflar (Free, Pro, Elite). Buning uchun foydalanuvchini tanish, natijani qurilmalar orasida saqlash va to'lovni qabul qilish kerak. Statik GitHub Pages buni o'zi qila olmaydi. Server yozish va saqlash o'rniga tayyor xizmat olinadi: Supabase (Auth, Postgres, Edge Functions) va inPAY (Click, Payme, UzCard/HUMO).
+SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pullik tariflar (Free, Pro, Max; 2026-11-11 gacha uchinchi tarif "Elite" deb atalgan). Buning uchun foydalanuvchini tanish, natijani qurilmalar orasida saqlash va to'lovni qabul qilish kerak. Statik GitHub Pages buni o'zi qila olmaydi. Server yozish va saqlash o'rniga tayyor xizmat olinadi: Supabase (Auth, Postgres, Edge Functions) va inPAY (Click, Payme, UzCard/HUMO).
 
 ## Qayerda nima ishlaydi
 
@@ -20,8 +20,9 @@ SAT bo'limi to'liq ilovaga aylanadi: original savollar, kvotali bepul qism va pu
 ## Qaysi ma'lumot saqlanadi
 
 - **Hisob**: email, Google orqali kirsa Google bergan ism va email (SB04 dagi standart scope'lar). Parol Supabase Auth'da, Tayanch jadvallarida emas.
-- **Obuna**: tarif (free, pro, elite), qavat (`bolim`), boshlanish va tugash sanasi, inPAY to'lov identifikatori.
+- **Obuna**: tarif (free, pro, max), qavat (`bolim`), boshlanish va tugash sanasi, inPAY to'lov identifikatori.
 - **Foydalanish**: kvota hisoblagichi, javoblar, xato daftari va progress (hozirgi `tayanch:sat-*` kalitlarining server nusxasi).
+- **Statistika** (P25, 2026-11-12): birinchi tomon hodisalari `events` jadvalida (ro'yxat, sessiya, kun savoli, tariflar sahifasi, to'lov), hisob ID si bilan, savol matni, email va IP siz. Profilda o'chiriladi (to'lov hodisalaridan tashqari). Uchinchi tomon analitikasi yo'q. So'rovlar: `docs/metrikalar.sql`.
 - **Saqlanmaydi**: karta ma'lumoti, pasport va boshqa hujjatlar, College Board kontenti.
 - Minimal yosh: 12 (muallif, 2026-11-08). 12–17 yosh: ota-ona yoki vasiy ismi va roziligi (Qonun 21-modda, LX02, LX03; HANDOFF §5, 12-savol). Maxfiylik siyosati `/uz/maxfiylik/`, Foydalanish shartlari `/uz/shartlar/` (P23, 2026-11-09).
 - Hisobni o'chirish: profil sahifasidan, `public.delete_own_account()` (o'z `auth.users` qatorini o'chiradi, cascade bilan bog'liq jadvallar ham).

@@ -17,20 +17,44 @@ jadvallar as (
    where n.nspname = 'public' and c.relkind in ('r', 'p')
 ),
 kutilgan_huquq (jadval, rol, huquqlar) as (values
+  ('ai_conversations', 'anon', ''),
+  ('ai_conversations', 'authenticated', 'DELETE,SELECT'),
+  ('ai_messages', 'anon', ''),
+  ('ai_messages', 'authenticated', 'DELETE,SELECT'),
   ('attempts', 'anon', ''),
   ('attempts', 'authenticated', 'SELECT UPDATE(flagged)'),
   ('audit_log', 'anon', ''),
   ('audit_log', 'authenticated', ''),
   ('bookmarks', 'anon', ''),
+  ('daily_picks', 'anon', ''),
+  ('daily_picks', 'authenticated', ''),
   ('bookmarks', 'authenticated', 'DELETE,INSERT,SELECT'),
   ('events', 'anon', ''),
-  ('events', 'authenticated', 'INSERT(name),INSERT(page),INSERT(props)'),
+  ('events', 'authenticated', ''),
+  ('group_licenses', 'anon', ''),
+  ('group_licenses', 'authenticated', 'SELECT'),
+  ('group_members', 'anon', ''),
+  ('group_members', 'authenticated', 'SELECT'),
+  ('groups', 'anon', ''),
+  ('groups', 'authenticated', 'SELECT'),
   ('feedback', 'anon', ''),
   ('feedback', 'authenticated', 'SELECT INSERT(message),INSERT(page),INSERT(rating)'),
   ('official_mistakes', 'anon', ''),
   ('official_mistakes', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('official_tests', 'anon', ''),
   ('official_tests', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('mock_answers', 'anon', ''),
+  ('mock_answers', 'authenticated', ''),
+  ('mock_attempts', 'anon', ''),
+  ('mock_attempts', 'authenticated', ''),
+  ('mock_form_questions', 'anon', ''),
+  ('mock_form_questions', 'authenticated', ''),
+  ('mock_forms', 'anon', ''),
+  ('mock_forms', 'authenticated', ''),
+  ('mock_modules', 'anon', ''),
+  ('mock_modules', 'authenticated', ''),
+  ('onboarding_profiles', 'anon', ''),
+  ('onboarding_profiles', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('payment_events', 'anon', ''),
   ('payment_events', 'authenticated', ''),
   ('payments', 'anon', ''),
@@ -42,7 +66,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('practice_sessions', 'anon', ''),
   ('practice_sessions', 'authenticated', 'SELECT'),
   ('profiles', 'anon', ''),
-  ('profiles', 'authenticated', 'SELECT UPDATE(consent_version),UPDATE(country),UPDATE(display_name),UPDATE(exam_date),UPDATE(locale),UPDATE(nickname),UPDATE(target_score)'),
+  ('profiles', 'authenticated', 'SELECT UPDATE(consent_version),UPDATE(country),UPDATE(current_score),UPDATE(display_name),UPDATE(exam_date),UPDATE(locale),UPDATE(nickname),UPDATE(sat_setup_at),UPDATE(target_score),UPDATE(usage_analytics)'),
   ('questions', 'anon', ''),
   ('questions', 'authenticated', ''),
   ('reports', 'anon', ''),
@@ -60,7 +84,9 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('user_state', 'anon', ''),
   ('user_state', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('vocab_progress', 'anon', ''),
-  ('vocab_progress', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
+  ('user_vocab_words', 'anon', ''),
+  ('user_vocab_words', 'authenticated', 'DELETE,SELECT'),
+  ('vocab_progress', 'authenticated', 'DELETE,SELECT'),
   ('vocab_words', 'anon', 'SELECT'),
   ('vocab_words', 'authenticated', 'SELECT')
 ),
@@ -89,11 +115,14 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.start_session(jsonb,integer,text)', false, true, true),
   ('public.submit_answer(uuid,uuid,text,integer)', false, true, true),
   ('public.daily_question()', false, true, true),
+  ('public.daily_question_public()', true, true, true),
+  ('public.check_daily_answer(uuid,text)', true, true, true),
   ('public.start_review_session(integer)', false, true, true),
   ('public.usage_status()', false, true, true),
   ('public.can_read_question_figure(text)', false, true, true),
   ('public.admin_grant_plan(uuid,text,integer,text,text)', false, false, true),
   ('public.admin_hide_question(text,text,text)', false, false, true),
+  ('public.admin_unhide_question(text,text,text)', false, false, true),
   ('public.payment_create(uuid,text)', false, false, true),
   ('public.payment_set_invoice(uuid,text,jsonb)', false, false, true),
   ('public.payment_apply_event(jsonb)', false, false, true),
@@ -101,7 +130,44 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.get_session(uuid)', false, true, true),
   ('public.finish_session(uuid)', false, true, true),
   ('public.add_to_review(uuid)', false, true, true),
-  ('public.analytics_summary()', false, true, true)
+  ('public.analytics_summary()', false, true, true),
+  ('public.vocab_status()', false, true, true),
+  ('public.vocab_rate(uuid,boolean,boolean)', false, true, true),
+  ('public.vocab_star(uuid,boolean,boolean)', false, true, true),
+  ('public.user_word_add(text,text,text,text)', false, true, true),
+  ('public.vocab_import_local(jsonb)', false, true, true),
+  ('public.ai_tutor_status()', false, true, true),
+  ('public.ai_recent_mistakes(integer)', false, true, true),
+  ('public.ai_begin(uuid,text,integer,integer)', false, false, true),
+  ('public.ai_finish(bigint,integer,integer,integer,boolean,text)', false, false, true),
+  ('public.ai_reject(text)', false, false, true),
+  ('public.ai_attempt_context(uuid,bigint)', false, false, true),
+  ('public.ai_conversation_history(uuid,uuid,integer)', false, false, true),
+  ('public.ai_save_turn(uuid,uuid,text,bigint,uuid,text,text,text,text)', false, false, true),
+  ('public.mock_status()', false, true, true),
+  ('public.start_mock(uuid)', false, true, true),
+  ('public.get_mock(uuid)', false, true, true),
+  ('public.mock_start_module(uuid)', false, true, true),
+  ('public.mock_save(uuid,jsonb)', false, true, true),
+  ('public.mock_submit_module(uuid,integer)', false, true, true),
+  ('public.mock_abandon(uuid)', false, true, true),
+  ('public.get_mock_result(uuid)', false, true, true),
+  ('public.admin_mock_readiness()', false, false, true),
+  ('public.admin_grant_group_license(uuid,integer,integer,integer,text,text)', false, false, true),
+  ('public.admin_revoke_group_license(uuid,text,text)', false, false, true),
+  ('public.group_teacher_overview()', false, true, true),
+  ('public.group_create(text,text)', false, true, true),
+  ('public.group_rotate_code(uuid)', false, true, true),
+  ('public.group_archive(uuid)', false, true, true),
+  ('public.group_delete(uuid)', false, true, true),
+  ('public.group_remove_member(uuid,uuid)', false, true, true),
+  ('public.group_progress(uuid)', false, true, true),
+  ('public.group_preview(text)', false, true, true),
+  ('public.group_join(text,text,boolean,boolean,text,text,boolean)', false, true, true),
+  ('public.group_my_memberships()', false, true, true),
+  ('public.group_update_sharing(uuid,boolean,boolean,text,text,boolean)', false, true, true),
+  ('public.group_leave(uuid)', false, true, true),
+  ('public.track_event(text,jsonb)', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k
@@ -109,8 +175,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 23 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 23); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 36 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 36); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 
@@ -215,11 +281,16 @@ natija (tartib, tekshiruv, holat, tafsilot) as (
 
   -- 9. Ma'lumot holati: tariflar bo'sh, savol yo'q, sinov qoldig'i yo'q
   union all
-  select 90, 'plans: free, pro, elite; limits = {}, price_uzs = null (P19 gacha)',
-         case when count(*) = 3 and bool_and(limits = '{}'::jsonb and price_uzs is null) then 'ok' else 'XATO' end,
-         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null'), '; ' order by code)
+  select 90, 'plans: limits = {} (P19); pro 59000/30 kun faol, free va max narxsiz, max faol emas',
+         case when count(*) = 3 and bool_and(limits = '{}'::jsonb)
+                   and bool_and(case code when 'pro' then price_uzs = 59000 and period_days = 30 and is_active
+                                          when 'max' then price_uzs is null and not is_active
+                                          else price_uzs is null and is_active end)
+              then 'ok' else 'XATO' end,
+         string_agg(code || ' limits=' || limits::text || ' narx=' || coalesce(price_uzs::text, 'null')
+                    || ' faol=' || is_active::text, '; ' order by code)
     from public.plans
-   where code in ('free', 'pro', 'elite')
+   where code in ('free', 'pro', 'max')
   union all
   select 91, 'questions: bo''sh (savol mazmuni yuklanmagan)',
          case when count(*) = 0 then 'ok' else 'info' end,

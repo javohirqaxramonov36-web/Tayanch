@@ -1,0 +1,67 @@
+Tayanch DS — shisha bino (Stage 1 hero, Stage 3 Home'da ishlatilgan). Manba: https://claude.ai/artifact/VDa6kEFnybraLAMiR1JhP9
+Geometriya: viewBox "0 0 260 360". FLOORS = [{n:1,key:'navigator',icon:'compass'},{n:2,key:'admission',icon:'university'},{n:3,key:'sat',icon:'pencil'},{n:4,key:'ielts',icon:'headphones'},{n:5,key:'eyuf',icon:'medal'}]
+Saytda: Astro komponenti sifatida server tomonda chizilsin (JS'siz), aria-hidden, ikonkalar qavatlar.ts dagi ikonka satrlaridan.
+
+=== CSS ===
+/* ---- Stage 1 Foundations · hero isometric glass building — ported unchanged ---- */
+/* hero isometric glass building */
+.fi-hero{width:100%;max-width:var(--size-indicator-hero);height:auto;overflow:visible;display:block}
+.fi-hero--sm{max-width:calc(var(--size-indicator-hero) * 0.6)}
+.fi-hero .shadow{fill:var(--color-indicator-shadow)}
+.fi-hero .g-t{fill:var(--color-indicator-glass-top)}
+.fi-hero .g-l{fill:var(--color-indicator-glass-left)}
+.fi-hero .g-r{fill:var(--color-indicator-glass-right)}
+.fi-hero .g-s{fill:none;stroke:var(--color-indicator-glass-stroke);stroke-width:var(--border-width-1)}
+.fi-hero .edge{fill:none;stroke:var(--floor-ui);stroke-width:var(--floor-indicator-edge-width);stroke-linejoin:round}
+.fi-hero [data-on="true"] .edge{stroke:var(--floor-fill)}
+.fi-hero .on{opacity:var(--opacity-0);transition:opacity var(--floor-light-out-duration) var(--floor-light-out-ease)}
+.fi-hero .glow{opacity:var(--opacity-0);fill:var(--floor-fill);transition:opacity var(--floor-light-out-duration) var(--floor-light-out-ease)}
+.fi-hero [data-on="true"] .on{opacity:var(--opacity-100);transition:opacity var(--floor-light-in-duration) var(--floor-light-in-ease) var(--floor-light-in-delay)}
+.fi-hero [data-on="true"] .glow{opacity:var(--floor-indicator-glow-opacity);transition:opacity var(--floor-light-in-duration) var(--floor-light-in-ease) var(--floor-light-in-delay)}
+.fi-hero .hl{fill:none;stroke:var(--floor-indicator-window-on);stroke-width:var(--border-width-1)}
+.fi-hero .lab{color:var(--color-text-secondary);fill:currentColor;font-family:var(--font-family-sans);font-size:var(--text-small-size);font-weight:var(--font-weight-bold);font-variant-numeric:tabular-nums;transition:color var(--floor-light-out-duration) var(--floor-light-out-ease)}
+.fi-hero .lab .icon{stroke:currentColor;fill:none}
+.fi-hero [data-on="true"] .lab{color:var(--color-on-floor);transition:color var(--floor-light-in-duration) var(--floor-light-in-ease) var(--floor-light-in-delay)}
+.fi-hero .win{fill:transparent;stroke:var(--color-indicator-window-off);stroke-width:var(--border-width-1);transition:fill var(--floor-light-out-duration) var(--floor-light-out-ease),stroke var(--floor-light-out-duration) var(--floor-light-out-ease)}
+.fi-hero [data-on="true"] .win{fill:var(--floor-indicator-window-on);stroke:var(--floor-indicator-window-on);transition:fill var(--floor-light-in-duration) var(--floor-light-in-ease) calc(var(--floor-light-in-delay) + var(--i) * var(--duration-stagger)),stroke var(--floor-light-in-duration) var(--floor-light-in-ease) calc(var(--floor-light-in-delay) + var(--i) * var(--duration-stagger))}
+.fi-hero .ant{stroke:var(--color-indicator-window-off);stroke-width:var(--border-width-2)}
+.fi-hero .tip{fill:var(--floor-fill);transition:fill var(--duration-base) var(--ease-state)}
+.fi-hero .b-floor{cursor:pointer}
+
+=== SVG filtrlar ===
+<!-- SVG filtrlar (prototipdan) -->
+<filter id="fi-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+<filter id="fi-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
+
+=== JS (gradientlar va heroSVG) ===
+$("#fi-grads").innerHTML = FLOORS.map(f => {
+    const c = `var(--color-floor-${f.key}-500)`, W = "var(--color-neutral-0)", K = "var(--color-neutral-950)";
+    const st = (o, a, b, p) => `<stop offset="${o}" style="stop-color:color-mix(in srgb, ${a} ${p}%, ${b})"/>`;
+    return `<linearGradient id="gL${f.n}" x1="0" y1="0" x2="0" y2="1">${st(0, c, W, 92)}${st(1, c, K, 80)}</linearGradient>
+      <linearGradient id="gR${f.n}" x1="0" y1="0" x2="0" y2="1">${st(0, c, W, 70)}${st(1, c, W, 92)}</linearGradient>
+      <linearGradient id="gT${f.n}" x1="0" y1="0" x2="1" y2="1">${st(0, c, W, 45)}${st(1, c, W, 70)}</linearGradient>`;
+  }).join("");
+}
+function heroSVG(active) {
+  const cxm = 130, a = 100, b = 50, h = 36, pitch = 44, base = 330, P = pts => pts.map(p => p.join(",")).join(" ");
+  const y1 = base - h;
+  let s = `<polygon class="shadow" filter="url(#fi-soft)" points="${P([[cxm - a + 8, y1 - b + h + 12], [cxm + 8, y1 + h + 12], [cxm + a + 8, y1 - b + h + 12], [cxm + 8, y1 - 2 * b + h + 12]])}"/>`;
+  FLOORS.forEach(f => {
+    const yF = base - (f.n - 1) * pitch - h;
+    const L = [cxm - a, yF - b], F = [cxm, yF], R = [cxm + a, yF - b], Bk = [cxm, yF - 2 * b], Lb = [cxm - a, yF - b + h], Fb = [cxm, yF + h], Rb = [cxm + a, yF - b + h];
+    const left = P([L, F, Fb, Lb]), right = P([F, R, Rb, Fb]), top = P([L, F, R, Bk]), sil = P([L, Bk, R, Rb, Fb, Lb]);
+    const wins = [0, 1, 2, 3].map(k => `<rect class="win" style="--i:${k}" x="${16 + k * 21}" y="0" width="12" height="16" rx="1.5"/>`).join("");
+    s += `<g class="b-floor" data-floor="${f.n}" data-on="${f.n === active}">
+      <polygon class="glow" points="${sil}" filter="url(#fi-blur)"/>
+      <polygon class="g-t" points="${top}"/><polygon class="g-l" points="${left}"/><polygon class="g-r" points="${right}"/>
+      <g class="on"><polygon points="${top}" fill="url(#gT${f.n})"/><polygon points="${left}" fill="url(#gL${f.n})"/><polygon points="${right}" fill="url(#gR${f.n})"/></g>
+      <polygon class="g-s" points="${top}"/><polygon class="g-s" points="${left}"/><polygon class="g-s" points="${right}"/>
+      <polyline class="edge" points="${P([Lb, Fb, Rb])}"/>
+      <g class="on"><polyline class="hl" points="${P([L, F, R])}"/></g>
+      <g transform="translate(${cxm - a + 14},${yF - b + 30}) matrix(1 .5 0 1 0 0)" class="lab"><text x="0" y="0">${pad(f.n)}</text><use class="ic-stroke" href="#i-${f.icon}" x="25" y="-14" width="18" height="18"/></g>
+      <g transform="translate(${cxm},${yF + 10}) matrix(1 -.5 0 1 0 0)">${wins}</g></g>`;
+  });
+  const y5 = base - 4 * pitch - h;
+  s += `<line class="ant" x1="${cxm}" y1="${y5 - b}" x2="${cxm}" y2="${y5 - b - 34}"/><g class="tipg" data-floor="${active}"><circle class="tip" cx="${cxm}" cy="${y5 - b - 38}" r="4"/></g>`;
+  return s;
+}

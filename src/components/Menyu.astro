@@ -47,7 +47,8 @@ const hisobProfil = yol('/uz/hisob/profil/');
 </script>
 
 <style>
-  .menyu-qator { background: var(--sirt); border-bottom: 1px solid var(--chiziq); }
+  /* Ustki qator: zich fon, 1px chiziq (2026-11-13: shisha olib tashlandi) */
+  .menyu-qator { background: var(--color-surface); border-bottom: var(--border-width-1) solid var(--color-border); }
   .menyu-ichki {
     display: flex;
     flex-wrap: wrap;
@@ -71,12 +72,8 @@ const hisobProfil = yol('/uz/hisob/profil/');
     display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5);
     font-weight: 600; font-size: 15px;
   }
-  ul a { text-decoration: none; display: inline-block; padding-block: 10px; }
-  ul a:hover { color: var(--rang-havola); }
-  ul a.boshlash {
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-    border-radius: var(--r-toliq); padding: 9px 16px;
-  }
+  ul a:not(.boshlash) { text-decoration: none; display: inline-block; padding-block: 10px; }
+  @media (hover: hover) and (pointer: fine) { ul a:not(.boshlash):hover { color: var(--rang-havola); } }
+  /* DS btn-primary, md */
   ul a.hisob-menyu { display: inline-flex; align-items: center; gap: 6px; }
-  ul a.boshlash:hover { background: var(--rang-asosiy-toq); color: var(--rang-asosiy-matn); }
 </style>

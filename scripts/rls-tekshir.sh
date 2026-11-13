@@ -59,3 +59,48 @@ echo "security definer: hammasida search_path belgilangan"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/rls_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/sessiya_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/analitika_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/lugat_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/kvota_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/kun_savoli_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/xato_daftari_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/obuna_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/adaptiv_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/xabar_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/ai_tutor_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/mock_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/guruh_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+
+"${PSQL[@]}" -f "$ROOT/supabase/tests/metrikalar_test.sql" 2>&1 | grep -v "WARNING:" | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+
+# P25: docs/metrikalar.sql sun'iy ma'lumotda. Kutilgan har qator natijada aynan bo'lishi kerak.
+"${PSQL[@]}" -f "$ROOT/supabase/tests/metrikalar_sorov_malumot.sql" > "$TMP/metrika.kutilgan"
+"${PSQL[@]}" -At -F '|' -f "$ROOT/docs/metrikalar.sql" > "$TMP/metrika.natija"
+"${PSQL[@]}" -c "delete from public.payments where provider_order_id in ('ms-1', 'ms-2');
+  delete from auth.users where id::text like '00000000-0000-4000-8000-0000000000d_';" >/dev/null
+TOPILMADI=0
+while IFS= read -r qator; do
+  [[ -z "$qator" ]] && continue
+  grep -Fxq -- "$qator" "$TMP/metrika.natija" || { echo "XATO: metrikalar.sql natijasida yo'q: $qator"; TOPILMADI=1; }
+done < "$TMP/metrika.kutilgan"
+if [[ "$TOPILMADI" == "1" ]]; then echo "--- natija:"; cat "$TMP/metrika.natija"; exit 1; fi
+echo "  NOTICE: OK MS01 docs/metrikalar.sql: $(grep -c . "$TMP/metrika.kutilgan") kutilgan qator sun'iy ma'lumotda topildi (DAU, WAU, ro'yxat, D1/D7, funnel, daromad)"
+
+# P19 K06: parallel so'rovlar. 10 ta alohida ulanish bir vaqtda 1 birlikdan sarflaydi, limit 3:
+# aynan 3 tasi o'tishi, hisoblagich 3 bo'lishi kerak (hisoblagich qatori hali yo'q: insert poygasi ham sinaladi).
+# Bu ma'lumot tranzaksiyadan tashqarida yoziladi; vaqtinchalik klaster oxirida o'chiriladi.
+U_PAR="00000000-0000-4000-8000-0000000000f6"
+"${PSQL[@]}" -c "insert into auth.users (id, email, raw_user_meta_data) values ('$U_PAR', 'kp@sinov.invalid', '{}');
+  update public.plans set limits = limits || '{\"parallel_sinov\": {\"max\": 3, \"per\": \"day\"}}' where code = 'free';" >/dev/null
+for i in $(seq 1 10); do
+  ( "${PSQL[@]}" -At -c "select pg_sleep(0.2); select private.consume_quota('$U_PAR', 'parallel_sinov', 1);" \
+      >/dev/null 2>&1 && echo ok > "$TMP/par.$i" || echo rad > "$TMP/par.$i" ) &
+done
+wait
+OTDI="$(cat "$TMP"/par.* | grep -c '^ok$' || true)"
+SON="$("${PSQL[@]}" -At -c "select coalesce(sum(count), 0) from public.usage_counters where user_id = '$U_PAR' and key = 'parallel_sinov'")"
+"${PSQL[@]}" -c "update public.plans set limits = limits - 'parallel_sinov' where code = 'free'; delete from auth.users where id = '$U_PAR';" >/dev/null
+if [[ "$OTDI" == "3" && "$SON" == "3" ]]; then
+  echo "  NOTICE: OK K06 parallel: 10 ta bir vaqtdagi so'rovdan 3 tasi o'tdi (limit 3), hisoblagich 3"
+else
+  echo "XATO: K06 parallel: o'tdi=$OTDI, hisoblagich=$SON (kutilgan 3 va 3)"; exit 1
+fi

@@ -97,10 +97,10 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
         ))}
       </ul>
       <div class="tugmalar">
-        <button type="button" class="matn-tugma" id="rt-qayta">Start over</button>
+        <button type="button" class="tugma tugma-matn" id="rt-qayta">Start over</button>
         <span class="tasdiq" id="rt-tasdiq" hidden>This clears your check marks.
-          <button type="button" class="matn-tugma" id="rt-ha">Yes, clear</button>
-          <button type="button" class="matn-tugma" id="rt-yoq">Cancel</button>
+          <button type="button" class="tugma tugma-matn" id="rt-ha">Yes, clear</button>
+          <button type="button" class="tugma tugma-matn" id="rt-yoq">Cancel</button>
         </span>
       </div>
       <p class="kichik ikkinchi" id="rt-saqlash">Saved only in this browser.</p>
@@ -237,11 +237,8 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
   .b-qosh { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--b-4); margin: 0; padding-left: calc(24px + var(--b-3)); }
   .b-qosh a { min-height: 44px; display: inline-flex; align-items: center; }
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
-  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
-  .matn-tugma:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
   .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
-  .tasdiq[hidden], .matn-tugma[hidden] { display: none; }
+  .tasdiq[hidden] { display: none; }
 
   @media (max-width: 760px) {
     .jadval thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

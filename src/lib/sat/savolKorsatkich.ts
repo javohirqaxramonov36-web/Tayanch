@@ -24,6 +24,10 @@ const M = {
   savol: (n: number) => `Question ${n}`,
   passage: 'Passage',
   belgila: 'Mark for review',
+  xabar: 'Report',
+  xabarlangan: 'Reported',
+  xabarIzoh: 'Report a problem with this question',
+  xabarlanganIzoh: 'You reported this question',
   ochirishRejimi: 'Cross out',
   ochirishRejimiIzoh: 'Cross out answer choices you have ruled out',
   ochirVariant: (k: string) => `Cross out choice ${k}`,
@@ -77,6 +81,7 @@ const IK = {
   togri: ['M5 12l5 5L20 7'],
   xato: ['M6 6l12 12M18 6L6 18'],
   ochirish: ['M4 12h16', 'M8 6h8a4 4 0 0 1 0 8', 'M16 18H8a4 4 0 0 1 0-8'],
+  xabar: ['M12 8v4', 'M12 16h.01', 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18'],
   ogoh: ['M12 9v4', 'M12 17h.01', 'M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'],
 };
 
@@ -135,7 +140,15 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   const bayroq = el('button', 'sk-asbob sk-bayroq');
   bayroq.type = 'button';
   bayroq.append(ikonka(IK.bayroq), el('span', '', M.belgila));
-  asboblar.appendChild(bayroq);
+  // "Mark for review" faqat onFlag berilganda (kun savolida yo'q: bitta savol, ko'rib chiqish ro'yxati yo'q).
+  if (props.onFlag) asboblar.appendChild(bayroq);
+  // "Report" (P24) faqat onReport berilganda: hisob bilan ishlaydigan sahifalarda (namuna sahifasida yo'q).
+  const xabarTugma = el('button', 'sk-asbob sk-xabar');
+  xabarTugma.type = 'button';
+  xabarTugma.title = M.xabarIzoh;
+  const xabarMatn = el('span', '', M.xabar);
+  xabarTugma.append(ikonka(IK.xabar), xabarMatn);
+  if (props.onReport) asboblar.appendChild(xabarTugma);
 
   if (savol.figure) {
     const f = el('figure', 'sk-rasm');
@@ -301,6 +314,7 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   });
 
   bayroq.addEventListener('click', () => props.onFlag?.(!holat.belgilangan));
+  xabarTugma.addEventListener('click', () => props.onReport?.(xabarTugma));
 
   function sprKorsat(xom: string) {
     if (!korinish || !korinishQiymat) return;
@@ -358,6 +372,8 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     ildiz.classList.toggle('sk-ochirish-rejimi', ochirishRejimi && !holat.javobBerilgan);
 
     bayroq.setAttribute('aria-pressed', String(holat.belgilangan));
+    xabarMatn.textContent = holat.xabarlangan ? M.xabarlangan : M.xabar;
+    xabarTugma.title = holat.xabarlangan ? M.xabarlanganIzoh : M.xabarIzoh;
     if (ochirishTugma) {
       ochirishTugma.setAttribute('aria-pressed', String(ochirishRejimi));
       ochirishTugma.hidden = holat.javobBerilgan;

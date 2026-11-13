@@ -104,7 +104,7 @@ const holatIzohi = [
             <details class="jadval-muqobil"><summary>Show as a table</summary><div id="jm-qiyinlik" tabindex="0" role="group" aria-label="Accuracy and pacing by difficulty table"></div></details>
           </div>
           <div class="qulf" id="keng-qulf" hidden>
-            <p>Accuracy and pacing by difficulty are part of the Pro and Elite plans.</p>
+            <p>Accuracy and pacing by difficulty are part of the Pro and Max plans.</p>
             <a href={yol('/uz/sat/hisob/obuna/')}>See plans</a>
           </div>
         </section>
@@ -203,14 +203,16 @@ const holatIzohi = [
 </BolimQobiq>
 
 <script>
-  import { KALIT_JAVOBLAR, type Javob } from '../../../../../data/satNamuna';
+  import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
+  import { holatOchir } from '../../../../../lib/holat';
 
   const namuna: Javob[] = JSON.parse(document.getElementById('namuna-data')!.textContent || '[]');
   const testUrl = (document.querySelector('.chiziq-blok a') as HTMLAnchorElement).href;
   const oqi = (): Javob[] => {
     try {
       const x = JSON.parse(localStorage.getItem(KALIT_JAVOBLAR) || '[]');
-      return Array.isArray(x) ? x : [];
+      // Eski (o'zbekcha) mavzu va sana faqat ko'rsatishda moslanadi, saqlangani o'zgarmaydi.
+      return Array.isArray(x) ? x.map(javobniMosla) : [];
     } catch { return []; }
   };
   let filtr = 'hammasi';
@@ -280,7 +282,7 @@ const holatIzohi = [
   ochirish.addEventListener('click', () => { oyna.returnValue = ''; oyna.showModal(); });
   oyna.addEventListener('close', () => {
     if (oyna.returnValue === 'ochir') {
-      try { localStorage.removeItem(KALIT_JAVOBLAR); } catch { /* ruxsat yo'q */ }
+      holatOchir(KALIT_JAVOBLAR);
       document.getElementById('ochirish-xabar')!.textContent = 'Results deleted.';
       chiz();
       (document.getElementById('nat-h') as HTMLElement).focus();
@@ -682,7 +684,7 @@ const holatIzohi = [
 
   .korsatkich { display: grid; grid-template-columns: 2fr 1fr; gap: var(--b-4); }
   .qora-blok {
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     border-radius: var(--r-katta); padding: var(--b-6);
     display: flex; flex-direction: column; gap: 14px;
@@ -723,7 +725,7 @@ const holatIzohi = [
     border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn);
     text-decoration: none; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap;
   }
-  .qatorlar :global(.qayta:hover) { background: var(--chiziq); }
+  @media (hover: hover) and (pointer: fine) { .qatorlar :global(.qayta:hover) { background: var(--chiziq); } }
   .bosh-holat { padding: var(--b-8); text-align: center; background: var(--fon-ikkinchi); border-radius: var(--r-katta); color: var(--matn-ikkinchi); }
   .bosh-holat[hidden] { display: none; }
 
@@ -732,17 +734,6 @@ const holatIzohi = [
   .m-sarlavha { font-weight: 800; }
   .m-matn { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .m-matn:empty { display: none; }
-  .chiziq-tugma {
-    min-height: 48px; padding: 0 22px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq);
-    background: var(--fon); color: var(--matn);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
-  }
-  .chiziq-tugma:disabled { opacity: 0.5; cursor: not-allowed; }
-  .asosiy-tugma {
-    min-height: 48px; padding: 0 22px; border: 0; border-radius: var(--r-toliq);
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
-  }
 
   .tasdiq {
     border: 1px solid var(--chiziq); border-radius: var(--r-katta); padding: var(--b-6);
@@ -776,7 +767,7 @@ const holatIzohi = [
     border: 0; border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
     font: inherit; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer;
   }
-  .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); }
+  @media (hover: hover) and (pointer: fine) { .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); } }
 
   .tana { display: flex; flex-direction: column; gap: var(--b-10); }
   .tana[hidden] { display: none; }
@@ -830,7 +821,7 @@ const holatIzohi = [
     background: var(--sirt-ikkinchi); color: var(--matn);
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap; cursor: pointer;
   }
-  .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); } }
   .panel :global(.mashq-tugma:disabled) { opacity: 0.6; cursor: progress; }
   .panel :global(.mashq-xabar) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 28ch; }
   .panel :global(.mashq-xabar:empty) { display: none; }

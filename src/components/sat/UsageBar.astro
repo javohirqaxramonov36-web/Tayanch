@@ -1,0 +1,41 @@
+---
+// UsageBar (P19): tarif bo'yicha sarf. Ma'lumot brauzerda usage_status() dan keladi va
+// src/lib/sat/usageBar.ts dagi usageBarniChiz(ildiz, javob, kvotaNomi) bilan chiziladi.
+// Limit faqat serverda majburlanadi; bu komponent faqat ko'rsatadi.
+// Sarlavhani sahifa beradi (aria-labelledby orqali bog'lanadi). rejalar=false: Obuna sahifasining o'zida havola kerak emas.
+import { yol } from '../../lib/yol';
+
+interface Props {
+  /** Sarlavha elementi id si (sahifadagi h2/h3). */
+  sarlavhaId?: string;
+  /** Limit tugaganda "See plans" havolasi. */
+  rejalar?: boolean;
+  /** Qatorlar kichik kartalar to'rida (Obuna sahifasi): kompyuterda 2-3 ustun, telefonda 1. */
+  tor?: boolean;
+}
+const { sarlavhaId, rejalar = true, tor = false } = Astro.props;
+---
+<div class:list={['usage-bar', { 'ub-tor': tor }]} data-usage-bar role="group" aria-labelledby={sarlavhaId}>
+  <ul class="ub-royxat" data-ub-royxat hidden></ul>
+  <p class="ub-izoh" data-ub-bosh>Your plan has no usage limits right now, and nothing has been used today.</p>
+  <p class="ub-tugadi" data-ub-tugadi hidden>
+    You've reached a limit on your plan. It resets at the time shown above; everything you've saved stays.
+    {rejalar && <> <a href={yol('/uz/sat/hisob/obuna/')}>See plans</a></>}
+  </p>
+</div>
+
+<style>
+  .usage-bar { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ub-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-4); }
+  .ub-royxat :global(.ub-qator) { display: flex; flex-direction: column; gap: var(--b-1); }
+  .ub-royxat :global(.ub-bosh) { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); margin: 0; }
+  .ub-royxat :global(.ub-nom) { font-weight: 700; }
+  .ub-royxat :global(.ub-son) { font-variant-numeric: tabular-nums; }
+  .ub-royxat :global(.ub-chiziq) { block-size: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .ub-royxat :global(.ub-chiziq span) { display: block; block-size: 100%; background: var(--rang-havola); border-radius: var(--r-toliq); }
+  .usage-bar :global(.ub-izoh) { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .ub-tor .ub-royxat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--b-3); }
+  .ub-tor .ub-royxat :global(.ub-qator) { padding: var(--b-3) var(--b-4); border: 1px solid var(--chiziq); border-radius: var(--r-orta); background: var(--sirt); }
+  .ub-tugadi { margin: 0; font-size: var(--matn-kichik); }
+  .ub-tugadi a { font-weight: 700; }
+</style>

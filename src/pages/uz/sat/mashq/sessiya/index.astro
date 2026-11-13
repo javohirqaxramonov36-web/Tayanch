@@ -8,6 +8,9 @@
 import SatFokus from '../../../../../layouts/SatFokus.astro';
 import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
+import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
+import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
 
@@ -16,6 +19,7 @@ const bankUrl = yol('/uz/sat/mashq/bank/');
 const IK = {
   xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
   soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
+  saqla: ['M6 3h12v18l-6-4-6 4z'],
 };
 ---
 <SatFokus
@@ -35,6 +39,11 @@ const IK = {
       <span class="taymer-vaqt" id="taymer-vaqt" role="timer">--:--</span>
     </div>
     <button type="button" class="kichik-tugma kulrang" id="taymer-yashir" aria-pressed="false" aria-controls="taymer" hidden>Hide timer</button>
+    <button type="button" class="kichik-tugma kulrang" id="saqla-tugma" aria-pressed="false" hidden>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.saqla.map((d) => <path d={d} />)}</svg>
+      Save question
+    </button>
+    <DesmosHavola id="desmos" hidden />
     <button type="button" class="kichik-tugma kulrang" id="xarita-och" aria-haspopup="dialog" hidden>
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.xarita.map((d) => <path d={d} />)}</svg>
       Questions
@@ -117,6 +126,9 @@ const IK = {
     </div>
   </dialog>
 
+  <XabarDialog />
+  <TarifDialog />
+
   <div class="sr-only" id="taymer-elon" aria-live="assertive" aria-atomic="true"></div>
   <div class="sr-only" id="elon" aria-live="polite" aria-atomic="true"></div>
 </SatFokus>
@@ -128,6 +140,9 @@ const IK = {
   import { BOSH_HOLAT, type SavolHolati } from '../../../../../lib/sat/savolTuri';
   import { sprTekshir } from '../../../../../lib/sat/sprFormat';
   import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
+  import type { XabarApi } from '../../../../../lib/sat/xabar';
+  import { xabarDialogUlash, supabaseXabarApi } from '../../../../../lib/sat/xabarDialog';
+  import { supabaseTaklifManba, tarifTaklifiniOch, type TaklifManba } from '../../../../../lib/sat/tarifDialog';
   import {
     MAHALLIY_KALIT, mahalliyniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
     xarita, xaritaYorliq, navbatgaQosh, keyingiUrinishMs, sessiyaXatosi, idTogrimi, hisobot, SABABLAR, sababTogrimi,
@@ -141,12 +156,21 @@ const IK = {
 
   // ---------- Holat ----------
   let api: SessiyaApi | null = null;
+  let taklifManba: TaklifManba | null = null;
+  let taklifKorsatildi = false; // dialog shu sahifada bir marta
+  // P24 Report: ochiq xabari bor savollar (serverdan, RLS: faqat o'ziniki). Dialog boshla() da ulanadi.
+  let xabarApi: XabarApi | null = null;
+  let xabarDialog: ReturnType<typeof xabarDialogUlash> | null = null;
+  const xabarlar = new Set<string>();
   let id = '';
   let S: SessiyaJavob | null = null;
   let m: Mahalliy = mahalliyniTekshir(null);
   let soatOlingan = 0;
   const javoblar = new Map<string, YuborJavob & { answer: string }>();
   const review = new Map<string, string | null>();
+  // Saqlangan savollar (public.bookmarks): Xato daftaridagi "Saved" ro'yxati bilan bir manba.
+  const saqlangan = new Set<string>();
+  let saqlashBand = false;
   const ui = new Map<string, SavolHolati>();
   const rasmlar = new Map<string, string | null>();
   let korsatkich: SavolKorsatkich | null = null;
@@ -201,6 +225,8 @@ const IK = {
     $('natija').hidden = e !== 'natija';
     const ishda = e === 'savol';
     $('xarita-och').hidden = !ishda;
+    $('saqla-tugma').hidden = !ishda;
+    desmosYangila();
     $('taymer').hidden = !(ishda && taymerli()) || $('taymer-yashir').getAttribute('aria-pressed') === 'true';
     $('taymer-yashir').hidden = !(ishda && taymerli());
     // .jarayon da display: flex bor, shuning uchun hidden emas, style
@@ -223,6 +249,33 @@ const IK = {
     e.textContent = '';
     setTimeout(() => (e.textContent = matn), 50);
   }
+
+  function saqlaChiz() {
+    const q = joriySavol();
+    $('saqla-tugma').setAttribute('aria-pressed', String(!!q && saqlangan.has(q.id)));
+  }
+
+  $('saqla-tugma').addEventListener('click', async () => {
+    const q = joriySavol();
+    if (!q || !api || saqlashBand) return;
+    const t = $('saqla-tugma');
+    const on = !saqlangan.has(q.id);
+    saqlashBand = true;
+    t.setAttribute('aria-busy', 'true');
+    if (on) saqlangan.add(q.id); else saqlangan.delete(q.id);
+    saqlaChiz();
+    try {
+      await api.saqla(q.id, on);
+      elon(on ? 'Question saved. Find it under Saved in your mistake log.' : 'Removed from saved questions.');
+    } catch {
+      if (on) saqlangan.delete(q.id); else saqlangan.add(q.id);
+      saqlaChiz();
+      elon("Couldn't update saved questions. Try again.");
+    } finally {
+      saqlashBand = false;
+      t.removeAttribute('aria-busy');
+    }
+  });
 
   function kirishHavolasi() {
     return `${ildiz.dataset.kirishUrl}?keyin=${encodeURIComponent(location.pathname + location.search)}`;
@@ -248,6 +301,18 @@ const IK = {
     $('fokus-progress-matn').textContent = ekran === 'savol' ? `${m.joriy + 1} / ${n}` : `${javob} / ${n}`;
   }
 
+  // ---------- Report (P24) ----------
+  function xabarOch(qid: string, nomi: string, ochuvchi: HTMLElement, keyin?: () => void) {
+    xabarDialog?.och({
+      qid, nomi, ochuvchi, sessiya: idTogrimi(id) ? id : null, yuborilgan: xabarlar.has(qid),
+      onYuborildi: (q) => {
+        xabarlar.add(q);
+        if (ekran === 'savol' && joriySavol()?.id === q) yangila();
+        keyin?.();
+      },
+    });
+  }
+
   // ---------- Savol ----------
   function holatOl(q: ServerSavol): SavolHolati {
     const h = ui.get(q.id) ?? { ...BOSH_HOLAT, ochirilgan: [] };
@@ -261,6 +326,7 @@ const IK = {
       tanlangan: q.format === 'mcq' ? (javob ?? h.tanlangan) : null,
       sprQiymat: q.format === 'spr' ? (javob ?? h.sprQiymat ?? '') : undefined,
       belgilangan: m.belgilar.includes(q.id),
+      xabarlangan: xabarlar.has(q.id),
       natija: j && !taymerli() ? { togrimi: j.is_correct, togriJavob: togriMatn(j.correct), izoh: j.explanation } : null,
     };
   }
@@ -280,9 +346,15 @@ const IK = {
     else if (!inp.value.trim()) delete m.qoralama[q.id];
   }
 
+  // Desmos havolasi faqat savol ekranida va Math savolida (P29). Tashqi skript yo'q, holat saqlanmaydi.
+  function desmosYangila() {
+    $('desmos').hidden = !(ekran === 'savol' && joriySavol()?.section === 'math');
+  }
+
   async function savolChizish(fokus: boolean) {
     const q = joriySavol();
     if (!q) return;
+    desmosYangila();
     let rasm: string | null = null;
     if (q.figure) {
       if (!rasmlar.has(q.figure.path)) rasmlar.set(q.figure.path, await api!.rasm(q.figure.path).catch(() => null));
@@ -326,8 +398,10 @@ const IK = {
         uiYangila(q, { ochirilgan: on ? [...new Set([...h.ochirilgan, k])] : h.ochirilgan.filter((x) => x !== k) });
         yangila();
       },
+      onReport: xabarDialog ? (t) => xabarOch(q.id, `Question ${m.joriy + 1}`, t) : undefined,
     });
     korsatilgan = m.joriy;
+    saqlaChiz();
     $('savol-h').textContent = `Question ${m.joriy + 1} of ${savollar().length}`;
     tugmalarChiz();
     progressChiz();
@@ -452,6 +526,10 @@ const IK = {
           if (tur === 'kirish') { xatoEkrani(e); return; }
           if (tur === 'kvota') {
             saqlashHolati("You've reached today's answer limit, so this answer wasn't checked.", { rejalar: true });
+            if (taklifManba && !taklifKorsatildi) {
+              taklifKorsatildi = true;
+              void tarifTaklifiniOch(taklifManba, "You've reached today's answer limit, so this answer wasn't checked. Your answers so far are saved. It resets at midnight (Tashkent time).", $('saqlash-havola'));
+            }
             m.navbat = [];
             saqla();
             yangila();
@@ -730,6 +808,18 @@ const IK = {
       a.append(el('p', 'natija-javob', 'Not answered. The correct answer is shown only after you answer.'));
     }
     a.append(redoBoshqaruv(b, tur === 'xato'));
+    if (xabarDialog) {
+      const t = el('button', 'kichik-tugma kulrang natija-xabar');
+      t.type = 'button';
+      const yoz = () => {
+        const bor = xabarlar.has(b.savol.id);
+        t.textContent = bor ? 'Reported' : 'Report a problem';
+        t.setAttribute('aria-label', bor ? `Reported: question ${b.raqam}` : `Report a problem with question ${b.raqam}`);
+      };
+      yoz();
+      t.addEventListener('click', () => xabarOch(b.savol.id, `Question ${b.raqam}`, t, yoz));
+      a.append(t);
+    }
     return a;
   }
 
@@ -823,6 +913,8 @@ const IK = {
     for (const r of j.results ?? []) {
       javoblar.set(r.question_id, { is_correct: r.is_correct, correct: r.correct, explanation: r.explanation, already_answered: true, answer: r.answer });
     }
+    saqlangan.clear();
+    for (const q of j.questions) if (q.bookmarked) saqlangan.add(q.id);
     review.clear();
     for (const r of j.review ?? []) review.set(r.question_id, sababTogrimi(r.reason_tag) ? r.reason_tag : null);
     // Serverda javobi borlari navbatdan chiqadi
@@ -932,6 +1024,9 @@ const IK = {
       if (!p.get('id')) p.set('id', MOCK_ID[tur] ?? MOCK_ID.oddiy);
       history.replaceState(null, '', `${location.pathname}?${p}`);
       api = mockApi(tur);
+      taklifManba = (await import('../../../../../lib/sat/tarifDialogSinov')).namunaTaklifManba();
+      const { mockXabarApi } = await import('../../../../../lib/sat/xabarMock');
+      xabarApi = mockXabarApi();
       const pill = document.getElementById('namuna-pill');
       if (pill) pill.hidden = false;
     }
@@ -945,7 +1040,10 @@ const IK = {
       const { data } = await c.auth.getSession();
       if (!data.session) return xabarKorsat('Sign in to continue', 'Practice sessions are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
       api = haqiqiyApi(c);
+      xabarApi = supabaseXabarApi(c);
+      taklifManba = supabaseTaklifManba(c);
     }
+    if (xabarApi) xabarDialog = xabarDialogUlash(xabarApi);
     // Savol bankidagi start javobi kerak emas: sessiya doim serverdan (get_session) olinadi.
     try { sessionStorage.removeItem(SESSIYA_KALITI); } catch { /* */ }
     m = oqiMahalliy();
@@ -953,6 +1051,12 @@ const IK = {
       serverdanOl(await api.ol(id));
     } catch (e) {
       return xatoEkrani(e);
+    }
+    // Ochiq xabarlar: olinmasa ham sessiya ishlaydi (tugma "Report" bo'lib qoladi, takror server tomonda rad etiladi).
+    if (xabarApi && S) {
+      try {
+        for (const q of await xabarApi.ochiqlar(S.questions.map((x) => x.id))) xabarlar.add(q);
+      } catch { /* */ }
     }
     saqla();
     holatgaOt(false);
@@ -976,6 +1080,13 @@ const IK = {
       sabab: async (qid, tag) => {
         const { error } = await c.from('review_queue').update({ reason_tag: tag }).eq('question_id', qid);
         if (error) throw error;
+      },
+      saqla: async (qid, on) => {
+        const { error } = on
+          ? await c.from('bookmarks').insert({ question_id: qid })
+          : await c.from('bookmarks').delete().eq('question_id', qid);
+        // 23505: allaqachon saqlangan (boshqa tabda) — natija bir xil
+        if (error && error.code !== '23505') throw error;
       },
       rasm: async (path) => {
         const { data, error } = await c.storage.from('question-figures').createSignedUrl(path, 3600);
@@ -1017,8 +1128,10 @@ const IK = {
     border: 0; font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
   }
   .kichik-tugma.kulrang { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .kichik-tugma.kulrang:hover { background: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .kichik-tugma.kulrang:hover { background: var(--chiziq-kuchli); } }
   .kichik-tugma[aria-busy='true'] { cursor: progress; }
+  #saqla-tugma[aria-pressed='true'] { background: var(--rang-asosiy-och); color: var(--matn); box-shadow: inset 0 0 0 1.5px var(--rang-asosiy); }
+  #saqla-tugma[aria-pressed='true'] svg { fill: currentColor; }
 
   .holat-karta {
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
@@ -1037,11 +1150,6 @@ const IK = {
     border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
   }
   .saqlash p { margin: 0; }
-  .matn-tugma {
-    min-height: 48px; padding: 0 var(--b-2); border: 0; background: transparent; color: inherit;
-    font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer;
-    display: inline-flex; align-items: center;
-  }
 
   #savol-h:focus, .natija-h:focus { outline: none; }
 
@@ -1053,18 +1161,6 @@ const IK = {
     background: var(--fon-ikkinchi); border-top: 1px solid var(--chiziq);
   }
   [data-mavzu='qorongi'] .sessiya-pastki { background: var(--fon); }
-  .asosiy-tugma, .ikkinchi-tugma {
-    min-height: 52px; padding: 0 28px;
-    border: 0; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 800; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
-  }
-  .asosiy-tugma { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .asosiy-tugma:hover { background: var(--rang-asosiy-toq); }
-  .asosiy-tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .ikkinchi-tugma { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .ikkinchi-tugma:hover { background: var(--chiziq-kuchli); }
-  .ikkinchi-tugma:disabled { color: var(--matn-sust); cursor: not-allowed; background: var(--sirt-ikkinchi); }
   .sessiya-pastki #tekshir, .sessiya-pastki #keyingi { margin-left: auto; }
   .sessiya-pastki #otkaz:not([hidden]) + #tekshir { margin-left: 0; }
   .sessiya-pastki #otkaz { margin-left: auto; }
@@ -1159,6 +1255,7 @@ const IK = {
   .yigma { display: flex; flex-direction: column; gap: var(--b-3); }
   .yigma > :not(summary) { margin-top: var(--b-3); }
   .redo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
+  .natija-xabar { align-self: flex-start; }
   .redo-holat { margin: 0; display: inline-flex; align-items: center; gap: var(--b-2); font-weight: 700; font-size: var(--matn-kichik); }
   .redo-ikonka { color: var(--rang-havola); }
   .sabab { flex-basis: 100%; display: flex; flex-direction: column; gap: var(--b-2); }

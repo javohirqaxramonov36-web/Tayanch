@@ -151,7 +151,7 @@ const tuzoqlar = [
           </div>
         </section>
 
-        <section class="keyingi" aria-labelledby="keyingi-h">
+        <section class="keyingi qora-kontekst" aria-labelledby="keyingi-h">
           <p class="ustki-yorliq kok-q">Keyingi qadam</p>
           <h2 id="keyingi-h">Rasmiy namunadagi bitta Reading matnini soat bilan ishla</h2>
           <p class="k-matn">Keyin har xatoning dalil gapini top. Reja vositasi bu ishni kunlarga bo'lib beradi.</p>
@@ -237,7 +237,6 @@ const tuzoqlar = [
   h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
   .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
 
-
   .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
   .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
   h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
@@ -299,7 +298,7 @@ const tuzoqlar = [
     font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
     background: var(--fon); color: var(--matn); border: 2px solid var(--matn);
   }
-  .variantlar button:hover { background: var(--fon-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .variantlar button:hover { background: var(--fon-ikkinchi); } }
   .variantlar button[aria-disabled='true'] { cursor: default; }
   .variantlar button.togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .variantlar button.xato { background: var(--fon-ikkinchi); border-style: dashed; text-decoration: line-through; }
@@ -311,7 +310,7 @@ const tuzoqlar = [
   .javob p { line-height: 1.6; }
   .dars-havolalar { line-height: 1.6; }
   .dars-havolalar a { color: var(--rang-havola); font-weight: 700; }
-  .chiziq-tugma { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
+  .chiziq-tugma { align-self: flex-start; }
 
   .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }
   .tuzoqlar li { display: flex; gap: var(--b-4); align-items: flex-start; }
@@ -324,20 +323,17 @@ const tuzoqlar = [
   .chiziqlar span.qora { background: var(--matn); }
   .ulushlar { font-size: var(--matn-kichik); }
 
-  .keyingi { background: var(--qora); color: var(--rang-asosiy-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
+  .keyingi { background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
   .kok-q { color: var(--rang-asosiy-qorada); }
   .keyingi h2 { font-size: 26px; line-height: 1.25; }
   .k-matn { line-height: 1.6; color: var(--qora-matn-ikkinchi); }
   .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
-  .katta { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 24px; border-radius: var(--r-toliq); text-decoration: none; font-weight: 800; }
-  .katta.asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .katta.asosiy:hover { background: var(--rang-asosiy-toq); }
-  .katta.qora-tugma { background: var(--qora-sirt); color: var(--rang-asosiy-matn); font-weight: 700; }
+  /* Qora karta ichida: oq pill (btn-primary brand-900 qora fonga qo'shilib ketadi) */
 
   .mundarija { flex: 0 0 240px; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1); border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-3); }
   .mundarija .ustki-yorliq { margin: var(--b-2) var(--b-3); }
   .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
-  .mundarija a:hover { background: var(--fon-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .mundarija a:hover { background: var(--fon-ikkinchi); } }
   .mundarija a[aria-current='true'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
 
   /* Telefon: QollanmaTelefon ekrani */
@@ -353,7 +349,7 @@ const tuzoqlar = [
     .mundarija-tel[open] summary svg { transform: rotate(180deg); }
     .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--b-2) var(--b-2); display: flex; flex-direction: column; gap: 2px; }
     .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
-    .mundarija-tel a:hover { background: var(--fon-ikkinchi); }
+    @media (hover: hover) and (pointer: fine) { .mundarija-tel a:hover { background: var(--fon-ikkinchi); } }
   }
   @media (max-width: 760px) {
     .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }

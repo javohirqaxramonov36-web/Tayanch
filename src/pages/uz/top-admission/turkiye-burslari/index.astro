@@ -260,13 +260,10 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
 </BolimQobiq>
 
 <script>
+  import { toshkentBugun, kunFarqi } from '../../../../lib/muddat';
   // 1) Chiptadagi qolgan kun (kirish sahifasi bilan bir xil mantiq), bugun Toshkent bo'yicha.
   //    JS bo'lmasa "20-fevral / oxirgi kun" qoladi.
-  const bugun = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tashkent' }).format(new Date());
-  const kunFarqi = (a: string, b: string) => {
-    const k = (s: string) => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
-    return Math.round((k(b) - k(a)) / 864e5);
-  };
+  const bugun = toshkentBugun();
   document.querySelectorAll<HTMLElement>('.chipta[data-yopilish]').forEach((ch) => {
     const katta = ch.querySelector('.korishok-katta');
     const matn = ch.querySelector('.korishok-matn');
@@ -314,7 +311,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
   .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
   .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
   .havola-matn { color: var(--rang-havola); font-weight: 700; }
-  a:focus-visible, summary:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  a:focus-visible, summary:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .qalin { color: var(--matn); }
   .matn { max-width: 62ch; }
 
@@ -359,7 +356,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
   .mund { width: 220px; flex: none; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: 2px; border-left: 1.5px solid var(--chiziq); padding-left: var(--b-3); }
   .mund .ustki { margin: 0 0 var(--b-2) var(--b-3); font-size: 12px; }
   .mund a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--b-3); border-radius: 10px; text-decoration: none; color: var(--matn-ikkinchi); font-weight: 600; font-size: var(--matn-kichik); }
-  .mund a:hover { background: var(--fon-ikkinchi); color: var(--matn); }
+  @media (hover: hover) and (pointer: fine) { .mund a:hover { background: var(--fon-ikkinchi); color: var(--matn); } }
   .mund a[aria-current='location'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
   .mund-telefon { display: none; }
 
@@ -418,7 +415,6 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
   .keyingi { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--b-4); }
   .keyingi-matn { display: grid; gap: 6px; justify-items: start; }
   .keyingi-sarlavha { font-size: 22px; font-weight: 800; }
-  .katta-tugma { min-height: 52px; padding-inline: 26px; font-weight: 800; }
 
   .tb-oxir { border-top: 1.5px solid var(--matn); padding-top: var(--b-6); display: grid; gap: 18px; }
   /* MRZ: pasport metaforasi, shaxsiy ma'lumot yo'q (DESIGN.md) */
@@ -433,7 +429,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
     .mund-telefon[open] summary svg { transform: rotate(180deg); }
     .mund-telefon nav { display: grid; padding-bottom: var(--b-2); }
     .mund-telefon a { display: flex; align-items: center; min-height: 44px; padding: 0 var(--b-3); border-radius: 10px; text-decoration: none; color: var(--matn); font-weight: 600; }
-    .mund-telefon a:hover { background: var(--fon-ikkinchi); }
+    @media (hover: hover) and (pointer: fine) { .mund-telefon a:hover { background: var(--fon-ikkinchi); } }
   }
 
   @media (max-width: 760px) {

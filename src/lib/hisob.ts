@@ -212,11 +212,7 @@ export function xatoMatni(e: AuthError | Error, amal: Amal): string {
     return "Email yoki parol noto'g'ri.";
   }
   if (amal === 'royxat') return "Hisob ochilmadi. Qayta urinib ko'ring.";
-  if (amal === 'ochirish') {
-    // 23503: hisobga "on delete restrict" bilan bog'langan yozuv bor (masalan to'lov tarixi).
-    if (x.code === '23503') return "Hisobingizda to'lov yozuvlari bor, shuning uchun uni bu yerdan o'chirib bo'lmaydi.";
-    return "Hisob o'chirilmadi. Qayta urinib ko'ring.";
-  }
+  if (amal === 'ochirish') return "Hisob o'chirilmadi. Qayta urinib ko'ring.";
   if (amal === 'yangilash') return "Yangi parol saqlanmadi. Havolaning muddati o'tgan bo'lishi mumkin: yangisini so'rang.";
   return "Nimadir xato ketdi. Qayta urinib ko'ring.";
 }
@@ -235,6 +231,20 @@ export function maydonXatosi(input: HTMLInputElement, matn: string | null): void
     p.textContent = matn ?? '';
     p.hidden = !matn;
   }
+}
+
+/** Forma tepasidagi xatolar ro'yxati (role="alert"): har xato maydonga havola, ro'yxat bo'lsa fokus unga. */
+export function xatolarRoyxati(blok: HTMLElement, royxat: [HTMLElement, string][]): void {
+  const ul = blok.querySelector('ul')!;
+  ul.replaceChildren(...royxat.map(([el, m]) => {
+    const li = document.createElement('li');
+    const a = Object.assign(document.createElement('a'), { href: `#${el.id}`, textContent: m });
+    a.addEventListener('click', (e) => { e.preventDefault(); el.focus(); });
+    li.append(a);
+    return li;
+  }));
+  blok.hidden = royxat.length === 0;
+  if (royxat.length) blok.focus();
 }
 
 /** Tugmani yuklanish holatiga o'tkazadi (qayta bosilmaydi, ekran o'quvchiga band ekani aytiladi). */

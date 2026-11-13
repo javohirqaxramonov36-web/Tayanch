@@ -300,11 +300,10 @@ const MISOL = 'turkiye';
     text-align: left; font: inherit; font-weight: 700; cursor: pointer;
     background: var(--fon); color: var(--matn-sust);
     border: 2px dashed var(--chiziq-kuchli); border-radius: var(--r-orta);
-    transition: background-color var(--harakat-orta) var(--harakat-egri), border-color var(--harakat-orta) var(--harakat-egri);
   }
   .zp-pogona:disabled { cursor: default; }
-  .zp-pogona:hover:not(:disabled) { border-color: var(--rang-asosiy); }
-  .zp-pogona:focus-visible, .zp-karta:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) { .zp-pogona:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
+  .zp-pogona:focus-visible, .zp-karta:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .zp-pogona.zp-tola { border-style: solid; border-color: var(--matn); color: var(--matn); }
   .zp-pogona.zp-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
   .zp-pogona.zp-xato { border-style: dashed; border-color: var(--matn); }
@@ -324,7 +323,7 @@ const MISOL = 'turkiye';
     min-height: 56px; padding: var(--b-2) var(--b-4); text-align: left; font: inherit; font-weight: 700; cursor: pointer;
     background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
   }
-  .zp-karta:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .zp-karta:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
   .zp-karta[aria-pressed='true'] { border-color: var(--rang-asosiy); box-shadow: inset 4px 0 0 var(--rang-asosiy); }
   .zp-karta.zp-joylandi { background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
   .zp-karta-joy { font-size: var(--matn-mayda); color: var(--matn-ikkinchi); }
