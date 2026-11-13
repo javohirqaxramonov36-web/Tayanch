@@ -631,6 +631,15 @@ export const manbalar: Manba[] = [
     tekshirilganSana: '2026-11-12',
     izoh: "Sohalar bo'yicha savol soni: Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7; \"Questions from all four categories appear in each test module.\" Pretest soni bu sahifada yo'q.",
   },
+  {
+    id: 'CB44',
+    nomi: 'SAT School Day Bluebook Test Directions, Math Module Directions',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/media/pdf/english-sat-test-directions-bb.pdf#page=7',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-13',
+    izoh: "SPR: musbat uchun 5, manfiy uchun minus bilan 6 belgi. Bitta javob kiritiladi. Sig'magan kasr o'nlikka aylantiriladi, sig'magan o'nlik kesiladi yoki yaxlitlanadi. Aralash son kasr yoki o'nlikka aylantiriladi. Oxirgi nuqta, manfiy nol va aynan yarimdagi yaxlitlash qoidasi ko'rsatilmagan.",
+  },
 ];
 
 export function rasmiyManbalar(idlar: string[] = []): Manba[] {

@@ -185,6 +185,7 @@ const IK = {
   const yakundaYuboriladi = () => taymerli() || miniTest();
   const savollar = (): ServerSavol[] => S?.questions ?? [];
   const joriySavol = () => savollar()[m.joriy];
+  const kursSavoli = (q: ServerSavol) => !!S?.course || ('course_question' in q && q.course_question === true);
   const navbatda = (qid: string) => m.navbat.some((b) => b.qid === qid);
   const javobBor = (qid: string) => javoblar.has(qid);
   const yakunlangan = () => !!S?.finished_at;
@@ -201,6 +202,23 @@ const IK = {
     const vaqt = { ...boshqa.vaqt };
     for (const [k, v] of Object.entries(m.vaqt)) vaqt[k] = Math.max(v, vaqt[k] ?? 0);
     m = { ...boshqa, joriy: m.joriy, vaqt };
+    qoralamaniTozala();
+  }
+
+  function qoralamaniTozala() {
+    if (!miniTest()) return;
+    const toza: Mahalliy['qoralama'] = {};
+    for (const q of savollar()) {
+      const qiymat = m.qoralama[q.id];
+      if (typeof qiymat !== 'string') continue;
+      if (q.format === 'spr') {
+        const natija = sprTekshir(qiymat, true);
+        if (natija.ok) toza[q.id] = natija.qiymat;
+      } else if (q.options?.some(({ key }) => key === qiymat)) {
+        toza[q.id] = qiymat;
+      }
+    }
+    m.qoralama = toza;
   }
 
   // ---------- Vaqt ----------
@@ -325,8 +343,8 @@ const IK = {
     return {
       ...h,
       javobBerilgan: qulf,
-      tanlangan: q.format === 'mcq' ? (javob ?? h.tanlangan) : null,
-      sprQiymat: q.format === 'spr' ? (javob ?? h.sprQiymat ?? '') : undefined,
+      tanlangan: q.format === 'mcq' ? (javob ?? (miniTest() ? null : h.tanlangan)) : null,
+      sprQiymat: q.format === 'spr' ? (javob ?? (miniTest() ? '' : h.sprQiymat ?? '')) : undefined,
       belgilangan: m.belgilar.includes(q.id),
       xabarlangan: xabarlar.has(q.id),
       natija: j && !yakundaYuboriladi() ? { togrimi: j.is_correct, togriJavob: togriMatn(j.correct), izoh: j.explanation } : null,
@@ -337,15 +355,22 @@ const IK = {
     ui.set(q.id, { ...holatOl(q), ...ozgar });
   }
 
+  const sprMaydon = () => $('savol-joy').querySelector<HTMLInputElement>('.sk-spr-maydon');
+  const sprXatosiBormi = () => miniTest() && korsatilgan === m.joriy && korsatkich?.sprXatosiBormi();
+
   /** Yakunda yuboriladigan rejimda: SPR maydonida yozilgan, lekin "Save answer" bosilmagan qiymat ham qoralamaga tushadi. */
   function sprQoralamaOl() {
     const q = joriySavol();
-    if (!q || q.format !== 'spr' || !yakundaYuboriladi()) return;
-    const inp = $('savol-joy').querySelector<HTMLInputElement>('input[type="text"]');
+    if (!q || q.format !== 'spr' || !yakundaYuboriladi() || korsatilgan !== m.joriy) return;
+    const inp = sprMaydon();
     if (!inp) return;
-    const t = sprTekshir(inp.value);
-    if (t.ok) m.qoralama[q.id] = t.qiymat;
-    else if (!inp.value.trim()) delete m.qoralama[q.id];
+    const t = sprTekshir(inp.value, kursSavoli(q));
+    if (t.ok) {
+      m.qoralama[q.id] = t.qiymat;
+      if (miniTest()) m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
+    } else if (miniTest() || !inp.value.trim()) {
+      delete m.qoralama[q.id];
+    }
   }
 
   // Desmos havolasi faqat savol ekranida va Math savolida (P29). Tashqi skript yo'q, holat saqlanmaydi.
@@ -366,6 +391,7 @@ const IK = {
     const joy = $('savol-joy');
     korsatkich = savolChiz(joy, {
       savol: komponentSavoli(q, rasm),
+      kurs: kursSavoli(q),
       holat: holatOl(q),
       rejim: yakundaYuboriladi() ? 'taymerli' : 'taymersiz',
       raqam: m.joriy + 1,
@@ -435,7 +461,7 @@ const IK = {
     const keyingi = $<HTMLButtonElement>('keyingi');
     oldingi.disabled = m.joriy === 0;
     if (yakundaYuboriladi()) {
-      otkaz.hidden = true;
+      otkaz.hidden = !(miniTest() && q.format === 'spr');
       tekshirT.hidden = true;
       keyingi.hidden = false;
       keyingi.textContent = oxirgi ? 'Review and finish' : 'Next';
@@ -450,7 +476,7 @@ const IK = {
   }
 
   function otish(i: number, fokus = true) {
-    if (!S || i < 0 || i >= savollar().length) return;
+    if (!S || i < 0 || i >= savollar().length || sprXatosiBormi()) return;
     sprQoralamaOl();
     vaqtYig();
     m.joriy = i;
@@ -556,6 +582,10 @@ const IK = {
 
   // ---------- Yakunlash ----------
   function yakunla(sabab: 'tugma' | 'vaqt' | 'davom'): Promise<void> {
+    if (sabab === 'tugma' && ekran === 'savol' && miniTest()) {
+      if (xaritaDialog.open) xaritaYop();
+      if (sprXatosiBormi()) return Promise.resolve();
+    }
     yakunVadasi ??= (async () => {
       if (ekran === 'savol') { sprQoralamaOl(); vaqtYig(); }
       if (xaritaDialog.open) xaritaYop();
@@ -616,6 +646,10 @@ const IK = {
   }
 
   function yakunlashniSora() {
+    if (miniTest()) {
+      if (sprXatosiBormi()) return;
+      sprQoralamaOl();
+    }
     const xb = xarita(savollar(), m, new Set(javoblar.keys()), yakundaYuboriladi());
     const qolgan = xb.filter((b) => b.holat === 'unanswered' || b.holat === 'skipped').length;
     if (!qolgan) return yakunla('tugma');
@@ -649,6 +683,7 @@ const IK = {
     }));
   }
   function xaritaOch(ogoh?: string) {
+    if (sprXatosiBormi()) return;
     xaritaOchuvchi = document.activeElement as HTMLElement | null;
     sprQoralamaOl();
     xaritaChiz(ogoh);
@@ -942,6 +977,7 @@ const IK = {
   // ---------- Yuklash va sinxronlash ----------
   function serverdanOl(j: SessiyaJavob) {
     S = j;
+    qoralamaniTozala();
     if (j.course) $('fokus-ustki').textContent = miniTest() ? 'Topic mini-test' : 'Course practice';
     soatOlingan = Date.now();
     javoblar.clear();
@@ -1024,6 +1060,14 @@ const IK = {
   $('otkaz').addEventListener('click', () => {
     const q = joriySavol();
     if (!q) return;
+    if (miniTest()) {
+      const inp = sprMaydon();
+      if (inp) {
+        inp.value = '';
+        inp.dispatchEvent(new Event('input'));
+      }
+      delete m.qoralama[q.id];
+    }
     if (!m.otkazilgan.includes(q.id)) m.otkazilgan.push(q.id);
     saqla();
     if (m.joriy >= savollar().length - 1) { progressChiz(); return yakunlashniSora(); }

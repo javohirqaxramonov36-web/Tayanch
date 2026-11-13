@@ -201,6 +201,7 @@ test('tasdiqsiz va eskirgan hash rad etiladi, tasdiqlangan dry-run yozmaydi', ()
   assert.ok(tasdiq.reja.every(({ qator }) => qator.status === 'verified' && qator.difficulty === 3));
   assert.equal(tasdiq.reja.filter(({ qator }) => qator.tags[0].endsWith(':mini_test')).length, 50);
   assert.deepEqual(tasdiq.reja[0].qator.correct.accepted, ['2/3', '.6666', '.6667', '0.666', '0.667']);
+  assert.deepEqual(tasdiq.reja[0].qator.correct.exact, ['2/3']);
   assert.deepEqual(tasdiq.reja.find(({ qator }) => qator.format === 'mcq').qator.correct, { choice: 'A' });
 
   const oldin = faylHashlari(papka);

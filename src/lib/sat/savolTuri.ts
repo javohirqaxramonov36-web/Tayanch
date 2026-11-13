@@ -66,6 +66,8 @@ export type SavolRejimi = 'taymerli' | 'taymersiz';
 
 export interface SavolKorsatkichProps {
   savol: Savol;
+  /** Kurs savoli, jumladan redo sessiyasidagi kurs savoli. */
+  kurs?: boolean;
   holat: SavolHolati;
   rejim: SavolRejimi;
   /** "Question 3" yorlig'i uchun; berilmasa yorliq chiqmaydi */

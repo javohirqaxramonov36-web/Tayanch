@@ -119,5 +119,9 @@ export function kursSavoliniOqi(s, mavzu, fayl, muallif) {
 export function kursImportRejasi(natijalar) {
   // Bo‘laklab nashr qilinadigan to‘plamlar keyingi bosqichga tegishli.
   if (natijalar.length !== 200 || natijalar.some((n) => !n.reviewed)) return [];
-  return natijalar.map((n) => importQatori(n, { hash: n.hash }));
+  return natijalar.map((n) => {
+    const reja = importQatori(n, { hash: n.hash });
+    if (n.topshiriq.type === 'spr') reja.qator.correct.exact = n.topshiriq.exact;
+    return reja;
+  });
 }

@@ -4,6 +4,14 @@ Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: 
 
 Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5 qavatning hammasi). Boshqa `Tayanch-*-prep` papkalarida faqat dizayn fayllari bor.
 
+## SAT kursi 1c (2026-11-13, lokal, muallif qabul qilgan)
+
+- Kurs mashqi, mini-test va kurs savolining redo oqimida haqiqiy radio, ko‘rinadigan klaviatura fokusi, mobil SPR belgi tugmalari va `aria-live` xato e’loni bor. Mini-test buzilgan mahalliy qoralamani jim tashlaydi. Bank va mock avvalgi format bilan ishlaydi.
+- Kurs SPR formati 5/6 belgi bilan cheklangan. `-0`, `.5`, `0.5` va sig‘adigan ekvivalent kasrlar qabul qilinadi. Bluebook yo‘riqnomasida `5.` holati ochiq qolgan, Tayanch kursida `5` yoki `5.0` kiritiladi. Qaror va rasmiy manba `docs/SAT_COURSE_PLAN.md` §5 (CB44) da.
+- 1a adapteri tekshirilgan aniq qiymatni `correct.exact` sifatida `correct.accepted` yoniga uzatadi. `20261113190000_kurs_javob_kiritish.sql` kursga xos format va ratsional baholashni qo‘llaydi. 1b sessiya migratsiyasi saqlandi.
+- Sinalgan: `npm run build` (75 sahifa), `npm test` (221/221), kurs dry-run (5/5), lokal PostgreSQL (35 ta umumiy SPR vektori, mashq, atomar mini-test va redo), Chrome 390/1280 px yorug‘ va qorong‘i (Tab, strelka, Enter, axe va kontrast), bank va mock regressiyasi. `astro check` 1b dagi o‘sha 6 xatoni qaytardi.
+- Haqiqiy telefon va VoiceOver sinalmagan. 1d boshlanmagan. Reja `docs/SAT_COURSE_PLAN.md` §6 va §8 da.
+
 ## 1. Sayt tuzilmasi: 5 qavatli bino
 
 | Qavat | Nomi | Manzil | Holat (`bolimlar.ts`) | Nima bor |
