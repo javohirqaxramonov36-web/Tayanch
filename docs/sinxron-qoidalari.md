@@ -1,6 +1,6 @@
 # SAT progressini sinxronlash qoidalari
 
-Holat: kod `sat-progress-sinxron` branch'ida (P04). Adapter hisob moduliga (P03, `hisob.ts`) `holatHisob.ts` orqali ulangan. Hisobsiz foydalanuvchi uchun hamma narsa avvalgidek ishlaydi: supabase-js yuklanmaydi, serverga hech narsa ketmaydi.
+Holat: P04, PR #59 da 2026-11-13 merge qilingan. Adapter hisob moduliga (P03, `hisob.ts`) `holatHisob.ts` orqali ulangan. Hisobsiz foydalanuvchi uchun hamma narsa avvalgidek ishlaydi: supabase-js yuklanmaydi, serverga hech narsa ketmaydi.
 
 ## Fayllar
 
