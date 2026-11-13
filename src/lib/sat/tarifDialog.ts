@@ -2,6 +2,7 @@
 // Yopilgandan keyingi ish (fokusni qaytarish) yopuvchi funksiyada bajariladi: skript bilan close() da
 // 'close' hodisasi kelmasligi mumkin (ilova brauzeri), shuning uchun hodisaga tayanilmaydi.
 import { satTarif, jadvalQatorlari, kvotaNomi } from '../../data/satTarif';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { kartaRoyxati, taqqoslashJadvali, type KartaBand, type TarifManba } from './tarifJadval';
 
 export interface TarifDialogMalumot {
@@ -74,10 +75,7 @@ export interface TaklifManba {
 }
 
 /** Supabase mijozidan manba. Xato bo'lsa bo'sh ro'yxat / null (dialog ro'yxatsiz ochiladi). */
-export function supabaseTaklifManba(c: {
-  from(t: string): { select(s: string): { eq(k: string, v: string): PromiseLike<{ data: unknown; error: unknown }> } };
-  rpc(n: string): PromiseLike<{ data: unknown; error: unknown }>;
-}): TaklifManba {
+export function supabaseTaklifManba(c: SupabaseClient): TaklifManba {
   return {
     async tariflar() {
       const { data, error } = await c.from('plans').select('code, name, limits, features').eq('bolim', 'sat');
