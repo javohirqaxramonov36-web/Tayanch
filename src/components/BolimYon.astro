@@ -25,7 +25,7 @@ const M = matn[bolimTili(bolim)].yon;
 const LOGO_NOM = bolim === 'sat' ? 'SAT®' : NOM;
 const joriy = Astro.url.pathname;
 const b = (qism: string) => yol(`/uz/${bolim}/${qism}`);
-// SAT ikonkalari (Tayanch-SAT-dizayn.md, Main ekrani). Har tayyor sahifada ikonka bor; "Coming soon" bandlari ikonkasiz.
+// SAT ikonkalari (Tayanch-SAT-dizayn.md, Main ekrani). Yon paneldagi har sahifada ikonka bor (tayyor bo'lmaganlari yon panelda yo'q).
 const ikonkalar: Record<string, string> = {
   'mashq/test/': '<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
   'mashq/bank/': '<rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/>',
@@ -45,6 +45,14 @@ const ikonkalar: Record<string, string> = {
   'hisob/obuna/': '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
   'qollanma/qayerdan-boshlash/': '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/>',
   'mashq/lugat/': '<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/>',
+  // 2026-11-13 (yon panel 5 band): ilgari ikonkasiz qolgan tayyor sahifalar.
+  'mashq/mock/': '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/>',
+  'qollanma/reading-writing/': '<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>',
+  'vosita/ai-tutor/': '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  'hisob/maqsad/': '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  'guruh/': '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5a3 3 0 0 1 0 6"/><path d="M21 20a6 6 0 0 0-4-5.6"/>',
+  'hisob/fikr/': '<path d="M4 4h16v12H8l-4 4z"/>',
+  'hisob/profil/': '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
 };
 // SAT: College Board rasmiy saytiga tashqi havola (CB07). Manba yo'q bo'lsa build to'xtaydi.
 const cbSayt = bolim === 'sat' ? manbalar.find((m) => m.id === 'CB07') : undefined;
@@ -112,7 +120,7 @@ const ieltsGuruhlar = [
       <li>
         <a href={b('')} aria-current={joriymi(b('')) ? 'page' : undefined}>
           <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>
-          {bolim === 'top-admission' ? "Bo'lim haqida" : M.haqida(NOM)}
+          {bolim === 'top-admission' ? "Bo'lim haqida" : bolim === 'sat' ? 'Today' : M.haqida(NOM)}
         </a>
       </li>
     </ul>
