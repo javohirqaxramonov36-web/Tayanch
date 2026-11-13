@@ -9,7 +9,7 @@
 
 import type { Savol, SavolBolimi, SavolFormati } from './savolTuri';
 
-export type SessiyaRejimi = 'practice' | 'timed' | 'daily' | 'review';
+export type SessiyaRejimi = 'practice' | 'timed' | 'daily' | 'review' | 'course_practice' | 'mini_test';
 
 /** get_session / start_session dagi savol (javobsiz). */
 export interface ServerSavol {
@@ -29,14 +29,17 @@ export interface ServerSavol {
   bookmarked?: boolean;
 }
 
-/** get_session.results: faqat javob berilgan savollar. */
-export interface ServerNatija {
+export interface ServerYechim {
   question_id: string;
-  answer: string;
-  is_correct: boolean;
   /** mcq: "B"; spr: ["1/2", "0.5"] */
   correct: string | string[] | null;
   explanation: string | null;
+}
+
+/** get_session.results: faqat javob berilgan savollar. */
+export interface ServerNatija extends ServerYechim {
+  answer: string;
+  is_correct: boolean;
   time_ms: number | null;
 }
 
@@ -55,7 +58,14 @@ export interface SessiyaJavob {
   questions: ServerSavol[];
   results: ServerNatija[];
   review: ServerReview[];
+  course?: { v: 1; set_id: string; topic_id: string; stage: string };
+  elapsed_ms?: number | null;
+  passed?: boolean;
+  topic_passed?: boolean;
+  skipped_solutions?: ServerYechim[];
 }
+
+export type MiniTestJavob = Pick<ServerNatija, 'question_id' | 'answer' | 'time_ms'>;
 
 /** submit_answer javobi */
 export interface YuborJavob {
@@ -70,6 +80,7 @@ export interface SessiyaApi {
   ol(id: string): Promise<SessiyaJavob>;
   yubor(id: string, qid: string, javob: string, timeMs: number): Promise<YuborJavob>;
   yakunla(id: string): Promise<{ finished_at: string }>;
+  miniTestniYakunla(id: string, javoblar: MiniTestJavob[]): Promise<SessiyaJavob>;
   navbatgaQosh(qid: string): Promise<void>;
   navbatdanOl(qid: string): Promise<void>;
   sabab(qid: string, tag: string | null): Promise<void>;
@@ -93,11 +104,11 @@ export interface Mahalliy {
   otkazilgan: string[];
   /** Savol bo'yicha sarflangan vaqt, ms */
   vaqt: Record<string, number>;
-  /** Taymerli rejim: tanlangan / kiritilgan javoblar (oxirida yuboriladi) */
+  /** Yakunda yuboriladigan javoblar (taymerli mashq va mini-test). */
   qoralama: Record<string, string>;
   /** Yuborilmagan javoblar (tarmoq xatosi, yakunlash paytida) */
   navbat: NavbatBand[];
-  /** Taymerli rejim: "Finish" bosilgan yoki vaqt tugagan (yuborish davom etmoqda) */
+  /** "Finish" bosilgan yoki vaqt tugagan (yuborish davom etmoqda). */
   yakunlanmoqda: boolean;
 }
 

@@ -57,13 +57,15 @@ export function xatoBilanChiq(xabar) {
 }
 
 /** Papkadagi .json va .jsonl fayllar (ichki papkalar bilan; nuqta bilan boshlanganlari va node_modules o'tkaziladi). */
-export function savolFayllari(papka) {
+export function savolFayllari(papka, ildiz = papka) {
   const natija = [];
   for (const nom of readdirSync(papka).sort()) {
     if (nom.startsWith('.') || nom === 'node_modules') continue;
+    // Kurs sxemasiga tegishli fayllarni kurs:tekshir o'qiydi.
+    if (papka === join(ildiz, 'content') && ['sat-math', 'sat-english'].includes(nom)) continue;
     const yol = join(papka, nom);
     const st = statSync(yol);
-    if (st.isDirectory()) natija.push(...savolFayllari(yol));
+    if (st.isDirectory()) natija.push(...savolFayllari(yol, ildiz));
     else if (/\.jsonl?$/i.test(nom)) natija.push(yol);
   }
   return natija;
@@ -188,7 +190,7 @@ export function sprSon(x) {
   return m[1] ? -q : q;
 }
 
-function sprTekshir(answer, xatolar, ogohlar) {
+function sprTekshir(answer, xatolar, ogohlar, qiymatlarniSolishtir = true) {
   if (!Array.isArray(answer) || answer.length === 0) { xatolar.push("answer: spr uchun qabul qilinadigan javoblar ro'yxati kerak, masalan ['3/4', '.75', '0.75']"); return; }
   const qiymatlar = [];
   const korilgan = new Set();
@@ -206,6 +208,7 @@ function sprTekshir(answer, xatolar, ogohlar) {
     if (j.length > chegara) ogohlar.push(`answer "${j}": ${j.length} belgi (musbat javob 5, manfiy 6 belgidan oshmasligi kerak; qoida rasmiy matnda tekshirish kerak)`);
     qiymatlar.push({ j, q });
   }
+  if (!qiymatlarniSolishtir) return;
   for (const { j, q } of qiymatlar.slice(1)) {
     const asos = qiymatlar[0];
     // O'nli yaxlitlash (masalan 2/3 → .6666, .6667) uchun kichik tafovutga ruxsat.
@@ -257,7 +260,8 @@ export function savolniTekshir(s, kontekst = {}) {
   } else if (s.format === 'spr') {
     if (s.section !== 'math') xatolar.push('format: spr faqat math bo\'limida');
     if (Array.isArray(s.options) && s.options.length) xatolar.push('options: spr savolda variant bo\'lmaydi');
-    sprTekshir(s.answer, xatolar, ogohlar);
+    // Kurs adapteri qiymatlarni alohida, aniq ratsional tekshiruvdan o'tkazadi.
+    sprTekshir(s.answer, xatolar, ogohlar, !kontekst.sprAniqTekshiriladi);
   } else {
     xatolar.push('format: "mcq" yoki "spr"');
   }
@@ -332,6 +336,18 @@ export function bazaQatori(s, { hash, figureYol = null, status = savolHolati(s) 
     status,
     content_hash: hash ?? mazmunHash(s),
   };
+}
+
+/** P05 importining xotiradagi qatori va ixtiyoriy rasm rejasi. */
+export function importQatori(n, { hash = mazmunHash(n.savol) } = {}) {
+  const s = n.savol;
+  let rasm = null;
+  if (s.figure) {
+    const manba = resolve(dirname(n.fayl), s.figure.src);
+    const yol = `${s.section}/${s.external_id}/${hash.slice(0, 12)}${extname(manba).toLowerCase()}`;
+    rasm = { manba, yol, turi: s.figure.type === 'svg' ? 'image/svg+xml' : 'image/png' };
+  }
+  return { n, rasm, qator: bazaQatori(s, { hash, figureYol: rasm?.yol ?? null }) };
 }
 
 /**
