@@ -1,13 +1,12 @@
 ---
-// Bosh sahifa. Tuzilma: BRIEF-bosh-sahifa.md (muammo → burilish → cho'qqi → shaxsiy yo'l → harakat).
+// Bosh sahifa. Tartib (N2, 2026-11-13): hero (bitta "Boshlash") → qavat kartalari → bitta yo'l → muallif yo'li → yaqin muddatlar.
+// "Qayerdan boshlayman?" savoliga bitta kirish yo'li: hero va menyudagi "Boshlash" (Navigator onboarding, boshqaruv.ts).
 import Asosiy from '../../layouts/Asosiy.astro';
-import MaqsadTesti from '../../components/MaqsadTesti.astro';
 import MuallifYoli from '../../components/MuallifYoli.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
 import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
-import Zina from '../../components/Zina.astro';
 import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
@@ -23,11 +22,6 @@ const sochilgan = [
   { t: 'Hujjatlar', x: 8, y: 82, r: -4 },
 ];
 const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
-// Bo'lim kartalari fotosi (Higgsfield, 2026-11-11; uslub: real foto, yuzsiz, matnsiz). Bezak: alt bo'sh.
-const kartaRasm = (slug: string) => ({
-  src: yol(`/rasmlar/bosh/${slug}-720.webp`),
-  srcset: `${yol(`/rasmlar/bosh/${slug}-400.webp`)} 400w, ${yol(`/rasmlar/bosh/${slug}-720.webp`)} 720w`,
-});
 ---
 <Asosiy
   title="Tayanch"
@@ -51,22 +45,9 @@ const kartaRasm = (slug: string) => ({
     <div class="muammo-matn">
       <h1 id="s1">Imtihon, hujjat, esse, muddat.<br /><span class="xira">Qayerdan boshlash kerak?</span></h1>
       <p class="lead">Chet elda o'qishni xohlagan har bir o'quvchi shu savoldan boshlaydi. Javob bor, va u bitta joyda.</p>
-      <nav id="qavatlar" class="qavat-qator" aria-labelledby="qavatlar-h">
-        <p id="qavatlar-h" class="qq-sarlavha">Qavatni tanlang</p>
-        <ul>
-          {qavatlar.slice(1).map((q) => (
-            <li>
-              <a class:list={['qq-tugma', { tez: q.holat === 'tez-orada' }]} data-floor={q.raqam} data-bino-yoq={q.raqam} href={yol(q.manzil)}>
-                <span class="qq-raqam" aria-hidden="true">{q.raqam}</span>
-                <span class="qq-nom"><span class="sr">{q.raqam}-qavat: </span>{q.nomi}</span>
-                {q.holat === 'tez-orada' && <span class="qq-pill" lang="en">Coming soon</span>}
-                {(q.slug === 'sat' || q.slug === 'ielts') && <span class="qq-pill" lang="en">Beta</span>}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <a class="qq-test" href="#maqsad">Bilmayapman: 3 savolga javob bering</a>
-      </nav>
+      <p class="hero-amal">
+        <button type="button" class="tugma tugma-asosiy hero-tugma" data-boshlash="hero" aria-haspopup="dialog">Boshlash</button>
+      </p>
     </div>
     <div class="sochilgan" aria-hidden="true">
       <Bino aktiv={1} class="sochilgan-bino" />
@@ -76,7 +57,50 @@ const kartaRasm = (slug: string) => ({
     </div>
   </section>
 
-  <!-- 2. Burilish -->
+  <!-- 2. Qavatlar: har qavat kartasi. Ochiq qavatda bitta fokus nuqtasi (tugma), tez-oradagida nom havolasi;
+       havola ::after bilan butun kartani bosiladigan qiladi. -->
+  <section id="qavatlar" class="ichki blok qavatlar" aria-labelledby="qavatlar-h">
+    <h2 id="qavatlar-h">Qaysi bo'limdan boshlaysiz?</h2>
+    <ul class="kartalar">
+      {bolimlar.map((b) => {
+        // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
+        const ochiq = b.holat === 'ochiq';
+        const raqam = qavatlar.find((q) => q.slug === b.slug)?.raqam;
+        const manzil = yol(`/uz/${b.slug}/`);
+        return (
+          <li>
+            <article class:list={['ds-karta', 'karta', { tez: !ochiq }]} data-floor={raqam} aria-labelledby={`karta-${b.slug}`}>
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka ds-karta-belgi">
+                {b.ikonka === 'qalpoq' && <><path d="M3 10l9-5 9 5-9 5z" /><path d="M7 12v5c3 2 7 2 10 0v-5" /></>}
+                {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
+                {b.ikonka === 'varaq' && <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h4" /></>}
+                {b.ikonka === 'medal' && <><circle cx="12" cy="9" r="5" /><path d="M9 13l-2 8 5-3 5 3-2-8" /></>}
+              </svg>
+              <h3 class="karta-nom" id={`karta-${b.slug}`}>
+                {ochiq ? b.nomi : <a class="karta-havola" href={manzil} data-bino-yoq={raqam} aria-describedby={`tez-${b.slug}`}>{b.nomi}</a>}
+              </h3>
+              <p class="karta-tavsif">{b.tavsif}</p>
+              {b.xususiyatlar.length > 0 && (
+                <ul class="xususiyatlar">
+                  {b.xususiyatlar.map((x) => (
+                    <li>
+                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                      {x}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {ochiq
+                ? <a class="tugma tugma-asosiy karta-tugma karta-havola" href={manzil} data-bino-yoq={raqam}>{b.nomi}'ni boshlash</a>
+                : <span class="yorliq karta-yorliq" id={`tez-${b.slug}`}>Tez orada</span>}
+            </article>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+
+  <!-- 3. Burilish -->
   <section class="kulrang" aria-labelledby="s2">
     <div class="ichki blok">
       <h2 id="s2">Tayanch hammasini <span class="kok">bitta yo'lga</span> tizadi.</h2>
@@ -105,58 +129,20 @@ const kartaRasm = (slug: string) => ({
     </div>
   </section>
 
-  <!-- 3. Cho'qqi -->
+  <!-- 4. Cho'qqi -->
   <MuallifYoli />
 
-  <!-- 4. Shaxsiy yo'l -->
-  <section id="maqsad" class="ichki shaxsiy" aria-labelledby="s4">
-    <div class="shaxsiy-bosh">
-      <h2 id="s4">Endi sizning yo'lingiz</h2>
-      <p class="ikkinchi">3 ta savol, va qaysi bo'limdan boshlashni ko'rasiz.</p>
-    </div>
-    <MaqsadTesti />
-  </section>
-
-  <!-- 5. Harakat -->
-  <section id="yonalish" class="ichki blok harakat" aria-labelledby="s5">
-    <h2 id="s5">Qaysi bo'limdan boshlaysiz?</h2>
-    <ul class="kartalar">
-      {bolimlar.map((b) => {
-        // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
-        const ochiq = b.holat === 'ochiq';
-        return (
-          <li>
-            <a class:list={['ds-karta', 'karta', { tez: !ochiq }]} data-floor={qavatlar.find((q) => q.slug === b.slug)?.raqam} href={yol(`/uz/${b.slug}/`)}>
-              <img class="karta-rasm" {...kartaRasm(b.slug)} sizes="(min-width: 1100px) 280px, (min-width: 560px) 50vw, 100vw" width="720" height="542" loading="lazy" decoding="async" alt="" />
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka ds-karta-belgi">
-                {b.ikonka === 'qalpoq' && <><path d="M3 10l9-5 9 5-9 5z" /><path d="M7 12v5c3 2 7 2 10 0v-5" /></>}
-                {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
-                {b.ikonka === 'varaq' && <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h4" /></>}
-                {b.ikonka === 'medal' && <><circle cx="12" cy="9" r="5" /><path d="M9 13l-2 8 5-3 5 3-2-8" /></>}
-              </svg>
-              <span class="karta-nom">{b.nomi}</span>
-              <span class="karta-tavsif">{b.tavsif}</span>
-              <span class="karta-holat">{ochiq ? 'Boshlash' : 'Coming soon'}</span>
-            </a>
-          </li>
-        );
-      })}
-    </ul>
-  </section>
-
+  <!-- 5. Yaqin muddatlar: eng yaqin 3 tasi -->
   <section class="ichki blok muddatlar" aria-labelledby="s6">
     <h2 id="s6" class="kichik-h2">Yaqin muddatlar</h2>
-    <DeadlineRoyxati faqatKelajak />
+    <DeadlineRoyxati faqatKelajak limit={3} />
     <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
   </section>
 
-  <div class="ichki zina-orami"><Zina /></div>
 </Asosiy>
 
 <style>
-  .zina-orami { padding-top: var(--b-14); }
   .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 520px; }
-  .ikkinchi { color: var(--matn-ikkinchi); font-size: var(--matn-katta); }
   .kok { color: var(--rang-havola); }
   .blok { padding-block: var(--b-24); display: flex; flex-direction: column; gap: var(--b-10); }
   .kulrang { background: var(--fon-ikkinchi); }
@@ -179,27 +165,35 @@ const kartaRasm = (slug: string) => ({
   .yorliq-katta.qora { background: var(--qora); color: #ffffff; }
   @media (max-width: 640px) { .sochilgan { height: 260px; } .yorliq-katta { font-size: 15px; padding: 8px 14px; } }
 
-  /* Qavat qatori: bosh sahifadan qavatga bir bosishda */
-  .qavat-qator { display: flex; flex-direction: column; gap: var(--b-3); }
-  .qq-sarlavha { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
-  .qavat-qator ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2); }
-  .qq-tugma {
-    display: inline-flex; align-items: center; gap: var(--b-2);
-    min-height: 48px; box-sizing: border-box; padding: var(--b-1) var(--b-4) var(--b-1) var(--b-1);
-    border: 1.5px solid var(--matn); border-radius: var(--r-toliq);
-    color: var(--matn); text-decoration: none; font-weight: 700;
-  }
-  @media (hover: hover) and (pointer: fine) { .qq-tugma:hover { background: var(--fon-ikkinchi); } }
-  .qq-raqam {
-    width: 36px; height: 36px; flex: none; border-radius: var(--r-toliq);
-    display: flex; align-items: center; justify-content: center; font-weight: 800;
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-  }
-  .qq-pill { padding: 3px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: 12px; font-weight: 700; }
-  .qq-test { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--rang-havola); }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .hero-amal { margin: 0; }
+  .hero-tugma { min-width: 200px; }
+  @media (max-width: 640px) { .hero-tugma { width: 100%; } }
 
-  /* 2. Burilish */
+  /* 2. Qavat kartalari: 2x2, telefonda 1 ustun */
+  .qavatlar { padding-top: 0; }
+  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  @media (max-width: 760px) { .kartalar { grid-template-columns: 1fr; } }
+  /* DS karta (global .ds-karta), urg'u qavat rangida (data-floor) */
+  .karta {
+    position: relative; height: 100%; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+    padding: var(--card-pad);
+  }
+  /* DS: hover faqat sichqoncha bilan, faqat transform (global a.ds-karta kabi) */
+  @media (hover: hover) and (pointer: fine) { .karta:has(.karta-havola:hover) { transform: translateY(var(--card-lift)); } }
+  .karta .ikonka { width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3); }
+  .karta-nom { font-weight: 900; font-size: var(--matn-h3); margin: 0; }
+  .karta-nom a { color: inherit; text-decoration: none; }
+  /* Havola butun kartani qoplaydi: bitta Tab to'xtashi, karta istalgan joyidan bosiladi */
+  .karta-havola::after { content: ''; position: absolute; inset: 0; border-radius: var(--card-radius); }
+  .karta-tavsif { font-size: 15px; line-height: 1.5; color: var(--matn-ikkinchi); margin: 0; }
+  .xususiyatlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .xususiyatlar li { display: flex; align-items: flex-start; gap: var(--space-2); font-size: 15px; line-height: 1.5; }
+  .xususiyatlar svg { flex: none; margin-top: 2px; color: var(--floor-text); }
+  .karta-tugma { margin-top: auto; align-self: stretch; }
+  .karta-yorliq { margin-top: auto; }
+
+  /* 3. Burilish */
   .blok h2 { max-width: 760px; font-weight: 900; }
   .zanjir { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
   .zanjir .bosqich { background: var(--sirt); border-radius: var(--r-toliq); padding: 10px 18px; font-weight: 700; font-size: 17px; }
@@ -213,36 +207,7 @@ const kartaRasm = (slug: string) => ({
   .vadalar p { flex: 1 1 280px; font-size: 17px; color: var(--matn-ikkinchi); }
   .vadalar strong { color: var(--matn); }
 
-  /* 4. Shaxsiy yo'l */
-  .shaxsiy { max-width: 760px; padding-block: var(--b-24) 72px; display: flex; flex-direction: column; gap: 28px; }
-  .shaxsiy-bosh { display: flex; flex-direction: column; gap: 10px; text-align: center; align-items: center; }
-  .shaxsiy h2 { font-weight: 900; }
-
-  /* 5. Harakat */
-  .harakat { padding-top: var(--b-6); }
-  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--b-4); }
-  /* DS link karta (global .ds-karta), urg'u borilayotgan qavatdan (data-floor) */
-  .karta {
-    height: 100%; box-sizing: border-box;
-    display: flex; flex-direction: column; gap: var(--space-3);
-    padding: var(--card-pad); overflow: hidden;
-  }
-  /* Foto karta tepasida chetma-chet; belgi doirasi foto va matn chegarasiga chiqadi */
-  .karta-rasm {
-    display: block; width: calc(100% + 2 * var(--card-pad)); max-width: none; height: auto;
-    aspect-ratio: 16 / 10; object-fit: cover;
-    margin: calc(-1 * var(--card-pad)) calc(-1 * var(--card-pad)) 0;
-    background: var(--color-surface-sunken);
-  }
-  .karta .ikonka {
-    width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3);
-    margin-top: calc(var(--control-height-md) / -2 - var(--space-3));
-    position: relative; box-shadow: 0 0 0 var(--space-1) var(--color-surface);
-  }
-
-  @media (max-width: 640px) { .karta-rasm { aspect-ratio: 2 / 1; } }
-
-  /* 2. Burilish: 5 bosqich ostidagi foto */
+  /* 3. Burilish: 5 bosqich ostidagi foto */
   .yol-rasm { margin: 0; }
   .yol-rasm img {
     display: block; width: 100%; height: auto;
@@ -251,11 +216,6 @@ const kartaRasm = (slug: string) => ({
     background: var(--color-surface-sunken);
   }
   @media (max-width: 640px) { .yol-rasm img { aspect-ratio: 4 / 3; object-position: 55% 72%; border-radius: var(--radius-lg); } }
-  .karta-nom { font-weight: 900; font-size: var(--matn-h3); }
-  .karta-tavsif { font-size: 15px; line-height: 1.5; color: var(--matn-ikkinchi); }
-  .karta-holat { margin-top: auto; font-weight: 700; color: var(--rang-havola); }
-  .karta.tez .karta-holat { color: var(--matn-sust); }
-
   .muddatlar { padding-top: 0; gap: var(--b-5); }
   .kichik-h2 { font-size: 1.75rem; }
 </style>
