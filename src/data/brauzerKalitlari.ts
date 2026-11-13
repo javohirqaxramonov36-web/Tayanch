@@ -21,6 +21,7 @@ export const brauzerKalitlari: BrauzerKalit[] = [
   { kalit: 'tayanch:ielts-…, tayanch:top-admission-…', uz: "IELTS va Top Admission: dars progressi, urinishlar va reja.", en: 'IELTS and Top Admission: lesson progress, attempts and plan.' },
   { kalit: 'tayanch:navigator-…, tayanch:keyingi-qadam', uz: "Bosh sahifadagi yo'l xaritasi javoblari va keyingi qadam.", en: 'Your answers on the home page road map and your next step.' },
   { kalit: 'tayanch:analitika-kirgan', uz: "Natijalar sahifasi oldin ochilganmi (faqat belgi).", en: 'Whether you have opened the results page before (a flag only).' },
+  { kalit: 'tayanch:metrika:…', uz: "Statistika hodisasi oxirgi marta qachon yuborilgani (ortiqcha so'rov bo'lmasligi uchun, faqat vaqt).", en: 'When a usage statistics event was last sent (to avoid duplicate requests; a time only).', sessiya: true },
   { kalit: 'tayanch-topshirish-yoli', uz: "Topshirish yo'li vositasidagi belgilaringiz.", en: 'Your marks in the Application path tool.' },
 ];
 

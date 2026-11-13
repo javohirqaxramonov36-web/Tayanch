@@ -37,7 +37,7 @@ storage: question-figures     (yopiq bucket, imzolangan URL)
 
 | Jadval | Nima | Mijoz (authenticated) | Kim yozadi |
 | --- | --- | --- | --- |
-| `profiles` | ism, taxallus, davlat, maqsad ball, hozirgi eng yaxshi ball (`current_score`), imtihon sanasi, SAT sozlash vaqti (`sat_setup_at`), rozilik, til | o'zini o'qiydi; ruxsat etilgan ustunlarni yangilaydi | trigger yaratadi; `consent_at` ni trigger qo'yadi |
+| `profiles` | ism, taxallus, davlat, maqsad ball, hozirgi eng yaxshi ball (`current_score`), imtihon sanasi, SAT sozlash vaqti (`sat_setup_at`), rozilik, til, statistikani ulashish (`usage_analytics`, standart `true`) | o'zini o'qiydi; ruxsat etilgan ustunlarni yangilaydi | trigger yaratadi; `consent_at` ni trigger qo'yadi |
 | `questions` | savol banki (`draft`/`verified`/`hidden`, `verified_by` ≠ `author`, `verified_at`, `version`; P05 maydonlari `drafted_by`, `tags`, `content_hash`: ADR 002) | **hech narsa** | service role |
 | `practice_sessions` | sessiya (`practice`, `timed`, `daily`, `review`) | o'zini o'qiydi | RPC |
 | `session_questions` | sessiyaga berilgan savollar | o'zini o'qiydi | RPC |
@@ -57,7 +57,7 @@ storage: question-figures     (yopiq bucket, imzolangan URL)
 | `daily_picks` | kun savoli tanlovi (`day` → `question_id`, hamma uchun bitta) | **hech narsa** | RPC (`daily_pick`) |
 | `reports` | savoldagi xato haqida xabar | o'zini o'qiydi, qo'shadi | mijoz |
 | `feedback` | fikr-mulohaza | o'zini o'qiydi, qo'shadi | mijoz |
-| `events` | analitika hodisasi (P25) | faqat qo'shadi | mijoz |
+| `events` | birinchi tomon metrikasi (P25): `name`, `props` (ruxsat etilgan kalitlar, faqat slug/son/boolean), vaqt; IP va qurilma ma'lumoti yo'q | **hech narsa** (faqat `track_event('plan_viewed')` RPC) | `private.track` (trigger'lar, RPC); so'rovlar `docs/metrikalar.sql` |
 | `audit_log` | admin amallari | **hech narsa** | admin funksiyalari |
 
 `anon` (hisobsiz): faqat faol `plans` va tasdiqlangan `vocab_words` ni o'qiydi. RPC faqat kun savoli uchun (`daily_question_public`, `check_daily_answer`, hech narsa yozmaydi); hisobsiz progress brauzerda (`tayanch:*`) qoladi.
@@ -155,6 +155,10 @@ Kirgan ── daily_question ─> 'daily' sessiya (kuniga bitta) + result (javob
 - **Kvota**: kun savoli hech qanday kalitni sarflamaydi (P19 bilan kelishilgan qoida). `daily` kaliti `usage_counters` da qoladi, lekin oshmaydi.
 - **Rasmli savol** kun savoli bo'lmaydi: mehmon `question-figures` dan rasm ocha olmaydi.
 - **Sinov**: `supabase/tests/kun_savoli_test.sql` (KS01–KS13, sana `private.today_tashkent` almashtirilib simulyatsiya qilinadi), `npm run db:tekshir`.
+
+### Mock imtihon (P30, migratsiya `20261113012418_mock_imtihon.sql`)
+
+Jadvallar `mock_forms`, `mock_form_questions`, `mock_attempts`, `mock_modules`, `mock_answers` (RLS yoqilgan, mijozga huquq yo'q, hammasi RPC orqali). RPC: `mock_status`, `start_mock`, `get_mock`, `mock_start_module`, `mock_save`, `mock_submit_module`, `mock_abandon`, `get_mock_result`; admin `admin_mock_readiness` (faqat service role). Modul yopilganda `practice_sessions` (`mode = 'mock'`) + `attempts` + `review_queue` (xatolar). `can_read_question_figure` mock formasidagi savol rasmini ham ochadi. Batafsil: `docs/mock-imtihon.md`.
 
 ### Kvota
 

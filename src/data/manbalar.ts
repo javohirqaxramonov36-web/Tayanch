@@ -66,8 +66,8 @@ export const manbalar: Manba[] = [
     tashkilot: 'College Board',
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/reading-writing',
     tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-06',
-    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z. Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
+    tekshirilganSana: '2026-11-12',
+    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z (adabiyot, tarix/ijtimoiy fanlar, gumanitar, fan). Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Har ikki modulda to'rt domenning hammasi bor; o'xshash skill savollari guruhlangan va osondan qiyinga boradi (2026-11-12, WebFetch xulosasi). Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
   },
   {
     id: 'CB07',
@@ -169,6 +169,15 @@ export const manbalar: Manba[] = [
     izoh: "To'rt ko'nikma bo'yicha namuna topshiriqlar; Listening va Reading uchun javob kalitlari PDF. Sahifada bepulligi yozilmagan.",
   },
   {
+    id: 'IE07',
+    nomi: 'IELTS Academic: Listening test format',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-listening',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Listening qo'llanmasi uchun. \"Approximately 30 minutes\", 40 savol, 4 qism: 1-qism ikki kishi suhbati va 2-qism bitta asosiy so'zlovchi (kundalik, ijtimoiy vaziyatlar), 3-qism ikki asosiy so'zlovchi suhbati va 4-qism bitta kishi akademik mavzuda (ta'lim va o'qish vaziyatlari). Yozuv \"once only\" eshitiladi. 6 savol turi: Multiple choice; Matching; Plan, map, diagram labelling; Form, note, table, flow chart completion; Sentence completion; Short-answer questions. So'z cheklovi masalan \"NO MORE THAN TWO WORDS AND/OR A NUMBER\": ortiq yozilsa ball yo'qoladi; \"they're\" kabi qisqartmalar so'ralmaydi; \"check-in\" kabi defisli so'z bitta hisoblanadi. Har to'g'ri javob 1 ball, natija butun va yarim bandlarda. Ko'chirish vaqti (qog'oz test) bu sahifada yo'q. Sahifada yangilanish sanasi yo'q (faqat ©2026). 2026-11-12 da o'qildi. IE05 (ielts-writing-task2) va IE06 (ielts-speaking) boshqa branch'larda band.",
+  },
+  {
     id: 'IE04',
     nomi: 'IELTS scoring in detail: band scores explained',
     tashkilot: 'IELTS (ielts.org)',
@@ -203,6 +212,15 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
     izoh: "Listening imlo mashqi uchun. Sahifada: \"Both British and American spellings are accepted in IELTS\", lekin bittasiga izchil amal qilish kerak; \"words with spelling mistakes in the Reading and Listening tests will be marked as incorrect\". Maqola sanasi 18/05/2023 (IDP Staff). British Council blogi (takeielts.britishcouncil.org) bu mashinadan ochilmadi.",
+  },
+  {
+    id: 'ID03',
+    nomi: 'How to write the date correctly in IELTS',
+    tashkilot: 'IDP IELTS',
+    havola: 'https://ielts.idp.com/ghana/prepare/article-how-to-write-the-date-correctly',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Harf va raqam diktanti uchun. Sahifada: \"For IELTS, you can use both date formats\" (britancha kun-oy, amerikancha oy-kun); Listening javobida sana bir necha to'g'ri ko'rinishda yozilishi mumkin (24th April, April 24, 24 April), raqam bilan ham (19/02 yoki 02/19). Maqola 28/06/2021, IDP Staff. Vaqt yozilishi (7.30 / 7:30) sahifada yo'q.",
   },
   {
     id: 'CA01',
@@ -611,6 +629,34 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
     izoh: "Rasmiy emas (College Board emas). Google blogi, 2026-01-21: \"partnering with The Princeton Review to bring full-length, no-cost practice SATs\" Gemini ilovasida. Gemini AI izohlari xato bo'lishi mumkin. Sifati tekshirilmagan.",
+  },
+  // P30 (mock imtihon). CB30–CB35 va CB40 boshqa branch'larda band. Matnlar WebFetch xulosasidan (2026-11-12).
+  {
+    id: 'CB41',
+    nomi: 'Reading and Writing Specifications (SAT Suite)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/k12-educators/about/alignment/reading',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "SAT R&W: har modulda \"25 operational questions and 2 pretest questions\", modul 32 daqiqa. Soha ulushi: Information and Ideas ≈26%, Craft and Structure ≈28%, Expression of Ideas ≈20%, Standard English Conventions ≈26%. Sohalar bo'yicha savol soni sahifada yozilmagan. Tayanch mocki: pretestsiz, modulda 27 savol hisoblanadi.",
+  },
+  {
+    id: 'CB42',
+    nomi: 'Math Specifications (SAT Suite)',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/k12-educators/about/alignment/math',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "SAT Math: har modulda 20 operational + 2 pretest = 22 savol, modul 35 daqiqa. Soha ulushi: Algebra ≈35%, Advanced Math ≈35%, Problem-Solving and Data Analysis ≈15%, Geometry and Trigonometry ≈15%. Ko'p tanlovli va talaba kiritadigan javoblar ulushi yozilmagan.",
+  },
+  {
+    id: 'CB43',
+    nomi: 'The SAT Math Section: Overview',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/math/overview',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Sohalar bo'yicha savol soni: Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7; \"Questions from all four categories appear in each test module.\" Pretest soni bu sahifada yo'q.",
   },
 ];
 

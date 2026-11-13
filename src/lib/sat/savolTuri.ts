@@ -57,6 +57,8 @@ export interface SavolHolati {
   /** Cross out qilingan variant kalitlari */
   ochirilgan: string[];
   natija?: SavolNatijasi | null;
+  /** P24: foydalanuvchi bu savol haqida xabar yuborgan (tugma "Reported") */
+  xabarlangan?: boolean;
 }
 
 /** taymerli: natija ko'rsatilmaydi (imtihon kabi); taymersiz: mashq, javobdan keyin natija */
@@ -74,6 +76,8 @@ export interface SavolKorsatkichProps {
   onSubmitSpr?: (qiymat: string) => void;
   onFlag?: (belgilangan: boolean) => void;
   onEliminate?: (kalit: string, ochirilgan: boolean) => void;
+  /** P24 "Report": tugma faqat shu berilganda chiqadi; dialog ota sahifada, fokus shu tugmaga qaytadi */
+  onReport?: (tugma: HTMLButtonElement) => void;
 }
 
 export const BOSH_HOLAT: SavolHolati = {

@@ -23,6 +23,9 @@ const bolimlar: { nomi: string; vaqt: string; ikonka: string; daqiqa: [number, n
 const engUzun = Math.max(...bolimlar.map((b) => b.daqiqa[1]));
 const ulush = (n: number) => Math.round((n / engUzun) * 1000) / 1000;
 const tezQollanmalar = qollanmalar.filter((q) => !q.qism).length;
+// Manbalar blokidagi "hali yozilmagan" ro'yxati ma'lumotdan: qo'llanma qo'shilsa, o'zi yangilanadi.
+const yozilmagan = [...qollanmalar.filter((q) => !q.qism), asos].map((q) => q.nomi);
+const yozilmaganMatn = yozilmagan.length > 1 ? `${yozilmagan.slice(0, -1).join(', ')} va ${yozilmagan.at(-1)}` : yozilmagan.join('');
 const qadamlar = [
   { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
   { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
@@ -265,7 +268,7 @@ const namunalar = [
         "British Council'ning bepul mashq testlari sahifasi (saytga ulanib bo'lmadi).",
         "IELTS.org namunalari bepulligi sahifada yozilmagan.",
         "Savdo belgisi haqidagi eslatma matni.",
-        "Listening, Speaking va General English qo'llanmalari hali yozilmagan.",
+        `${yozilmaganMatn} qo'llanmalari hali yozilmagan.`,
       ]}
     />
   </div>
