@@ -110,7 +110,7 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
 
         <div class="pullik">
           {pullik.map((t) => (
-            <article class:list={['tarif', { tavsiya: t.kod === satTarif.tavsiya }]} data-tarif={t.kod} aria-labelledby={`tarif-${t.kod}`}>
+            <article class:list={['tarif', { tavsiya: t.kod === satTarif.tavsiya, 'qora-kontekst': t.kod === satTarif.tavsiya }]} data-tarif={t.kod} aria-labelledby={`tarif-${t.kod}`}>
               <div class="tarif-bosh">
                 <h3 id={`tarif-${t.kod}`}>{t.nomi}</h3>
                 {t.kod === satTarif.tavsiya && <span class="belgi">{satTarif.tavsiyaYorliq}</span>}
@@ -590,8 +590,8 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
   .tarif { display: flex; flex-direction: column; gap: var(--b-4); padding: var(--b-6); border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--sirt); }
   /* Qorong'i mavzuda --qora fon bilan bir xil: chegara --matn (oq) bo'lib qoladi va karta ajralib turadi. */
   .tarif.tavsiya { background: var(--qora); color: var(--qora-matn); }
-  /* Qora kartadagi asosiy tugma oq (PR #149 dagi .qora-kontekst bilan bir xil qiymatlar). */
-  .tarif.tavsiya { --btn-primary-bg: var(--qora-matn); --btn-primary-bg-hover: var(--color-neutral-200); --btn-primary-bg-pressed: var(--color-neutral-200); --btn-primary-text: var(--qora); }
+  /* Qora kartadagi tugmalar: global .qora-kontekst (PR #149, global.css); bosilgan holat ham oq fonda qolsin. */
+  .tarif.tavsiya { --btn-primary-bg-pressed: var(--color-neutral-200); }
   .tarif:not(.tavsiya) { border-color: var(--chiziq-kuchli); }
   .tarif-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
   .tarif h3, .qator-nom { font-size: var(--matn-h3); }

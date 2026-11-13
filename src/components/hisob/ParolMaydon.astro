@@ -45,7 +45,7 @@ const tasvir = [izoh ? `${id}-izoh` : null, `${id}-xato`].filter(Boolean).join('
     background: transparent; color: var(--rang-havola);
     font: inherit; font-size: var(--matn-kichik); font-weight: 700; cursor: pointer;
   }
-  .parol-korsat:hover { background: var(--fon-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .parol-korsat:hover { background: var(--fon-ikkinchi); } }
   .parol-korsat .koz-yopiq { display: none; }
   .parol-korsat[data-korinadi='true'] .koz { display: none; }
   .parol-korsat[data-korinadi='true'] .koz-yopiq { display: block; }
