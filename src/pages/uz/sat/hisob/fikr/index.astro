@@ -1,0 +1,212 @@
+---
+// SAT · Account · Send feedback (P24): qisqa forma, public.feedback jadvaliga yoziladi (RLS: faqat o'zini o'qiydi).
+// Hisobsiz: kirish taklifi (?keyin= shu sahifa). Kirgan, lekin rozilik yo'q bo'lsa hisobQorovul rozilikka yuboradi.
+// Server cheklovi: 24 soatda 5 ta (boshlang'ich qiymat, muallif tasdig'i kerak; migratsiya 20261112151943).
+// `page` ustuniga faqat shu saytdagi oldingi sahifa yo'li (query va hash'siz) yoziladi, foydalanuvchiga ko'rsatiladi.
+// Holatlar: kutish → forma → yuborilmoqda → rahmat ("Send another") | xato (forma saqlanadi). localStorage yo'q.
+// Dev sinov: ?mock=1 (&xabar=limit|xato|kirish), faqat DEV.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { FIKR_MAX } from '../../../../../lib/sat/xabar';
+import { satSahifalar } from '../../../../../data/satSahifalar';
+
+const sahifa = satSahifalar.find((s) => s.qism === 'hisob/fikr/');
+if (!sahifa) throw new Error('SAT fikr: satSahifalar yozuvi topilmadi');
+---
+<BolimQobiq
+  title="Send feedback · SAT"
+  description={sahifa.tavsif}
+  turi="vosita"
+  yol={['Account']}
+  bolim="sat"
+  holat="qoralama"
+  manbalar={sahifa.manbalar}
+>
+  <div class="ichki fikr">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Account</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>Send feedback</h1>
+      <p class="lead">Tell the Tayanch author what works, what doesn't, or what you'd like to see next. To report a mistake in a question, use <strong>Report</strong> on that question during practice.</p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>Loading…</p>
+    <p class="ogoh" data-yoq hidden>Accounts are not available on this copy of the site, so feedback can't be sent here.</p>
+    <div class="kirish-taklif" data-kirish hidden>
+      <p>Sign in to send feedback. Your message is linked to your account so the author can follow up on problems.</p>
+      <a class="tugma tugma-asosiy" data-kirish-havola href="#">Sign in</a>
+    </div>
+
+    <form class="forma" id="fikr-forma" novalidate aria-labelledby="fikr-h" hidden>
+      <h2 id="fikr-h" class="ekranda-yoq">Send feedback</h2>
+      <div class="maydon">
+        <label for="f-xabar">Your message</label>
+        <p class="izoh" id="f-xabar-izoh">Don't include personal information such as phone numbers or passwords.</p>
+        <textarea class="kirit" id="f-xabar" name="xabar" rows="6" maxlength={FIKR_MAX} required aria-describedby="f-xabar-izoh f-sanoq f-xabar-xato"></textarea>
+        <p class="sanoq" id="f-sanoq">0 / {FIKR_MAX}</p>
+        <p class="xato" id="f-xabar-xato" hidden></p>
+      </div>
+      <p class="izoh" id="f-sahifa" hidden></p>
+      <p class="alert" id="fikr-holat" role="alert" hidden></p>
+      <div class="tugmalar">
+        <button type="submit" class="tugma tugma-asosiy" id="f-yubor">Send feedback</button>
+      </div>
+    </form>
+
+    <div class="tayyor" id="fikr-tayyor" hidden>
+      <h2 id="tayyor-h" tabindex="-1">Thanks</h2>
+      <p>Thanks for your feedback. The author reads every message.</p>
+      <div class="tugmalar">
+        <button type="button" class="tugma tugma-ikkinchi" id="f-yana">Send another</button>
+      </div>
+    </div>
+
+    <ManbaBlok
+      manbalar={sahifa.manbalar}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={sahifa.tekshirilmagan}
+    />
+  </div>
+</BolimQobiq>
+
+<style>
+  .fikr [hidden] { display: none !important; }
+  .fikr { display: flex; flex-direction: column; gap: var(--space-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 700; }
+  .pill-chiziq { border: var(--border-width-1) dashed var(--color-text-secondary); color: var(--color-text-secondary); }
+  .lead { font-size: var(--font-size-body-d); color: var(--color-text-secondary); max-width: var(--size-measure); }
+  .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
+  .holat-matn { color: var(--color-text-secondary); }
+  .kirish-taklif, .tayyor {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); max-width: var(--size-measure);
+    padding: var(--space-6); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface);
+  }
+  .tayyor h2 { font-size: var(--text-h3-size); }
+  .tayyor h2:focus { outline: none; }
+
+  .forma { display: flex; flex-direction: column; gap: var(--space-6); max-width: var(--size-measure); }
+  .maydon { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .maydon label { font-weight: 700; }
+  .izoh, .sanoq { font-size: var(--text-small-size); color: var(--color-text-secondary); line-height: 1.5; }
+  .sanoq { text-align: right; font-variant-numeric: tabular-nums; }
+  .kirit {
+    width: 100%; min-height: 160px; padding: var(--space-3) var(--space-4); resize: vertical;
+    border: var(--border-width-2) solid var(--chiziq-maydon); border-radius: var(--radius-md);
+    background: var(--color-bg); color: var(--color-text-primary); font: inherit; font-size: var(--text-body-size); line-height: 1.5;
+  }
+  .kirit:focus-visible { outline: none; border-color: var(--input-border-focus); box-shadow: var(--focus-ring); }
+  .kirit[aria-invalid='true'] { border-color: var(--color-warning-text); }
+  .xato { font-size: var(--text-small-size); font-weight: 700; color: var(--color-warning-text); line-height: 1.5; }
+  .xato::before { content: '! '; }
+  .alert { font-weight: 700; line-height: 1.5; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  @media (max-width: 36rem) {
+    .tugmalar .tugma, .kirish-taklif .tugma { width: 100%; }
+    .kirish-taklif, .tayyor { padding: var(--space-5); }
+  }
+</style>
+
+<script>
+  import { hisobMijoz, hisobQorovul, hisobYoli } from '../../../../../lib/hisob';
+  import { FIKR_MATN, FIKR_MAX, sahifaYoli, xatoTuri, type FikrApi } from '../../../../../lib/sat/xabar';
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const forma = $<HTMLFormElement>('#fikr-forma');
+  const matn = $<HTMLTextAreaElement>('#f-xabar');
+  const sanoq = $<HTMLElement>('#f-sanoq');
+  const xato = $<HTMLElement>('#f-xabar-xato');
+  const holat = $<HTMLElement>('#fikr-holat');
+  const yubor = $<HTMLButtonElement>('#f-yubor');
+  const tayyor = $<HTMLElement>('#fikr-tayyor');
+  let api: FikrApi | null = null;
+  let band = false;
+
+  // Qaysi sahifadan kelgan: faqat shu saytdagi yo'l (query/hash yo'q), o'zi shu sahifa bo'lsa yozilmaydi.
+  const oldingi = sahifaYoli(document.referrer, location.origin, import.meta.env.BASE_URL);
+  const sahifa = oldingi && oldingi !== location.pathname ? oldingi : null;
+  if (sahifa) {
+    const p = $<HTMLElement>('#f-sahifa');
+    p.textContent = `We'll also save the page you came from: ${sahifa}`;
+    p.hidden = false;
+  }
+
+  const sanoqYangila = () => { sanoq.textContent = `${matn.value.length} / ${FIKR_MAX}`; };
+  matn.addEventListener('input', () => {
+    sanoqYangila();
+    if (!xato.hidden && matn.value.trim()) { xato.hidden = true; matn.removeAttribute('aria-invalid'); }
+  });
+
+  function korsat(qism: 'kutish' | 'yoq' | 'kirish' | 'forma' | 'tayyor') {
+    $<HTMLElement>('[data-kutish]').hidden = qism !== 'kutish';
+    $<HTMLElement>('[data-yoq]').hidden = qism !== 'yoq';
+    $<HTMLElement>('[data-kirish]').hidden = qism !== 'kirish';
+    forma.hidden = qism !== 'forma';
+    tayyor.hidden = qism !== 'tayyor';
+  }
+
+  forma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (band || !api) return;
+    const x = matn.value.trim();
+    if (!x) {
+      xato.textContent = FIKR_MATN.bosh;
+      xato.hidden = false;
+      matn.setAttribute('aria-invalid', 'true');
+      matn.focus();
+      return;
+    }
+    band = true;
+    holat.hidden = true;
+    yubor.setAttribute('aria-busy', 'true');
+    yubor.textContent = 'Sending…';
+    try {
+      await api.yubor({ xabar: x.slice(0, FIKR_MAX), sahifa });
+      forma.reset();
+      sanoqYangila();
+      korsat('tayyor');
+      $<HTMLElement>('#tayyor-h').focus();
+    } catch (err) {
+      holat.textContent = FIKR_MATN[xatoTuri(err)];
+      holat.hidden = false;
+    } finally {
+      band = false;
+      yubor.removeAttribute('aria-busy');
+      yubor.textContent = 'Send feedback';
+    }
+  });
+
+  $<HTMLButtonElement>('#f-yana').addEventListener('click', () => {
+    korsat('forma');
+    matn.focus();
+  });
+
+  async function boshla() {
+    // Faqat dev: ?mock=1 (&xabar=limit|xato|kirish). Prod build'da bu shox va mock moduli yo'q.
+    if (import.meta.env.DEV && new URLSearchParams(location.search).get('mock')) {
+      const { mockFikrApi } = await import('../../../../../lib/sat/xabarMock');
+      api = mockFikrApi();
+      return korsat('forma');
+    }
+    const c = hisobMijoz();
+    if (!c) return korsat('yoq');
+    const { data } = await c.auth.getSession();
+    if (!data.session) {
+      $<HTMLAnchorElement>('[data-kirish-havola]').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname)}`;
+      return korsat('kirish');
+    }
+    // Rozilik yo'q bo'lsa rozilik sahifasiga yuboradi.
+    if (!(await hisobQorovul())) return;
+    api = {
+      async yubor({ xabar, sahifa: s }) {
+        const { error } = await c.from('feedback').insert({ message: xabar, page: s });
+        if (error) throw error;
+      },
+    };
+    korsat('forma');
+  }
+
+  boshla();
+</script>

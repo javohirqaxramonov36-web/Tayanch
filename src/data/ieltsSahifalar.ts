@@ -22,7 +22,7 @@ export const IKONKA = {
 } as const;
 
 export const qollanmalar: IeltsBand[] = [
-  { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", ikonka: IKONKA.listening },
+  { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", qism: 'qollanma/listening/', ikonka: IKONKA.listening },
   { nomi: 'Reading', tavsif: 'Skimming, scanning, True/False/Not Given', qism: 'qollanma/reading/', ikonka: IKONKA.reading },
   { nomi: 'Writing Task 2', tavsif: 'Insho tuzilishi va reja', ikonka: IKONKA.writing },
   { nomi: 'Speaking', tavsif: "Uch qism va o'zingni yozib eshitish", ikonka: IKONKA.speaking },
@@ -44,6 +44,7 @@ export const darslar: IeltsBand[] = [
 export const mashqlar: IeltsBand[] = [
   { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
   { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+  { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
 ];
 
 export const vositalar: IeltsBand[] = [

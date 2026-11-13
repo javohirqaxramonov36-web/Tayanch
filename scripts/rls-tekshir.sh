@@ -62,8 +62,29 @@ echo "security definer: hammasida search_path belgilangan"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/lugat_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/kvota_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/kun_savoli_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/xato_daftari_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/obuna_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/xavfsizlik_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/adaptiv_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/xabar_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/ai_tutor_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/mock_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/guruh_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+
+"${PSQL[@]}" -f "$ROOT/supabase/tests/metrikalar_test.sql" 2>&1 | grep -v "WARNING:" | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+
+# P25: docs/metrikalar.sql sun'iy ma'lumotda. Kutilgan har qator natijada aynan bo'lishi kerak.
+"${PSQL[@]}" -f "$ROOT/supabase/tests/metrikalar_sorov_malumot.sql" > "$TMP/metrika.kutilgan"
+"${PSQL[@]}" -At -F '|' -f "$ROOT/docs/metrikalar.sql" > "$TMP/metrika.natija"
+"${PSQL[@]}" -c "delete from public.payments where provider_order_id in ('ms-1', 'ms-2');
+  delete from auth.users where id::text like '00000000-0000-4000-8000-0000000000d_';" >/dev/null
+TOPILMADI=0
+while IFS= read -r qator; do
+  [[ -z "$qator" ]] && continue
+  grep -Fxq -- "$qator" "$TMP/metrika.natija" || { echo "XATO: metrikalar.sql natijasida yo'q: $qator"; TOPILMADI=1; }
+done < "$TMP/metrika.kutilgan"
+if [[ "$TOPILMADI" == "1" ]]; then echo "--- natija:"; cat "$TMP/metrika.natija"; exit 1; fi
+echo "  NOTICE: OK MS01 docs/metrikalar.sql: $(grep -c . "$TMP/metrika.kutilgan") kutilgan qator sun'iy ma'lumotda topildi (DAU, WAU, ro'yxat, D1/D7, funnel, daromad)"
 
 # P19 K06: parallel so'rovlar. 10 ta alohida ulanish bir vaqtda 1 birlikdan sarflaydi, limit 3:
 # aynan 3 tasi o'tishi, hisoblagich 3 bo'lishi kerak (hisoblagich qatori hali yo'q: insert poygasi ham sinaladi).

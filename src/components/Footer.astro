@@ -1,16 +1,22 @@
 ---
+// 1-qavat footer (Asosiy qolipi). Huquqiy havolalar: src/data/huquqiySahifalar.ts (P23).
+// SAT belgisi izohi: CB08 dagi umumiy formula (inglizcha, so'zma-so'z; 2026-11-11 tekshirildi). Bosh sahifada SAT nomi bor.
 import { yol } from '../lib/yol';
+import { huquqiySahifalar } from '../data/huquqiySahifalar';
 
 const qurilgan = new Date().toISOString().slice(0, 10);
+const havolalar = huquqiySahifalar.map((s) => ({ href: s.uz.yol, nomi: s.uz.qisqa }));
 ---
 <footer class="footer">
   <div class="ichki footer-ichki">
     <p class="ogoh">Natija kafolatlanmaydi. Har qoida va muddatni rasmiy manbada o'zingiz ham tekshiring.</p>
-    <ul>
-      <li><a href={yol('/uz/maxfiylik/')}>Maxfiylik</a></li>
-      <li><a href={yol('/uz/shartlar/')}>Shartlar</a></li>
-      <li><a href={yol('/uz/manbalar/')}>Manba jurnali</a></li>
-    </ul>
+    <nav aria-label="Huquqiy sahifalar va manbalar">
+      <ul>
+        {havolalar.map((h) => <li><a href={yol(h.href)}>{h.nomi}</a></li>)}
+        <li><a href={yol('/uz/manbalar/')}>Manba jurnali</a></li>
+      </ul>
+    </nav>
+    <p class="kichik sust" lang="en">SAT® is a trademark registered by the College Board, which is not affiliated with, and does not endorse, this website.</p>
     <p class="kichik sust" lang="en">Beta — in development</p>
     <p class="kichik sust">Oxirgi yangilanish: {qurilgan}</p>
   </div>

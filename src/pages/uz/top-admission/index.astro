@@ -8,50 +8,19 @@
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import SahifaOxiri from '../../../components/SahifaOxiri.astro';
 import Zina from '../../../components/Zina.astro';
-import { deadlinelar } from '../../../data/deadline';
+import QavatFoto from '../../../components/QavatFoto.astro';
+import { taChiptalar } from '../../../data/taChiptalar';
 import { manbalar } from '../../../data/manbalar';
 import { qabulXatlari } from '../../../data/muallif';
 import { SAVOLLAR, KALIT } from '../../../data/topshirishYoli';
 import { yol } from '../../../lib/yol';
 
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
-const d = (id: string) => deadlinelar.find((x) => x.id === id)!;
 const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 const zinapoya = yol('/uz/top-admission/qollanma/ariza-zinapoyasi/');
 
-const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
-const sanaMatn = (iso: string) => {
-  const [, oy, kun] = iso.split('-').map(Number);
-  return `${kun}-${OYLAR[oy - 1]}`;
-};
-
-const eyuf = d('eyuf-2026-2-hujjat');
-const tb = d('turkiye-burslari-2027-ariza');
-const chiptalar = [
-  {
-    ustki: "El-yurt umidi · 2026-yil 2-tanlov",
-    katta: sanaMatn(eyuf.sana),
-    matn: `Hujjat qabuli ${eyuf.soat} gacha`,
-    izoh: null as string | null,
-    manba: m('EY01'),
-    ochilish: null as string | null,
-    yopilish: eyuf.sana,
-    korishokKatta: sanaMatn(eyuf.sana),
-    korishokMatn: 'oxirgi kun',
-  },
-  {
-    ustki: "Türkiye Bursları · umumiy ariza",
-    katta: '10-yanvar – 20-fevral',
-    matn: 'Ariza oynasi',
-    izoh: "Har yilgi taqvim, 2027 e'loni kutilmoqda",
-    manba: m('TB01'),
-    // TB01: ariza har yili 10-yanvarda ochiladi; yil deadline.ts dagi yopilish yilidan olinadi.
-    ochilish: `${tb.sana.slice(0, 4)}-01-10`,
-    yopilish: tb.sana,
-    korishokKatta: sanaMatn(tb.sana),
-    korishokMatn: 'oxirgi kun',
-  },
-];
+// Muddat chiptalari va ularning .ics fayllari bitta manbadan (taChiptalar.ts).
+const chiptalar = taChiptalar;
 
 const tezOrada = [
   { kod: 'UZ → US', nomi: 'AQSH' },
@@ -66,11 +35,20 @@ const yolMalumot = {
     Object.entries(SAVOLLAR).map(([k, s]) => [k, Object.fromEntries(s.variantlar.map((v) => [v.id, v.nomi]))]),
   ),
 };
-const savollar = [
-  { n: 1, nomi: 'Davlat', variantlar: ['AQSH', 'Buyuk Britaniya', 'Turkiya', '…'] },
-  { n: 2, nomi: 'Daraja', variantlar: ['Bakalavriat', 'Magistratura'] },
-  { n: 3, nomi: 'Grant', variantlar: ["To'liq", 'Qisman', "Yo'q"] },
-];
+// Vosita savollari: variantlar vositaning o'zidan (SAVOLLAR), tanlov o'sha kalitga yoziladi (KALIT).
+const savollar = (
+  [
+    { n: 1, k: 'davlat', nomi: 'Davlat' },
+    { n: 2, k: 'daraja', nomi: 'Daraja' },
+    { n: 3, k: 'grant', nomi: 'Grant' },
+  ] as const
+).map((s) => ({ ...s, variantlar: SAVOLLAR[s.k].variantlar }));
+// Hero yo'l xaritasi: sahifadagi yo'nalish kodlari. "sahifa" = yo'nalish sahifasi bor (yaxlit chiziq), qolgani tez orada (uzuq).
+const xaritaKodlar = [
+  { kod: 'TR', sahifa: true },
+  { kod: 'HU', sahifa: false },
+  ...tezOrada.map((t) => ({ kod: t.kod.replace('UZ → ', ''), sahifa: false })),
+].map((x, i, hammasi) => ({ ...x, y: 30 + i * (180 / (hammasi.length - 1)) }));
 const tekshirilmagan = [
   "Türkiye Bursları 2027-yil e'loni (taqvimda yil yozilmagan)",
   "Stipendium Hungaricum 2027/28 e'loni va muddati (hali chiqmagan)",
@@ -90,12 +68,35 @@ const tekshirilmagan = [
   tekshirilmagan={tekshirilmagan}
 >
   <div class="ichki ta-sahifa">
+    <QavatFoto bolim="top-admission" />
 
     <section class="kirish" aria-labelledby="ta-sarlavha">
+      <div class="kirish-matn-blok">
       <p class="ustki-qator"><span class="yorliq">Qoralama</span> <span class="sust kichik">Bo'lim kirishi</span></p>
       <h1 id="ta-sarlavha">Top Admission</h1>
       <p class="kirish-matn">Chet el universitetiga ariza yo'lini rasmiy manbalar bilan ko'rsatamiz. Natija kafolatlanmaydi.</p>
       <p class="qisman sust kichik">Qavat qisman tayyor: Topshirish yo'li vositasi va Ariza zinapoyasi darsi ishlaydi, Türkiye Bursları yo'nalish sahifasi bor, qolgan yo'nalishlar tez orada.</p>
+      </div>
+      <svg class="yol-xarita" aria-hidden="true" viewBox="0 0 360 240" width="360" height="240" focusable="false">
+        <defs>
+          <pattern id="ta-xarita-tor" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path d="M24 0H0V24" class="yx-tor" />
+          </pattern>
+        </defs>
+        <rect class="yx-fon" x="1" y="1" width="358" height="238" rx="20" />
+        <rect x="1" y="1" width="358" height="238" rx="20" fill="url(#ta-xarita-tor)" />
+        {xaritaKodlar.map((x) => (
+          <path class:list={['yx-yol', { 'yx-yol-tez': !x.sahifa }]} d={`M92 120 C 170 120, 190 ${x.y}, 262 ${x.y}`} />
+        ))}
+        <circle class="yx-uz" cx="66" cy="120" r="28" />
+        <text class="yx-uz-matn" x="66" y="125" text-anchor="middle">UZ</text>
+        {xaritaKodlar.map((x) => (
+          <g>
+            <rect class:list={['yx-kod', { 'yx-kod-tez': !x.sahifa }]} x="264" y={x.y - 14} width="56" height="28" rx="14" />
+            <text class="yx-kod-matn" x="292" y={x.y + 5} text-anchor="middle">{x.kod}</text>
+          </g>
+        ))}
+      </svg>
     </section>
 
     <section class="vosita-karta" aria-labelledby="vosita-sarlavha">
@@ -103,12 +104,12 @@ const tekshirilmagan = [
         <p class="ustki">Vosita · 3 savol</p>
         <h2 id="vosita-sarlavha">Topshirish yo'li</h2>
         <p class="ikkinchi">Qaysi davlat, qaysi daraja, grant kerakmi. Javoblaringizga mos ariza yo'llari va ularning rasmiy manbalari chiqadi.</p>
-        <ol class="savollar">
+        <ol class="savollar" data-kalit={KALIT}>
           {savollar.map((s) => (
-            <li>
+            <li data-savol={s.k}>
               <span class="raqam" aria-hidden="true">{s.n}</span>
-              <span class="savol-nom">{s.nomi}</span>
-              <span class="variantlar">{s.variantlar.map((v) => <span class="variant">{v}</span>)}</span>
+              <span class="savol-nom" id={`ta-savol-${s.k}`}>{s.nomi}</span>
+              <span class="variantlar">{s.variantlar.map((v) => <span class="variant" data-v={v.id}>{v.nomi}</span>)}</span>
             </li>
           ))}
         </ol>
@@ -123,13 +124,54 @@ const tekshirilmagan = [
       </div>
       <div class="sahna" aria-hidden="true">
         <div class="savol-zinasi">
-          <div class="pog p1"><div class="old"></div><div class="yon"></div><div class="ust"><span>Davlat</span></div></div>
-          <div class="pog p2"><div class="old"></div><div class="yon"></div><div class="ust"><span>Daraja</span></div></div>
-          <div class="pog p3"><div class="old"></div><div class="yon"></div><div class="ust"><span>Grant</span></div></div>
+          <div class="pog p1" data-q="davlat"><div class="old"></div><div class="yon"></div><div class="ust"><span>Davlat</span></div></div>
+          <div class="pog p2" data-q="daraja"><div class="old"></div><div class="yon"></div><div class="ust"><span>Daraja</span></div></div>
+          <div class="pog p3" data-q="grant"><div class="old"></div><div class="yon"></div><div class="ust"><span>Grant</span></div></div>
         </div>
         <p class="sahna-izoh">Savol progressi</p>
       </div>
     </section>
+    <script is:inline>
+      // Vosita kartasidagi chiplar: JS bo'lsa tugmaga aylanadi (aria-pressed). Tanlov Topshirish yo'li kalitiga yoziladi
+      // (vosita bilan bir format: {davlat, daraja, grant} variant id'lari), "Mening yo'lim" va 3D zinapoya yangilanadi.
+      // JS bo'lmasa: statik yozuvlar. localStorage ishlamasa: tanlov ko'rinadi, saqlanmaydi.
+      (() => {
+        const karta = document.currentScript && document.currentScript.previousElementSibling;
+        const ol = karta && karta.querySelector('.savollar');
+        if (!ol) return;
+        const kalit = ol.dataset.kalit;
+        let javob = {};
+        try { const s = JSON.parse(localStorage.getItem(kalit) || 'null'); if (s && typeof s === 'object') javob = s; } catch (e) { /* o'qib bo'lmadi */ }
+        const belgi = '<svg class="variant-belgi" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7" /></svg>';
+        const chiz = () => {
+          ol.querySelectorAll('button.variant').forEach((b) => b.setAttribute('aria-pressed', String(javob[b.dataset.k] === b.dataset.v)));
+          karta.querySelectorAll('.pog[data-q]').forEach((p) => p.classList.toggle('bajarildi', !!ol.querySelector(`button.variant[data-k="${p.dataset.q}"][aria-pressed="true"]`)));
+        };
+        ol.querySelectorAll('li[data-savol]').forEach((li) => {
+          const k = li.dataset.savol;
+          const guruh = li.querySelector('.variantlar');
+          guruh.setAttribute('role', 'group');
+          guruh.setAttribute('aria-labelledby', `ta-savol-${k}`);
+          guruh.querySelectorAll('span.variant').forEach((sp) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'variant';
+            b.dataset.k = k;
+            b.dataset.v = sp.dataset.v;
+            b.innerHTML = belgi;
+            b.append(sp.textContent);
+            b.addEventListener('click', () => {
+              javob = { ...javob, [k]: b.dataset.v };
+              try { localStorage.setItem(kalit, JSON.stringify(javob)); } catch (e) { /* saqlanmadi */ }
+              chiz();
+              document.dispatchEvent(new CustomEvent('ta-yol-yangilandi'));
+            });
+            sp.replaceWith(b);
+          });
+        });
+        chiz();
+      })();
+    </script>
 
     <section class="blok" aria-labelledby="muddat-sarlavha">
       <div class="blok-bosh">
@@ -148,6 +190,10 @@ const tekshirilmagan = [
                 <p class="chipta-qator">{c.matn}</p>
                 {c.izoh && <p class="ikkinchi kichik">{c.izoh}</p>}
                 <p class="sust kichik chipta-manba">Manba: <a href={c.manba.havola} rel="noopener">{c.manba.tashkilot}</a></p>
+                <a class="havola kalendar" href={yol(`/uz/top-admission/kalendar/${c.id}.ics`)} download={`${c.id}.ics`} aria-label={`Kalendarga qo'shish: ${c.ustki}, oxirgi kun ${c.korishokKatta}`}>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4" /></svg>
+                  Kalendarga qo'shish
+                </a>
               </div>
               <span class="muhr" role="img" aria-label={`Rasmiy manbada tekshirilgan, ${c.manba.tekshirilganSana}`}>
                 <b>TEKSHIRILGAN</b><span>{c.manba.tekshirilganSana}</span>
@@ -188,11 +234,14 @@ const tekshirilmagan = [
           <span class="yorliq yorliq-ogoh">2027/28 e'loni hali chiqmagan</span>
         </article>
       </div>
-      <ul class="tez-orada">
-        {tezOrada.map((t) => (
-          <li><span class="sust kichik">{t.kod}</span><span class="tez-nom">{t.nomi}</span><span class="yorliq">tez orada</span></li>
-        ))}
-      </ul>
+      <div class="tez-orada">
+        <ul class="tez-royxat">
+          {tezOrada.map((t) => (
+            <li><span class="tez-kod">{t.kod}</span> <span class="tez-nom">{t.nomi}</span></li>
+          ))}
+        </ul>
+        <span class="yorliq">tez orada</span>
+      </div>
     </section>
 
     <div class="yol-qator">
@@ -272,7 +321,8 @@ const tekshirilmagan = [
   // 2) Mening yo'lim: Topshirish yo'li javoblari, faqat o'qiladi (spetsifikatsiya 3-band).
   const blok = document.querySelector<HTMLElement>('[data-mening-yolim]');
   const malumotEl = document.getElementById('ta-yol-malumot');
-  if (blok && malumotEl) {
+  const meningYolim = () => {
+    if (!blok || !malumotEl) return;
     try {
       const M = JSON.parse(malumotEl.textContent || '{}') as { KALIT: string; nomlar: Record<string, Record<string, string>> };
       const s = JSON.parse(localStorage.getItem(M.KALIT) || 'null');
@@ -285,7 +335,10 @@ const tekshirilmagan = [
         blok.querySelector<HTMLElement>('[data-holat="bor"]')!.hidden = false;
       }
     } catch { /* o'qib bo'lmadi: bo'sh holat qoladi */ }
-  }
+  };
+  meningYolim();
+  // Vosita kartasidagi chiplar tanlovni o'zgartirsa (inline skript hodisasi)
+  document.addEventListener('ta-yol-yangilandi', meningYolim);
 </script>
 
 <style>
@@ -296,7 +349,19 @@ const tekshirilmagan = [
   .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
   a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
-  .kirish { display: grid; gap: var(--b-4); }
+  .kirish { display: flex; align-items: center; justify-content: space-between; gap: var(--b-8); }
+  .kirish-matn-blok { flex: 1 1 0; min-width: 0; display: grid; gap: var(--b-4); }
+  /* Hero yo'l xaritasi (bezak, aria-hidden): UZ dan sahifadagi yo'nalish kodlariga; yaxlit = sahifasi bor, uzuq = tez orada */
+  .yol-xarita { flex: 0 1 360px; width: 100%; max-width: 360px; height: auto; }
+  .yx-fon { fill: var(--color-surface-sunken); stroke: var(--color-border); stroke-width: 1; }
+  .yx-tor { fill: none; stroke: var(--color-border); stroke-width: 1; }
+  .yx-yol { fill: none; stroke: var(--floor-ui); stroke-width: 2; stroke-linecap: round; }
+  .yx-yol-tez { stroke-dasharray: 2 6; }
+  .yx-uz { fill: var(--floor-ui); }
+  .yx-uz-matn { fill: var(--floor-ui-text); font-size: var(--text-small-size); font-weight: 800; letter-spacing: .04em; }
+  .yx-kod { fill: var(--color-surface); stroke: var(--floor-ui); stroke-width: 2; }
+  .yx-kod-tez { stroke: var(--color-border-strong); stroke-dasharray: 3 3; }
+  .yx-kod-matn { fill: var(--color-text-primary); font-size: var(--text-caption-size); font-weight: 800; letter-spacing: .06em; }
   .ustki-qator { display: flex; align-items: center; gap: var(--b-3); }
   .kirish-matn { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
   .qisman { max-width: 62ch; }
@@ -313,22 +378,37 @@ const tekshirilmagan = [
   .savol-nom { font-weight: 700; width: 64px; }
   .variantlar { display: flex; flex-wrap: wrap; gap: 6px; }
   .variant { padding: 3px 12px; border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli); font-size: 13px; font-weight: 700; }
+  /* JS bilan chiplar tugma (aria-pressed); tanlangani Variant tugmasi qoidasi: --floor-subtle fon, --floor-ui chegara va belgi.
+     Tugma skriptda yaratiladi, shuning uchun selektor :global (scoped atributi yo'q) */
+  .variantlar :global(button.variant) {
+    display: inline-flex; align-items: center; gap: var(--space-1);
+    min-height: var(--size-touch-min); padding: 0 var(--space-4);
+    border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli);
+    background: transparent; color: var(--color-text-primary); font: inherit; font-size: var(--text-small-size); font-weight: 700;
+    cursor: pointer;
+  }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(button.variant:hover) { background: var(--floor-subtle); } }
+  .variantlar :global(button.variant[aria-pressed='true']) { background: var(--floor-subtle); border-color: var(--floor-ui); border-width: var(--border-width-2); }
+  .variantlar :global(.variant-belgi) { display: none; color: var(--floor-text); }
+  .variantlar :global(button.variant[aria-pressed='true'] .variant-belgi) { display: block; }
   .vosita-past { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-4); padding-top: var(--b-1); }
-  .katta-tugma { min-height: var(--control-height-md); padding-inline: 26px; font-weight: 800; }
 
   /* Savol progressi (3D): saytdagi Zina emas */
   .sahna { flex: 1 1 300px; perspective: 900px; display: grid; place-items: center; gap: var(--b-2); min-height: 260px; }
-  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s var(--harakat-egri); }
-  .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
+  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform var(--duration-base) var(--harakat-egri); }
+  @media (hover: hover) and (pointer: fine) { .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); } }
   .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
-  .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; }
-  .pog .ust span { transform: rotateZ(38deg) rotateX(-58deg); font-weight: 800; font-size: 13px; }
+  .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; transform-style: preserve-3d; }
+  /* Yozuv zina ustida tik turadi: preserve-3d bo'lmasa qarama-qarshi burilish matnni yassilab, o'qib bo'lmas qilardi */
+  .pog .ust span { transform-origin: 50% 100%; transform: translateY(-50%) rotateZ(38deg) rotateX(-58deg); font-weight: 800; font-size: 15px; }
   .pog .old { position: absolute; left: 0; bottom: 0; width: 92px; height: var(--h); background: var(--sirt-ikkinchi); border: 1.5px solid var(--matn); transform-origin: bottom; transform: rotateX(-90deg); }
   .pog .yon { position: absolute; right: 0; top: 0; width: var(--h); height: 92px; background: var(--chiziq-kuchli); border: 1.5px solid var(--matn); transform-origin: right; transform: rotateY(90deg); }
   .p1 { left: 0; top: 128px; --h: 28px; }
   .p2 { left: 104px; top: 64px; --h: 56px; }
   .p3 { left: 208px; top: 0; --h: 84px; }
   .sahna-izoh { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
+  /* Chipda javob berilgan savol pog'onasi yonadi */
+  .pog.bajarildi .ust { background: var(--floor-ui); color: var(--floor-ui-text); }
 
   .blok { display: grid; gap: var(--b-5); }
   .blok-bosh { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--b-3); }
@@ -358,6 +438,7 @@ const tekshirilmagan = [
   .chipta-qator { font-weight: 600; }
   .chipta-manba { margin-top: var(--b-2); }
   .chipta-manba a { color: var(--rang-havola); }
+  .kalendar { gap: var(--space-2); justify-self: start; white-space: nowrap; }
   .korishok { width: var(--korishok); flex: none; border-left: 2px dashed var(--chiziq-kuchli); display: grid; place-content: center; justify-items: center; gap: 2px; padding: var(--b-4); text-align: center; }
   .korishok-katta { font-size: 20px; font-weight: 800; line-height: 1.15; }
   .korishok-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
@@ -374,8 +455,14 @@ const tekshirilmagan = [
   .yorliq-kok { background: var(--rang-asosiy-och); color: var(--rang-havola); }
   .yorliq-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); align-self: flex-start; margin-top: auto; }
   .fakt { display: flex; align-items: center; gap: var(--b-3); font-weight: 600; font-size: var(--matn-kichik); }
-  .tez-orada { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--b-3); }
-  .tez-orada li { border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4); display: grid; gap: var(--b-2); justify-items: start; }
+  /* Tez-oradagi yo'nalishlar: bitta ixcham qator (bir xil kartalar qatori emas) */
+  .tez-orada {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);
+    border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--space-3) var(--space-4);
+  }
+  .tez-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); flex: 1 1 0; min-width: 0; }
+  .tez-royxat li { display: inline-flex; align-items: baseline; gap: var(--space-2); }
+  .tez-kod { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); }
   .tez-nom { font-weight: 800; }
 
   .yol-qator { display: flex; flex-wrap: wrap; gap: var(--b-4); align-items: stretch; }
@@ -398,9 +485,8 @@ const tekshirilmagan = [
 
   @media (max-width: 760px) {
     .vosita-karta { padding: var(--b-5); gap: var(--b-4); }
-    .sahna { order: -1; min-height: 190px; }
-    .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.7); }
-    .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg) scale(.7); }
+    /* Telefonda 3D sahna yo'q: kichraytirilganda yozuvi o'qilmaydi va birinchi ekranni egallardi. Hero xaritasi ham yo'q */
+    .sahna, .yol-xarita { display: none; }
     .katta-tugma { width: 100%; }
     .chipta { --korishok: 96px; }
     .chipta-asosiy { flex-direction: column; padding: var(--b-4); }
@@ -411,12 +497,12 @@ const tekshirilmagan = [
     .yonalish-katta .muhr { width: 72px; height: 72px; outline-offset: -6px; }
     .yonalish-katta .muhr b { font-size: 6.5px; letter-spacing: .02em; }
     .yonalish-katta .muhr span { font-size: 9px; }
-    .tez-orada { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tez-orada { align-items: flex-start; }
     .previewlar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .mrz p { font-size: 13px; letter-spacing: .18em; }
   }
   @media (prefers-reduced-motion: reduce) {
     .savol-zinasi { transition: none; }
-    .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); }
+    @media (hover: hover) and (pointer: fine) { .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); } }
   }
 </style>

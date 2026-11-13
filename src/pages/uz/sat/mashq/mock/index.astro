@@ -1,0 +1,325 @@
+---
+// Mock imtihon kirishi (P30). Tuzilma (statik, CB03 / CB41 / CB42), holat va tarix faqat Supabase mock_status RPC'dan
+// (hisob bilan): statik build'da foydalanuvchi ma'lumoti yo'q. Imtihon ekrani: /uz/sat/mashq/mock/imtihon/?id=.
+// Server: supabase/migrations/20261113012418_mock_imtihon.sql. Sof mantiq: src/lib/sat/mock.ts.
+// Dev mock: src/lib/sat/mockImtihonMock.ts (?mock=oddiy|qisqa|tayyor-emas|kvota|xato, &tozala=1; faqat DEV).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import MockUslub from '../../../../../components/sat/MockUslub.astro';
+import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { satSahifalar } from '../../../../../data/satSahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const sahifa = satSahifalar.find((s) => s.qism === 'mashq/mock/')!;
+const TUZILMA = [
+  { nomi: 'Reading and Writing · Module 1', savol: '27 questions', vaqt: '32 minutes' },
+  { nomi: 'Reading and Writing · Module 2', savol: '27 questions', vaqt: '32 minutes' },
+  { nomi: 'Break', savol: '', vaqt: '10 minutes', oraliq: true },
+  { nomi: 'Math · Module 1', savol: '22 questions', vaqt: '35 minutes' },
+  { nomi: 'Math · Module 2', savol: '22 questions', vaqt: '35 minutes' },
+];
+---
+<BolimQobiq
+  title={`${sahifa.nomi} · SAT`}
+  description={sahifa.tavsif}
+  turi="mashq"
+  yol={['Practice']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <MockUslub />
+  <div class="ichki mk mk-kirish" id="mk-kirish"
+    data-imtihon-url={yol('/uz/sat/mashq/mock/imtihon/')}
+    data-kirish-url={yol('/uz/hisob/kirish/')}
+    data-rejalar-url={yol('/uz/sat/hisob/obuna/')}>
+    <section class="bosh" aria-labelledby="mk-h">
+      <p class="pill-qator"><span class="pill">Practice</span></p>
+      <h1 id="mk-h">Mock test</h1>
+      <p class="lead">A full-length, timed practice test with the same number of modules, questions and minutes as the digital SAT®. Every question is an original written and checked by the author.</p>
+    </section>
+
+    {import.meta.env.DEV && <p class="mk-pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
+
+    <section class="mk-karta holat" id="holat" aria-labelledby="holat-h" aria-busy="true">
+      <h2 class="mk-karta-h" id="holat-h" tabindex="-1">Checking your mock tests…</h2>
+      <p class="mk-matn" id="holat-matn"></p>
+      <p class="mk-matn" id="kredit" hidden></p>
+      <p class="mk-ogoh" id="kredit-tugadi" tabindex="-1" hidden><span id="kredit-tugadi-matn"></span> <a id="rejalar" href="#">See plans</a></p>
+      <div class="mk-amal">
+        <button type="button" class="mk-tugma" id="boshla" hidden>Start a new mock test</button>
+        <a class="mk-tugma" id="davom" hidden href="#">Resume</a>
+        <a class="mk-tugma" id="kirish" hidden href="#">Sign in</a>
+        <button type="button" class="mk-tugma2" id="qayta" hidden>Try again</button>
+      </div>
+      <p class="mk-matn" id="boshla-izoh" hidden>The timer starts only when you start a module. You can leave between modules, but once a module starts its timer keeps running, even if you close the page.</p>
+    </section>
+
+    <section class="mk-bolim" aria-labelledby="tuzilma-h">
+      <h2 id="tuzilma-h">How the mock test works</h2>
+      <div class="mk-jadval-quti">
+        <table class="mk-jadval">
+          <thead><tr><th scope="col">Part</th><th scope="col">Questions</th><th scope="col">Time</th></tr></thead>
+          <tbody>
+            {TUZILMA.map((t) => (
+              <tr class={t.oraliq ? 'mk-jadval-oraliq' : ''}>
+                <th scope="row">{t.nomi}</th><td class="son">{t.savol}</td><td class="son">{t.vaqt}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul class="qoidalar">
+        <li>In total: 98 questions and 2 hours 14 minutes of testing time, plus the break.</li>
+        <li>Not adaptive: the second module of each section has the same mix of easy, medium and hard questions as the first. On the real test, your first module decides how hard the second one is.</li>
+        <li>No unscored questions: on the real test each module has 2 pretest questions that don't count. Here every question counts.</li>
+        <li>You can change answers and mark questions for review until you submit the module. You can't go back to a module after it ends.</li>
+        <li>When a module's time runs out, it's submitted with the answers you saved.</li>
+        <li>Your score is a rough estimate from a simple formula, not an official SAT score. Mistakes go to your redo list.</li>
+      </ul>
+    </section>
+
+    <section class="mk-bolim" id="tarix" aria-labelledby="tarix-h" hidden>
+      <h2 id="tarix-h">Your mock tests</h2>
+      <p class="mk-bolim-izoh">"Retake" gives you the same questions again, so you can check what you learned from the review.</p>
+      <div class="mk-jadval-quti">
+        <table class="mk-jadval">
+          <thead>
+            <tr>
+              <th scope="col">Date</th><th scope="col">Test</th><th scope="col">Reading and Writing</th><th scope="col">Math</th>
+              <th scope="col">Total <span class="mk-sr">(estimated)</span></th><th scope="col"><span class="mk-sr">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="tarix-qatorlar"></tbody>
+        </table>
+      </div>
+      <p class="mk-matn">Scores are estimates, not official SAT scores.</p>
+    </section>
+
+    <div class="mk-sr" id="elon" aria-live="polite" aria-atomic="true"></div>
+
+    <ManbaBlok
+      manbalar={sahifa.manbalar}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={sahifa.tekshirilmagan}
+    />
+  </div>
+  <TarifDialog />
+</BolimQobiq>
+
+<script>
+  import { hisobMijoz } from '../../../../../lib/hisob';
+  import { kreditMatni, mockXatosi, BOLIM_NOMI, type MockApi, type MockStatus, type MockTarixBand } from '../../../../../lib/sat/mock';
+  import { tiklanishYozuv } from '../../../../../lib/sat/usageBar';
+  import { supabaseTaklifManba, tarifTaklifiniOch, type TaklifManba } from '../../../../../lib/sat/tarifDialog';
+
+  const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
+  const ildiz = $('mk-kirish');
+  const IMTIHON = ildiz.dataset.imtihonUrl!;
+  let api: MockApi | null = null;
+  let taklifManba: TaklifManba | null = null;
+  let qidiruv = '';
+  let S: MockStatus | null = null;
+
+  const imtihonUrl = (id: string) => `${IMTIHON}?id=${encodeURIComponent(id)}${qidiruv}`;
+  const kirishHavolasi = () => `${ildiz.dataset.kirishUrl}?keyin=${encodeURIComponent(location.pathname + location.search)}`;
+
+  function elon(m: string) {
+    const e = $('elon');
+    e.textContent = '';
+    setTimeout(() => (e.textContent = m), 50);
+  }
+
+  function holat(sarlavha: string, matn: string, o: { boshla?: boolean; davom?: string; kirish?: boolean; qayta?: boolean; fokus?: boolean } = {}) {
+    $('holat').setAttribute('aria-busy', 'false');
+    $('holat-h').textContent = sarlavha;
+    $('holat-matn').textContent = matn;
+    $('holat-matn').hidden = !matn;
+    $('boshla').hidden = !o.boshla;
+    $('boshla-izoh').hidden = !o.boshla;
+    const d = $<HTMLAnchorElement>('davom');
+    d.hidden = !o.davom;
+    if (o.davom) d.href = o.davom;
+    const k = $<HTMLAnchorElement>('kirish');
+    k.hidden = !o.kirish;
+    if (o.kirish) k.href = kirishHavolasi();
+    $('qayta').hidden = !o.qayta;
+    if (o.fokus) $('holat-h').focus();
+  }
+
+  const sana = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Tashkent' });
+
+  function kreditlar(s: MockStatus) {
+    const yangi = kreditMatni(s.credits.mock_first);
+    const qayta = kreditMatni(s.credits.mock_retake);
+    const k = $('kredit');
+    k.hidden = false;
+    k.textContent = `New mock tests: ${yangi.matn}. Retakes: ${qayta.matn}.`;
+    const tugadi = $('kredit-tugadi');
+    tugadi.hidden = yangi.qoldi;
+    if (!yangi.qoldi) {
+      $('kredit-tugadi-matn').textContent = `You have used your new mock tests for now. ${tiklanishYozuv(s.credits.mock_first.per, s.credits.mock_first.resets_at).replace(/\.?$/, '.')} Your past results stay saved.`;
+      $<HTMLAnchorElement>('rejalar').href = ildiz.dataset.rejalarUrl!;
+    }
+    return { yangi: yangi.qoldi, qayta: qayta.qoldi };
+  }
+
+  function tarixChiz(s: MockStatus, retakeBor: boolean) {
+    const tb = $('tarix-qatorlar');
+    tb.replaceChildren();
+    $('tarix').hidden = s.history.length === 0;
+    for (const h of s.history) tb.appendChild(tarixQatori(h, retakeBor && !s.active));
+  }
+
+  function tarixQatori(h: MockTarixBand, retake: boolean) {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.scope = 'row';
+    th.textContent = sana(h.started_at);
+    const td = (t: string, son = false) => {
+      const x = document.createElement('td');
+      x.textContent = t;
+      if (son) x.className = 'son';
+      return x;
+    };
+    const nomi = `Mock test ${h.form_no}${h.kind === 'retake' ? ' (retake)' : ''}${h.status === 'abandoned' ? ' · stopped' : ''}`;
+    tr.append(th, td(nomi));
+    if (h.status === 'finished' && h.scores) {
+      tr.append(td(String(h.scores.rw.score), true), td(String(h.scores.math.score), true), td(String(h.scores.total), true));
+    } else {
+      tr.append(td('—'), td('—'), td('No score'));
+    }
+    const amal = document.createElement('td');
+    amal.className = 'tarix-amal';
+    if (h.status === 'finished') {
+      const a = document.createElement('a');
+      a.className = 'mk-kichik';
+      a.href = imtihonUrl(h.attempt_id);
+      a.textContent = 'View results';
+      a.setAttribute('aria-label', `View results of mock test ${h.form_no}, ${sana(h.started_at)}`);
+      amal.appendChild(a);
+    }
+    if (retake) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mk-kichik';
+      b.textContent = 'Retake';
+      b.setAttribute('aria-label', `Retake mock test ${h.form_no}`);
+      b.addEventListener('click', () => boshla(h.form_id, b));
+      amal.appendChild(b);
+    }
+    tr.appendChild(amal);
+    return tr;
+  }
+
+  function chiz(s: MockStatus, fokus = false) {
+    S = s;
+    const k = kreditlar(s);
+    if (s.active) {
+      const bosqich = s.active.phase === 'break' ? 'the break' : s.active.phase === 'module'
+        ? `${BOLIM_NOMI[s.active.current_module <= 2 ? 'rw' : 'math']}, module ${s.active.current_module <= 2 ? s.active.current_module : s.active.current_module - 2} (the timer is running)`
+        : `before ${BOLIM_NOMI[s.active.current_module <= 2 ? 'rw' : 'math']}, module ${s.active.current_module <= 2 ? s.active.current_module : s.active.current_module - 2}`;
+      holat(`Mock test ${s.active.form_no} is in progress`, `You stopped at ${bosqich}. Finish it or stop it before you start another one.`, { davom: imtihonUrl(s.active.attempt_id), fokus });
+    } else if (!s.ready) {
+      holat('Mock tests are not open yet', 'A full mock test needs at least 8 checked questions in every SAT skill. The author is still writing and checking them. Until then, practice by skill in the question bank.', { fokus });
+    } else if (!k.yangi) {
+      holat('No new mock tests left', 'You can still retake a mock test you already took, if you have retakes left.', { fokus });
+    } else {
+      holat('Start a mock test', 'Plan for about 2 hours 30 minutes in a quiet place. Each new mock test gives you a new set of questions.', { boshla: true, fokus });
+    }
+    // Retake mavjud formadan: bank tayyor bo'lmasa ham mumkin, faqat retake krediti kerak.
+    tarixChiz(s, k.qayta);
+  }
+
+  async function yukla(fokus = false) {
+    $('holat').setAttribute('aria-busy', 'true');
+    try {
+      chiz(await api!.status(), fokus);
+    } catch (e) {
+      const t = mockXatosi(e);
+      if (t === 'kirish') return holat('Sign in to take a mock test', 'Mock tests and their results are saved to your Tayanch account.', { kirish: true, fokus });
+      if (t === 'tarmoq') return holat("Couldn't reach the server", 'Check your connection and try again.', { qayta: true, fokus });
+      holat('Something went wrong', "Your mock tests didn't load. Try again in a moment.", { qayta: true, fokus });
+    }
+  }
+
+  async function boshla(formId: string | null, tugma: HTMLButtonElement) {
+    if (tugma.getAttribute('aria-busy') === 'true') return;
+    tugma.setAttribute('aria-busy', 'true');
+    tugma.disabled = true;
+    elon(formId ? 'Preparing your retake…' : 'Preparing your mock test…');
+    try {
+      const h = await api!.boshla(formId);
+      location.href = imtihonUrl(h.attempt_id);
+    } catch (e) {
+      tugma.removeAttribute('aria-busy');
+      tugma.disabled = false;
+      const t = mockXatosi(e);
+      if (t === 'kvota') {
+        // Kredit oldindan ma'lum bo'lsa tugma o'chiq turadi; bu yerga faqat server kutilmaganda limit desa kelinadi.
+        elon('No mock test credits left.');
+        await yukla(true);
+        const xabar = $('kredit-tugadi');
+        if (taklifManba) void tarifTaklifiniOch(taklifManba, 'You have used your new mock tests for now. Your past results stay saved.', xabar.hidden ? null : xabar);
+        return;
+      }
+      if (t === 'ochiq' || t === 'tayyor-emas') return yukla(true);
+      if (t === 'forma') return holat("This test can't be retaken", 'The author has removed or changed some of its questions. Start a new mock test instead.', { boshla: !!S?.ready, fokus: true });
+      if (t === 'tarmoq') return holat("Couldn't reach the server", 'Nothing was used up. Check your connection and try again.', { qayta: true, fokus: true });
+      if (t === 'kirish') return holat('Sign in to take a mock test', 'Mock tests and their results are saved to your Tayanch account.', { kirish: true, fokus: true });
+      holat('Something went wrong', "The mock test didn't start. Try again in a moment.", { qayta: true, fokus: true });
+    }
+  }
+
+  $('boshla').addEventListener('click', (e) => boshla(null, e.currentTarget as HTMLButtonElement));
+  $('qayta').addEventListener('click', () => yukla(true));
+
+  async function ishga() {
+    const p = new URLSearchParams(location.search);
+    // Faqat dev: ?mock=oddiy|qisqa|tayyor-emas|kvota|xato (&tozala=1). Prod build'da bu shox va mock moduli yo'q.
+    if (import.meta.env.DEV && p.get('mock')) {
+      const { mockApi, mockTozala } = await import('../../../../../lib/sat/mockImtihonMock');
+      if (p.get('tozala')) { mockTozala(); p.delete('tozala'); history.replaceState(null, '', `${location.pathname}?${p}`); }
+      api = mockApi(p.get('mock') as Parameters<typeof mockApi>[0]);
+      taklifManba = (await import('../../../../../lib/sat/tarifDialogSinov')).namunaTaklifManba();
+      qidiruv = `&mock=${encodeURIComponent(p.get('mock')!)}`;
+      const pill = document.getElementById('namuna-pill');
+      if (pill) pill.hidden = false;
+    }
+    if (!api) {
+      const c = hisobMijoz();
+      if (!c) return holat('Accounts are not available yet', 'Mock tests need a Tayanch account, and sign-in is not set up on this copy of the site.');
+      const { data } = await c.auth.getSession();
+      if (!data.session) return holat('Sign in to take a mock test', 'Mock tests and their results are saved to your Tayanch account.', { kirish: true });
+      const rpc = async <T,>(nom: string, args: Record<string, unknown> = {}): Promise<T> => {
+        const { data: d, error } = await c.rpc(nom, args);
+        if (error) throw error;
+        return d as T;
+      };
+      taklifManba = supabaseTaklifManba(c);
+      api = {
+        status: () => rpc('mock_status'),
+        boshla: (f) => rpc('start_mock', { p_form: f }),
+      } as MockApi;
+    }
+    await yukla();
+  }
+
+  ishga();
+</script>
+
+<style>
+  .mk-kirish { padding-top: var(--b-14); display: flex; flex-direction: column; gap: var(--b-8); }
+  .bosh { display: flex; flex-direction: column; gap: 14px; max-width: 62ch; }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
+  .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); }
+  .holat[aria-busy='true'] .mk-karta-h { color: var(--matn-ikkinchi); }
+  .qoidalar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); max-width: 70ch; color: var(--matn-ikkinchi); }
+  :global(.tarix-amal) { display: flex; flex-wrap: wrap; gap: var(--b-2); justify-content: flex-end; }
+  @media (max-width: 640px) {
+    .mk-kirish { padding-top: 28px; gap: var(--b-6); }
+    h1 { font-size: 34px; }
+  }
+</style>

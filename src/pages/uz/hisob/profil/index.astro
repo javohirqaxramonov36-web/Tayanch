@@ -6,8 +6,10 @@
 import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
 import HisobQorovul from '../../../../components/hisob/HisobQorovul.astro';
 import Maydon from '../../../../components/hisob/Maydon.astro';
+import ParolMaydon from '../../../../components/hisob/ParolMaydon.astro';
 import { hisobSahifalar } from '../../../../data/hisobSahifalar';
 import { satBall } from '../../../../data/hisobSozlama';
+import { yol } from '../../../../lib/yol';
 ---
 <HisobKarta sahifa={hisobSahifalar.profil}>
   <HisobQorovul>
@@ -15,7 +17,7 @@ import { satBall } from '../../../../data/hisobSozlama';
       <section class="hisob-karta" aria-labelledby="hisob-malumot">
         <h2 id="hisob-malumot">Hisob</h2>
         <p>Siz <strong id="profil-email"></strong> bilan kirgansiz.</p>
-        <p class="hisob-sust">Dars va mashqlardagi natijalaringiz hozircha faqat shu brauzerda saqlanadi. Ularni hisobga sinxronlash keyinroq qo'shiladi.</p>
+        <p class="hisob-sust">SAT savol banki va mashq sessiyalaridagi javoblaringiz hisobingizda saqlanadi. Dars natijalari hozircha faqat shu brauzerda.</p>
       </section>
 
       <section class="hisob-karta" aria-labelledby="profil-sarlavha">
@@ -33,24 +35,54 @@ import { satBall } from '../../../../data/hisobSozlama';
         </form>
       </section>
 
+      <section class="hisob-karta" aria-labelledby="statistika-sarlavha">
+        <h2 id="statistika-sarlavha">Foydalanish statistikasi</h2>
+        <p class="hisob-sust">Sayt qanday ishlatilayotganini bilish uchun Tayanch bir nechta hodisani yozadi: ro'yxatdan o'tish, mashq sessiyasini boshlash va tugatish, kun savoliga javob, tariflar sahifasini ochish. Savol matni, javobingiz, email va IP manzil yozilmaydi. Batafsil: <a href={yol('/uz/maxfiylik/#statistika')}>Maxfiylik siyosati</a>.</p>
+        <p class="hisob-alert" id="statistika-xato" role="alert" hidden></p>
+        <div class="hisob-belgi-blok">
+          <div class="hisob-belgi">
+            <input type="checkbox" id="statistika-belgi" aria-describedby="statistika-izoh" disabled />
+            <label for="statistika-belgi">Foydalanish statistikasini ulashish</label>
+          </div>
+          <p class="hisob-sust" id="statistika-izoh">O'chirsangiz, avvalgi yozuvlar ham o'chiriladi. To'lov yozuvlari to'lov hisobi uchun qoladi.</p>
+        </div>
+        <p class="hisob-holat" id="statistika-holat" role="status" hidden></p>
+      </section>
+
       <section class="hisob-karta" aria-labelledby="chiqish-sarlavha">
         <h2 id="chiqish-sarlavha">Hisobdan chiqish</h2>
         <p class="hisob-sust">Shu qurilmada hisobdan chiqasiz. Brauzerda saqlangan natijalar shu yerda qoladi.</p>
         <button type="button" class="tugma tugma-ikkinchi" id="chiqish-tugma">Chiqish</button>
       </section>
 
+      <section class="hisob-karta" aria-labelledby="eksport-sarlavha">
+        <h2 id="eksport-sarlavha">Ma'lumotlaringiz nusxasi</h2>
+        <p class="hisob-sust">Serverdagi hamma ma'lumotingiz (hisob, profil, savol-javob tarixi, obuna va to'lovlar) va shu brauzerdagi Tayanch yozuvlari bitta JSON faylga yuklanadi. Sessiya kaliti faylga kirmaydi.</p>
+        <p class="hisob-alert" id="eksport-xato" role="alert" hidden></p>
+        <p class="hisob-holat" id="eksport-holat" role="status" hidden></p>
+        <button type="button" class="tugma tugma-ikkinchi" id="eksport-tugma">Ma'lumotlarimni yuklab olish (JSON)</button>
+      </section>
+
       <section class="hisob-karta" aria-labelledby="ochirish-sarlavha">
         <h2 id="ochirish-sarlavha">Hisobni o'chirish</h2>
-        <p class="hisob-sust">Hisobingiz va serverdagi ma'lumotlaringiz butunlay o'chiriladi. Shu brauzerda saqlangan natijalar qoladi: ularni brauzer sozlamalaridan tozalashingiz mumkin.</p>
+        <p class="hisob-sust">Hisobingiz, profil, savol-javob tarixi va obunangiz serverdan butunlay o'chiriladi. Faol obuna ham tugaydi: pulni qaytarishni xohlasangiz, avval <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>ni o'qing. To'lov yozuvlari hisobdan uzilgan holda saqlanadi (<a href={yol('/uz/maxfiylik/#ochirish')}>Maxfiylik siyosati</a>). Shu brauzerdagi natijalar qoladi.</p>
         <button type="button" class="tugma tugma-ikkinchi" id="ochirish-tugma" aria-expanded="false" aria-controls="ochirish-tasdiq">Hisobni o'chirish</button>
-        <div class="ochirish-tasdiq" id="ochirish-tasdiq" hidden>
+        <form class="ochirish-tasdiq hisob-forma" id="ochirish-tasdiq" novalidate aria-labelledby="ochirish-savol" hidden>
           <p id="ochirish-savol" tabindex="-1"><strong>Rostdan ham o'chirasizmi?</strong> Buni qaytarib bo'lmaydi.</p>
           <p class="hisob-alert" id="ochirish-xato" role="alert" hidden></p>
+          <div id="ochirish-parol-qadam" hidden>
+            <ParolMaydon id="ochirish-parol" nomi="Parolingiz" autocomplete="current-password" izoh="Shaxsingizni tasdiqlash uchun." />
+          </div>
+          <div class="ochirish-google" id="ochirish-google-qadam" hidden>
+            <p class="hisob-sust">Shaxsingizni tasdiqlash uchun Google orqali qayta kiring. Keyin shu sahifaga qaytasiz.</p>
+            <button type="button" class="tugma tugma-ikkinchi" id="ochirish-google">Google orqali qayta kirish</button>
+          </div>
+          <Maydon id="ochirish-email" nomi="Tasdiqlash uchun emailingizni yozing" turi="email" autocomplete="off" izoh="Hisobingiz emaili, yuqorida ko'rsatilgandek." />
           <div class="ochirish-tugmalar">
-            <button type="button" class="tugma tugma-asosiy" id="ochirish-ha">Ha, o'chirish</button>
+            <button type="submit" class="tugma tugma-asosiy" id="ochirish-ha" disabled>Ha, hisobni o'chirish</button>
             <button type="button" class="tugma tugma-ikkinchi" id="ochirish-yoq">Bekor qilish</button>
           </div>
-        </div>
+        </form>
       </section>
     </div>
   </HisobQorovul>
@@ -62,11 +94,15 @@ import { satBall } from '../../../../data/hisobSozlama';
   .ochirish-tasdiq { display: flex; flex-direction: column; gap: var(--b-3); }
   .ochirish-tasdiq[hidden] { display: none; }
   .ochirish-tasdiq p:focus { outline: none; }
+  .ochirish-google { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ochirish-google[hidden] { display: none; }
   .ochirish-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
 </style>
 
 <script>
-  import { hisobMijoz, hisobQorovul, hisobYoli, xatoMatni, maydonXatosi, yuklanish, xabar } from '../../../../lib/hisob';
+  import { hisobMijoz, hisobQorovul, hisobYoli, xatoMatni, maydonXatosi, yuklanish, xabar, googleBilanKirish, googleXatoMatni, googleXatoTuri } from '../../../../lib/hisob';
+  import { funksiya, tokenKirishVaqti } from '../../../../lib/funksiya';
+  import { eksportdanTashqari } from '../../../../data/brauzerKalitlari';
   import { hisobSozlama, satBall } from '../../../../data/hisobSozlama';
   import { ballXatosi as satBallXatosi, sanaXatosi, SANA_MAX_YIL, type BallXato } from '../../../../lib/satMaqsad';
   import { toshkentBugun, yilQosh } from '../../../../lib/muddat';
@@ -100,7 +136,7 @@ import { satBall } from '../../../../data/hisobSozlama';
     if (!c) return;
     const { data, error } = await c
       .from('profiles')
-      .select('display_name, nickname, target_score, current_score, exam_date')
+      .select('display_name, nickname, target_score, current_score, exam_date, usage_analytics')
       .eq('id', u.id)
       .maybeSingle();
     if (error || !data) {
@@ -115,7 +151,34 @@ import { satBall } from '../../../../data/hisobSozlama';
     saqlanganSana = sana.value;
     sanaEslatma();
     formaYoq(false);
+    statistika.checked = data.usage_analytics !== false;
+    statistika.disabled = false;
   }).catch(() => undefined); // xatoni HisobQorovul ko'rsatadi
+
+  // P25: "Foydalanish statistikasini ulashish". Belgi o'zgarishi bilan saqlanadi; xato bo'lsa belgi qaytariladi.
+  // O'chirilganda server avvalgi to'lovsiz hodisalarni o'chiradi (trigger events_optout).
+  const statistika = $<HTMLInputElement>('statistika-belgi');
+  statistika.addEventListener('change', async () => {
+    const c = hisobMijoz();
+    if (!c || !foydalanuvchiId) return;
+    const yangi = statistika.checked;
+    xabar($('statistika-xato'), null);
+    xabar($('statistika-holat'), null);
+    statistika.disabled = true;
+    const { data, error } = await c
+      .from('profiles')
+      .update({ usage_analytics: yangi })
+      .eq('id', foydalanuvchiId)
+      .select('id');
+    statistika.disabled = false;
+    if (error || !data?.length) {
+      statistika.checked = !yangi;
+      return xabar($('statistika-xato'), "Sozlamani saqlab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.");
+    }
+    xabar($('statistika-holat'), yangi
+      ? 'Saqlandi. Statistika yoziladi.'
+      : "Saqlandi. Statistika endi yozilmaydi, avvalgi yozuvlar o'chirildi.");
+  });
 
   // SAT ball: 400–1600, qadam 10 (src/lib/satMaqsad.ts, SAT sozlash sahifasi bilan bir xil qoida).
   const ballMatn: Record<BallXato, string> = {
@@ -199,33 +262,152 @@ import { satBall } from '../../../../data/hisobSozlama';
     location.assign(`${hisobYoli('kirish')}?chiqdi=1`);
   });
 
-  // Hisobni o'chirish: ikki bosqich (tugma → tasdiq). Escape yoki "Bekor qilish" yopadi va fokusni qaytaradi.
+  // ---- Ma'lumot eksporti (P23): server (Edge Function hisob-malumot) + shu brauzerdagi Tayanch kalitlari ----
+  // Sessiya kalitlari (tayanch:auth…) faylga yozilmaydi.
+  function brauzerYozuvlari(xotira: Storage): Record<string, unknown> {
+    const natija: Record<string, unknown> = {};
+    try {
+      for (let i = 0; i < xotira.length; i++) {
+        const k = xotira.key(i);
+        if (!k || !(k.startsWith('tayanch:') || k.startsWith('tayanch-')) || eksportdanTashqari(k)) continue;
+        const v = xotira.getItem(k);
+        try { natija[k] = v === null ? null : JSON.parse(v); } catch { natija[k] = v; }
+      }
+    } catch { /* xotira yopiq: bo'sh qoladi */ }
+    return natija;
+  }
+  const eksport = $<HTMLButtonElement>('eksport-tugma');
+  eksport.addEventListener('click', async () => {
+    xabar($('eksport-xato'), null);
+    xabar($('eksport-holat'), null);
+    yuklanish(eksport, true, 'Tayyorlanmoqda…');
+    const r = await funksiya<{ malumot: Record<string, unknown> }>('hisob-malumot', { amal: 'eksport' });
+    yuklanish(eksport, false);
+    if (!r.ok) {
+      return xabar($('eksport-xato'), r.kod === 'network_error'
+        ? "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."
+        : "Ma'lumotni tayyorlab bo'lmadi. Birozdan keyin qayta urinib ko'ring.");
+    }
+    const fayl = { ...r.data.malumot, brauzer: { localStorage: brauzerYozuvlari(localStorage), sessionStorage: brauzerYozuvlari(sessionStorage) } };
+    const nomi = `tayanch-malumotlarim-${toshkentBugun()}.json`;
+    const url = URL.createObjectURL(new Blob([JSON.stringify(fayl, null, 2)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomi;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    xabar($('eksport-holat'), `Fayl yuklandi: ${nomi}`);
+  });
+
+  // ---- Hisobni o'chirish (P23): tugma → tasdiq formasi → qayta autentifikatsiya → email bilan tasdiq → Edge Function ----
+  // Email foydalanuvchi har safar parolini kiritadi. Faqat Google bilan kirgan foydalanuvchi oxirgi 9 daqiqada
+  // kirmagan bo'lsa, Google orqali qayta kiradi (?ochirish=1 bilan shu sahifaga qaytadi). Server chegarasi 10 daqiqa.
+  // Escape yoki "Bekor qilish" formani yopadi va fokusni tugmaga qaytaradi.
+  const YANGI_KIRISH_SONIYA = 9 * 60;
   const ochirish = $<HTMLButtonElement>('ochirish-tugma');
-  const tasdiq = $('ochirish-tasdiq');
+  const tasdiq = $<HTMLFormElement>('ochirish-tasdiq');
   const ha = $<HTMLButtonElement>('ochirish-ha');
-  function tasdiqni(ochiq: boolean) {
+  const parol = $<HTMLInputElement>('ochirish-parol');
+  const tasdiqEmail = $<HTMLInputElement>('ochirish-email');
+  const parolQadam = $('ochirish-parol-qadam');
+  const googleQadam = $('ochirish-google-qadam');
+  const googleTugma = $<HTMLButtonElement>('ochirish-google');
+  let joriyEmail = '';
+  let emailBilan = false;
+  let yangiKirish = false;
+
+  const emailNorm = (x: string) => x.trim().toLowerCase();
+  function haHolati() {
+    const emailMos = !!joriyEmail && emailNorm(tasdiqEmail.value) === emailNorm(joriyEmail);
+    ha.disabled = !(emailMos && (emailBilan ? parol.value.length > 0 : yangiKirish));
+  }
+
+  async function kirishHolati() {
+    const c = hisobMijoz();
+    const { data } = c ? await c.auth.getSession() : { data: { session: null } };
+    const s = data.session;
+    joriyEmail = s?.user.email ?? '';
+    const usullar: string[] = (s?.user.identities ?? []).map((i) => i.provider);
+    emailBilan = usullar.includes('email');
+    const vaqt = tokenKirishVaqti(s?.access_token);
+    yangiKirish = vaqt !== null && Date.now() / 1000 - vaqt <= YANGI_KIRISH_SONIYA;
+    parolQadam.hidden = !emailBilan;
+    googleQadam.hidden = emailBilan || yangiKirish;
+    haHolati();
+  }
+
+  async function tasdiqni(ochiq: boolean) {
+    if (ochiq) await kirishHolati();
     tasdiq.hidden = !ochiq;
     ochirish.setAttribute('aria-expanded', String(ochiq));
     xabar($('ochirish-xato'), null);
+    if (!ochiq) {
+      parol.value = '';
+      tasdiqEmail.value = '';
+      maydonXatosi(parol, null);
+      maydonXatosi(tasdiqEmail, null);
+    }
     if (ochiq) $('ochirish-savol').focus();
     else ochirish.focus();
   }
-  ochirish.addEventListener('click', () => tasdiqni(tasdiq.hidden));
+  ochirish.addEventListener('click', () => tasdiqni(ochirish.getAttribute('aria-expanded') !== 'true'));
   $<HTMLButtonElement>('ochirish-yoq').addEventListener('click', () => tasdiqni(false));
-  tasdiq.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !ha.disabled) tasdiqni(false); });
-  ha.addEventListener('click', async () => {
+  tasdiq.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && ha.getAttribute('aria-busy') !== 'true') tasdiqni(false); });
+  [parol, tasdiqEmail].forEach((el) => el.addEventListener('input', () => { maydonXatosi(el, null); haHolati(); }));
+
+  googleTugma.addEventListener('click', async () => {
+    yuklanish(googleTugma, true, 'Google ochilmoqda…');
+    const e = await googleBilanKirish(`${hisobYoli('profil')}?ochirish=1`);
+    if (e) {
+      yuklanish(googleTugma, false);
+      xabar($('ochirish-xato'), googleXatoMatni[googleXatoTuri(e)]);
+    }
+  });
+
+  const ochirishXatoMatni: Record<string, string> = {
+    reauth_required: "Shaxsingizni qayta tasdiqlang: parolingizni kiriting yoki Google orqali qayta kiring.",
+    payment_in_progress: "Sizda tugallanmagan to'lov bor. Bir necha daqiqadan keyin qayta urinib ko'ring yoki Aloqa sahifasi orqali yozing.",
+    network_error: "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.",
+  };
+
+  tasdiq.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    haHolati();
+    if (ha.disabled) return;
     const c = hisobMijoz();
     if (!c) return;
     xabar($('ochirish-xato'), null);
     yuklanish(ha, true, "O'chirilmoqda…");
-    // Server funksiyasi: supabase/migrations/20261110210000_hisobni_ochirish.sql (faqat o'z hisobi).
-    const { error } = await c.rpc('delete_own_account');
-    if (error) {
+    if (emailBilan) {
+      // Qayta autentifikatsiya: yangi sessiya JWT dagi amr vaqtini yangilaydi (server shuni tekshiradi).
+      const { error } = await c.auth.signInWithPassword({ email: joriyEmail, password: parol.value });
+      if (error) {
+        yuklanish(ha, false);
+        const m = xatoMatni(error, 'kirish');
+        maydonXatosi(parol, m === "Email yoki parol noto'g'ri." ? "Parol noto'g'ri." : m);
+        return parol.focus();
+      }
+    }
+    const r = await funksiya<{ ok: true }>('hisob-malumot', { amal: 'ochirish', tasdiq: tasdiqEmail.value });
+    if (!r.ok) {
       yuklanish(ha, false);
-      return xabar($('ochirish-xato'), xatoMatni(error as unknown as Error, 'ochirish'));
+      if (r.kod === 'confirmation_mismatch') {
+        maydonXatosi(tasdiqEmail, 'Email hisobingiz emailiga mos kelmadi.');
+        return tasdiqEmail.focus();
+      }
+      if (r.kod === 'reauth_required') await kirishHolati();
+      return xabar($('ochirish-xato'), ochirishXatoMatni[r.kod] ?? "Hisob o'chirilmadi. Qayta urinib ko'ring.");
     }
     await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
     try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
     location.assign(`${hisobYoli('kirish')}?ochirildi=1`);
   });
+
+  // Google'dan qaytganda (?ochirish=1) forma o'zi ochiladi; parametr manzildan olib tashlanadi.
+  if (new URLSearchParams(location.search).get('ochirish') === '1') {
+    history.replaceState(null, '', location.pathname + location.hash);
+    hisobQorovul().then((s) => { if (s) tasdiqni(true); }).catch(() => undefined);
+  }
 </script>

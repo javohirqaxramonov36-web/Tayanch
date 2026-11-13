@@ -1,0 +1,245 @@
+---
+// SAT "Today" bloki (/uz/sat/, faqat kirgan o'quvchi; rekonstruksiya 1-bosqich, muallif tasdig'i 2026-11-13).
+// Spetsifikatsiya: bitta asosiy qadam (tugallanmagan mock → bugungi takrorlash → reja → zaif ko'nikma → boshlash;
+// bank bo'sh bo'lsa darslar),
+// yonida qisqa ko'rsatkichlar (streak, aniqlik, takrorlash, oxirgi mock) va zaif ko'nikmalar. Mantiq: src/lib/sat/bugun.ts.
+// Holatlar: yuklanmoqda (skelet, balandlik band), tayyor, xato (Retry; sahifaning qolgan qismi joyida), sessiya yo'q (blok yashirinadi,
+// kirish sahifasi avvalgidek). Yangi localStorage kaliti yo'q: tayanch:auth (sessiya bormi) va tayanch:sat-reja faqat o'qiladi.
+// Ko'rinish <html data-sat-kirgan> belgisiga bog'liq (SatKirganBelgi, sahifa chizilishidan oldin); belgisiz blok ko'rinmaydi.
+// Sessiya serverda tasdiqlanmasa belgi olib tashlanadi va kirish sahifasi avvalgidek qoladi.
+import { yol } from '../../lib/yol';
+
+const sat = (qism: string) => yol(`/uz/sat/${qism}`);
+---
+<section class="bugun" aria-labelledby="bugun-h" aria-busy="true" data-sat-bugun data-asos={sat('')}>
+  <div class="bugun-bosh">
+    <h2 id="bugun-h">Today</h2>
+    <a class="bugun-hammasi" href={sat('vosita/natijalar/')}>See all progress</a>
+  </div>
+
+  <div class="bugun-tor" data-b-tor>
+    <article class="asosiy" aria-labelledby="asosiy-h">
+      <p class="asosiy-yorliq" data-b-yorliq>Next step</p>
+      <h3 id="asosiy-h" data-b-sarlavha><span class="skelet skelet-sarlavha" aria-hidden="true"></span></h3>
+      <p class="asosiy-matn" data-b-matn><span class="skelet skelet-matn" aria-hidden="true"></span></p>
+      <a class="tugma tugma-asosiy asosiy-tugma" href={sat('mashq/bank/')} data-b-tugma>Open the question bank</a>
+    </article>
+
+    <div class="panel" data-b-panel>
+      <dl class="korsatkich">
+        <div class="qator"><dt>Day streak</dt><dd data-b-streak><span class="skelet skelet-son" aria-hidden="true"></span></dd></div>
+        <div class="qator"><dt>Accuracy, last 90 days</dt><dd data-b-aniqlik><span class="skelet skelet-son" aria-hidden="true"></span></dd></div>
+        <div class="qator"><dt><a href={sat('vosita/takrorlash/?tab=due')}>Mistakes to review</a></dt><dd data-b-xato><span class="skelet skelet-son" aria-hidden="true"></span></dd></div>
+        <div class="qator"><dt><a href={sat('mashq/lugat/')}>Words to review</a></dt><dd data-b-soz><span class="skelet skelet-son" aria-hidden="true"></span></dd></div>
+        <div class="qator" data-b-mock-qator hidden><dt><a href={sat('mashq/mock/')}>Last mock, estimate</a></dt><dd data-b-mock></dd></div>
+      </dl>
+      <div class="zaif" data-b-zaif hidden>
+        <h3 class="zaif-h" id="zaif-h">Skills to practice</h3>
+        <ul class="zaif-royxat" aria-labelledby="zaif-h" data-b-zaif-royxat></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="bugun-xato" data-b-xato-blok hidden>
+    <p role="alert">We couldn't load your progress. Check your connection and try again.</p>
+    <button type="button" class="tugma tugma-ikkinchi" data-b-qayta>Try again</button>
+  </div>
+</section>
+
+<style>
+  .bugun [hidden] { display: none !important; }
+  .bugun { display: none; flex-direction: column; gap: var(--space-4); }
+  :global(:root[data-sat-kirgan]) .bugun { display: flex; }
+  .bugun-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-4); }
+  .bugun-bosh h2 { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: var(--text-h2-weight); letter-spacing: var(--text-h2-ls); }
+  .bugun-hammasi { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: 700; }
+
+  .bugun-tor { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-4); }
+  .bugun-tor[data-yakka] { grid-template-columns: minmax(0, 1fr); }
+  .asosiy, .panel {
+    background: var(--card-bg); border: var(--border-width-1) solid var(--card-border);
+    border-radius: var(--card-radius); padding: var(--card-pad);
+  }
+  .asosiy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); box-shadow: var(--card-shadow); }
+  .asosiy-yorliq { font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700; letter-spacing: var(--text-caption-ls); text-transform: uppercase; color: var(--color-text-secondary); }
+  .asosiy h3 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: var(--text-h3-weight); letter-spacing: var(--text-h3-ls); }
+  .asosiy-matn { color: var(--color-text-secondary); line-height: var(--text-body-lh); max-width: 52ch; }
+  .asosiy-tugma { margin-top: auto; }
+
+  .panel { display: flex; flex-direction: column; gap: var(--space-4); }
+  .korsatkich { display: flex; flex-direction: column; }
+  .qator {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    min-height: var(--size-touch-min); border-bottom: var(--border-width-1) solid var(--color-border);
+  }
+  .qator:last-child { border-bottom: 0; }
+  .qator dt { color: var(--color-text-secondary); font-size: var(--text-small-size); }
+  .qator dt a { color: var(--color-link); font-weight: 700; display: inline-flex; align-items: center; min-height: var(--size-touch-min); }
+  .qator dd { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+  .zaif { display: flex; flex-direction: column; gap: var(--space-2); }
+  .zaif-h { font-size: var(--text-small-size); font-weight: 800; }
+  .zaif-royxat { display: flex; flex-direction: column; gap: var(--space-1); list-style: none; padding: 0; margin: 0; }
+  .zaif-royxat :global(li) { display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--text-small-size); }
+  .zaif-royxat :global(.foiz) { font-variant-numeric: tabular-nums; color: var(--color-text-secondary); }
+
+  .skelet { display: inline-block; vertical-align: middle; border-radius: var(--radius-sm); background: var(--color-surface-sunken); }
+  .skelet-sarlavha { width: 16ch; height: 1em; }
+  .skelet-matn { width: 28ch; max-width: 100%; height: 1em; }
+  .skelet-son { width: 4ch; height: 1em; }
+
+  .bugun-xato { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-warning-subtle); }
+  .bugun-xato p { color: var(--color-warning-text); font-weight: 700; flex: 1 1 24ch; }
+
+  @media (max-width: 52rem) {
+    .bugun-tor { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 36rem) {
+    .asosiy-tugma, .bugun-xato .tugma { width: 100%; }
+  }
+</style>
+
+<script>
+  import { hisobMijoz } from '../../lib/hisob';
+  import { tavsiyalar, xulosaOqi } from '../../lib/sat/analitika';
+  import { asosiyQadam, aniqlikMatn, rejaBormi, streakMatn, xatoDueSoni, type BugunKirish } from '../../lib/sat/bugun';
+  import { KALIT_REJA } from '../../data/satDarslar/turlar';
+  import type { MockStatus } from '../../lib/sat/mock';
+  import type { BankRoyxat } from '../../lib/sat/xatoDaftari';
+
+  const quti = document.querySelector<HTMLElement>('[data-sat-bugun]');
+  const q = <T extends HTMLElement>(s: string) => quti!.querySelector<T>(`[${s}]`)!;
+
+  function kirishniBekor() {
+    document.documentElement.removeAttribute('data-sat-kirgan');
+  }
+
+  function oqiReja(): boolean {
+    try { return rejaBormi(localStorage.getItem(KALIT_REJA)); } catch { return false; }
+  }
+
+  const natija = <T,>(r: PromiseSettledResult<T>): T | null => (r.status === 'fulfilled' ? r.value : null);
+
+  function korsat(k: BugunKirish) {
+    const a = asosiyQadam(k);
+    const asos = quti!.dataset.asos!;
+    q('data-b-sarlavha').textContent = a.sarlavha;
+    q('data-b-matn').textContent = a.matn;
+    const t = q<HTMLAnchorElement>('data-b-tugma');
+    t.textContent = a.tugma;
+    t.href = asos + a.qism;
+    q('data-b-streak').textContent = k.tahlil ? streakMatn(k.tahlil.streak) : '–';
+    q('data-b-aniqlik').textContent = (k.tahlil && aniqlikMatn(k.tahlil.urinish, k.tahlil.togri)) ?? 'No answers yet';
+    q('data-b-xato').textContent = k.xatoDue == null ? '–' : String(k.xatoDue);
+    q('data-b-soz').textContent = k.sozDue == null ? '–' : String(k.sozDue);
+    const mq = q('data-b-mock-qator');
+    mq.hidden = !k.oxirgiBall;
+    if (k.oxirgiBall) q('data-b-mock').textContent = String(k.oxirgiBall.total);
+    // Yangi o'quvchi (javob, takrorlash va mock yo'q): bo'sh ko'rsatkichlar shovqin, faqat asosiy qadam qoladi.
+    const yangi = !!k.tahlil && k.tahlil.urinish === 0 && !k.xatoDue && !k.sozDue && !k.oxirgiBall;
+    q('data-b-panel').hidden = yangi;
+    q('data-b-tor').toggleAttribute('data-yakka', yangi);
+    const zaif = k.tahlil?.zaif ?? [];
+    q('data-b-zaif').hidden = zaif.length === 0;
+    q('data-b-zaif-royxat').replaceChildren(...zaif.map((z) => {
+      const li = document.createElement('li');
+      const nom = document.createElement('span');
+      nom.textContent = z.skill;
+      const f = document.createElement('span');
+      f.className = 'foiz';
+      f.textContent = z.foiz == null ? '' : `${z.foiz}%`;
+      li.append(nom, f);
+      return li;
+    }));
+  }
+
+  async function yukla() {
+    const c = hisobMijoz();
+    if (!quti || !c) return kirishniBekor();
+    let sessiya = false;
+    try { sessiya = !!(await c.auth.getSession()).data.session; } catch { /* pastda xato holati */ }
+    if (!sessiya) return kirishniBekor();
+    quti.setAttribute('aria-busy', 'true');
+    q('data-b-xato-blok').hidden = true;
+    q('data-b-tor').hidden = false;
+
+    const rpc = async <T,>(nom: string): Promise<T> => {
+      const { data, error } = await c.rpc(nom);
+      if (error) throw error;
+      return data as T;
+    };
+    const [mock, royxat, xulosa, sonlar] = await Promise.allSettled([
+      rpc<MockStatus>('mock_status'),
+      rpc<BankRoyxat>('review_overview'),
+      rpc<unknown>('analytics_summary'),
+      (async () => {
+        const { data, error } = await c.rpc('question_counts', { p_filters: {} });
+        if (error) throw error;
+        return data as { total?: number } | null;
+      })(),
+    ]);
+    const bankJami = natija(sonlar);
+    const m = natija(mock);
+    const r = natija(royxat);
+    const x = xulosaOqi(natija(xulosa));
+    const bugun = r?.today ?? x?.today ?? null;
+
+    let sozDue: number | null = null;
+    if (bugun) {
+      const [p, o] = await Promise.allSettled([
+        c.from('vocab_progress').select('next_due', { count: 'exact', head: true }).lte('next_due', bugun),
+        c.from('user_vocab_words').select('next_due', { count: 'exact', head: true }).lte('next_due', bugun),
+      ]);
+      const sanoq = (v: PromiseSettledResult<{ count: number | null; error: unknown }>) =>
+        v.status === 'fulfilled' && !v.value.error ? v.value.count ?? 0 : null;
+      const a = sanoq(p as PromiseSettledResult<{ count: number | null; error: unknown }>);
+      const b = sanoq(o as PromiseSettledResult<{ count: number | null; error: unknown }>);
+      sozDue = a == null && b == null ? null : (a ?? 0) + (b ?? 0);
+    }
+
+    // Hammasi o'qilmasa: xato holati (blok bo'sh raqamlar bilan qolmaydi).
+    if (!m && !r && !x) {
+      q('data-b-tor').hidden = true;
+      q('data-b-xato-blok').hidden = false;
+      quti.setAttribute('aria-busy', 'false');
+      return;
+    }
+
+    const tugagan = (m?.history ?? []).filter((h) => h.status === 'finished' && h.scores).sort((a, b) => (b.finished_at ?? '').localeCompare(a.finished_at ?? ''));
+    korsat({
+      mockFaol: m?.active ? { form_no: m.active.form_no, current_module: m.active.current_module, phase: m.active.phase } : null,
+      xatoDue: r ? xatoDueSoni(r.items ?? [], r.today) : null,
+      sozDue,
+      rejaBor: oqiReja(),
+      tahlil: x ? {
+        urinish: x.totals.attempts,
+        togri: x.totals.correct,
+        streak: x.totals.streak,
+        zaif: tavsiyalar(x.skills).slice(0, 3).map((s) => ({ skill: s.skill, foiz: s.foiz })),
+      } : null,
+      oxirgiBall: tugagan[0]?.scores ? { total: tugagan[0].scores.total, sana: tugagan[0].finished_at ?? '' } : null,
+      bankSavol: bankJami && typeof bankJami.total === 'number' ? bankJami.total : null,
+    });
+    quti.setAttribute('aria-busy', 'false');
+  }
+
+  async function boshla() {
+    if (!quti) return;
+    // Dev mock (dist'da yo'q): ?bugun-mock=yangi|bosh-bank|toliq|mock|takror|xato
+    if (import.meta.env.DEV) {
+      const tur = new URLSearchParams(location.search).get('bugun-mock');
+      const { BUGUN_MOCKLAR, bugunMock } = await import('../../lib/sat/bugunMock');
+      if (tur && (BUGUN_MOCKLAR as readonly string[]).includes(tur)) {
+        document.documentElement.setAttribute('data-sat-kirgan', '');
+        const k = bugunMock(tur as (typeof BUGUN_MOCKLAR)[number]);
+        if (k === 'xato') { q('data-b-tor').hidden = true; q('data-b-xato-blok').hidden = false; }
+        else korsat(k);
+        quti.setAttribute('aria-busy', 'false');
+        return;
+      }
+    }
+    if (!document.documentElement.hasAttribute('data-sat-kirgan')) return;
+    quti.querySelector('[data-b-qayta]')?.addEventListener('click', () => { void yukla(); });
+    void yukla();
+  }
+  void boshla();
+</script>

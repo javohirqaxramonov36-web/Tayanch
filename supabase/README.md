@@ -12,11 +12,13 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | --- | --- |
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
 | `migrations/20261109000010_tolov_inpay.sql` | To'lov SQL funksiyalari (`payment_create`, `payment_set_invoice`, `payment_apply_event`), faqat service_role. Jadvallarga tegmaydi. 10-bo'lim. |
+| `migrations/20261109120000_questions_p05.sql` | 0010: `questions` ni P05 savol formatiga moslash (ADR 002). |
 | `migrations/20261110000011_tolov_audit_muvofiqlash.sql` | `payment_events.payload` tozalash trigger'i va `payment_pending_stale` (P21), 10-bo'lim. |
 | `migrations/20261110120000_sessiya.sql` | Mashq sessiyasi sahifasi (P08): `get_session`, `finish_session`, `add_to_review`; `submit_answer` yangilangan (parallel so'rov, yakunlangan sessiya). Sinov `tests/sessiya_test.sql`. |
 | `migrations/20261111120000_analitika.sql` | Analitika paneli (P14): `analytics_summary()` (yig'indi serverda, kun chegarasi Asia/Tashkent), `private.has_feature`, `plans.features` ga `analytics_extended` (Pro, Max). Sinov `tests/analitika_test.sql`. Jonli bazaga 2026-11-11 da qo'llangan (PR #91 merge va deploy'dan keyin). |
 | `migrations/20261111200000_tarif_max.sql` | Tarif nomi Elite -> Max (muallif, 2026-11-11): `plans` da `elite` qatori `max` / `Max` bo'ladi, qolgan ustunlar o'zgarmaydi. `elite` ga obuna yoki to'lov havolasi bo'lsa FK xatosi bilan to'xtaydi. |
 | `migrations/20261111210000_kvota_p19.sql` | P19 kvota: `usage_status()` ga `resets_at` va `today_resets_at`, `private.period_end`. Qoidalar: `docs/tarif-qoidalari.md`. Sinov `tests/kvota_test.sql` (K00–K05) va `scripts/rls-tekshir.sh` dagi K06 (parallel). |
+| `migrations/20261112143717_metrikalar.sql` | P25 metrikalar: `private.track` (yagona yozuvchi: nom va xossa ro'yxati, soatiga 60 ta, `plan_viewed` 10 daqiqada 1), `public.track_event` (mijoz, faqat `plan_viewed`), trigger'lar (`signup`, `first_session`, `session_completed`, `daily_question_answered`, `payment_started`, `payment_success`), `profiles.usage_analytics`. Mijozning `events` ga to'g'ridan-to'g'ri INSERT huquqi olib tashlangan. So'rovlar `../docs/metrikalar.sql`, sinov `tests/metrikalar_test.sql` (M01–M11) va `tests/metrikalar_sorov_malumot.sql` (MS01). |
 | `functions/tolov-yaratish/`, `functions/inpay-webhook/`, `functions/inpay-holat/`, `functions/inpay-muvofiqlash/` | Edge Function'lar: inPAY to'lovi, webhook, holat va muvofiqlashtirish (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
@@ -43,7 +45,7 @@ Tayanch uchun xulosa:
 - Bepul reja faqat sinov va yopiq beta uchun. Loyiha to'xtatilsa, saytdagi kirish va mashq ishlamaydi (statik sahifalar ishlayveradi).
 - Backup yo'q: muhim o'zgarishdan oldin muallif qo'lda eksport qiladi va faylni **repo papkasidan tashqarida** saqlaydi (unda foydalanuvchi ma'lumoti bo'ladi). Usul (`supabase db dump` yoki Homebrew `pg_dump` session pooler orqali): sinalmagan, birinchi haqiqiy foydalanuvchidan oldin sinaladi.
 - Email bilan ro'yxatdan o'tish jamoadan tashqaridagi foydalanuvchilarga ishlashi uchun o'z SMTP serveri kerak (P28, 2.4-bo'lim).
-- **Pro rejaga o'tish qarori P28 da qabul qilinadi.**
+- **Pro rejaga o'tish qarori P28 da qabul qilinadi.** Tavsiya va chiqarish ro'yxati: `docs/chiqarish-royxati.md` (2026-11-12, qaror muallifda).
 - To'lov (inPAY) ishga tushmaguncha `subscriptions` ga faqat `admin_grant_plan` yozadi.
 
 ## 1. Loyiha yaratish
@@ -344,7 +346,18 @@ select public.admin_hide_question('<external_id>', 'sabab', 'muallif');
 
 ## 9. Savol qo'shish
 
-Savollar migratsiyaga yozilmaydi. Ular alohida (keyingi vazifa) service role bilan `questions` ga yuklanadi: `status = 'draft'`, muallif tekshirgach `verified` va `verified_by`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+Savollar migratsiyaga yozilmaydi. Ular P05 importi bilan service role orqali `questions` ga yuklanadi (`docs/savol-formati.md` §7, ADR 002): `external_id` bo'yicha upsert, tasdiqlanmagani `draft`, muallif tasdiqlagani (`verified_by` ≠ `author`, `verified_at`) `verified`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+
+**0010 holati (2026-11-09):** Tayanch loyihasiga **qo'llangan** (muallif ishga tushirdi; `migration list` da 0001–0010 local = remote, yangi ustunlar `gen types` da ko'rindi). Keyingi migratsiyalar uchun tartib: `supabase --workdir "$PWD" migration list --remote=<ref>`, so'ng `db push --remote=<ref> --dry-run`, keyin `db push --remote=<ref>`. Bu branch'da `supabase/config.toml` yo'q: `--workdir` siz CLI yuqoridagi papkaga chiqib ketadi va "remote migration not found locally" deydi. Tekshirish (SQL Editor):
+
+```sql
+select column_name from information_schema.columns
+ where table_schema = 'public' and table_name = 'questions'
+   and column_name in ('drafted_by', 'verified_at', 'tags', 'content_hash');          -- 4 qator
+select conname from pg_constraint where conrelid = 'public.questions'::regclass
+   and conname in ('questions_verified_rule', 'questions_draft_rule', 'questions_figure_alt',
+                   'questions_source_original', 'questions_drafted_by');               -- 5 qator
+```
 
 ## 10. To'lov: inPAY Edge Function'lari
 

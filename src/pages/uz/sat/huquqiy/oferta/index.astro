@@ -1,0 +1,81 @@
+---
+// SAT · Public Offer (inglizcha nusxa, P23 davomi, 2026-11-11). Asosiy matn: /uz/oferta/. QORALAMA.
+// Qaysi til yuridik kuchga ega: yurist javobi kerak (sahifada aytilgan).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import HuquqiyMatn from '../../../../../components/huquqiy/HuquqiyMatn.astro';
+import { huquqiyOchiq } from '../../../../../data/huquqiySahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
+---
+<BolimQobiq
+  title="Public Offer · SAT"
+  description="Terms for buying Tayanch SAT paid plans (draft)."
+  turi="qollanma"
+  bolim="sat"
+  yol={['Legal']}
+  holat="qoralama"
+>
+  <HuquqiyMatn
+    til="en"
+    kalit="oferta"
+    sana="2026-11-11"
+    kirish="This offer covers the paid plans on the Subscription page."
+    tekshirish={[
+      'Seller details (sole trader or company name, taxpayer number, address): from the author.',
+      'Whether the inPAY merchant agreement requires a specific language or clauses for the offer.',
+      'Which language version is legally binding (Uzbek, Russian, English).',
+      'The matching articles of the Civil Code and the Consumer Protection Law: no article numbers are given yet.',
+      'Whether a digital service needs an electronic receipt or invoice.',
+    ]}
+  >
+    <h2>1. Parties</h2>
+    <p>
+      Seller:
+      {sotuvchi
+        ? <> {sotuvchi.nomi}, taxpayer number {sotuvchi.stir}, address: {sotuvchi.manzil}.</>
+        : <> <span class="tekshir">to be checked</span> (name, taxpayer number and address are awaited from the author).</>}
+    </p>
+    <p>Buyer: a user with a Tayanch account who pays for a plan.</p>
+
+    <h2>2. Accepting the offer</h2>
+    <p>When you complete payment on the Subscription page, you accept this offer in full. The offer is accepted at the moment the payment succeeds.</p>
+
+    <h2>3. The service</h2>
+    <ul>
+      <li>The service: use of the paid plan features in the SAT section of the Tayanch site (for example question quota and extended results) for the chosen period.</li>
+      <li>The plan contents, price and period are shown on the <a href={yol('/uz/sat/hisob/obuna/')}>Subscription page</a> before you pay. The terms shown at the time of payment apply.</li>
+      <li>The plan is switched on in your account automatically once the payment is confirmed.</li>
+      <li>The subscription covers only the SAT section and does not unlock other sections.</li>
+      <li>Tayanch does not guarantee a score, admission or a scholarship.</li>
+    </ul>
+
+    <h2>4. Payment</h2>
+    <ul>
+      <li>Payment is in Uzbek so'm, through inPAY with Click or Payme. Tayanch never sees your card details.</li>
+      <li>There is no automatic recurring payment yet: when the period ends, you pay again if you want to continue.</li>
+      <li>
+        {voyagaYetmaganTolov === null
+          ? <>Buyers under 18: <span class="tekshir">to be checked</span> (author and lawyer decision).</>
+          : voyagaYetmaganTolov === 'faqat-18'
+            ? <>The buyer must be 18 or older.</>
+            : <>If you are under 18, pay with your parent's or guardian's consent and their payment method.</>}
+      </li>
+    </ul>
+
+    <h2>5. Refunds</h2>
+    <p>Refund terms are on a separate page: <a href={yol('/uz/sat/huquqiy/qaytarish/')}>Refund Policy</a>.</p>
+
+    <h2>6. Obligations</h2>
+    <ul>
+      <li>Seller: provides the plan features for the paid period and protects personal data under the <a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>.</li>
+      <li>Buyer: follows the <a href={yol('/uz/sat/huquqiy/shartlar/')}>Terms of Use</a>, does not share the account and does not distribute paid materials.</li>
+    </ul>
+
+    <h2>7. Disputes</h2>
+    <p>Disputes are first settled by talking to us: <a href={yol('/uz/sat/huquqiy/aloqa/')}>Contact</a>. If that fails, they are handled under the law of the Republic of Uzbekistan. Exact procedure: <span class="tekshir">to be checked</span> (lawyer).</p>
+
+    <h2>8. Changes</h2>
+    <p>If the offer changes, the new date is shown at the top of this page. A period you already paid for ends under the terms in force at the time of payment.</p>
+  </HuquqiyMatn>
+</BolimQobiq>

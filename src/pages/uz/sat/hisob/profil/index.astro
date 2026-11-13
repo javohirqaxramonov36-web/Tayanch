@@ -1,0 +1,396 @@
+---
+// My SAT profile (2026-11-13, TopTierPrep /profile tahlili asosida, muallif tasdiqlagan spetsifikatsiya).
+// SAT bo'yicha "men" markazi: maqsad va sana, o'qish afzalliklari, saqlangan kontent, tarif. Hisob sozlamalari
+// (ism, email, parol, eksport, o'chirish) 1-qavatda qoladi (/uz/hisob/profil/, bitta hisob qarori).
+// Faqat kirgan foydalanuvchi (hisobQorovul). Har blok o'zi yuklanadi; xato bo'lsa faqat o'sha blokda "Retry".
+// Ma'lumot: profiles (display_name, nickname, target_score, current_score, exam_date), usage_status + subscriptions,
+// review_overview + brauzerdagi dars takrorlashi, user_vocab_words / vocab_progress (faqat son), Test tracker (brauzer).
+// Afzalliklar: tayanch:sat-afzallik (holat.ts orqali, hisob bilan user_state ga sinxron). Savol banki standart rejimni shundan oladi.
+// Reyting, yutuqlar, ball trendi, avatar yo'q (streak va reyting bosqichlaridan keyin). Desmos sozlamasi yo'q (ADR 003).
+// Sun'iy holatlar (faqat dev): ?sinov=toliq|bosh|xato (src/lib/sat/profilSinov.ts).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { REJIMLAR, KUNLIK_VARIANTLAR } from '../../../../../lib/sat/afzallik';
+import { yol } from '../../../../../lib/yol';
+
+const h = {
+  maqsad: yol('/uz/sat/hisob/maqsad/'),
+  obuna: yol('/uz/sat/hisob/obuna/'),
+  takrorlash: yol('/uz/sat/vosita/takrorlash/'),
+  lugat: yol('/uz/sat/mashq/lugat/'),
+  testlar: yol('/uz/sat/vosita/rasmiy-testlar/'),
+  natijalar: yol('/uz/sat/vosita/natijalar/'),
+  hisob: yol('/uz/hisob/profil/'),
+};
+---
+<BolimQobiq
+  title="My SAT profile · SAT"
+  description="Your SAT goal and test date, study preferences, saved work and plan in one place."
+  turi="vosita"
+  yol={['Account']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki profil">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Account</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1 data-sarlavha>My SAT profile</h1>
+      <p class="lead">Your goal, how you like to study and what you have saved, in one place.</p>
+      <p class="kichik"><a href={h.hisob}>Account settings</a> <span class="ikkinchi">(name, email, password, data export) are on the main Tayanch account page.</span></p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>Checking your account…</p>
+    <p class="ogoh" data-yoq hidden>Accounts are not available on this site yet.</p>
+    <p class="ogoh" data-sinov-belgi hidden>Test data (development only). Nothing on this page comes from a real account.</p>
+
+    <div class="tor" data-ichi hidden>
+      <!-- Maqsad -->
+      <section class="blok" aria-labelledby="maqsad-h" data-blok="profil">
+        <div class="blok-bosh">
+          <h2 id="maqsad-h">Goal and test date</h2>
+          <a class="tugma tugma-ikkinchi kichik-tugma" href={h.maqsad} data-maqsad-havola>Edit</a>
+        </div>
+        <p class="ikkinchi" data-yuklanish>Loading…</p>
+        <div class="xato-qator" data-xato hidden><p>Couldn't load your goal.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="profil">Retry</button></div>
+        <div data-tayyor hidden>
+          <p class="ikkinchi" data-maqsad-bosh hidden>You haven't set a goal yet. A target score and test date put a countdown on the SAT home page.</p>
+          <dl class="sonlar" data-maqsad-sonlar>
+            <div><dt>Target score</dt><dd data-m="maqsad"></dd></div>
+            <div><dt>Best score so far</dt><dd data-m="joriy"></dd></div>
+            <div><dt>Test date</dt><dd data-m="sana"></dd></div>
+          </dl>
+          <p class="kichik" data-m="qolgan" hidden></p>
+        </div>
+      </section>
+
+      <!-- Afzalliklar (brauzer + sinxron) -->
+      <section class="blok" aria-labelledby="afz-h">
+        <div>
+          <h2 id="afz-h">Study preferences</h2>
+          <p class="ikkinchi kichik">Saved on this device and, when sync is on, in your account.</p>
+        </div>
+        <fieldset class="tanlov">
+          <legend>Default practice mode</legend>
+          <p class="ikkinchi kichik" id="rejim-izoh">The question bank starts in this mode. You can still switch before each session.</p>
+          <div class="variantlar" role="presentation">
+            {REJIMLAR.map((r) => (
+              <label class="variant">
+                <input type="radio" name="rejim" value={r.kalit} aria-describedby="rejim-izoh" />
+                <span><b>{r.nomi}</b><small>{r.izoh}</small></span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="tanlov">
+          <legend>Daily study goal</legend>
+          <p class="ikkinchi kichik" id="kunlik-izoh">Pick what fits your day. It is only a reminder for you; nothing is locked.</p>
+          <div class="variantlar kunlik-qator" role="presentation">
+            <label class="variant ixcham"><input type="radio" name="kunlik" value="" aria-describedby="kunlik-izoh" /><span><b>Not set</b></span></label>
+            {KUNLIK_VARIANTLAR.map((d) => (
+              <label class="variant ixcham"><input type="radio" name="kunlik" value={String(d)} aria-describedby="kunlik-izoh" /><span><b>{d} min</b></span></label>
+            ))}
+          </div>
+        </fieldset>
+        <p class="saqlandi kichik" role="status" data-afz-holat></p>
+      </section>
+
+      <!-- Saqlangan ish -->
+      <section class="blok" aria-labelledby="saqlangan-h">
+        <h2 id="saqlangan-h">Your saved work</h2>
+        <ul class="royxat">
+          <li data-blok="daftar">
+            <a class="qator" href={h.takrorlash}>
+              <span class="qator-nom">Mistake log</span>
+              <span class="qator-qiymat" data-yuklanish>Loading…</span>
+              <span class="qator-qiymat" data-tayyor hidden data-daftar></span>
+            </a>
+            <div class="xato-qator" data-xato hidden><p>Couldn't load question bank mistakes.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="daftar">Retry</button></div>
+          </li>
+          <li data-blok="lugat">
+            <a class="qator" href={h.lugat}>
+              <span class="qator-nom">Vocabulary</span>
+              <span class="qator-qiymat" data-yuklanish>Loading…</span>
+              <span class="qator-qiymat" data-tayyor hidden data-lugat></span>
+            </a>
+            <div class="xato-qator" data-xato hidden><p>Couldn't load your words.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="lugat">Retry</button></div>
+          </li>
+          <li>
+            <a class="qator" href={h.testlar}>
+              <span class="qator-nom">Test tracker</span>
+              <span class="qator-qiymat" data-testlar>—</span>
+            </a>
+          </li>
+          <li>
+            <a class="qator" href={h.natijalar}>
+              <span class="qator-nom">Results</span>
+              <span class="qator-qiymat">Accuracy and skills</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Tarif -->
+      <section class="blok" aria-labelledby="tarif-h" data-blok="tarif">
+        <div class="blok-bosh">
+          <h2 id="tarif-h">Plan</h2>
+          <a class="tugma tugma-ikkinchi kichik-tugma" href={h.obuna}>Subscription</a>
+        </div>
+        <p class="ikkinchi" data-yuklanish>Loading…</p>
+        <div class="xato-qator" data-xato hidden><p>Couldn't load your plan.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="tarif">Retry</button></div>
+        <div data-tayyor hidden>
+          <p class="tarif-nom" data-tarif-nom></p>
+          <p class="ikkinchi kichik" data-tarif-izoh></p>
+        </div>
+      </section>
+    </div>
+  </div>
+</BolimQobiq>
+
+<script>
+  import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
+  import { holatOqi, holatYoz } from '../../../../../lib/holat';
+  import { holatniOqi as takrorOqi } from '../../../../../lib/takrorlash';
+  import { toshkentBugun } from '../../../../../lib/muddat';
+  import { AFZALLIK_KALITI, afzallikTozala, type Afzallik } from '../../../../../lib/sat/afzallik';
+  import { bankXulosa, darsBugun, ismYozuv, maqsadXulosa, sonBirlik, takrorMatn, type ProfilQator } from '../../../../../lib/sat/profilXulosa';
+  import { KALIT_RASMIY_TESTLAR, BOSH_OMBOR, omborniTozala } from '../../../../../lib/sat/rasmiyTestlar';
+  import { obunaHolati, sanaYozuv, type ObunaYozuv } from '../../../../../lib/sat/obunaHolat';
+  import type { BankQator } from '../../../../../lib/sat/xatoDaftari';
+  import type { ProfilSinov } from '../../../../../lib/sat/profilSinov';
+
+  type Blok = 'profil' | 'tarif' | 'daftar' | 'lugat';
+  type Yuklovchi = () => Promise<void>;
+
+  const $ = <T extends HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s);
+  const blok = (b: Blok) => $(`[data-blok="${b}"]`)!;
+  const yuklovchilar = new Map<Blok, Yuklovchi>();
+  let sinov: ProfilSinov | null = null;
+
+  function holat(b: Blok, h: 'yuklanish' | 'xato' | 'tayyor') {
+    const el = blok(b);
+    el.querySelectorAll<HTMLElement>('[data-yuklanish]').forEach((x) => (x.hidden = h !== 'yuklanish'));
+    el.querySelectorAll<HTMLElement>('[data-xato]').forEach((x) => (x.hidden = h !== 'xato'));
+    el.querySelectorAll<HTMLElement>('[data-tayyor]').forEach((x) => (x.hidden = h !== 'tayyor'));
+  }
+
+  async function ishga(b: Blok, f: Yuklovchi) {
+    yuklovchilar.set(b, f);
+    holat(b, 'yuklanish');
+    try {
+      await f();
+      holat(b, 'tayyor');
+    } catch {
+      holat(b, 'xato');
+    }
+  }
+
+  const sinovQiymat = <T,>(x: T | Error | undefined): T => { if (x instanceof Error || x === undefined) throw x ?? new Error('yoq'); return x; };
+
+  // ---------- Afzalliklar ----------
+  function afzallikChiz(a: Afzallik) {
+    document.querySelectorAll<HTMLInputElement>('input[name="rejim"]').forEach((r) => (r.checked = r.value === a.rejim));
+    document.querySelectorAll<HTMLInputElement>('input[name="kunlik"]').forEach((r) => (r.checked = r.value === (a.kunlikDaqiqa === null ? '' : String(a.kunlikDaqiqa))));
+  }
+  function afzallikSaqla() {
+    const rejim = document.querySelector<HTMLInputElement>('input[name="rejim"]:checked')?.value;
+    const kunlik = document.querySelector<HTMLInputElement>('input[name="kunlik"]:checked')?.value ?? '';
+    const a = afzallikTozala({ rejim, kunlikDaqiqa: kunlik ? Number(kunlik) : null });
+    const ok = holatYoz(AFZALLIK_KALITI, a);
+    $('[data-afz-holat]')!.textContent = ok ? 'Saved.' : "This browser didn't allow saving. Your choice will be lost when you close the page.";
+  }
+  afzallikChiz(afzallikTozala(holatOqi(AFZALLIK_KALITI, null)));
+  document.querySelectorAll<HTMLInputElement>('input[name="rejim"], input[name="kunlik"]').forEach((r) => r.addEventListener('change', afzallikSaqla));
+
+  // ---------- Test tracker (faqat brauzer) ----------
+  function testlarChiz() {
+    const o = omborniTozala(holatOqi(KALIT_RASMIY_TESTLAR, BOSH_OMBOR));
+    $('[data-testlar]')!.textContent = o.testlar.length ? sonBirlik(o.testlar.length, 'test logged', 'tests logged') : 'Nothing logged yet';
+  }
+
+  // ---------- Bloklar ----------
+  function profilChiz(p: ProfilQator) {
+    const ism = ismYozuv(p);
+    if (ism) $('[data-sarlavha]')!.textContent = `${ism}'s SAT profile`;
+    const x = maqsadXulosa(p, toshkentBugun());
+    $('[data-maqsad-bosh]')!.hidden = !x.bosh;
+    $('[data-maqsad-sonlar]')!.hidden = x.bosh;
+    $('[data-maqsad-havola]')!.textContent = x.bosh ? 'Set your goal' : 'Edit';
+    $('[data-m="maqsad"]')!.textContent = x.maqsad;
+    $('[data-m="joriy"]')!.textContent = x.joriy;
+    $('[data-m="sana"]')!.textContent = x.sana;
+    const q = $('[data-m="qolgan"]')!;
+    q.hidden = !x.qolgan;
+    q.textContent = x.otgan ? 'This date has passed. Set your next test date when you know it.' : x.qolgan ?? '';
+  }
+
+  function tarifChiz(plan: { code?: string; name?: string } | null | undefined, obunalar: ObunaYozuv[]) {
+    const kod = plan?.code ?? 'free';
+    const h = obunaHolati(obunalar, new Date(), kod);
+    $('[data-tarif-nom]')!.textContent = plan?.name ?? 'Free';
+    $('[data-tarif-izoh]')!.textContent = (h.tur === 'faol' || h.tur === 'tugayapti')
+      ? (h.tugash ? `Paid until ${sanaYozuv(h.tugash)}. Nothing renews automatically.` : 'No end date.')
+      : 'No payment and no end date. Compare plans on the Subscription page.';
+  }
+
+  function daftarChiz(bank: { today: string; items: BankQator[] }) {
+    const kun = bank.today || toshkentBugun();
+    const dars = darsBugun(takrorOqi('sat').savollar, kun);
+    const b = bankXulosa(bank.items, kun);
+    const qism = [takrorMatn(dars + b.bugun)];
+    if (b.saqlangan) qism.push(sonBirlik(b.saqlangan, 'saved question', 'saved questions'));
+    $('[data-daftar]')!.textContent = qism.join(' · ');
+  }
+
+  function lugatChiz(l: { qoshilgan: number; yulduzli: number }) {
+    const qism: string[] = [];
+    if (l.qoshilgan) qism.push(sonBirlik(l.qoshilgan, 'word added', 'words added'));
+    if (l.yulduzli) qism.push(`${l.yulduzli} starred`);
+    $('[data-lugat]')!.textContent = qism.length ? qism.join(' · ') : 'Nothing saved yet';
+  }
+
+  async function yukla() {
+    testlarChiz();
+    if (import.meta.env.DEV) {
+      const t = new URLSearchParams(location.search).get('sinov');
+      const m = await import('../../../../../lib/sat/profilSinov');
+      if (m.profilSinovmi(t)) {
+        sinov = m.profilSinov(t, new Date());
+        $('[data-sinov-belgi]')!.hidden = false;
+        $('[data-kutish]')!.hidden = true;
+        $('[data-ichi]')!.hidden = false;
+        const s = sinov;
+        await Promise.all([
+          ishga('profil', async () => profilChiz(sinovQiymat(s.profil))),
+          ishga('tarif', async () => { const x = sinovQiymat(s.tarif); tarifChiz(x.plan, x.obunalar); }),
+          ishga('daftar', async () => daftarChiz(sinovQiymat(s.daftar))),
+          ishga('lugat', async () => lugatChiz(sinovQiymat(s.lugat))),
+        ]);
+        return;
+      }
+    }
+    const c = hisobMijoz();
+    if (!c) {
+      $('[data-kutish]')!.hidden = true;
+      $('[data-yoq]')!.hidden = false;
+      return;
+    }
+    const sessiya = await hisobQorovul();
+    if (!sessiya) return; // kirish sahifasiga yo'naltirildi
+    const uid = sessiya.user.id;
+    $('[data-kutish]')!.hidden = true;
+    $('[data-ichi]')!.hidden = false;
+
+    await Promise.all([
+      ishga('profil', async () => {
+        const { data, error } = await c.from('profiles').select('display_name, nickname, target_score, current_score, exam_date').eq('id', uid).maybeSingle();
+        if (error) throw error;
+        profilChiz((data ?? {}) as ProfilQator);
+      }),
+      ishga('tarif', async () => {
+        const [u, s] = await Promise.all([
+          c.rpc('usage_status'),
+          c.from('subscriptions').select('plan_code, status, starts_at, ends_at').eq('bolim', 'sat')
+            .in('status', ['active', 'expired']).order('ends_at', { ascending: false }).limit(50),
+        ]);
+        if (u.error || s.error) throw u.error ?? s.error;
+        tarifChiz((u.data as { plan?: { code?: string; name?: string } } | null)?.plan, (s.data as ObunaYozuv[] | null) ?? []);
+      }),
+      ishga('daftar', async () => {
+        const { data, error } = await c.rpc('review_overview');
+        if (error) throw error;
+        daftarChiz((data as { today: string; items: BankQator[] } | null) ?? { today: '', items: [] });
+      }),
+      ishga('lugat', async () => {
+        const [o, y] = await Promise.all([
+          c.from('user_vocab_words').select('id', { count: 'exact', head: true }),
+          c.from('vocab_progress').select('starred', { count: 'exact', head: true }).eq('starred', true),
+        ]);
+        if (o.error || y.error) throw o.error ?? y.error;
+        lugatChiz({ qoshilgan: o.count ?? 0, yulduzli: y.count ?? 0 });
+      }),
+    ]);
+  }
+
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-qayta]');
+    if (!b) return;
+    const k = b.dataset.qayta as Blok;
+    const f = yuklovchilar.get(k);
+    // Fokus: hali xato bo'lsa yana Retry tugmasiga, bo'lmasa blok sarlavhasiga yoki qator havolasiga.
+    if (f) ishga(k, f).then(() => {
+      const el = blok(k);
+      const qayta = el.querySelector<HTMLElement>('[data-xato]:not([hidden]) [data-qayta]');
+      const sarlavha = el.querySelector<HTMLElement>('h2');
+      if (sarlavha) sarlavha.tabIndex = -1;
+      (qayta ?? sarlavha ?? el.querySelector<HTMLElement>('a'))?.focus();
+    });
+  });
+
+  // Boshqa qurilmadan sinxron kelsa afzalliklar yangilanadi.
+  window.addEventListener('tayanch:holat-yangilandi', () => { afzallikChiz(afzallikTozala(holatOqi(AFZALLIK_KALITI, null))); testlarChiz(); });
+
+  yukla().catch(() => {
+    $('[data-kutish]')!.textContent = "We couldn't read your account. Refresh the page to try again.";
+  });
+</script>
+
+<style>
+  .profil [hidden] { display: none !important; }
+  .profil { display: flex; flex-direction: column; gap: var(--b-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-chiziq { border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .kichik { font-size: var(--matn-kichik); }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
+  .holat-matn { color: var(--matn-ikkinchi); }
+
+  /* Kompyuterda ikki ustun, telefonda bitta. */
+  .tor:not([hidden]) { display: grid; gap: var(--b-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .tor > * { min-width: 0; }
+  @media (min-width: 880px) { .tor:not([hidden]) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .blok { display: flex; flex-direction: column; gap: var(--b-4); padding: var(--b-6); border: 1px solid var(--chiziq); border-radius: var(--r-katta); background: var(--sirt); }
+  @media (max-width: 640px) { .blok { padding: var(--b-5) var(--b-4); } }
+  .blok h2 { font-size: var(--matn-h3); }
+  .blok h2:focus { outline: none; }
+  .blok-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
+  .kichik-tugma { min-height: var(--size-touch-min); }
+
+  .xato-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); font-size: var(--matn-kichik); }
+
+  .sonlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: var(--b-3); margin: 0; }
+  .sonlar > div { display: flex; flex-direction: column; gap: var(--b-1); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .sonlar dt { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+  .sonlar dd { margin: 0; font-size: var(--matn-katta); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .sonlar dd[data-m="sana"] { font-size: var(--matn-asosiy); }
+
+  .tanlov { border: 0; margin: 0; padding: 0; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .tanlov legend { padding: 0; font-weight: 700; }
+  .variantlar { display: grid; gap: var(--b-2); }
+  .variantlar.kunlik-qator { grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
+  .variant.ixcham b { white-space: nowrap; }
+  .variant { position: relative; display: block; }
+  .variant input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .variant span { display: flex; flex-direction: column; gap: var(--b-1); min-height: var(--size-touch-min); padding: var(--b-3) var(--b-4); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
+  .variant.ixcham span { align-items: center; justify-content: center; padding: var(--b-2) var(--b-3); }
+  .variant small { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .variant input:checked + span { border-color: var(--matn); background: var(--fon-ikkinchi); }
+  .variant input:focus-visible + span { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .saqlandi:empty { display: none; }
+  .saqlandi { color: var(--matn-ikkinchi); }
+
+  .royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .royxat > li { border-bottom: 1px solid var(--chiziq); }
+  .royxat > li:last-child { border-bottom: 0; }
+  .qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); min-height: var(--size-touch-min); padding: var(--b-3) 0; color: inherit; text-decoration: none; }
+  .qator:hover .qator-nom { text-decoration: underline; }
+  .qator:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
+  .qator-nom { font-weight: 700; flex: none; }
+  .qator-qiymat { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); text-align: right; }
+  .royxat .xato-qator { margin-bottom: var(--b-3); }
+
+  .tarif-nom { font-size: var(--matn-h3); font-weight: 800; }
+</style>

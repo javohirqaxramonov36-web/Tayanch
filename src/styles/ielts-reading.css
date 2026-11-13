@@ -12,7 +12,7 @@
   border: 1.5px solid var(--chiziq-maydon); border-radius: var(--r-yon);
   background: var(--fon); cursor: pointer; line-height: 1.45;
 }
-.variant:hover { border-color: var(--matn); }
+@media (hover: hover) and (pointer: fine) { .variant:hover { border-color: var(--matn); } }
 .variant:has(input:checked) { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); box-shadow: inset 0 0 0 1px var(--rang-asosiy); }
 .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
 .variant input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--rang-asosiy); }
@@ -40,7 +40,6 @@
   font-weight: 600; line-height: 1.5;
 }
 .rt-ogoh p { margin: 0; flex: 1 1 280px; }
-.rt-ogoh .tugma { min-height: 44px; padding-block: var(--b-2); background: var(--fon); color: var(--matn); border: 1.5px solid var(--rang-ogoh-matn); }
 
 .rt-ish { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .rt-ust { flex: none; padding: var(--b-2) var(--b-6); border-bottom: 1px solid var(--chiziq); display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
@@ -49,7 +48,7 @@
   min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq);
   background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap;
 }
-.rt-passagelar button:hover { color: var(--matn); }
+@media (hover: hover) and (pointer: fine) { .rt-passagelar button:hover { color: var(--matn); } }
 .rt-passagelar button[aria-pressed='true'] { background: var(--matn); color: var(--fon); }
 .rt-tablar { display: none; }
 .rt-tablar button {
@@ -90,7 +89,7 @@
   background: var(--fon); color: var(--matn-ikkinchi); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
 }
-.belgi-tugma:hover { border-color: var(--matn); color: var(--matn); }
+@media (hover: hover) and (pointer: fine) { .belgi-tugma:hover { border-color: var(--matn); color: var(--matn); } }
 .belgi-tugma[aria-pressed='true'] { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-color: var(--rang-ogoh-matn); }
 .belgi-tugma[aria-pressed='true'] svg { fill: currentColor; }
 .rt-otish { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--b-3); padding-top: var(--b-4); border-top: 1px solid var(--chiziq); }
@@ -113,7 +112,7 @@
   position: relative; width: 44px; height: 44px; border: 1.5px solid var(--chiziq-maydon); border-radius: var(--r-yon);
   background: var(--fon); color: var(--matn); font: inherit; font-size: var(--matn-kichik); font-weight: 700; cursor: pointer;
 }
-.rt-raqam:hover { border-color: var(--matn); }
+@media (hover: hover) and (pointer: fine) { .rt-raqam:hover { border-color: var(--matn); } }
 .rt-raqam.berilgan { background: var(--matn); border-color: var(--matn); color: var(--fon); }
 .rt-raqam.belgi::after {
   content: ''; position: absolute; top: -5px; right: -5px; width: 14px; height: 14px; border-radius: var(--r-toliq);
@@ -180,7 +179,7 @@
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--b-1) var(--b-4);
   color: var(--matn); text-decoration: none;
 }
-.rn-qadam:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
+@media (hover: hover) and (pointer: fine) { .rn-qadam:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); } }
 .rn-qadam strong { font-size: 1.1875rem; font-weight: 800; }
 .rn-qadam span { grid-column: 1; color: var(--matn-ikkinchi); line-height: 1.5; }
 .rn-qadam svg { grid-column: 2; grid-row: 1 / span 2; color: var(--rang-havola); }
@@ -200,7 +199,7 @@
 }
 .rn-savollar summary::-webkit-details-marker { display: none; }
 .rn-savollar summary:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: -3px; }
-.rn-savollar summary:hover { background: var(--fon-ikkinchi); }
+@media (hover: hover) and (pointer: fine) { .rn-savollar summary:hover { background: var(--fon-ikkinchi); } }
 .rn-holat { display: inline-flex; align-items: center; gap: var(--b-1); padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
 .rn-holat.togri { background: var(--rang-asosiy-och); color: var(--rang-havola); }
 .rn-holat.xato { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
@@ -214,14 +213,13 @@ details[open] > summary .rn-ok { transform: rotate(180deg); }
 .rn-tana dt { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
 .rn-tana dd { margin: var(--b-1) 0 0; line-height: 1.55; display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3); }
 .rn-tana blockquote { margin: 0; padding: var(--b-3) var(--b-4); border-left: 3px solid var(--rang-asosiy); background: var(--fon-ikkinchi); border-radius: 0 var(--r-yon) var(--r-yon) 0; line-height: 1.6; }
-.rn-tana .tugma { min-height: 44px; padding-block: var(--b-2); }
 .rn-bosh-xabar { margin: 0; padding: var(--b-5) var(--b-6); background: var(--fon-ikkinchi); border-radius: var(--r-katta); line-height: 1.55; }
 
 /* ---------- Attempt history (start page) ---------- */
 .rb-tarix { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
 .rb-tarix li + li { border-top: 1px solid var(--chiziq); }
 .rb-tarix a { min-height: 56px; padding: var(--b-2) var(--b-5); display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--b-3); color: var(--matn); text-decoration: none; }
-.rb-tarix a:hover { background: var(--fon-ikkinchi); }
+@media (hover: hover) and (pointer: fine) { .rb-tarix a:hover { background: var(--fon-ikkinchi); } }
 .rb-tarix a:focus-visible { outline-offset: -3px; }
 .rb-tarix .sana { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
 .rb-tarix .ball { font-weight: 700; }
