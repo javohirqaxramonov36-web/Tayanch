@@ -10,6 +10,7 @@ import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
 import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
+import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
 
@@ -126,6 +127,7 @@ const IK = {
   </dialog>
 
   <XabarDialog />
+  <TarifDialog />
 
   <div class="sr-only" id="taymer-elon" aria-live="assertive" aria-atomic="true"></div>
   <div class="sr-only" id="elon" aria-live="polite" aria-atomic="true"></div>
@@ -140,6 +142,7 @@ const IK = {
   import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
   import type { XabarApi } from '../../../../../lib/sat/xabar';
   import { xabarDialogUlash, supabaseXabarApi } from '../../../../../lib/sat/xabarDialog';
+  import { supabaseTaklifManba, tarifTaklifiniOch, type TaklifManba } from '../../../../../lib/sat/tarifDialog';
   import {
     MAHALLIY_KALIT, mahalliyniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
     xarita, xaritaYorliq, navbatgaQosh, keyingiUrinishMs, sessiyaXatosi, idTogrimi, hisobot, SABABLAR, sababTogrimi,
@@ -153,6 +156,8 @@ const IK = {
 
   // ---------- Holat ----------
   let api: SessiyaApi | null = null;
+  let taklifManba: TaklifManba | null = null;
+  let taklifKorsatildi = false; // dialog shu sahifada bir marta
   // P24 Report: ochiq xabari bor savollar (serverdan, RLS: faqat o'ziniki). Dialog boshla() da ulanadi.
   let xabarApi: XabarApi | null = null;
   let xabarDialog: ReturnType<typeof xabarDialogUlash> | null = null;
@@ -521,6 +526,10 @@ const IK = {
           if (tur === 'kirish') { xatoEkrani(e); return; }
           if (tur === 'kvota') {
             saqlashHolati("You've reached today's answer limit, so this answer wasn't checked.", { rejalar: true });
+            if (taklifManba && !taklifKorsatildi) {
+              taklifKorsatildi = true;
+              void tarifTaklifiniOch(taklifManba, "You've reached today's answer limit, so this answer wasn't checked. Your answers so far are saved. It resets at midnight (Tashkent time).", $('saqlash-havola'));
+            }
             m.navbat = [];
             saqla();
             yangila();
@@ -1015,6 +1024,7 @@ const IK = {
       if (!p.get('id')) p.set('id', MOCK_ID[tur] ?? MOCK_ID.oddiy);
       history.replaceState(null, '', `${location.pathname}?${p}`);
       api = mockApi(tur);
+      taklifManba = (await import('../../../../../lib/sat/tarifDialogSinov')).namunaTaklifManba();
       const { mockXabarApi } = await import('../../../../../lib/sat/xabarMock');
       xabarApi = mockXabarApi();
       const pill = document.getElementById('namuna-pill');
@@ -1031,6 +1041,7 @@ const IK = {
       if (!data.session) return xabarKorsat('Sign in to continue', 'Practice sessions are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
       api = haqiqiyApi(c);
       xabarApi = supabaseXabarApi(c);
+      taklifManba = supabaseTaklifManba(c);
     }
     if (xabarApi) xabarDialog = xabarDialogUlash(xabarApi);
     // Savol bankidagi start javobi kerak emas: sessiya doim serverdan (get_session) olinadi.

@@ -66,3 +66,39 @@ export function tarifDialogOch(m: TarifDialogMalumot, qaytishFokus: HTMLElement 
   if (!d.open) d.showModal();
   $<HTMLElement>('#td-h').focus();
 }
+
+/** Dialog uchun ma'lumot manbai: tariflar (plans) va foydalanuvchining amaldagi tarif kodi (usage_status). */
+export interface TaklifManba {
+  tariflar(): Promise<(TarifManba & { name?: string })[]>;
+  joriyKod(): Promise<string | null>;
+}
+
+/** Supabase mijozidan manba. Xato bo'lsa bo'sh ro'yxat / null (dialog ro'yxatsiz ochiladi). */
+export function supabaseTaklifManba(c: {
+  from(t: string): { select(s: string): { eq(k: string, v: string): PromiseLike<{ data: unknown; error: unknown }> } };
+  rpc(n: string): PromiseLike<{ data: unknown; error: unknown }>;
+}): TaklifManba {
+  return {
+    async tariflar() {
+      const { data, error } = await c.from('plans').select('code, name, limits, features').eq('bolim', 'sat');
+      return error ? [] : ((data ?? []) as (TarifManba & { name?: string })[]);
+    },
+    async joriyKod() {
+      const { data, error } = await c.rpc('usage_status');
+      return error ? null : ((data as { plan?: { code?: string } } | null)?.plan?.code ?? null);
+    },
+  };
+}
+
+/**
+ * Server limit tugadi desa (quota_exceeded, foydalanuvchi amalidan keyin): tavsiya tarif ro'yxati bilan dialog.
+ * Tavsiya tarifdagi (Pro) foydalanuvchiga ochilmaydi: undan yuqori ochiq tarif yo'q. Qaytaradi: ochildimi.
+ * Limit oldindan ma'lum bo'lsa sahifa tugmani o'chiq qiladi va sababini yozadi: bu funksiya chaqirilmaydi.
+ */
+export async function tarifTaklifiniOch(manba: TaklifManba, matn: string, qaytishFokus: HTMLElement | null, sarlavha?: string): Promise<boolean> {
+  const [kod, tariflar] = await Promise.all([manba.joriyKod().catch(() => null), manba.tariflar().catch(() => [])]);
+  if (kod === satTarif.tavsiya) return false;
+  const t = tavsiyaRoyxati(tariflar);
+  tarifDialogOch({ sarlavha, matn, tarifNomi: t?.nomi, royxat: t?.royxat }, qaytishFokus);
+  return true;
+}
