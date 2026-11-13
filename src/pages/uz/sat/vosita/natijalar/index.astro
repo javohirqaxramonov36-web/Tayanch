@@ -204,6 +204,7 @@ const holatIzohi = [
 
 <script>
   import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
+  import { holatOchir } from '../../../../../lib/holat';
 
   const namuna: Javob[] = JSON.parse(document.getElementById('namuna-data')!.textContent || '[]');
   const testUrl = (document.querySelector('.chiziq-blok a') as HTMLAnchorElement).href;
@@ -281,7 +282,7 @@ const holatIzohi = [
   ochirish.addEventListener('click', () => { oyna.returnValue = ''; oyna.showModal(); });
   oyna.addEventListener('close', () => {
     if (oyna.returnValue === 'ochir') {
-      try { localStorage.removeItem(KALIT_JAVOBLAR); } catch { /* ruxsat yo'q */ }
+      holatOchir(KALIT_JAVOBLAR);
       document.getElementById('ochirish-xabar')!.textContent = 'Results deleted.';
       chiz();
       (document.getElementById('nat-h') as HTMLElement).focus();

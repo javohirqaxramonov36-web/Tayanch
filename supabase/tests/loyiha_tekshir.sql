@@ -30,7 +30,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('daily_picks', 'authenticated', ''),
   ('bookmarks', 'authenticated', 'DELETE,INSERT,SELECT'),
   ('events', 'anon', ''),
-  ('events', 'authenticated', 'INSERT(name),INSERT(page),INSERT(props)'),
+  ('events', 'authenticated', ''),
   ('group_licenses', 'anon', ''),
   ('group_licenses', 'authenticated', 'SELECT'),
   ('group_members', 'anon', ''),
@@ -66,7 +66,7 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('practice_sessions', 'anon', ''),
   ('practice_sessions', 'authenticated', 'SELECT'),
   ('profiles', 'anon', ''),
-  ('profiles', 'authenticated', 'SELECT UPDATE(consent_version),UPDATE(country),UPDATE(display_name),UPDATE(exam_date),UPDATE(locale),UPDATE(nickname),UPDATE(target_score)'),
+  ('profiles', 'authenticated', 'SELECT UPDATE(consent_version),UPDATE(country),UPDATE(current_score),UPDATE(display_name),UPDATE(exam_date),UPDATE(locale),UPDATE(nickname),UPDATE(sat_setup_at),UPDATE(target_score),UPDATE(usage_analytics)'),
   ('questions', 'anon', ''),
   ('questions', 'authenticated', ''),
   ('reports', 'anon', ''),
@@ -166,7 +166,8 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.group_join(text,text,boolean,boolean,text,text,boolean)', false, true, true),
   ('public.group_my_memberships()', false, true, true),
   ('public.group_update_sharing(uuid,boolean,boolean,text,text,boolean)', false, true, true),
-  ('public.group_leave(uuid)', false, true, true)
+  ('public.group_leave(uuid)', false, true, true),
+  ('public.track_event(text,jsonb)', false, true, true)
 ),
 rpc as (
   select k.*, to_regprocedure(k.imzo) as oid from kutilgan_rpc k

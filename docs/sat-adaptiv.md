@@ -1,6 +1,6 @@
 # SAT mock imtihon: adaptive-style 2-modul (P31)
 
-Holat: yadro qurilgan (branch `sat-adaptiv`, 2026-11-12). Mock imtihonga (P30, branch `sat-mock-imtihon`) ulash alohida kichik PR bo'ladi. Migratsiya jonli bazaga **qo'llanmagan**.
+Holat: yadro qurilgan (branch `sat-adaptiv`, 2026-11-12). Mock imtihonga (P30, branch `sat-mock-imtihon`) ulash alohida kichik PR bo'ladi. Migratsiya jonli bazaga 2026-11-13 da qo'llangan (PR #131 merge qilingan).
 
 ## Bu nima va nima emas
 
