@@ -11,6 +11,8 @@ import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
 import KunSavoli from '../../../components/sat/KunSavoli.astro';
 import SatMaqsadSarlavha from '../../../components/sat/SatMaqsadSarlavha.astro';
+import SatBugun from '../../../components/sat/SatBugun.astro';
+import SatKirganBelgi from '../../../components/sat/SatKirganBelgi.astro';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 
@@ -33,9 +35,9 @@ const qayerdaQatorlar = qayerda.map((q) => ({ ...q, m: manbalar.find((m) => m.id
 if (qayerdaQatorlar.some((q) => !q.m)) throw new Error('SAT kirish: "Where the SAT counts" manbasi topilmadi yoki rasmiy emas');
 type QadamBelgi = 'kompas' | 'qalam' | 'grafik';
 const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; qism: string; belgi: QadamBelgi }[] = [
-  { yorliq: 'UNDERSTAND', nomi: 'Strategy', tavsif: 'Where to start your prep and how to plan it.', havola: 'Open the guide', qism: 'qollanma/strategiya/', belgi: 'kompas' },
+  { yorliq: 'UNDERSTAND', nomi: 'Where to start', tavsif: 'How the test works and how to plan your prep.', havola: 'Open the guide', qism: 'qollanma/qayerdan-boshlash/', belgi: 'kompas' },
   { yorliq: 'PRACTICE', nomi: 'Tests and question bank', tavsif: 'Short tests by topic, with an explanation right after each answer.', havola: 'Start practicing', qism: 'mashq/test/', belgi: 'qalam' },
-  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'A list of your mistakes, saved only in this browser. No score is calculated.', havola: 'See your results', qism: 'vosita/natijalar/', belgi: 'grafik' },
+  { yorliq: 'ANALYZE', nomi: 'My results', tavsif: 'Accuracy by skill and the topics to work on next. Needs a free account.', havola: 'See your results', qism: 'vosita/natijalar/', belgi: 'grafik' },
 ];
 ---
 <BolimQobiq
@@ -49,11 +51,11 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   manbalar={['CB03', 'HV01', 'NY01', 'MT01', 'KY01']}
 >
   <div class="ichki sat-kirish">
+    <SatKirganBelgi />
     <SatMaqsadSarlavha />
     <QavatFoto bolim="sat" />
     <section class="hero" aria-labelledby="sat-h">
       <div class="hero-matn">
-        <p class="pill-qator"><span class="pill">Draft</span><span class="pill-izoh">Section home</span></p>
         <h1 id="sat-h">Digital SAT®,<br /><span class="kok">without expensive courses.</span></h1>
         <p class="lead">English (Reading &amp; Writing) and Math, with equal attention. The plan is based on the independent prep that led the author to an SAT score of 1420: Desmos and formulas, time management, mistake analysis.</p>
         <p class="lead lead-telefon">English and Math, with equal attention. A plan based on the author's independent prep.</p>
@@ -62,7 +64,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
             Start a practice test
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
           </a>
-          <a class="katta-tugma ikkinchi" href={sat('qollanma/strategiya/')}>Read the strategy</a>
+          <a class="katta-tugma ikkinchi" href={sat('qollanma/qayerdan-boshlash/')}>Where to start</a>
         </div>
       </div>
 
@@ -105,6 +107,8 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
         })();
       </script>
     </section>
+
+    <SatBugun />
 
     <KunSavoli />
 
@@ -218,10 +222,8 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .sat-kirish { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-14); }
   .kok { color: var(--rang-havola); }
 
-  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
   .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; }
   .pill-kichik { padding: 3px 10px; font-size: 12px; color: var(--matn-ikkinchi); white-space: nowrap; }
-  .pill-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-sust); }
   .ustki-yorliq { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); line-height: 1.4; }
 
   /* Hero */
@@ -356,6 +358,20 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   }
   .telegram { display: flex; align-items: center; gap: 10px; font-weight: 700; }
   .eslatma { font-size: var(--matn-kichik); color: var(--matn-sust); max-width: 60ch; }
+
+  /* Kirgan o'quvchi (SatKirganBelgi <html data-sat-kirgan> qo'yadi): kirish sahifasining tanishtiruv qismi yashirinadi,
+     "Today" bloki birinchi. h1 ekran o'quvchi uchun qoladi (sahifa sarlavhasiz qolmasin). Kun savoli, "Where the SAT counts"
+     va qolgan bloklar joyida. */
+  :global(:root[data-sat-kirgan]) .hero,
+  :global(:root[data-sat-kirgan]) .hero-matn { display: contents; }
+  :global(:root[data-sat-kirgan]) .sat-kirish > :global(.qavat-foto),
+  :global(:root[data-sat-kirgan]) .hero-matn > :not(h1),
+  :global(:root[data-sat-kirgan]) .tuzilma,
+  :global(:root[data-sat-kirgan]) .yol { display: none; }
+  :global(:root[data-sat-kirgan]) .hero h1 {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
 
   /* Telefon ekrani */
   @media (max-width: 640px) {
