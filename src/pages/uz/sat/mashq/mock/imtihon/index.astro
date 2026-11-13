@@ -1,0 +1,946 @@
+---
+// Mock imtihon ekrani (P30). Fokus qolipi, yon panelsiz. Manzil: /uz/sat/mashq/mock/imtihon/?id=<attempt_id>.
+// Bosqichlar: modul oldidan → modul (taymer serverdagi deadline_at dan) → R&W 2-moduldan keyin 10 daqiqa tanaffus → natija.
+// Javoblar modul davomida o'zgaradi; to'g'ri javob va tushuntirish faqat natijada. Uzilishda: brauzer navbati
+// (tayanch:sat-mock:v1:<id>), qaytganda server holati; muddati o'tgan modul serverda o'zi yopiladi.
+// Server: supabase/migrations/20261113012418_mock_imtihon.sql. Sof mantiq: src/lib/sat/mock.ts.
+// Dev mock: src/lib/sat/mockImtihonMock.ts (?mock=..., faqat DEV).
+import SatFokus from '../../../../../../layouts/SatFokus.astro';
+import SavolUslub from '../../../../../../components/sat/SavolUslub.astro';
+import MockUslub from '../../../../../../components/sat/MockUslub.astro';
+import ManbaBlok from '../../../../../../components/ManbaBlok.astro';
+import DesmosHavola from '../../../../../../components/sat/DesmosHavola.astro';
+import { ichkiSahifa } from '../../../../../../data/satSahifalar';
+import { yol } from '../../../../../../lib/yol';
+
+const sahifa = ichkiSahifa('mashq/mock/imtihon/');
+const kirishUrl = yol('/uz/sat/mashq/mock/');
+const IK = {
+  xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
+  soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
+  yop: ['M6 6l12 12M18 6L6 18'],
+};
+---
+<SatFokus
+  title={`${sahifa.nomi} · SAT`}
+  description={sahifa.tavsif}
+  ustki="Mock test"
+  nomi="Mock test"
+  progressNomi="Questions answered in this module"
+  yol={['Practice', 'Mock test']}
+  yopish={{ href: kirishUrl, yorliq: 'Leave the mock test. Your saved answers stay, but a running module timer keeps going.' }}
+  liftPastki={false}
+>
+  <div slot="amal" class="mk-amallar">
+    <div class="mk-taymer" id="taymer" hidden>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{IK.soat.map((d) => <path d={d} />)}</svg>
+      <span class="mk-sr">Time left in this module:</span>
+      <span id="taymer-vaqt">--:--</span>
+    </div>
+    <button type="button" class="mk-kichik" id="taymer-yashir" aria-pressed="false" aria-controls="taymer" hidden>Hide timer</button>
+    <DesmosHavola id="desmos" hidden />
+    <button type="button" class="mk-kichik" id="xarita-och" aria-haspopup="dialog" hidden>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.xarita.map((d) => <path d={d} />)}</svg>
+      Questions
+    </button>
+  </div>
+
+  <SavolUslub />
+  <MockUslub />
+  <div class="mk mk-imtihon" id="mk" data-kirish-url={kirishUrl} data-hisob-url={yol('/uz/hisob/kirish/')}>
+    {import.meta.env.DEV && <p class="mk-pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
+
+    <section class="mk-karta" id="yuklash" role="status">
+      <p class="mk-karta-h">Loading your mock test…</p>
+    </section>
+
+    <section class="mk-karta" id="xabar" hidden aria-labelledby="xabar-h">
+      <h1 id="xabar-h" class="mk-karta-h" tabindex="-1"></h1>
+      <p id="xabar-matn" class="mk-matn"></p>
+      <div class="mk-amal">
+        <button type="button" class="mk-tugma" id="xabar-qayta" hidden>Try again</button>
+        <a class="mk-tugma" id="xabar-havola" hidden></a>
+      </div>
+    </section>
+
+    <section class="mk-karta" id="modul-oldi" hidden aria-labelledby="oldi-h">
+      <p class="mk-meta" id="oldi-ustki"></p>
+      <h1 id="oldi-h" class="mk-karta-h" tabindex="-1"></h1>
+      <p class="mk-matn" id="oldi-matn"></p>
+      <ul class="mk-oldi-royxat">
+        <li>The timer starts when you press Start and keeps running if you leave the page.</li>
+        <li>You can change answers and mark questions for review until you submit the module.</li>
+        <li>When time runs out, the module is submitted with the answers you saved.</li>
+      </ul>
+      <div class="mk-amal">
+        <button type="button" class="mk-tugma" id="modul-boshla">Start module</button>
+        <button type="button" class="mk-tugma2" id="toxtat-och" aria-haspopup="dialog">Stop the mock test</button>
+      </div>
+    </section>
+
+    <section id="savol-ekran" hidden aria-label="Question">
+      <h1 class="mk-sr" id="savol-h" tabindex="-1">Question</h1>
+      <p class="mk-saqlash" id="saqlash" role="status"></p>
+      <div id="savol-joy"></div>
+      <div class="mk-pastki">
+        <button type="button" class="mk-tugma2" id="oldingi">Back</button>
+        <span class="mk-joy" id="joy"></span>
+        <button type="button" class="mk-tugma" id="keyingi">Next</button>
+      </div>
+    </section>
+
+    <section class="mk-karta" id="tanaffus" hidden aria-labelledby="tanaffus-h">
+      <p class="mk-meta">Reading and Writing is done</p>
+      <h1 id="tanaffus-h" class="mk-karta-h" tabindex="-1">Take a 10-minute break</h1>
+      <p class="mk-tanaffus-vaqt" id="tanaffus-vaqt" aria-hidden="true">10:00</p>
+      <p class="mk-matn" id="tanaffus-matn">Stand up, drink some water and rest your eyes. Math starts only when you press the button, so you can also continue early.</p>
+      <div class="mk-amal">
+        <button type="button" class="mk-tugma" id="tanaffus-davom">Resume testing</button>
+      </div>
+    </section>
+
+    <section class="mk-karta" id="topshirish" hidden aria-labelledby="topshirish-h">
+      <h1 id="topshirish-h" class="mk-karta-h" tabindex="-1">Submitting the module…</h1>
+      <p id="topshirish-matn" class="mk-matn" role="status"></p>
+      <div class="mk-amal">
+        <button type="button" class="mk-tugma" id="topshirish-qayta" hidden>Try again</button>
+      </div>
+    </section>
+
+    <section class="mk-natija" id="natija" hidden aria-labelledby="natija-h"></section>
+
+    <ManbaBlok
+      manbalar={sahifa.manbalar}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={sahifa.tekshirilmagan}
+    />
+  </div>
+
+  <dialog class="mk-dialog" id="xarita" aria-labelledby="xarita-h">
+    <div class="mk-dialog-ichi">
+      <div class="mk-dialog-bosh">
+        <h2 id="xarita-h">Questions</h2>
+        <button type="button" class="mk-yopish" id="xarita-yop" aria-label="Close">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">{IK.yop.map((d) => <path d={d} />)}</svg>
+        </button>
+      </div>
+      <p class="mk-matn" id="xarita-izoh"></p>
+      <ol class="mk-panjara" id="xarita-panjara"></ol>
+      <ul class="mk-belgi" aria-label="Legend">
+        <li><span class="mk-namuna-katak javobli" aria-hidden="true"></span> Answered</li>
+        <li><span class="mk-namuna-katak" aria-hidden="true"></span> Not answered</li>
+        <li><span class="mk-namuna-katak flag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M4 22V4" /><path d="M4 4h13l-2 4 2 4H4" /></svg></span> Marked for review</li>
+      </ul>
+      <p class="mk-ogoh" id="xarita-ogoh"></p>
+      <div class="mk-dialog-amal">
+        <button type="button" class="mk-tugma2" id="xarita-qayt">Back to questions</button>
+        <button type="button" class="mk-tugma" id="modul-topshir">Submit module</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="mk-dialog" id="toxtat" aria-labelledby="toxtat-h">
+    <div class="mk-dialog-ichi">
+      <div class="mk-dialog-bosh"><h2 id="toxtat-h">Stop this mock test?</h2></div>
+      <p class="mk-matn">Answers from modules you already finished stay in your history, and wrong ones are in your redo list. A stopped test gets no score, and you can't continue it later.</p>
+      <div class="mk-dialog-amal">
+        <button type="button" class="mk-tugma2" id="toxtat-yoq">Keep going</button>
+        <button type="button" class="mk-tugma" id="toxtat-ha">Stop the test</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="mk-sr" id="taymer-elon" aria-live="assertive" aria-atomic="true"></div>
+  <div class="mk-sr" id="elon" aria-live="polite" aria-atomic="true"></div>
+</SatFokus>
+
+<script>
+  import { hisobMijoz } from '../../../../../../lib/hisob';
+  import { savolChiz, type SavolKorsatkich } from '../../../../../../lib/sat/savolKorsatkich';
+  import { BOSH_HOLAT, type SavolHolati } from '../../../../../../lib/sat/savolTuri';
+  import { sprTekshir } from '../../../../../../lib/sat/sprFormat';
+  import { xavfsizMatn } from '../../../../../../lib/sat/xavfsizMatn';
+  import { komponentSavoli, togriMatn, chegaraOtildi, vaqtMatni, davomiylikMatni, keyingiUrinishMs, idTogrimi, SABABLAR, type ServerSavol } from '../../../../../../lib/sat/sessiya';
+  import {
+    MOCK_KALIT, mockMahalliyTekshir, modulgaMosla, javoblarniBirlashtir, navbatBolagi, navbatdanOl, mockXarita, mockXaritaYorliq,
+    topshirishOgohi, qolganMs, tanaffusTugashi, joriyModul, ekranTuri, modulNomi, mockXatosi, natijaJadvali, modulVaqtlari,
+    BOLIM_NOMI, SINOV_YOZUVI,
+    type MockApi, type MockHolat, type MockMahalliy, type MockNatija, type MockNatijaSavol, type SaqlashBand,
+  } from '../../../../../../lib/sat/mock';
+
+  const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
+  const ildiz = $('mk');
+  const KIRISH = ildiz.dataset.kirishUrl!;
+
+  // ---------- Holat ----------
+  let api: MockApi | null = null;
+  let qidiruv = '';
+  let id = '';
+  let H: MockHolat | null = null;
+  let soatOlingan = 0;
+  let m: MockMahalliy = mockMahalliyTekshir(null);
+  let javoblar = new Map<string, SaqlashBand>();
+  let korsatkich: SavolKorsatkich | null = null;
+  type Ekran = 'yuklash' | 'xabar' | 'modul-oldi' | 'savol' | 'tanaffus' | 'topshirish' | 'natija';
+  let ekran: Ekran = 'yuklash';
+  let kirgan = performance.now();
+  let oldingiQolgan: number | null = null;
+  let yuborilmoqda = false;
+  let urinish = 0;
+  let qaytaTaymer: ReturnType<typeof setTimeout> | undefined;
+  let saqlashTaymer: ReturnType<typeof setTimeout> | undefined;
+  let topshirilmoqda = false;
+  const rasmlar = new Map<string, string | null>();
+
+  const savollar = () => H?.questions ?? [];
+  const joriySavol = () => savollar()[m.joriy];
+
+  // ---------- Xotira ----------
+  function saqla() {
+    try { localStorage.setItem(MOCK_KALIT(id), JSON.stringify(m)); } catch { /* xotira yopiq: sahifa ochiq turguncha ishlaydi */ }
+  }
+  function oqiMahalliy(): MockMahalliy {
+    try { return mockMahalliyTekshir(localStorage.getItem(MOCK_KALIT(id))); } catch { return mockMahalliyTekshir(null); }
+  }
+  function tozala() {
+    try { localStorage.removeItem(MOCK_KALIT(id)); } catch { /* */ }
+  }
+
+  // ---------- Umumiy ----------
+  function elon(matn: string, kuchli = false) {
+    const e = $(kuchli ? 'taymer-elon' : 'elon');
+    e.textContent = '';
+    setTimeout(() => (e.textContent = matn), 50);
+  }
+
+  function korsat(e: Ekran) {
+    ekran = e;
+    for (const [k, s] of [['yuklash', 'yuklash'], ['xabar', 'xabar'], ['modul-oldi', 'modul-oldi'], ['savol', 'savol-ekran'], ['tanaffus', 'tanaffus'], ['topshirish', 'topshirish'], ['natija', 'natija']] as const) {
+      $(s).hidden = e !== k;
+    }
+    const ishda = e === 'savol';
+    $('xarita-och').hidden = !ishda;
+    $('taymer-yashir').hidden = !ishda;
+    $('taymer').hidden = !ishda || $('taymer-yashir').getAttribute('aria-pressed') === 'true';
+    $('desmos').hidden = !(ishda && joriySavol()?.section === 'math');
+    $('fokus-progress').parentElement!.style.display = ishda ? '' : 'none';
+    const modul = H?.current_module ?? 1;
+    $('fokus-nomi').textContent = e === 'natija' ? 'Results' : e === 'tanaffus' ? 'Break' : H ? modulNomi(modul) : 'Mock test';
+    $('fokus-ustki').textContent = H ? `Mock test ${H.form_no}${H.kind === 'retake' ? ' · retake' : ''}` : 'Mock test';
+  }
+
+  function xabarKorsat(sarlavha: string, matn: string, amal?: { qayta?: boolean; havola?: { href: string; matn: string } }) {
+    $('xabar-h').textContent = sarlavha;
+    $('xabar-matn').textContent = matn;
+    $('xabar-qayta').hidden = !amal?.qayta;
+    const h = $<HTMLAnchorElement>('xabar-havola');
+    h.hidden = !amal?.havola;
+    if (amal?.havola) { h.href = amal.havola.href; h.textContent = amal.havola.matn; }
+    korsat('xabar');
+    $('xabar-h').focus();
+  }
+
+  const kirishHavolasi = () => `${ildiz.dataset.hisobUrl}?keyin=${encodeURIComponent(location.pathname + location.search)}`;
+  const orqaga = { href: KIRISH + (qidiruv ? `?${qidiruv.slice(1)}` : ''), matn: 'Go to mock tests' };
+
+  function xatoEkrani(e: unknown) {
+    const tur = mockXatosi(e);
+    if (tur === 'kirish') return xabarKorsat('Sign in to continue', 'Mock tests are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
+    if (tur === 'topilmadi') return xabarKorsat('Mock test not found', 'This mock test does not exist or belongs to another account.', { havola: { ...orqaga, href: KIRISH + (qidiruv ? `?${qidiruv.slice(1)}` : '') } });
+    if (tur === 'tarmoq') return xabarKorsat("Couldn't reach the server", 'Check your connection and try again. Answers you already chose on this device are kept.', { qayta: true });
+    return xabarKorsat('Something went wrong', "The mock test didn't load. Try again in a moment.", { qayta: true });
+  }
+
+  // ---------- Server holati ----------
+  function serverdan(h: MockHolat) {
+    H = h;
+    soatOlingan = Date.now();
+    if (h.phase === 'module') {
+      m = modulgaMosla(m, h.current_module);
+      if (m.joriy >= h.questions.length) m.joriy = 0;
+    } else if (h.status !== 'active') {
+      tozala();
+      m = mockMahalliyTekshir(null);
+    }
+    javoblar = javoblarniBirlashtir(h.phase === 'module' ? h.answers : [], m);
+    oldingiQolgan = null;
+  }
+
+  async function holatgaOt(fokus = true) {
+    if (!H) return;
+    const e = ekranTuri(H);
+    if (e === 'modul') return savolKorsat(fokus);
+    if (e === 'modul-oldi') return modulOldi(fokus);
+    if (e === 'tanaffus') return tanaffusKorsat(fokus);
+    if (e === 'toxtatilgan') return xabarKorsat('This mock test was stopped', 'A stopped mock test has no score. Mistakes from the modules you finished are in your redo list.', { havola: { href: KIRISH + (qidiruv ? `?${qidiruv.slice(1)}` : ''), matn: 'Go to mock tests' } });
+    return natijaKorsat();
+  }
+
+  // ---------- Modul oldidan ----------
+  function modulOldi(fokus: boolean) {
+    const md = joriyModul(H!)!;
+    const bolim = BOLIM_NOMI[md.section];
+    $('oldi-ustki').textContent = `Module ${H!.current_module} of 4`;
+    $('oldi-h').textContent = modulNomi(md.module);
+    $('oldi-matn').textContent = `${md.question_count} questions · ${davomiylikMatni(md.time_ms)}. ${md.section === 'math' ? 'You can use the Desmos graphing calculator in a new tab.' : `${bolim} questions come one at a time, with a short text for each.`}`;
+    $('modul-boshla').textContent = H!.current_module === 1 && !H!.modules.some((x) => x.started_at) ? 'Start the test' : 'Start module';
+    korsat('modul-oldi');
+    if (fokus) $('oldi-h').focus();
+  }
+
+  async function modulBoshla(tugma: HTMLButtonElement) {
+    if (tugma.getAttribute('aria-busy') === 'true') return;
+    tugma.setAttribute('aria-busy', 'true');
+    tugma.disabled = true;
+    try {
+      m = { ...modulgaMosla(m, H!.current_module), joriy: 0 };
+      serverdan(await api!.modulBoshla(id));
+      saqla();
+      await holatgaOt();
+    } catch (e) {
+      xatoEkrani(e);
+    } finally {
+      tugma.removeAttribute('aria-busy');
+      tugma.disabled = false;
+    }
+  }
+
+  // ---------- Savol ----------
+  function holatOl(q: ServerSavol | MockHolat['questions'][number]): SavolHolati {
+    const j = javoblar.get(q.id);
+    return {
+      ...BOSH_HOLAT,
+      ochirilgan: [...(m.ochirilgan[q.id] ?? [])],
+      tanlangan: q.format === 'mcq' ? (j?.answer ?? null) : null,
+      sprQiymat: q.format === 'spr' ? (j?.answer ?? '') : undefined,
+      belgilangan: !!j?.flagged,
+    };
+  }
+
+  /** Bandni o'zgartiradi, navbatga qo'yadi va qisqa kutishdan keyin serverga yuboradi. */
+  function bandYoz(qid: string, ozgar: Partial<Pick<SaqlashBand, 'answer' | 'flagged' | 'time_ms'>>, darhol = false) {
+    const eski = javoblar.get(qid) ?? { question_id: qid, answer: null, flagged: false, time_ms: 0 };
+    const yangi = { ...eski, ...ozgar };
+    javoblar.set(qid, yangi);
+    m.navbat[qid] = yangi;
+    saqla();
+    saqlashHolati();
+    clearTimeout(saqlashTaymer);
+    saqlashTaymer = setTimeout(() => void yubor(), darhol ? 0 : 700);
+  }
+
+  /** Joriy savolda sarflangan vaqt (tab ko'rinib turganda). */
+  function vaqtYig() {
+    const q = joriySavol();
+    const hozir = performance.now();
+    const otdi = hozir - kirgan;
+    kirgan = hozir;
+    if (!q || ekran !== 'savol' || document.hidden || otdi < 500) return;
+    const eski = javoblar.get(q.id);
+    bandYoz(q.id, { time_ms: Math.round((eski?.time_ms ?? 0) + otdi) });
+  }
+
+  /** SPR maydonida yozilgan, lekin Enter bosilmagan qiymat ham saqlanadi. */
+  function sprQoralamaOl() {
+    const q = joriySavol();
+    if (!q || q.format !== 'spr') return;
+    const inp = $('savol-joy').querySelector<HTMLInputElement>('input[type="text"]');
+    if (!inp) return;
+    const t = sprTekshir(inp.value);
+    const hozir = javoblar.get(q.id)?.answer ?? null;
+    if (t.ok && t.qiymat !== hozir) bandYoz(q.id, { answer: t.qiymat });
+    else if (!inp.value.trim() && hozir) bandYoz(q.id, { answer: null });
+  }
+
+  async function savolKorsat(fokus: boolean) {
+    const q = joriySavol();
+    if (!q) return;
+    korsat('savol');
+    let rasm: string | null = null;
+    if (q.figure) {
+      if (!rasmlar.has(q.figure.path)) rasmlar.set(q.figure.path, await api!.rasm(q.figure.path).catch(() => null));
+      rasm = rasmlar.get(q.figure.path) ?? null;
+    }
+    korsatkich?.yoq();
+    korsatkich = savolChiz($('savol-joy'), {
+      savol: komponentSavoli({ ...q, domain: '', skill: '' }, rasm),
+      holat: holatOl(q),
+      rejim: 'taymerli',
+      raqam: m.joriy + 1,
+      onSelect: (k) => { bandYoz(q.id, { answer: k }); yangila(); },
+      onSubmitSpr: (v) => { bandYoz(q.id, { answer: v }); elon('Answer saved. You can change it until you submit the module.'); yangila(); },
+      onFlag: (b) => { bandYoz(q.id, { flagged: b }); yangila(); },
+      onEliminate: (k, ochir) => {
+        const r = new Set(m.ochirilgan[q.id] ?? []);
+        if (ochir) r.add(k); else r.delete(k);
+        m.ochirilgan[q.id] = [...r];
+        saqla();
+        yangila();
+      },
+    });
+    kirgan = performance.now();
+    yangila();
+    $('savol-h').textContent = `Question ${m.joriy + 1} of ${savollar().length}`;
+    if (fokus) { scrollTo({ top: 0 }); $('savol-h').focus({ preventScroll: true }); }
+  }
+
+  function yangila() {
+    const q = joriySavol();
+    if (!q) return;
+    korsatkich?.yangila(holatOl(q));
+    const n = savollar().length;
+    $<HTMLButtonElement>('oldingi').disabled = m.joriy === 0;
+    $('keyingi').textContent = m.joriy === n - 1 ? 'Review and submit' : 'Next';
+    $('joy').textContent = `${m.joriy + 1} of ${n}`;
+    $('desmos').hidden = q.section !== 'math';
+    progressChiz();
+  }
+
+  function progressChiz() {
+    const n = savollar().length;
+    const javob = savollar().filter((q) => javoblar.get(q.id)?.answer).length;
+    const p = $('fokus-progress');
+    p.setAttribute('aria-valuemax', String(n));
+    p.setAttribute('aria-valuenow', String(javob));
+    p.setAttribute('aria-valuetext', `${javob} of ${n} answered`);
+    $('fokus-progress-toldirish').style.width = n ? `${(javob / n) * 100}%` : '0';
+    $('fokus-progress-matn').textContent = `${javob} / ${n}`;
+  }
+
+  function otish(i: number) {
+    if (i < 0 || i >= savollar().length) return;
+    sprQoralamaOl();
+    vaqtYig();
+    m.joriy = i;
+    saqla();
+    void savolKorsat(true);
+  }
+
+  // ---------- Saqlash ----------
+  function saqlashHolati(xabar?: string, ogoh = false) {
+    const s = $('saqlash');
+    const navbatda = Object.keys(m.navbat).length;
+    s.classList.toggle('ogoh', ogoh);
+    s.textContent = xabar ?? (navbatda ? 'Saving…' : 'All answers saved');
+  }
+
+  /** Navbatni serverga yuboradi. true: navbat bo'sh. */
+  async function yubor(): Promise<boolean> {
+    if (!api || !H || H.phase !== 'module') return true;
+    if (yuborilmoqda) return false;
+    const bolak = navbatBolagi(m);
+    if (!bolak.length) { saqlashHolati(); return true; }
+    yuborilmoqda = true;
+    clearTimeout(qaytaTaymer);
+    try {
+      const r = await api.saqla(id, bolak);
+      urinish = 0;
+      if (r.module_closed) {
+        // Modul serverda yopilgan (vaqt tugagan yoki boshqa tabda topshirilgan): yangi holat olinadi.
+        yuborilmoqda = false;
+        await qaytaOl('This module has ended. Answers saved before the time ran out were kept.');
+        return true;
+      }
+      m = navbatdanOl(m, bolak);
+      saqla();
+      saqlashHolati();
+      yuborilmoqda = false;
+      if (Object.keys(m.navbat).length) return yubor();
+      return true;
+    } catch (e) {
+      yuborilmoqda = false;
+      const t = mockXatosi(e);
+      if (t === 'kirish') { xatoEkrani(e); return false; }
+      saqlashHolati("Offline: your answers are kept on this device and will be sent when the connection is back.", true);
+      qaytaTaymer = setTimeout(() => void yubor(), keyingiUrinishMs(urinish++));
+      return false;
+    }
+  }
+
+  async function qaytaOl(xabar?: string) {
+    try {
+      serverdan(await api!.ol(id));
+      saqla();
+      if (xabar) elon(xabar);
+      await holatgaOt();
+    } catch (e) {
+      xatoEkrani(e);
+    }
+  }
+
+  // ---------- Taymer ----------
+  const ELON = {
+    besh: '5 minutes left in this module.',
+    bir: '1 minute left in this module.',
+    tugadi: 'Time is up. Submitting the module.',
+  } as const;
+
+  function tik() {
+    if (!H) return;
+    const hozir = Date.now();
+    if (ekran === 'savol' && H.phase === 'module') {
+      const qolgan = qolganMs(joriyModul(H)?.deadline_at ?? null, H.server_now, soatOlingan, hozir);
+      $('taymer-vaqt').textContent = vaqtMatni(qolgan);
+      $('taymer').classList.toggle('kam', qolgan <= 300_000);
+      const c = chegaraOtildi(oldingiQolgan, qolgan);
+      if (c) elon(ELON[c], true);
+      // Yashirilgan taymer 5 daqiqa qolganda qayta ko'rinadi (foydalanuvchi bilmay qolmasin).
+      if (c === 'besh' && $('taymer-yashir').getAttribute('aria-pressed') === 'true') taymerYashir(false);
+      oldingiQolgan = qolgan;
+      if (qolgan <= 0 && !topshirilmoqda) void topshir(true);
+    } else if (ekran === 'tanaffus') {
+      const tugash = tanaffusTugashi(H);
+      const qolgan = qolganMs(tugash, H.server_now, soatOlingan, hozir);
+      $('tanaffus-vaqt').textContent = vaqtMatni(qolgan);
+      if (qolgan <= 0 && !$('tanaffus').dataset.tugadi) {
+        $('tanaffus').dataset.tugadi = '1';
+        $('tanaffus-h').textContent = 'The break is over';
+        $('tanaffus-matn').textContent = "Start Math when you're ready. Its timer starts when you press the button.";
+        elon('The break is over.');
+      }
+    }
+  }
+
+  function taymerYashir(yashir: boolean) {
+    const t = $('taymer-yashir');
+    t.setAttribute('aria-pressed', String(yashir));
+    t.textContent = yashir ? 'Show timer' : 'Hide timer';
+    $('taymer').hidden = yashir || ekran !== 'savol';
+  }
+
+  // ---------- Tanaffus ----------
+  function tanaffusKorsat(fokus: boolean) {
+    delete $('tanaffus').dataset.tugadi;
+    $('tanaffus-h').textContent = 'Take a 10-minute break';
+    $('tanaffus-matn').textContent = 'Stand up, drink some water and rest your eyes. Math starts only when you press the button, so you can also continue early.';
+    korsat('tanaffus');
+    tik();
+    if (fokus) $('tanaffus-h').focus();
+  }
+
+  // ---------- Topshirish ----------
+  async function topshir(avto: boolean) {
+    if (!H || H.phase !== 'module' || topshirilmoqda) return;
+    topshirilmoqda = true;
+    const dlg = $<HTMLDialogElement>('xarita');
+    if (dlg.open) xaritaYop(false);
+    sprQoralamaOl();
+    vaqtYig();
+    const modul = H.current_module;
+    $('topshirish-h').textContent = avto ? 'Time is up' : 'Submitting the module…';
+    $('topshirish-matn').textContent = 'Saving your last answers…';
+    $<HTMLButtonElement>('topshirish-qayta').hidden = true;
+    korsat('topshirish');
+    $('topshirish-h').focus();
+    clearTimeout(saqlashTaymer);
+    const bosh = await yubor();
+    if (!bosh) {
+      topshirilmoqda = false;
+      if (ekran !== 'topshirish') return;
+      $('topshirish-matn').textContent = avto
+        ? "Some answers couldn't be sent: you're offline. Reconnect within 30 seconds to keep them; after that the module is submitted with the answers already saved."
+        : "Some answers couldn't be sent: you're offline. Your answers are kept on this device. Try again when you're back online.";
+      $<HTMLButtonElement>('topshirish-qayta').hidden = false;
+      return;
+    }
+    try {
+      $('topshirish-matn').textContent = 'Submitting…';
+      if (H?.phase === 'module' && H.current_module === modul) serverdan(await api!.topshir(id, modul));
+      tozala();
+      m = mockMahalliyTekshir(null);
+      if (H?.phase === 'module') m = modulgaMosla(m, H.current_module);
+      saqla();
+      topshirilmoqda = false;
+      elon(H?.status === 'finished' ? 'The mock test is finished.' : 'Module submitted.');
+      await holatgaOt();
+    } catch (e) {
+      topshirilmoqda = false;
+      const t = mockXatosi(e);
+      if (t === 'tarmoq') {
+        $('topshirish-matn').textContent = "Couldn't reach the server. Your answers are saved. Try again.";
+        $<HTMLButtonElement>('topshirish-qayta').hidden = false;
+      } else xatoEkrani(e);
+    }
+  }
+
+  // ---------- Xarita (dialog) ----------
+  let xaritaQaytish: HTMLElement | null = null;
+  function xaritaOch(oxirgi: boolean) {
+    sprQoralamaOl();
+    const x = mockXarita(savollar(), javoblar, m.joriy);
+    const panjara = $('xarita-panjara');
+    panjara.replaceChildren();
+    for (const b of x) {
+      const li = document.createElement('li');
+      const t = document.createElement('button');
+      t.type = 'button';
+      t.className = `mk-katak${b.javobli ? ' javobli' : ''}`;
+      t.textContent = String(b.raqam);
+      t.setAttribute('aria-label', mockXaritaYorliq(b));
+      if (b.joriy) t.setAttribute('aria-current', 'step');
+      if (b.belgilangan) {
+        const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        s.setAttribute('class', 'mk-katak-bayroq'); s.setAttribute('width', '12'); s.setAttribute('height', '12');
+        s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('fill', 'currentColor'); s.setAttribute('aria-hidden', 'true');
+        s.innerHTML = '<path d="M4 22V4" stroke="currentColor" stroke-width="2"/><path d="M4 4h13l-2 4 2 4H4"/>';
+        t.appendChild(s);
+      }
+      t.addEventListener('click', () => { xaritaYop(false); otish(b.raqam - 1); });
+      li.appendChild(t);
+      panjara.appendChild(li);
+    }
+    const javobli = x.filter((b) => b.javobli).length;
+    $('xarita-h').textContent = modulNomi(H!.current_module);
+    $('xarita-izoh').textContent = `${javobli} of ${x.length} answered.${oxirgi ? ' Check your answers, then submit the module.' : ''}`;
+    $('xarita-ogoh').textContent = topshirishOgohi(x);
+    $('modul-topshir').textContent = H!.current_module === 4 ? 'Submit and finish the test' : 'Submit module';
+    xaritaQaytish = document.activeElement as HTMLElement | null;
+    $<HTMLDialogElement>('xarita').showModal();
+    $('xarita-yop').focus();
+  }
+  // Dialog yopilish mantig'i shu funksiyada (ilova brauzerida skriptli close() hodisa bermasligi mumkin).
+  function xaritaYop(fokusQaytar = true) {
+    const d = $<HTMLDialogElement>('xarita');
+    if (d.open) d.close();
+    if (fokusQaytar) xaritaQaytish?.focus();
+  }
+
+  // ---------- To'xtatish ----------
+  function toxtatOch() {
+    $<HTMLDialogElement>('toxtat').showModal();
+    $('toxtat-yoq').focus();
+  }
+  function toxtatYop() {
+    const d = $<HTMLDialogElement>('toxtat');
+    if (d.open) d.close();
+  }
+  async function toxtat() {
+    const t = $<HTMLButtonElement>('toxtat-ha');
+    t.setAttribute('aria-busy', 'true');
+    t.disabled = true;
+    try {
+      serverdan(await api!.toxtat(id));
+      toxtatYop();
+      await holatgaOt();
+    } catch (e) {
+      toxtatYop();
+      xatoEkrani(e);
+    } finally {
+      t.removeAttribute('aria-busy');
+      t.disabled = false;
+    }
+  }
+
+  // ---------- Natija ----------
+  function el<K extends keyof HTMLElementTagNameMap>(tag: K, sinf = '', matn?: string): HTMLElementTagNameMap[K] {
+    const e = document.createElement(tag);
+    if (sinf) e.className = sinf;
+    if (matn !== undefined) e.textContent = matn;
+    return e;
+  }
+
+  async function natijaKorsat() {
+    korsat('yuklash');
+    let N: MockNatija;
+    try {
+      N = await api!.natija(id);
+    } catch (e) {
+      return xatoEkrani(e);
+    }
+    const quti = $('natija');
+    quti.replaceChildren();
+    const s = N.scores!;
+    const sana = new Date(N.finished_at ?? N.started_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Tashkent' });
+
+    const h1 = el('h1', 'mk-natija-h', 'Your estimated score');
+    h1.id = 'natija-h';
+    h1.tabIndex = -1;
+    quti.append(h1, el('p', 'mk-lead', `Mock test ${N.form_no}${N.kind === 'retake' ? ' (retake)' : ''}, ${sana}. ${SINOV_YOZUVI}`));
+
+    const dl = el('dl', 'mk-statlar');
+    const stat = (nomi: string, son: string, izoh: string) => {
+      const d = el('div', 'mk-stat');
+      const dd = el('dd');
+      dd.append(el('span', 'mk-stat-son', son), el('span', 'mk-stat-izoh', izoh));
+      d.append(el('dt', '', nomi), dd);
+      return d;
+    };
+    dl.append(
+      stat('Total (estimate)', String(s.total), 'out of 1600'),
+      stat('Reading and Writing', String(s.rw.score), `${s.rw.correct} of ${s.rw.total} correct`),
+      stat('Math', String(s.math.score), `${s.math.correct} of ${s.math.total} correct`),
+    );
+    quti.append(dl);
+    quti.append(el('p', 'mk-matn', 'How the estimate works: each section score is 200 + 600 × (correct answers ÷ questions), rounded to the nearest 10. The real SAT uses its own scoring method for adaptive modules, so a real score can be different. Use this number to compare your own mock tests, not to predict your SAT score.'));
+
+    const { sohalar } = natijaJadvali(N.questions);
+    const sohaBolim = el('section', 'mk-bolim');
+    sohaBolim.setAttribute('aria-labelledby', 'soha-h');
+    const sh = el('h2', '', 'By domain');
+    sh.id = 'soha-h';
+    sohaBolim.append(sh);
+    const jq = el('div', 'mk-jadval-quti');
+    const jt = el('table', 'mk-jadval');
+    jt.innerHTML = '<thead><tr><th scope="col">Domain</th><th scope="col">Correct</th></tr></thead>';
+    const tb = el('tbody');
+    for (const d of sohalar) {
+      const tr = el('tr');
+      const th = el('th');
+      th.scope = 'row';
+      th.append(el('span', '', d.domain), el('span', 'mk-meta', ` · ${BOLIM_NOMI[d.section]}`));
+      const td = el('td');
+      const foiz = d.total ? Math.round((d.correct / d.total) * 100) : 0;
+      td.append(el('span', 'son', `${d.correct} of ${d.total}`));
+      const bar = el('span', 'mk-bar');
+      bar.setAttribute('aria-hidden', 'true');
+      const ich = el('span', 'mk-bar-ich');
+      ich.style.width = `${foiz}%`;
+      bar.append(ich);
+      td.append(bar);
+      tr.append(th, td);
+      tb.append(tr);
+    }
+    jt.append(tb);
+    jq.append(jt);
+    sohaBolim.append(jq);
+    quti.append(sohaBolim);
+
+    const vaqtBolim = el('section', 'mk-bolim');
+    vaqtBolim.setAttribute('aria-labelledby', 'vaqt-h');
+    const vh = el('h2', '', 'Time');
+    vh.id = 'vaqt-h';
+    const vjq = el('div', 'mk-jadval-quti');
+    const vt = el('table', 'mk-jadval');
+    vt.innerHTML = '<thead><tr><th scope="col">Module</th><th scope="col">Time used</th></tr></thead>';
+    const vtb = el('tbody');
+    const limit = new Map(N.modules.map((x) => [x.module, x.time_ms]));
+    for (const v of modulVaqtlari(N.modules)) {
+      const tr = el('tr');
+      const th = el('th', '', modulNomi(v.module));
+      th.scope = 'row';
+      const lim = limit.get(v.module) ?? 0;
+      tr.append(th, el('td', 'son', `${davomiylikMatni(Math.min(v.ms, lim))} of ${davomiylikMatni(lim)}${v.auto || v.ms >= lim ? ' · time ran out' : ''}`));
+      vtb.append(tr);
+    }
+    vt.append(vtb);
+    vjq.append(vt);
+    vaqtBolim.append(vh, vjq);
+    quti.append(vaqtBolim);
+
+    const xatolar = N.questions.filter((q) => q.answered && !q.is_correct);
+    const otkazilgan = N.questions.filter((q) => !q.answered);
+    quti.append(savolBolimi('xato-h', `Mistakes (${xatolar.length})`, xatolar.length ? 'Wrong answers went to your redo list automatically. Tag why you missed each one to see patterns later.' : 'No wrong answers in this mock test.', xatolar, 'xato'));
+    if (otkazilgan.length) quti.append(savolBolimi('otkaz-h', `No answer (${otkazilgan.length})`, "Questions you left empty are not in your redo list. Add the ones you want to practice.", otkazilgan, 'otkaz', true));
+
+    const amal = el('div', 'mk-amal');
+    const a = el('a', 'mk-tugma', 'Back to mock tests');
+    a.href = KIRISH + (qidiruv ? `?${qidiruv.slice(1)}` : '');
+    amal.append(a);
+    quti.append(amal);
+
+    korsat('natija');
+    h1.focus();
+  }
+
+  function savolBolimi(hid: string, sarlavha: string, izoh: string, qs: MockNatijaSavol[], tur: 'xato' | 'otkaz', yigma = false) {
+    const b = el('section', 'mk-bolim');
+    b.setAttribute('aria-labelledby', hid);
+    const h2 = el('h2', '', sarlavha);
+    h2.id = hid;
+    const ichki: HTMLElement[] = [el('p', 'mk-bolim-izoh', izoh), ...qs.map((q) => savolKartasi(q, tur))];
+    if (yigma && qs.length) {
+      const d = el('details');
+      const sm = el('summary', '', `Show ${qs.length} ${qs.length === 1 ? 'question' : 'questions'}`);
+      d.append(sm, ...ichki.slice(1));
+      b.append(h2, ichki[0], d);
+    } else b.append(h2, ...ichki);
+    return b;
+  }
+
+  function savolKartasi(q: MockNatijaSavol, tur: 'xato' | 'otkaz') {
+    const k = el('article', 'mk-savol-karta');
+    const modul = q.module <= 2 ? q.module : q.module - 2;
+    k.append(el('h3', '', `${BOLIM_NOMI[q.section]} · Module ${modul} · Question ${q.position}`));
+    k.append(el('p', 'mk-meta', `${q.domain} · ${q.skill}`));
+    if (q.passage) {
+      const d = el('details');
+      d.append(el('summary', '', 'Show the text'));
+      const p = el('div', 'mk-izoh');
+      void xavfsizMatn(q.passage, p);
+      d.append(p);
+      k.append(d);
+    }
+    const stem = el('div');
+    void xavfsizMatn(q.stem, stem);
+    k.append(stem);
+    const j = el('p', 'mk-javob');
+    j.append(el('span', '', `Your answer: ${q.answer ?? 'none'}`), el('span', '', `Correct answer: ${togriMatn(q.correct)}`));
+    k.append(j);
+    if (q.explanation) {
+      const d = el('details');
+      d.append(el('summary', '', 'Explanation'));
+      const p = el('div', 'mk-izoh');
+      void xavfsizMatn(q.explanation, p);
+      d.append(p);
+      k.append(d);
+    }
+    k.append(redoQismi(q, tur));
+    return k;
+  }
+
+  function redoQismi(q: MockNatijaSavol, tur: 'xato' | 'otkaz') {
+    const r = el('div', 'mk-redo');
+    const holat = el('p', 'mk-redo-holat');
+    const chiz = () => {
+      holat.textContent = q.in_review ? (tur === 'xato' ? 'In your redo list (added automatically)' : 'In your redo list') : 'Not in your redo list';
+    };
+    chiz();
+    r.append(holat);
+    if (!q.in_review) {
+      const t = el('button', 'mk-kichik', 'Add to redo list');
+      t.type = 'button';
+      t.addEventListener('click', async () => {
+        t.disabled = true;
+        t.setAttribute('aria-busy', 'true');
+        try {
+          await api!.navbatgaQosh(q.id);
+          q.in_review = true;
+          chiz();
+          t.remove();
+          elon('Added to your redo list.');
+        } catch {
+          t.disabled = false;
+          elon("Couldn't add it. Try again.");
+        } finally {
+          t.removeAttribute('aria-busy');
+        }
+      });
+      r.append(t);
+    }
+    if (tur === 'xato') {
+      const g = el('div', 'mk-chiplar');
+      g.setAttribute('role', 'group');
+      g.setAttribute('aria-label', 'Why did you miss it?');
+      g.append(el('span', 'mk-meta', 'Why did you miss it?'));
+      for (const s of SABABLAR) {
+        const c = el('button', 'mk-chip', s.nomi);
+        c.type = 'button';
+        c.setAttribute('aria-pressed', String(q.reason_tag === s.kalit));
+        c.addEventListener('click', async () => {
+          const yangi = q.reason_tag === s.kalit ? null : s.kalit;
+          try {
+            await api!.sabab(q.id, yangi);
+            q.reason_tag = yangi;
+            for (const x of g.querySelectorAll<HTMLButtonElement>('.mk-chip')) x.setAttribute('aria-pressed', String(x === c && !!yangi));
+            elon(yangi ? `Tagged: ${s.nomi}.` : 'Tag removed.');
+          } catch {
+            elon("Couldn't save the tag. Try again.");
+          }
+        });
+        g.append(c);
+      }
+      r.append(g);
+    }
+    return r;
+  }
+
+  // ---------- Hodisalar ----------
+  $('modul-boshla').addEventListener('click', (e) => modulBoshla(e.currentTarget as HTMLButtonElement));
+  $('tanaffus-davom').addEventListener('click', (e) => modulBoshla(e.currentTarget as HTMLButtonElement));
+  $('oldingi').addEventListener('click', () => otish(m.joriy - 1));
+  $('keyingi').addEventListener('click', () => (m.joriy === savollar().length - 1 ? xaritaOch(true) : otish(m.joriy + 1)));
+  $('xarita-och').addEventListener('click', () => xaritaOch(false));
+  $('xarita-yop').addEventListener('click', () => xaritaYop());
+  $('xarita-qayt').addEventListener('click', () => xaritaYop());
+  $<HTMLDialogElement>('xarita').addEventListener('cancel', (e) => { e.preventDefault(); xaritaYop(); });
+  $('modul-topshir').addEventListener('click', () => void topshir(false));
+  $('topshirish-qayta').addEventListener('click', () => void topshir(false));
+  $('taymer-yashir').addEventListener('click', () => taymerYashir($('taymer-yashir').getAttribute('aria-pressed') !== 'true'));
+  $('toxtat-och').addEventListener('click', toxtatOch);
+  $('toxtat-yoq').addEventListener('click', toxtatYop);
+  $<HTMLDialogElement>('toxtat').addEventListener('cancel', (e) => { e.preventDefault(); toxtatYop(); });
+  $('toxtat-ha').addEventListener('click', () => void toxtat());
+  $('xabar-qayta').addEventListener('click', () => void boshla());
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { vaqtYig(); void yubor(); }
+    else {
+      kirgan = performance.now();
+      // Qaytganda server holati: muddat o'tgan bo'lsa modul yopiladi.
+      if (H?.status === 'active' && ekran !== 'topshirish') void qaytaOl();
+    }
+  });
+  addEventListener('online', () => { urinish = 0; void yubor(); });
+  addEventListener('pagehide', () => { if (ekran === 'savol') { sprQoralamaOl(); vaqtYig(); saqla(); } });
+
+  // ---------- Boshlash ----------
+  async function boshla() {
+    const p = new URLSearchParams(location.search);
+    // Faqat dev: ?mock=oddiy|qisqa|tayyor-emas|kvota|xato. Prod build'da bu shox va mock moduli yo'q.
+    if (import.meta.env.DEV && p.get('mock') && !api) {
+      const { mockApi } = await import('../../../../../../lib/sat/mockImtihonMock');
+      api = mockApi(p.get('mock') as Parameters<typeof mockApi>[0]);
+      qidiruv = `&mock=${encodeURIComponent(p.get('mock')!)}`;
+      const pill = document.getElementById('namuna-pill');
+      if (pill) pill.hidden = false;
+    }
+    id = p.get('id') ?? '';
+    if (!idTogrimi(id)) {
+      return xabarKorsat('No mock test selected', 'Start or resume a mock test from the mock test page.', { havola: { href: KIRISH + (qidiruv ? `?${qidiruv.slice(1)}` : ''), matn: 'Go to mock tests' } });
+    }
+    if (!api) {
+      const c = hisobMijoz();
+      if (!c) return xabarKorsat('Accounts are not available yet', 'Mock tests need a Tayanch account, and sign-in is not set up on this copy of the site.', { havola: { href: KIRISH, matn: 'Go to mock tests' } });
+      const { data } = await c.auth.getSession();
+      if (!data.session) return xabarKorsat('Sign in to continue', 'Mock tests are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
+      api = haqiqiyApi(c);
+    }
+    m = oqiMahalliy();
+    try {
+      serverdan(await api.ol(id));
+    } catch (e) {
+      return xatoEkrani(e);
+    }
+    saqla();
+    await holatgaOt(false);
+    // Uzilishdan keyin qolgan navbat darhol yuboriladi.
+    if (Object.keys(m.navbat).length) void yubor();
+  }
+
+  function haqiqiyApi(c: NonNullable<ReturnType<typeof hisobMijoz>>): MockApi {
+    const rpc = async <T,>(nom: string, args: Record<string, unknown> = {}): Promise<T> => {
+      const { data, error } = await c.rpc(nom, args);
+      if (error) throw error;
+      return data as T;
+    };
+    return {
+      status: () => rpc('mock_status'),
+      boshla: (f) => rpc('start_mock', { p_form: f }),
+      ol: (a) => rpc('get_mock', { p_attempt: a }),
+      modulBoshla: (a) => rpc('mock_start_module', { p_attempt: a }),
+      saqla: (a, bandlar) => rpc('mock_save', { p_attempt: a, p_items: bandlar }),
+      topshir: (a, modul) => rpc('mock_submit_module', { p_attempt: a, p_module: modul }),
+      toxtat: (a) => rpc('mock_abandon', { p_attempt: a }),
+      natija: (a) => rpc('get_mock_result', { p_attempt: a }),
+      navbatgaQosh: async (qid) => { await rpc('add_to_review', { p_question: qid }); },
+      sabab: async (qid, tag) => {
+        const { error } = await c.from('review_queue').update({ reason_tag: tag }).eq('question_id', qid);
+        if (error) throw error;
+      },
+      rasm: async (path) => {
+        const { data, error } = await c.storage.from('question-figures').createSignedUrl(path, 3600);
+        return error ? null : data.signedUrl;
+      },
+    };
+  }
+
+  setInterval(tik, 500);
+  void boshla();
+</script>
+
+<style>
+  .mk-imtihon { max-width: var(--kenglik); margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
+  #savol-h:focus { outline: none; }
+  .mk-oldi-royxat { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); color: var(--matn-ikkinchi); max-width: 62ch; }
+</style>

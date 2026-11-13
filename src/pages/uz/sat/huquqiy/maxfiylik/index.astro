@@ -57,6 +57,11 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     </ul>
     <p>This data runs your results page, review and recommendations. Without an account, results stay only in your browser.</p>
 
+    <h2>Teacher groups</h2>
+    <p>If you join a SAT group with a code from your teacher, the server keeps: your name in the group, the date you joined, what you chose to share and when, and, if you are under 18, your parent or guardian's name and when they agreed.</p>
+    <p>Your teacher sees only what you chose (a summary, accuracy by topic, or both), and only from practice after the day you joined. Your email, age, individual answers, mistake log, test scores and payments are never shown. If you leave the group or your teacher removes you, the membership record is deleted and your teacher sees nothing more.</p>
+    <p>For teachers, the server keeps the group name, the name shown to students, the invite code and the group plan period.</p>
+
     <h2>Payments</h2>
     <ul>
       <li>You pay through inPAY, on the Click or Payme page. <strong>Your card details never reach Tayanch and are never asked for on this site.</strong></li>
@@ -72,14 +77,25 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     </ul>
 
     <h2>Why we use it</h2>
-    <p>Only to run the service: sign-in, your profile, results and review, subscription and payment, and necessary emails. Your data is not sold, not used for advertising and not given to third parties except where the law requires it.</p>
+    <p>To run the service: sign-in, your profile, results and review, subscription and payment, and necessary emails. Usage statistics (below) are used only for totals: how many people signed up, came back and moved to a paid plan. Your data is not sold, not used for advertising and not given to third parties except where the law requires it.</p>
+
+    <h2 id="statistika">Usage statistics</h2>
+    <p>To understand how the site is used, a few events of signed-in users are written to Tayanch's own database (Supabase, Frankfurt). Nothing is written when you are not signed in. No third-party analytics service (for example, Google Analytics) is used.</p>
+    <ul>
+      <li><strong>Which events</strong>: sign-up, first practice session, finishing a practice session (mode and number of questions), answering the daily question (section and right or wrong), opening the Subscription page, starting a payment and a successful payment (plan and amount).</li>
+      <li><strong>Each event has</strong>: the event name, its time and your account ID. The ID is needed to count how many people come back, so these records are not anonymous. Only the Tayanch author sees the results, as totals.</li>
+      <li><strong>Never recorded</strong>: question text, your answers, email, name, IP address, browser or device details (fingerprint), or the page you came from.</li>
+      <li><strong>On by default.</strong> On your <a href={yol('/uz/hisob/profil/')}>account page</a>, untick "Foydalanish statistikasini ulashish" (Share usage statistics): new events are no longer written and your earlier records are deleted at once.</li>
+      <li><strong>Payment events</strong> (payment started and payment succeeded) are written even when the box is unticked: they come from the payment record itself and are needed for payment accounting.</li>
+      <li><strong>Kept</strong>: until you delete your account. Deleting the account deletes these records too.</li>
+    </ul>
 
     <h2>Where it is stored</h2>
     <p>Accounts, question history and payment records are stored with <strong>Supabase</strong> on a server in <strong>Frankfurt, Germany</strong>. Germany is on the Cabinet of Ministers' list of countries that protect personal data equally (LX04), so the Law allows storing data there (Articles 15 and 27¹, LX02). Confirmation and password reset emails are sent through Google's Gmail service, so your email is passed to Google. Payment data is also held by inPAY and the payment system you choose (Click or Payme). Tayanch does not collect biometric or genetic data.</p>
 
     <h2>How long we keep it</h2>
     <ul>
-      <li>Account and question history: while your account exists. If you delete your account, they are deleted at once.</li>
+      <li>Account, question history and usage statistics: while your account exists. If you delete your account, they are deleted at once.</li>
       <li>
         Payment records: when the account is deleted they are unlinked from it (who paid is removed); the amount, date and inPAY number
         {tolovSaqlashYil === null
@@ -99,6 +115,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     <ul>
       <li><strong>Access and copy</strong>: the "Download my data" button on your <a href={yol('/uz/hisob/profil/')}>account page</a> gives you all your server data as a JSON file.</li>
       <li><strong>Correction</strong>: change your name, nickname and SAT goal on the account page, and your password with "Reset password".</li>
+      <li><strong>Opt out of statistics</strong>: the "Foydalanish statistikasini ulashish" (Share usage statistics) box on your account page.</li>
       <li><strong>Withdraw consent and delete</strong>: see "How to delete your account" below (Article 17, LX02).</li>
       <li><strong>Complaint</strong>: if you believe your rights were violated, you can contact the competent state body or a court (Article 30, LX02).</li>
     </ul>
@@ -110,13 +127,13 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>Confirm it is you: enter your password or sign in with Google again.</li>
       <li>Type your email to confirm the deletion.</li>
     </ol>
-    <p>Your account, profile, question history and subscription are deleted from the server at once. An active subscription ends too (refunds: <a href={yol('/uz/sat/huquqiy/qaytarish/')}>Refund Policy</a>). Payment records stay as described above. Data in your browser stays with you: clear it in your browser settings.</p>
+    <p>Your account, profile, question history, usage statistics and subscription are deleted from the server at once. An active subscription ends too (refunds: <a href={yol('/uz/sat/huquqiy/qaytarish/')}>Refund Policy</a>). Payment records stay as described above. Data in your browser stays with you: clear it in your browser settings.</p>
 
     <h2>What we do not collect</h2>
     <ul>
       <li>You cannot upload documents (passport, certificates) or essays.</li>
       <li>Card details are never asked for on the site.</li>
-      <li>Tayanch does not use advertising or third-party analytics code. Fonts are also served from the site itself.</li>
+      <li>Tayanch does not use advertising or third-party analytics code: usage statistics are kept only as described above, in Tayanch's own database. Fonts are also served from the site itself.</li>
     </ul>
 
     <h2>Hosting</h2>

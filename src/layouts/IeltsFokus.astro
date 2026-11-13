@@ -53,7 +53,7 @@ const { title, description, ustki, nomi, chiqish, chiqishNomi } = Astro.props;
     display: flex; align-items: center; justify-content: center;
     color: var(--matn); background: var(--fon-ikkinchi);
   }
-  .if-yopish:hover { background: var(--sirt-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .if-yopish:hover { background: var(--sirt-ikkinchi); } }
   .if-sarlavha { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .if-ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
   .if-nomi { font-size: 17px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

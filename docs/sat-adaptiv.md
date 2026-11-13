@@ -1,6 +1,6 @@
 # SAT mock imtihon: adaptive-style 2-modul (P31)
 
-Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (branch `sat-adaptiv-qaror`). Mock imtihonga (P30, branch `sat-mock-imtihon`) ulash alohida kichik PR bo'ladi: P30 hali main'da emas. Migratsiyalar (`20261112163208_adaptiv_kalibr.sql`, `20261113072953_adaptiv_tarmoq.sql`) jonli bazaga **qo'llanmagan**, muallif ruxsati kutilmoqda.
+Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (branch `sat-adaptiv-qaror`). Mock imtihonga (P30, branch `sat-mock-imtihon`) ulash alohida kichik PR bo'ladi: P30 hali main'da emas. Migratsiya `20261112163208_adaptiv_kalibr.sql` jonli bazaga 2026-11-13 da qo'llangan; `20261113072953_adaptiv_tarmoq.sql` jonli bazaga **qo'llanmagan**, muallif ruxsati kutilmoqda.
 
 ## Bu nima va nima emas
 

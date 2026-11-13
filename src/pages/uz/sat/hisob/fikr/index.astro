@@ -103,7 +103,6 @@ if (!sahifa) throw new Error('SAT fikr: satSahifalar yozuvi topilmadi');
   .xato::before { content: '! '; }
   .alert { font-weight: 700; line-height: 1.5; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
   .tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
-  .tugma[aria-busy='true'] { cursor: progress; }
   @media (max-width: 36rem) {
     .tugmalar .tugma, .kirish-taklif .tugma { width: 100%; }
     .kirish-taklif, .tayyor { padding: var(--space-5); }

@@ -1,0 +1,62 @@
+---
+// TarifDialog: limitga yetganda tavsiya tarif nima berishini ko'rsatadi (TopTierPrep "needs Pro" modaliga o'xshash).
+// Faqat server quota_exceeded qaytarganda ochiladi (oldindan emas, sozlab bo'lgach "tuzoq" emas: tugma oldindan o'chiq turadi).
+// Boshqaruv: src/lib/sat/tarifDialog.ts (tarifDialogOch). Ro'yxat bazadan (plans) keladi, bu yerda raqam yo'q.
+// Bosim yo'q: taymer, "oxirgi imkoniyat", qizil rang yo'q. Matn inglizcha (SAT bo'limi).
+import { yol } from '../../lib/yol';
+---
+<dialog class="td" id="tarif-dialog" aria-labelledby="td-h" aria-describedby="td-matn" lang="en">
+  <div class="td-ichi">
+    <div class="td-bosh">
+      <h2 id="td-h" tabindex="-1" data-td-sarlavha>You've reached today's limit</h2>
+      <button type="button" class="td-yop" data-td-yop aria-label="Close">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </div>
+    <p id="td-matn" data-td-matn></p>
+    <section class="td-tarif" data-td-tarif hidden aria-labelledby="td-tarif-h">
+      <h3 id="td-tarif-h" class="td-tarif-h" data-td-tarif-sarlavha>What Pro includes</h3>
+      <ul class="td-royxat" data-td-royxat></ul>
+    </section>
+    <div class="td-amal">
+      <button type="button" class="tugma tugma-ikkinchi" data-td-yop>Maybe later</button>
+      <a class="tugma tugma-asosiy" href={yol('/uz/sat/hisob/obuna/')} data-td-rejalar>See plans</a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .td {
+    inline-size: min(100% - 2 * var(--b-4), 32rem);
+    max-block-size: calc(100dvh - 2 * var(--b-4));
+    padding: 0;
+    border: 1px solid var(--chiziq);
+    border-radius: var(--r-katta);
+    background: var(--sirt);
+    color: var(--matn);
+    box-shadow: var(--soya);
+  }
+  .td::backdrop { background: var(--parda); }
+  .td-ichi { display: flex; flex-direction: column; gap: var(--b-4); padding: var(--b-6); }
+  .td-bosh { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--b-3); }
+  .td-bosh h2 { font-size: var(--matn-h3); }
+  .td-bosh h2:focus { outline: none; }
+  .td-yop {
+    display: inline-grid; place-items: center; flex: none;
+    inline-size: var(--size-touch-min); block-size: var(--size-touch-min);
+    margin: calc(-1 * var(--b-2)) calc(-1 * var(--b-2)) 0 0;
+    border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); cursor: pointer;
+  }
+  .td-yop:hover { background: var(--sirt-ikkinchi); color: var(--matn); }
+  .td-yop:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .td-tarif { display: flex; flex-direction: column; gap: var(--b-2); padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .td-tarif-h { font-size: var(--matn-kichik); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .td-royxat { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); font-size: var(--matn-kichik); }
+  .td-royxat :global(b) { font-weight: 700; }
+  .td-amal { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--b-3); }
+  @media (max-width: 480px) {
+    .td-ichi { padding: var(--b-5); }
+    .td-amal { flex-direction: column-reverse; }
+    .td-amal .tugma { inline-size: 100%; justify-content: center; }
+  }
+</style>
