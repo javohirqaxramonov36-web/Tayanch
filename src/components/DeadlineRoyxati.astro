@@ -2,9 +2,10 @@
 import { korinadiganDeadlinelar } from '../data/deadline';
 import type { BolimSlug } from '../data/bolimlar';
 
-interface Props { bolim?: BolimSlug; faqatKelajak?: boolean }
-const { bolim, faqatKelajak = false } = Astro.props;
-const royxat = korinadiganDeadlinelar({ bolim, faqatKelajak });
+// limit: ro'yxat sana bo'yicha tartiblangan, shuning uchun eng yaqin N tasi qoladi.
+interface Props { bolim?: BolimSlug; faqatKelajak?: boolean; limit?: number }
+const { bolim, faqatKelajak = false, limit } = Astro.props;
+const royxat = korinadiganDeadlinelar({ bolim, faqatKelajak }).slice(0, limit);
 const bugun = new Date().toISOString().slice(0, 10);
 ---
 {royxat.length > 0 ? (

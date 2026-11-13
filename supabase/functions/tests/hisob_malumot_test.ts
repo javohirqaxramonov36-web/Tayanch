@@ -14,10 +14,12 @@ function jwt(amr: unknown): string {
 const YANGI = jwt([{ method: 'password', timestamp: HOZIR - 60 }]);
 const ESKI = jwt([{ method: 'password', timestamp: HOZIR - QAYTA_KIRISH_SONIYA - 1 }]);
 
-interface Holat { ochirildi: string[]; eksport: number; jurnal: string[] }
+interface Holat { ochirildi: string[]; eksport: number; jurnal: string[]; audit: string[]; bekor: [number, string][] }
 
-function bogliqlik(o: { tolovJarayonda?: boolean; ochirXato?: boolean } = {}): { d: MalumotBogliqlik; h: Holat } {
-  const h: Holat = { ochirildi: [], eksport: 0, jurnal: [] };
+function bogliqlik(
+  o: { tolovJarayonda?: boolean; ochirXato?: boolean; auditXato?: boolean } = {},
+): { d: MalumotBogliqlik; h: Holat } {
+  const h: Holat = { ochirildi: [], eksport: 0, jurnal: [], audit: [], bekor: [] };
   const d: MalumotBogliqlik = {
     originlar: [SAYT],
     yetishmaydi: [],
@@ -27,8 +29,17 @@ function bogliqlik(o: { tolovJarayonda?: boolean; ochirXato?: boolean } = {}): {
       return Promise.resolve({ format: 'tayanch-malumot/1' });
     },
     jarayondagiTolov: () => Promise.resolve(o.tolovJarayonda ?? false),
+    auditYoz: (id) => {
+      if (o.auditXato) return Promise.resolve(null);
+      h.audit.push(id);
+      return Promise.resolve(42);
+    },
+    auditBekor: (id, xato) => {
+      h.bekor.push([id, xato]);
+      return Promise.resolve();
+    },
     ochir: (id) => {
-      if (o.ochirXato) return Promise.resolve({ ok: false, xato: 'x' });
+      if (o.ochirXato) return Promise.resolve({ ok: false, xato: '500:unexpected_failure' });
       h.ochirildi.push(id);
       return Promise.resolve({ ok: true });
     },
@@ -102,13 +113,34 @@ Deno.test('o\'chirish: yangi kirish va to\'g\'ri email (katta-kichik harf farqi 
   const r = await hisobMalumot(sorov(YANGI, { amal: 'ochirish', tasdiq: '  SINOV@example.com ' }), d);
   assert.equal(r.status, 200);
   assert.deepEqual(h.ochirildi, [EGA]);
+  assert.deepEqual(h.audit, [EGA]);
+  assert.equal(h.bekor.length, 0);
 });
 
-Deno.test('o\'chirish: server xatosi 500 delete_failed', async () => {
-  const { d } = bogliqlik({ ochirXato: true });
+Deno.test('o\'chirish: server xatosi 500 delete_failed, audit yozuvi account_delete_failed ga o\'zgaradi', async () => {
+  // Masalan jonli bazada payments.user_id hali "on delete restrict" (20261112090000 qo'llanmagan) va hisobda to'lov bor.
+  const { d, h } = bogliqlik({ ochirXato: true });
   const r = await hisobMalumot(sorov(YANGI, { amal: 'ochirish', tasdiq: 'sinov@example.com' }), d);
   assert.equal(r.status, 500);
   assert.deepEqual(await r.json(), { error: 'delete_failed' });
+  assert.deepEqual(h.bekor, [[42, '500:unexpected_failure']]);
+});
+
+Deno.test('o\'chirish: audit yozilmasa 500 audit_failed, hisob o\'chirilmaydi', async () => {
+  const { d, h } = bogliqlik({ auditXato: true });
+  const r = await hisobMalumot(sorov(YANGI, { amal: 'ochirish', tasdiq: 'sinov@example.com' }), d);
+  assert.equal(r.status, 500);
+  assert.deepEqual(await r.json(), { error: 'audit_failed' });
+  assert.equal(h.ochirildi.length, 0);
+});
+
+Deno.test('o\'chirish: Google bilan qayta kirish (amr oauth) ham yangi kirish hisoblanadi', async () => {
+  const { d, h } = bogliqlik();
+  const g = jwt([{ method: 'password', timestamp: HOZIR - 86_400 }, { method: 'oauth', timestamp: HOZIR - 30 }]);
+  d.foydalanuvchi = (t) => Promise.resolve(t === g ? { id: EGA, email: 'sinov@example.com' } : null);
+  const r = await hisobMalumot(sorov(g, { amal: 'ochirish', tasdiq: 'sinov@example.com' }), d);
+  assert.equal(r.status, 200);
+  assert.deepEqual(h.ochirildi, [EGA]);
 });
 
 Deno.test('noma\'lum amal 400', async () => {
