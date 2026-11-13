@@ -23,7 +23,8 @@
     "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",
     "savol:tasdiqla": "node scripts/savol-tasdiqla.mjs",
     "savol:import": "node --env-file-if-exists=.env scripts/savol-import.mjs",
-    "savol:sinov": "node --test scripts/savol/savol.test.mjs"
+    "savol:sinov": "node --test scripts/savol/savol.test.mjs",
+    "sinxron:tekshir": "node scripts/sinxron-test.ts"
   },
   "dependencies": {
     "@fontsource-variable/onest": "^5.3.1",
