@@ -60,6 +60,13 @@ Keyin shu jadval yangilanadi. Kod o'zgarmaydi; `UsageBar` va Savol banki yangi l
 
 - Limitli kalit: "12 of 20", "8 left today · Resets at midnight (Tashkent time)" va shkala. Shkala `aria-hidden`, chunki ma'lumot matnda bor.
 - Cheklovsiz kalit: bugungi soni va "No limit on your plan", shkalasiz.
+- `max: 0`: "Not included" va "Not part of your plan", shkalasiz ("0 of 0" emas, tugagan limit ham hisoblanmaydi).
+
+## Subscription sahifasi (2026-11-13)
+
+`/uz/sat/hisob/obuna/` (sahifa nomi "Subscription"): joriy tarif va sarf metrlari, tariflar (Monthly / 3 months; server qabul qilmaydigan davr o'chiq, "Coming soon"), Pro va Max kartalari "What's included" bilan, Free | Pro | Max taqqoslash jadvali, FAQ, to'lov tarixi. Jadval va karta ro'yxati `src/lib/sat/tarifJadval.ts` da faqat `plans.limits` va `plans.features` dan quriladi (qatorlar tartibi va nomi `satTarif.jadvalQatorlari`): kalit yo'q "No limit", `max 0` "Not included", AI kalitlari yo'q "Not included", bazada yo'q (faol emas) tarif "Coming soon". Raqam qo'yilsa sahifa o'zi yangilanadi.
+
+**TarifDialog** (`src/components/sat/TarifDialog.astro`, `src/lib/sat/tarifDialog.ts`): server `quota_exceeded` qaytarganda tavsiya tarif (Pro) nima berishini ko'rsatadi, "Maybe later" / "See plans". Ulangan joylar: Savol banki (Start bosilganda), Mock test (yangi test yoki retake boshlanganda), mashq sessiyasi (javob yuborilganda, sahifada bir marta). Umumiy yordamchi `tarifTaklifiniOch(manba, matn, fokus)` (`supabaseTaklifManba(c)`; dev'da `tarifDialogSinov.ts`). Limit oldindan ma'lum bo'lsa tugma o'chiq turadi va sababi yoziladi, oyna chiqmaydi. Tavsiya tarifdagi foydalanuvchiga chiqmaydi. Ulanmagan: Lug'at (`new_words` qoldig'i oldindan ma'lum, sahifa ichida xabar beradi), AI tutor (hozir hamma tarifda yopiq, "not included" xabari oldindan chiqadi). Dev: `/uz/sat/mashq/bank/?mock=kvota2`, `/uz/sat/mashq/sessiya/?mock=kvota`, `/uz/sat/mashq/mock/?mock=kvota`, obuna sahifasi `?sinov=kvota`.
 - Limit tugaganda halol xabar chiqadi: qachon tiklanishi, saqlangan ma'lumot joyida qolishi va "See plans" havolasi. Ogohlantiruvchi rang, taymer, "oxirgi imkoniyat" kabi bosim yo'q.
 
 ## Sinovlar
