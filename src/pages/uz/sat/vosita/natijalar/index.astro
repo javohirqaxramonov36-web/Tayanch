@@ -725,7 +725,7 @@ const holatIzohi = [
     border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn);
     text-decoration: none; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap;
   }
-  .qatorlar :global(.qayta:hover) { background: var(--chiziq); }
+  @media (hover: hover) and (pointer: fine) { .qatorlar :global(.qayta:hover) { background: var(--chiziq); } }
   .bosh-holat { padding: var(--b-8); text-align: center; background: var(--fon-ikkinchi); border-radius: var(--r-katta); color: var(--matn-ikkinchi); }
   .bosh-holat[hidden] { display: none; }
 
@@ -734,17 +734,6 @@ const holatIzohi = [
   .m-sarlavha { font-weight: 800; }
   .m-matn { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .m-matn:empty { display: none; }
-  .chiziq-tugma {
-    min-height: 48px; padding: 0 22px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq);
-    background: var(--fon); color: var(--matn);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
-  }
-  .chiziq-tugma:disabled { opacity: 0.5; cursor: not-allowed; }
-  .asosiy-tugma {
-    min-height: 48px; padding: 0 22px; border: 0; border-radius: var(--r-toliq);
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
-  }
 
   .tasdiq {
     border: 1px solid var(--chiziq); border-radius: var(--r-katta); padding: var(--b-6);
@@ -778,7 +767,7 @@ const holatIzohi = [
     border: 0; border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
     font: inherit; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer;
   }
-  .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); }
+  @media (hover: hover) and (pointer: fine) { .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); } }
 
   .tana { display: flex; flex-direction: column; gap: var(--b-10); }
   .tana[hidden] { display: none; }
@@ -832,7 +821,7 @@ const holatIzohi = [
     background: var(--sirt-ikkinchi); color: var(--matn);
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap; cursor: pointer;
   }
-  .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); } }
   .panel :global(.mashq-tugma:disabled) { opacity: 0.6; cursor: progress; }
   .panel :global(.mashq-xabar) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 28ch; }
   .panel :global(.mashq-xabar:empty) { display: none; }

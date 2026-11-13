@@ -179,7 +179,8 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
     padding: var(--card-pad);
   }
-  .karta:has(.karta-havola:hover) { box-shadow: var(--card-shadow-hover), var(--glass-highlight); transform: translateY(var(--card-lift)); }
+  /* DS: hover faqat sichqoncha bilan, faqat transform (global a.ds-karta kabi) */
+  @media (hover: hover) and (pointer: fine) { .karta:has(.karta-havola:hover) { transform: translateY(var(--card-lift)); } }
   .karta .ikonka { width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3); }
   .karta-nom { font-weight: 900; font-size: var(--matn-h3); margin: 0; }
   .karta-nom a { color: inherit; text-decoration: none; }

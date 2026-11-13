@@ -82,7 +82,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     <h2 id="statistika">Usage statistics</h2>
     <p>To understand how the site is used, a few events of signed-in users are written to Tayanch's own database (Supabase, Frankfurt). Nothing is written when you are not signed in. No third-party analytics service (for example, Google Analytics) is used.</p>
     <ul>
-      <li><strong>Which events</strong>: sign-up, first practice session, finishing a practice session (mode and number of questions), answering the daily question (section and right or wrong), opening the plans page, starting a payment and a successful payment (plan and amount).</li>
+      <li><strong>Which events</strong>: sign-up, first practice session, finishing a practice session (mode and number of questions), answering the daily question (section and right or wrong), opening the Subscription page, starting a payment and a successful payment (plan and amount).</li>
       <li><strong>Each event has</strong>: the event name, its time and your account ID. The ID is needed to count how many people come back, so these records are not anonymous. Only the Tayanch author sees the results, as totals.</li>
       <li><strong>Never recorded</strong>: question text, your answers, email, name, IP address, browser or device details (fingerprint), or the page you came from.</li>
       <li><strong>On by default.</strong> On your <a href={yol('/uz/hisob/profil/')}>account page</a>, untick "Foydalanish statistikasini ulashish" (Share usage statistics): new events are no longer written and your earlier records are deleted at once.</li>

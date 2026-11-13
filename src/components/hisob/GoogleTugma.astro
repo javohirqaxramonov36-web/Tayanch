@@ -37,7 +37,7 @@
     line-height: 1.25;
     cursor: pointer;
   }
-  .google-tugma:hover:not(:disabled) { box-shadow: inset 0 0 0 999px var(--google-hover); }
+  @media (hover: hover) and (pointer: fine) { .google-tugma:hover:not(:disabled) { box-shadow: inset 0 0 0 999px var(--google-hover); } }
   .google-tugma:disabled { cursor: progress; }
   .google-g { flex: none; display: block; }
 </style>
