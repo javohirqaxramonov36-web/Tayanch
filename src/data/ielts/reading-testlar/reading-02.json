@@ -1,0 +1,726 @@
+{
+  "schemaVersion": 1,
+  "testId": "reading-02",
+  "title": "Reading test 2",
+  "durationMinutes": 60,
+  "explanationLang": "uz",
+  "passages": [
+    {
+      "id": "p1",
+      "difficulty": "Oson-O'rta",
+      "title": "Water from Beneath the Desert",
+      "paragraphs": [
+        {
+          "label": "A",
+          "text": "Across the dry belt that stretches from North Africa through Iran to Central Asia and western China, travellers often notice lines of small mounds running across the plain, each with a hole at its centre. From the air they look like rows of craters. They are in fact the surface traces of one of the oldest water technologies still in use: the qanat, an underground channel that carries groundwater by gravity from the foot of the hills to fields and villages, sometimes many kilometres away. The technique is known by different names in different regions: karez in Afghanistan and western China, foggara in Algeria and falaj in Oman. The basic principle, however, is the same everywhere."
+        },
+        {
+          "label": "B",
+          "text": "Building a qanat begins with a search for water. A skilled digger, traditionally called a muqanni in Iran, studies the slope of an alluvial fan, the wedge of gravel and sand that streams deposit where they leave the mountains, looking for signs of moisture such as patches of vegetation. He then sinks a trial well, known as the mother well, until it reaches the water table. If the flow is reliable, the real work can start. Rather than working downwards from the mother well, the diggers usually begin at the far end, where the channel will come to the surface, and tunnel back uphill towards the source."
+        },
+        {
+          "label": "C",
+          "text": "The tunnel itself has a very gentle gradient. If it falls too steeply, the fast-moving water erodes the walls and the channel can collapse; if it is too flat, the water barely moves and silt builds up. At regular intervals along the route a vertical shaft is dug from the surface down to the tunnel. These shafts, which create the familiar lines of mounds, let the workers remove excavated soil, bring in fresh air and keep their direction underground. Once the qanat is finished, the same shafts provide access for cleaning and repair, work that has to be done regularly if the channel is to keep flowing."
+        },
+        {
+          "label": "D",
+          "text": "The great advantage of the system is that the water travels out of sight. In a climate where summer temperatures are high and the air is very dry, an open canal can lose a large share of its water to evaporation before it reaches the fields. Underground, the losses are much smaller. A qanat also needs no pump and no fuel: as long as the aquifer is recharged by rain and snowmelt in the mountains, water arrives day and night without any outside energy. And because the channel only collects water that flows into it naturally, a qanat cannot easily take more from the aquifer than the aquifer receives."
+        },
+        {
+          "label": "E",
+          "text": "Qanats shaped not only farming but also the way communities were organised. Since a single channel might serve dozens of families, there had to be rules about who received water and for how long. In many villages the flow was divided by time, with each household entitled to a fixed share of hours in a cycle that repeated every week or two. Some desert towns also used the cool, steady flow for purposes beyond irrigation. In parts of Iran, qanat water helped to cool houses in the hot months, and in winter it was used to make ice, which was then kept in large domed buildings and used through the summer."
+        },
+        {
+          "label": "F",
+          "text": "Today many qanats are in decline. Modern motor-driven wells can draw water from much deeper levels, and when they lower the water table, the older channels above them simply run dry. Many young people have also moved to the cities, and fewer are willing to do the hard and sometimes dangerous work of maintenance. Yet interest in the technology is growing again. In 2016 a group of Iranian qanats was added to UNESCO's World Heritage List, and engineers concerned about climate change have begun to study qanats as an example of how a water supply can be managed within the limits of what nature provides."
+        }
+      ],
+      "groups": [
+        {
+          "type": "tfng",
+          "instructions": "Do the following statements agree with the information given in the passage? Choose TRUE, FALSE or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 1,
+              "prompt": "Qanats are found only in Iran.",
+              "answer": "FALSE",
+              "explanation": "A paragrafda qanotlar Shimoliy Afrikadan G'arbiy Xitoygacha bo'lgan hududda uchrashi va har mintaqada boshqacha nomlanishi aytilgan (karez, foggara, falaj). Demak, faqat Eronda emas.",
+              "evidence": {
+                "paragraph": "A",
+                "quote": "The technique is known by different names in different regions"
+              }
+            },
+            {
+              "number": 2,
+              "prompt": "A trial well is dug to confirm that water is present before the main work begins.",
+              "answer": "TRUE",
+              "explanation": "B paragrafda usta avval sinov qudug'i (mother well) qazishi, oqim ishonchli bo'lsagina asosiy ish boshlanishi aytilgan. Bu gapga mos.",
+              "evidence": {
+                "paragraph": "B",
+                "quote": "He then sinks a trial well, known as the mother well, until it reaches the water table"
+              }
+            },
+            {
+              "number": 3,
+              "prompt": "The diggers normally start at the mother well and work downhill.",
+              "answer": "FALSE",
+              "explanation": "B paragraf buning teskarisini aytadi: qazuvchilar ona quduqdan pastga emas, kanal yer yuziga chiqadigan uzoq uchidan boshlab tepaga qarab qazishadi.",
+              "evidence": {
+                "paragraph": "B",
+                "quote": "Rather than working downwards from the mother well, the diggers usually begin at the far end"
+              }
+            },
+            {
+              "number": 4,
+              "prompt": "A tunnel with too steep a slope may be damaged by the water flowing through it.",
+              "answer": "TRUE",
+              "explanation": "C paragrafda nishablik juda tik bo'lsa, tez oqayotgan suv devorlarni yemirishi va kanal qulashi mumkinligi aytilgan.",
+              "evidence": {
+                "paragraph": "C",
+                "quote": "If it falls too steeply, the fast-moving water erodes the walls and the channel can collapse"
+              }
+            },
+            {
+              "number": 5,
+              "prompt": "The vertical shafts are filled in once the tunnel has been completed.",
+              "answer": "FALSE",
+              "explanation": "C paragrafga ko'ra, qanot tugagach o'sha vertikal quduqlar tozalash va ta'mirlash uchun kirish yo'li bo'lib xizmat qiladi, ya'ni ko'milmaydi.",
+              "evidence": {
+                "paragraph": "C",
+                "quote": "Once the qanat is finished, the same shafts provide access for cleaning and repair"
+              }
+            },
+            {
+              "number": 6,
+              "prompt": "Qanat diggers were paid more than other workers in their communities.",
+              "answer": "NOT GIVEN",
+              "explanation": "Matnda qazuvchilar ishining og'ir va xavfli ekani aytilgan (F), lekin ularning maoshi yoki boshqa ishchilar bilan solishtirish haqida hech narsa yo'q.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "fewer are willing to do the hard and sometimes dangerous work of maintenance"
+              }
+            }
+          ]
+        },
+        {
+          "type": "gap-fill",
+          "instructions": "Complete the notes below. Choose ONE WORD ONLY from the passage for each answer.",
+          "questions": [
+            {
+              "number": 7,
+              "prompt": "An open canal in a hot, dry climate can lose much of its water through ______.",
+              "wordLimit": 1,
+              "answer": "evaporation",
+              "explanation": "D paragrafda ochiq kanal suvining katta qismini bug'lanish (evaporation) orqali yo'qotishi mumkinligi aytilgan.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "an open canal can lose a large share of its water to evaporation"
+              }
+            },
+            {
+              "number": 8,
+              "prompt": "A qanat needs neither a pump nor ______.",
+              "wordLimit": 1,
+              "answer": "fuel",
+              "explanation": "D paragraf: qanotga na nasos, na yoqilg'i (fuel) kerak.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "A qanat also needs no pump and no fuel"
+              }
+            },
+            {
+              "number": 9,
+              "prompt": "The aquifer is refilled by rain and ______ in the mountains.",
+              "wordLimit": 1,
+              "answer": "snowmelt",
+              "explanation": "D paragrafda suvli qatlam tog'dagi yomg'ir va qor erishi (snowmelt) bilan to'lishi aytilgan.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "recharged by rain and snowmelt in the mountains"
+              }
+            },
+            {
+              "number": 10,
+              "prompt": "In many villages, water was shared between households according to ______.",
+              "wordLimit": 1,
+              "answer": "time",
+              "explanation": "E paragraf: ko'p qishloqlarda oqim vaqt (time) bo'yicha taqsimlangan, har xonadonga belgilangan soatlar tegishli bo'lgan.",
+              "evidence": {
+                "paragraph": "E",
+                "quote": "the flow was divided by time"
+              }
+            },
+            {
+              "number": 11,
+              "prompt": "In winter, qanat water was used to produce ______ for the summer.",
+              "wordLimit": 1,
+              "answer": "ice",
+              "explanation": "E paragrafda qishda qanot suvidan muz (ice) tayyorlanib, gumbazli binolarda yozgacha saqlangani aytilgan.",
+              "evidence": {
+                "paragraph": "E",
+                "quote": "in winter it was used to make ice"
+              }
+            },
+            {
+              "number": 12,
+              "prompt": "Old channels can dry up when motor-driven ______ lower the water table.",
+              "wordLimit": 1,
+              "answer": "wells",
+              "explanation": "F paragraf: motorli quduqlar (wells) chuqurdan suv tortib, yer osti suvi sathini pasaytiradi va eski kanallar qurib qoladi.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "Modern motor-driven wells can draw water from much deeper levels"
+              }
+            },
+            {
+              "number": 13,
+              "prompt": "Engineers worried about ______ change are now studying qanats.",
+              "wordLimit": 1,
+              "answer": "climate",
+              "explanation": "F paragrafda iqlim (climate) o'zgarishidan xavotirdagi muhandislar qanotlarni o'rganayotgani aytilgan.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "engineers concerned about climate change"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "difficulty": "O'rta",
+      "title": "Concrete That Mends Itself",
+      "paragraphs": [
+        {
+          "label": "A",
+          "text": "Concrete is the most widely used construction material on Earth. It is cheap, it can be poured into almost any shape, and it is enormously strong when squeezed. Its weakness is tension. When concrete is stretched or bent, it cracks easily, which is why most structural concrete contains steel reinforcing bars that carry the tensile loads. Yet even well-reinforced concrete develops fine cracks over time, as it shrinks while drying, expands and contracts with changes in temperature, and carries the loads of traffic and wind."
+        },
+        {
+          "label": "B",
+          "text": "A small crack is rarely dangerous in itself. The problem is what it lets in. Water, carrying dissolved salts from the sea or from the chemicals spread on winter roads to melt ice, can travel through cracks to the steel inside. There it causes rust, and because rust takes up more space than the original metal, it pushes the surrounding concrete apart, widening the crack and letting in still more water. Left unchecked, this cycle can weaken a bridge or a car park long before the end of its planned life. Inspecting and repairing cracks is therefore one of the largest costs of looking after concrete structures."
+        },
+        {
+          "label": "C",
+          "text": "Engineers have long known that concrete has a limited ability to repair itself. Some of the cement in a mix never fully reacts with water during construction. When a fine crack later lets moisture in, these leftover particles can react, and the products, together with calcium carbonate that forms when the concrete reacts with carbon dioxide from the air, may gradually block the gap. This natural process, called autogenous healing, works only for very narrow cracks, however, and it is too slow and unpredictable to be relied on when a structure is designed."
+        },
+        {
+          "label": "D",
+          "text": "One of the best-known attempts to improve on it began at Delft University of Technology in the Netherlands, where the microbiologist Henk Jonkers and his colleagues asked whether bacteria could do the job. The challenge was to find organisms that could survive inside concrete, which is highly alkaline and becomes as hard as rock. The team chose bacteria that form spores: tough, dormant cells that can stay alive for long periods without food or water. The spores are mixed into the concrete together with a food source, such as calcium lactate, and remain inactive for as long as the material is undamaged."
+        },
+        {
+          "label": "E",
+          "text": "When a crack forms and water enters, the spores become active. The bacteria feed on the calcium lactate and, as a by-product, produce calcium carbonate, essentially limestone, which gradually fills the crack and seals it against further water. Because the bacteria also consume oxygen, their activity also reduces the oxygen available to the steel, giving it additional protection against rust. Once the crack is closed, conditions inside become hostile again and the surviving bacteria return to a dormant state, ready to respond if new damage occurs."
+        },
+        {
+          "label": "F",
+          "text": "Bacterial concrete is not the only approach being explored. Some researchers add tiny capsules filled with a healing agent, which break open when a crack passes through them and release a liquid that hardens in the gap. Others have looked to the past. Many concrete structures built by the ancient Romans are still standing after two thousand years, and a study published in 2023 by a team including researchers at the Massachusetts Institute of Technology suggested one reason: small lumps of lime in Roman concrete, long dismissed as a sign of careless mixing, appear to act as a store of calcium that can react with water and fill cracks."
+        },
+        {
+          "label": "G",
+          "text": "Despite these advances, self-healing concrete remains a specialist product. It costs more to produce than ordinary concrete, and the healing agents can affect the strength of the mix if they are not added carefully. Its supporters argue that the price should be judged over the whole life of a structure rather than at the moment of construction: if a self-healing material avoids even a few rounds of inspection and repair, it may turn out to be the cheaper choice. There is an environmental argument too. Making cement releases large amounts of carbon dioxide, so any material that allows structures to last longer, and to be replaced less often, could help to reduce the industry's impact on the climate."
+        }
+      ],
+      "groups": [
+        {
+          "type": "matching-headings",
+          "instructions": "The passage has seven paragraphs, A-G. Choose the correct heading for paragraphs B-G from the list of headings below. There are more headings than paragraphs.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "A natural process with clear limits"
+            },
+            {
+              "id": "ii",
+              "text": "How a small gap can lead to serious damage"
+            },
+            {
+              "id": "iii",
+              "text": "Finding a living organism tough enough to survive"
+            },
+            {
+              "id": "iv",
+              "text": "Paying more now in order to save later"
+            },
+            {
+              "id": "v",
+              "text": "Why steel is placed inside concrete"
+            },
+            {
+              "id": "vi",
+              "text": "What happens inside a crack as it heals"
+            },
+            {
+              "id": "vii",
+              "text": "Other solutions, both modern and ancient"
+            },
+            {
+              "id": "viii",
+              "text": "New rules for inspecting bridges"
+            },
+            {
+              "id": "ix",
+              "text": "A material that failed its first tests"
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "prompt": "Paragraph B",
+              "answer": "ii",
+              "explanation": "B paragrafning asosiy fikri: kichik yoriq o'zi xavfli emas, lekin u orqali kirgan suv po'latni zanglatadi va zarar kuchayib boradi. 'v' (po'lat nima uchun qo'yiladi) A paragrafga tegishli.",
+              "evidence": {
+                "paragraph": "B",
+                "quote": "A small crack is rarely dangerous in itself. The problem is what it lets in."
+              }
+            },
+            {
+              "number": 15,
+              "prompt": "Paragraph C",
+              "answer": "i",
+              "explanation": "C paragraf betonning tabiiy o'z-o'zini tiklashi (autogenous healing) haqida va u faqat juda ingichka yoriqlarda ishlashini, ishonchsizligini aytadi: aniq chegarali tabiiy jarayon.",
+              "evidence": {
+                "paragraph": "C",
+                "quote": "works only for very narrow cracks"
+              }
+            },
+            {
+              "number": 16,
+              "prompt": "Paragraph D",
+              "answer": "iii",
+              "explanation": "D paragraf ishqoriy va qattiq beton ichida yashay oladigan bakteriyani tanlash muammosi haqida: jamoa spora hosil qiluvchi bakteriyalarni tanlagan.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "The challenge was to find organisms that could survive inside concrete"
+              }
+            },
+            {
+              "number": 17,
+              "prompt": "Paragraph E",
+              "answer": "vi",
+              "explanation": "E paragraf yoriq paydo bo'lgandan keyingi jarayonni bosqichma-bosqich tasvirlaydi: sporalar uyg'onadi, kalsiy karbonat hosil bo'ladi va yoriq yopiladi.",
+              "evidence": {
+                "paragraph": "E",
+                "quote": "which gradually fills the crack and seals it against further water"
+              }
+            },
+            {
+              "number": 18,
+              "prompt": "Paragraph F",
+              "answer": "vii",
+              "explanation": "F paragraf boshqa yondashuvlarni sanaydi: zamonaviy kapsulalar va qadimgi Rim betonidagi ohak bo'lakchalari.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "Bacterial concrete is not the only approach being explored."
+              }
+            },
+            {
+              "number": 19,
+              "prompt": "Paragraph G",
+              "answer": "iv",
+              "explanation": "G paragrafda o'zini tuzatadigan beton qimmatroq, lekin butun xizmat muddatida ta'mirni kamaytirib arzonroq chiqishi mumkinligi aytilgan. Matnda sinovda muvaffaqiyatsizlik ('ix') haqida gap yo'q.",
+              "evidence": {
+                "paragraph": "G",
+                "quote": "the price should be judged over the whole life of a structure"
+              }
+            }
+          ]
+        },
+        {
+          "type": "mcq",
+          "instructions": "Choose TWO letters, A-E.",
+          "questions": [
+            {
+              "numbers": [
+                20,
+                21
+              ],
+              "choose": 2,
+              "prompt": "Which TWO benefits of bacterial concrete are mentioned in the passage?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "It seals cracks against water."
+                },
+                {
+                  "id": "B",
+                  "text": "It is cheaper to produce than ordinary concrete."
+                },
+                {
+                  "id": "C",
+                  "text": "It reduces the oxygen that reaches the steel."
+                },
+                {
+                  "id": "D",
+                  "text": "It makes concrete stronger when squeezed."
+                },
+                {
+                  "id": "E",
+                  "text": "It allows builders to use less steel."
+                }
+              ],
+              "answer": [
+                "A",
+                "C"
+              ],
+              "explanation": "E paragrafda ikki foyda aytilgan: kalsiy karbonat yoriqni suvga qarshi yopadi (A) va bakteriyalar kislorodni sarflab, po'latga yetadigan kislorodni kamaytiradi (C). B noto'g'ri: G paragrafga ko'ra u qimmatroq. D va E matnda yo'q.",
+              "evidence": {
+                "paragraph": "E",
+                "quote": "their activity also reduces the oxygen available to the steel"
+              }
+            }
+          ]
+        },
+        {
+          "type": "gap-fill",
+          "instructions": "Complete the sentences below. Choose NO MORE THAN TWO WORDS from the passage for each answer.",
+          "questions": [
+            {
+              "number": 22,
+              "prompt": "Concrete is weak when it is placed under ______.",
+              "wordLimit": 2,
+              "answer": "tension",
+              "explanation": "A paragraf: betonning zaif tomoni cho'zilish (tension); siqilganda esa juda mustahkam.",
+              "evidence": {
+                "paragraph": "A",
+                "quote": "Its weakness is tension."
+              }
+            },
+            {
+              "number": 23,
+              "prompt": "Rust is harmful because it takes up more ______ than the steel it replaces.",
+              "wordLimit": 2,
+              "answer": "space",
+              "explanation": "B paragrafda zang asl metalldan ko'proq joy (space) egallashi va atrofdagi betonni itarib yorishi aytilgan.",
+              "evidence": {
+                "paragraph": "B",
+                "quote": "rust takes up more space than the original metal"
+              }
+            },
+            {
+              "number": 24,
+              "prompt": "Concrete's own limited ability to close fine cracks is called ______.",
+              "wordLimit": 2,
+              "acceptedAnswers": [
+                "autogenous"
+              ],
+              "answer": "autogenous healing",
+              "explanation": "C paragrafda bu tabiiy jarayon 'autogenous healing' deb atalishi aytilgan.",
+              "evidence": {
+                "paragraph": "C",
+                "quote": "This natural process, called autogenous healing"
+              }
+            },
+            {
+              "number": 25,
+              "prompt": "The Delft team used bacteria that can survive as ______ inside concrete.",
+              "wordLimit": 2,
+              "answer": "spores",
+              "explanation": "D paragraf: jamoa uzoq vaqt ovqat va suvsiz tirik qola oladigan spora (spores) hosil qiluvchi bakteriyalarni tanlagan.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "The team chose bacteria that form spores"
+              }
+            },
+            {
+              "number": 26,
+              "prompt": "Small lumps of ______ may explain why Roman concrete has lasted so long.",
+              "wordLimit": 2,
+              "answer": "lime",
+              "explanation": "F paragrafda Rim betonidagi kichik ohak (lime) bo'lakchalari kalsiy zaxirasi bo'lib, yoriqlarni to'ldirishi mumkinligi aytilgan.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "small lumps of lime in Roman concrete"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p3",
+      "difficulty": "Qiyin",
+      "title": "Remembering on Schedule",
+      "paragraphs": [
+        {
+          "label": "A",
+          "text": "In the 1880s the German psychologist Hermann Ebbinghaus carried out a long series of experiments on the only subject who was always available to him: himself. To study memory without the influence of meaning, he made up lists of nonsense syllables, short combinations of letters that formed no real word, memorised them, and then measured how much time he needed to learn each list again after delays of hours or days. He found that forgetting was fastest soon after learning and then slowed down, a pattern now known as the forgetting curve. He also noticed something of even greater practical value: lists that he had studied in several sessions spread out over time were retained far better than lists he had learned in a single sitting."
+        },
+        {
+          "label": "B",
+          "text": "This finding, the spacing effect, has since been confirmed in a very large number of studies, with learners of all ages and with many kinds of material, from vocabulary and historical facts to mathematical procedures and physical skills. The basic result is remarkably consistent. If the total amount of study time is kept the same, dividing it into separate sessions with gaps between them produces better long-term memory than concentrating it into one block. Massed practice, as cramming is called by researchers, can be effective for a test the next morning, but much of what is learned in this way is lost within days."
+        },
+        {
+          "label": "C",
+          "text": "Why should a gap help? One explanation is that, when material is reviewed immediately, it is still fresh in the mind, so the review requires little effort and adds little to memory. After a delay, some of the material has begun to fade, and recalling it takes work. The psychologist Robert Bjork has described such obstacles as desirable difficulties: conditions that make learning feel slower and harder at the time but lead to stronger and longer-lasting memories. The same idea helps to explain a related finding known as the testing effect. Students who try to recall information from memory, for example by answering questions, typically remember it better a week later than students who spend the same time simply rereading it, even though rereading often feels more productive."
+        },
+        {
+          "label": "D",
+          "text": "Turning these findings into a daily routine is not straightforward, because the best interval between reviews depends on how well something is already known. In the early 1970s the German journalist Sebastian Leitner proposed a simple solution that needed nothing more than a box with several compartments and a set of flashcards. Every new card starts in the first compartment, which is reviewed most often. When a learner answers a card correctly, it moves to the next compartment, which is reviewed less frequently; when the answer is wrong, the card goes back to the first compartment, however far it had progressed. Difficult items therefore come up again and again, while well-known ones appear only occasionally, so that study time is concentrated where it is most needed."
+        },
+        {
+          "label": "E",
+          "text": "From the late 1980s onwards, computer programs automated the same logic, estimating for each item the moment at which it is likely to be forgotten and scheduling a review shortly before then. Such software is now widely used by language learners and by medical students, who must memorise very large numbers of facts. The programs differ in their details, but they share Leitner's central insight that the interval between reviews should grow as an item becomes better known."
+        },
+        {
+          "label": "F",
+          "text": "Despite the strength of the evidence, spaced practice is far less common than it could be. Part of the reason lies in how learning feels. Cramming produces a quick sense of mastery: after an evening of repetition, the material seems familiar, and familiarity is easily mistaken for knowledge. Spacing, by contrast, means meeting material that has partly slipped away, which can be discouraging. School timetables add a further obstacle, since topics are often taught in a single block and then left behind once the end-of-unit test is over. Researchers who study learning argue that the answer is not more hours of study but a different arrangement of the same hours, with earlier topics returned to again and again throughout a course."
+        }
+      ],
+      "groups": [
+        {
+          "type": "mcq",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 27,
+              "prompt": "What was unusual about the way Ebbinghaus studied memory?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "He worked with a large group of students."
+                },
+                {
+                  "id": "B",
+                  "text": "He was the subject of his own experiments."
+                },
+                {
+                  "id": "C",
+                  "text": "He tested memory for meaningful stories."
+                },
+                {
+                  "id": "D",
+                  "text": "He measured memory only on the day of learning."
+                }
+              ],
+              "answer": "B",
+              "explanation": "A paragrafda Ebbinghaus doim qo'l ostida bo'lgan yagona sinaluvchi, ya'ni o'zi ustida tajriba o'tkazgani aytilgan. C noto'g'ri: u ataylab ma'nosiz bo'g'inlardan foydalangan. D noto'g'ri: soatlar va kunlardan keyin o'lchagan.",
+              "evidence": {
+                "paragraph": "A",
+                "quote": "on the only subject who was always available to him: himself"
+              }
+            },
+            {
+              "number": 28,
+              "prompt": "According to the forgetting curve, forgetting",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "is most rapid shortly after learning."
+                },
+                {
+                  "id": "B",
+                  "text": "happens at a steady rate."
+                },
+                {
+                  "id": "C",
+                  "text": "begins only after several days."
+                },
+                {
+                  "id": "D",
+                  "text": "stops completely after a few weeks."
+                }
+              ],
+              "answer": "A",
+              "explanation": "A paragraf: unutish o'rganishdan keyin eng tez bo'ladi, keyin sekinlashadi. Demak, bir tekis emas (B) va kunlar o'tib boshlanmaydi (C).",
+              "evidence": {
+                "paragraph": "A",
+                "quote": "forgetting was fastest soon after learning and then slowed down"
+              }
+            },
+            {
+              "number": 29,
+              "prompt": "What does the writer say about massed practice?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "It never produces useful results."
+                },
+                {
+                  "id": "B",
+                  "text": "It is the best method for learning physical skills."
+                },
+                {
+                  "id": "C",
+                  "text": "It requires more total study time than spaced practice."
+                },
+                {
+                  "id": "D",
+                  "text": "It can help in the short term but is poor for long-term memory."
+                }
+              ],
+              "answer": "D",
+              "explanation": "B paragrafda bir o'tirishda yodlash ertangi test uchun samarali bo'lishi mumkin, lekin o'rganilganning ko'pi bir necha kunda unutilishi aytilgan. A juda kuchli da'vo, matn buni aytmaydi.",
+              "evidence": {
+                "paragraph": "B",
+                "quote": "can be effective for a test the next morning, but much of what is learned in this way is lost within days"
+              }
+            },
+            {
+              "number": 30,
+              "prompt": "According to paragraph C, an immediate review adds little to memory because",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "the learner is usually tired."
+                },
+                {
+                  "id": "B",
+                  "text": "the questions are too difficult."
+                },
+                {
+                  "id": "C",
+                  "text": "the material is still easy to recall."
+                },
+                {
+                  "id": "D",
+                  "text": "the learner rereads instead of answering questions."
+                }
+              ],
+              "answer": "C",
+              "explanation": "C paragraf: material hali yangi va esda bo'lgani uchun takrorlash kam kuch talab qiladi va xotiraga kam qo'shadi.",
+              "evidence": {
+                "paragraph": "C",
+                "quote": "it is still fresh in the mind, so the review requires little effort and adds little to memory"
+              }
+            },
+            {
+              "number": 31,
+              "prompt": "In Leitner's system, what happens to a card that is answered wrongly?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "It returns to the first compartment."
+                },
+                {
+                  "id": "B",
+                  "text": "It stays in the same compartment."
+                },
+                {
+                  "id": "C",
+                  "text": "It moves back by one compartment."
+                },
+                {
+                  "id": "D",
+                  "text": "It is removed from the box."
+                }
+              ],
+              "answer": "A",
+              "explanation": "D paragrafda xato javob berilgan kartochka qanchalik oldinga ketgan bo'lmasin, birinchi bo'limga qaytishi aytilgan. Bir bo'lim orqaga surilish (C) emas.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "the card goes back to the first compartment, however far it had progressed"
+              }
+            }
+          ]
+        },
+        {
+          "type": "tfng",
+          "instructions": "Do the following statements agree with the information given in the passage? Choose TRUE, FALSE or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 32,
+              "prompt": "The spacing effect has only been demonstrated with word lists and vocabulary.",
+              "answer": "FALSE",
+              "explanation": "B paragrafda spacing effect lug'atdan tashqari tarixiy faktlar, matematik amallar va jismoniy ko'nikmalarda ham tasdiqlangani aytilgan.",
+              "evidence": {
+                "paragraph": "B",
+                "quote": "from vocabulary and historical facts to mathematical procedures and physical skills"
+              }
+            },
+            {
+              "number": 33,
+              "prompt": "Rereading can give students a false impression of how well they are learning.",
+              "answer": "TRUE",
+              "explanation": "C paragrafga ko'ra, eslab ko'rish bir haftadan keyin yaxshiroq natija beradi, lekin qayta o'qish ko'pincha samaraliroq tuyuladi. Ya'ni qayta o'qish noto'g'ri taassurot beradi.",
+              "evidence": {
+                "paragraph": "C",
+                "quote": "even though rereading often feels more productive"
+              }
+            },
+            {
+              "number": 34,
+              "prompt": "Leitner first designed his system for medical students.",
+              "answer": "NOT GIVEN",
+              "explanation": "D paragrafda Leitner jurnalist ekani va tizimni taklif qilgani aytilgan, lekin kim uchun mo'ljallagani aytilmagan. Tibbiyot talabalari E paragrafda faqat zamonaviy dasturlar foydalanuvchisi sifatida tilga olinadi.",
+              "evidence": {
+                "paragraph": "D",
+                "quote": "the German journalist Sebastian Leitner proposed a simple solution"
+              }
+            },
+            {
+              "number": 35,
+              "prompt": "All review programs use exactly the same method to schedule reviews.",
+              "answer": "FALSE",
+              "explanation": "E paragrafda dasturlar tafsilotlarda farq qilishi, faqat asosiy g'oyasi umumiy ekani aytilgan.",
+              "evidence": {
+                "paragraph": "E",
+                "quote": "The programs differ in their details"
+              }
+            },
+            {
+              "number": 36,
+              "prompt": "Schools often teach a topic once and do not come back to it later.",
+              "answer": "TRUE",
+              "explanation": "F paragrafda mavzular ko'pincha bitta blokda o'tilib, bo'lim testidan keyin qoldirib ketilishi aytilgan.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "topics are often taught in a single block and then left behind once the end-of-unit test is over"
+              }
+            }
+          ]
+        },
+        {
+          "type": "gap-fill",
+          "instructions": "Complete the summary below. Choose ONE WORD ONLY from the passage for each answer.",
+          "questions": [
+            {
+              "number": 37,
+              "prompt": "Spaced practice is less popular than it should be. Cramming quickly gives learners a sense of ______.",
+              "wordLimit": 1,
+              "answer": "mastery",
+              "explanation": "F paragraf: bir kechada yodlash tezda o'zlashtirib bo'ldim (mastery) degan tuyg'u beradi.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "Cramming produces a quick sense of mastery"
+              }
+            },
+            {
+              "number": 38,
+              "prompt": "After many repetitions, material seems ______, and this is easily confused with real knowledge.",
+              "wordLimit": 1,
+              "answer": "familiar",
+              "explanation": "F paragrafda takrordan keyin material tanish (familiar) tuyulishi va tanishlik bilim bilan adashtirilishi aytilgan.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "the material seems familiar"
+              }
+            },
+            {
+              "number": 39,
+              "prompt": "Meeting material that has partly been forgotten can be ______.",
+              "wordLimit": 1,
+              "answer": "discouraging",
+              "explanation": "F paragraf: qisman unutilgan material bilan qayta uchrashish ruhni tushirishi (discouraging) mumkin.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "which can be discouraging"
+              }
+            },
+            {
+              "number": 40,
+              "prompt": "Researchers recommend a different ______ of study hours, not simply more of them.",
+              "wordLimit": 1,
+              "answer": "arrangement",
+              "explanation": "F paragrafda yechim ko'proq soat emas, o'sha soatlarning boshqacha tartibi (arrangement) ekani aytilgan.",
+              "evidence": {
+                "paragraph": "F",
+                "quote": "a different arrangement of the same hours"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
