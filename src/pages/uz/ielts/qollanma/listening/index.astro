@@ -313,12 +313,13 @@ const strategiyalar = [
   }
   .variantlar button:hover { background: var(--fon-ikkinchi); }
   .variantlar button[aria-disabled='true'] { cursor: default; }
-  .variantlar button.togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  /* To'g'ri javob neytral (PR #134 qarori): IELTS qavat rangi qizil, "to'g'ri" xato kabi o'qilmasin. Ma'no matn bilan. */
+  .variantlar button.togri { background: var(--matn); border-color: var(--matn); color: var(--fon); }
   .variantlar button.xato { background: var(--fon-ikkinchi); border-style: dashed; text-decoration: line-through; }
   .variantlar button.sust { color: var(--matn-ikkinchi); border-color: var(--chiziq-kuchli); }
   .javob { border-radius: var(--r-orta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); background: var(--fon-ikkinchi); border: 1.5px dashed var(--matn); }
   .javob[hidden] { display: none; }
-  .javob.j-togri { background: var(--rang-asosiy-och); border: 1.5px solid var(--rang-asosiy); }
+  .javob.j-togri { background: var(--fon-ikkinchi); border: 1.5px solid var(--matn); }
   .j-sarlavha { font-size: 18px; font-weight: 800; }
   .javob p { line-height: 1.6; }
   .chiziq-tugma { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
