@@ -80,3 +80,8 @@ Keyin shu jadval yangilanadi. Kod o'zgarmaydi; `UsageBar` va Savol banki yangi l
   - K05: `usage_status` shakli va mijoz huquqlari.
 - K06, parallel: `scripts/rls-tekshir.sh` oxirida 10 ta alohida ulanish ishga tushadi, limit 3, natija aynan 3. Atomik bo'lmagan versiya bilan sinab ko'rilgan: test xatoni ushlaydi.
 - `src/lib/testlar/usageBar.test.ts`: qatorlar, tugash holati, Toshkent bo'yicha tiklanish sanasi.
+
+## Yon paneldagi Upgrade bandi (2026-11-13)
+
+`BolimYon` (faqat SAT, Subscription sahifasining o'zida yo'q): "Upgrade to <tavsiya tarif nomi>" va izoh. Faqat kirgan va amaldagi tarifi `free` bo'lgan foydalanuvchiga ko'rinadi; pullik, noma'lum yoki xato holatda yashirin. Izoh `upgradeIzohi`: tavsiya tarif Free'dan farq qiladigan jadval qatorlari nomi (ko'pi bilan 2 ta), farq bo'lmasa "Compare plans". Raqam yozilmaydi. supabase-js yuklanmaydi: `tayanch:auth` dagi token bilan REST (`rpc/usage_status`, `plans`), natija sessionStorage `tayanch:sat-tarif-kesh` da 10 daqiqa (foydalanuvchi id bilan); Subscription sahifasi va muvaffaqiyatli to'lov keshni tozalaydi. Mantiq `src/lib/sat/upgradeBand.ts` (testlar), brauzer qismi `upgradeBandUlash.ts`. Dev: istalgan SAT sahifasida `?upgrade=sinov`.
+

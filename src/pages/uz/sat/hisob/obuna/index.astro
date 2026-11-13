@@ -235,6 +235,7 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
   import { tarifBayrogimi } from '../../../../../data/satAnalitika';
   import { usageBarniChiz, type UsageJavob } from '../../../../../lib/sat/usageBar';
   import { kartaRoyxati, taqqoslashJadvali, type JadvalQator } from '../../../../../lib/sat/tarifJadval';
+  import { tarifKeshiniTozala } from '../../../../../lib/sat/upgradeBandUlash';
   import {
     eslatma, freeCheklovlari, holatNomi, obunaHolati, qisqaId, sanaYozuv, tekshirishMumkin, usulYozuv,
     type ObunaYozuv, type TolovYozuv,
@@ -402,6 +403,7 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
   }
 
   function korsat(m: Malumot) {
+    tarifKeshiniTozala(); // yon paneldagi Upgrade bandi keyingi sahifada yangi tarifni o'qisin
     tariflar = m.tariflar;
     jadval = taqqoslashJadvali(m.tariflar, ustunlar, jadvalQatorlari, kvotaNomi);
     jadvalniChiz();
