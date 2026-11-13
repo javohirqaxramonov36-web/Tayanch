@@ -4,7 +4,8 @@
 //   {"amal": "eksport"}                       -> 200 {"malumot": {...}}   (serverdagi hamma ma'lumot, JSON)
 //   {"amal": "ochirish", "tasdiq": "<email>"} -> 200 {"ok": true}         (hisob va bog'liq ma'lumot o'chadi)
 // Xato: {"error": "<kod>"}: not_signed_in 401, bad_request 400, confirmation_mismatch 400, reauth_required 403,
-//       payment_in_progress 409, export_failed / delete_failed / server_not_configured 500, method_not_allowed 405.
+//       payment_in_progress 409, export_failed / audit_failed / delete_failed / server_not_configured 500,
+//       method_not_allowed 405. Brauzer bu kodni xato matni yonida "(kod: …)" deb ko'rsatadi (maxfiy ma'lumot yo'q).
 //
 // Qayta autentifikatsiya: JWT dagi `amr` (autentifikatsiya usullari va vaqti) ichidagi eng yangi vaqt
 // QAYTA_KIRISH_SONIYA dan eski bo'lmasligi kerak. Token yangilansa ham `amr` vaqti o'zgarmaydi (tekshirish kerak:
@@ -29,7 +30,12 @@ export interface MalumotBogliqlik {
   eksport: (u: HisobFoydalanuvchi) => Promise<Record<string, unknown>>;
   /** created yoki pending holatdagi to'lov bormi */
   jarayondagiTolov: (userId: string) => Promise<boolean>;
+  /** audit_log ga `account_deleted` yozadi (o'chirishdan OLDIN: o'chgach yozib bo'lmasligi mumkin); yozuv id yoki null. */
+  auditYoz: (userId: string) => Promise<number | null>;
+  /** auth.admin.deleteUser */
   ochir: (userId: string) => Promise<OchirishNatija>;
+  /** O'chirish bajarilmasa audit yozuvi `account_delete_failed` ga o'zgaradi (yolg'on `account_deleted` qolmasin). */
+  auditBekor: (auditId: number, xato: string) => Promise<void>;
   /** Hozirgi vaqt, soniya */
   hozir: () => number;
   jurnal: (xabar: string, tafsilot?: Record<string, unknown>) => void;
@@ -97,9 +103,15 @@ export async function hisobMalumot(req: Request, d: MalumotBogliqlik): Promise<R
       return javob(403, { error: 'reauth_required' });
     }
     if (await d.jarayondagiTolov(u.id)) return javob(409, { error: 'payment_in_progress' });
+    const auditId = await d.auditYoz(u.id);
+    if (auditId === null) {
+      d.jurnal('ochirish xatosi', { user: u.id, xato: 'audit' });
+      return javob(500, { error: 'audit_failed' });
+    }
     const n = await d.ochir(u.id);
     if (!n.ok) {
       d.jurnal('ochirish xatosi', { user: u.id, xato: n.xato });
+      await d.auditBekor(auditId, n.xato).catch(() => undefined);
       return javob(500, { error: 'delete_failed' });
     }
     d.jurnal('hisob ochirildi', { user: u.id });

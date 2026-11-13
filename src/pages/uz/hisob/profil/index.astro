@@ -73,8 +73,9 @@ import { yol } from '../../../../lib/yol';
           <div id="ochirish-parol-qadam" hidden>
             <ParolMaydon id="ochirish-parol" nomi="Parolingiz" autocomplete="current-password" izoh="Shaxsingizni tasdiqlash uchun." />
           </div>
+          <p class="hisob-sust" id="ochirish-yangi" hidden>Siz yaqinda kirgansiz, shuning uchun parol so'ralmaydi.</p>
           <div class="ochirish-google" id="ochirish-google-qadam" hidden>
-            <p class="hisob-sust">Shaxsingizni tasdiqlash uchun Google orqali qayta kiring. Keyin shu sahifaga qaytasiz.</p>
+            <p class="hisob-sust" id="ochirish-google-matn">Shaxsingizni tasdiqlash uchun Google orqali qayta kiring. Keyin shu sahifaga qaytasiz.</p>
             <button type="button" class="tugma tugma-ikkinchi" id="ochirish-google">Google orqali qayta kirish</button>
           </div>
           <Maydon id="ochirish-email" nomi="Tasdiqlash uchun emailingizni yozing" turi="email" autocomplete="off" izoh="Hisobingiz emaili, yuqorida ko'rsatilgandek." />
@@ -102,6 +103,7 @@ import { yol } from '../../../../lib/yol';
 <script>
   import { hisobMijoz, hisobQorovul, hisobYoli, xatoMatni, maydonXatosi, yuklanish, xabar, googleBilanKirish, googleXatoMatni, googleXatoTuri } from '../../../../lib/hisob';
   import { funksiya, tokenKirishVaqti } from '../../../../lib/funksiya';
+  import { authXatoKodi, kodBilan } from '../../../../lib/xatoKodi';
   import { eksportdanTashqari } from '../../../../data/brauzerKalitlari';
   import { hisobSozlama, satBall } from '../../../../data/hisobSozlama';
   import { ballXatosi as satBallXatosi, sanaXatosi, SANA_MAX_YIL, type BallXato } from '../../../../lib/satMaqsad';
@@ -284,9 +286,11 @@ import { yol } from '../../../../lib/yol';
     const r = await funksiya<{ malumot: Record<string, unknown> }>('hisob-malumot', { amal: 'eksport' });
     yuklanish(eksport, false);
     if (!r.ok) {
-      return xabar($('eksport-xato'), r.kod === 'network_error'
+      return xabar($('eksport-xato'), kodBilan(r.kod === 'network_error'
         ? "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."
-        : "Ma'lumotni tayyorlab bo'lmadi. Birozdan keyin qayta urinib ko'ring.");
+        : r.kod === 'not_signed_in'
+          ? "Sessiya tugagan. Sahifani yangilab, qayta kiring."
+          : "Ma'lumotni tayyorlab bo'lmadi. Birozdan keyin qayta urinib ko'ring.", r.kod));
     }
     const fayl = { ...r.data.malumot, brauzer: { localStorage: brauzerYozuvlari(localStorage), sessionStorage: brauzerYozuvlari(sessionStorage) } };
     const nomi = `tayanch-malumotlarim-${toshkentBugun()}.json`;
@@ -302,8 +306,11 @@ import { yol } from '../../../../lib/yol';
   });
 
   // ---- Hisobni o'chirish (P23): tugma → tasdiq formasi → qayta autentifikatsiya → email bilan tasdiq → Edge Function ----
-  // Email foydalanuvchi har safar parolini kiritadi. Faqat Google bilan kirgan foydalanuvchi oxirgi 9 daqiqada
-  // kirmagan bo'lsa, Google orqali qayta kiradi (?ochirish=1 bilan shu sahifaga qaytadi). Server chegarasi 10 daqiqa.
+  // Oxirgi 9 daqiqada kirgan (parol yoki Google) foydalanuvchidan qayta tasdiq so'ralmaydi: server chegarasi 10 daqiqa.
+  // Aks holda: parolli hisob parolini kiritadi; Google bog'langan hisob (faqat Google yoki email + Google) Google orqali
+  // qayta kira oladi (?ochirish=1 bilan shu sahifaga qaytadi). Email + Google hisobda ikkalasi ko'rinadi: parolni
+  // eslamagan foydalanuvchi Google'ni tanlaydi (2026-11-13 gacha faqat parol so'ralardi).
+  // Xato xabarlari oxirida "(kod: …)": muallif sinovda aniq sababni ko'rishi uchun, maxfiy ma'lumotsiz.
   // Escape yoki "Bekor qilish" formani yopadi va fokusni tugmaga qaytaradi.
   const YANGI_KIRISH_SONIYA = 9 * 60;
   const ochirish = $<HTMLButtonElement>('ochirish-tugma');
@@ -312,16 +319,19 @@ import { yol } from '../../../../lib/yol';
   const parol = $<HTMLInputElement>('ochirish-parol');
   const tasdiqEmail = $<HTMLInputElement>('ochirish-email');
   const parolQadam = $('ochirish-parol-qadam');
+  const yangiEslatma = $('ochirish-yangi');
   const googleQadam = $('ochirish-google-qadam');
+  const googleMatn = $('ochirish-google-matn');
   const googleTugma = $<HTMLButtonElement>('ochirish-google');
   let joriyEmail = '';
   let emailBilan = false;
   let yangiKirish = false;
 
   const emailNorm = (x: string) => x.trim().toLowerCase();
+  const parolKerak = () => emailBilan && !yangiKirish;
   function haHolati() {
     const emailMos = !!joriyEmail && emailNorm(tasdiqEmail.value) === emailNorm(joriyEmail);
-    ha.disabled = !(emailMos && (emailBilan ? parol.value.length > 0 : yangiKirish));
+    ha.disabled = !(emailMos && (yangiKirish || (parolKerak() && parol.value.length > 0)));
   }
 
   async function kirishHolati() {
@@ -331,10 +341,15 @@ import { yol } from '../../../../lib/yol';
     joriyEmail = s?.user.email ?? '';
     const usullar: string[] = (s?.user.identities ?? []).map((i) => i.provider);
     emailBilan = usullar.includes('email');
+    const googleBilan = usullar.includes('google') || !emailBilan;
     const vaqt = tokenKirishVaqti(s?.access_token);
     yangiKirish = vaqt !== null && Date.now() / 1000 - vaqt <= YANGI_KIRISH_SONIYA;
-    parolQadam.hidden = !emailBilan;
-    googleQadam.hidden = emailBilan || yangiKirish;
+    parolQadam.hidden = !parolKerak();
+    yangiEslatma.hidden = !(yangiKirish && emailBilan);
+    googleQadam.hidden = yangiKirish || !googleBilan;
+    googleMatn.textContent = emailBilan
+      ? "Parolingizni eslay olmasangiz, Google orqali qayta kiring. Keyin shu sahifaga qaytasiz."
+      : "Shaxsingizni tasdiqlash uchun Google orqali qayta kiring. Keyin shu sahifaga qaytasiz.";
     haHolati();
   }
 
@@ -362,7 +377,7 @@ import { yol } from '../../../../lib/yol';
     const e = await googleBilanKirish(`${hisobYoli('profil')}?ochirish=1`);
     if (e) {
       yuklanish(googleTugma, false);
-      xabar($('ochirish-xato'), googleXatoMatni[googleXatoTuri(e)]);
+      xabar($('ochirish-xato'), kodBilan(googleXatoMatni[googleXatoTuri(e)], authXatoKodi(e)));
     }
   });
 
@@ -370,6 +385,8 @@ import { yol } from '../../../../lib/yol';
     reauth_required: "Shaxsingizni qayta tasdiqlang: parolingizni kiriting yoki Google orqali qayta kiring.",
     payment_in_progress: "Sizda tugallanmagan to'lov bor. Bir necha daqiqadan keyin qayta urinib ko'ring yoki Aloqa sahifasi orqali yozing.",
     network_error: "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.",
+    not_signed_in: "Sessiya tugagan. Sahifani yangilab, qayta kiring.",
+    delete_failed: "Hisob serverda o'chirilmadi. Birozdan keyin qayta urinib ko'ring yoki Aloqa sahifasi orqali yozing.",
   };
 
   tasdiq.addEventListener('submit', async (ev) => {
@@ -380,13 +397,14 @@ import { yol } from '../../../../lib/yol';
     if (!c) return;
     xabar($('ochirish-xato'), null);
     yuklanish(ha, true, "O'chirilmoqda…");
-    if (emailBilan) {
+    if (parolKerak()) {
       // Qayta autentifikatsiya: yangi sessiya JWT dagi amr vaqtini yangilaydi (server shuni tekshiradi).
-      const { error } = await c.auth.signInWithPassword({ email: joriyEmail, password: parol.value });
+      const { error } = await c.auth.signInWithPassword({ email: joriyEmail, password: parol.value })
+        .catch((e: Error) => ({ error: e }));
       if (error) {
         yuklanish(ha, false);
         const m = xatoMatni(error, 'kirish');
-        maydonXatosi(parol, m === "Email yoki parol noto'g'ri." ? "Parol noto'g'ri." : m);
+        maydonXatosi(parol, kodBilan(m === "Email yoki parol noto'g'ri." ? "Parol noto'g'ri." : m, authXatoKodi(error)));
         return parol.focus();
       }
     }
@@ -398,7 +416,7 @@ import { yol } from '../../../../lib/yol';
         return tasdiqEmail.focus();
       }
       if (r.kod === 'reauth_required') await kirishHolati();
-      return xabar($('ochirish-xato'), ochirishXatoMatni[r.kod] ?? "Hisob o'chirilmadi. Qayta urinib ko'ring.");
+      return xabar($('ochirish-xato'), kodBilan(ochirishXatoMatni[r.kod] ?? "Hisob o'chirilmadi. Qayta urinib ko'ring.", r.kod));
     }
     await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
     try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }
