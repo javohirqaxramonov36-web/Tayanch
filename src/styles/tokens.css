@@ -78,13 +78,12 @@
   --size-swatch:88px; --size-content-max:1200px; --size-measure:68ch;
   --border-width-1:1px; --border-width-2:2px; --border-width-3:3px;
   --breakpoint-mobile:390px; --breakpoint-tablet:768px; --breakpoint-desktop:1280px;
-  --blur-glass:20px;
   --opacity-0:0; --opacity-muted:0.5; --opacity-100:1;
   --angle-quarter:90deg;
   --z-base:0; --z-raised:1; --z-sticky:20;
 
   /* ---- PRIMITIVE · motion ---- */
-  --duration-fast:150ms; --duration-base:250ms; --duration-slow:400ms; --duration-stagger:50ms;
+  --duration-fast:150ms; --duration-base:200ms; --duration-slow:200ms; /* 2026-11-13: hamma harakat 120-200ms */ --duration-stagger:50ms;
   --ease-enter:cubic-bezier(0.22, 1, 0.36, 1);      /* decelerate: things arriving / lighting up */
   --ease-exit:cubic-bezier(0.55, 0, 1, 0.45);       /* accelerate: things leaving / dimming */
   --ease-state:cubic-bezier(0.4, 0, 0.2, 1);        /* standard: hover, press, toggles, position */
@@ -106,10 +105,7 @@
   --color-bg-deep:var(--color-neutral-150);
   --color-surface:var(--color-neutral-0);
   --color-surface-sunken:var(--color-neutral-100);
-  --color-surface-glass:color-mix(in srgb, var(--color-neutral-0) 62%, transparent);
-  --color-surface-glass-strong:color-mix(in srgb, var(--color-neutral-0) 84%, transparent);
   --color-border:var(--color-neutral-200);
-  --color-border-glass:var(--color-neutral-0);
   --color-border-strong:var(--color-neutral-500);
   --color-text-primary:var(--color-neutral-900);
   --color-text-secondary:var(--color-neutral-600);
@@ -155,10 +151,7 @@
   --color-bg-deep:var(--color-neutral-950);
   --color-surface:var(--color-neutral-850);
   --color-surface-sunken:var(--color-neutral-950);
-  --color-surface-glass:color-mix(in srgb, var(--color-neutral-0) 6%, transparent);
-  --color-surface-glass-strong:color-mix(in srgb, var(--color-neutral-0) 10%, transparent);
   --color-border:var(--color-neutral-800);
-  --color-border-glass:color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
   --color-border-strong:var(--color-neutral-500);
   --color-text-primary:var(--color-neutral-50);
   --color-text-secondary:var(--color-neutral-400);
@@ -211,11 +204,10 @@
   --text-button-size:var(--font-size-button-m); --text-button-lh:var(--line-height-button-m); --text-button-weight:var(--font-weight-button-m); --text-button-ls:var(--letter-spacing-button-m);
 
   /* ======================================================================
-     Layer 3 · COMPONENT tokens (Stage 1 scope: focus ring, glass, floor indicator)
+     Layer 3 · COMPONENT tokens (Stage 1 scope: focus ring, floor indicator)
      ====================================================================== */
   --focus-ring-width:var(--border-width-2); --focus-ring-gap:var(--border-width-2);
   --focus-ring:0 0 0 var(--focus-ring-gap) var(--color-focus-gap), 0 0 0 calc(var(--focus-ring-gap) + var(--focus-ring-width)) var(--color-focus-ring);
-  --glass-fill:var(--color-surface-glass); --glass-stroke:var(--color-border-glass); --glass-blur:var(--blur-glass);
 
   --floor-indicator-edge-width:var(--border-width-2);
   --floor-indicator-glow-opacity:calc(0.95 * var(--knob-glow));
@@ -259,13 +251,8 @@
   --size-checkbox:22px; --size-radio-dot:10px; --size-slider-thumb:24px; --size-slider-track:6px;
   --size-qcell:44px; --size-letter:32px; --size-sidebar:248px; --size-toast:400px; --size-modal:440px; --size-tooltip:240px; --size-bottombar:64px;
   --size-spinner:18px;
-  --duration-instant:0ms; --duration-skeleton:1400ms; --duration-spin:800ms;
-  --skeleton-animation:skeleton-sweep; --spinner-animation:spin;
+  --duration-instant:0ms; /* 2026-11-13: cheksiz skeleton va spinner animatsiyasi olib tashlandi */
 }
-@media (prefers-reduced-motion: reduce){
-  :root:not([data-motion="full"]){ --duration-skeleton:0ms; --duration-spin:0ms; --skeleton-animation:none; --spinner-animation:none; }
-}
-:root[data-motion="reduced"]{ --duration-skeleton:0ms; --duration-spin:0ms; --skeleton-animation:none; --spinner-animation:none; }
 
 /* Layer 3 · COMPONENT tokens (theme-dependent values) */
 :root{
@@ -304,7 +291,7 @@
   --control-pad-sm:var(--space-4); --control-pad-md:var(--space-5); --control-pad-lg:var(--space-6);
   --control-radius:var(--radius-md); --control-border:var(--border-width-1);
   --btn-radius:calc(var(--radius-xl) * 2); /* pill at 100%, square at 0% */
-  --btn-dot:var(--color-floor-navigator-500); --btn-press-shift:calc(var(--border-width-1) * var(--motion-distance));
+  --btn-dot:var(--color-floor-navigator-500); --btn-press-scale:calc(1 - 0.03 * var(--motion-distance)); /* :active scale(0.97), reduced motion 1 */
   --btn-disabled-bg:var(--color-surface-sunken); --btn-disabled-text:var(--color-text-disabled); --btn-disabled-border:var(--color-border);
 
   --input-bg:var(--color-surface); --input-border:var(--color-border-strong); --input-border-hover:var(--color-text-secondary); --input-border-focus:var(--color-focus-ring);
@@ -312,16 +299,16 @@
   --input-error-border:var(--color-error-ui); --input-error-text:var(--color-error-text);
   --input-disabled-bg:var(--color-surface-sunken); --input-disabled-border:var(--color-border); --input-disabled-text:var(--color-text-disabled);
 
-  --card-bg:var(--glass-fill); --card-border:var(--card-line); --card-radius:var(--radius-lg); --card-pad:var(--space-5);
+  --card-bg:var(--color-surface); --card-border:var(--card-line); --card-radius:var(--radius-lg); --card-pad:var(--space-5);
   --card-shadow:var(--shadow-1); --card-shadow-hover:var(--shadow-2); --card-lift:calc(var(--border-width-2) * -1 * var(--motion-distance));
   --card-accent-width:var(--border-width-3);
 
   --badge-height:var(--space-6); --badge-pad:var(--space-2); --badge-radius:var(--radius-full);
 
-  --nav-item-active-bg:var(--color-surface-glass-strong); --nav-item-hover-bg:var(--btn-ghost-bg-hover);
+  --nav-item-active-bg:var(--color-surface); --nav-item-hover-bg:var(--btn-ghost-bg-hover);
   --nav-indicator:var(--color-text-primary);
 
-  --timer-bg:var(--color-surface-glass-strong); --timer-border:var(--color-border);
+  --timer-bg:var(--color-surface); --timer-border:var(--color-border);
   --timer-warn-bg:var(--color-warning-subtle); --timer-warn-border:var(--color-warning-ui); --timer-warn-text:var(--color-warning-text);
   --qcell-flag:var(--color-warning-ui);
   --answer-bg:var(--color-surface); --answer-border:var(--color-border-strong); --answer-bg-hover:var(--color-surface-sunken);
@@ -337,46 +324,9 @@
   --progress-track:var(--color-surface-sunken); --progress-fill:var(--floor-ui, var(--color-brand)); --progress-height:var(--space-2);
 }
 
-/* ==========================================================================
-   Liquid Glass (muallif tasdiqladi, 2026-11-09).
-   backdrop-filter faqat: topbar, sticky panel, Lift paneli. Bino SVG blursiz.
-   Bir ekranda ko'pi bilan 3 qatlam. Aks (sheen) statik.
-   A yo'nalish (2026-11-09): blur 20px, saturate 1.8 / 1.4, fon 84% (yorug' oq, qorong'i neutral-925).
-   84% ikkinchi darajali matn (neutral-600 / 400) uchun eng yomon holatda (ostida qora yoki oq kontent,
-   blur hisobga olinmagan) 4.5:1 ni saqlaydigan eng kichik qiymat; maketdagi 56% / 55% bunga yetmaydi.
-   Kartalar blursiz: --glass-card-bg faqat studio foni ustida.
-   ========================================================================== */
-:root{
-  --glass-blur:var(--blur-glass);
-  --glass-saturate:1.8;
-  --glass-backdrop:blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  --glass-chrome-bg:color-mix(in srgb, var(--color-neutral-0) 84%, transparent);
-  --glass-solid-bg:var(--color-surface);
-  --glass-card-bg:color-mix(in srgb, var(--color-neutral-0) 72%, transparent);
-  --glass-highlight:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 95%, transparent);
-  --glass-edge:inset 0 0 0 var(--border-width-1) color-mix(in srgb, var(--color-neutral-0) 78%, transparent), var(--glass-highlight);
-  --glass-shadow:0 12px 32px color-mix(in srgb, var(--color-neutral-900) 10%, transparent);
-  --card-line:color-mix(in srgb, var(--color-neutral-900) 8%, transparent);
-  --glass-sheen:linear-gradient(180deg, color-mix(in srgb, var(--color-neutral-0) 35%, transparent), transparent 50%);
-}
-:root[data-mavzu='qorongi']{
-  --glass-saturate:1.4;
-  --glass-chrome-bg:color-mix(in srgb, var(--color-neutral-925) 84%, transparent);
-  --glass-card-bg:color-mix(in srgb, var(--color-neutral-0) 5%, transparent);
-  --glass-highlight:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 16%, transparent);
-  --glass-edge:inset 0 0 0 var(--border-width-1) color-mix(in srgb, var(--color-neutral-0) 12%, transparent), var(--glass-highlight);
-  --glass-shadow:0 12px 32px color-mix(in srgb, var(--color-neutral-950) 45%, transparent);
-  --card-line:color-mix(in srgb, var(--color-neutral-0) 9%, transparent);
-  --glass-sheen:linear-gradient(180deg, color-mix(in srgb, var(--color-neutral-0) 4%, transparent), transparent 50%);
-}
-/* Asosiy zaxira: backdrop-filter qo'llanmaydigan brauzerda zich oddiy fon */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
-  :root, :root[data-mavzu='qorongi']{ --glass-chrome-bg:var(--glass-solid-bg); --glass-backdrop:none; }
-}
-/* Qo'shimcha zaxira (hamma brauzerda qo'llanmaydi) */
-@media (prefers-reduced-transparency: reduce){
-  :root, :root[data-mavzu='qorongi']{ --glass-chrome-bg:var(--glass-solid-bg); --glass-card-bg:var(--color-surface); --glass-backdrop:none; --glass-sheen:none; --glass-highlight:inset 0 0 0 0 transparent; }
-}
+/* Karta chizig'i (2026-11-13: Liquid Glass olib tashlandi, sirtlar zich) */
+:root{ --card-line:color-mix(in srgb, var(--color-neutral-900) 8%, transparent); }
+:root[data-mavzu='qorongi']{ --card-line:color-mix(in srgb, var(--color-neutral-0) 9%, transparent); }
 
 /* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
@@ -471,7 +421,7 @@
   --harakat-sekin:var(--duration-slow);
   --harakat-egri:var(--ease-enter);
   --kotarilish:translateY(var(--card-lift));  /* bosiladigan karta hover (reduced motion'da 0) */
-  --bosilish:translateY(var(--btn-press-shift)); /* tugma :active */
+  --bosilish:scale(var(--btn-press-scale)); /* tugma :active */
 
   /* Qobiq (bo'lim yon paneli): eski qiymatlar */
   --yon-kenglik:288px;

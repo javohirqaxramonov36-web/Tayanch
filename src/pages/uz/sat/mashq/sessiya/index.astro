@@ -1072,7 +1072,7 @@ const IK = {
     border: 0; font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
   }
   .kichik-tugma.kulrang { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .kichik-tugma.kulrang:hover { background: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .kichik-tugma.kulrang:hover { background: var(--chiziq-kuchli); } }
   .kichik-tugma[aria-busy='true'] { cursor: progress; }
   #saqla-tugma[aria-pressed='true'] { background: var(--rang-asosiy-och); color: var(--matn); box-shadow: inset 0 0 0 1.5px var(--rang-asosiy); }
   #saqla-tugma[aria-pressed='true'] svg { fill: currentColor; }
@@ -1094,11 +1094,6 @@ const IK = {
     border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
   }
   .saqlash p { margin: 0; }
-  .matn-tugma {
-    min-height: 48px; padding: 0 var(--b-2); border: 0; background: transparent; color: inherit;
-    font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer;
-    display: inline-flex; align-items: center;
-  }
 
   #savol-h:focus, .natija-h:focus { outline: none; }
 
@@ -1110,18 +1105,6 @@ const IK = {
     background: var(--fon-ikkinchi); border-top: 1px solid var(--chiziq);
   }
   [data-mavzu='qorongi'] .sessiya-pastki { background: var(--fon); }
-  .asosiy-tugma, .ikkinchi-tugma {
-    min-height: 52px; padding: 0 28px;
-    border: 0; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 800; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
-  }
-  .asosiy-tugma { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .asosiy-tugma:hover { background: var(--rang-asosiy-toq); }
-  .asosiy-tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .ikkinchi-tugma { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .ikkinchi-tugma:hover { background: var(--chiziq-kuchli); }
-  .ikkinchi-tugma:disabled { color: var(--matn-sust); cursor: not-allowed; background: var(--sirt-ikkinchi); }
   .sessiya-pastki #tekshir, .sessiya-pastki #keyingi { margin-left: auto; }
   .sessiya-pastki #otkaz:not([hidden]) + #tekshir { margin-left: 0; }
   .sessiya-pastki #otkaz { margin-left: auto; }

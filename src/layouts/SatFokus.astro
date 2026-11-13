@@ -68,8 +68,7 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
   .fokus-bosh {
     min-height: 72px; flex: none;
     padding: var(--b-3) var(--b-8);
-    /* Liquid Glass (topbar) */
-    background: var(--glass-sheen), var(--glass-chrome-bg); -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop); box-shadow: var(--glass-edge);
+    background: var(--color-surface);
     border-bottom: var(--border-width-1) solid var(--color-border);
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-6);
   }
@@ -78,13 +77,13 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
     display: flex; align-items: center; justify-content: center;
     color: var(--matn); background: var(--fon-ikkinchi);
   }
-  .fokus-bosh .yopish:hover { background: var(--sirt-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .fokus-bosh .yopish:hover { background: var(--sirt-ikkinchi); } }
   .fokus-bosh .sarlavha { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .fokus-bosh .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
   .fokus-bosh .nomi { font-size: 17px; font-weight: 800; }
   .fokus-bosh .jarayon { flex: 1 1 240px; display: flex; align-items: center; gap: 14px; max-width: 520px; margin-left: auto; }
   .fokus-bosh .progress { flex: 1; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); transition: width var(--harakat-orta) var(--harakat-egri); }
+  .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); }
   .fokus-bosh .progress-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); white-space: nowrap; }
   .fokus-bosh .fokus-oraliq { flex: 1; }
   .fokus-asosiy { flex: 1; padding: var(--b-6) var(--b-8) var(--b-10); }

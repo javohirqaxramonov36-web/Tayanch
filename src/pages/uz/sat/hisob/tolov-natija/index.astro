@@ -133,8 +133,4 @@ const obuna = yol('/uz/sat/hisob/obuna/');
   .karta a:not(.tugma) { color: var(--rang-havola); }
   .amallar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-2); }
   @media (max-width: 479.98px) { .amallar { flex-direction: column; align-self: stretch; } .amallar .tugma { width: 100%; } }
-  @media (prefers-reduced-motion: no-preference) {
-    .karta[data-holat='tekshirilmoqda'] .belgi { animation: nafas 1.6s ease-in-out infinite; }
-  }
-  @keyframes nafas { 50% { opacity: 0.45; } }
 </style>

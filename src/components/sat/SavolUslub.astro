@@ -47,8 +47,8 @@
   }
   .sk-asbob[hidden] { display: none; }
   .sk-asbob svg { color: var(--rang-havola); flex: none; }
-  .sk-asbob:hover { background: var(--fon-ikkinchi); }
-  [data-mavzu='qorongi'] .sk-asbob:hover { background: var(--sirt-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .sk-asbob:hover { background: var(--fon-ikkinchi); } }
+  @media (hover: hover) and (pointer: fine) { [data-mavzu='qorongi'] .sk-asbob:hover { background: var(--sirt-ikkinchi); } }
   .sk-asbob[aria-pressed='true'] { background: var(--sirt-ikkinchi); color: var(--matn); }
   .sk-bayroq[aria-pressed='true'] svg { fill: currentColor; }
 
@@ -70,7 +70,7 @@
     cursor: pointer;
   }
   [data-mavzu='qorongi'] .sk-variant { background: var(--fon); }
-  .sk-variant:hover { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .sk-variant:hover { border-color: var(--rang-asosiy); } }
   .sk-variant:focus-visible, .sk-ochir:focus-visible, .sk-asbob:focus-visible, .sk-katta:focus-visible {
     outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
   }
@@ -99,20 +99,22 @@
     display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
   }
   .sk-ochir[hidden] { display: none; }
-  .sk-ochir:hover { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .sk-ochir:hover { border-color: var(--rang-asosiy); } }
   .sk-ochir-harf { text-decoration: line-through; text-decoration-thickness: 2px; }
   .sk-ochir[aria-pressed='true'] { background: var(--sirt-ikkinchi); color: var(--matn); border-color: var(--matn-sust); }
   .sk-ochir[aria-pressed='true'] .sk-ochir-harf { text-decoration: none; }
 
   /* Qulflangan (javob berilgan) */
   .sk-qulf .sk-variant { cursor: default; }
-  .sk-qulf .sk-variant:hover { border-color: var(--chiziq-kuchli); }
-  .sk-qulf .sk-tanlangan .sk-variant:hover { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .sk-qulf .sk-variant:hover { border-color: var(--chiziq-kuchli); } }
+  @media (hover: hover) and (pointer: fine) { .sk-qulf .sk-tanlangan .sk-variant:hover { border-color: var(--rang-asosiy); } }
 
   /* Natija (taymersiz) */
-  .sk-togri .sk-variant, .sk-togri .sk-variant:hover { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  .sk-togri .sk-variant { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .sk-togri .sk-variant:hover { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); } }
   .sk-togri .sk-belgi-togri { display: block; color: var(--rang-havola); }
-  .sk-xato .sk-variant, .sk-xato .sk-variant:hover { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); }
+  .sk-xato .sk-variant { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); }
+  @media (hover: hover) and (pointer: fine) { .sk-xato .sk-variant:hover { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); } }
   .sk-xato .sk-v-matn { text-decoration: line-through; }
   .sk-xato .sk-harf { background: var(--matn); color: var(--fon); }
   .sk-xato .sk-belgi-xato { display: block; color: var(--matn); }
@@ -165,7 +167,7 @@
   }
   .sk-katta[hidden] { display: none; }
   .sk-asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .sk-asosiy:hover { background: var(--rang-asosiy-toq); }
+  @media (hover: hover) and (pointer: fine) { .sk-asosiy:hover { background: var(--rang-asosiy-toq); } }
 
   /* Keng konteyner: passage chapda, savol o'ngda, ikkalasi alohida suriladi */
   @container (min-width: 960px) {
@@ -184,7 +186,4 @@
     .sk-asbob { padding: 0 10px; }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .sk-variant, .sk-ochir, .sk-asbob { transition: border-color var(--harakat-tez) var(--harakat-egri), background-color var(--harakat-tez) var(--harakat-egri); }
-  }
 </style>
