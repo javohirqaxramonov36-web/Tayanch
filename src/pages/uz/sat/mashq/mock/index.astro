@@ -5,6 +5,7 @@
 // Dev mock: src/lib/sat/mockImtihonMock.ts (?mock=oddiy|qisqa|tayyor-emas|kvota|xato, &tozala=1; faqat DEV).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import MockUslub from '../../../../../components/sat/MockUslub.astro';
+import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import { satSahifalar } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
@@ -43,7 +44,7 @@ const TUZILMA = [
       <h2 class="mk-karta-h" id="holat-h" tabindex="-1">Checking your mock tests…</h2>
       <p class="mk-matn" id="holat-matn"></p>
       <p class="mk-matn" id="kredit" hidden></p>
-      <p class="mk-ogoh" id="kredit-tugadi" hidden><span id="kredit-tugadi-matn"></span> <a id="rejalar" href="#">See plans</a></p>
+      <p class="mk-ogoh" id="kredit-tugadi" tabindex="-1" hidden><span id="kredit-tugadi-matn"></span> <a id="rejalar" href="#">See plans</a></p>
       <div class="mk-amal">
         <button type="button" class="mk-tugma" id="boshla" hidden>Start a new mock test</button>
         <a class="mk-tugma" id="davom" hidden href="#">Resume</a>
@@ -103,17 +104,20 @@ const TUZILMA = [
       tekshirilmagan={sahifa.tekshirilmagan}
     />
   </div>
+  <TarifDialog />
 </BolimQobiq>
 
 <script>
   import { hisobMijoz } from '../../../../../lib/hisob';
   import { kreditMatni, mockXatosi, BOLIM_NOMI, type MockApi, type MockStatus, type MockTarixBand } from '../../../../../lib/sat/mock';
   import { tiklanishYozuv } from '../../../../../lib/sat/usageBar';
+  import { supabaseTaklifManba, tarifTaklifiniOch, type TaklifManba } from '../../../../../lib/sat/tarifDialog';
 
   const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
   const ildiz = $('mk-kirish');
   const IMTIHON = ildiz.dataset.imtihonUrl!;
   let api: MockApi | null = null;
+  let taklifManba: TaklifManba | null = null;
   let qidiruv = '';
   let S: MockStatus | null = null;
 
@@ -251,7 +255,14 @@ const TUZILMA = [
       tugma.removeAttribute('aria-busy');
       tugma.disabled = false;
       const t = mockXatosi(e);
-      if (t === 'kvota') { elon('No mock test credits left.'); return yukla(true); }
+      if (t === 'kvota') {
+        // Kredit oldindan ma'lum bo'lsa tugma o'chiq turadi; bu yerga faqat server kutilmaganda limit desa kelinadi.
+        elon('No mock test credits left.');
+        await yukla(true);
+        const xabar = $('kredit-tugadi');
+        if (taklifManba) void tarifTaklifiniOch(taklifManba, 'You have used your new mock tests for now. Your past results stay saved.', xabar.hidden ? null : xabar);
+        return;
+      }
       if (t === 'ochiq' || t === 'tayyor-emas') return yukla(true);
       if (t === 'forma') return holat("This test can't be retaken", 'The author has removed or changed some of its questions. Start a new mock test instead.', { boshla: !!S?.ready, fokus: true });
       if (t === 'tarmoq') return holat("Couldn't reach the server", 'Nothing was used up. Check your connection and try again.', { qayta: true, fokus: true });
@@ -270,6 +281,7 @@ const TUZILMA = [
       const { mockApi, mockTozala } = await import('../../../../../lib/sat/mockImtihonMock');
       if (p.get('tozala')) { mockTozala(); p.delete('tozala'); history.replaceState(null, '', `${location.pathname}?${p}`); }
       api = mockApi(p.get('mock') as Parameters<typeof mockApi>[0]);
+      taklifManba = (await import('../../../../../lib/sat/tarifDialogSinov')).namunaTaklifManba();
       qidiruv = `&mock=${encodeURIComponent(p.get('mock')!)}`;
       const pill = document.getElementById('namuna-pill');
       if (pill) pill.hidden = false;
@@ -284,6 +296,7 @@ const TUZILMA = [
         if (error) throw error;
         return d as T;
       };
+      taklifManba = supabaseTaklifManba(c);
       api = {
         status: () => rpc('mock_status'),
         boshla: (f) => rpc('start_mock', { p_form: f }),

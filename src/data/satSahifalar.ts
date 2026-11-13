@@ -281,8 +281,8 @@ export const satGuruhlar: SatGuruh[] = [
       {
         qism: 'hisob/obuna/',
         tayyor: true,
-        nomi: 'Plans',
-        tavsif: 'Choose a SAT plan and pay through inPAY. Each payment covers one prepaid period; nothing renews automatically.',
+        nomi: 'Subscription',
+        tavsif: 'Your SAT plan, usage and payments. Compare plans and pay through inPAY. Each payment covers one prepaid period; nothing renews automatically.',
         turi: 'vosita',
         manbalar: ['IP03'],
         tekshirilmagan: ['Prices and usage limits are not set yet.'],
