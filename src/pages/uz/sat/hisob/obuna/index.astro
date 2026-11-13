@@ -3,15 +3,20 @@
 // Faqat kirgan foydalanuvchi; kirmagan bo'lsa kirish sahifasiga (?keyin= bilan).
 // Narx va muddat bazadan (plans, faqat faol tariflar ko'rinadi). Brauzer summa yubormaydi:
 // tugma tolov-yaratish ga faqat {plan_code, period} beradi va inPAY sahifasiga o'tadi. Karta ma'lumoti bu saytda yo'q.
-// Davr almashtirgich: tabiiy radio guruh (strelkalar bilan). To'lov tugmasi bosilgach band bo'ladi (takror bosish yo'q).
+// Tuzilma (2026-11-13, TopTierPrep /subscription tahlili asosida, muallif tasdiqlagan spetsifikatsiya):
+// joriy tarif + sarf metrlari -> tariflar (davr almashtirgich, kartalar, "What's included") -> taqqoslash jadvali -> FAQ -> to'lov tarixi.
+// Hamma raqam bazadan (plans.limits/features/price_uzs/period_days, usage_status): src/lib/sat/tarifJadval.ts.
+// Davr almashtirgich: tabiiy radio guruh; server qabul qilmaydigan davr (satTarif.faolDavrlar da yo'q) o'chiq, "Coming soon".
+// To'lov tugmasi bosilgach band bo'ladi (takror bosish yo'q).
 // Dizayn: uchta bir xil karta qatori emas (DESIGN.md "Taqiqlar"): Pro (qora) va Max yonma-yon, Free pastda qator.
 // P22: obuna va to'lovlar faqat o'qiladi (subscriptions SELECT, payment_history RPC). Eslatma 7 kun qolganda
 // sahifa ochilganda chiqadi, tugagach Free xabari; "Check payment status" faqat inpay-holat orqali.
-// Sun'iy holatlar (faqat dev): ?sinov=faol|5kun|tugagan|hech (src/lib/sat/obunaSinov.ts).
+// Sun'iy holatlar (faqat dev): ?sinov=faol|5kun|tugagan|hech|kvota (src/lib/sat/obunaSinov.ts).
 // Brauzerda faqat tayanch:sat-tolov (oxirgi to'lov raqami).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import UsageBar from '../../../../../components/sat/UsageBar.astro';
+import Belgi from '../../../../../components/sat/TarifBelgi.astro';
 import { satTarif, usulNomi } from '../../../../../data/satTarif';
 import { yol } from '../../../../../lib/yol';
 
@@ -22,10 +27,11 @@ const usulMatn = usullar.length
   : 'You choose how to pay on the inPAY checkout page.';
 const aloqa = satTarif.aloqa;
 const qaytarish = satTarif.qaytarishHavola;
+const freeTavsif = 'No payment and no end date. Lessons and tools on this site stay open without a plan.';
 ---
 <BolimQobiq
   title="Plans · SAT"
-  description="Choose a Tayanch SAT plan and pay through inPAY. Prices come from the server; card details are entered only on the inPAY page."
+  description="Your Tayanch SAT plan, usage and payments. Compare Free and Pro, pay through inPAY; card details are entered only on the inPAY page."
   turi="vosita"
   yol={['Account']}
   bolim="sat"
@@ -35,8 +41,8 @@ const qaytarish = satTarif.qaytarishHavola;
   <div class="ichki obuna">
     <header class="bosh">
       <p class="pill-qator"><span class="ustki-kok">Account</span><span class="pill pill-chiziq">Draft</span></p>
-      <h1>Plans</h1>
-      <p class="lead">Each payment covers one prepaid period. Nothing renews automatically: when the period ends, you pay again if you want to continue.</p>
+      <h1>Plans and billing</h1>
+      <p class="lead">Check your plan and usage, compare plans and see your past payments.</p>
     </header>
 
     <p class="holat-matn" role="status" data-kutish>Checking your account…</p>
@@ -52,60 +58,152 @@ const qaytarish = satTarif.qaytarishHavola;
           <ul data-cheklov-royxat></ul>
           <p class="ikkinchi kichik" data-cheklov-yoq hidden>Nothing on this site is limited on Free right now.</p>
         </div>
-        <button type="button" class="tugma uzaytir" data-uzaytir hidden>Extend</button>
+        <button type="button" class="tugma tugma-asosiy uzaytir" data-uzaytir hidden>Extend</button>
       </section>
 
-      <section class="joriy" aria-labelledby="joriy-sarlavha">
-        <h2 id="joriy-sarlavha" class="kichik-sarlavha">Your plan</h2>
-        <p class="joriy-nom" data-joriy-nom>—</p>
-        <p class="ikkinchi kichik" data-joriy-muddat hidden></p>
+      <!-- 1. Joriy tarif va sarf -->
+      <section class="blok joriy" aria-labelledby="joriy-sarlavha">
+        <div class="joriy-bosh">
+          <div class="joriy-nom-blok">
+            <p class="kichik-sarlavha" id="joriy-sarlavha">Current plan</p>
+            <p class="joriy-nom-qator"><span class="joriy-nom" data-joriy-nom>—</span><span class="faol-belgi">Active</span></p>
+          </div>
+          <a class="tugma tugma-ikkinchi" href="#tariflar" data-joriy-havola>See plans</a>
+        </div>
+        <p class="ikkinchi" data-joriy-tavsif></p>
         <div class="sarf">
           <h3 id="sarf-sarlavha" class="kichik-sarlavha">Usage</h3>
-          <UsageBar sarlavhaId="sarf-sarlavha" rejalar={false} />
+          <UsageBar sarlavhaId="sarf-sarlavha" rejalar={false} tor />
         </div>
       </section>
 
-      <fieldset class="davr">
-        <legend class="kichik-sarlavha">Billing period</legend>
-        <div class="davr-tanlov">
-          {satTarif.davrlar.map((d, i) => (
-            <label class="davr-variant">
-              <input type="radio" name="davr" value={d.kod} checked={i === 0} />
-              <span>{d.nomi}</span>
-            </label>
+      <!-- 2. Tariflar -->
+      <section class="blok tariflar" id="tariflar" aria-labelledby="tariflar-sarlavha" tabindex="-1">
+        <div class="tariflar-bosh">
+          <div>
+            <p class="kichik-sarlavha">Available plans</p>
+            <h2 id="tariflar-sarlavha">Choose a plan</h2>
+          </div>
+          <fieldset class="davr">
+            <legend class="ekranda-yoq">Billing period</legend>
+            <div class="davr-tanlov">
+              {satTarif.davrlar.map((d, i) => {
+                const faol = (satTarif.faolDavrlar as readonly string[]).includes(d.kod);
+                return (
+                  <label class:list={['davr-variant', { ochiq: !faol }]}>
+                    <input type="radio" name="davr" value={d.kod} checked={i === 0} disabled={!faol} aria-describedby={faol ? undefined : `davr-${d.kod}-izoh`} />
+                    <span>{d.nomi}{!faol && <small class="davr-tez" id={`davr-${d.kod}-izoh`}>Coming soon</small>}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+        </div>
+
+        <ul class="ishonch" aria-label="How plans work">
+          <li><Belgi />Paid once, no automatic charges</li>
+          <li><Belgi />Card details only on the inPAY page</li>
+          <li><Belgi />Nothing you saved is deleted when a plan ends</li>
+        </ul>
+
+        <p class="xato" role="alert" data-xato hidden></p>
+
+        <div class="pullik">
+          {pullik.map((t) => (
+            <article class:list={['tarif', { tavsiya: t.kod === satTarif.tavsiya }]} data-tarif={t.kod} aria-labelledby={`tarif-${t.kod}`}>
+              <div class="tarif-bosh">
+                <h3 id={`tarif-${t.kod}`}>{t.nomi}</h3>
+                {t.kod === satTarif.tavsiya && <span class="belgi">{satTarif.tavsiyaYorliq}</span>}
+              </div>
+              <div>
+                <p class="narx" data-narx>Not available yet</p>
+                <p class="narx-izoh" data-narx-izoh>The price will appear here once it is set.</p>
+              </div>
+              <div class="imkoniyat-blok" data-imkoniyat-blok hidden>
+                <h4 class="kichik-sarlavha">What's included</h4>
+                <ul class="imkoniyat" data-imkoniyat></ul>
+              </div>
+              <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
+              <button type="button" class="tugma tugma-asosiy tolov-tugma" data-tolov={t.kod} hidden>Continue to payment</button>
+            </article>
           ))}
         </div>
-      </fieldset>
 
-      <p class="xato" role="alert" data-xato hidden></p>
+        <article class="tarif-qator" data-tarif="free" aria-labelledby="tarif-free">
+          <div>
+            <h3 id="tarif-free" class="qator-nom">Free</h3>
+            <p class="ikkinchi kichik">{freeTavsif}</p>
+          </div>
+          <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
+        </article>
+      </section>
 
-      <div class="pullik">
-        {pullik.map((t) => (
-          <article class:list={['tarif', { tavsiya: t.kod === satTarif.tavsiya }]} data-tarif={t.kod} aria-labelledby={`tarif-${t.kod}`}>
-            <div class="tarif-bosh">
-              <h2 id={`tarif-${t.kod}`}>{t.nomi}</h2>
-              {t.kod === satTarif.tavsiya && <span class="belgi">{satTarif.tavsiyaYorliq}</span>}
-            </div>
-            <p class="narx" data-narx>Not available yet</p>
-            <p class="narx-izoh" data-narx-izoh>The price will appear here once it is set.</p>
-            <ul class="imkoniyat" data-imkoniyat hidden></ul>
-            <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
-            <button type="button" class="tugma tolov-tugma" data-tolov={t.kod} hidden>Continue to payment</button>
-          </article>
-        ))}
-      </div>
-
-      <article class="tarif-qator" data-tarif="free" aria-labelledby="tarif-free">
+      <!-- 3. Taqqoslash jadvali (qiymatlar bazadan, JS bilan) -->
+      <section class="blok" aria-labelledby="taqqos-sarlavha" data-taqqos>
         <div>
-          <h2 id="tarif-free" class="qator-nom">Free</h2>
-          <p class="ikkinchi kichik">No payment. Lessons and tools on this site stay open without a plan.</p>
+          <h2 id="taqqos-sarlavha">Compare plans</h2>
+          <p class="ikkinchi kichik">"No limit" means the plan sets no cap right now. Limits are counted by the day or month in Tashkent time.</p>
         </div>
-        <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
-      </article>
+        <table class="taqqos" data-taqqos-jadval>
+          <caption class="ekranda-yoq">What each plan includes</caption>
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              {satTarif.tariflar.map((t) => <th scope="col" class:list={{ tavsiya: t.kod === satTarif.tavsiya }}>{t.nomi}</th>)}
+            </tr>
+          </thead>
+          <tbody data-taqqos-qatorlar></tbody>
+        </table>
+      </section>
 
-      <section class="tarix-blok" aria-labelledby="tarix-sarlavha">
-        <h2 id="tarix-sarlavha" class="kichik-sarlavha">Payment history</h2>
-        <p class="ikkinchi" data-tarix-bosh hidden>No payments yet.</p>
+      <!-- 4. FAQ -->
+      <section class="blok" aria-labelledby="faq-sarlavha">
+        <h2 id="faq-sarlavha">Questions about plans</h2>
+        <div class="faq">
+          <details>
+            <summary>Does my plan renew automatically?</summary>
+            <p>No. Each payment covers one prepaid period. Nothing is charged automatically: when the period ends, you pay again only if you want to continue.</p>
+          </details>
+          <details>
+            <summary>What happens when my plan ends?</summary>
+            <p>You move to Free. Your answers, mistake log, study plan and history are kept. New usage follows the Free limits shown in the table above.</p>
+          </details>
+          <details>
+            <summary>Can I extend before my plan ends?</summary>
+            <p>Yes. The new period starts when the current one ends, so no days are lost.</p>
+          </details>
+          <details>
+            <summary>Is there a free trial?</summary>
+            <p>No. Free has no end date, so you can use it for as long as you like before deciding.</p>
+          </details>
+          <details>
+            <summary>How can I pay?</summary>
+            <p>{usulMatn} Your plan turns on after inPAY confirms the payment. Returning to this site alone does not count as payment.</p>
+          </details>
+          <details>
+            <summary>Is my card information safe?</summary>
+            <p>Card details are entered only on the inPAY page. Tayanch never receives or stores them.</p>
+          </details>
+          <details>
+            <summary>Money left my account but my plan did not change</summary>
+            <p>Wait a few minutes, then use "Check payment status" in the payment history below. {aloqa
+              ? <>Still not resolved? <a href={aloqa.havola}>{aloqa.matn}</a> and include the payment ID from the history.</>
+              : <>Keep the payment ID from the history. You will need it if you contact us about this payment.</>}</p>
+          </details>
+          <details>
+            <summary>Can I get a refund?</summary>
+            <p>{qaytarish ? <>See the <a href={yol(qaytarish)}>refund policy</a>.</> : <>Refund terms are not published yet.</>}</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- 5. To'lov tarixi -->
+      <section class="blok tarix-blok" aria-labelledby="tarix-sarlavha">
+        <h2 id="tarix-sarlavha">Payment history</h2>
+        <div class="tarix-bosh" data-tarix-bosh hidden>
+          <p class="tarix-bosh-nom">No payments yet</p>
+          <p class="ikkinchi kichik">Your payments will appear here.</p>
+        </div>
         <p class="tarix-xabar" role="status" data-tarix-xabar></p>
         <table class="tarix" role="table" data-tarix hidden>
           <caption class="ekranda-yoq">Your payments, newest first</caption>
@@ -121,35 +219,11 @@ const qaytarish = satTarif.qaytarishHavola;
           </thead>
           <tbody role="rowgroup" data-tarix-qatorlar></tbody>
         </table>
-        <p class="ikkinchi kichik" data-tarix-izoh hidden>A payment waiting for more than {satTarif.tekshirishDaqiqa} minutes can be checked with inPAY. Receipts are not shown here because inPAY does not send them to Tayanch.</p>
-      </section>
-
-      <section class="tolov-izoh" aria-labelledby="tolov-sarlavha">
-        <h2 id="tolov-sarlavha" class="kichik-sarlavha">How payment works</h2>
-        <ul>
-          <li>{usulMatn}</li>
-          <li>Card details are entered only on the inPAY page. Tayanch never receives or stores them.</li>
-          <li>Your plan turns on after inPAY confirms the payment. Returning to this site alone does not count as payment.</li>
-          <li>No automatic charges. Each period is paid separately.</li>
-          <li>When a plan ends you move to Free. Nothing you saved is deleted.</li>
-        </ul>
-      </section>
-
-      <section class="tolov-izoh" aria-labelledby="yordam-sarlavha">
-        <h2 id="yordam-sarlavha" class="kichik-sarlavha">Problems with a payment</h2>
-        <ul>
-          <li>If money left your account but your plan did not change, wait a few minutes, then use "Check payment status" in the payment history.</li>
-          {aloqa
-            ? <li>Still not resolved? <a href={aloqa.havola}>{aloqa.matn}</a> and include the payment ID from the history.</li>
-            : <li>Keep the payment ID from the history. You will need it if you contact us about this payment.</li>}
-          {qaytarish
-            ? <li>Refunds: see the <a href={yol(qaytarish)}>refund policy</a>.</li>
-            : <li>Refund terms are not published yet.</li>}
-        </ul>
+        <p class="ikkinchi kichik" data-tarix-izoh hidden>A payment waiting for more than {satTarif.tekshirishDaqiqa} minutes can be checked with inPAY. Receipts are not shown here because inPAY does not send them to Tayanch. Amounts are in Uzbek so'm.</p>
       </section>
     </div>
 
-    <ManbaBlok manbalar={['IP03']} tekshirilgan="2026-11-10" keyingiTekshiruv="2026-12-10" tekshirilmagan={['Payment history and status checks have not been tried with a real account in a browser yet.', 'Usage limits are not set yet.']} />
+    <ManbaBlok manbalar={['IP03']} tekshirilgan="2026-11-10" keyingiTekshiruv="2026-12-10" tekshirilmagan={['Payment history and status checks have not been tried with a real account in a browser yet.', 'Usage limits are not set yet: the comparison shows "No limit" until they are.']} />
   </div>
 </BolimQobiq>
 
@@ -157,9 +231,10 @@ const qaytarish = satTarif.qaytarishHavola;
   import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
   import { track } from '../../../../../lib/metrika';
   import { funksiya, narxYozuv, tolovXatoMatni, tolovniEsla } from '../../../../../lib/sat/tolov';
-  import { bayroqNomi, kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
+  import { bayroqNomi, jadvalQatorlari, kvotaNomi, satTarif, type DavrKod } from '../../../../../data/satTarif';
   import { tarifBayrogimi } from '../../../../../data/satAnalitika';
   import { usageBarniChiz, type UsageJavob } from '../../../../../lib/sat/usageBar';
+  import { kartaRoyxati, taqqoslashJadvali, type JadvalQator } from '../../../../../lib/sat/tarifJadval';
   import {
     eslatma, freeCheklovlari, holatNomi, obunaHolati, qisqaId, sanaYozuv, tekshirishMumkin, usulYozuv,
     type ObunaYozuv, type TolovYozuv,
@@ -174,6 +249,12 @@ const qaytarish = satTarif.qaytarishHavola;
   const xatoEl = $('[data-xato]');
   const tarixXabar = $('[data-tarix-xabar]');
   let tariflar: Tarif[] = [];
+  let jadval: JadvalQator[] = [];
+  const ustunlar = satTarif.tariflar.map((t) => t.kod);
+  const belgiNusxa = () => {
+    const svg = document.querySelector('.ishonch svg')?.cloneNode(true) as SVGElement | undefined;
+    return svg ?? document.createTextNode('');
+  };
   let joriyKod = 'free';
   let sinovRejim = false;
 
@@ -201,9 +282,16 @@ const qaytarish = satTarif.qaytarishHavola;
         : !t ? 'This plan is not open yet.'
         : davrFaol ? 'The price will appear here once it is set.' : 'This billing period is not available yet.';
       const imk = $<HTMLUListElement>('[data-imkoniyat]', karta)!;
-      const royxat = t && Array.isArray(t.features) ? t.features.filter((f): f is string => typeof f === 'string' && !tarifBayrogimi(f)) : [];
-      imk.replaceChildren(...royxat.map((f) => Object.assign(document.createElement('li'), { textContent: f })));
-      imk.hidden = royxat.length === 0;
+      const royxat = t ? kartaRoyxati(jadval, kod, t.features) : [];
+      imk.replaceChildren(...royxat.map((b) => {
+        const li = document.createElement('li');
+        const matn = document.createElement('span');
+        if (b.qiymat) matn.append(Object.assign(document.createElement('b'), { textContent: `${b.nomi}:` }), ` ${b.qiymat}`);
+        else matn.textContent = b.nomi;
+        li.append(belgiNusxa(), matn);
+        return li;
+      }));
+      $('[data-imkoniyat-blok]', karta)!.hidden = royxat.length === 0;
       const tugma = $<HTMLButtonElement>('[data-tolov]', karta)!;
       tugma.hidden = !tayyor;
       tugma.textContent = joriyKod === kod ? 'Extend this plan' : 'Continue to payment';
@@ -220,13 +308,13 @@ const qaytarish = satTarif.qaytarishHavola;
     const h = obunaHolati(m.obunalar, hozir, kod, satTarif.eslatmaKun);
 
     $('[data-joriy-nom]')!.textContent = m.usage.plan?.name ?? 'Free';
-    const muddat = $('[data-joriy-muddat]')!;
-    muddat.hidden = !(h.tur === 'faol' || h.tur === 'tugayapti');
-    if (!muddat.hidden) {
-      muddat.textContent = h.tugash
-        ? `Paid until ${sanaYozuv(h.tugash)} · ${h.qolganKun === 0 ? 'ends today' : `${h.qolganKun} ${h.qolganKun === 1 ? 'day' : 'days'} left`}.`
-        : 'No end date.';
-    }
+    const pullikmi = h.tur === 'faol' || h.tur === 'tugayapti';
+    $('[data-joriy-tavsif]')!.textContent = pullikmi
+      ? (h.tugash
+        ? `Paid until ${sanaYozuv(h.tugash)} · ${h.qolganKun === 0 ? 'ends today' : `${h.qolganKun} ${h.qolganKun === 1 ? 'day' : 'days'} left`}. Nothing renews automatically.`
+        : 'No end date.')
+      : 'No payment and no end date. Compare plans below to see what Pro adds.';
+    $('[data-joriy-havola]')!.textContent = pullikmi && h.tugash ? 'Extend plan' : 'See plans';
     document.querySelectorAll<HTMLElement>('[data-tarif]').forEach((k) => {
       $('[data-joriy-belgi]', k)!.hidden = k.dataset.tarif !== kod;
     });
@@ -295,8 +383,28 @@ const qaytarish = satTarif.qaytarishHavola;
     }));
   }
 
+  /** Taqqoslash jadvali: qator nomi (th scope=row) + har tarif katagi; telefonda katak oldida ustun nomi. */
+  function jadvalniChiz() {
+    const nomlar = Object.fromEntries(satTarif.tariflar.map((t) => [t.kod, t.nomi]));
+    $('[data-taqqos-qatorlar]')!.replaceChildren(...jadval.map((q) => {
+      const tr = document.createElement('tr');
+      tr.append(Object.assign(document.createElement('th'), { scope: 'row', textContent: q.nomi }));
+      for (const kod of ustunlar) {
+        const td = document.createElement('td');
+        td.dataset.nom = nomlar[kod];
+        if (kod === satTarif.tavsiya) td.className = 'tavsiya';
+        const v = q.qiymat[kod];
+        td.append(Object.assign(document.createElement('span'), { className: v === 'Not included' || v === 'Coming soon' ? 'sust' : '', textContent: v }));
+        tr.append(td);
+      }
+      return tr;
+    }));
+  }
+
   function korsat(m: Malumot) {
     tariflar = m.tariflar;
+    jadval = taqqoslashJadvali(m.tariflar, ustunlar, jadvalQatorlari, kvotaNomi);
+    jadvalniChiz();
     holatniKorsat(m);
     tarixniChiz(m.tolovlar);
     kartalarniYangila();
@@ -420,20 +528,27 @@ const qaytarish = satTarif.qaytarishHavola;
 </script>
 
 <style>
-  /* display: flex/inline-flex hidden atributini bosib ketmasin */
+  /* display: flex/grid hidden atributini bosib ketmasin */
   .obuna [hidden] { display: none !important; }
   .obuna { display: flex; flex-direction: column; gap: var(--b-8); }
   .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  .pill { padding: 4px 12px; border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill { padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
   .pill-chiziq { border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); }
   .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
   .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
   .holat-matn { color: var(--matn-ikkinchi); }
-  [data-ichi]:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-8); }
+  [data-ichi]:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-6); }
+  .ikkinchi { color: var(--matn-ikkinchi); }
 
   .kichik-sarlavha { font-size: var(--matn-kichik); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+
+  /* Bo'lim bloklari: bitta oq sirt, yupqa chegara. */
+  .blok { display: flex; flex-direction: column; gap: var(--b-5); padding: var(--b-6); border: 1px solid var(--chiziq); border-radius: var(--r-katta); background: var(--sirt); }
+  .blok h2 { font-size: var(--matn-h3); }
+  .blok:focus { outline: none; }
+  @media (max-width: 640px) { .blok { padding: var(--b-5) var(--b-4); } }
 
   /* Eslatma: neytral (ogohlantiruvchi rang emas), chap rangli chiziqsiz (DESIGN.md "Taqiqlar"). */
   .eslatma { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); }
@@ -441,48 +556,94 @@ const qaytarish = satTarif.qaytarishHavola;
   .eslatma p { max-width: 62ch; }
   .cheklov { display: flex; flex-direction: column; gap: var(--b-2); }
   .cheklov ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
-  .uzaytir { align-self: flex-start; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .uzaytir:hover { background: var(--rang-asosiy-toq); }
-  .uzaytir:disabled { cursor: progress; opacity: 0.75; }
+  .uzaytir { align-self: flex-start; }
+  .uzaytir:disabled, .tolov-tugma:disabled { cursor: progress; opacity: 0.75; }
 
-  .joriy { display: flex; flex-direction: column; gap: var(--b-2); padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); }
+  /* 1. Joriy tarif */
+  .joriy { gap: var(--b-4); }
+  .joriy-bosh { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--b-4); flex-wrap: wrap; }
+  .joriy-nom-qator { display: flex; align-items: center; gap: var(--b-3); margin-top: var(--b-1); }
   .joriy-nom { font-size: var(--matn-h3); font-weight: 800; }
-  .sarf { display: flex; flex-direction: column; gap: var(--b-3); margin-top: var(--b-3); }
+  .faol-belgi { padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); border: 1px solid var(--chiziq-kuchli); font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+  .sarf { display: flex; flex-direction: column; gap: var(--b-3); }
 
-  .davr { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
-  .davr legend { padding: 0; margin-bottom: var(--b-3); }
-  .davr-tanlov { display: inline-flex; align-self: flex-start; padding: var(--b-1); gap: var(--b-1); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); }
+  /* 2. Tariflar */
+  .tariflar-bosh { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--b-4); flex-wrap: wrap; }
+  .tariflar-bosh h2 { margin-top: var(--b-1); }
+  .davr { border: 0; margin: 0; padding: 0; }
+  .davr-tanlov { display: inline-flex; padding: var(--b-1); gap: var(--b-1); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); }
   .davr-variant { position: relative; }
   .davr-variant input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-  .davr-variant span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--b-5); border-radius: var(--r-toliq); font-weight: 700; color: var(--matn-ikkinchi); }
+  .davr-variant input:disabled { cursor: not-allowed; }
+  .davr-variant span { display: inline-flex; align-items: center; gap: var(--b-2); min-height: var(--size-touch-min); padding: 0 var(--b-4); border-radius: var(--r-toliq); font-weight: 700; color: var(--matn-ikkinchi); }
   .davr-variant input:checked + span { background: var(--sirt); color: var(--matn); box-shadow: var(--soya); }
   .davr-variant input:focus-visible + span { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .davr-tez { padding: 2px var(--b-2); border-radius: var(--r-toliq); background: var(--sirt); font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+
+  .ishonch { list-style: none; margin: 0; padding: var(--b-3) var(--b-4); display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5); border-radius: var(--r-orta); background: var(--fon-ikkinchi); font-size: var(--matn-kichik); }
+  .ishonch li { display: flex; align-items: flex-start; gap: var(--b-2); }
 
   .xato { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; }
 
   .pullik { display: grid; gap: var(--b-5); grid-template-columns: 1fr; }
   @media (min-width: 720px) { .pullik { grid-template-columns: 1fr 1fr; } }
-  .tarif { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-6); border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--sirt); }
+  .tarif { display: flex; flex-direction: column; gap: var(--b-4); padding: var(--b-6); border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--sirt); }
   /* Qorong'i mavzuda --qora fon bilan bir xil: chegara --matn (oq) bo'lib qoladi va karta ajralib turadi. */
-  .tarif.tavsiya { background: var(--qora); color: var(--rang-asosiy-matn); }
+  .tarif.tavsiya { background: var(--qora); color: var(--qora-matn); }
+  /* Qora kartadagi asosiy tugma oq (PR #149 dagi .qora-kontekst bilan bir xil qiymatlar). */
+  .tarif.tavsiya { --btn-primary-bg: var(--qora-matn); --btn-primary-bg-hover: var(--color-neutral-200); --btn-primary-bg-pressed: var(--color-neutral-200); --btn-primary-text: var(--qora); }
+  .tarif:not(.tavsiya) { border-color: var(--chiziq-kuchli); }
   .tarif-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
-  .tarif h2, .qator-nom { font-size: var(--matn-h3); }
-  .belgi { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-size: var(--matn-mayda); font-weight: 700; }
-  .narx { font-size: var(--matn-h3); font-weight: 800; }
-  .narx-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .tavsiya .narx-izoh { color: var(--qora-matn-ikkinchi); }
-  .imkoniyat { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
+  .tarif h3, .qator-nom { font-size: var(--matn-h3); }
+  .belgi { padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-size: var(--matn-mayda); font-weight: 700; }
+  .narx { font-size: var(--matn-h2); font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .narx-izoh { margin-top: var(--b-1); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .tavsiya .narx-izoh, .tavsiya .kichik-sarlavha { color: var(--qora-matn-ikkinchi); }
+  .imkoniyat-blok { display: flex; flex-direction: column; gap: var(--b-3); padding-top: var(--b-4); border-top: 1px solid var(--chiziq); }
+  .tavsiya .imkoniyat-blok { border-top-color: var(--qora-matn-ikkinchi); }
+  .imkoniyat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); font-size: var(--matn-kichik); }
+  .imkoniyat :global(li) { display: flex; align-items: flex-start; gap: var(--b-2); }
+  .imkoniyat :global(b) { font-weight: 700; }
+  .tavsiya .imkoniyat :global(.tarif-belgi) { color: var(--rang-asosiy-qorada); }
   .joriy-belgi { font-size: var(--matn-kichik); font-weight: 700; color: var(--rang-havola); }
   .tavsiya .joriy-belgi { color: var(--rang-asosiy-qorada); }
-  .tolov-tugma { margin-top: auto; width: 100%; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .tolov-tugma:hover { background: var(--rang-asosiy-toq); }
-  .tolov-tugma:disabled { cursor: progress; opacity: 0.75; }
+  .tolov-tugma { margin-top: auto; width: 100%; justify-content: center; }
   .tavsiya .tolov-tugma:focus-visible { outline-color: var(--rang-asosiy-qorada); }
 
   .tarif-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-4); flex-wrap: wrap; padding: var(--b-4) var(--b-6); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
 
-  /* To'lov tarixi: kompyuterda jadval, telefonda har to'lov alohida blok (role atributlari jadval ma'nosini saqlaydi). */
-  .tarix-blok { display: flex; flex-direction: column; gap: var(--b-3); }
+  /* 3. Taqqoslash jadvali: kompyuterda jadval, telefonda har xususiyat alohida blok (gorizontal scroll yo'q). */
+  .taqqos { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); }
+  .taqqos th, .taqqos :global(th), .taqqos :global(td) { text-align: left; padding: var(--b-3); border-bottom: 1px solid var(--chiziq); vertical-align: top; }
+  .taqqos thead th { color: var(--matn-ikkinchi); font-weight: 700; border-bottom: 1.5px solid var(--chiziq-kuchli); }
+  .taqqos thead th.tavsiya { color: var(--matn); }
+  .taqqos thead th.tavsiya, .taqqos :global(td.tavsiya) { background: var(--fon-ikkinchi); }
+  .taqqos :global(tbody th) { font-weight: 700; inline-size: 34%; }
+  .taqqos :global(.sust) { color: var(--matn-ikkinchi); }
+  @media (max-width: 640px) {
+    .taqqos thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .taqqos, .taqqos tbody, .taqqos :global(tr), .taqqos :global(th), .taqqos :global(td) { display: block; }
+    .taqqos :global(tr) { padding: var(--b-3) 0; border-bottom: 1px solid var(--chiziq); }
+    .taqqos :global(tbody th) { inline-size: auto; padding: 0 0 var(--b-2); border: 0; font-size: var(--matn-asosiy); }
+    .taqqos :global(td) { display: grid; grid-template-columns: 4.5em minmax(0, 1fr); gap: var(--b-3); padding: var(--b-1) var(--b-2); border: 0; border-radius: var(--r-kichik); }
+    .taqqos :global(td::before) { content: attr(data-nom); color: var(--matn-ikkinchi); font-weight: 700; }
+  }
+
+  /* 4. FAQ: <details>, JS yo'q. */
+  .faq { display: flex; flex-direction: column; }
+  .faq details { border-bottom: 1px solid var(--chiziq); }
+  .faq details:first-child { border-top: 1px solid var(--chiziq); }
+  .faq summary { display: flex; align-items: center; justify-content: space-between; gap: var(--b-4); min-height: var(--size-touch-min); padding: var(--b-3) 0; font-weight: 700; cursor: pointer; list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: ''; flex: none; inline-size: var(--b-2); block-size: var(--b-2); margin-inline-end: var(--b-1); border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform var(--harakat-tez) var(--harakat-egri); }
+  .faq details[open] summary::after { transform: rotate(-135deg); }
+  .faq summary:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
+  .faq details p { padding-bottom: var(--b-4); color: var(--matn-ikkinchi); max-width: 70ch; }
+
+  /* 5. To'lov tarixi: kompyuterda jadval, telefonda har to'lov alohida blok (role atributlari jadval ma'nosini saqlaydi). */
+  .tarix-blok { gap: var(--b-3); }
+  .tarix-bosh { display: flex; flex-direction: column; align-items: center; gap: var(--b-1); padding: var(--b-6) var(--b-4); border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-orta); text-align: center; }
+  .tarix-bosh-nom { font-weight: 700; }
   .tarix-xabar:empty { display: none; }
   .tarix-xabar { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
   .tarix { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); }
@@ -491,7 +652,7 @@ const qaytarish = satTarif.qaytarishHavola;
   .tarix :global(td) { padding: var(--b-3); border-bottom: 1px solid var(--chiziq); vertical-align: top; }
   .tarix .son, .tarix :global(td.son) { text-align: right; white-space: nowrap; }
   .tarix :global(code) { font-family: var(--font-family-mono); }
-  .tarix :global(.yorliq) { padding: 2px 8px; border-radius: var(--r-toliq); border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  .tarix :global(.yorliq) { padding: 2px var(--b-2); border-radius: var(--r-toliq); border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
   .tarix :global(.holat) { display: block; font-weight: 700; }
   .tarix :global(.holat-paid) { color: var(--color-success-text); }
   .tarix :global(.holat-failed) { color: var(--color-error-text); }
@@ -506,7 +667,4 @@ const qaytarish = satTarif.qaytarishHavola;
     .tarix :global(td.son) { text-align: left; }
     .tarix :global(td > *) { grid-column: 2; }
   }
-
-  .tolov-izoh { display: flex; flex-direction: column; gap: var(--b-3); }
-  .tolov-izoh ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-2); color: var(--matn-ikkinchi); max-width: 70ch; }
 </style>

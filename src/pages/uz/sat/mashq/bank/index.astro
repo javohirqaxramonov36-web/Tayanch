@@ -3,6 +3,7 @@
 // Domen va skill ro'yxati taksonomiyadan (statik). Sonlar FAQAT Supabase question_counts RPC'dan (hisob bilan):
 // statik build'da hech qanday raqam yo'q. Sof mantiq: src/lib/savolBanki.ts.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
 import { savolTaksonomiya, type SavolBolim } from '../../../../../data/satTaksonomiya';
 import { HAJMLAR } from '../../../../../lib/savolBanki';
 import { yol } from '../../../../../lib/yol';
@@ -29,7 +30,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       <h1 id="bank-h">Question bank</h1>
       <p class="lead">Pick the skills you want to work on, set the difficulty and start a session. Only questions the author has checked are included.</p>
       <p class="kvota" id="kvota" hidden></p>
-      <div class="ogoh" id="kvota-tugadi" hidden>
+      <div class="ogoh" id="kvota-tugadi" tabindex="-1" hidden>
         <p id="kvota-tugadi-matn"></p>
         <!-- P20 da tariflar sahifasiga (/uz/sat/hisob/tariflar/) o'tkaziladi; hozircha profil. -->
         <a id="rejalar" href="#">See plans</a>
@@ -131,6 +132,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       <p><a href={yol('/uz/sat/mashq/test/')}>Sample test · saved in this browser only</a></p>
     </div>
   </div>
+  <TarifDialog />
 </BolimQobiq>
 
 <script>
@@ -141,11 +143,15 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     type BankFiltr, type BankHolat, type Hajm, type Kvota, type Qiyinlik, type Rejim, type SonJavob, type UsageJavob,
   } from '../../../../../lib/savolBanki';
   import type { SavolBolim } from '../../../../../data/satTaksonomiya';
+  import { satTarif } from '../../../../../data/satTarif';
+  import { tarifDialogOch, tavsiyaRoyxati } from '../../../../../lib/sat/tarifDialog';
+  import type { TarifManba } from '../../../../../lib/sat/tarifJadval';
 
   interface Api {
     sonlar(f: Record<string, unknown>): Promise<SonJavob>;
     boshlash(f: Record<string, unknown>, hajm: number, rejim: Rejim): Promise<{ session_id: string | null }>;
     kvota(): Promise<UsageJavob>;
+    tariflar(): Promise<(TarifManba & { name?: string })[]>;
   }
 
   const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
@@ -373,6 +379,11 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       sonlar: (f) => rpc<SonJavob>('question_counts', { p_filters: f }),
       boshlash: (f, hajm, rejim) => rpc('start_session', { p_filters: f, p_volume: hajm, p_mode: rejim }),
       kvota: () => rpc<UsageJavob>('usage_status'),
+      tariflar: async () => {
+        const { data, error } = await c.from('plans').select('code, name, limits, features').eq('bolim', 'sat');
+        if (error) throw error;
+        return (data ?? []) as (TarifManba & { name?: string })[];
+      },
     };
   }
 
@@ -406,6 +417,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
         const k = s.kvota;
         s.kvota = { ...(k ?? kvotaHolati(null)), tugadi: true, qolgan: 0, savolQolgan: k?.kalit === 'questions' ? 0 : (k?.savolQolgan ?? null) };
         s.xato = 'Daily limit reached';
+        void tarifTaklifi(tugma);
       } else if (tur === 'kirish') {
         s.holat = 'anon';
       } else {
@@ -487,6 +499,26 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   });
 
   $('boshlash').addEventListener('click', boshla);
+  /**
+   * Server limit tugadi desa (Start bosilgandan keyin): TarifDialog. Faqat tavsiya tarifda bo'lmaganlarga.
+   * Limit oldindan ma'lum bo'lsa Start o'chiq turadi va sababi yoziladi: bu oyna faqat kutilmagan holat uchun.
+   */
+  async function tarifTaklifi(tugma: HTMLElement) {
+    if (!api) return;
+    const [usage, tariflar] = await Promise.all([api.kvota().catch(() => null), api.tariflar().catch(() => [])]);
+    const yangi = usage ? kvotaHolati(usage) : null;
+    if (yangi?.kalit) s.kvota = { ...yangi, tugadi: true, qolgan: 0, savolQolgan: yangi.kalit === 'questions' ? 0 : yangi.savolQolgan };
+    if (usage?.plan?.code === satTarif.tavsiya) return;
+    const t = tavsiyaRoyxati(tariflar);
+    // Sarlavha allaqachon "You've reached today's limit": limit noma'lum bo'lsa faqat tiklanish vaqti.
+    const asos = s.kvota?.kalit ? kvotaTugadiMatni(s.kvota) : 'It resets at midnight (Tashkent time).';
+    chiz();
+    tarifDialogOch({
+      matn: `${asos} Everything you've saved stays.`,
+      tarifNomi: t?.nomi,
+      royxat: t?.royxat,
+    }, $('kvota-tugadi').hidden ? tugma : $('kvota-tugadi')); // Start o'chiq bo'lib qoladi: fokus limit xabariga qaytadi
+  }
   $('qayta').addEventListener('click', () => { if (api) yukla(); });
   $<HTMLAnchorElement>('rejalar').href = hisobYoli('profil');
   $<HTMLAnchorElement>('kirish-havola').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(bank.dataset.bankUrl!)}`;
