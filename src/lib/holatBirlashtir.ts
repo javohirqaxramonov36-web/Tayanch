@@ -10,9 +10,9 @@ export const SINXRON_KALITLAR = [
   'tayanch:sat-takrorlash',
   'tayanch:sat-reja',
   'tayanch:sat-xato-sabab',
+  'tayanch:sat-rasmiy-testlar',
 ] as const;
 // tayanch:sat-lugat bu yerda yo'q: P15 (PR #99) dan beri lug'at o'z jadvallarida (vocab_progress, vocab_import_local).
-// tayanch:sat-rasmiy-testlar (P11) hali yo'q: alohida PR (docs/sinxron-qoidalari.md).
 export type SinxronKalit = (typeof SINXRON_KALITLAR)[number];
 export const sinxronKalitmi = (k: string): k is SinxronKalit => (SINXRON_KALITLAR as readonly string[]).includes(k);
 
@@ -92,6 +92,24 @@ const SHAKLLAR: Record<SinxronKalit, Shakl> = {
   // tayanch:sat-xato-sabab: { versiya: 1, savollar: { id: { teg, izoh } } } (xatoSabab.ts, P09); izoh 1000 belgigacha,
   // yozuvlar soni dars savollari soni bilan cheklangan.
   'tayanch:sat-xato-sabab': savollarShakl,
+  // tayanch:sat-rasmiy-testlar: { versiya: 1, testlar: RasmiyTest[], xatolar: RasmiyXato[] } (rasmiyTestlar.ts, P11).
+  // Yozuv id "test<TAB>id" yoki "xato<TAB>id". Hajm chegarasi sahifada (HAJM_CHEGARA, 200 KB). Tartib ko'rsatishda saralanadi.
+  'tayanch:sat-rasmiy-testlar': {
+    ajrat(q) {
+      const m: Yozuvlar = new Map();
+      if (!obyektmi(q)) return m;
+      for (const [tur, r] of [['test', q.testlar], ['xato', q.xatolar]] as const) {
+        if (Array.isArray(r)) for (const x of r) if (obyektmi(x) && typeof x.id === 'string') m.set(tur + AJRATGICH + x.id, x);
+      }
+      return m;
+    },
+    yig(y) {
+      const testlar: unknown[] = [];
+      const xatolar: unknown[] = [];
+      for (const [k, x] of y) (k.startsWith('test' + AJRATGICH) ? testlar : xatolar).push(x);
+      return { versiya: 1, testlar, xatolar };
+    },
+  },
   // tayanch:sat-reja: bitta obyekt yoki yo'q → bitta yozuv "reja"
   'tayanch:sat-reja': {
     ajrat(q) {

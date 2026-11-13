@@ -66,6 +66,9 @@ const eskiTakror = { versiya: 1, savollar: {
   m2: { quti: 3, keyingi: '2026-11-20', xatoSana: '2026-11-01' },
   r1: { quti: 1, keyingi: '2026-11-05', xatoSana: '2026-11-04' },
 } };
+const tTest = (id: string, nomi: string) => ({ id, t: 1, turi: 'practice', nomi, sana: '2026-11-01', rw: 600, math: 650, daqiqa: null, izoh: '' });
+const tXato = (id: string, testId: string, savol: number) => ({ id, t: 1, testId, bolim: 'math', modul: 1, savol, konikma: '', domen: '', sabab: 'other', izoh: '', hal: false });
+const eskiTracker = { versiya: 1, testlar: [tTest('ta', 'Practice 1')], xatolar: [tXato('xa', 'ta', 4), tXato('xb', 'ta', 9)] };
 const eskiSabab = { versiya: 1, savollar: { m2: { teg: 'careless', izoh: '' }, r1: { teg: null, izoh: 'its / it\'s' } } };
 const eskiReja = { sana: '2026-11-01', hozirgi: null, maqsad: 1400, kunlar: 4, fokus: 'teng', belgilar: { 'h1-0': true } };
 // Lug'at (P15) endi o'z jadvallarida: P04 uni sinxronlamaydi, faqat tegmasligi tekshiriladi.
@@ -81,6 +84,7 @@ const seed = () => {
   ls.setItem('tayanch:sat-takrorlash', JSON.stringify(eskiTakror));
   ls.setItem('tayanch:sat-reja', JSON.stringify(eskiReja));
   ls.setItem('tayanch:sat-xato-sabab', JSON.stringify(eskiSabab));
+  ls.setItem('tayanch:sat-rasmiy-testlar', JSON.stringify(eskiTracker));
   ls.setItem('tayanch:sat-lugat', JSON.stringify(eskiLugat));
   ls.setItem('tayanch:ielts-xato-daftari', JSON.stringify([{ id: 'x', modul: 'y', tanlangan: 'z', sana: '2026-11-01' }]));
 };
@@ -108,6 +112,7 @@ await sinov('Kirish: brauzerda ma\'lumot bor → dialog so\'raladi, rozilikgacha
   assert.deepEqual(sorov, {
     'tayanch:sat-javoblar': 2, 'tayanch:sat-dars-progress': 3, 'tayanch:sat-xato-daftari': 2,
     'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1, 'tayanch:sat-xato-sabab': 2,
+    'tayanch:sat-rasmiy-testlar': 3,
   });
   assert.equal(A.oqishlar + A.yozishlar, 0);
   // Rozilikdan oldingi yozish ham yuborilmaydi
@@ -131,10 +136,11 @@ await sinov('Import: hamma kalit serverga, bayroq profilda, Leitner qutilari va 
   vaqt = 2_000_000;
   await H.importQil();
   await kut();
-  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-dars-progress', 'tayanch:sat-xato-daftari', 'tayanch:sat-takrorlash', 'tayanch:sat-reja', 'tayanch:sat-xato-sabab']) {
+  for (const k of ['tayanch:sat-javoblar', 'tayanch:sat-dars-progress', 'tayanch:sat-xato-daftari', 'tayanch:sat-takrorlash', 'tayanch:sat-reja', 'tayanch:sat-xato-sabab', 'tayanch:sat-rasmiy-testlar']) {
     assert.ok(A.q(k), `${k} serverda yo'q`);
   }
   assert.deepEqual(A.q('tayanch:sat-xato-sabab').qiymat, eskiSabab);
+  assert.deepEqual(A.q('tayanch:sat-rasmiy-testlar').qiymat, eskiTracker);
   assert.equal(A.q('tayanch:sat-lugat'), undefined, "Lug'at (P15) user_state ga yozilmasin");
   assert.deepEqual(oqi('tayanch:sat-lugat'), eskiLugat, "Lug'at kaliti o'zgarmasin");
   assert.deepEqual(A.q('tayanch:sat-takrorlash').qiymat, eskiTakror);
@@ -219,6 +225,32 @@ await sinov("Xato sababi: teg o'zgarishi va olib tashlangan sabab boshqa qurilma
   assert.deepEqual(s.qiymat.savollar, { m2: { teg: 'misread', izoh: 'read too fast' } });
   assert.equal(s.t.m2, 5_500_000);
   assert.equal(s.o.r1, 5_500_000);
+});
+
+await sinov("Test tracker: ikki qurilma birlashadi, testni o'chirish va \"Delete all data\" boshqa qurilmaga o'tadi", async () => {
+  // 2-qurilma serverga yangi test va xato qo'shgan
+  vaqt = 5_600_000;
+  const s = A.q('tayanch:sat-rasmiy-testlar');
+  s.qiymat.testlar.push(tTest('tb', 'Practice 2')); s.t['test\ttb'] = 5_600_000;
+  s.qiymat.xatolar.push(tXato('xc', 'tb', 1)); s.t['xato\txc'] = 5_600_000;
+  A.qatorlar.set('tayanch:sat-rasmiy-testlar', JSON.stringify(s));
+  // Shu qurilma xb ni o'chiradi
+  vaqt = 5_700_000;
+  const joriy = oqi('tayanch:sat-rasmiy-testlar');
+  H.holatYoz('tayanch:sat-rasmiy-testlar', { ...joriy, xatolar: joriy.xatolar.filter((x: { id: string }) => x.id !== 'xb') });
+  await H.sinxronlaHozir();
+  const l = oqi('tayanch:sat-rasmiy-testlar');
+  assert.deepEqual(l.testlar.map((t: { id: string }) => t.id).sort(), ['ta', 'tb']);
+  assert.deepEqual(l.xatolar.map((x: { id: string }) => x.id).sort(), ['xa', 'xc']);
+  assert.equal(A.q('tayanch:sat-rasmiy-testlar').o['xato\txb'], 5_700_000);
+  // "Delete all data" (holatOchir): hamma yozuvga tombstone, serverda ham bo'sh
+  vaqt = 5_800_000;
+  H.holatOchir('tayanch:sat-rasmiy-testlar');
+  await H.sinxronlaHozir();
+  const srv = A.q('tayanch:sat-rasmiy-testlar');
+  assert.deepEqual(srv.qiymat, { versiya: 1, testlar: [], xatolar: [] });
+  assert.equal(srv.o['test\tta'], 5_800_000);
+  assert.equal(srv.o['xato\txc'], 5_800_000);
 });
 
 await sinov('Oflayn: navbat saqlanadi, qayta urinadi, "online" bo\'lganda yuboradi', async () => {

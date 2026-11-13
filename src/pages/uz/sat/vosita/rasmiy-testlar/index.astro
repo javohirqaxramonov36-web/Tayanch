@@ -18,7 +18,7 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
 ---
 <BolimQobiq
   title="Test tracker · SAT"
-  description="Log your SAT practice test and real SAT scores and mistakes, see your score history and the skills you miss most. Only your own entries; the data stays in this browser."
+  description="Log your SAT practice test and real SAT scores and mistakes, see your score history and the skills you miss most. Only your own entries; saved in this browser and, after you sign in and import, in your Tayanch account."
   turi="vosita"
   yol={['Practice']}
   bolim="sat"
@@ -233,7 +233,7 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
     <section class="blok malumot" aria-labelledby="malumot-h">
       <div class="malumot-matn">
         <h2 id="malumot-h">Your data</h2>
-        <p class="kichik ikkinchi" id="saqlash-holat">Saved only in this browser. Other devices and browsers do not see it.</p>
+        <p class="kichik ikkinchi" id="saqlash-holat">Saved in this browser. If you sign in and import your SAT progress, your account keeps a copy for your other devices.</p>
       </div>
       <div class="tugmalar">
         <button type="button" class="ikkinchi-tugma" id="csv-test">Download tests (CSV)</button>
@@ -269,7 +269,7 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
         'The score step (10) is not stated on the official page (CB04): it is used in the fields for convenience.',
         `Questions per module (${MODUL_SAVOLLARI.rw} in Reading and Writing, ${MODUL_SAVOLLARI.math} in Math) are the CB03 section totals split equally between two modules.`,
         'Skills and domains follow the Tayanch question taxonomy; mistake reasons are a Tayanch list, not an official one.',
-        'Sync with your Tayanch account is not connected yet: the data stays in this browser.',
+        'Account sync is tested only with a mock server so far, not with the live Tayanch account.',
       ]}
     />
   </div>
@@ -279,10 +279,11 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
   import {
     KALIT_RASMIY_TESTLAR, BOLIM_NOMI, TUR_NOMI, sababNomi, sanaMatn, jami, xronologik, urinishlar,
     testniTekshir, xatoniTekshir, omborniTozala, konikmaStatistikasi, testlarCsv, xatolarCsv, chizmaHisobla, yangiId,
-    type Ombor, type RasmiyTest, type RasmiyXato, type TestMaydon, type XatoMaydon,
+    sigadimi, HAJM_XABARI, type Ombor, type RasmiyTest, type RasmiyXato, type TestMaydon, type XatoMaydon,
   } from '../../../../../lib/sat/rasmiyTestlar';
   import { savolTaksonomiya, type SavolBolim } from '../../../../../data/satTaksonomiya';
   import { oqi, yoz, bugun } from '../../../../../lib/darsSaqlash';
+  import { holatOchir } from '../../../../../lib/holat';
 
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const el = <K extends keyof HTMLElementTagNameMap>(tag: K, sinf?: string, matn?: string) => {
@@ -311,7 +312,7 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
     if (namuna) { $('saqlash-holat').textContent = 'Sample data: nothing is saved.'; return; }
     const ok = yoz(KALIT_RASMIY_TESTLAR, ombor);
     $('saqlash-holat').textContent = ok
-      ? 'Saved only in this browser. Other devices and browsers do not see it.'
+      ? 'Saved in this browser. If you sign in and import your SAT progress, your account keeps a copy for your other devices.'
       : 'The browser did not allow saving: your entries will be lost when the page is closed.';
   }
 
@@ -345,6 +346,13 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
       li.append(a); ul.append(li);
     }
     box.append(ul);
+    box.focus();
+  }
+  /** Hajm chegarasi: xabar formaning xulosa qutisida (role="alert"), fokus o'sha yerga. */
+  function hajmXato(id: string) {
+    const box = $(id);
+    box.replaceChildren(el('p', 'xulosa-sarlavha', HAJM_XABARI));
+    box.hidden = false;
     box.focus();
   }
   const radio = (nom: string) => (document.querySelector<HTMLInputElement>(`input[name="${nom}"]:checked`)?.value ?? '');
@@ -395,11 +403,11 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
     }
     $('t-xulosa').hidden = true;
     const qaytaId = tahrir;
-    if (qaytaId) {
-      ombor.testlar = ombor.testlar.map((t) => (t.id === qaytaId ? { ...t, ...n.qiymat, t: Date.now() } : t));
-    } else {
-      ombor.testlar.push({ id: yangiId(), t: Date.now(), ...n.qiymat });
-    }
+    const testlar = qaytaId
+      ? ombor.testlar.map((t) => (t.id === qaytaId ? { ...t, ...n.qiymat, t: Date.now() } : t))
+      : [...ombor.testlar, { id: yangiId(), t: Date.now(), ...n.qiymat }];
+    if (!namuna && !sigadimi({ ...ombor, testlar }, ombor)) { hajmXato('t-xulosa'); return; }
+    ombor.testlar = testlar;
     saqla();
     const turi = radio('t-turi');
     tahrirRejimi(null);
@@ -455,7 +463,9 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
     (['testId', 'savol', 'konikma', 'sabab', 'izoh'] as const).forEach((k) => maydonXato(X_MAYDON[k], n.ok ? undefined : n.xatolar[k]));
     if (!n.ok) { xulosaXato('x-xulosa', n.xatolar, (k) => X_MAYDON[k as XatoMaydon], X_NOM); return; }
     $('x-xulosa').hidden = true;
-    ombor.xatolar.push({ id: yangiId(), t: Date.now(), hal: false, ...n.qiymat });
+    const xatolar = [...ombor.xatolar, { id: yangiId(), t: Date.now(), hal: false, ...n.qiymat }];
+    if (!namuna && !sigadimi({ ...ombor, xatolar }, ombor)) { hajmXato('x-xulosa'); return; }
+    ombor.xatolar = xatolar;
     saqla();
     $<HTMLInputElement>('x-savol').value = '';
     $<HTMLTextAreaElement>('x-izoh').value = '';
@@ -710,19 +720,28 @@ const xatoIkonka = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 
   $('hammasi-yoq').addEventListener('click', hammasiBekor);
   $('hammasi-tasdiq').addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); hammasiBekor(); } });
   $('hammasi-ha').addEventListener('click', () => {
-    if (!namuna) { try { localStorage.removeItem(KALIT_RASMIY_TESTLAR); } catch { /* ruxsat yo'q */ } }
+    // holatOchir: hisob bilan sinxronda o'chirish boshqa qurilmalarga ham o'tadi (tombstone).
+    if (!namuna) holatOchir(KALIT_RASMIY_TESTLAR);
     ombor = { versiya: 1, testlar: [], xatolar: [] };
     tahrirRejimi(null);
     $('hammasi-tasdiq').hidden = true;
     chiz(); xabar('All tests and mistakes deleted.'); $('t-forma-h').focus();
   });
 
-  // Boshqa tabda o'zgarsa qayta o'qiymiz.
-  window.addEventListener('storage', (e) => {
-    if (e.key !== KALIT_RASMIY_TESTLAR || namuna) return;
+  // Boshqa tabda yoki hisobdan (P04 sinxron) o'zgarsa qayta o'qiymiz.
+  function qaytaOqi() {
     ombor = omborniTozala(oqi(KALIT_RASMIY_TESTLAR, null));
     if (tahrir && !ombor.testlar.some((t) => t.id === tahrir)) tahrirRejimi(null);
     chiz();
+  }
+  window.addEventListener('storage', (e) => {
+    if (e.key !== KALIT_RASMIY_TESTLAR || namuna) return;
+    qaytaOqi();
+  });
+  window.addEventListener('tayanch:holat-yangilandi', (e) => {
+    const kalitlar = (e as CustomEvent<{ kalitlar?: string[] }>).detail?.kalitlar ?? [];
+    if (namuna || !kalitlar.includes(KALIT_RASMIY_TESTLAR)) return;
+    qaytaOqi();
   });
 
   // ---------- Boshlash ----------
