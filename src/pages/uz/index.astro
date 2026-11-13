@@ -11,6 +11,7 @@ import Zina from '../../components/Zina.astro';
 import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
+import YolTaklif from '../../components/navigator/YolTaklif.astro';
 
 const sochilgan = [
   { t: 'IELTS', x: 6, y: 8, r: -6 },
@@ -75,6 +76,9 @@ const kartaRasm = (slug: string) => ({
       ))}
     </div>
   </section>
+
+  <!-- 1a. Birinchi tashrif: yo'l xaritasi taklifi (profil bo'lmasa) -->
+  <YolTaklif />
 
   <!-- 2. Burilish -->
   <section class="kulrang" aria-labelledby="s2">
