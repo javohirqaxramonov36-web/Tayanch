@@ -35,13 +35,14 @@ const obuna = yol('/uz/sat/hisob/obuna/');
       )}
       <div class="amallar">
         <button type="button" class="tugma tugma-asosiy" data-qayta hidden>Check again</button>
-        <a class="tugma tugma-ikkinchi" href={obuna} data-obuna>Back to plans</a>
+        <a class="tugma tugma-ikkinchi" href={obuna} data-obuna>Back to Subscription</a>
       </div>
     </section>
   </div>
 </BolimQobiq>
 
 <script>
+  import { tarifKeshiniTozala } from '../../../../../lib/sat/upgradeBandUlash';
   import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
   import { UUID, funksiya, oxirgiTolov, tolovniUnut } from '../../../../../lib/sat/tolov';
   import { satTarif } from '../../../../../data/satTarif';
@@ -57,9 +58,9 @@ const obuna = yol('/uz/sat/hisob/obuna/');
   const MATN: Record<Holat, [string, string]> = {
     tekshirilmoqda: ['Checking your payment…', 'This usually takes a few seconds. You can keep this page open.'],
     success: ['Payment confirmed', 'Your plan is active. Thank you.'],
-    failed: ['Payment did not go through', 'Your plan has not changed. You can try again from the plans page.'],
+    failed: ['Payment did not go through', 'Your plan has not changed. You can try again from the Subscription page.'],
     kutish: ['Payment not confirmed yet', 'We will update your plan as soon as the payment is confirmed.'],
-    topilmadi: ['No payment to check', 'We could not find a payment for this account. Open the plans page to start one.'],
+    topilmadi: ['No payment to check', 'We could not find a payment for this account. Open the Subscription page to start one.'],
   };
   const BELGI: Record<Holat, string> = { tekshirilmoqda: '…', success: '✓', failed: '!', kutish: '…', topilmadi: '?' };
 
@@ -75,13 +76,13 @@ const obuna = yol('/uz/sat/hisob/obuna/');
     if (aloqa) aloqa.hidden = h !== 'kutish' && h !== 'failed';
     raqamEl.hidden = !(paymentId && (h === 'kutish' || h === 'failed'));
     if (paymentId) raqamEl.textContent = `Payment reference: ${paymentId}. Keep it if you contact us.`;
-    obunaHavola.textContent = h === 'success' ? 'Go to your plan' : 'Back to plans';
+    obunaHavola.textContent = h === 'success' ? 'Go to your plan' : 'Back to Subscription';
     obunaHavola.className = `tugma ${h === 'kutish' ? 'tugma-ikkinchi' : 'tugma-asosiy'}`;
   }
 
   async function sora(paymentId: string) {
     const r = await funksiya<{ status: string }>('inpay-holat', { payment_id: paymentId });
-    if (r.ok && r.data.status === 'success') { tolovniUnut(); return korsat('success', paymentId); }
+    if (r.ok && r.data.status === 'success') { tolovniUnut(); tarifKeshiniTozala(); return korsat('success', paymentId); }
     if (r.ok && r.data.status === 'failed') { tolovniUnut(); return korsat('failed', paymentId); }
     if (!r.ok && r.kod === 'not_found') return korsat('topilmadi');
     if (!r.ok && r.kod === 'not_signed_in') return location.reload();
@@ -133,8 +134,4 @@ const obuna = yol('/uz/sat/hisob/obuna/');
   .karta a:not(.tugma) { color: var(--rang-havola); }
   .amallar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-2); }
   @media (max-width: 479.98px) { .amallar { flex-direction: column; align-self: stretch; } .amallar .tugma { width: 100%; } }
-  @media (prefers-reduced-motion: no-preference) {
-    .karta[data-holat='tekshirilmoqda'] .belgi { animation: nafas 1.6s ease-in-out infinite; }
-  }
-  @keyframes nafas { 50% { opacity: 0.45; } }
 </style>
