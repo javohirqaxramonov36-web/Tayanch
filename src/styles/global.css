@@ -225,11 +225,11 @@ a.ds-karta:active { transform: var(--bosilish); }
 .qavat-yoli-orami:not(:empty) + section,
 .qavat-yoli-orami:not(:empty) + div { padding-top: var(--b-6) !important; }
 
-/* Telefonda pastki lift paneli kontentni yopmasin */
+/* Telefonda pastki panel (lift yoki SAT tab bar) kontentni yopmasin */
 @media (max-width: 1023.98px) {
-  body:has(.lift-pastki) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
-  /* Fokus yoki scrollIntoView elementni pastki lift ostiga yashirmasin (WCAG 2.4.11) */
-  html:has(.lift-pastki) { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  body:has(.lift-pastki, .sat-tab) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  /* Fokus yoki scrollIntoView elementni pastki panel ostiga yashirmasin (WCAG 2.4.11) */
+  html:has(.lift-pastki, .sat-tab) { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
