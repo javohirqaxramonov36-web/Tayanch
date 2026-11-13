@@ -79,14 +79,25 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     </ul>
 
     <h2>Nima uchun ishlatiladi</h2>
-    <p>Faqat xizmat ishlashi uchun: kirish, profil, natijalar va takrorlash, obuna va to'lov, kerakli xatlar. Ma'lumotingiz sotilmaydi, reklama uchun ishlatilmaydi va qonunda nazarda tutilgan holatlardan tashqari uchinchi shaxsga berilmaydi.</p>
+    <p>Xizmat ishlashi uchun: kirish, profil, natijalar va takrorlash, obuna va to'lov, kerakli xatlar. Statistika (pastda) faqat umumiy sonlar uchun: nechta odam ro'yxatdan o'tgani, qaytib kelgani va pullik tarifga o'tgani. Ma'lumotingiz sotilmaydi, reklama uchun ishlatilmaydi va qonunda nazarda tutilgan holatlardan tashqari uchinchi shaxsga berilmaydi.</p>
+
+    <h2 id="statistika">Foydalanish statistikasi</h2>
+    <p>Sayt qanday ishlatilayotganini bilish uchun hisobga kirgan foydalanuvchilarning bir nechta hodisasi Tayanch'ning o'z bazasiga (Supabase, Frankfurt) yoziladi. Hisobsiz holatda hech narsa yozilmaydi. Uchinchi tomon analitika xizmati (masalan, Google Analytics) ishlatilmaydi.</p>
+    <ul>
+      <li><strong>Qaysi hodisalar</strong>: ro'yxatdan o'tish, birinchi mashq sessiyasi, mashq sessiyasini tugatish (rejim va savollar soni), kun savoliga javob (bo'lim va to'g'ri yoki noto'g'ri), tariflar sahifasini ochish, to'lovni boshlash va to'lov muvaffaqiyatli bo'lishi (tarif va summa).</li>
+      <li><strong>Har hodisada</strong>: hodisa nomi, vaqti va hisobingiz identifikatori (ID). ID qaytib kelganlar sonini hisoblash uchun kerak, shuning uchun bu yozuvlar anonim emas. Natijalarni faqat Tayanch muallifi umumiy sonlar ko'rinishida ko'radi.</li>
+      <li><strong>Yozilmaydi</strong>: savol matni, javobingiz, email, ism, IP manzil, brauzer yoki qurilma ma'lumoti (barmoq izi), qaysi sahifadan kelganingiz.</li>
+      <li><strong>Standart holatda yoqiq.</strong> <a href={yol('/uz/hisob/profil/')}>Profil sahifasida</a> "Foydalanish statistikasini ulashish" belgisini olib tashlasangiz, yangi hodisalar yozilmaydi va avvalgi yozuvlaringiz darhol o'chiriladi.</li>
+      <li><strong>To'lov hodisalari</strong> (to'lovni boshlash va muvaffaqiyatli to'lov) belgi o'chiq bo'lsa ham yoziladi: ular to'lov yozuvining o'zidan olinadi va to'lov hisobi uchun kerak.</li>
+      <li><strong>Saqlash muddati</strong>: hisob o'chirilguncha. Hisobni o'chirsangiz, bu yozuvlar ham o'chiriladi.</li>
+    </ul>
 
     <h2>Qayerda saqlanadi</h2>
     <p>Hisob, savol-javob tarixi va to'lov yozuvlari <strong>Supabase</strong> xizmatida, <strong>Frankfurt (Germaniya)</strong> serverida saqlanadi. Germaniya Vazirlar Mahkamasi tasdiqlagan, shaxsga doir ma'lumotlar bir xil himoya qilinadigan davlatlar ro'yxatida bor (LX04), shuning uchun Qonun ma'lumotni u yerda saqlashga ruxsat beradi (15 va 27¹-moddalar, LX02). Tasdiqlash va parol tiklash xatlari Google'ning Gmail xizmati orqali yuboriladi: buning uchun emailingiz Google'ga beriladi. To'lov ma'lumoti inPAY va siz tanlagan to'lov tizimida (Click yoki Payme) ham bo'ladi. Tayanch biometrik yoki genetik ma'lumot yig'maydi.</p>
 
     <h2>Qancha saqlanadi</h2>
     <ul>
-      <li>Hisob va savol-javob tarixi: hisobingiz ochiq turguncha. Hisobni o'chirsangiz, darhol o'chiriladi.</li>
+      <li>Hisob, savol-javob tarixi va statistika yozuvlari: hisobingiz ochiq turguncha. Hisobni o'chirsangiz, darhol o'chiriladi.</li>
       <li>
         To'lov yozuvlari: hisob o'chirilganda hisobdan uziladi (kimga tegishliligi o'chadi), summa, sana va inPAY raqami
         {tolovSaqlashYil === null
@@ -118,6 +129,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     <ul>
       <li><strong>Bilish va nusxa olish</strong>: <a href={yol('/uz/hisob/profil/')}>profil sahifasida</a> "Ma'lumotlarimni yuklab olish" tugmasi serverdagi hamma ma'lumotingizni JSON faylda beradi.</li>
       <li><strong>O'zgartirish</strong>: ism, taxallus va SAT maqsadini profil sahifasida, parolni "Parolni tiklash" orqali.</li>
+      <li><strong>Statistikadan chiqish</strong>: profil sahifasidagi "Foydalanish statistikasini ulashish" belgisi.</li>
       <li><strong>Rozilikni chaqirib olish va o'chirish</strong>: pastdagi "Hisobni qanday o'chirish mumkin" bo'limi (17-modda, LX02).</li>
       <li><strong>Shikoyat</strong>: huquqingiz buzilgan deb hisoblasangiz, vakolatli davlat organiga yoki sudga murojaat qilish (30-modda, LX02).</li>
     </ul>
@@ -129,13 +141,13 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>Shaxsingizni tasdiqlang: parolingizni kiriting yoki Google orqali qayta kiring.</li>
       <li>Emailingizni yozib, o'chirishni tasdiqlang.</li>
     </ol>
-    <p>Hisob, profil, savol-javob tarixi va obuna serverdan darhol o'chiriladi. Faol obuna bo'lsa, u ham tugaydi (pul qaytarish: <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>). To'lov yozuvlari yuqoridagi tartibda qoladi. Brauzerdagi ma'lumot o'zingizda qoladi: uni brauzer sozlamalaridan tozalang.</p>
+    <p>Hisob, profil, savol-javob tarixi, statistika yozuvlari va obuna serverdan darhol o'chiriladi. Faol obuna bo'lsa, u ham tugaydi (pul qaytarish: <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>). To'lov yozuvlari yuqoridagi tartibda qoladi. Brauzerdagi ma'lumot o'zingizda qoladi: uni brauzer sozlamalaridan tozalang.</p>
 
     <h2>Nima to'planmaydi</h2>
     <ul>
       <li>Hujjat (pasport, sertifikat) yoki insho yuklash imkoniyati yo'q.</li>
       <li>Karta ma'lumoti saytda so'ralmaydi.</li>
-      <li>Tayanch reklama yoki tashqi analitika kodini ishlatmaydi. Shrift ham saytning o'zidan yuklanadi.</li>
+      <li>Tayanch reklama yoki tashqi analitika kodini ishlatmaydi: statistika faqat yuqoridagi tartibda, Tayanch'ning o'z bazasida. Shrift ham saytning o'zidan yuklanadi.</li>
     </ul>
 
     <h2>Xosting</h2>
