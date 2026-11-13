@@ -216,17 +216,8 @@ const malumot = namunaSavollar.map((n) => ({
   .turi { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
 
   .pastki { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .asosiy-tugma, .ikkinchi-tugma {
-    min-height: 52px; padding: 0 28px;
-    border: 0; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 800; cursor: pointer;
-  }
-  .asosiy-tugma { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); margin-left: auto; }
-  .asosiy-tugma:hover { background: var(--rang-asosiy-toq); }
+  .asosiy-tugma { margin-left: auto; }
   .asosiy-tugma[hidden] { display: none; }
-  .asosiy-tugma:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .ikkinchi-tugma { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .ikkinchi-tugma:disabled { color: var(--matn-sust); cursor: not-allowed; }
   .asosiy-tugma[hidden] + .ikkinchi-tugma { margin-left: auto; }
   .nav-tugma:focus-visible, .asosiy-tugma:focus-visible, .ikkinchi-tugma:focus-visible, .jurnal summary:focus-visible {
     outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
@@ -247,6 +238,6 @@ const malumot = namunaSavollar.map((n) => ({
   @media (max-width: 640px) {
     .pastki > * { flex: 1 1 0; }
     .pastki .asosiy-tugma { order: -1; flex: 1 1 100%; margin-left: 0; }
-    .pastki .ikkinchi-tugma { margin-left: 0; padding: 0 var(--b-4); }
+    .pastki .ikkinchi-tugma { margin-left: 0; }
   }
 </style>

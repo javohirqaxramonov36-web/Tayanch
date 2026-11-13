@@ -16,11 +16,13 @@ export const brauzerKalitlari: BrauzerKalit[] = [
   { kalit: 'tayanch:hisob-keyin', uz: "Google bilan kirgandan keyin qaysi sahifaga qaytish.", en: 'Which page to return to after signing in with Google.', sessiya: true },
   { kalit: 'tayanch:mavzu, tayanch:sidebar', uz: "Yorug' yoki qorong'i mavzu va yon panel holati.", en: 'Light or dark theme and the side panel state.' },
   { kalit: 'tayanch:qavat', uz: 'Qaysi qavatda ekaningiz.', en: 'Which floor of the site you are on.', sessiya: true },
-  { kalit: 'tayanch:sat-…', uz: "SAT: javoblar, dars progressi, xato daftari, takrorlash, lug'at, reja, rasmiy testlar, kun savoli, to'lov holati.", en: 'SAT: answers, lesson progress, mistake log, review, vocabulary, plan, official tests, question of the day, payment status.' },
+  { kalit: 'tayanch:sat-…', uz: "SAT: javoblar, dars progressi, xato daftari, takrorlash, lug'at, reja, rasmiy testlar, kun savoli, to'lov holati, o'qish afzalliklari.", en: 'SAT: answers, lesson progress, mistake log, review, vocabulary, plan, official tests, question of the day, payment status, study preferences.' },
+  { kalit: 'tayanch:sat-tarif-kesh', uz: "SAT: amaldagi tarif (yon paneldagi Upgrade bandi uchun), 10 daqiqa.", en: 'SAT: your current plan (for the Upgrade link in the side panel), kept for 10 minutes.', sessiya: true },
   { kalit: 'tayanch:sat-sessiya', uz: 'SAT mashq sessiyasining joriy holati.', en: 'The current SAT practice session.', sessiya: true },
   { kalit: 'tayanch:ielts-…, tayanch:top-admission-…', uz: "IELTS va Top Admission: dars progressi, urinishlar va reja.", en: 'IELTS and Top Admission: lesson progress, attempts and plan.' },
   { kalit: 'tayanch:navigator-…, tayanch:keyingi-qadam', uz: "Bosh sahifadagi yo'l xaritasi javoblari va keyingi qadam.", en: 'Your answers on the home page road map and your next step.' },
   { kalit: 'tayanch:analitika-kirgan', uz: "Natijalar sahifasi oldin ochilganmi (faqat belgi).", en: 'Whether you have opened the results page before (a flag only).' },
+  { kalit: 'tayanch:metrika:…', uz: "Statistika hodisasi oxirgi marta qachon yuborilgani (ortiqcha so'rov bo'lmasligi uchun, faqat vaqt).", en: 'When a usage statistics event was last sent (to avoid duplicate requests; a time only).', sessiya: true },
   { kalit: 'tayanch-topshirish-yoli', uz: "Topshirish yo'li vositasidagi belgilaringiz.", en: 'Your marks in the Application path tool.' },
 ];
 

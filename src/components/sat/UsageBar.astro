@@ -10,10 +10,12 @@ interface Props {
   sarlavhaId?: string;
   /** Limit tugaganda "See plans" havolasi. */
   rejalar?: boolean;
+  /** Qatorlar kichik kartalar to'rida (Obuna sahifasi): kompyuterda 2-3 ustun, telefonda 1. */
+  tor?: boolean;
 }
-const { sarlavhaId, rejalar = true } = Astro.props;
+const { sarlavhaId, rejalar = true, tor = false } = Astro.props;
 ---
-<div class="usage-bar" data-usage-bar role="group" aria-labelledby={sarlavhaId}>
+<div class:list={['usage-bar', { 'ub-tor': tor }]} data-usage-bar role="group" aria-labelledby={sarlavhaId}>
   <ul class="ub-royxat" data-ub-royxat hidden></ul>
   <p class="ub-izoh" data-ub-bosh>Your plan has no usage limits right now, and nothing has been used today.</p>
   <p class="ub-tugadi" data-ub-tugadi hidden>
@@ -32,6 +34,8 @@ const { sarlavhaId, rejalar = true } = Astro.props;
   .ub-royxat :global(.ub-chiziq) { block-size: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .ub-royxat :global(.ub-chiziq span) { display: block; block-size: 100%; background: var(--rang-havola); border-radius: var(--r-toliq); }
   .usage-bar :global(.ub-izoh) { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .ub-tor .ub-royxat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--b-3); }
+  .ub-tor .ub-royxat :global(.ub-qator) { padding: var(--b-3) var(--b-4); border: 1px solid var(--chiziq); border-radius: var(--r-orta); background: var(--sirt); }
   .ub-tugadi { margin: 0; font-size: var(--matn-kichik); }
   .ub-tugadi a { font-weight: 700; }
 </style>

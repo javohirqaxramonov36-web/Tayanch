@@ -3,6 +3,7 @@
 // Domen va skill ro'yxati taksonomiyadan (statik). Sonlar FAQAT Supabase question_counts RPC'dan (hisob bilan):
 // statik build'da hech qanday raqam yo'q. Sof mantiq: src/lib/savolBanki.ts.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
 import { savolTaksonomiya, type SavolBolim } from '../../../../../data/satTaksonomiya';
 import { HAJMLAR } from '../../../../../lib/savolBanki';
 import { yol } from '../../../../../lib/yol';
@@ -29,7 +30,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       <h1 id="bank-h">Question bank</h1>
       <p class="lead">Pick the skills you want to work on, set the difficulty and start a session. Only questions the author has checked are included.</p>
       <p class="kvota" id="kvota" hidden></p>
-      <div class="ogoh" id="kvota-tugadi" hidden>
+      <div class="ogoh" id="kvota-tugadi" tabindex="-1" hidden>
         <p id="kvota-tugadi-matn"></p>
         <!-- P20 da tariflar sahifasiga (/uz/sat/hisob/tariflar/) o'tkaziladi; hozircha profil. -->
         <a id="rejalar" href="#">See plans</a>
@@ -117,7 +118,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       </fieldset>
     </section>
 
-    <section class="tanlov" aria-label="Start a session">
+    <section class="tanlov qora-kontekst" aria-label="Start a session">
       <div class="tanlov-holat" aria-live="polite">
         <p class="tanlov-matn" id="tanlov-matn">Loading question counts…</p>
         <p class="tanlov-izoh" id="tanlov-izoh"></p>
@@ -131,6 +132,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       <p><a href={yol('/uz/sat/mashq/test/')}>Sample test · saved in this browser only</a></p>
     </div>
   </div>
+  <TarifDialog />
 </BolimQobiq>
 
 <script>
@@ -141,11 +143,17 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     type BankFiltr, type BankHolat, type Hajm, type Kvota, type Qiyinlik, type Rejim, type SonJavob, type UsageJavob,
   } from '../../../../../lib/savolBanki';
   import type { SavolBolim } from '../../../../../data/satTaksonomiya';
+  import { holatOqi } from '../../../../../lib/holat';
+  import { AFZALLIK_KALITI, afzallikTozala } from '../../../../../lib/sat/afzallik';
+  import { satTarif } from '../../../../../data/satTarif';
+  import { tarifDialogOch, tavsiyaRoyxati } from '../../../../../lib/sat/tarifDialog';
+  import type { TarifManba } from '../../../../../lib/sat/tarifJadval';
 
   interface Api {
     sonlar(f: Record<string, unknown>): Promise<SonJavob>;
     boshlash(f: Record<string, unknown>, hajm: number, rejim: Rejim): Promise<{ session_id: string | null }>;
     kvota(): Promise<UsageJavob>;
+    tariflar(): Promise<(TarifManba & { name?: string })[]>;
   }
 
   const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
@@ -159,7 +167,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     sonlar: { rw: null, math: null } as Record<SavolBolim, Map<string, number> | null>,
     jami: { rw: 0, math: 0 } as Record<SavolBolim, number>,
     hajm: 20 as Hajm,
-    rejim: 'practice' as Rejim,
+    rejim: afzallikTozala(holatOqi(AFZALLIK_KALITI, null)).rejim as Rejim, // My SAT profile: standart rejim
     kvota: null as Kvota | null,
     band: false,
     xato: null as string | null,
@@ -373,6 +381,11 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       sonlar: (f) => rpc<SonJavob>('question_counts', { p_filters: f }),
       boshlash: (f, hajm, rejim) => rpc('start_session', { p_filters: f, p_volume: hajm, p_mode: rejim }),
       kvota: () => rpc<UsageJavob>('usage_status'),
+      tariflar: async () => {
+        const { data, error } = await c.from('plans').select('code, name, limits, features').eq('bolim', 'sat');
+        if (error) throw error;
+        return (data ?? []) as (TarifManba & { name?: string })[];
+      },
     };
   }
 
@@ -406,6 +419,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
         const k = s.kvota;
         s.kvota = { ...(k ?? kvotaHolati(null)), tugadi: true, qolgan: 0, savolQolgan: k?.kalit === 'questions' ? 0 : (k?.savolQolgan ?? null) };
         s.xato = 'Daily limit reached';
+        void tarifTaklifi(tugma);
       } else if (tur === 'kirish') {
         s.holat = 'anon';
       } else {
@@ -487,6 +501,26 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   });
 
   $('boshlash').addEventListener('click', boshla);
+  /**
+   * Server limit tugadi desa (Start bosilgandan keyin): TarifDialog. Faqat tavsiya tarifda bo'lmaganlarga.
+   * Limit oldindan ma'lum bo'lsa Start o'chiq turadi va sababi yoziladi: bu oyna faqat kutilmagan holat uchun.
+   */
+  async function tarifTaklifi(tugma: HTMLElement) {
+    if (!api) return;
+    const [usage, tariflar] = await Promise.all([api.kvota().catch(() => null), api.tariflar().catch(() => [])]);
+    const yangi = usage ? kvotaHolati(usage) : null;
+    if (yangi?.kalit) s.kvota = { ...yangi, tugadi: true, qolgan: 0, savolQolgan: yangi.kalit === 'questions' ? 0 : yangi.savolQolgan };
+    if (usage?.plan?.code === satTarif.tavsiya) return;
+    const t = tavsiyaRoyxati(tariflar);
+    // Sarlavha allaqachon "You've reached today's limit": limit noma'lum bo'lsa faqat tiklanish vaqti.
+    const asos = s.kvota?.kalit ? kvotaTugadiMatni(s.kvota) : 'It resets at midnight (Tashkent time).';
+    chiz();
+    tarifDialogOch({
+      matn: `${asos} Everything you've saved stays.`,
+      tarifNomi: t?.nomi,
+      royxat: t?.royxat,
+    }, $('kvota-tugadi').hidden ? tugma : $('kvota-tugadi')); // Start o'chiq bo'lib qoladi: fokus limit xabariga qaytadi
+  }
   $('qayta').addEventListener('click', () => { if (api) yukla(); });
   $<HTMLAnchorElement>('rejalar').href = hisobYoli('profil');
   $<HTMLAnchorElement>('kirish-havola').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(bank.dataset.bankUrl!)}`;
@@ -557,7 +591,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
     background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
   }
-  .chip:hover { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .chip:hover { border-color: var(--rang-asosiy); } }
   .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
   .belgi-qutisi { display: flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: var(--b-2); font-size: 15px; font-weight: 600; cursor: pointer; }
   input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--rang-asosiy); }
@@ -575,20 +609,17 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     border-radius: var(--r-yon); cursor: pointer;
   }
   .domen-bosh { font-weight: 800; font-size: 17px; border-bottom: 1px solid var(--chiziq); border-radius: var(--r-yon) var(--r-yon) 0 0; margin-bottom: var(--b-1); }
-  .skill:hover, .domen-bosh:hover { background: var(--fon-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .skill:hover, .domen-bosh:hover { background: var(--fon-ikkinchi); } }
   .skill-royxat { list-style: none; margin: 0; padding: 0; }
   .s-nom, .d-nom { flex: 1; min-width: 0; }
   .s-nom { font-size: 15px; font-weight: 600; line-height: 1.35; }
   .son { font-variant-numeric: tabular-nums; font-weight: 800; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); min-width: 3ch; text-align: right; }
   .skill.sust { cursor: default; }
   .skill.sust .s-nom, .skill.sust .son { color: var(--matn-sust); }
-  .skill.sust:hover { background: transparent; }
+  @media (hover: hover) and (pointer: fine) { .skill.sust:hover { background: transparent; } }
   .son :global(.skelet) {
     display: inline-block; width: 2.5ch; height: 0.9em; border-radius: var(--r-kichik); background: var(--sirt-ikkinchi); vertical-align: middle;
-    animation: skelet 1.2s ease-in-out infinite alternate;
   }
-  @keyframes skelet { from { opacity: 1; } to { opacity: 0.45; } }
-  @media (prefers-reduced-motion: reduce) { .son :global(.skelet) { animation: none; } }
   .son :global(.korinmas), .korinmas {
     position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
   }
@@ -607,15 +638,6 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   .tanlov-holat { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
   .tanlov-matn { font-size: 20px; font-weight: 800; }
   .tanlov-izoh { font-size: var(--matn-kichik); color: var(--qora-matn-ikkinchi); }
-  .katta-tugma {
-    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    min-height: 52px; padding: 0 26px; border-radius: var(--r-toliq); border: 0;
-    text-decoration: none; font: inherit; font-weight: 800; font-size: 16px; white-space: nowrap; cursor: pointer;
-  }
-  .katta-tugma.oq { background: var(--qora-matn); color: var(--qora); }
-  .katta-tugma.oq:focus-visible { outline-color: var(--rang-asosiy-qorada); }
-  .katta-tugma:disabled { background: var(--qora-sirt); color: var(--qora-matn-ikkinchi); border: 1.5px dashed var(--qora-matn-ikkinchi); cursor: not-allowed; }
-  .katta-tugma[aria-busy='true'] { cursor: progress; border-style: solid; }
   .katta-tugma[hidden] { display: none; }
   .eslatma { font-size: var(--matn-kichik); color: var(--matn-sust); max-width: 62ch; }
   .eslatma a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rang-havola); font-weight: 700; }
