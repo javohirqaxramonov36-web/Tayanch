@@ -81,7 +81,7 @@ const qaytarish = satTarif.qaytarishHavola;
 
       <div class="pullik">
         {pullik.map((t) => (
-          <article class:list={['tarif', { tavsiya: t.kod === satTarif.tavsiya }]} data-tarif={t.kod} aria-labelledby={`tarif-${t.kod}`}>
+          <article class:list={['tarif', { tavsiya: t.kod === satTarif.tavsiya, 'qora-kontekst': t.kod === satTarif.tavsiya }]} data-tarif={t.kod} aria-labelledby={`tarif-${t.kod}`}>
             <div class="tarif-bosh">
               <h2 id={`tarif-${t.kod}`}>{t.nomi}</h2>
               {t.kod === satTarif.tavsiya && <span class="belgi">{satTarif.tavsiyaYorliq}</span>}
@@ -441,9 +441,7 @@ const qaytarish = satTarif.qaytarishHavola;
   .eslatma p { max-width: 62ch; }
   .cheklov { display: flex; flex-direction: column; gap: var(--b-2); }
   .cheklov ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
-  .uzaytir { align-self: flex-start; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .uzaytir:hover { background: var(--rang-asosiy-toq); }
-  .uzaytir:disabled { cursor: progress; opacity: 0.75; }
+  .uzaytir { align-self: flex-start; }
 
   .joriy { display: flex; flex-direction: column; gap: var(--b-2); padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); }
   .joriy-nom { font-size: var(--matn-h3); font-weight: 800; }
@@ -474,10 +472,7 @@ const qaytarish = satTarif.qaytarishHavola;
   .imkoniyat { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
   .joriy-belgi { font-size: var(--matn-kichik); font-weight: 700; color: var(--rang-havola); }
   .tavsiya .joriy-belgi { color: var(--rang-asosiy-qorada); }
-  .tolov-tugma { margin-top: auto; width: 100%; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .tolov-tugma:hover { background: var(--rang-asosiy-toq); }
-  .tolov-tugma:disabled { cursor: progress; opacity: 0.75; }
-  .tavsiya .tolov-tugma:focus-visible { outline-color: var(--rang-asosiy-qorada); }
+  .tolov-tugma { margin-top: auto; width: 100%; }
 
   .tarif-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-4); flex-wrap: wrap; padding: var(--b-4) var(--b-6); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
 

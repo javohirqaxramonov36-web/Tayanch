@@ -345,8 +345,7 @@ const ieltsGuruhlar = [
     display: flex; align-items: center; justify-content: space-between;
     gap: var(--b-3);
     padding: 0 var(--b-3) 0 var(--b-4);
-    /* Liquid Glass (sticky topbar) */
-    background: var(--glass-sheen), var(--glass-chrome-bg); -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop); box-shadow: var(--glass-edge);
+    background: var(--color-surface);
     border-bottom: var(--border-width-1) solid var(--color-border);
   }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; min-height: 44px; color: var(--matn); }
@@ -372,9 +371,9 @@ const ieltsGuruhlar = [
     background: transparent; color: var(--matn-sust);
     cursor: pointer;
   }
-  .belgi-tugma:hover { background: var(--fon-ikkinchi); color: var(--matn); }
+  @media (hover: hover) and (pointer: fine) { .belgi-tugma:hover { background: var(--fon-ikkinchi); color: var(--matn); } }
   #panel-ochish { background: var(--fon-ikkinchi); color: var(--matn); }
-  #panel-ochish:hover { background: var(--sirt-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { #panel-ochish:hover { background: var(--sirt-ikkinchi); } }
 
   /* Panel */
   .yon {
@@ -417,7 +416,7 @@ const ieltsGuruhlar = [
   }
   .qism-nom:first-of-type { margin-top: 0; }
   .royxat a .ikonka { flex: none; color: var(--rang-havola); }
-  .royxat a:hover { background: var(--fon-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .royxat a:hover { background: var(--fon-ikkinchi); } }
   .royxat a[aria-current='page'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-weight: 700; }
   .royxat a[aria-current='page'] .ikonka { color: var(--rang-asosiy-matn); }
 
@@ -443,8 +442,8 @@ const ieltsGuruhlar = [
   .tashqi-izoh { font-size: var(--matn-mayda); font-weight: 500; color: var(--matn-sust); }
   #mavzu-tugma { background: var(--fon-ikkinchi); color: var(--matn); }
   .past-tugma svg { flex: none; width: 18px; height: 18px; }
-  .past-tugma:hover { background: var(--fon-ikkinchi); color: var(--matn); }
-  #mavzu-tugma:hover { background: var(--sirt-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .past-tugma:hover { background: var(--fon-ikkinchi); color: var(--matn); } }
+  @media (hover: hover) and (pointer: fine) { #mavzu-tugma:hover { background: var(--sirt-ikkinchi); } }
   .past-tugma .quyosh { display: none; }
   :global([data-mavzu='qorongi']) .past-tugma .oy { display: none; }
   :global([data-mavzu='qorongi']) .past-tugma .quyosh { display: block; }
@@ -469,7 +468,7 @@ const ieltsGuruhlar = [
     font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap;
   }
   .past-nofaol { margin: 0; cursor: default; }
-  .past-nofaol:hover { background: transparent; color: var(--matn-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .past-nofaol:hover { background: transparent; color: var(--matn-ikkinchi); } }
 
   .parda { display: none; }
 
