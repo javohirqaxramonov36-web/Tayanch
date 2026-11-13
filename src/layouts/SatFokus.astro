@@ -8,6 +8,7 @@ import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
+import SatSinxron from '../components/SatSinxron.astro';
 import { matn } from '../data/umumiyMatn';
 // SAT bo'limi: matn inglizcha (CLAUDE.md).
 const M = matn.en;
@@ -59,6 +60,7 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
       <slot />
     </main>
     <SatEslatma />
+    <SatSinxron />
     {liftPastki && <Lift variant="pastki" />}
   </body>
 </html>

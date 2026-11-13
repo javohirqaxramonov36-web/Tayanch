@@ -1,7 +1,7 @@
 ---
 // IELTS bo'limi kirishi. Dizayn: Tayanch-IELTS-dizayn.md, "Main" va "KirishTelefon" ekranlari.
 // Vaqtlar: IE01 (ielts.org). Rasmiy namunalar: IE03 (ielts.org), ID01 (IDP), BC01 (British Council).
-// Savdo belgisi eslatmasi: IE07 (ielts.org sahifa osti).
+// Savdo belgisi eslatmasi: IE08 (ielts.org sahifa osti).
 // Qayta tuzish (2026-11-12, muallif qarorni Claude'ga topshirdi): Reading test bor bo'lsa (build vaqtida)
 // asosiy tugma testga olib boradi, aks holda 30 kunlik rejaga.
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
@@ -19,7 +19,6 @@ const reja = yol('/uz/ielts/vosita/reja/');
 const reading = yol('/uz/ielts/qollanma/reading/');
 const readingTest = yol('/uz/ielts/mashq/reading/');
 const testBor = (await saytTestlari()).length > 0;
-const tezNomlar = [...qollanmalar.filter((q) => !q.qism).map((q) => q.nomi), asos.nomi];
 // "Mening holatim": faqat brauzerdagi ma'lumot bo'lsa chiqadi. Takrorlash havolasi sahifa saytda bo'lsagina (vositalar ro'yxati).
 const holat = {
   darsJami: hammaSavollar.length,
@@ -37,6 +36,9 @@ const bolimlar: { nomi: string; vaqt: string; ikonka: string; daqiqa: [number, n
 const engUzun = Math.max(...bolimlar.map((b) => b.daqiqa[1]));
 const ulush = (n: number) => Math.round((n / engUzun) * 1000) / 1000;
 const tezQollanmalar = qollanmalar.filter((q) => !q.qism).length;
+// Manbalar blokidagi "hali yozilmagan" ro'yxati ma'lumotdan: qo'llanma qo'shilsa, o'zi yangilanadi.
+const yozilmagan = [...qollanmalar.filter((q) => !q.qism), asos].map((q) => q.nomi);
+const yozilmaganMatn = yozilmagan.length > 1 ? `${yozilmagan.slice(0, -1).join(', ')} va ${yozilmagan.at(-1)}` : yozilmagan.join('');
 const qadamlar = [
   { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
   testBor
@@ -276,19 +278,20 @@ const namunalar = [
         <span class="t-matn"><strong>Telegram kanal</strong><span class="pill-tez">tez orada</span></span>
       </div>
       <div class="eslatma">
-        <p>IELTS British Council, IDP IELTS va Cambridge University Press & Assessment'ning birgalikdagi mulki va ro'yxatdan o'tgan savdo belgisi (<a href={m('IE07').havola} rel="noopener">ielts.org</a>). Tayanch ular bilan bog'liq emas, mashqlar rasmiy IELTS materiali emas.</p>
+        <p>IELTS British Council, IDP IELTS va Cambridge University Press & Assessment'ning birgalikdagi mulki va ro'yxatdan o'tgan savdo belgisi (<a href={m('IE08').havola} rel="noopener">ielts.org</a>). Tayanch ular bilan bog'liq emas, mashqlar rasmiy IELTS materiali emas.</p>
       </div>
     </section>
 
     <Zina />
 
     <ManbaBlok
-      manbalar={['IE01', 'IE03', 'ID01', 'BC01', 'IE07']}
+      manbalar={['IE01', 'IE03', 'ID01', 'BC01', 'IE08']}
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
         "IELTS.org namunalari bepulligi sahifada yozilmagan.",
-        `${tezNomlar.join(', ')} qo'llanmalari hali yozilmagan.`,
+        "Savdo belgisi haqidagi eslatma matni.",
+        `${yozilmaganMatn} qo'llanmalari hali yozilmagan.`,
       ]}
     />
   </div>

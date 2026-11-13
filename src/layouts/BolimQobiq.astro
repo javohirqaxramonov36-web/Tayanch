@@ -9,6 +9,7 @@ import QavatYoli from '../components/QavatYoli.astro';
 import Lift from '../components/Lift.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
+import SatSinxron from '../components/SatSinxron.astro';
 import type { BolimSlug } from '../data/bolimlar';
 import { bolimTili, matn } from '../data/umumiyMatn';
 
@@ -46,6 +47,7 @@ const sahifaNomi = title.split(' · ')[0];
         <slot />
       </main>
       {bolim === 'sat' && <SatEslatma />}
+      {bolim === 'sat' && <SatSinxron />}
       <p class="ichki beta-holat" lang="en">Beta — in development</p>
     </div>
     <Lift variant="pastki" />
