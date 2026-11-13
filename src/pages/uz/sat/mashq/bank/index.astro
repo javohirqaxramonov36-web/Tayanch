@@ -143,6 +143,8 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     type BankFiltr, type BankHolat, type Hajm, type Kvota, type Qiyinlik, type Rejim, type SonJavob, type UsageJavob,
   } from '../../../../../lib/savolBanki';
   import type { SavolBolim } from '../../../../../data/satTaksonomiya';
+  import { holatOqi } from '../../../../../lib/holat';
+  import { AFZALLIK_KALITI, afzallikTozala } from '../../../../../lib/sat/afzallik';
   import { satTarif } from '../../../../../data/satTarif';
   import { tarifDialogOch, tavsiyaRoyxati } from '../../../../../lib/sat/tarifDialog';
   import type { TarifManba } from '../../../../../lib/sat/tarifJadval';
@@ -165,7 +167,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     sonlar: { rw: null, math: null } as Record<SavolBolim, Map<string, number> | null>,
     jami: { rw: 0, math: 0 } as Record<SavolBolim, number>,
     hajm: 20 as Hajm,
-    rejim: 'practice' as Rejim,
+    rejim: afzallikTozala(holatOqi(AFZALLIK_KALITI, null)).rejim as Rejim, // My SAT profile: standart rejim
     kvota: null as Kvota | null,
     band: false,
     xato: null as string | null,

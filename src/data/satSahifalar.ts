@@ -270,6 +270,16 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Account',
     sahifalar: [
       {
+        // 2026-11-13: SAT "men" markazi (maqsad, afzalliklar, saqlangan ish, tarif). Hisob sozlamalari 1-qavatda.
+        qism: 'hisob/profil/',
+        tayyor: true,
+        nomi: 'My SAT profile',
+        tavsif: 'Your SAT goal and test date, study preferences, saved work and plan in one place.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['Saved work counts have not been checked with a real account yet.'],
+      },
+      {
         qism: 'hisob/maqsad/',
         tayyor: true,
         nomi: 'Goal and test date',
@@ -350,7 +360,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Progress', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/takrorlash/', 'vosita/rasmiy-testlar/'].map(s) }] },
   { nomi: 'Plan', qismlar: [{ sahifalar: ['vosita/reja/', 'hisob/maqsad/', 'vosita/ai-tutor/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/obuna/', 'guruh/', 'hisob/fikr/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/profil/', 'hisob/obuna/', 'guruh/', 'hisob/fikr/'].map(s) }] },
 ];
 
 // Har tayyor sahifa yon panelda aynan bir marta bo'lishi kerak, tayyor bo'lmagani esa umuman bo'lmasligi kerak
