@@ -3,7 +3,7 @@
 // brauzerdagi reja kalitidan bitta "asosiy qadam" va kartalar holatini chiqaradi. Tarmoq va DOM yo'q (testlar: testlar/bugun.test.ts).
 // Uydirma raqam yo'q: ma'lumot kelmagan karta "null" bo'lib qoladi va ekranda yashiriladi.
 
-export type QadamTur = 'mock' | 'takrorlash' | 'reja' | 'zaif' | 'boshlash';
+export type QadamTur = 'mock' | 'takrorlash' | 'reja' | 'zaif' | 'boshlash' | 'dars';
 
 export interface BugunKirish {
   /** Tugallanmagan mock (mock_status.active); null: yo'q yoki o'qib bo'lmadi */
@@ -24,6 +24,8 @@ export interface BugunKirish {
   } | null;
   /** Oxirgi tugagan mock ball (taxminiy); null: yo'q */
   oxirgiBall: { total: number; sana: string } | null;
+  /** Bankdagi tasdiqlangan savollar soni (question_counts, filtrsiz). 0: bank bo'sh; null: o'qib bo'lmadi */
+  bankSavol: number | null;
 }
 
 export interface AsosiyQadam {
@@ -37,7 +39,8 @@ export interface AsosiyQadam {
 
 const sonMatn = (n: number, bir: string, kop: string) => `${n} ${n === 1 ? bir : kop}`;
 
-/** Ustuvorlik: tugallanmagan mock → bugungi takrorlash → reja → zaif ko'nikma → boshlash. */
+/** Ustuvorlik: tugallanmagan mock → bugungi takrorlash → reja → zaif ko'nikma → boshlash.
+ *  Bank bo'sh bo'lsa (bankSavol === 0) "boshlash" o'rniga darslar: o'quvchi bo'sh sahifaga yuborilmaydi. */
 export function asosiyQadam(k: BugunKirish): AsosiyQadam {
   if (k.mockFaol) {
     return {
@@ -79,6 +82,15 @@ export function asosiyQadam(k: BugunKirish): AsosiyQadam {
       matn: eng.foiz == null ? `${eng.skill} needs more practice.` : `${eng.skill}: ${eng.foiz}% correct so far.`,
       tugma: 'Practice questions',
       qism: 'mashq/bank/',
+    };
+  }
+  if (k.bankSavol === 0) {
+    return {
+      tur: 'dars',
+      sarlavha: 'Start with a lesson',
+      matn: 'Learn how the test works, then try the interactive lessons for Math and Reading & Writing.',
+      tugma: 'Where to start',
+      qism: 'qollanma/qayerdan-boshlash/',
     };
   }
   return {

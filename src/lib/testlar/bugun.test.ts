@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { asosiyQadam, xatoDueSoni, rejaBormi, streakMatn, aniqlikMatn, type BugunKirish } from '../sat/bugun.ts';
 
-const bosh: BugunKirish = { mockFaol: null, xatoDue: 0, sozDue: 0, rejaBor: false, tahlil: null, oxirgiBall: null };
+const bosh: BugunKirish = { mockFaol: null, xatoDue: 0, sozDue: 0, rejaBor: false, tahlil: null, oxirgiBall: null, bankSavol: 120 };
 
 test('unfinished mock comes first', () => {
   const q = asosiyQadam({ ...bosh, mockFaol: { form_no: 2, current_module: 3, phase: 'module' }, xatoDue: 5, rejaBor: true });
@@ -37,6 +37,14 @@ test('plan, then weakest skill, then start', () => {
   const yangi = asosiyQadam(bosh);
   assert.equal(yangi.tur, 'boshlash');
   assert.match(yangi.matn, /first questions/);
+});
+
+test('empty question bank: point to lessons, never to an empty page', () => {
+  const q = asosiyQadam({ ...bosh, bankSavol: 0 });
+  assert.equal(q.tur, 'dars');
+  assert.equal(q.qism, 'qollanma/qayerdan-boshlash/');
+  assert.equal(asosiyQadam({ ...bosh, bankSavol: null }).tur, 'boshlash');
+  assert.equal(asosiyQadam({ ...bosh, bankSavol: 0, xatoDue: 2 }).tur, 'takrorlash');
 });
 
 test('due count matches the mistake log rule (box 1-4, date today or earlier)', () => {

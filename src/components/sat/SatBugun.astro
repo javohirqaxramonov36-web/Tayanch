@@ -1,6 +1,7 @@
 ---
 // SAT "Today" bloki (/uz/sat/, faqat kirgan o'quvchi; rekonstruksiya 1-bosqich, muallif tasdig'i 2026-11-13).
-// Spetsifikatsiya: bitta asosiy qadam (tugallanmagan mock → bugungi takrorlash → reja → zaif ko'nikma → boshlash),
+// Spetsifikatsiya: bitta asosiy qadam (tugallanmagan mock → bugungi takrorlash → reja → zaif ko'nikma → boshlash;
+// bank bo'sh bo'lsa darslar),
 // yonida qisqa ko'rsatkichlar (streak, aniqlik, takrorlash, oxirgi mock) va zaif ko'nikmalar. Mantiq: src/lib/sat/bugun.ts.
 // Holatlar: yuklanmoqda (skelet, balandlik band), tayyor, xato (Retry; sahifaning qolgan qismi joyida), sessiya yo'q (blok yashirinadi,
 // kirish sahifasi avvalgidek). Yangi localStorage kaliti yo'q: tayanch:auth (sessiya bormi) va tayanch:sat-reja faqat o'qiladi.
@@ -166,11 +167,17 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
       if (error) throw error;
       return data as T;
     };
-    const [mock, royxat, xulosa] = await Promise.allSettled([
+    const [mock, royxat, xulosa, sonlar] = await Promise.allSettled([
       rpc<MockStatus>('mock_status'),
       rpc<BankRoyxat>('review_overview'),
       rpc<unknown>('analytics_summary'),
+      (async () => {
+        const { data, error } = await c.rpc('question_counts', { p_filters: {} });
+        if (error) throw error;
+        return data as { total?: number } | null;
+      })(),
     ]);
+    const bankJami = natija(sonlar);
     const m = natija(mock);
     const r = natija(royxat);
     const x = xulosaOqi(natija(xulosa));
@@ -210,13 +217,14 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
         zaif: tavsiyalar(x.skills).slice(0, 3).map((s) => ({ skill: s.skill, foiz: s.foiz })),
       } : null,
       oxirgiBall: tugagan[0]?.scores ? { total: tugagan[0].scores.total, sana: tugagan[0].finished_at ?? '' } : null,
+      bankSavol: bankJami && typeof bankJami.total === 'number' ? bankJami.total : null,
     });
     quti.setAttribute('aria-busy', 'false');
   }
 
   async function boshla() {
     if (!quti) return;
-    // Dev mock (dist'da yo'q): ?bugun-mock=yangi|toliq|mock|takror|xato
+    // Dev mock (dist'da yo'q): ?bugun-mock=yangi|bosh-bank|toliq|mock|takror|xato
     if (import.meta.env.DEV) {
       const tur = new URLSearchParams(location.search).get('bugun-mock');
       const { BUGUN_MOCKLAR, bugunMock } = await import('../../lib/sat/bugunMock');
