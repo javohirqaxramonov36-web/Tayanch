@@ -176,7 +176,7 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
 </style>
 
 <script>
-  import { hisobMijoz, hisobQorovul, maydonXatosi, yuklanish, xabar } from '../../../../../lib/hisob';
+  import { hisobMijoz, hisobQorovul, maydonXatosi, xatolarRoyxati, yuklanish, xabar } from '../../../../../lib/hisob';
   import { toshkentBugun, yilQosh } from '../../../../../lib/muddat';
   import { ballXatosi, sanaXatosi, kelgusiSanalar, SANA_MAX_YIL, type MaqsadProfil } from '../../../../../lib/satMaqsad';
   import { satSanalar } from '../../../../../data/satSanalar';
@@ -264,18 +264,7 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
     }
   }
 
-  function xatolarniKorsat(royxat: [HTMLInputElement, string][]) {
-    const ul = xatolar.querySelector('ul')!;
-    ul.replaceChildren(...royxat.map(([el, m]) => {
-      const li = document.createElement('li');
-      const a = Object.assign(document.createElement('a'), { href: `#${el.id}`, textContent: m });
-      a.addEventListener('click', (e) => { e.preventDefault(); el.focus(); });
-      li.append(a);
-      return li;
-    }));
-    xatolar.hidden = royxat.length === 0;
-    if (royxat.length) xatolar.focus();
-  }
+  const xatolarniKorsat = (royxat: [HTMLInputElement, string][]) => xatolarRoyxati(xatolar, royxat);
 
   async function yoz(qiymat: Partial<MaqsadProfil>, tugma: HTMLButtonElement) {
     const c = hisobMijoz();

@@ -9,6 +9,7 @@ import SatFokus from '../../../../../layouts/SatFokus.astro';
 import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
+import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
 
@@ -124,6 +125,8 @@ const IK = {
     </div>
   </dialog>
 
+  <XabarDialog />
+
   <div class="sr-only" id="taymer-elon" aria-live="assertive" aria-atomic="true"></div>
   <div class="sr-only" id="elon" aria-live="polite" aria-atomic="true"></div>
 </SatFokus>
@@ -135,6 +138,8 @@ const IK = {
   import { BOSH_HOLAT, type SavolHolati } from '../../../../../lib/sat/savolTuri';
   import { sprTekshir } from '../../../../../lib/sat/sprFormat';
   import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
+  import type { XabarApi } from '../../../../../lib/sat/xabar';
+  import { xabarDialogUlash, supabaseXabarApi } from '../../../../../lib/sat/xabarDialog';
   import {
     MAHALLIY_KALIT, mahalliyniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
     xarita, xaritaYorliq, navbatgaQosh, keyingiUrinishMs, sessiyaXatosi, idTogrimi, hisobot, SABABLAR, sababTogrimi,
@@ -148,6 +153,10 @@ const IK = {
 
   // ---------- Holat ----------
   let api: SessiyaApi | null = null;
+  // P24 Report: ochiq xabari bor savollar (serverdan, RLS: faqat o'ziniki). Dialog boshla() da ulanadi.
+  let xabarApi: XabarApi | null = null;
+  let xabarDialog: ReturnType<typeof xabarDialogUlash> | null = null;
+  const xabarlar = new Set<string>();
   let id = '';
   let S: SessiyaJavob | null = null;
   let m: Mahalliy = mahalliyniTekshir(null);
@@ -287,6 +296,18 @@ const IK = {
     $('fokus-progress-matn').textContent = ekran === 'savol' ? `${m.joriy + 1} / ${n}` : `${javob} / ${n}`;
   }
 
+  // ---------- Report (P24) ----------
+  function xabarOch(qid: string, nomi: string, ochuvchi: HTMLElement, keyin?: () => void) {
+    xabarDialog?.och({
+      qid, nomi, ochuvchi, sessiya: idTogrimi(id) ? id : null, yuborilgan: xabarlar.has(qid),
+      onYuborildi: (q) => {
+        xabarlar.add(q);
+        if (ekran === 'savol' && joriySavol()?.id === q) yangila();
+        keyin?.();
+      },
+    });
+  }
+
   // ---------- Savol ----------
   function holatOl(q: ServerSavol): SavolHolati {
     const h = ui.get(q.id) ?? { ...BOSH_HOLAT, ochirilgan: [] };
@@ -300,6 +321,7 @@ const IK = {
       tanlangan: q.format === 'mcq' ? (javob ?? h.tanlangan) : null,
       sprQiymat: q.format === 'spr' ? (javob ?? h.sprQiymat ?? '') : undefined,
       belgilangan: m.belgilar.includes(q.id),
+      xabarlangan: xabarlar.has(q.id),
       natija: j && !taymerli() ? { togrimi: j.is_correct, togriJavob: togriMatn(j.correct), izoh: j.explanation } : null,
     };
   }
@@ -371,6 +393,7 @@ const IK = {
         uiYangila(q, { ochirilgan: on ? [...new Set([...h.ochirilgan, k])] : h.ochirilgan.filter((x) => x !== k) });
         yangila();
       },
+      onReport: xabarDialog ? (t) => xabarOch(q.id, `Question ${m.joriy + 1}`, t) : undefined,
     });
     korsatilgan = m.joriy;
     saqlaChiz();
@@ -776,6 +799,18 @@ const IK = {
       a.append(el('p', 'natija-javob', 'Not answered. The correct answer is shown only after you answer.'));
     }
     a.append(redoBoshqaruv(b, tur === 'xato'));
+    if (xabarDialog) {
+      const t = el('button', 'kichik-tugma kulrang natija-xabar');
+      t.type = 'button';
+      const yoz = () => {
+        const bor = xabarlar.has(b.savol.id);
+        t.textContent = bor ? 'Reported' : 'Report a problem';
+        t.setAttribute('aria-label', bor ? `Reported: question ${b.raqam}` : `Report a problem with question ${b.raqam}`);
+      };
+      yoz();
+      t.addEventListener('click', () => xabarOch(b.savol.id, `Question ${b.raqam}`, t, yoz));
+      a.append(t);
+    }
     return a;
   }
 
@@ -980,6 +1015,8 @@ const IK = {
       if (!p.get('id')) p.set('id', MOCK_ID[tur] ?? MOCK_ID.oddiy);
       history.replaceState(null, '', `${location.pathname}?${p}`);
       api = mockApi(tur);
+      const { mockXabarApi } = await import('../../../../../lib/sat/xabarMock');
+      xabarApi = mockXabarApi();
       const pill = document.getElementById('namuna-pill');
       if (pill) pill.hidden = false;
     }
@@ -993,7 +1030,9 @@ const IK = {
       const { data } = await c.auth.getSession();
       if (!data.session) return xabarKorsat('Sign in to continue', 'Practice sessions are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
       api = haqiqiyApi(c);
+      xabarApi = supabaseXabarApi(c);
     }
+    if (xabarApi) xabarDialog = xabarDialogUlash(xabarApi);
     // Savol bankidagi start javobi kerak emas: sessiya doim serverdan (get_session) olinadi.
     try { sessionStorage.removeItem(SESSIYA_KALITI); } catch { /* */ }
     m = oqiMahalliy();
@@ -1001,6 +1040,12 @@ const IK = {
       serverdanOl(await api.ol(id));
     } catch (e) {
       return xatoEkrani(e);
+    }
+    // Ochiq xabarlar: olinmasa ham sessiya ishlaydi (tugma "Report" bo'lib qoladi, takror server tomonda rad etiladi).
+    if (xabarApi && S) {
+      try {
+        for (const q of await xabarApi.ochiqlar(S.questions.map((x) => x.id))) xabarlar.add(q);
+      } catch { /* */ }
     }
     saqla();
     holatgaOt(false);
@@ -1199,6 +1244,7 @@ const IK = {
   .yigma { display: flex; flex-direction: column; gap: var(--b-3); }
   .yigma > :not(summary) { margin-top: var(--b-3); }
   .redo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
+  .natija-xabar { align-self: flex-start; }
   .redo-holat { margin: 0; display: inline-flex; align-items: center; gap: var(--b-2); font-weight: 700; font-size: var(--matn-kichik); }
   .redo-ikonka { color: var(--rang-havola); }
   .sabab { flex-basis: 100%; display: flex; flex-direction: column; gap: var(--b-2); }

@@ -53,6 +53,8 @@ export const kvotaNomi: Record<string, string> = {
   review_sessions: 'Review sessions',
   new_words: 'New words', // P15
   plan_rebuilds: 'Plan rebuilds', // P13
+  ai_messages: 'AI tutor messages', // P33
+  ai_messages_month: 'AI tutor messages this month', // P33
 };
 
 /** plans.features dagi mashina bayrog'i -> Free ga tushganda "nima cheklanadi" ro'yxatidagi nom (P22). */
