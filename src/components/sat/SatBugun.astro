@@ -7,6 +7,8 @@
 // kirish sahifasi avvalgidek). Yangi localStorage kaliti yo'q: tayanch:auth (sessiya bormi) va tayanch:sat-reja faqat o'qiladi.
 // Ko'rinish <html data-sat-kirgan> belgisiga bog'liq (SatKirganBelgi, sahifa chizilishidan oldin); belgisiz blok ko'rinmaydi.
 // Sessiya serverda tasdiqlanmasa belgi olib tashlanadi va kirish sahifasi avvalgidek qoladi.
+// Kunlik maqsad satri (2026-11-13): tayanch:sat-afzallik.kunlikDaqiqa faqat o'qiladi (holat.ts), My SAT profile'ga havola.
+// Vaqt o'lchanmaydi va streak hisoblanmaydi (4-bosqich). Sinxron (tayanch:holat-yangilandi) va bfcache (pageshow) da yangilanadi.
 import { yol } from '../../lib/yol';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
@@ -16,6 +18,10 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
     <h2 id="bugun-h">Today</h2>
     <a class="bugun-hammasi" href={sat('vosita/natijalar/')}>See all progress</a>
   </div>
+  <p class="bugun-maqsad" data-b-maqsad>
+    <span class="maqsad-matn" data-b-maqsad-matn hidden></span>
+    <a href={sat('hisob/profil/#afz-h')} data-b-maqsad-havola aria-label="Set a daily study goal in your SAT profile">Set a daily goal</a>
+  </p>
 
   <div class="bugun-tor" data-b-tor>
     <article class="asosiy" aria-labelledby="asosiy-h">
@@ -53,6 +59,9 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
   .bugun-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-4); }
   .bugun-bosh h2 { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: var(--text-h2-weight); letter-spacing: var(--text-h2-ls); }
   .bugun-hammasi { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: 700; }
+  .bugun-maqsad { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); margin-top: calc(-1 * var(--space-2)); font-size: var(--text-small-size); }
+  .maqsad-matn { font-weight: 700; color: var(--color-text-primary); }
+  .bugun-maqsad a { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: 700; }
 
   .bugun-tor { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-4); }
   .bugun-tor[data-yakka] { grid-template-columns: minmax(0, 1fr); }
@@ -101,7 +110,9 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 <script>
   import { hisobMijoz } from '../../lib/hisob';
   import { tavsiyalar, xulosaOqi } from '../../lib/sat/analitika';
-  import { asosiyQadam, aniqlikMatn, rejaBormi, streakMatn, xatoDueSoni, type BugunKirish } from '../../lib/sat/bugun';
+  import { asosiyQadam, aniqlikMatn, kunlikMaqsad, rejaBormi, streakMatn, xatoDueSoni, type BugunKirish } from '../../lib/sat/bugun';
+  import { holatOqi } from '../../lib/holat';
+  import { AFZALLIK_KALITI, afzallikTozala } from '../../lib/sat/afzallik';
   import { KALIT_REJA } from '../../data/satDarslar/turlar';
   import type { MockStatus } from '../../lib/sat/mock';
   import type { BankRoyxat } from '../../lib/sat/xatoDaftari';
@@ -115,6 +126,17 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 
   function oqiReja(): boolean {
     try { return rejaBormi(localStorage.getItem(KALIT_REJA)); } catch { return false; }
+  }
+
+  /** Kunlik maqsad satri: faqat brauzerdagi afzallikdan (server so'rovi yo'q, skelet paytida ham darhol). */
+  function maqsadniChiz() {
+    const m = kunlikMaqsad(afzallikTozala(holatOqi(AFZALLIK_KALITI, null)).kunlikDaqiqa);
+    const matn = q('data-b-maqsad-matn');
+    matn.hidden = !m.matn;
+    matn.textContent = m.matn ?? '';
+    const h = q<HTMLAnchorElement>('data-b-maqsad-havola');
+    h.textContent = m.havola;
+    h.setAttribute('aria-label', m.havolaNomi);
   }
 
   const natija = <T,>(r: PromiseSettledResult<T>): T | null => (r.status === 'fulfilled' ? r.value : null);
@@ -224,6 +246,12 @@ const sat = (qism: string) => yol(`/uz/sat/${qism}`);
 
   async function boshla() {
     if (!quti) return;
+    maqsadniChiz();
+    window.addEventListener('tayanch:holat-yangilandi', (e) => {
+      const k = (e as CustomEvent<{ kalitlar?: string[] }>).detail?.kalitlar;
+      if (!k || k.includes(AFZALLIK_KALITI)) maqsadniChiz();
+    });
+    window.addEventListener('pageshow', (e) => { if (e.persisted) maqsadniChiz(); });
     // Dev mock (dist'da yo'q): ?bugun-mock=yangi|bosh-bank|toliq|mock|takror|xato
     if (import.meta.env.DEV) {
       const tur = new URLSearchParams(location.search).get('bugun-mock');
