@@ -35,6 +35,20 @@ import { yol } from '../../../../lib/yol';
         </form>
       </section>
 
+      <section class="hisob-karta" aria-labelledby="statistika-sarlavha">
+        <h2 id="statistika-sarlavha">Foydalanish statistikasi</h2>
+        <p class="hisob-sust">Sayt qanday ishlatilayotganini bilish uchun Tayanch bir nechta hodisani yozadi: ro'yxatdan o'tish, mashq sessiyasini boshlash va tugatish, kun savoliga javob, tariflar sahifasini ochish. Savol matni, javobingiz, email va IP manzil yozilmaydi. Batafsil: <a href={yol('/uz/maxfiylik/#statistika')}>Maxfiylik siyosati</a>.</p>
+        <p class="hisob-alert" id="statistika-xato" role="alert" hidden></p>
+        <div class="hisob-belgi-blok">
+          <div class="hisob-belgi">
+            <input type="checkbox" id="statistika-belgi" aria-describedby="statistika-izoh" disabled />
+            <label for="statistika-belgi">Foydalanish statistikasini ulashish</label>
+          </div>
+          <p class="hisob-sust" id="statistika-izoh">O'chirsangiz, avvalgi yozuvlar ham o'chiriladi. To'lov yozuvlari to'lov hisobi uchun qoladi.</p>
+        </div>
+        <p class="hisob-holat" id="statistika-holat" role="status" hidden></p>
+      </section>
+
       <section class="hisob-karta" aria-labelledby="chiqish-sarlavha">
         <h2 id="chiqish-sarlavha">Hisobdan chiqish</h2>
         <p class="hisob-sust">Shu qurilmada hisobdan chiqasiz. Brauzerda saqlangan natijalar shu yerda qoladi.</p>
@@ -122,7 +136,7 @@ import { yol } from '../../../../lib/yol';
     if (!c) return;
     const { data, error } = await c
       .from('profiles')
-      .select('display_name, nickname, target_score, current_score, exam_date')
+      .select('display_name, nickname, target_score, current_score, exam_date, usage_analytics')
       .eq('id', u.id)
       .maybeSingle();
     if (error || !data) {
@@ -137,7 +151,34 @@ import { yol } from '../../../../lib/yol';
     saqlanganSana = sana.value;
     sanaEslatma();
     formaYoq(false);
+    statistika.checked = data.usage_analytics !== false;
+    statistika.disabled = false;
   }).catch(() => undefined); // xatoni HisobQorovul ko'rsatadi
+
+  // P25: "Foydalanish statistikasini ulashish". Belgi o'zgarishi bilan saqlanadi; xato bo'lsa belgi qaytariladi.
+  // O'chirilganda server avvalgi to'lovsiz hodisalarni o'chiradi (trigger events_optout).
+  const statistika = $<HTMLInputElement>('statistika-belgi');
+  statistika.addEventListener('change', async () => {
+    const c = hisobMijoz();
+    if (!c || !foydalanuvchiId) return;
+    const yangi = statistika.checked;
+    xabar($('statistika-xato'), null);
+    xabar($('statistika-holat'), null);
+    statistika.disabled = true;
+    const { data, error } = await c
+      .from('profiles')
+      .update({ usage_analytics: yangi })
+      .eq('id', foydalanuvchiId)
+      .select('id');
+    statistika.disabled = false;
+    if (error || !data?.length) {
+      statistika.checked = !yangi;
+      return xabar($('statistika-xato'), "Sozlamani saqlab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.");
+    }
+    xabar($('statistika-holat'), yangi
+      ? 'Saqlandi. Statistika yoziladi.'
+      : "Saqlandi. Statistika endi yozilmaydi, avvalgi yozuvlar o'chirildi.");
+  });
 
   // SAT ball: 400–1600, qadam 10 (src/lib/satMaqsad.ts, SAT sozlash sahifasi bilan bir xil qoida).
   const ballMatn: Record<BallXato, string> = {

@@ -38,6 +38,7 @@ const ogTil = /\/uz\/sat(\/|$)/.test(Astro.url.pathname) ? 'en_US' : 'uz_UZ';
 <meta property="og:image:alt" content={ogRasm.alt} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image:alt" content={ogRasm.alt} />
+<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
 <script is:inline>
   (function () {
     var d = document.documentElement;

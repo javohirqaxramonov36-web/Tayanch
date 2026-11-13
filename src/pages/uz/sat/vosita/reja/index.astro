@@ -88,11 +88,11 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
       <p class="xato-xabar" id="r-xato" role="alert" hidden></p>
       <p class="kichik ikkinchi" id="kvota" hidden></p>
       <div class="tugmalar">
-        <button type="submit" class="katta asosiy" id="tuz">Make my plan</button>
+        <button type="submit" class="tugma tugma-asosiy" id="tuz">Make my plan</button>
         <span class="tasdiq" id="qayta-tasdiq" hidden>
           <span id="qayta-matn">A new plan replaces your current plan and its check marks.</span>
-          <button type="button" class="matn-tugma" id="qayta-ha">Replace plan</button>
-          <button type="button" class="matn-tugma" id="qayta-yoq">Cancel</button>
+          <button type="button" class="tugma tugma-matn" id="qayta-ha">Replace plan</button>
+          <button type="button" class="tugma tugma-matn" id="qayta-yoq">Cancel</button>
         </span>
       </div>
     </form>
@@ -102,10 +102,10 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
       <p class="kichik ikkinchi">Made with the earlier version of this planner and saved in this browser. It stays until you delete it. If you have no newer plan, its settings fill in the form.</p>
       <dl class="qiymatlar" id="eski-xulosa"></dl>
       <div class="tugmalar">
-        <button type="button" class="matn-tugma" id="eski-ochir">Delete previous plan</button>
+        <button type="button" class="tugma tugma-matn" id="eski-ochir">Delete previous plan</button>
         <span class="tasdiq" id="eski-tasdiq" hidden>Delete the previous plan from this browser?
-          <button type="button" class="matn-tugma" id="eski-ha">Yes, delete</button>
-          <button type="button" class="matn-tugma" id="eski-yoq">Cancel</button>
+          <button type="button" class="tugma tugma-matn" id="eski-ha">Yes, delete</button>
+          <button type="button" class="tugma tugma-matn" id="eski-yoq">Cancel</button>
         </span>
       </div>
     </section>
@@ -125,20 +125,20 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
         </div>
         <div class="kochir" id="kochir-blok" hidden>
           <p class="kichik" id="otkazilgan-matn"></p>
-          <button type="button" class="kichik-tugma" id="kochir">Move missed tasks</button>
+          <button type="button" class="tugma tugma-ikkinchi" id="kochir">Move missed tasks</button>
         </div>
         <p class="kichik natija-xabar" id="kochir-natija" aria-live="polite"></p>
         <div class="hisobga" id="hisobga" hidden>
           <p class="kichik">This plan is saved only in this browser.</p>
-          <button type="button" class="kichik-tugma" id="hisobga-saqla">Save this plan to your account</button>
+          <button type="button" class="tugma tugma-ikkinchi" id="hisobga-saqla">Save this plan to your account</button>
         </div>
       </div>
       <ol class="haftalar" id="haftalar"></ol>
       <div class="tugmalar">
-        <button type="button" class="matn-tugma" id="ochir">Delete plan</button>
+        <button type="button" class="tugma tugma-matn" id="ochir">Delete plan</button>
         <span class="tasdiq" id="ochir-tasdiq" hidden><span id="ochir-matn">Delete this plan and its check marks?</span>
-          <button type="button" class="matn-tugma" id="ochir-ha">Yes, delete</button>
-          <button type="button" class="matn-tugma" id="ochir-yoq">Cancel</button>
+          <button type="button" class="tugma tugma-matn" id="ochir-ha">Yes, delete</button>
+          <button type="button" class="tugma tugma-matn" id="ochir-yoq">Cancel</button>
         </span>
       </div>
       <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite"></p>
@@ -175,6 +175,7 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
   import { oqi, yoz } from '../../../../../lib/darsSaqlash';
   import { KALIT_REJA, KALIT_XATO_DAFTARI } from '../../../../../data/satDarslar/turlar';
   import { yol } from '../../../../../lib/yol';
+  import { holatOchir } from '../../../../../lib/holat';
 
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const ildiz = document.querySelector<HTMLElement>('.reja')!;
@@ -642,7 +643,7 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
       s.reja = brauzerRejani(oqi<unknown>(KALIT_HAFTALIK, null));
       s.manba = 'brauzer';
     } else {
-      try { localStorage.removeItem(KALIT_HAFTALIK); } catch { /* ruxsat yo'q */ }
+      holatOchir(KALIT_HAFTALIK);
       s.reja = null;
     }
     $('ochir-tasdiq').hidden = true;
@@ -656,7 +657,7 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
   $('eski-ochir').addEventListener('click', () => { $('eski-tasdiq').hidden = false; $('eski-ochir').hidden = true; $('eski-yoq').focus(); });
   $('eski-yoq').addEventListener('click', () => { $('eski-tasdiq').hidden = true; $('eski-ochir').hidden = false; $('eski-ochir').focus(); });
   $('eski-ha').addEventListener('click', () => {
-    try { localStorage.removeItem(KALIT_REJA); } catch { /* ruxsat yo'q */ }
+    holatOchir(KALIT_REJA);
     s.eski = null;
     eskiniChiz();
     maqsadInp.focus();
@@ -798,20 +799,13 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); line-height: 1.3; cursor: pointer;
     background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
   }
-  .chip:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .chip:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
   .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
   .chip:disabled { cursor: not-allowed; color: var(--matn-sust); border-style: dashed; }
   .taklif-belgi { font-size: var(--matn-mayda); font-weight: 800; padding: 1px 8px; border-radius: var(--r-toliq); border: 1.5px solid currentColor; }
 
   .xato-xabar { font-weight: 700; color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .katta { min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
-  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
-  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
-  .kichik-tugma { min-height: 44px; padding: 0 var(--b-5); border: 2px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; }
-  .kichik-tugma:hover { background: var(--sirt-ikkinchi); }
-  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
-  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
   .havola-tugma { border: 0; padding: 0; background: none; color: var(--rang-havola); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; min-height: 24px; }
   .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
 
@@ -862,6 +856,6 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
     .lead { font-size: 17px; }
     .forma { padding: var(--b-5); }
     .forma input[type='date'], .forma input[type='number'] { width: 100%; }
-    .katta { width: 100%; }
+    .tugma-asosiy { width: 100%; }
   }
 </style>
