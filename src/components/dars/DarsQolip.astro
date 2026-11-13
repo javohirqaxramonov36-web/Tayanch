@@ -79,13 +79,24 @@ const qadamlar = [
       </p>
       <h1>{sarlavha}</h1>
       <p class="lead">{lead}</p>
+      <a class="tugma tugma-ikkinchi mashqqa" href="#mashqlar">
+        {M.mashqqaOtish(savollar.length)}
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+      </a>
     </header>
 
     <section class="maqsad" aria-labelledby="maqsad-h">
-      <div class="maqsad-matn">
-        <h2 id="maqsad-h" class="kichik-h">{M.maqsad}</h2>
+      <details class="maqsad-matn" open data-maqsad-yigma>
+        <summary>
+          <h2 id="maqsad-h" class="kichik-h">{M.maqsad}</h2>
+          <svg class="maqsad-ok" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </summary>
         <ul>{maqsadlar.map((m) => <li>{m}</li>)}</ul>
-      </div>
+      </details>
+      <script is:inline>
+        // Telefonda "Bu darsdan keyin" yopiq: birinchi ekranga laboratoriya sig'adi. Chizilishdan oldin ishlaydi.
+        if (matchMedia('(max-width: 719px)').matches) document.querySelector('[data-maqsad-yigma]')?.removeAttribute('open');
+      </script>
       <div class="maqsad-progress">
         <p class="kichik"><span id="progress-son">0</span> / {savollar.length} {M.progress}</p>
         <div class="progress" aria-hidden="true"><span id="progress-chiziq"></span></div>
@@ -508,8 +519,15 @@ const qadamlar = [
   .dars .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
 
   .dars .maqsad { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-wrap: wrap; gap: var(--b-6); justify-content: space-between; }
-  .dars .maqsad-matn { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .dars .maqsad-matn { flex: 1 1 320px; min-width: 0; display: block; }
   .dars .maqsad ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-1); }
+  .dars .mashqqa { align-self: flex-start; gap: var(--b-2); }
+  .dars .maqsad-matn summary { display: flex; align-items: center; gap: var(--b-2); min-height: 44px; cursor: pointer; list-style: none; border-radius: var(--r-orta); }
+  .dars .maqsad-matn summary::-webkit-details-marker { display: none; }
+  .dars .maqsad-ok { flex: none; transition: transform var(--harakat-tez) var(--harakat-egri); }
+  .dars .maqsad-matn[open] .maqsad-ok { transform: rotate(180deg); }
+  .dars .maqsad-matn summary:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .dars .maqsad-matn[open] > ul { margin-top: var(--b-2); }
   .dars .maqsad-progress { flex: 0 1 240px; display: flex; flex-direction: column; gap: var(--b-2); justify-content: flex-end; }
   .dars .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .dars .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); }
@@ -674,6 +692,7 @@ const qadamlar = [
     .dars h1 { font-size: 34px; }
     .dars h2, .dars .manba h2 { font-size: 26px; }
     .dars .lead { font-size: 17px; }
+    .dars .maqsad { padding: var(--b-3) var(--b-5) var(--b-4); gap: var(--b-2); }
     .dars .savol-karta { padding: var(--b-5); }
     .dars .s-matn { font-size: 19px; }
     .dars .s-tugmalar .katta { flex: 1 1 100%; }
