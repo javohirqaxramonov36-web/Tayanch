@@ -233,11 +233,12 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'qollanma/strategiya/',
+        tayyor: true,
         nomi: 'Strategy',
-        tavsif: "Where to start your prep and how to plan it: based on the author's experience.",
+        tavsif: 'How the test is built (official) and habits for pacing, skipping, guessing and checking.',
         turi: 'qollanma',
-        manbalar: ['CB02'],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN],
+        manbalar: ['CB03', 'CB26', 'CB30'],
+        tekshirilmagan: ["The author's experience sections are not written yet."],
       },
       {
         qism: 'qollanma/math-desmos/',
@@ -258,11 +259,12 @@ export const satGuruhlar: SatGuruh[] = [
       },
       {
         qism: 'qollanma/vaqt/',
+        tayyor: true,
         nomi: 'Timing and retakes',
-        tavsif: 'Pacing your time in the test and planning a retake.',
+        tavsif: 'When to start, official test dates and score sending rules, and a checklist before a retake.',
         turi: 'qollanma',
-        manbalar: [],
-        tekshirilmagan: [UMUMIY_TEKSHIRILMAGAN, 'An official source for test timing and retake rules has not been added to the source log yet.'],
+        manbalar: ['CB31', 'CB32', 'CB33', 'CB34', 'CB35'],
+        tekshirilmagan: ["The author's experience sections are not written yet.", 'The checklist is a Tayanch recommendation, not an official list.'],
       },
     ],
   },
@@ -353,7 +355,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   {
     nomi: 'Learn',
     qismlar: [
-      { nomi: 'Guides', sahifalar: ['qollanma/qayerdan-boshlash/', 'qollanma/reading-writing/'].map(s) },
+      { nomi: 'Guides', sahifalar: ['qollanma/qayerdan-boshlash/', 'qollanma/reading-writing/', 'qollanma/strategiya/', 'qollanma/vaqt/'].map(s) },
       { nomi: 'Math lessons', sahifalar: ['hajm', 'grafik', 'birlik-aylana', 'statistika'].map((q) => s(`qollanma/math/${q}/`)) },
       { nomi: 'Reading & Writing lessons', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
     ],
