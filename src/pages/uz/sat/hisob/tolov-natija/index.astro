@@ -42,6 +42,7 @@ const obuna = yol('/uz/sat/hisob/obuna/');
 </BolimQobiq>
 
 <script>
+  import { tarifKeshiniTozala } from '../../../../../lib/sat/upgradeBandUlash';
   import { hisobMijoz, hisobQorovul } from '../../../../../lib/hisob';
   import { UUID, funksiya, oxirgiTolov, tolovniUnut } from '../../../../../lib/sat/tolov';
   import { satTarif } from '../../../../../data/satTarif';
@@ -81,7 +82,7 @@ const obuna = yol('/uz/sat/hisob/obuna/');
 
   async function sora(paymentId: string) {
     const r = await funksiya<{ status: string }>('inpay-holat', { payment_id: paymentId });
-    if (r.ok && r.data.status === 'success') { tolovniUnut(); return korsat('success', paymentId); }
+    if (r.ok && r.data.status === 'success') { tolovniUnut(); tarifKeshiniTozala(); return korsat('success', paymentId); }
     if (r.ok && r.data.status === 'failed') { tolovniUnut(); return korsat('failed', paymentId); }
     if (!r.ok && r.kod === 'not_found') return korsat('topilmadi');
     if (!r.ok && r.kod === 'not_signed_in') return location.reload();

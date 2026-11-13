@@ -196,6 +196,20 @@ const ieltsGuruhlar = [
   </nav>
 
   <div class="yon-past">
+    {bolim === 'sat' && !joriymi(b('hisob/obuna/')) && (
+      // Doimiy "Upgrade to Pro" bandi: faqat kirgan va Free tarifdagi foydalanuvchiga (src/lib/sat/upgradeBandUlash.ts).
+      <ul class="royxat tashqi upgrade-band" aria-label="Plan" data-upgrade-band hidden>
+        <li>
+          <a href={b('hisob/obuna/')} data-upgrade-havola>
+            <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5" /><path d="M6 11l6-6 6 6" /></svg>
+            <span class="yon-matn tashqi-matn">
+              <span data-upgrade-nom>Upgrade</span>
+              <span class="tashqi-izoh" data-upgrade-izoh>Compare plans</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    )}
     {hisobBand && (
       <ul class="royxat tashqi hisob-band" aria-label={M.hisob}>
         <li>
@@ -526,6 +540,11 @@ const ieltsGuruhlar = [
     :global([data-sidebar='yigilgan']) .yigish-strelka { transform: rotate(180deg); transform-origin: 14px 12px; }
   }
   .hisob-band .tashqi-izoh { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px; }
+  /* Upgrade bandi: bosimsiz (rangli fon, taymer yo'q), faqat ikonka asosiy rangda va yupqa chegara. */
+  .upgrade-band[hidden] { display: none; }
+  .upgrade-band a { border: 1px solid var(--chiziq-kuchli); }
+  .upgrade-band .ikonka { color: var(--rang-havola); }
+  .upgrade-band .tashqi-izoh { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px; }
 
 </style>
 
@@ -533,4 +552,6 @@ const ieltsGuruhlar = [
   // Hisob bandi (hamma qavat): kirgan/kirmagan holat, boshqa tabdagi o'zgarish ham. Mantiq: src/lib/hisobHolat.ts.
   import { hisobHavolalari } from '../lib/hisobHolat';
   hisobHavolalari();
+  // SAT: Upgrade bandi (band faqat SAT sahifalarida bor; boshqa qavatda modul hech narsa qilmaydi).
+  if (document.querySelector('[data-upgrade-band]')) import('../lib/sat/upgradeBandUlash').then((m) => m.upgradeBandUlash()).catch(() => {});
 </script>
