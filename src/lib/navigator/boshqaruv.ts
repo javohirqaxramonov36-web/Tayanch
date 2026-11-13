@@ -1,4 +1,7 @@
 // Navigator page controller: onboarding dialog + roadmap rendering. Browser only.
+// The dialog never opens by itself (N2, 2026-11-13). It opens only from a "Boshlash" control ([data-boshlash]:
+// hero button, header link) or once from /uz/?boshlash=1 (the header link on other pages). With a completed
+// profile, "Boshlash" scrolls to the roadmap instead; a skipped profile still opens the dialog.
 // All logic that can be unit-tested lives in the pure modules next to this file.
 import { navigatorMatni, type MuddatJavob } from '../../data/navigatorMatn.ts';
 import { MAQSADLAR, type Maqsad } from '../../data/navigatorSahifalar.ts';
@@ -46,6 +49,7 @@ export function navigatorniIshgaTushir(): void {
   const sanaMaydon = $<HTMLInputElement>('input[name="sana"]', dialog);
   const sanaXato = $('[data-onb-sana-xato]', dialog);
   const qaytaBtn = $<HTMLButtonElement>('[data-yol-qayta]', blok);
+  const boshlashlar = () => [...document.querySelectorAll<HTMLElement>('[data-boshlash]')];
   const salomEl = $('[data-yol-salom]', blok);
 
   let profil = profilniOqi(ombor);
@@ -143,13 +147,12 @@ export function navigatorniIshgaTushir(): void {
     qadamlarEl[n]?.querySelector<HTMLElement>('.onb-savol')?.focus();
   }
 
-  function och(r: Rejim) {
+  /** ochuvchi: the control that opened the dialog (focus returns there); null = opened from the URL. */
+  function och(r: Rejim, ochuvchi: HTMLElement | null) {
     rejim = r;
     yopishSababi = null;
     yakunlandi = false;
-    qaytarilsin = document.activeElement instanceof HTMLElement && document.activeElement !== document.body
-      ? document.activeElement
-      : null;
+    qaytarilsin = ochuvchi;
     formgaYoz(r === 'qayta' ? profil : null);
     dialog!.showModal();
     korsat(0);
@@ -176,8 +179,14 @@ export function navigatorniIshgaTushir(): void {
       yopishSababi = rejim === 'birinchi' ? 'otkazildi' : 'bekor';
     }
     chiz();
-    // Return focus: rebuild button (or whatever opened it); after first run, the roadmap heading.
-    const nishon = yopishSababi === 'bekor' ? qaytarilsin ?? qaytaBtn : salomEl;
+    // Return focus: saved → the new roadmap heading; skipped → the "Boshlash" control that opened it
+    // (hero button when opened from ?boshlash=1); cancelled rebuild → the rebuild button.
+    const heroBtn = document.querySelector<HTMLElement>('[data-boshlash="hero"]');
+    const nishon = yopishSababi === 'saqlandi'
+      ? salomEl
+      : yopishSababi === 'otkazildi'
+        ? qaytarilsin ?? heroBtn ?? salomEl
+        : qaytarilsin ?? qaytaBtn;
     nishon.focus();
   }
 
@@ -263,7 +272,37 @@ export function navigatorniIshgaTushir(): void {
     }
   });
 
-  qaytaBtn.addEventListener('click', () => och('qayta'));
+  qaytaBtn.addEventListener('click', () => och('qayta', qaytaBtn));
+
+  // ---------- "Boshlash" ----------
+  /** Completed profile → go to the roadmap; no profile or a skipped one → open first-run onboarding. */
+  function boshla(ochuvchi: HTMLElement | null) {
+    if (dialog!.open) return;
+    if (profil && !profil.skipped) {
+      const tinch = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      blok!.scrollIntoView({ behavior: tinch ? 'auto' : 'smooth', block: 'start' });
+      salomEl.focus({ preventScroll: true });
+      return;
+    }
+    och('birinchi', ochuvchi);
+  }
+
+  // Delegated: covers the hero button and the header link on this page (no reload).
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const el = (e.target as Element | null)?.closest<HTMLElement>('[data-boshlash]');
+    if (!el) return;
+    e.preventDefault();
+    boshla(el);
+  });
+
+  // ?boshlash=1: drop the parameter at once so a reload does not reopen the dialog.
+  const manzil = new URL(window.location.href);
+  const urldanBoshla = manzil.searchParams.get('boshlash') === '1';
+  if (manzil.searchParams.has('boshlash')) {
+    manzil.searchParams.delete('boshlash');
+    history.replaceState(history.state, '', manzil.pathname + manzil.search + manzil.hash);
+  }
 
   // ---------- roadmap rendering ----------
   function el<K extends keyof HTMLElementTagNameMap>(teg: K, klass?: string, matn?: string) {
@@ -275,6 +314,9 @@ export function navigatorniIshgaTushir(): void {
 
   function chiz() {
     document.documentElement.setAttribute('data-yol', profil ? 'bor' : 'yoq');
+    // "Boshlash" opens a dialog unless the profile is complete (then it is an in-page jump).
+    const dialogOchadi = !profil || profil.skipped;
+    boshlashlar().forEach((b) => (dialogOchadi ? b.setAttribute('aria-haspopup', 'dialog') : b.removeAttribute('aria-haspopup')));
     if (!profil) return;
     const hozir = new Date();
     const holat = muddatHolati(profil, hozir);
@@ -345,15 +387,15 @@ export function navigatorniIshgaTushir(): void {
   // ---------- start ----------
   chiz();
   void (async () => {
-    // Signed-in user: pull/push the account copy first. Without a local profile we wait (bounded) so a
-    // returning user on a new device does not see onboarding flash before their roadmap arrives.
+    // Signed-in user: pull/push the account copy first. Without a local profile we wait (bounded) so that
+    // ?boshlash=1 sends a returning user on a new device to their roadmap instead of the onboarding.
     if (kirganFoydalanuvchi()) {
       const sinxron = sinxronla(ombor).then((yangi) => {
         if (yangi) { profil = yangi; if (!dialog.open) chiz(); }
       });
       if (!profil) await Promise.race([sinxron, new Promise((r) => setTimeout(r, SINXRON_KUTISH_MS))]);
     }
-    if (!profil && !dialog.open) och('birinchi');
+    if (urldanBoshla) boshla(null);
   })();
 
   // Re-render when another tab/module changes the profile or the override, and when the tab
