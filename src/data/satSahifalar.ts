@@ -270,13 +270,14 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Account',
     sahifalar: [
       {
-        qism: 'hisob/maqsad/',
+        // 2026-11-13: SAT "men" markazi (maqsad, afzalliklar, saqlangan ish, tarif). Hisob sozlamalari 1-qavatda.
+        qism: 'hisob/profil/',
         tayyor: true,
-        nomi: 'Goal and test date',
-        tavsif: 'Set your target SAT score, your best score so far and your test date. You can change them any time.',
+        nomi: 'My SAT profile',
+        tavsif: 'Your SAT goal and test date, study preferences, saved work and plan in one place.',
         turi: 'vosita',
-        manbalar: ['CB04', 'CB14'],
-        tekshirilmagan: ['Whether every official date is offered at test centers in Uzbekistan.'],
+        manbalar: [],
+        tekshirilmagan: ['Saved work counts have not been checked with a real account yet.'],
       },
       {
         qism: 'hisob/obuna/',
@@ -349,7 +350,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/mock/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
   { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/', 'guruh/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/profil/', 'hisob/obuna/', 'hisob/fikr/', 'guruh/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];
 
@@ -405,6 +406,16 @@ export const satIchkiSahifalar: SatSahifa[] = [
       'Module times (32 and 35 minutes) and the break (10 minutes) follow the official test. The real test also has unscored pretest questions; this mock does not.',
       'The estimated score is a simple Tayanch formula, not the College Board scoring method.',
     ],
+  },
+  {
+    // P12: yon panelda emas (2026-11-13 dan My SAT profile o'rnida); profil, SAT bosh sahifasi va onboarding'dan ochiladi.
+    qism: 'hisob/maqsad/',
+    tayyor: true,
+    nomi: 'Goal and test date',
+    tavsif: 'Set your target SAT score, your best score so far and your test date. You can change them any time.',
+    turi: 'vosita',
+    manbalar: ['CB04', 'CB14'],
+    tekshirilmagan: ['Whether every official date is offered at test centers in Uzbekistan.'],
   },
   {
     // P34: taklif kodi bilan guruhga qo'shilish (Groups sahifasidan va o'qituvchining havolasidan, ?kod=).
