@@ -61,7 +61,7 @@ export function kursSavoliniOqi(s, mavzu, fayl, muallif) {
       s.choices.some((x) => !matnmi(x, 160)) || !variantKalitlari.includes(s.answer) || s.accepted != null)) {
     throw new Error('MCQ: 4 ta A–D variant va bitta javob harfi kerak');
   }
-  if (s.check_choices !== undefined && (!mcq || !Array.isArray(s.check_choices)
+  if (s.check_choices !== undefined && (!mcq || s.check?.kind === 'linear_count' || !Array.isArray(s.check_choices)
       || s.check_choices.length !== 4 || s.check_choices.some((x) => !matnmi(x, 160)))) {
     throw new Error('check_choices: MCQ uchun to‘rtta matematik ifoda kerak');
   }

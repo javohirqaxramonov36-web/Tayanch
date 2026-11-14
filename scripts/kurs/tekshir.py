@@ -120,6 +120,7 @@ def solve(check, spr):
     require(isinstance(check, dict), "check: obyekt kerak")
     kind = check.get("kind")
     fields = {"expression": {"expression"}, "linear": {"equations", "variables", "target"},
+              "linear_count": {"equations", "variables"},
               "inequality": {"relations", "variables"}, "relation": {"expression", "variables"},
               "alternatives": {"expressions"}}
     require(isinstance(kind, str) and kind in fields and set(check) == fields[kind] | {"kind"},
@@ -155,11 +156,21 @@ def solve(check, spr):
         elif equation is not sp.true:
             require(isinstance(equation, sp.Equality), "check: tenglama kerak")
             polys.append(linear(equation.lhs - equation.rhs, symbols).as_expr())
-    target = expression(check["target"])
-    require(target.free_symbols <= set(symbols), "check: target o‘zgaruvchisi noma’lum")
+    count = kind == "linear_count"
+    if count:
+        require(not spr, "check: linear_count faqat MCQ uchun")
+    else:
+        target = expression(check["target"])
+        require(target.free_symbols <= set(symbols), "check: target o‘zgaruvchisi noma’lum")
     if inconsistent:
-        return sp.S.EmptySet
-    solutions = sp.linsolve(polys or [sp.S.Zero], symbols)
+        solutions = sp.S.EmptySet
+    else:
+        solutions = sp.linsolve(polys or [sp.S.Zero], symbols)
+    if count:
+        if solutions is sp.S.EmptySet:
+            return "no solution"
+        (solution,) = solutions
+        return "infinitely many solutions" if any(value.free_symbols for value in solution) else "exactly one solution"
     if solutions is sp.S.EmptySet:
         return solutions
     (solution,) = solutions
@@ -204,6 +215,14 @@ def equivalent(left, right):
 
 
 def mcq(check, correct, choices, key):
+    if check["kind"] == "linear_count":
+        labels = [text.strip().lower() for text in choices]
+        require(len(labels) == 4 and set(labels) == {
+            "no solution", "exactly one solution", "exactly two solutions", "infinitely many solutions",
+        }, "MCQ: yechim sonini ifodalovchi to‘rtta farqli variant kerak")
+        require(labels[key] == correct, "MCQ: yechimlar soni kalitga mos emas")
+        return
+
     def choice(text):
         if text == "no solution":
             return sp.S.EmptySet

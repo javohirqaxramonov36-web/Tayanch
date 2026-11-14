@@ -120,6 +120,7 @@ explanation_uz (Foundation'da majburiy), check (Math: sympy ifodasi), reviewed, 
 | --- | --- |
 | `expression` | `expression` (hisoblanadigan matn) |
 | `linear` | `equations` (1–3 matn), `variables` (1–2 nom), `target` (topiladigan ifoda yoki nuqta) |
+| `linear_count` | `equations` (1–3 matn), `variables` (1–2 nom). MCQ variantlari `No solution`, `Exactly one solution`, `Exactly two solutions` va `Infinitely many solutions`. |
 | `inequality` | `relations` (1–3 matn, kesishma), `variables` (1 nom) |
 | `relation` | `expression` (chiziq yoki yarim tekislik), `variables` (2 nom) |
 | `alternatives` | `expressions` (SPR uchun 2–4 takrorsiz ratsional qiymatni beradigan matn) |

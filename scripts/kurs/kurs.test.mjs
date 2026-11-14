@@ -172,6 +172,33 @@ test('chiziqli sistemalar va tengsizliklar, barcha variantlar SymPy orqali', () 
   }
 });
 
+test('MCQ chiziqli yechimlar sonini va so‘zli variantlarni alohida tekshiradi', () => {
+  const fayl = savolYoli(mA1);
+  const asl = readFileSync(fayl, 'utf8');
+  const savollar = JSON.parse(asl);
+  const choices = ['No solution', 'Exactly one solution', 'Exactly two solutions', 'Infinitely many solutions'];
+  const misollar = [['x+1=x+2', 'A'], ['2*x=8', 'B'], ['2*(x+1)=2*x+2', 'D']];
+  const tekshirA1 = () => kursniTekshir({ papka, muallif, mavzuId: 'A1' });
+  try {
+    for (const [i, [tenglama, answer]] of misollar.entries()) {
+      Object.assign(savollar[mA1.spr + i], {
+        check: { kind: 'linear_count', equations: [tenglama], variables: ['x'] }, choices, answer,
+      });
+    }
+    yoz(fayl, savollar);
+    assert.deepEqual(tekshirA1().xatolar, []);
+
+    savollar[mA1.spr].answer = 'B';
+    savollar[mA1.spr + 2].choices = ['0', ...choices.slice(1)];
+    yoz(fayl, savollar);
+    const { xatolar } = tekshirA1();
+    assert.ok(xatolar.some((xato) => xato.includes('yechimlar soni kalitga mos emas')));
+    assert.ok(xatolar.some((xato) => xato.includes('to‘rtta farqli variant')));
+  } finally {
+    writeFileSync(fayl, asl);
+  }
+});
+
 function daraxt(ildiz) {
   return readdirSync(ildiz, { withFileTypes: true }).flatMap((entry) => {
     const yol = join(ildiz, entry.name);
