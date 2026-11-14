@@ -273,8 +273,9 @@ begin
   insert into public.official_tests (test_name, total_score) values ('SINOV test', 1300);
   insert into public.official_mistakes (official_test_id, section, module, question_number)
     select id, 'math', 1, 5 from public.official_tests limit 1;
-  insert into public.study_plans (title) values ('SINOV reja');
-  insert into public.plan_tasks (plan_id, title) select id, 'SINOV vazifa' from public.study_plans limit 1;
+  -- P13: reja faqat RPC orqali (to'g'ridan insert yopiq, reja_test.sql R02).
+  perform public.save_study_plan('{"title": "SINOV reja", "hours_per_week": 4}',
+                                 '[{"title": "SINOV vazifa", "due_on": "2026-11-20", "ref": "/uz/sat/mashq/bank/"}]');
   insert into public.feedback (message) values ('SINOV fikr');
   insert into public.reports (question_id, reason) values (q1, 'typo');
   -- P25 (20261112143717): events ga faqat private.track yozadi, mijoz faqat track_event('plan_viewed').
