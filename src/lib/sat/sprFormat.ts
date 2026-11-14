@@ -3,9 +3,8 @@
 // Qoidalar P02 normallashiga mos: .5 = 0.5 = 1/2; kasr surati va maxraji butun son;
 // rad: aralash son (1 1/2), vergul (1,5), plyus (+2), maxraj 0, bir nechta minus.
 
-/** Bluebook'dagi belgi soni chegarasi (musbat / manfiy javob). Rasmiy manba bilan TEKSHIRILMAGAN
- *  (needs verification, P06 muallif qarori 2026-11-09): manba tasdiqlanguncha null = cheklov yo'q. */
-export const SPR_UZUNLIK: { musbat: number | null; manfiy: number | null } = { musbat: null, manfiy: null };
+/** Kursdagi belgi chegarasi. Bank va mock avvalgi SPR formatidan foydalanadi. */
+export const SPR_UZUNLIK = { musbat: 5, manfiy: 6 };
 
 export type SprNatija =
   | { ok: true; qiymat: string; korinish: string }
@@ -22,8 +21,10 @@ export function sprNormalla(xom: string): string {
     .replace(/\s*\/\s*/, '/');
 }
 
-export function sprTekshir(xom: string): SprNatija {
-  const s = sprNormalla(xom);
+export function sprTekshir(xom: string, kurs = false): SprNatija {
+  if (kurs && xom.length > 100) return { ok: false, xabar: 'Enter a shorter answer.' };
+  // Kurs va SQL bir xil bo'shliq to'plamini taniydi.
+  const s = sprNormalla(kurs ? xom.replace(/[\u0009-\u000D\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]/g, ' ') : xom);
   if (!s) return { ok: false, xabar: 'Enter an answer.' };
   if (s.includes(',')) return { ok: false, xabar: 'Use a period for decimals, not a comma: 1.5, not 1,5.' };
   if (/^-?\d+\s+\d+\/\d+$/.test(s)) {
@@ -46,9 +47,10 @@ export function sprTekshir(xom: string): SprNatija {
     if ((tana.match(/\./g) ?? []).length > 1) return { ok: false, xabar: 'Use only one decimal point.' };
     if (!/\d/.test(tana)) return { ok: false, xabar: 'Enter at least one digit.' };
   }
-  const chegara = s.startsWith('-') ? SPR_UZUNLIK.manfiy : SPR_UZUNLIK.musbat;
-  if (chegara !== null && s.length > chegara) {
-    return { ok: false, xabar: `The answer can have at most ${chegara} characters.` };
+  if (kurs) {
+    if (s.endsWith('.')) return { ok: false, xabar: 'Enter a digit after the decimal point, or leave out the point.' };
+    const chegara = s.startsWith('-') ? SPR_UZUNLIK.manfiy : SPR_UZUNLIK.musbat;
+    if (s.length > chegara) return { ok: false, xabar: `The answer can have at most ${chegara} characters.` };
   }
   return { ok: true, qiymat: s, korinish: s.replace('-', '−') };
 }

@@ -23,6 +23,13 @@
     "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",
     "savol:tasdiqla": "node scripts/savol-tasdiqla.mjs",
     "savol:import": "node --env-file-if-exists=.env scripts/savol-import.mjs",
+    "kurs:tekshir": "node scripts/kurs.mjs",
+    "kurs:import": "node scripts/kurs.mjs dry-run",
+    "kurs:tasdiqla": "node scripts/kurs.mjs tasdiqla",
+    "kurs:kochir": "node scripts/kurs.mjs kochir",
+    "kurs:konvert": "node scripts/kurs/konvert.mjs",
+    "kurs:korib-chiq": "node scripts/kurs/koribChiq.mjs",
+    "kurs:sinov": "node --test scripts/kurs/kurs.test.mjs",
     "savol:sinov": "node --test scripts/savol/savol.test.mjs",
     "sinxron:tekshir": "node scripts/sinxron-test.ts"
   },

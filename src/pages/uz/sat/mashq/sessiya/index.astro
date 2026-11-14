@@ -1,9 +1,9 @@
 ---
 // Mashq sessiyasi (P08): Savol bankida tanlangan savollarni birma-bir yechish. Fokus qolipi, yon panelsiz.
 // Manzil: /uz/sat/mashq/sessiya/?id=<session_id> (javoblar URL da emas). Server: get_session, submit_answer,
-// finish_session, add_to_review (supabase/migrations/20261110120000_sessiya.sql), review_queue (RLS).
+// finish_session, finish_course_mini_test, add_to_review va review_queue (RLS).
 // Taymersiz rejim: "Check" → natija va tushuntirish darhol. Taymerli rejim: javoblar oxirigacha o'zgaradi, "Finish"
-// yoki vaqt tugaganda yuboriladi, tushuntirishlar natija sahifasida (muallif qarori, 2026-11-10).
+// yoki vaqt tugaganda yuboriladi. Kurs mini-testida taymer yo'q, javoblar faqat Finish'da birga yuboriladi.
 // Sof mantiq: src/lib/sat/sessiya.ts. Dev mock: src/lib/sat/sessiyaMock.ts (?mock=..., faqat DEV).
 import SatFokus from '../../../../../layouts/SatFokus.astro';
 import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
@@ -13,9 +13,11 @@ import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
 import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
+import { kursNatijaHavolalari, kursOchiq, kursPreview } from '../../../../../lib/sat/kursKatalog';
 
 const sahifa = ichkiSahifa('mashq/sessiya/');
 const bankUrl = yol('/uz/sat/mashq/bank/');
+const kursYollar = kursPreview || kursOchiq ? JSON.stringify(kursNatijaHavolalari()) : undefined;
 const IK = {
   xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
   soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
@@ -51,7 +53,8 @@ const IK = {
   </div>
 
   <SavolUslub />
-  <div class="sessiya" id="sessiya" data-bank-url={bankUrl} data-kirish-url={yol('/uz/hisob/kirish/')} data-rejalar-url={yol('/uz/hisob/profil/')}>
+  <div class="sessiya" id="sessiya" data-bank-url={bankUrl} data-kirish-url={yol('/uz/hisob/kirish/')} data-rejalar-url={yol('/uz/hisob/profil/')} data-kurs-yollar={kursYollar}
+    data-redo-url={yol('/uz/sat/vosita/takrorlash/')} data-natijalar-url={yol('/uz/sat/vosita/natijalar/')}>
     {import.meta.env.DEV && <p class="pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
 
     <section class="holat-karta" id="yuklash" role="status">
@@ -89,6 +92,7 @@ const IK = {
       <p id="yuborish-matn" class="holat-matn" role="status"></p>
       <div class="holat-amal">
         <button type="button" class="asosiy-tugma" id="yuborish-qayta" hidden>Try again</button>
+        <a class="ikkinchi-tugma" id="yuborish-rejalar" hidden>See plans</a>
       </div>
     </section>
 
@@ -139,12 +143,13 @@ const IK = {
   import { savolChiz, type SavolKorsatkich } from '../../../../../lib/sat/savolKorsatkich';
   import { BOSH_HOLAT, type SavolHolati } from '../../../../../lib/sat/savolTuri';
   import { sprTekshir } from '../../../../../lib/sat/sprFormat';
+  import { miniTestOtdimi } from '../../../../../lib/sat/kursNatija';
   import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
   import type { XabarApi } from '../../../../../lib/sat/xabar';
   import { xabarDialogUlash, supabaseXabarApi } from '../../../../../lib/sat/xabarDialog';
   import { supabaseTaklifManba, tarifTaklifiniOch, type TaklifManba } from '../../../../../lib/sat/tarifDialog';
   import {
-    MAHALLIY_KALIT, mahalliyniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
+    MAHALLIY_KALIT, mahalliyniTekshir, kursQoralamasiniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
     xarita, xaritaYorliq, navbatgaQosh, keyingiUrinishMs, sessiyaXatosi, idTogrimi, hisobot, SABABLAR, sababTogrimi,
     type Mahalliy, type SessiyaApi, type SessiyaJavob, type ServerSavol, type YuborJavob, type NatijaBand,
   } from '../../../../../lib/sat/sessiya';
@@ -152,6 +157,7 @@ const IK = {
   const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
   const ildiz = $('sessiya');
   const BANK = ildiz.dataset.bankUrl!;
+  const kursYollar: Record<string, { mavzu: string; keyingi?: string }> = JSON.parse(ildiz.dataset.kursYollar ?? '{}');
   const SINF = { flag: ['M4 22V4', 'M4 4h13l-2 4 2 4H4'], togri: ['M5 12l5 5L20 7'], xato: ['M6 6l12 12M18 6L6 18'] };
 
   // ---------- Holat ----------
@@ -184,8 +190,11 @@ const IK = {
   let sinxronTaymer: ReturnType<typeof setTimeout> | undefined;
 
   const taymerli = () => S?.mode === 'timed';
+  const miniTest = () => S?.mode === 'mini_test';
+  const yakundaYuboriladi = () => taymerli() || miniTest();
   const savollar = (): ServerSavol[] => S?.questions ?? [];
   const joriySavol = () => savollar()[m.joriy];
+  const kursSavoli = (q: ServerSavol) => !!S?.course || ('course_question' in q && q.course_question === true);
   const navbatda = (qid: string) => m.navbat.some((b) => b.qid === qid);
   const javobBor = (qid: string) => javoblar.has(qid);
   const yakunlangan = () => !!S?.finished_at;
@@ -202,6 +211,27 @@ const IK = {
     const vaqt = { ...boshqa.vaqt };
     for (const [k, v] of Object.entries(m.vaqt)) vaqt[k] = Math.max(v, vaqt[k] ?? 0);
     m = { ...boshqa, joriy: m.joriy, vaqt };
+    qoralamaniTozala();
+  }
+
+  function qoralamaniTozala() {
+    if (S?.course) {
+      const toza = kursQoralamasiniTekshir(m, new Set(savollar().map(({ id }) => id)));
+      if (toza !== m) { m = toza; saqla(); }
+    }
+    if (!miniTest()) return;
+    const toza: Mahalliy['qoralama'] = {};
+    for (const q of savollar()) {
+      const qiymat = m.qoralama[q.id];
+      if (typeof qiymat !== 'string') continue;
+      if (q.format === 'spr') {
+        const natija = sprTekshir(qiymat, true);
+        if (natija.ok) toza[q.id] = natija.qiymat;
+      } else if (q.options?.some(({ key }) => key === qiymat)) {
+        toza[q.id] = qiymat;
+      }
+    }
+    m.qoralama = toza;
   }
 
   // ---------- Vaqt ----------
@@ -209,7 +239,7 @@ const IK = {
   function vaqtYig() {
     const q = joriySavol();
     const hozir = performance.now();
-    if (q && ekran === 'savol' && !document.hidden && (taymerli() || !(javobBor(q.id) || navbatda(q.id)))) {
+    if (q && ekran === 'savol' && !document.hidden && (yakundaYuboriladi() || !(javobBor(q.id) || navbatda(q.id)))) {
       m.vaqt[q.id] = Math.round((m.vaqt[q.id] ?? 0) + (hozir - kirgan));
     }
     kirgan = hozir;
@@ -285,6 +315,9 @@ const IK = {
     const tur = sessiyaXatosi(e);
     if (tur === 'kirish') return xabarKorsat('Sign in to continue', 'Practice sessions are saved to your Tayanch account.', { havola: { href: kirishHavolasi(), matn: 'Sign in' } });
     if (tur === 'topilmadi') return xabarKorsat('Session not found', 'This session does not exist or belongs to another account. Start a new one from the question bank.', { havola: { href: BANK, matn: 'Go to the question bank' } });
+    if (tur === 'savol' && (e as { message?: string })?.message === 'question_unavailable') {
+      return xabarKorsat('A question is unavailable', 'A question in this session is no longer available.');
+    }
     if (tur === 'tarmoq') return xabarKorsat("Couldn't reach the server", 'Check your connection and try again. Your answers on this device are kept.', { qayta: true });
     return xabarKorsat('Something went wrong', 'The session did not load. Try again in a moment.', { qayta: true });
   }
@@ -292,7 +325,7 @@ const IK = {
   // ---------- Progress ----------
   function progressChiz() {
     const n = savollar().length;
-    const javob = xarita(savollar(), m, new Set(javoblar.keys()), taymerli()).filter((b) => b.holat === 'answered' || b.holat === 'pending').length;
+    const javob = xarita(savollar(), m, new Set(javoblar.keys()), yakundaYuboriladi()).filter((b) => b.holat === 'answered' || b.holat === 'pending').length;
     const p = $('fokus-progress');
     p.setAttribute('aria-valuemax', String(n));
     p.setAttribute('aria-valuenow', String(javob));
@@ -318,16 +351,16 @@ const IK = {
     const h = ui.get(q.id) ?? { ...BOSH_HOLAT, ochirilgan: [] };
     const j = javoblar.get(q.id);
     const band = m.navbat.find((b) => b.qid === q.id);
-    const javob = j?.answer ?? band?.javob ?? (taymerli() ? m.qoralama[q.id] : undefined);
-    const qulf = !taymerli() && (!!j || !!band);
+    const javob = j?.answer ?? band?.javob ?? (yakundaYuboriladi() ? m.qoralama[q.id] : undefined);
+    const qulf = !yakundaYuboriladi() && (!!j || !!band);
     return {
       ...h,
       javobBerilgan: qulf,
-      tanlangan: q.format === 'mcq' ? (javob ?? h.tanlangan) : null,
-      sprQiymat: q.format === 'spr' ? (javob ?? h.sprQiymat ?? '') : undefined,
+      tanlangan: q.format === 'mcq' ? (javob ?? (miniTest() ? null : h.tanlangan)) : null,
+      sprQiymat: q.format === 'spr' ? (javob ?? (miniTest() ? '' : h.sprQiymat ?? '')) : undefined,
       belgilangan: m.belgilar.includes(q.id),
       xabarlangan: xabarlar.has(q.id),
-      natija: j && !taymerli() ? { togrimi: j.is_correct, togriJavob: togriMatn(j.correct), izoh: j.explanation } : null,
+      natija: j && !yakundaYuboriladi() ? { togrimi: j.is_correct, togriJavob: togriMatn(j.correct), izoh: j.explanation } : null,
     };
   }
 
@@ -335,15 +368,22 @@ const IK = {
     ui.set(q.id, { ...holatOl(q), ...ozgar });
   }
 
-  /** Taymerli rejim: SPR maydonida yozilgan, lekin "Save answer" bosilmagan qiymat ham qoralamaga tushadi. */
+  const sprMaydon = () => $('savol-joy').querySelector<HTMLInputElement>('.sk-spr-maydon');
+  const sprXatosiBormi = () => miniTest() && korsatilgan === m.joriy && korsatkich?.sprXatosiBormi();
+
+  /** Yakunda yuboriladigan rejimda: SPR maydonida yozilgan, lekin "Save answer" bosilmagan qiymat ham qoralamaga tushadi. */
   function sprQoralamaOl() {
     const q = joriySavol();
-    if (!q || q.format !== 'spr' || !taymerli()) return;
-    const inp = $('savol-joy').querySelector<HTMLInputElement>('input[type="text"]');
+    if (!q || q.format !== 'spr' || !yakundaYuboriladi() || korsatilgan !== m.joriy) return;
+    const inp = sprMaydon();
     if (!inp) return;
-    const t = sprTekshir(inp.value);
-    if (t.ok) m.qoralama[q.id] = t.qiymat;
-    else if (!inp.value.trim()) delete m.qoralama[q.id];
+    const t = sprTekshir(inp.value, kursSavoli(q));
+    if (t.ok) {
+      m.qoralama[q.id] = t.qiymat;
+      if (miniTest()) m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
+    } else if (miniTest() || !inp.value.trim()) {
+      delete m.qoralama[q.id];
+    }
   }
 
   // Desmos havolasi faqat savol ekranida va Math savolida (P29). Tashqi skript yo'q, holat saqlanmaydi.
@@ -364,12 +404,13 @@ const IK = {
     const joy = $('savol-joy');
     korsatkich = savolChiz(joy, {
       savol: komponentSavoli(q, rasm),
+      kurs: kursSavoli(q),
       holat: holatOl(q),
-      rejim: taymerli() ? 'taymerli' : 'taymersiz',
+      rejim: yakundaYuboriladi() ? 'taymerli' : 'taymersiz',
       raqam: m.joriy + 1,
       onSelect: (k) => {
         uiYangila(q, { tanlangan: k });
-        if (taymerli()) {
+        if (yakundaYuboriladi()) {
           if (k) m.qoralama[q.id] = k; else delete m.qoralama[q.id];
           m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
           saqla();
@@ -378,7 +419,7 @@ const IK = {
       },
       onSubmitSpr: (v) => {
         uiYangila(q, { sprQiymat: v });
-        if (taymerli()) {
+        if (yakundaYuboriladi()) {
           m.qoralama[q.id] = v;
           m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
           saqla();
@@ -432,8 +473,8 @@ const IK = {
     const tekshirT = $<HTMLButtonElement>('tekshir');
     const keyingi = $<HTMLButtonElement>('keyingi');
     oldingi.disabled = m.joriy === 0;
-    if (taymerli()) {
-      otkaz.hidden = true;
+    if (yakundaYuboriladi()) {
+      otkaz.hidden = !(miniTest() && q.format === 'spr');
       tekshirT.hidden = true;
       keyingi.hidden = false;
       keyingi.textContent = oxirgi ? 'Review and finish' : 'Next';
@@ -448,7 +489,7 @@ const IK = {
   }
 
   function otish(i: number, fokus = true) {
-    if (!S || i < 0 || i >= savollar().length) return;
+    if (!S || i < 0 || i >= savollar().length || sprXatosiBormi()) return;
     sprQoralamaOl();
     vaqtYig();
     m.joriy = i;
@@ -459,7 +500,7 @@ const IK = {
   // ---------- Javob yuborish (navbat) ----------
   function tekshir(javob: string) {
     const q = joriySavol();
-    if (!q || taymerli() || javobBor(q.id) || navbatda(q.id) || yakunlangan()) return;
+    if (!q || yakundaYuboriladi() || javobBor(q.id) || navbatda(q.id) || yakunlangan()) return;
     vaqtYig();
     m.navbat = navbatgaQosh(m.navbat, { qid: q.id, javob, timeMs: m.vaqt[q.id] ?? 0 });
     m.otkazilgan = m.otkazilgan.filter((x) => x !== q.id);
@@ -481,9 +522,11 @@ const IK = {
     const h = $<HTMLAnchorElement>('saqlash-havola');
     h.hidden = !o.rejalar;
     h.href = ildiz.dataset.rejalarUrl!;
+    $<HTMLAnchorElement>('yuborish-rejalar').href = h.href;
     if (ekran === 'yuborish') {
       $('yuborish-matn').textContent = matn ?? '';
       $('yuborish-qayta').hidden = !o.qayta;
+      $('yuborish-rejalar').hidden = !o.rejalar;
     }
   }
 
@@ -556,6 +599,10 @@ const IK = {
 
   // ---------- Yakunlash ----------
   function yakunla(sabab: 'tugma' | 'vaqt' | 'davom'): Promise<void> {
+    if (sabab === 'tugma' && ekran === 'savol' && miniTest()) {
+      if (xaritaDialog.open) xaritaYop();
+      if (sprXatosiBormi()) return Promise.resolve();
+    }
     yakunVadasi ??= (async () => {
       if (ekran === 'savol') { sprQoralamaOl(); vaqtYig(); }
       if (xaritaDialog.open) xaritaYop();
@@ -570,7 +617,28 @@ const IK = {
       korsat('yuborish');
       $('yuborish-h').textContent = sabab === 'vaqt' ? "Time's up. Submitting your answers…" : 'Submitting your answers…';
       $('yuborish-h').focus();
+      saqlashHolati(null);
       progressChiz();
+      if (miniTest()) {
+        const javoblar = savollar().flatMap(({ id: qid }) => {
+          const answer = m.qoralama[qid];
+          return answer ? [{ question_id: qid, answer, time_ms: Math.min(m.vaqt[qid] ?? 0, 2147483647) }] : [];
+        });
+        try {
+          serverdanOl(await api!.miniTestniYakunla(id, javoblar));
+          holatgaOt(false);
+        } catch (e) {
+          const tur = sessiyaXatosi(e);
+          if (tur === 'tarmoq' || tur === 'boshqa') {
+            saqlashHolati("Your answers are saved on this device. Try again when you're connected.", { qayta: true });
+          } else if (tur === 'kvota') {
+            saqlashHolati("This submission exceeds your answer limit. Your answers are saved on this device.", { qayta: true, rejalar: true });
+          } else {
+            xatoEkrani(e);
+          }
+        }
+        return;
+      }
       // Navbat bo'shaguncha (tarmoq qaytishini kutadi)
       while (m.navbat.length) {
         await navbatniYubor();
@@ -595,7 +663,11 @@ const IK = {
   }
 
   function yakunlashniSora() {
-    const xb = xarita(savollar(), m, new Set(javoblar.keys()), taymerli());
+    if (miniTest()) {
+      if (sprXatosiBormi()) return;
+      sprQoralamaOl();
+    }
+    const xb = xarita(savollar(), m, new Set(javoblar.keys()), yakundaYuboriladi());
     const qolgan = xb.filter((b) => b.holat === 'unanswered' || b.holat === 'skipped').length;
     if (!qolgan) return yakunla('tugma');
     xaritaOch(qolgan === 1 ? '1 question has no answer. Finish anyway?' : `${qolgan} questions have no answer. Finish anyway?`);
@@ -606,7 +678,7 @@ const IK = {
   let xaritaOchuvchi: HTMLElement | null = null;
 
   function xaritaChiz(ogoh?: string) {
-    const xb = xarita(savollar(), m, new Set(javoblar.keys()), taymerli());
+    const xb = xarita(savollar(), m, new Set(javoblar.keys()), yakundaYuboriladi());
     const javob = xb.filter((b) => b.holat === 'answered').length;
     const belgi = xb.filter((b) => b.belgilangan).length;
     $('xarita-izoh').textContent = `${javob} of ${xb.length} answered${belgi ? ` · ${belgi} marked for review` : ''}`;
@@ -628,6 +700,7 @@ const IK = {
     }));
   }
   function xaritaOch(ogoh?: string) {
+    if (sprXatosiBormi()) return;
     xaritaOchuvchi = document.activeElement as HTMLElement | null;
     sprQoralamaOl();
     xaritaChiz(ogoh);
@@ -790,17 +863,18 @@ const IK = {
     const stem = el('div', 'natija-stem sk-matn');
     xavfsizMatn(b.savol.stem, stem);
     a.append(h, meta, stem);
-    if (b.natija) {
+    const yechim = b.natija ?? S?.skipped_solutions?.find((r) => r.question_id === b.savol.id);
+    if (yechim) {
       const j = el('p', 'natija-javob');
-      const siz = el('span', '', `Your answer: ${b.natija.answer}`);
-      const togri = el('span', '', `Correct answer: ${togriMatn(b.natija.correct)}`);
+      const siz = el('span', '', b.natija ? `Your answer: ${b.natija.answer}` : 'Not answered.');
+      const togri = el('span', '', `Correct answer: ${togriMatn(yechim.correct)}`);
       j.append(siz, togri);
       a.append(j);
-      if (b.natija.explanation) {
+      if (yechim.explanation) {
         const d = el('details', 'izoh-ochiq');
         const s = el('summary', '', 'Explanation');
         const ich = el('div', 'izoh-matn sk-matn');
-        xavfsizMatn(b.natija.explanation, ich);
+        xavfsizMatn(yechim.explanation, ich);
         d.append(s, ich);
         a.append(d);
       }
@@ -830,7 +904,8 @@ const IK = {
     const sarlavha = el('h1', 'natija-h', 'Session results');
     sarlavha.id = 'natija-h';
     sarlavha.tabIndex = -1;
-    const rejim = el('p', 'lead', `${taymerli() ? 'Timed' : 'Untimed'} practice · ${h.jami} ${h.jami === 1 ? 'question' : 'questions'}`);
+    const nom = miniTest() ? 'Topic mini-test' : S.course ? 'Course practice' : taymerli() ? 'Timed practice' : 'Untimed practice';
+    const rejim = el('p', 'lead', `${nom} · ${h.jami} ${h.jami === 1 ? 'question' : 'questions'}`);
 
     const statlar = el('dl', 'statlar');
     const stat = (dt: string, dd: string, izoh?: string) => {
@@ -840,8 +915,13 @@ const IK = {
       statlar.append(d);
     };
     stat('Score', `${h.foiz}%`, `${h.togri} of ${h.jami} correct`);
-    stat('Time', davomiylikMatni(h.vaqtMs), 'Spent on answered questions');
+    stat('Time', davomiylikMatni(S.elapsed_ms ?? h.vaqtMs), S.course ? 'From start to submission' : 'Spent on answered questions');
     stat('Answered', `${h.javobBerilgan} / ${h.jami}`, h.jami - h.javobBerilgan ? `${h.jami - h.javobBerilgan} skipped` : 'None skipped');
+    const miniHolat = miniTest() ? (miniTestOtdimi(h.togri, h.jami) ? 'Passed' : 'Not yet passed') : null;
+    if (miniHolat) {
+      stat('Mini-test result', miniHolat, 'The passing score is 70%.');
+      if (S.topic_passed && miniHolat !== 'Passed') stat('Topic status', 'Passed on an earlier attempt');
+    }
 
     const skill = el('section', 'natija-bolim');
     skill.setAttribute('aria-labelledby', 'skill-h');
@@ -893,9 +973,22 @@ const IK = {
     };
 
     const amal = el('div', 'natija-amal');
-    const bank = el('a', 'asosiy-tugma', 'Back to the question bank');
-    bank.href = BANK;
-    amal.append(bank);
+    const kursYoli = S.course && Object.hasOwn(kursYollar, S.course.topic_id) ? kursYollar[S.course.topic_id] : undefined;
+    const orqaga = el('a', 'asosiy-tugma', kursYoli ? 'Back to the topic' : 'Back to the question bank');
+    orqaga.href = kursYoli?.mavzu ?? BANK;
+    amal.append(orqaga);
+    if (kursYoli?.keyingi) {
+      const keyingi = el('a', 'ikkinchi-tugma', 'Next topic');
+      keyingi.href = kursYoli.keyingi;
+      amal.append(keyingi);
+    }
+    if (S.course) {
+      const redo = el('a', 'ikkinchi-tugma', 'Go to your redo list');
+      redo.href = ildiz.dataset.redoUrl!;
+      const natijalar = el('a', 'ikkinchi-tugma', 'View your analytics');
+      natijalar.href = ildiz.dataset.natijalarUrl!;
+      amal.append(redo, natijalar);
+    }
 
     quti.replaceChildren(sarlavha, rejim, statlar, skill);
     if (h.xatolar.length) quti.append(bolim('xato-h', 'Mistakes', 'Wrong answers go to your redo list automatically. Tag why you missed each one to see patterns later.', h.xatolar, 'xato'));
@@ -903,11 +996,26 @@ const IK = {
     if (h.otkazilgan.length) quti.append(bolim('otkaz-h', 'Skipped', null, h.otkazilgan, 'otkaz'));
     if (h.togrilar.length) quti.append(bolim('togri-h', 'Correct answers', 'Add a question to your redo list if you guessed or want to practice it again.', h.togrilar, 'togri', true));
     quti.append(amal);
+    return S.course ? `${h.togri} of ${h.jami} correct. ${h.otkazilgan.length} skipped.${miniHolat ? ` ${miniHolat}.` : ''}` : undefined;
   }
 
   // ---------- Yuklash va sinxronlash ----------
   function serverdanOl(j: SessiyaJavob) {
     S = j;
+    qoralamaniTozala();
+    if (j.course) {
+      $('fokus-ustki').textContent = miniTest() ? 'Topic mini-test' : 'Course practice';
+      if (Object.hasOwn(kursYollar, j.course.topic_id)) {
+        void import('../../../../../styles/kurs.css');
+        document.body.classList.add('kurs-sessiya');
+        const yopish = document.querySelector<HTMLAnchorElement>('.fokus-bosh .yopish');
+        const mavzuYoli = Object.hasOwn(kursYollar, j.course.topic_id) ? kursYollar[j.course.topic_id].mavzu : undefined;
+        if (yopish && mavzuYoli) {
+          yopish.href = mavzuYoli;
+          yopish.setAttribute('aria-label', 'Leave the session and go to the topic');
+        }
+      }
+    }
     soatOlingan = Date.now();
     javoblar.clear();
     for (const r of j.results ?? []) {
@@ -955,10 +1063,11 @@ const IK = {
       korsatkich?.yoq();
       korsatkich = null;
       korsat('natija');
-      natijaChiz();
+      const natijaEloni = natijaChiz();
       progressChiz();
       try { localStorage.removeItem(MAHALLIY_KALIT(id)); } catch { /* */ }
       $('natija-h').focus();
+      if (natijaEloni) elon(natijaEloni);
       return;
     }
     if (m.yakunlanmoqda || yakunlangan()) { yakunla('davom'); return; }
@@ -989,16 +1098,31 @@ const IK = {
   $('otkaz').addEventListener('click', () => {
     const q = joriySavol();
     if (!q) return;
+    if (miniTest()) {
+      const inp = sprMaydon();
+      if (inp) {
+        inp.value = '';
+        inp.dispatchEvent(new Event('input'));
+      }
+      delete m.qoralama[q.id];
+    }
     if (!m.otkazilgan.includes(q.id)) m.otkazilgan.push(q.id);
     saqla();
     if (m.joriy >= savollar().length - 1) { progressChiz(); return yakunlashniSora(); }
     otish(m.joriy + 1);
   });
   $('saqlash-qayta').addEventListener('click', () => { m.navbat.forEach((b) => (b.urinish = 0)); navbatniYubor(); });
-  $('yuborish-qayta').addEventListener('click', () => { m.navbat.forEach((b) => (b.urinish = 0)); dispatchEvent(new Event('online')); });
+  $('yuborish-qayta').addEventListener('click', () => {
+    if (miniTest()) { yakunla('davom'); return; }
+    m.navbat.forEach((b) => (b.urinish = 0));
+    dispatchEvent(new Event('online'));
+  });
   $('xabar-qayta').addEventListener('click', () => { korsat('yuklash'); boshla(); });
 
-  addEventListener('online', () => { if (m.navbat.length) navbatniYubor(); });
+  addEventListener('online', () => {
+    if (miniTest() && m.yakunlanmoqda && !yakunlangan()) { yakunla('davom'); return; }
+    if (m.navbat.length) navbatniYubor();
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { vaqtYig(); saqla(); return; }
     kirgan = performance.now();
@@ -1072,6 +1196,7 @@ const IK = {
       ol: (sid) => rpc<SessiyaJavob>('get_session', { p_session: sid }),
       yubor: (sid, qid, javob, t) => rpc<YuborJavob>('submit_answer', { p_session: sid, p_question: qid, p_answer: javob, p_time_ms: Math.round(t) }),
       yakunla: (sid) => rpc<{ finished_at: string }>('finish_session', { p_session: sid }),
+      miniTestniYakunla: (sid, javoblar) => rpc<SessiyaJavob>('finish_course_mini_test', { p_session: sid, p_answers: javoblar }),
       navbatgaQosh: async (qid) => { await rpc('add_to_review', { p_question: qid }); },
       navbatdanOl: async (qid) => {
         const { error } = await c.from('review_queue').delete().eq('question_id', qid);
@@ -1164,6 +1289,8 @@ const IK = {
   .sessiya-pastki #tekshir, .sessiya-pastki #keyingi { margin-left: auto; }
   .sessiya-pastki #otkaz:not([hidden]) + #tekshir { margin-left: 0; }
   .sessiya-pastki #otkaz { margin-left: auto; }
+  #keyingi { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  #keyingi:hover { background: var(--btn-primary-bg-hover); }
   .asosiy-tugma:focus-visible, .ikkinchi-tugma:focus-visible, .kichik-tugma:focus-visible, .matn-tugma:focus-visible,
   .katak:focus-visible, .yopish-tugma:focus-visible, .chip:focus-visible, .izoh-ochiq summary:focus-visible, .yigma summary:focus-visible {
     outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
@@ -1221,6 +1348,7 @@ const IK = {
   }
   .stat { padding: var(--b-5) var(--b-6); }
   .stat + .stat { border-left: 1px solid var(--chiziq); }
+  .stat:nth-child(4) { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--chiziq); }
   .stat dt { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
   .stat dd { margin: 0; }
   .stat-son { font-size: var(--matn-h3); font-weight: 900; font-variant-numeric: tabular-nums; }
@@ -1283,6 +1411,6 @@ const IK = {
     .statlar { grid-template-columns: 1fr 1fr; }
     .stat:first-child { grid-column: 1 / -1; }
     .stat + .stat { border-left: 0; border-top: 1px solid var(--chiziq); }
-    .stat:last-child { border-left: 1px solid var(--chiziq); }
+    .stat:nth-child(3) { border-left: 1px solid var(--chiziq); }
   }
 </style>
