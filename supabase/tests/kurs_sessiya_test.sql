@@ -175,6 +175,11 @@ begin
     'answer', case when pos <= 7 then 'A' else 'B' end, 'time_ms', 1200))
     into javoblar from jsonb_array_elements(p -> 'questions') with ordinality as a(item, pos);
   p := public.finish_course_mini_test(sid, javoblar);
+  if not (public.course_links() -> 'passed' ? 'A1')
+     or (public.course_links(array(select question_id from public.review_queue)) -> 'questions')
+       is distinct from (select jsonb_object_agg(question_id, 'A1') from public.review_queue) then
+    raise exception 'FAIL C05: kurs tavsiya va redo mavzusi';
+  end if;
   if (p ->> 'passed')::boolean is distinct from true or (p ->> 'topic_passed')::boolean is distinct from true
      or (select count(*) from public.review_queue) <> 3
      or (public.analytics_summary() #>> '{totals,attempts}')::integer is distinct from 16 then

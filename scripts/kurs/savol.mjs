@@ -7,7 +7,7 @@ import { BOSQICHLAR } from './katalog.mjs';
 
 const MAYDONLAR = new Set([
   'id', 'course', 'domain', 'skill', 'topic_id', 'stage', 'difficulty', 'type', 'time_sec',
-  'prompt', 'passage', 'choices', 'answer', 'accepted', 'explanation_en', 'explanation_uz', 'check',
+  'prompt', 'passage', 'choices', 'answer', 'accepted', 'explanation_en', 'explanation_uz', 'check', 'check_choices',
   'reviewed', 'source', 'author', 'drafted_by', 'version', 'verified_by', 'verified_at', 'verified_hash', 'figure',
 ]);
 const matnmi = (x, max) => typeof x === 'string' && x.trim().length > 0 && x.length <= max;
@@ -61,6 +61,10 @@ export function kursSavoliniOqi(s, mavzu, fayl, muallif) {
       s.choices.some((x) => !matnmi(x, 160)) || !variantKalitlari.includes(s.answer) || s.accepted != null)) {
     throw new Error('MCQ: 4 ta A–D variant va bitta javob harfi kerak');
   }
+  if (s.check_choices !== undefined && (!mcq || !Array.isArray(s.check_choices)
+      || s.check_choices.length !== 4 || s.check_choices.some((x) => !matnmi(x, 160)))) {
+    throw new Error('check_choices: MCQ uchun to‘rtta matematik ifoda kerak');
+  }
   const exact = Array.isArray(s.answer) ? s.answer : [s.answer];
   if (!mcq && (s.choices != null || !qisqaRoyxat(exact, 4) || !qisqaRoyxat(s.accepted, 24))) {
     throw new Error('SPR: aniq javob va accepted ro‘yxati kerak');
@@ -109,16 +113,16 @@ export function kursSavoliniOqi(s, mavzu, fayl, muallif) {
 
   const texts = [s.prompt, s.passage, s.explanation_en, s.explanation_uz].filter((x) => x != null);
   const topshiriq = mcq
-    ? { type: s.type, check: s.check, choices: s.choices, key: variantKalitlari.indexOf(s.answer), texts }
+    ? { type: s.type, check: s.check, choices: s.check_choices ?? s.choices, key: variantKalitlari.indexOf(s.answer), texts }
     : { type: s.type, check: s.check, exact, accepted: s.accepted, texts };
   const normalla = (x) => x?.normalize('NFKC');
   const matnImzosi = matnHash({ stem: normalla(savol.stem), passage: normalla(savol.passage) });
   return { savol, fayl, hash, matnImzosi, topshiriq, reviewed };
 }
 
-export function kursImportRejasi(natijalar) {
-  // Bo‘laklab nashr qilinadigan to‘plamlar keyingi bosqichga tegishli.
-  if (natijalar.length !== 200 || natijalar.some((n) => !n.reviewed)) return [];
+export function kursImportRejasi(natijalar, katalog) {
+  const jami = katalog.reduce((n, m) => n + m.total, 0);
+  if (natijalar.length !== jami || natijalar.some((n) => !n.reviewed)) return [];
   return natijalar.map((n) => {
     const reja = importQatori(n, { hash: n.hash });
     if (n.topshiriq.type === 'spr') reja.qator.correct.exact = n.topshiriq.exact;

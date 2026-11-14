@@ -1,4 +1,5 @@
 ---
+import { kursTavsiyaYollari } from '../../../../../lib/sat/kursKatalog';
 // SAT Xato daftari: takrorlash (interaktiv darslar 2-bosqich, P09).
 // Darslardagi xatolar (tayanch:sat-xato-daftari, faqat o'qiladi) Leitner qutilariga tushadi: tayanch:sat-takrorlash.
 // Javob darsSaqlash.javobniYoz orqali yoziladi: dars progressi va daftar o'z shaklida yangilanadi.
@@ -58,7 +59,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
   holat="qoralama"
 >
   <SavolUslub />
-  <div class="ichki takror" id="takror" data-sessiya-url={yol('/uz/sat/mashq/sessiya/')} data-kirish-url={yol('/uz/hisob/kirish/')} data-sahifa-url={sahifaUrl}>
+  <div class="ichki takror" data-kurs={JSON.stringify(kursTavsiyaYollari())} id="takror" data-sessiya-url={yol('/uz/sat/mashq/sessiya/')} data-kirish-url={yol('/uz/hisob/kirish/')} data-sahifa-url={sahifaUrl}>
     <header class="bosh">
       <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
       <h1>Mistake log: review</h1>
@@ -184,6 +185,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
 </BolimQobiq>
 
 <script>
+  import { kursBogliqlar, type KursTavsiyaMavzu } from '../../../../../lib/sat/kursTavsiya';
   import { javobniYoz, bugun } from '../../../../../lib/darsSaqlash';
   import { sinxronla, guruhla, javobdanKeyin, holatniYoz, takrorKalit, type TakrorHolat } from '../../../../../lib/takrorlash';
   import { sababOqi, sababYoz } from '../../../../../lib/xatoSabab';
@@ -352,12 +354,15 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
   }
 
   function pill(t: string, cls = 'pill') { const p = document.createElement('span'); p.className = cls; p.textContent = t; return p; }
+  const kursMavzular: KursTavsiyaMavzu[] = JSON.parse(document.getElementById('takror')?.dataset.kurs ?? '[]');
   function el<K extends keyof HTMLElementTagNameMap>(teg: K, cls?: string, matn?: string) {
     const e = document.createElement(teg);
     if (cls) e.className = cls;
     if (matn !== undefined) e.textContent = matn;
     return e;
   }
+
+  let kursSavolMavzular: Record<string, string> = {};
 
   function bandQator(b: Band, i: number): HTMLLIElement {
     const li = el('li', 'band');
@@ -380,6 +385,12 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
     och.setAttribute('aria-controls', tanaId);
     och.setAttribute('aria-describedby', mavzuEl.id);
     amal.append(och);
+    const mavzu = b.manba === 'bank' && kursMavzular.find((m) => m.id === kursSavolMavzular[b.id]);
+    if (mavzu) {
+      const link = el('a', 'matn-tugma kok-tugma', 'Open course topic');
+      link.href = mavzu.href;
+      amal.append(link);
+    }
     li.append(amal);
 
     const tana = el('div', 'b-tana');
@@ -647,7 +658,11 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
     };
     const tekshir = (error: unknown) => { if (error) throw error; };
     return {
-      royxat: () => rpc('review_overview'),
+      royxat: async () => {
+        const r = await rpc<Awaited<ReturnType<DaftarApi['royxat']>>>('review_overview');
+        kursSavolMavzular = (await kursBogliqlar(c, kursMavzular, r.items.map((item) => item.question_id))).questions;
+        return r;
+      },
       ochish: (qid) => rpc('review_preview', { p_question: qid }),
       teg: async (qid, teg) => tekshir((await c.from('review_queue').update({ reason_tag: teg }).eq('question_id', qid)).error),
       izoh: async (qid, izoh) => tekshir((await c.from('review_queue').update({ note: izoh.trim() ? izoh : null }).eq('question_id', qid)).error),

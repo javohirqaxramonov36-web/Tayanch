@@ -6,6 +6,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, test } from 'node:test';
 import { katalogniOqi } from './katalog.mjs';
+import { nashrniOqi } from './buildNashr.mjs';
+import { importSql } from './importSql.mjs';
+import { nashrMalumoti } from './nashr.mjs';
 import { kursniTekshir } from './tekshir.mjs';
 import { kursPapkasi } from './xususiy.mjs';
 import { REPO, savolFayllari } from '../savol/umumiy.mjs';
@@ -204,6 +207,13 @@ test('tasdiqsiz va eskirgan hash rad etiladi, tasdiqlangan dry-run yozmaydi', ()
   assert.deepEqual(tasdiq.reja[0].qator.correct.exact, ['2/3']);
   assert.deepEqual(tasdiq.reja.find(({ qator }) => qator.format === 'mcq').qator.correct, { choice: 'A' });
 
+  const mavzu = kursniTekshir({ papka, mavzuId: mA1.id, muallif });
+  assert.equal(mavzu.reja.length, mA1.total);
+  const sql = importSql(mA1, mavzu.reja);
+  assert.equal(importSql(mA1, kursniTekshir({ papka, mavzuId: mA1.id, muallif }).reja), sql);
+  assert.match(sql, /on conflict \(external_id\) do update/);
+  assert.match(sql, /to_jsonb\(eski\)[\s\S]*is distinct from to_jsonb\(excluded\)/);
+
   const oldin = faylHashlari(papka);
   const dry = cli('dry-run');
   assert.equal(dry.status, 0, dry.stderr);
@@ -214,6 +224,24 @@ test('tasdiqsiz va eskirgan hash rad etiladi, tasdiqlangan dry-run yozmaydi', ()
   assert.doesNotMatch(dry.stdout + dry.stderr, new RegExp(javobBelgisi));
   assert.ok(kursniTekshir({ papka, muallif: 'Boshqa tekshiruvchi' }).xatolar.some((x) => x.includes('verified_by')));
 
+  const receiptYoli = join(faylPapkasi(mA1), 'import-receipt.json');
+  writeFileSync(receiptYoli, JSON.stringify({ topic: mA1.id, ...nashrMalumoti(mavzu.reja) }));
+  assert.deepEqual(Object.keys(nashrniOqi(papka, muallif)), ['A1']);
+  assert.match(nashrniOqi(papka, muallif).A1.darslar[0], /lang="uz"/);
+  const lesson = readFileSync(darsYoli(mA1));
+  rmSync(darsYoli(mA1));
+  assert.deepEqual(nashrniOqi(papka, muallif), {});
+  writeFileSync(darsYoli(mA1), lesson);
+
+  const original = JSON.parse(readFileSync(savolYoli(mA1), 'utf8'));
+  yoz(savolYoli(mA1), original.slice(1));
+  assert.deepEqual(nashrniOqi(papka, muallif), {});
+  const { verified_by, verified_at, verified_hash, ...qoralama } = original[0];
+  yoz(savolYoli(mA1), [{ ...qoralama, reviewed: false }, ...original.slice(1)]);
+  assert.deepEqual(nashrniOqi(papka, muallif), {});
+  yoz(savolYoli(mA1), original);
+  assert.ok(nashrniOqi(papka, muallif).A1);
+
   const fayl = savolYoli(mA1);
   const savollar = JSON.parse(readFileSync(fayl, 'utf8'));
   savollar[0].explanation_uz += ' Tahrir.';
@@ -221,6 +249,21 @@ test('tasdiqsiz va eskirgan hash rad etiladi, tasdiqlangan dry-run yozmaydi', ()
   const eskirgan = tekshir();
   assert.ok(eskirgan.xatolar.some((x) => x.includes('verified_hash')));
   assert.deepEqual(eskirgan.reja, []);
+  assert.deepEqual(nashrniOqi(papka, muallif), {});
+});
+
+test('To‘liq tasdiqsiz mavzu staging dan ko‘chmaydi', () => {
+  const ildiz = join(papka, 'staging', 'sat-math', mA1.domainSlug, mA1.topicSlug);
+  mkdirSync(ildiz, { recursive: true });
+  writeFileSync(join(ildiz, 'lesson.md'), lesson);
+  const savollar = JSON.parse(readFileSync(savolYoli(mA1), 'utf8')).map(({ verified_by, verified_at, verified_hash, ...s }) =>
+    ({ ...s, reviewed: false }));
+  yoz(join(ildiz, 'questions.json'), savollar);
+  const oldin = faylHashlari(papka);
+  const kochir = cli('kochir', '--mavzu', 'A1');
+  assert.equal(kochir.status, 1);
+  assert.match(kochir.stderr, /to‘liq tasdig‘i/);
+  assert.deepEqual(faylHashlari(papka), oldin);
 });
 
 test('Astro buildga xususiy dars, qoralama va javoblar chiqmaydi', () => {
@@ -228,7 +271,7 @@ test('Astro buildga xususiy dars, qoralama va javoblar chiqmaydi', () => {
   const build = spawnSync(process.execPath, [
     join(REPO, 'node_modules/.bin/astro'), 'build', '--outDir', dist,
   ], { cwd: REPO, encoding: 'utf8', timeout: 60_000,
-    env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', TAYANCH_SAVOLLAR_DIR: papka },
+    env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', TAYANCH_KURS_NASHR: '0', TAYANCH_SAVOLLAR_DIR: papka },
   });
   assert.equal(build.status, 0, build.stderr || build.stdout);
   const fayllar = daraxt(dist);

@@ -153,6 +153,15 @@ export function mahalliyniTekshir(xom: string | null): Mahalliy {
   };
 }
 
+/** Kurs sessiyasidagi server tarkibiga mos kelmaydigan eski qoralamani tashlaydi. */
+export function kursQoralamasiniTekshir(m: Mahalliy, ids: Set<string>): Mahalliy {
+  const saqlanganIds = [
+    ...Object.keys(m.qoralama), ...Object.keys(m.vaqt), ...m.belgilar, ...m.otkazilgan,
+    ...m.navbat.map(({ qid }) => qid),
+  ];
+  return saqlanganIds.every((id) => ids.has(id)) ? m : bushMahalliy();
+}
+
 /** Server savolini P06 komponenti turiga aylantiradi. Rasm URL'ini ota sahifa oladi (yopiq bucket). */
 export function komponentSavoli(q: ServerSavol, rasmUrl: string | null): Savol {
   return {

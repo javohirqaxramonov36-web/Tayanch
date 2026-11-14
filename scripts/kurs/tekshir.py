@@ -310,13 +310,25 @@ def markdown_check(text, lesson=False):
                 for a, b in spans:
                     require(any(t.type == "paragraph_open" for t in tokens[a + 3:b]),
                             "lesson.md: nazariya yoki yechilgan misol matni bo‘sh")
-    return images
+        rendered = []
+        for (start, title), (end, _) in zip(stages, [*stages[1:], (len(tokens), "")]):
+            body = tokens[start + 3:end]
+            if title == "Foundation":
+                uz = next(i for i, t in enumerate(body) if t.type == "heading_open" and t.tag == "h3" and t.level == 0 and body[i + 1].content == "Nazariya (UZ)")
+                examples = next(i for i, t in enumerate(body) if t.type == "heading_open" and t.tag == "h3" and t.level == 0 and body[i + 1].content == "Examples")
+                render = lambda part: MARKDOWN.renderer.render(part, MARKDOWN.options, {})
+                html = render(body[:uz]) + '<div lang="uz">' + render(body[uz:examples]) + '</div>' + render(body[examples:])
+            else:
+                html = MARKDOWN.renderer.render(body, MARKDOWN.options, {})
+            rendered.append(html)
+        return {"images": images, "sections": rendered}
+    return {}
 
 
 def tekshir(item):
     try:
         if item["type"] == "lesson":
-            return {"images": markdown_check(item["text"], lesson=True)}
+            return markdown_check(item["text"], lesson=True)
         math_check(item)
         for text in item["texts"]:
             markdown_check(text)

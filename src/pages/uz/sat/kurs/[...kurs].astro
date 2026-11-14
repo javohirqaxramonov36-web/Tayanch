@@ -3,7 +3,7 @@ import SatFokus from '../../../../layouts/SatFokus.astro';
 import DesmosHavola from '../../../../components/sat/DesmosHavola.astro';
 import KursBoshlash from '../../../../components/sat/kurs/KursBoshlash.astro';
 import {
-  kursBosqichlari, kursHavola, kursMavzulari, kursPreview, mavzuManzili,
+  kursBosqichlari, kursHavola, kursMavzulari, kursPreview, kursOchiq, kursMavzuOchiq, kursNashri, mavzuManzili,
   type KursBosqich, type KursMavzu,
 } from '../../../../lib/sat/kursKatalog';
 import { yol } from '../../../../lib/yol';
@@ -18,8 +18,8 @@ type Sahifa =
   | { tur: 'mashq'; mavzu: KursMavzu; bosqich: KursBosqich };
 
 export function getStaticPaths() {
-  if (!kursPreview) return [];
-  const domenlar = new Map(kursMavzulari.map((m) => [m.domainSlug, m.domain]));
+  if (!kursPreview && !kursOchiq) return [];
+  const domenlar = new Map(kursMavzulari.filter((m) => kursPreview || kursMavzuOchiq(m.id)).map((m) => [m.domainSlug, m.domain]));
   const yollar: { params: { kurs: string }; props: Sahifa }[] = [
     { params: { kurs: 'matematika' }, props: { tur: 'katalog' } },
   ];
@@ -27,6 +27,7 @@ export function getStaticPaths() {
     yollar.push({ params: { kurs: `matematika/${slug}` }, props: { tur: 'domen', domen } });
   }
   for (const mavzu of kursMavzulari) {
+    if (!kursPreview && !kursMavzuOchiq(mavzu.id)) continue;
     const manzil = `matematika/${mavzu.domainSlug}/${mavzu.topicSlug}`;
     yollar.push({ params: { kurs: manzil }, props: { tur: 'mavzu', mavzu } });
     for (const bosqich of kursBosqichlari) {
@@ -42,7 +43,7 @@ export function getStaticPaths() {
 const sahifa = Astro.props as Sahifa;
 const mavzu = 'mavzu' in sahifa ? sahifa.mavzu : undefined;
 const mavzuYoli = mavzu ? mavzuManzili(mavzu) : '';
-const domenlar = [...new Map(kursMavzulari.map((m) => [m.domainSlug, m.domain]))];
+const domenlar = [...new Map(kursMavzulari.filter((m) => kursPreview || kursMavzuOchiq(m.id)).map((m) => [m.domainSlug, m.domain]))];
 const mavzular = sahifa.tur === 'domen' ? kursMavzulari.filter((m) => m.domain === sahifa.domen) : kursMavzulari;
 const sarlavha = sahifa.tur === 'katalog' ? 'SAT® Math course'
   : sahifa.tur === 'domen' ? sahifa.domen
@@ -53,13 +54,16 @@ const orqaga = sahifa.tur === 'katalog' ? undefined
   : sahifa.tur === 'domen' ? { href: kursHavola(), yorliq: 'Back to the Math course' }
   : sahifa.tur === 'mavzu' ? { href: kursHavola(`${sahifa.mavzu.domainSlug}/`), yorliq: `Back to ${sahifa.mavzu.domain}` }
   : { href: kursHavola(mavzuYoli), yorliq: 'Back to the topic' };
-const namuna = sahifa.tur === 'dars' && sahifa.mavzu.id === 'A1' && sahifa.bosqich.set === 'foundation';
+const nashr = mavzu && kursMavzuOchiq(mavzu.id) ? kursNashri[mavzu.id] : undefined;
+const dars = sahifa.tur === 'dars' ? nashr?.darslar[kursBosqichlari.indexOf(sahifa.bosqich)] : undefined;
+const namuna = kursPreview && sahifa.tur === 'dars' && sahifa.mavzu.id === 'A1' && sahifa.bosqich.set === 'foundation';
 const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
   ? `sat-kurs:v1:${mavzu.topicSlug}:${sahifa.tur === 'mini' ? 'mini_test' : sahifa.bosqich.set}`
   : undefined;
 ---
-<SatFokus title={sarlavha} description="Preview of the Tayanch SAT Math course."
-  ustki="Course preview" nomi="SAT Math" liftPastki={false} yol={['SAT Math']}
+<SatFokus title={sarlavha} description="Study with the Tayanch SAT Math course."
+  ustki={kursPreview ? "Course preview" : "Math course"}
+  indeks={!kursPreview} nomi="SAT Math" liftPastki={false} yol={['SAT Math']}
   yopish={orqaga ?? { href: yol('/uz/sat/'), yorliq: 'Back to SAT' }}>
   <article class="kurs-sahifa">
     <header class="kurs-sarlavha">
@@ -79,8 +83,12 @@ const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
           {mavzular.map((m) => <li class="kurs-qator">
             <span class="kurs-qator-belgi">{m.id}</span>
             <div>
-              <h3><a class="kurs-havola" href={kursHavola(mavzuManzili(m))}>{m.topic}</a></h3>
-              <p>{m.domain} · {m.counts.mini_test ? 'Includes a mini-test' : 'Practice only'}</p>
+              <h3>{kursPreview || kursMavzuOchiq(m.id)
+                ? <a class="kurs-havola" href={kursHavola(mavzuManzili(m))}>{m.topic}</a>
+                : m.topic}</h3>
+              {kursMavzuOchiq(m.id)
+                ? <p>{kursNashri[m.id].savollar} questions{kursNashri[m.id].miniTest > 0 && ` · ${kursNashri[m.id].miniTest} in the mini-test`}</p>
+                : <p>Coming soon</p>}
             </div>
           </li>)}
         </ol>
@@ -96,7 +104,7 @@ const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
             <h3>Recommended first</h3>
             <ul>
               {kursMavzulari.filter((m) => mavzu.prerequisites.includes(m.id)).map((m) => (
-                <li><a class="kurs-havola" href={kursHavola(mavzuManzili(m))}>{m.topic}</a></li>
+                <li>{kursPreview || kursMavzuOchiq(m.id) ? <a class="kurs-havola" href={kursHavola(mavzuManzili(m))}>{m.topic}</a> : m.topic}</li>
               ))}
             </ul>
           </div>}
@@ -106,7 +114,7 @@ const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
           <h2 id="kurs-bosqichlar">Study in three stages</h2>
           <ol class="kurs-royxat" role="list">
             {kursBosqichlari.map((b, i) => {
-              const darsBor = mavzu.id === 'A1' && b.set === 'foundation';
+              const darsBor = kursPreview && mavzu.id === 'A1' && b.set === 'foundation';
               return <li class="kurs-qator">
                 <span class="kurs-qator-belgi" aria-hidden="true">{i + 1}</span>
                 <div>
@@ -116,7 +124,7 @@ const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
                     <a class="kurs-havola" aria-label={`${b.nom} lesson`} href={kursHavola(`${mavzuYoli}${b.slug}/dars/`)}>Lesson</a>
                     <a class="kurs-havola" aria-label={`${b.nom} practice`} href={kursHavola(`${mavzuYoli}${b.slug}/mashq/`)}>Practice</a>
                   </div>
-                  <p class="kurs-izoh">{darsBor ? 'Sample lesson available' : 'Lesson content coming soon'}</p>
+                  {!nashr && <p class="kurs-izoh">{darsBor ? 'Sample lesson available' : 'Lesson content coming soon'}</p>}
                 </div>
               </li>;
             })}
@@ -128,7 +136,9 @@ const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
       </Fragment>
     )}
 
-    {sahifa.tur === 'dars' && (namuna ? (
+    {sahifa.tur === 'dars' && (dars ? (
+      <section class="kurs-bolim" aria-label="Lesson material" set:html={dars} />
+    ) : namuna ? (
       <section class="kurs-bolim" aria-labelledby="kurs-namuna">
         <h2 id="kurs-namuna">Sample: Keep both sides equal</h2>
         <p>For <strong>2x + 3 = 11</strong>, subtract 3 from both sides to get <strong>2x = 8</strong>. Divide both sides by 2 to get <strong>x = 4</strong>.</p>
@@ -147,11 +157,11 @@ const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
 
     {toplam && (
       <section class="kurs-holat" aria-labelledby="kurs-savollar">
-        <h2 id="kurs-savollar">Question set coming soon</h2>
+        <h2 id="kurs-savollar">{nashr ? 'Question set' : 'Question set coming soon'}</h2>
         <p>{sahifa.tur === 'mini'
           ? 'There is no timer. You’ll see your score and explanations after you finish.'
           : 'Check each answer to see its explanation.'}</p>
-        <p>Sign in to try a question set on this preview when available.</p>
+        {!nashr && <p>Sign in to try a question set on this preview when available.</p>}
         <KursBoshlash toplam={toplam} miniTest={sahifa.tur === 'mini'} />
       </section>
     )}

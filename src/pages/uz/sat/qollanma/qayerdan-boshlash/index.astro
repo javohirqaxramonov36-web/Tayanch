@@ -1,4 +1,5 @@
 ---
+import { kursHavola, kursOchiq } from '../../../../../lib/sat/kursKatalog';
 // P16 "Where to start": 4 savollik "My path" -> 7 bosqichli shaxsiy ro'yxat (checkbox) va bepul resurslar xaritasi.
 // Spetsifikatsiya muallif tasdiqlagan (2026-11-11). Topshirish yo'li g'oyasi (savol -> yo'l), lekin alohida kod.
 // Saqlash: localStorage tayanch:sat-qayerdan-boshlash (faqat shu brauzer). JS'siz: umumiy 7 bosqich va jadvallar ko'rinadi.
@@ -120,6 +121,7 @@ const sanaQisqa = (s: string) => s.split('-').reverse().join('.');
       </div>
     </aside>
 
+    {kursOchiq && <p><a href={kursHavola()}>Explore the Math course</a></p>}
     <section class="resurslar" aria-labelledby="resurs-h">
       <h2 id="resurs-h">Free resources map</h2>
       <p class="ikkinchi">Every row was checked on the page it links to. Tayanch does not copy College Board questions or tests: open them on the official sites.</p>

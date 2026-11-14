@@ -148,3 +148,44 @@ baytlari o‘zgarsa, versiya oshirilib, qayta ko‘rikdan o‘tkaziladi.
 talab qiladi. Import bu bosqichda dry-run bo‘lib, P05 qatorlari xotirada quriladi.
 Hisobotda faqat sonlar va xato joylari chiqadi. CI xususiy kontent o‘rniga vaqtinchalik
 sun’iy to‘plamni tekshiradi. Nashrdan oldin muallif haqiqiy paketga `--nashr`ni qo‘llaydi.
+
+## 1e · Mavzuni alohida tayyorlash
+
+`--mavzu A1` ishlatilganda faqat shu mavzu tekshiriladi. `--staging` xususiy
+`staging/sat-math` katalogini, odatiy rejim esa `content/sat-math` katalogini o‘qiydi.
+`kurs:konvert -- --reja <xususiy-json>` Stage 4 ning P05 tasdiqlarini alohida
+`p05-manbalar.json` fayliga nusxalaydi. Kursga moslashtirilgan yozuvlar yangi ID va
+mazmun hash’iga ega. `check_choices` kerak joyda ko‘rsatilgan variantlarning matematik
+ifodalarini beradi. Muallif ifoda va ko‘rinadigan variantning mosligini ham tekshiradi.
+
+1. `kurs:korib-chiq -- --mavzu A1 --kim '<ism>'` xususiy `REVIEW.md` va
+   `tasdiqlash.txt` hosil qiladi. Har qatorda ID va mazmun hash’i bor. Muallif
+   `REVIEW.md`ni o‘qib, tasdiqlamaydigan qatorlarini `#` bilan belgilaydi.
+2. Muallif `REVIEW.md` oxiridagi `kurs:tasdiqla` buyrug‘ini bajaradi. `--sinov`
+   faqat tekshiradi. Mazmun keyin o‘zgarsa, versiyani oshirib, tasdiq maydonlarini
+   tozalang, `reviewed: false` qo‘ying va yangi ko‘rik ro‘yxatini tayyorlang.
+3. `TAYANCH_MUALLIF='<ism>' npm run kurs:import -- --staging --mavzu A1` xususiy
+   mavzuni yozuvsiz tekshiradi. Shundan keyin muallif
+   `TAYANCH_MUALLIF='<ism>' npm run kurs:kochir -- --mavzu A1` bilan to‘liq
+   mavzuni `content/` ga o‘tkazadi. Mavjud manzil ustiga yozilmaydi.
+4. `TAYANCH_MUALLIF='<ism>' npm run kurs:import -- --mavzu A1 --sql` faqat
+   xususiy `import.sql` faylini yozadi. SQL bitta tranzaksiyada ishlaydi, barqaror
+   `external_id` orqali UUIDni saqlaydi va bir xil yozuvni takror yangilamaydi.
+   Yashirilgan, boshqa to‘plamga tegishli yoki bir xil versiyada tahrirlangan
+   yozuv to‘liq tranzaksiyani to‘sadi. Rasmli savol uchun SQL eksport to‘xtaydi.
+5. Jonli ish uchun alohida tasdiqdan oldin migratsiyalar ro‘yxati, shu mavzudagi
+   mavjud savollar va bog‘langan sessiyalar sonini faqat o‘qib tekshiring. Mavzu
+   qatorlarining xususiy DB zaxirasini oling. Tranzaksiya xato bersa o‘zi bekor
+   bo‘ladi. Qo‘llangan mavzuni qaytarishda avval statik flagni o‘chiring va kerak
+   bo‘lsa savollarni yashiring. Sessiya tarixi bog‘langan UUIDlarni o‘chirmang.
+   Zaxiradagi mavjud qatorlarni UUID bo‘yicha tiklash alohida DB amali.
+6. Tasdiqlangan SQL muvaffaqiyatli commit bo‘lgach, qaytgan bitta JSON satrini
+   xususiy mavzu katalogida `import-receipt.json` sifatida saqlang. Nashr build’i
+   receipt’dagi to‘plam hash’i va sonlarni joriy validator rejasi bilan solishtiradi.
+   Sahifadagi savol va mini-test sonlari receipt’dan olinadi. Receipt yo‘q, kontent
+   to‘liq emas yoki hash o‘zgargan mavzu `Coming soon` holatiga qaytadi.
+   Faqat ochiq nazariya statik HTML’ga chiqadi.
+7. `TAYANCH_KURS_NASHR=1` nashr ruxsati. Flagni olib tashlab qayta build va
+   deploy qilish barcha kurs sahifalari va havolalarini qaytarib oladi. Statik
+   sayt uchun kontent yoki receipt o‘zgarganda ham qayta build kerak. Qoralamalar,
+   receipt, zaxira va import fayllari repodan tashqarida qoladi.

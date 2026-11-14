@@ -60,7 +60,7 @@ export function xatoBilanChiq(xabar) {
 export function savolFayllari(papka, ildiz = papka) {
   const natija = [];
   for (const nom of readdirSync(papka).sort()) {
-    if (nom.startsWith('.') || nom === 'node_modules') continue;
+    if (nom.startsWith('.') || nom === 'node_modules' || (papka === ildiz && nom === 'staging')) continue;
     // Kurs sxemasiga tegishli fayllarni kurs:tekshir o'qiydi.
     if (papka === join(ildiz, 'content') && ['sat-math', 'sat-english'].includes(nom)) continue;
     const yol = join(papka, nom);

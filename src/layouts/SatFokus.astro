@@ -25,13 +25,14 @@ export interface Props {
   yopish?: { href: string; yorliq: string };
   /** false: telefondagi pastki lift paneli chiqmaydi (mashq sessiyasi, P08) */
   liftPastki?: boolean;
+  indeks?: boolean;
 }
-const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish, liftPastki = true } = Astro.props;
+const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish, liftPastki = true, indeks = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
-    <BoshQism title={title} description={description} holat="qoralama" />
+    <BoshQism title={title} description={description} holat={indeks ? "chop-etilgan" : "qoralama"} />
   </head>
   <body class="fokus">
     <a class="otish" href="#asosiy">{M.otish}</a>

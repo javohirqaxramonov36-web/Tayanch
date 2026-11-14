@@ -1,5 +1,6 @@
-// Faqat Astro frontmatter: javobsiz katalog, xususiy savol yoki dars fayli o'qilmaydi.
+// Faqat Astro frontmatter. Mijozga havolalar, sonlar va ochiq nazariya chiqariladi.
 import { katalogniOqi } from '../../../scripts/kurs/katalog.mjs';
+import { nashrniOqi } from '../../../scripts/kurs/buildNashr.mjs';
 import kursCsv from '../../../docs/course-spec/math-topics.csv?raw';
 import { yol } from '../yol';
 
@@ -9,6 +10,7 @@ export const kursPreview = import.meta.env.DEV || import.meta.env.MODE === 'kurs
 export interface KursMavzu {
   id: string;
   domain: string;
+  skill: string | null;
   domainSlug: string;
   topic: string;
   topicSlug: string;
@@ -18,7 +20,11 @@ export interface KursMavzu {
   counts: { mini_test: number };
 }
 
-export const kursMavzulari: KursMavzu[] = kursPreview ? katalogniOqi(kursCsv) : [];
+export const kursMavzulari: KursMavzu[] = katalogniOqi(kursCsv);
+type NashrMavzusi = { savollar: number; miniTest: number; darslar: [string, string, string] };
+export const kursNashri: Record<string, NashrMavzusi> = process.env.TAYANCH_KURS_NASHR === '1' ? nashrniOqi() : {};
+export const kursOchiq = Object.keys(kursNashri).length > 0;
+export const kursMavzuOchiq = (id: string) => Object.hasOwn(kursNashri, id);
 
 export const kursBosqichlari = [
   { slug: 'asos', nom: 'Foundation', set: 'foundation', tavsif: 'Build the core idea.' },
@@ -31,11 +37,19 @@ export const mavzuManzili = (mavzu: KursMavzu) => `${mavzu.domainSlug}/${mavzu.t
 export const kursHavola = (qism = '') => yol(KURS_YOLI + qism);
 
 export function kursNatijaHavolalari() {
-  return Object.fromEntries(kursMavzulari.map((mavzu, i) => {
-    const keyingi = kursMavzulari[i + 1];
+  const mavzular = kursMavzulari.filter((m) => kursMavzuOchiq(m.id) || kursPreview);
+  return Object.fromEntries(mavzular.map((mavzu, i) => {
+    const keyingi = mavzular[i + 1];
     return [mavzu.id, {
       mavzu: kursHavola(mavzuManzili(mavzu)),
       keyingi: keyingi ? kursHavola(mavzuManzili(keyingi)) : undefined,
     }];
+  }));
+}
+
+export function kursTavsiyaYollari() {
+  return kursMavzulari.filter((m) => kursMavzuOchiq(m.id)).map((m) => ({
+    id: m.id, domain: m.domain, skill: m.skill, prerequisites: m.prerequisites,
+    href: kursHavola(mavzuManzili(m)), domainHref: kursHavola(`${m.domainSlug}/`),
   }));
 }

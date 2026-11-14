@@ -12,11 +12,11 @@ import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
 import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
-import { kursNatijaHavolalari, kursPreview } from '../../../../../lib/sat/kursKatalog';
+import { kursNatijaHavolalari, kursOchiq, kursPreview } from '../../../../../lib/sat/kursKatalog';
 
 const sahifa = ichkiSahifa('mashq/sessiya/');
 const bankUrl = yol('/uz/sat/mashq/bank/');
-const kursYollar = kursPreview ? JSON.stringify(kursNatijaHavolalari()) : undefined;
+const kursYollar = kursPreview || kursOchiq ? JSON.stringify(kursNatijaHavolalari()) : undefined;
 const IK = {
   xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
   soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
@@ -146,7 +146,7 @@ const IK = {
   import type { XabarApi } from '../../../../../lib/sat/xabar';
   import { xabarDialogUlash, supabaseXabarApi } from '../../../../../lib/sat/xabarDialog';
   import {
-    MAHALLIY_KALIT, mahalliyniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
+    MAHALLIY_KALIT, mahalliyniTekshir, kursQoralamasiniTekshir, komponentSavoli, togriMatn, qolganMs, chegaraOtildi, vaqtMatni, davomiylikMatni,
     xarita, xaritaYorliq, navbatgaQosh, keyingiUrinishMs, sessiyaXatosi, idTogrimi, hisobot, SABABLAR, sababTogrimi,
     type Mahalliy, type SessiyaApi, type SessiyaJavob, type ServerSavol, type YuborJavob, type NatijaBand,
   } from '../../../../../lib/sat/sessiya';
@@ -210,6 +210,10 @@ const IK = {
   }
 
   function qoralamaniTozala() {
+    if (S?.course) {
+      const toza = kursQoralamasiniTekshir(m, new Set(savollar().map(({ id }) => id)));
+      if (toza !== m) { m = toza; saqla(); }
+    }
     if (!miniTest()) return;
     const toza: Mahalliy['qoralama'] = {};
     for (const q of savollar()) {
@@ -992,7 +996,7 @@ const IK = {
     qoralamaniTozala();
     if (j.course) {
       $('fokus-ustki').textContent = miniTest() ? 'Topic mini-test' : 'Course practice';
-      if ((import.meta.env.DEV || import.meta.env.MODE === 'kurs-preview') && ildiz.dataset.kursYollar) {
+      if (Object.hasOwn(kursYollar, j.course.topic_id)) {
         void import('../../../../../styles/kurs.css');
         document.body.classList.add('kurs-sessiya');
         const yopish = document.querySelector<HTMLAnchorElement>('.fokus-bosh .yopish');

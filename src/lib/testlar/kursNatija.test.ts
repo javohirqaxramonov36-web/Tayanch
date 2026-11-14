@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { bushMahalliy, kursQoralamasiniTekshir } from '../sat/sessiya.ts';
 import { miniTestOtdimi } from '../sat/kursNatija.ts';
 
 for (const [togri, jami, kutilgan] of [
@@ -9,3 +10,9 @@ for (const [togri, jami, kutilgan] of [
     assert.equal(miniTestOtdimi(togri, jami), kutilgan);
   });
 }
+
+test('Kurs qoralamasi serverdagi savol IDlariga mos kelsa davom etadi', () => {
+  const m = { ...bushMahalliy(), qoralama: { mavjud: 'B' }, yakunlanmoqda: true };
+  assert.equal(kursQoralamasiniTekshir(m, new Set(['mavjud'])), m);
+  assert.deepEqual(kursQoralamasiniTekshir(m, new Set(['boshqa'])), bushMahalliy());
+});

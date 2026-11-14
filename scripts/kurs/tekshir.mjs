@@ -10,7 +10,7 @@ function pythonTekshir(topshiriqlar) {
     '-I', '-B', fileURLToPath(new URL('./tekshir.py', import.meta.url)),
   ], {
     input: JSON.stringify(topshiriqlar), encoding: 'utf8', timeout: 20_000, killSignal: 'SIGKILL',
-    maxBuffer: 256 * 1024, env: { PATH: process.env.PATH },
+    maxBuffer: 2 * 1024 * 1024, env: { PATH: process.env.PATH },
   });
   if (natija.error || natija.status !== 0) {
     throw new Error('SymPy/Markdown jarayoni bajarilmadi. requirements.txt, Python yo‘li va resurs chegaralarini tekshiring');
@@ -20,11 +20,13 @@ function pythonTekshir(topshiriqlar) {
   return javob;
 }
 
-export function kursniTekshir({ papka, muallif = process.env.TAYANCH_MUALLIF?.trim() } = {}) {
-  const katalog = katalogniOqi();
-  const ildiz = kursPapkasi(papka);
+export function kursniTekshir({ papka, mavzuId, staging = false, muallif = process.env.TAYANCH_MUALLIF?.trim() } = {}) {
+  const katalog = katalogniOqi().filter((m) => !mavzuId || m.id === mavzuId);
+  if (!katalog.length) throw new Error('MVP mavzusi topilmadi');
+  const ildiz = kursPapkasi(papka, staging ? 'staging' : 'content');
   const xatolar = [];
   const natijalar = [];
+  const darslar = new Map();
   const topshiriqlar = [];
   const idlar = new Map();
   const matnlar = new Map();
@@ -70,7 +72,7 @@ export function kursniTekshir({ papka, muallif = process.env.TAYANCH_MUALLIF?.tr
         if (matnlar.has(n.matnImzosi)) throw new Error(`Takror matn (${matnlar.get(n.matnImzosi)})`);
         idlar.set(s.id, joy);
         matnlar.set(n.matnImzosi, joy);
-        natijalar.push({ ...n, joy });
+        natijalar.push({ ...n, joy, manba: s });
         topshiriqlar.push({ joy, topshiriq: n.topshiriq });
       } catch (e) {
         xatolar.push(`${joy}: ${e.message}`);
@@ -83,12 +85,17 @@ export function kursniTekshir({ papka, muallif = process.env.TAYANCH_MUALLIF?.tr
     javoblar.forEach((javob, i) => {
       const { joy, papka } = topshiriqlar[i];
       if (javob.error) xatolar.push(`${joy}: ${javob.error}`);
-      for (const rasm of javob.images ?? []) {
-        try { pngOqi(join(ildiz, papka), rasm); }
-        catch (e) { xatolar.push(`${joy}: ${e.message}`); }
+      if (!javob.sections) return;
+      let sections = javob.sections;
+      for (const rasm of new Set(javob.images)) {
+        try {
+          const png = pngOqi(join(ildiz, papka), rasm);
+          sections = sections.map((html) => html.replaceAll(`src="${rasm}"`, `src="data:image/png;base64,${png.toString('base64')}"`));
+        } catch (e) { xatolar.push(`${joy}: ${e.message}`); }
       }
+      darslar.set(joy.split('/')[0], sections);
     });
   }
 
-  return { katalog, xatolar, natijalar, reja: xatolar.length ? [] : kursImportRejasi(natijalar) };
+  return { katalog, xatolar, natijalar, darslar, reja: xatolar.length ? [] : kursImportRejasi(natijalar, katalog) };
 }

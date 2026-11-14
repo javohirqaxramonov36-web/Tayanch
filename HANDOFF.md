@@ -19,6 +19,16 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 - Sinalgan: production build 75 sahifa, preview build 125 sahifa (50 kurs sahifasi), `npm test` 226/226, lokal PostgreSQL, Chrome 390/1280 px yorug‘ va qorong‘i, axe va gorizontal scroll, `3/5`, `4/5`, `6/10`, `7/10` hamda RPC javob namunalari bilan mashq va mini-test. `astro check` avvalgi 6 xatoni qaytaradi.
 - 1d haqiqiy telefon, VoiceOver va jonli Supabase’da sinalmagan. Tasdiqlangan real kontent, import va nashr 1e da. Reja `docs/SAT_COURSE_PLAN.md` §6 va §8 da.
 
+## SAT kursi 1e · A1 ko‘rikda (2026-11-14, `codex/sat-kurs-1e`)
+
+- Alohida worktree. Tarmoq lokal `main`dan ochildi va 1d `671ddc5` gacha fast-forward qilindi. Asl checkout’dagi lokal dizayn tahrirlari saqlandi. Jonli bazaga ulanilmadi, migratsiya/import qo‘llanmadi, nashr flagi o‘chiq.
+- Stage 4 ning 44 Math yozuviga muallif aytgan ID ro‘yxati bo‘yicha P05 tasdiqlash skripti ishlatildi. Ism Git’dagi `Javohir Kakhramonov` qiymatidan olindi. P05 98/98, 54 R&W baytma-bayt bir xil. Alohida zaxira `~/Tayanch-savollar/stage4-backup-2026-11-14.5ukspc/`. Mavjud `zaxira/`ga tegilmadi.
+- Xususiy `~/Tayanch-savollar/staging/sat-math/algebra/`: A1–A5 uchun CSV mosligida 4/2/4/3/1 savol konvertatsiya qilindi. P05 tasdiq metama’lumoti `p05-manbalar.json`da. O‘zgargan kurs sxemasi uchun yangi ID va hash ishlatiladi. P05 tasdig‘i kursga nashr ruxsati sifatida ishlatilmaydi. MX3 uchun mos manba yo‘q.
+- A1: `staging/sat-math/algebra/a1/REVIEW.md`, 32 yangi + 4 konvertatsiya qilingan savol, 3 bosqichli `lesson.md`, hashli ko‘rik ro‘yxati. SymPy 36/36. Staging dry-run 0/36 kurs tasdig‘i sabab kutilgan tarzda bloklandi. A2–A5 da faqat konvert qilingan yozuvlar, MX3 va qolgan dars/to‘plamlar yo‘q. Keyingi mavzu A1 muallif ko‘rigidan so‘ng.
+- Muallif ko‘rigi `kurs:tasdiqla`, keyin staging dry-run va `kurs:kochir`. Ko‘chirish 1e davomida bajarilmadi. Lokal SQL eksport to‘plamga bog‘langan barqaror `external_id` va tranzaksiyali upsert ishlatadi. Jonli ish oldidan holatni faqat o‘qib tekshirish, zaxira va alohida ruxsat zarur. Buyruqlar va qaytarish tartibi `docs/course-spec/README.md` §1e da.
+- Aktiv mavzu to‘liq paket, mos savol hash’lari va DB import receipt orqali aniqlanadi. Statik nashrni qaytarish uchun `TAYANCH_KURS_NASHR`ni olib tashlab qayta build/deploy qiling. Kursda maxsus mavzu sahifalari va tavsiya havolalari faqat ochiq to‘plamlar uchun. Prerequisite o‘tishi va xato savol mavzusi `course_links` orqali hisob egasidan olinadi. Qoralama ID’lari joriy sessiya to‘plamiga mos kelmasa brauzerda jim tashlanadi.
+- Sinalgan: build 75 sahifa, preview 125, repo tekshiruvi, kurs validator va nashr chegaralari, testlar, vaqtinchalik lokal PostgreSQL va takror import, Chrome 390/1280 px yorug‘/qorong‘i, axe va kontrast. `astro check` avvalgi 6 xatoni qaytardi. Haqiqiy telefon, VoiceOver va jonli Supabase sinalmagan.
+
 ## 1. Sayt tuzilmasi: 5 qavatli bino
 
 | Qavat | Nomi | Manzil | Holat (`bolimlar.ts`) | Nima bor |

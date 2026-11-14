@@ -8,8 +8,8 @@ function ichidami(asos, yol) {
   return farq !== '..' && !farq.startsWith(`..${sep}`) && !isAbsolute(farq);
 }
 
-export function kursPapkasi(papka = process.env.TAYANCH_SAVOLLAR_DIR ?? join(homedir(), 'Tayanch-savollar')) {
-  const yol = resolve(papka.replace(/^~(?=$|\/)/, homedir()), 'content');
+export function kursPapkasi(papka = process.env.TAYANCH_SAVOLLAR_DIR ?? join(homedir(), 'Tayanch-savollar'), bolim = 'content') {
+  const yol = resolve(papka.replace(/^~(?=$|\/)/, homedir()), bolim);
   const repo = realpathSync(REPO);
   if (ichidami(REPO, yol)) throw new Error('Kurs kontenti repo tashqarisida bo‘lishi kerak');
   let ildiz;
@@ -17,7 +17,7 @@ export function kursPapkasi(papka = process.env.TAYANCH_SAVOLLAR_DIR ?? join(hom
     ildiz = realpathSync(yol);
     if (!statSync(ildiz).isDirectory()) throw new Error();
   } catch {
-    throw new Error('Xususiy content/ papkasi topilmadi');
+    throw new Error(`Xususiy ${bolim}/ papkasi topilmadi`);
   }
   if (ichidami(repo, ildiz)) throw new Error('Kurs kontenti repo tashqarisida bo‘lishi kerak');
   return ildiz;
