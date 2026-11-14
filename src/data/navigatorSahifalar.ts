@@ -58,7 +58,7 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'ielts-sarlavhalar', maqsad: 'ielts', nomi: 'Reading darsi: Matching headings', izoh: 'Interaktiv dars va mashqlar.', manzil: '/uz/ielts/qollanma/reading/sarlavhalar/' },
   { id: 'ielts-listening', maqsad: 'ielts', nomi: "Listening qo'llanmasi", izoh: 'Audio bilan mashq.' },
   { id: 'ielts-writing', maqsad: 'ielts', nomi: 'Writing Task 2', izoh: 'Esse tuzilmasi va mashq.' },
-  { id: 'ielts-speaking', maqsad: 'ielts', nomi: 'Speaking', izoh: "Uch qism va o'zingizni yozib eshitish." },
+  { id: 'ielts-speaking', maqsad: 'ielts', nomi: "Speaking qo'llanmasi", izoh: "Uch qism va o'zingizni yozib eshitish.", manzil: '/uz/ielts/qollanma/speaking/' },
 
   // 5-qavat: EYUF
   { id: 'eyuf-kirish', maqsad: 'eyuf', nomi: 'EYUF qavati', izoh: 'Tanlov bosqichlari xaritasi.', manzil: '/uz/eyuf/', qurilmoqda: true },
