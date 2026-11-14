@@ -41,12 +41,13 @@ export const holatniYoz = (bolim: DarsBolim, h: TakrorHolat) => yoz(takrorKalit(
 /**
  * Daftardagi xatolarni takrorlash holatiga qo'shadi.
  * Yangi xato yoki darsda qayta xato (daftar sanasi yozuvdagidan keyin) → 1-quti, keyingi = xato sanasi + 1 kun.
+ * `qoshimcha`: daftardan tashqari xatolar (IELTS: Reading test urinishlari), xuddi shu qoida bilan.
  * O'zgarish bo'lsa yozadi. Saqlash ishlamasa ham holatni qaytaradi.
  */
-export function sinxronla(bolim: DarsBolim, mavjudId: Set<string>): TakrorHolat {
+export function sinxronla(bolim: DarsBolim, mavjudId: Set<string>, qoshimcha: { id: string; sana: string }[] = []): TakrorHolat {
   const h = holatniOqi(bolim);
   let ozgardi = false;
-  for (const x of xatolarniOqi(bolim)) {
+  for (const x of [...xatolarniOqi(bolim), ...qoshimcha]) {
     if (!x || typeof x.id !== 'string' || !mavjudId.has(x.id) || !SANA.test(String(x.sana))) continue;
     const y = h.savollar[x.id];
     if (!y || x.sana > y.xatoSana) {

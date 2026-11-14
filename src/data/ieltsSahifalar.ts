@@ -49,6 +49,7 @@ export const mashqlar: IeltsBand[] = [
 
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
+  { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
 ];
 
 export const KALIT_IELTS_REJA = 'tayanch:ielts-reja';
