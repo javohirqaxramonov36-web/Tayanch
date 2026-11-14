@@ -174,6 +174,12 @@ ifodalarini beradi. Muallif ifoda va ko‘rinadigan variantning mosligini ham te
    `external_id` orqali UUIDni saqlaydi va bir xil yozuvni takror yangilamaydi.
    Yashirilgan, boshqa to‘plamga tegishli yoki bir xil versiyada tahrirlangan
    yozuv to‘liq tranzaksiyani to‘sadi. Rasmli savol uchun SQL eksport to‘xtaydi.
+   SQL faylini `psql -X -v ON_ERROR_STOP=1 -f <fayl>` orqali bajaring. Generator
+   tranzaksiya ichida tasdiqlangan qatorlar va mavzu sonini tekshiradi. Birinchi
+   A1 ilk relizi uchun `kurs:import -- --mavzu A1 --staging --sql --birinchi-nashr`
+   boshqa kurs mavzulari soni nol bo‘lishini ham talab qiladi va `SET LOCAL ROLE
+   postgres`ni tranzaksiya ichida bajaradi. Bu rejimni `postgres` roliga o‘tish
+   huquqi bor Supabase ulanishida ishlating.
 5. Jonli ish uchun alohida tasdiqdan oldin migratsiyalar ro‘yxati, shu mavzudagi
    mavjud savollar va bog‘langan sessiyalar sonini faqat o‘qib tekshiring. Mavzu
    qatorlarining xususiy DB zaxirasini oling. Tranzaksiya xato bersa o‘zi bekor

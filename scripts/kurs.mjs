@@ -10,7 +10,7 @@ const mavzuId = typeof a.mavzu === 'string' ? a.mavzu.toUpperCase() : undefined;
 const staging = a.staging === true;
 const bayroqlar = {
   tekshir: ['papka', 'mavzu', 'staging', 'katalog', 'hashlar', 'nashr'],
-  'dry-run': ['papka', 'mavzu', 'staging', 'sql'],
+  'dry-run': ['papka', 'mavzu', 'staging', 'sql', 'birinchi-nashr'],
   kochir: ['papka', 'mavzu'],
   tasdiqla: ['papka', 'mavzu', 'kim', 'sinov'],
 };
@@ -19,11 +19,11 @@ try {
   if (!Object.hasOwn(bayroqlar, amal) || a._.length > 1
       || Object.keys(a).some((k) => k !== '_' && !bayroqlar[amal].includes(k))
       || ['papka', 'kim'].some((k) => a[k] !== undefined && typeof a[k] !== 'string')
-      || ['katalog', 'hashlar', 'nashr', 'staging', 'sinov', 'sql'].some((k) => a[k] !== undefined && a[k] !== true)
+      || ['katalog', 'hashlar', 'nashr', 'staging', 'sinov', 'sql', 'birinchi-nashr'].some((k) => a[k] !== undefined && a[k] !== true)
       || (a.mavzu !== undefined && !mavzuId)
       || (a.katalog && Object.keys(a).length !== 2) || (a.hashlar && a.nashr)
       || ((['kochir', 'tasdiqla'].includes(amal) || a.sql) && !mavzuId)
-      || (a.sql && staging)) {
+      || (a['birinchi-nashr'] && !a.sql)) {
     throw new Error('Noma’lum yoki mos kelmaydigan argument');
   }
   if (a.katalog) {
@@ -52,7 +52,7 @@ try {
     }
     if (amal === 'kochir') mavzuniKochir(a.papka, katalog[0]);
     if (a.sql) {
-      importSqlYoz(a.papka, katalog[0], reja);
+      importSqlYoz(a.papka, katalog[0], reja, { staging, birinchiNashr: a['birinchi-nashr'] === true });
       const { savollar, miniTest } = nashrMalumoti(reja);
       console.log(`Xususiy import.sql tayyor. ${savollar} savol, mini-testda ${miniTest} savol.`);
     }

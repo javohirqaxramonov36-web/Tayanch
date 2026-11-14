@@ -237,6 +237,10 @@ test('tasdiqsiz va eskirgan hash rad etiladi, tasdiqlangan dry-run yozmaydi', ()
   const mavzu = kursniTekshir({ papka, mavzuId: mA1.id, muallif });
   assert.equal(mavzu.reja.length, mA1.total);
   const sql = importSql(mA1, mavzu.reja);
+  const faqatA1 = importSql(mA1, mavzu.reja, { yagonaMavzu: true });
+  assert.match(faqatA1, /do \$kurs_count\$[\s\S]*course_import_count_mismatch[\s\S]*\$kurs_count\$;[\s\S]*commit;/);
+  assert.match(faqatA1, /teg like 'sat-kurs:%' and teg not like 'sat-kurs:v1:a1:%'/);
+  assert.doesNotMatch(sql, /teg like 'sat-kurs:%' and teg not like/);
   assert.equal(importSql(mA1, kursniTekshir({ papka, mavzuId: mA1.id, muallif }).reja), sql);
   assert.match(sql, /on conflict \(external_id\) do update/);
   assert.match(sql, /to_jsonb\(eski\)[\s\S]*is distinct from to_jsonb\(excluded\)/);
