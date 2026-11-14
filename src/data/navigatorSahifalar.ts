@@ -57,7 +57,7 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'ielts-tfng', maqsad: 'ielts', nomi: 'Reading darsi: True / False / Not Given', izoh: 'Interaktiv dars va mashqlar.', manzil: '/uz/ielts/qollanma/reading/tfng/' },
   { id: 'ielts-sarlavhalar', maqsad: 'ielts', nomi: 'Reading darsi: Matching headings', izoh: 'Interaktiv dars va mashqlar.', manzil: '/uz/ielts/qollanma/reading/sarlavhalar/' },
   { id: 'ielts-listening', maqsad: 'ielts', nomi: "Listening qo'llanmasi", izoh: 'Audio bilan mashq.' },
-  { id: 'ielts-writing', maqsad: 'ielts', nomi: 'Writing Task 2', izoh: 'Esse tuzilmasi va mashq.' },
+  { id: 'ielts-writing', maqsad: 'ielts', nomi: "Writing Task 2 qo'llanmasi", izoh: "Mezonlar, insho tuzilmasi va o'zini tekshirish.", manzil: '/uz/ielts/qollanma/writing-task-2/' },
   { id: 'ielts-speaking', maqsad: 'ielts', nomi: 'Speaking', izoh: "Uch qism va o'zingizni yozib eshitish." },
 
   // 5-qavat: EYUF
