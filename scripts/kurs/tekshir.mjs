@@ -1,13 +1,13 @@
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { REPO } from '../savol/umumiy.mjs';
 import { BOSQICHLAR, katalogniOqi } from './katalog.mjs';
 import { kursImportRejasi, kursSavoliniOqi } from './savol.mjs';
 import { kursPapkasi, pngOqi, xususiyFayl } from './xususiy.mjs';
 
-function pythonTekshir(topshiriqlar) {
+function pythonTekshir(topshiriqlar, repo) {
   const natija = spawnSync(process.env.TAYANCH_KURS_PYTHON || 'python3', [
-    '-I', '-B', fileURLToPath(new URL('./tekshir.py', import.meta.url)),
+    '-I', '-B', join(repo, 'scripts/kurs/tekshir.py'),
   ], {
     input: JSON.stringify(topshiriqlar), encoding: 'utf8', timeout: 20_000, killSignal: 'SIGKILL',
     maxBuffer: 2 * 1024 * 1024, env: { PATH: process.env.PATH },
@@ -20,10 +20,13 @@ function pythonTekshir(topshiriqlar) {
   return javob;
 }
 
-export function kursniTekshir({ papka, mavzuId, staging = false, muallif = process.env.TAYANCH_MUALLIF?.trim() } = {}) {
-  const katalog = katalogniOqi().filter((m) => !mavzuId || m.id === mavzuId);
+export function kursniTekshir({
+  papka, mavzuId, staging = false, muallif = process.env.TAYANCH_MUALLIF?.trim(),
+  repo = REPO, mavzular = katalogniOqi(),
+} = {}) {
+  const katalog = mavzular.filter((m) => !mavzuId || m.id === mavzuId);
   if (!katalog.length) throw new Error('MVP mavzusi topilmadi');
-  const ildiz = kursPapkasi(papka, staging ? 'staging' : 'content');
+  const ildiz = kursPapkasi(papka, staging ? 'staging' : 'content', repo);
   const xatolar = [];
   const natijalar = [];
   const darslar = new Map();
@@ -81,7 +84,7 @@ export function kursniTekshir({ papka, mavzuId, staging = false, muallif = proce
   }
 
   if (topshiriqlar.length) {
-    const javoblar = pythonTekshir(topshiriqlar.map((x) => x.topshiriq));
+    const javoblar = pythonTekshir(topshiriqlar.map((x) => x.topshiriq), repo);
     javoblar.forEach((javob, i) => {
       const { joy, papka } = topshiriqlar[i];
       if (javob.error) xatolar.push(`${joy}: ${javob.error}`);

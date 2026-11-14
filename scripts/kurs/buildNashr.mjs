@@ -3,15 +3,15 @@ import { mavzuYoli, nashrMalumoti } from './nashr.mjs';
 import { kursniTekshir } from './tekshir.mjs';
 import { kursPapkasi, xususiyFayl } from './xususiy.mjs';
 
-export function nashrniOqi(papka, muallif) {
+export function nashrniOqi(papka, muallif, { mavzular, repo } = {}) {
   let content;
-  try { content = kursPapkasi(papka); } catch { return {}; }
+  try { content = kursPapkasi(papka, 'content', repo); } catch { return {}; }
   const nashr = {};
-  for (const mavzu of katalogniOqi()) {
+  for (const mavzu of mavzular ?? katalogniOqi()) {
     try {
       const joy = mavzuYoli(content, mavzu);
       const receipt = JSON.parse(xususiyFayl(joy, 'import-receipt.json', 1024));
-      const { xatolar, reja, darslar } = kursniTekshir({ papka, mavzuId: mavzu.id, muallif });
+      const { xatolar, reja, darslar } = kursniTekshir({ papka, mavzuId: mavzu.id, muallif, mavzular, repo });
       if (xatolar.length || !reja.length) continue;
       const { hash, savollar, miniTest } = nashrMalumoti(reja);
       if (receipt.topic !== mavzu.id || receipt.hash !== hash || receipt.savollar !== savollar || receipt.miniTest !== miniTest) continue;

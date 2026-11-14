@@ -281,6 +281,7 @@ test('tasdiqsiz va eskirgan hash rad etiladi, tasdiqlangan dry-run yozmaydi', ()
   assert.ok(eskirgan.xatolar.some((x) => x.includes('verified_hash')));
   assert.deepEqual(eskirgan.reja, []);
   assert.deepEqual(nashrniOqi(papka, muallif), {});
+  yoz(fayl, original);
 });
 
 test('To‘liq tasdiqsiz mavzu staging dan ko‘chmaydi', () => {
@@ -297,19 +298,32 @@ test('To‘liq tasdiqsiz mavzu staging dan ko‘chmaydi', () => {
   assert.deepEqual(faylHashlari(papka), oldin);
 });
 
-test('Astro buildga xususiy dars, qoralama va javoblar chiqmaydi', () => {
-  const dist = join(papka, 'dist');
-  const build = spawnSync(process.execPath, [
-    join(REPO, 'node_modules/.bin/astro'), 'build', '--outDir', dist,
-  ], { cwd: REPO, encoding: 'utf8', timeout: 60_000,
-    env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', TAYANCH_KURS_NASHR: '0', TAYANCH_SAVOLLAR_DIR: papka },
-  });
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-  const fayllar = daraxt(dist);
-  assert.ok(fayllar.some((yol) => yol.endsWith('/index.html')));
-  assert.ok(fayllar.every((yol) => !yol.endsWith('questions.json') && !yol.endsWith('lesson.md')));
-  for (const yol of fayllar) {
-    const matn = readFileSync(yol);
-    assert.ok(!matn.includes(belgi) && !matn.includes(javobBelgisi));
+test('Astro faqat flag yoqilganda tasdiqlangan nazariyani chiqaradi', () => {
+  for (const flag of ['0', '1']) {
+    const dist = join(papka, `dist-${flag}`);
+    const build = spawnSync(process.execPath, [
+      join(REPO, 'node_modules/.bin/astro'), 'build', '--outDir', dist,
+    ], { cwd: REPO, encoding: 'utf8', timeout: 60_000,
+      env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', TAYANCH_KURS_NASHR: flag,
+        TAYANCH_SAVOLLAR_DIR: papka, TAYANCH_MUALLIF: muallif },
+    });
+    assert.equal(build.status, 0, build.stderr || build.stdout);
+
+    const fayllar = daraxt(dist);
+    const dars = fayllar.find((yol) => yol.endsWith('/algebra/a1/asos/dars/index.html'));
+    if (flag === '1') {
+      assert.ok(dars, 'A1 darsi build natijasida bo‘lishi kerak');
+      assert.ok(readFileSync(dars).includes(`Synthetic lesson ${belgi}`));
+    } else {
+      assert.equal(dars, undefined);
+    }
+    for (const yol of fayllar) {
+      assert.doesNotMatch(yol, /(?:questions\.json|lesson\.md|import-receipt\.json)$/);
+      const matn = readFileSync(yol);
+      if (flag === '0') assert.ok(!matn.includes(belgi));
+      assert.ok(!matn.includes(`Synthetic fixture ${belgi}`));
+      assert.ok(!matn.includes(`Synthetic explanation ${belgi}`));
+      assert.ok(!matn.includes(javobBelgisi));
+    }
   }
 });

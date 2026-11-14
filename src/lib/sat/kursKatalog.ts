@@ -20,9 +20,13 @@ export interface KursMavzu {
   counts: { mini_test: number };
 }
 
-export const kursMavzulari: KursMavzu[] = katalogniOqi(kursCsv);
+const mavzular = katalogniOqi(kursCsv);
+export const kursMavzulari: KursMavzu[] = mavzular;
 type NashrMavzusi = { savollar: number; miniTest: number; darslar: [string, string, string] };
-export const kursNashri: Record<string, NashrMavzusi> = process.env.TAYANCH_KURS_NASHR === '1' ? nashrniOqi() : {};
+// Astro prerender modullarini .astro ichiga yig‘adi. Validator manba katalogidan ishlaydi.
+export const kursNashri: Record<string, NashrMavzusi> = process.env.TAYANCH_KURS_NASHR === '1'
+  ? nashrniOqi(undefined, undefined, { mavzular, repo: process.cwd() })
+  : {};
 export const kursOchiq = Object.keys(kursNashri).length > 0;
 export const kursMavzuOchiq = (id: string) => Object.hasOwn(kursNashri, id);
 
