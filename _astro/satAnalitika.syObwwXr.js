@@ -1,0 +1,1 @@
+var e={kuchli:85,rivojlanmoqda:60,minUrinish:5,maxTavsiya:6,kunlar:90,vaqtMintaqasi:`Asia/Tashkent`,vaqtMintaqasiYozuv:`Tashkent time (Asia/Tashkent, UTC+5)`,mashqHajmi:10,kengaytirilganBayroq:`analytics_extended`},t=e=>/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/.test(e);export{t as n,e as t};

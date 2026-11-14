@@ -1,0 +1,1 @@
+var e=`tayanch:sat-reja`;export{e as t};

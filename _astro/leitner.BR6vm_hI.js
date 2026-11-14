@@ -1,0 +1,1 @@
+var e={1:3,2:7,3:14};function t(e,t){let[n,r,i]=e.split(`-`).map(Number);return new Date(Date.UTC(n,r-1,i)+t*864e5).toISOString().slice(0,10)}function n(n,r,i){if(!r)return{quti:1,keyingi:t(i,1)};let a=n??1;return a>=4?{quti:5,keyingi:i}:{quti:a+1,keyingi:t(i,e[a])}}export{t as n,n as t};
