@@ -1,4 +1,5 @@
 ---
+import { kursTavsiyaYollari } from '../../../../../../lib/sat/kursKatalog';
 // Mock imtihon ekrani (P30). Fokus qolipi, yon panelsiz. Manzil: /uz/sat/mashq/mock/imtihon/?id=<attempt_id>.
 // Bosqichlar: modul oldidan → modul (taymer serverdagi deadline_at dan) → R&W 2-moduldan keyin 10 daqiqa tanaffus → natija.
 // Javoblar modul davomida o'zgaradi; to'g'ri javob va tushuntirish faqat natijada. Uzilishda: brauzer navbati
@@ -47,7 +48,7 @@ const IK = {
 
   <SavolUslub />
   <MockUslub />
-  <div class="mk mk-imtihon" id="mk" data-kirish-url={kirishUrl} data-hisob-url={yol('/uz/hisob/kirish/')}>
+  <div class="mk mk-imtihon" data-kurs={JSON.stringify(kursTavsiyaYollari())} id="mk" data-kirish-url={kirishUrl} data-hisob-url={yol('/uz/hisob/kirish/')}>
     {import.meta.env.DEV && <p class="mk-pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
 
     <section class="mk-karta" id="yuklash" role="status">
@@ -156,6 +157,7 @@ const IK = {
 </SatFokus>
 
 <script>
+  import { kursBogliqlar, tavsiyaKursYoli, type KursTavsiyaMavzu } from '../../../../../../lib/sat/kursTavsiya';
   import { hisobMijoz } from '../../../../../../lib/hisob';
   import { savolChiz, type SavolKorsatkich } from '../../../../../../lib/sat/savolKorsatkich';
   import { BOSH_HOLAT, type SavolHolati } from '../../../../../../lib/sat/savolTuri';
@@ -633,6 +635,7 @@ const IK = {
   }
 
   // ---------- Natija ----------
+  const kursMavzular: KursTavsiyaMavzu[] = JSON.parse(document.getElementById('mk')?.dataset.kurs ?? '[]');
   function el<K extends keyof HTMLElementTagNameMap>(tag: K, sinf = '', matn?: string): HTMLElementTagNameMap[K] {
     const e = document.createElement(tag);
     if (sinf) e.className = sinf;
@@ -648,6 +651,8 @@ const IK = {
     } catch (e) {
       return xatoEkrani(e);
     }
+    const c = kursMavzular.length ? hisobMijoz() : null;
+    const otilgan = new Set(c ? (await kursBogliqlar(c, kursMavzular)).passed : []);
     const quti = $('natija');
     quti.replaceChildren();
     const s = N.scores!;
@@ -673,6 +678,25 @@ const IK = {
     );
     quti.append(dl);
     quti.append(el('p', 'mk-matn', 'How the estimate works: each section score is 200 + 600 × (correct answers ÷ questions), rounded to the nearest 10. The real SAT uses its own scoring method for adaptive modules, so a real score can be different. Use this number to compare your own mock tests, not to predict your SAT score.'));
+
+    const tavsiyalar = new Set(N.questions.filter((q) => q.is_correct !== true)
+      .map((q) => tavsiyaKursYoli(kursMavzular, q, otilgan)).filter((href) => href !== undefined));
+    if (tavsiyalar.size) {
+      const tavsiya = el('section', 'mk-bolim');
+      tavsiya.append(el('h2', '', 'Study in the Math course'));
+      const royxat = el('ul');
+      for (const href of tavsiyalar) {
+        const m = kursMavzular.find((m) => m.href === href);
+        const domen = kursMavzular.find((m) => m.domainHref === href);
+        const havola = el('a', '', m?.skill ?? domen?.domain ?? 'Math course');
+        havola.href = href;
+        const qator = el('li');
+        qator.append(havola);
+        royxat.append(qator);
+      }
+      tavsiya.append(royxat);
+      quti.append(tavsiya);
+    }
 
     const { sohalar } = natijaJadvali(N.questions);
     const sohaBolim = el('section', 'mk-bolim');

@@ -1,4 +1,5 @@
 ---
+import { kursTavsiyaYollari } from '../../../../../lib/sat/kursKatalog';
 // Mening natijalarim. Dizayn: Tayanch-SAT-dizayn.md, "Natijalar" ekrani.
 // 1) Analitika paneli (P14): hisob bilan kirganda public.analytics_summary() RPC javobi (yig'indi serverda hisoblanadi).
 //    Chegaralar va N: src/data/satAnalitika.ts. Sof hisob: src/lib/sat/analitika.ts. Kun chegarasi Asia/Tashkent.
@@ -26,7 +27,7 @@ const holatIzohi = [
   holat="qoralama"
 >
   <script type="application/json" id="namuna-data" set:html={JSON.stringify(namunaJavoblar)} />
-  <div class="ichki natija">
+  <div class="ichki natija" data-kurs={JSON.stringify(kursTavsiyaYollari())}>
     <section class="bosh" aria-labelledby="nat-h">
       <p class="pill-qator"><span class="pill">Tool</span><span class="pill pill-chiziq" id="mock-pill" hidden>Sample data</span></p>
       <h1 id="nat-h">My results</h1>
@@ -203,6 +204,7 @@ const holatIzohi = [
 </BolimQobiq>
 
 <script>
+  import { kursBogliqlar, tavsiyaKursYoli, type KursTavsiyaMavzu } from '../../../../../lib/sat/kursTavsiya';
   import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
   import { holatOchir } from '../../../../../lib/holat';
 
@@ -298,6 +300,7 @@ const holatIzohi = [
 <script>
   // Analitika paneli (P14). Holatlar: loading → ready | empty | anon | no-supabase | error.
   import { analitikaSozlama as A } from '../../../../../data/satAnalitika';
+  import { kursBogliqlar, tavsiyaKursYoli, type KursTavsiyaMavzu } from '../../../../../lib/sat/kursTavsiya';
   import { hisobMijoz, hisobYoli } from '../../../../../lib/hisob';
   import { xatoTuri, SESSIYA_KALITI } from '../../../../../lib/savolBanki';
   import { SABABLAR } from '../../../../../lib/sat/sessiya';
@@ -317,6 +320,7 @@ const holatIzohi = [
   const $ = (id: string) => document.getElementById(id)!;
   const SVG = 'http://www.w3.org/2000/svg';
 
+  const kursMavzular: KursTavsiyaMavzu[] = JSON.parse(document.querySelector<HTMLElement>('.natija')?.dataset.kurs ?? '[]');
   function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', matn = ''): HTMLElementTagNameMap[K] {
     const e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -443,7 +447,9 @@ const holatIzohi = [
     $('pl-streak-izoh').textContent = t.streak > 0 ? 'Days in a row with at least one answer' : 'Answer a question today to start a streak';
   }
 
-  function tavsiyaBlok(x: Xulosa) {
+  async function tavsiyaBlok(x: Xulosa) {
+    const c = kursMavzular.length ? hisobMijoz() : null;
+    const otilgan = new Set(c ? (await kursBogliqlar(c, kursMavzular)).passed : []);
     const r = tavsiyalar(x.skills);
     const ul = $('tavsiya');
     ul.replaceChildren(...r.map((s) => {
@@ -452,6 +458,12 @@ const holatIzohi = [
       bosh.append(el('span', 'tav-nom', s.skill), el('span', 'tav-bolim', `${BOLIM_NOMI[s.section] ?? s.section} · ${s.domain}`));
       const orta = el('div', 'tav-orta');
       orta.append(ustun(s.correct / s.attempts, s.holat), el('span', 'tav-son', aniqlikMatni(s)), holatBelgi(s.holat));
+      const href = tavsiyaKursYoli(kursMavzular, s, otilgan);
+      if (href) {
+        const kurs = el('a', undefined, 'Study in the Math course');
+        kurs.href = href;
+        bosh.append(kurs);
+      }
       li.append(bosh, orta, mashqTugma(s));
       return li;
     }));
