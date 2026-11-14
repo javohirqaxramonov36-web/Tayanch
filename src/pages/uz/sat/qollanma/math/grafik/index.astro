@@ -73,6 +73,7 @@ const Y = (y: number) => 210 - 20 * y;
     </div>
     <p class="sr" id="grafik-tavsif" aria-live="polite"></p>
     <p class="sahna-izoh" id="grafik-izoh"></p>
+    <button type="button" class="kichik-tugma grafik-qaytar" id="grafik-qaytar">Boshlang'ich holat</button>
   </div>
 
   <div slot="animatsiya">
@@ -110,6 +111,7 @@ const Y = (y: number) => 210 - 20 * y;
   const svg = $('grafik') as unknown as SVGSVGElement;
 
   const h = { rejim: 'chiziq' as Rejim, m: 1, b: 2, a: 1, ph: 2, pk: -3, m1: 2, b1: 1, m2: -1, b2: 7 };
+  const BOSH = { ...h }; // "Boshlang'ich holat" tugmasi shu qiymatlarga qaytaradi
 
   // Slayderlar ta'rifi: [kalit, yorliq, min, max, qadam]
   const SL: Record<Rejim, [keyof typeof h, string, number, number, number][]> = {
@@ -338,6 +340,15 @@ const Y = (y: number) => 210 - 20 * y;
     slayderlarniQur(); tutqichlarniQur(); chiz();
   }));
 
+  // ---------- Boshlang'ich holat ----------
+  // Faqat joriy rejim qiymatlari qaytadi; rejim va boshqa rejimlar o'zgarmaydi. Fokus tugmada qoladi.
+  $('grafik-qaytar').addEventListener('click', () => {
+    clearInterval(animT); animQadam = 0; $('anim-boshla').textContent = kamaytir ? 'Keyingi holat' : "Ko'rsatish";
+    $('anim-holat').textContent = 'Tugmani bosing.';
+    SL[h.rejim].forEach(([k]) => { (h as Record<string, unknown>)[k] = BOSH[k]; });
+    slayderlarniSinxronla(); chiz();
+  });
+
   bosishRadiusi(svg, 420, (r) => { bosishR = Math.max(10, r); tutqichlarniJoyla(); });
   slayderlarniQur();
   tutqichlarniQur();
@@ -346,6 +357,7 @@ const Y = (y: number) => 210 - 20 * y;
 
 <style is:global>
   .dars .rejim-tanlov { margin-bottom: var(--b-3); }
+  .dars .grafik-qaytar { margin-top: var(--b-3); }
   .dars .grafik-quti svg { touch-action: pan-y; }
   .dars .g-panjara line { stroke: var(--chiziq-kuchli); stroke-width: 1; }
   .dars .g-oqlar line { stroke: var(--matn-sust); stroke-width: 1.5; }
