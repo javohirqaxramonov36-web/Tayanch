@@ -1,0 +1,93 @@
+---
+// SAT telefon pastki tab bari (< 1024px; rekonstruksiya rejasi 1-bosqich qoldig'i, 2026-11-13).
+// Bandlar: Today, Practice, Learn, Progress, Plan (yon panel guruhlari, satYonGuruhlar). Account yon panelda (hamburger) qoladi.
+// SAT'da telefondagi pastki Lift o'rnini egallaydi; qavat lifti chiqib keladigan yon panelga (hamburger menyu) o'tadi
+// (Lift.astro, .yon[data-bolim='sat'] .lift-yon). Ikkalasi bir vaqtda pastda turmaydi.
+// Holatlar: doimiy ko'rinadi (asosiy navigatsiya, aylantirganda yashirinmaydi). Matn maydoni fokusda bo'lsa yashirinadi
+//   (telefon klaviaturasi ustiga chiqmasin), fokus ketganda qaytadi. Yon panel ochiq bo'lsa inert (data-panel-tashqari).
+// Joriy tab URL'dan: aynan tab sahifasi aria-current="page", guruhdagi boshqa sahifa aria-current="true".
+// Balandlik: 64px tab + 2 x 4px = 72px + safe area (global.css body pastki bo'shlig'i bilan bir xil). localStorage yo'q.
+// SatFokus (mashq, mock) sahifalarida yo'q: BolimQobiq'da ulanadi.
+import { satYonGuruhlar } from '../../data/satSahifalar';
+import { satQism, satTablar, type SatTabKalit } from '../../lib/sat/satTab';
+import { yol } from '../../lib/yol';
+
+const tablar = satTablar(
+  satYonGuruhlar.map((g) => ({ nomi: g.nomi, qismlar: g.qismlar.flatMap((q) => q.sahifalar.map((s) => s.qism)) })),
+  satQism(Astro.url.pathname),
+);
+// Ikonkalar yon paneldagi mos bandlardan (BolimYon.astro): Today = bosh, Practice = Question bank,
+// Learn = Reading & Writing guide, Progress = Progress, Plan = Study planner.
+const ikonkalar: Record<SatTabKalit, string> = {
+  today: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+  practice: '<rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/>',
+  learn: '<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>',
+  progress: '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
+  plan: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 15l2 2 4-4"/>',
+};
+---
+<nav class="sat-tab" aria-label="SAT sections" data-panel-tashqari data-sat-tab>
+  <ul class="sat-tab-royxat">
+    {tablar.map((t) => (
+      <li>
+        <a href={yol(`/uz/sat/${t.qism}`)} aria-current={t.joriy}>
+          <span class="sat-tab-belgi" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={ikonkalar[t.kalit]} />
+          </span>
+          <span class="sat-tab-nom">{t.nomi}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  // Telefon klaviaturasi ochiq (matn maydoni fokusda) bo'lsa panel yashirinadi. Holat saqlanmaydi.
+  const panel = document.querySelector<HTMLElement>('[data-sat-tab]');
+  if (panel) {
+    const YOZISH = 'input:not([type="checkbox"], [type="radio"], [type="range"], [type="button"], [type="submit"], [type="reset"], [type="color"], [type="file"]), textarea, select, [contenteditable=""], [contenteditable="true"]';
+    const yozishmi = (el: EventTarget | null) => el instanceof Element && el.matches(YOZISH);
+    document.addEventListener('focusin', (e) => { panel.classList.toggle('klaviatura', yozishmi(e.target)); });
+    document.addEventListener('focusout', (e) => { if (!yozishmi(e.relatedTarget)) panel.classList.remove('klaviatura'); });
+  }
+</script>
+
+<style>
+  .sat-tab {
+    position: fixed; z-index: 25; left: 0; right: 0; bottom: 0;
+    background: var(--color-surface);
+    border-top: var(--border-width-1) solid var(--color-border);
+    padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
+  }
+  .sat-tab.klaviatura { display: none; }
+  .sat-tab-royxat {
+    list-style: none; margin: 0 auto; padding: 0; max-width: 40rem;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-1);
+  }
+  .sat-tab-royxat a {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    height: var(--size-bottombar); min-width: 0; border-radius: var(--radius-md);
+    color: var(--color-text-secondary); text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sat-tab-belgi {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 52px; height: 30px; border-radius: var(--radius-full);
+  }
+  .sat-tab-nom {
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
+  }
+  .sat-tab-royxat a[aria-current] { color: var(--color-text-primary); }
+  .sat-tab-royxat a[aria-current] .sat-tab-belgi { background: var(--floor-ui); color: var(--floor-ui-text); }
+  .sat-tab-royxat a[aria-current] .sat-tab-nom { font-weight: 800; }
+  @media (hover: hover) and (pointer: fine) {
+    .sat-tab-royxat a:not([aria-current]):hover .sat-tab-belgi { background: var(--floor-subtle); color: var(--floor-text); }
+  }
+  .sat-tab-royxat a:active .sat-tab-belgi { transform: var(--bosilish); }
+  .sat-tab-belgi { transition: transform var(--duration-fast) var(--ease-enter); }
+
+  @media (min-width: 1024px) {
+    .sat-tab { display: none; }
+  }
+</style>

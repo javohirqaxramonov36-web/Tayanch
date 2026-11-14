@@ -7,6 +7,7 @@
 //   pastki — telefon (< 1024px): pastdagi 5 tugmali panel. Pastga 48px dan ko'p aylantirilsa yashirinadi,
 //            yuqoriga 24px, sahifa tepasi yoki oxirida, yoki Tab bilan fokus kelsa chiqadi.
 //            Yon panel ochiq (lift inert) bo'lsa holat o'zgarmaydi. body pastki bo'shlig'i o'zgarmaydi.
+//            SAT (BolimQobiq) da pastki Lift yo'q: o'rnida SatTabBar, Lift esa telefonda yon panel ichida (yon varianti).
 // Oldingi qavat sessionStorage "tayanch:qavat" da; qavat o'zgarsa qisqa "2 → 3" ko'rsatkichi.
 import { qavatlar, joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
@@ -196,6 +197,8 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
 
   @media (max-width: 1023.98px) {
     .lift-yon, .lift-menyu, .lift-fokus { display: none; }
+    /* SAT: telefonda pastda tab bar (SatTabBar), shuning uchun qavat lifti chiqib keladigan yon panelda (hamburger menyu). */
+    :global(.yon[data-bolim='sat']) .lift-yon { display: block; padding-bottom: var(--b-3); }
   }
   @media (min-width: 1024px) {
     .lift-pastki { display: none; }

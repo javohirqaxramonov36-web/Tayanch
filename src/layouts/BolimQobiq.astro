@@ -10,6 +10,7 @@ import Lift from '../components/Lift.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import SatSinxron from '../components/SatSinxron.astro';
+import SatTabBar from '../components/sat/SatTabBar.astro';
 import type { BolimSlug } from '../data/bolimlar';
 import { bolimTili, matn } from '../data/umumiyMatn';
 
@@ -50,7 +51,8 @@ const sahifaNomi = title.split(' · ')[0];
       {bolim === 'sat' && <SatSinxron />}
       <p class="ichki beta-holat" lang="en">Beta — in development</p>
     </div>
-    <Lift variant="pastki" />
+    {/* Telefon: SAT'da pastki tab bar (Lift yon panelga o'tadi), boshqa bo'limlarda pastki Lift. */}
+    {bolim === 'sat' ? <SatTabBar /> : <Lift variant="pastki" />}
   </body>
 </html>
 
