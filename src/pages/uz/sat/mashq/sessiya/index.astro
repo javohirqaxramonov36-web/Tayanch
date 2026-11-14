@@ -12,9 +12,11 @@ import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
 import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
 import { ichkiSahifa } from '../../../../../data/satSahifalar';
 import { yol } from '../../../../../lib/yol';
+import { kursNatijaHavolalari, kursPreview } from '../../../../../lib/sat/kursKatalog';
 
 const sahifa = ichkiSahifa('mashq/sessiya/');
 const bankUrl = yol('/uz/sat/mashq/bank/');
+const kursYollar = kursPreview ? JSON.stringify(kursNatijaHavolalari()) : undefined;
 const IK = {
   xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
   soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
@@ -50,7 +52,7 @@ const IK = {
   </div>
 
   <SavolUslub />
-  <div class="sessiya" id="sessiya" data-bank-url={bankUrl} data-kirish-url={yol('/uz/hisob/kirish/')} data-rejalar-url={yol('/uz/hisob/profil/')}
+  <div class="sessiya" id="sessiya" data-bank-url={bankUrl} data-kirish-url={yol('/uz/hisob/kirish/')} data-rejalar-url={yol('/uz/hisob/profil/')} data-kurs-yollar={kursYollar}
     data-redo-url={yol('/uz/sat/vosita/takrorlash/')} data-natijalar-url={yol('/uz/sat/vosita/natijalar/')}>
     {import.meta.env.DEV && <p class="pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
 
@@ -139,6 +141,7 @@ const IK = {
   import { savolChiz, type SavolKorsatkich } from '../../../../../lib/sat/savolKorsatkich';
   import { BOSH_HOLAT, type SavolHolati } from '../../../../../lib/sat/savolTuri';
   import { sprTekshir } from '../../../../../lib/sat/sprFormat';
+  import { miniTestOtdimi } from '../../../../../lib/sat/kursNatija';
   import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
   import type { XabarApi } from '../../../../../lib/sat/xabar';
   import { xabarDialogUlash, supabaseXabarApi } from '../../../../../lib/sat/xabarDialog';
@@ -151,6 +154,7 @@ const IK = {
   const $ = <T extends HTMLElement = HTMLElement>(i: string) => document.getElementById(i) as T;
   const ildiz = $('sessiya');
   const BANK = ildiz.dataset.bankUrl!;
+  const kursYollar: Record<string, { mavzu: string; keyingi?: string }> = JSON.parse(ildiz.dataset.kursYollar ?? '{}');
   const SINF = { flag: ['M4 22V4', 'M4 4h13l-2 4 2 4H4'], togri: ['M5 12l5 5L20 7'], xato: ['M6 6l12 12M18 6L6 18'] };
 
   // ---------- Holat ----------
@@ -900,9 +904,10 @@ const IK = {
     stat('Score', `${h.foiz}%`, `${h.togri} of ${h.jami} correct`);
     stat('Time', davomiylikMatni(S.elapsed_ms ?? h.vaqtMs), S.course ? 'From start to submission' : 'Spent on answered questions');
     stat('Answered', `${h.javobBerilgan} / ${h.jami}`, h.jami - h.javobBerilgan ? `${h.jami - h.javobBerilgan} skipped` : 'None skipped');
-    if (miniTest()) {
-      const holat = S.topic_passed ? 'Passed' : 'Not yet passed';
-      stat('Topic status', holat, S.passed ? 'You reached the 70% passing score.' : 'The passing score is 70%. You can continue to the next topic.');
+    const miniHolat = miniTest() ? (miniTestOtdimi(h.togri, h.jami) ? 'Passed' : 'Not yet passed') : null;
+    if (miniHolat) {
+      stat('Mini-test result', miniHolat, 'The passing score is 70%.');
+      if (S.topic_passed && miniHolat !== 'Passed') stat('Topic status', 'Passed on an earlier attempt');
     }
 
     const skill = el('section', 'natija-bolim');
@@ -955,9 +960,15 @@ const IK = {
     };
 
     const amal = el('div', 'natija-amal');
-    const bank = el('a', 'asosiy-tugma', 'Back to the question bank');
-    bank.href = BANK;
-    amal.append(bank);
+    const kursYoli = S.course && Object.hasOwn(kursYollar, S.course.topic_id) ? kursYollar[S.course.topic_id] : undefined;
+    const orqaga = el('a', 'asosiy-tugma', kursYoli ? 'Back to the topic' : 'Back to the question bank');
+    orqaga.href = kursYoli?.mavzu ?? BANK;
+    amal.append(orqaga);
+    if (kursYoli?.keyingi) {
+      const keyingi = el('a', 'ikkinchi-tugma', 'Next topic');
+      keyingi.href = kursYoli.keyingi;
+      amal.append(keyingi);
+    }
     if (S.course) {
       const redo = el('a', 'ikkinchi-tugma', 'Go to your redo list');
       redo.href = ildiz.dataset.redoUrl!;
@@ -972,13 +983,26 @@ const IK = {
     if (h.otkazilgan.length) quti.append(bolim('otkaz-h', 'Skipped', null, h.otkazilgan, 'otkaz'));
     if (h.togrilar.length) quti.append(bolim('togri-h', 'Correct answers', 'Add a question to your redo list if you guessed or want to practice it again.', h.togrilar, 'togri', true));
     quti.append(amal);
+    return S.course ? `${h.togri} of ${h.jami} correct. ${h.otkazilgan.length} skipped.${miniHolat ? ` ${miniHolat}.` : ''}` : undefined;
   }
 
   // ---------- Yuklash va sinxronlash ----------
   function serverdanOl(j: SessiyaJavob) {
     S = j;
     qoralamaniTozala();
-    if (j.course) $('fokus-ustki').textContent = miniTest() ? 'Topic mini-test' : 'Course practice';
+    if (j.course) {
+      $('fokus-ustki').textContent = miniTest() ? 'Topic mini-test' : 'Course practice';
+      if ((import.meta.env.DEV || import.meta.env.MODE === 'kurs-preview') && ildiz.dataset.kursYollar) {
+        void import('../../../../../styles/kurs.css');
+        document.body.classList.add('kurs-sessiya');
+        const yopish = document.querySelector<HTMLAnchorElement>('.fokus-bosh .yopish');
+        const mavzuYoli = Object.hasOwn(kursYollar, j.course.topic_id) ? kursYollar[j.course.topic_id].mavzu : undefined;
+        if (yopish && mavzuYoli) {
+          yopish.href = mavzuYoli;
+          yopish.setAttribute('aria-label', 'Leave the session and go to the topic');
+        }
+      }
+    }
     soatOlingan = Date.now();
     javoblar.clear();
     for (const r of j.results ?? []) {
@@ -1026,10 +1050,11 @@ const IK = {
       korsatkich?.yoq();
       korsatkich = null;
       korsat('natija');
-      natijaChiz();
+      const natijaEloni = natijaChiz();
       progressChiz();
       try { localStorage.removeItem(MAHALLIY_KALIT(id)); } catch { /* */ }
       $('natija-h').focus();
+      if (natijaEloni) elon(natijaEloni);
       return;
     }
     if (m.yakunlanmoqda || yakunlangan()) { yakunla('davom'); return; }

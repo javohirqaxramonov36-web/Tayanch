@@ -1,0 +1,164 @@
+---
+import SatFokus from '../../../../layouts/SatFokus.astro';
+import DesmosHavola from '../../../../components/sat/DesmosHavola.astro';
+import KursBoshlash from '../../../../components/sat/kurs/KursBoshlash.astro';
+import {
+  kursBosqichlari, kursHavola, kursMavzulari, kursPreview, mavzuManzili,
+  type KursBosqich, type KursMavzu,
+} from '../../../../lib/sat/kursKatalog';
+import { yol } from '../../../../lib/yol';
+import '../../../../styles/kurs.css';
+
+type Sahifa =
+  | { tur: 'katalog' }
+  | { tur: 'domen'; domen: string }
+  | { tur: 'mavzu'; mavzu: KursMavzu }
+  | { tur: 'mini'; mavzu: KursMavzu }
+  | { tur: 'dars'; mavzu: KursMavzu; bosqich: KursBosqich }
+  | { tur: 'mashq'; mavzu: KursMavzu; bosqich: KursBosqich };
+
+export function getStaticPaths() {
+  if (!kursPreview) return [];
+  const domenlar = new Map(kursMavzulari.map((m) => [m.domainSlug, m.domain]));
+  const yollar: { params: { kurs: string }; props: Sahifa }[] = [
+    { params: { kurs: 'matematika' }, props: { tur: 'katalog' } },
+  ];
+  for (const [slug, domen] of domenlar) {
+    yollar.push({ params: { kurs: `matematika/${slug}` }, props: { tur: 'domen', domen } });
+  }
+  for (const mavzu of kursMavzulari) {
+    const manzil = `matematika/${mavzu.domainSlug}/${mavzu.topicSlug}`;
+    yollar.push({ params: { kurs: manzil }, props: { tur: 'mavzu', mavzu } });
+    for (const bosqich of kursBosqichlari) {
+      for (const tur of ['dars', 'mashq'] as const) {
+        yollar.push({ params: { kurs: `${manzil}/${bosqich.slug}/${tur}` }, props: { tur, mavzu, bosqich } });
+      }
+    }
+    if (mavzu.counts.mini_test) yollar.push({ params: { kurs: `${manzil}/mini-test` }, props: { tur: 'mini', mavzu } });
+  }
+  return yollar;
+}
+
+const sahifa = Astro.props as Sahifa;
+const mavzu = 'mavzu' in sahifa ? sahifa.mavzu : undefined;
+const mavzuYoli = mavzu ? mavzuManzili(mavzu) : '';
+const domenlar = [...new Map(kursMavzulari.map((m) => [m.domainSlug, m.domain]))];
+const mavzular = sahifa.tur === 'domen' ? kursMavzulari.filter((m) => m.domain === sahifa.domen) : kursMavzulari;
+const sarlavha = sahifa.tur === 'katalog' ? 'SAT® Math course'
+  : sahifa.tur === 'domen' ? sahifa.domen
+  : sahifa.tur === 'mavzu' ? sahifa.mavzu.topic
+  : sahifa.tur === 'mini' ? 'Topic mini-test'
+  : `${sahifa.bosqich.nom} ${sahifa.tur === 'dars' ? 'lesson' : 'practice'}`;
+const orqaga = sahifa.tur === 'katalog' ? undefined
+  : sahifa.tur === 'domen' ? { href: kursHavola(), yorliq: 'Back to the Math course' }
+  : sahifa.tur === 'mavzu' ? { href: kursHavola(`${sahifa.mavzu.domainSlug}/`), yorliq: `Back to ${sahifa.mavzu.domain}` }
+  : { href: kursHavola(mavzuYoli), yorliq: 'Back to the topic' };
+const namuna = sahifa.tur === 'dars' && sahifa.mavzu.id === 'A1' && sahifa.bosqich.set === 'foundation';
+const toplam = mavzu && (sahifa.tur === 'mashq' || sahifa.tur === 'mini')
+  ? `sat-kurs:v1:${mavzu.topicSlug}:${sahifa.tur === 'mini' ? 'mini_test' : sahifa.bosqich.set}`
+  : undefined;
+---
+<SatFokus title={sarlavha} description="Preview of the Tayanch SAT Math course."
+  ustki="Course preview" nomi="SAT Math" liftPastki={false} yol={['SAT Math']}
+  yopish={orqaga ?? { href: yol('/uz/sat/'), yorliq: 'Back to SAT' }}>
+  <article class="kurs-sahifa">
+    <header class="kurs-sarlavha">
+      {orqaga && <a class="kurs-havola" href={orqaga.href}>{orqaga.yorliq}</a>}
+      <h1>{sarlavha}</h1>
+      {mavzu && sahifa.tur !== 'mavzu' && <p>{mavzu.topic}</p>}
+      {sahifa.tur === 'katalog' && <p>Choose a topic to see its lessons, practice and mini-test.</p>}
+    </header>
+
+    {(sahifa.tur === 'katalog' || sahifa.tur === 'domen') && (
+      <section class="kurs-bolim" aria-labelledby="kurs-mavzular">
+        {sahifa.tur === 'katalog' && <nav aria-label="Course domains" class="kurs-domenlar">
+          {domenlar.map(([slug, nom]) => <a class="kurs-havola" href={kursHavola(`${slug}/`)}>{nom}</a>)}
+        </nav>}
+        <h2 id="kurs-mavzular">Topics</h2>
+        <ol class="kurs-royxat" role="list">
+          {mavzular.map((m) => <li class="kurs-qator">
+            <span class="kurs-qator-belgi">{m.id}</span>
+            <div>
+              <h3><a class="kurs-havola" href={kursHavola(mavzuManzili(m))}>{m.topic}</a></h3>
+              <p>{m.domain} · {m.counts.mini_test ? 'Includes a mini-test' : 'Practice only'}</p>
+            </div>
+          </li>)}
+        </ol>
+      </section>
+    )}
+
+    {sahifa.tur === 'mavzu' && mavzu && (
+      <Fragment>
+        <section class="kurs-bolim" aria-labelledby="kurs-reja">
+          <h2 id="kurs-reja">What you’ll work on</h2>
+          <ul>{mavzu.subtopics.map((band) => <li>{band}</li>)}</ul>
+          {mavzu.prerequisites.length > 0 && <div>
+            <h3>Recommended first</h3>
+            <ul>
+              {kursMavzulari.filter((m) => mavzu.prerequisites.includes(m.id)).map((m) => (
+                <li><a class="kurs-havola" href={kursHavola(mavzuManzili(m))}>{m.topic}</a></li>
+              ))}
+            </ul>
+          </div>}
+          {mavzu.desmos && <div><DesmosHavola /></div>}
+        </section>
+        <section class="kurs-bolim" aria-labelledby="kurs-bosqichlar">
+          <h2 id="kurs-bosqichlar">Study in three stages</h2>
+          <ol class="kurs-royxat" role="list">
+            {kursBosqichlari.map((b, i) => {
+              const darsBor = mavzu.id === 'A1' && b.set === 'foundation';
+              return <li class="kurs-qator">
+                <span class="kurs-qator-belgi" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3>{b.nom}</h3>
+                  <p>{b.tavsif}</p>
+                  <div class="kurs-havolalar">
+                    <a class="kurs-havola" aria-label={`${b.nom} lesson`} href={kursHavola(`${mavzuYoli}${b.slug}/dars/`)}>Lesson</a>
+                    <a class="kurs-havola" aria-label={`${b.nom} practice`} href={kursHavola(`${mavzuYoli}${b.slug}/mashq/`)}>Practice</a>
+                  </div>
+                  <p class="kurs-izoh">{darsBor ? 'Sample lesson available' : 'Lesson content coming soon'}</p>
+                </div>
+              </li>;
+            })}
+          </ol>
+          {!!mavzu.counts.mini_test && (
+            <a class="kurs-havola" href={kursHavola(`${mavzuYoli}mini-test/`)}>Topic mini-test</a>
+          )}
+        </section>
+      </Fragment>
+    )}
+
+    {sahifa.tur === 'dars' && (namuna ? (
+      <section class="kurs-bolim" aria-labelledby="kurs-namuna">
+        <h2 id="kurs-namuna">Sample: Keep both sides equal</h2>
+        <p>For <strong>2x + 3 = 11</strong>, subtract 3 from both sides to get <strong>2x = 8</strong>. Divide both sides by 2 to get <strong>x = 4</strong>.</p>
+        <div lang="uz" class="kurs-holat">
+          <h3>O‘zbekcha izoh</h3>
+          <p>Tenglikni saqlash uchun ikkala tomonga bir xil amalni bajaring. Avval ikkala tomondan 3 ni ayiring, keyin ikkala tomonni 2 ga bo‘ling.</p>
+        </div>
+        <a class="kurs-havola" href={kursHavola(`${mavzuYoli}${sahifa.bosqich.slug}/mashq/`)}>Foundation practice</a>
+      </section>
+    ) : (
+      <section class="kurs-holat" aria-labelledby="kurs-kutilmoqda">
+        <h2 id="kurs-kutilmoqda">Coming soon</h2>
+        <p>This lesson will appear here when the course content is ready.</p>
+      </section>
+    ))}
+
+    {toplam && (
+      <section class="kurs-holat" aria-labelledby="kurs-savollar">
+        <h2 id="kurs-savollar">Question set coming soon</h2>
+        <p>{sahifa.tur === 'mini'
+          ? 'There is no timer. You’ll see your score and explanations after you finish.'
+          : 'Check each answer to see its explanation.'}</p>
+        <p>Sign in to try a question set on this preview when available.</p>
+        <KursBoshlash toplam={toplam} miniTest={sahifa.tur === 'mini'} />
+      </section>
+    )}
+  </article>
+</SatFokus>
+
+<style>
+  .kurs-domenlar { display: flex; flex-wrap: wrap; gap: 0 var(--b-5); }
+  .kurs-bolim ul { margin-block: 0; padding-inline-start: var(--b-6); }
+</style>

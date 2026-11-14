@@ -1,0 +1,72 @@
+---
+import { yol } from '../../../lib/yol';
+
+interface Props {
+  toplam: string;
+  miniTest?: boolean;
+}
+const { toplam, miniTest = false } = Astro.props;
+---
+<div class="kurs-boshlash" data-kurs-boshlash
+  data-toplam={toplam} data-sessiya={yol('/uz/sat/mashq/sessiya/')}
+  data-kirish={yol('/uz/hisob/kirish/')}>
+  <button type="button" class="kurs-tugma">{miniTest ? 'Start mini-test' : 'Start practice'}</button>
+  <p role="status" aria-live="polite" aria-atomic="true"></p>
+  <a class="kurs-havola" hidden href={yol('/uz/hisob/kirish/')}>Sign in</a>
+</div>
+
+<script>
+  import { hisobMijoz } from '../../../lib/hisob';
+  import { idTogrimi, sessiyaXatosi } from '../../../lib/sat/sessiya';
+
+  const ildiz = document.querySelector<HTMLElement>('[data-kurs-boshlash]');
+  if (ildiz) {
+    const tugma = ildiz.querySelector('button')!;
+    const holat = ildiz.querySelector('p')!;
+    const kirish = ildiz.querySelector('a')!;
+    const kirishYoli = `${ildiz.dataset.kirish}?keyin=${encodeURIComponent(location.pathname)}`;
+    kirish.href = kirishYoli;
+
+    function kirishKerak() {
+      holat.textContent = 'Sign in to start this session.';
+      kirish.hidden = false;
+      kirish.focus();
+    }
+
+    tugma.addEventListener('click', async () => {
+      tugma.disabled = true;
+      kirish.hidden = true;
+      holat.textContent = 'Starting your session…';
+      let boshlandi = false;
+      try {
+        const c = hisobMijoz();
+        if (!c) {
+          holat.textContent = 'Sign-in is unavailable on this preview.';
+          return;
+        }
+        const { data: hisob, error: hisobXatosi } = await c.auth.getSession();
+        if (hisobXatosi) throw hisobXatosi;
+        if (!hisob.session) return kirishKerak();
+        const { data, error } = await c.rpc('start_course_session', { p_set: ildiz.dataset.toplam });
+        if (error) throw error;
+        if (!idTogrimi(data?.session_id)) throw new Error('Invalid session ID');
+        location.assign(`${ildiz.dataset.sessiya}?id=${encodeURIComponent(data.session_id)}`);
+        boshlandi = true;
+      } catch (error) {
+        const tur = sessiyaXatosi(error);
+        if (tur === 'kirish') return kirishKerak();
+        const kod = (error as { message?: string; code?: string }) ?? {};
+        if (tur === 'kvota') holat.textContent = 'You’ve reached your plan limit for this session.';
+        else if (kod.code === 'P0002' && kod.message === 'course_set_unavailable') {
+          holat.textContent = 'This question set is coming soon.';
+        } else {
+          holat.textContent = tur === 'tarmoq' ? 'Check your connection and try again.' : 'Couldn’t start this session. Try again.';
+          tugma.textContent = 'Try again';
+        }
+      } finally {
+        if (!boshlandi) tugma.disabled = false;
+      }
+    });
+
+  }
+</script>
