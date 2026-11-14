@@ -1,7 +1,8 @@
 // SAT "Today" bloki (bugun.ts): asosiy qadam ustuvorligi, takrorlash soni, reja kaliti, matnlar.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { asosiyQadam, xatoDueSoni, rejaBormi, streakMatn, aniqlikMatn, type BugunKirish } from '../sat/bugun.ts';
+import { asosiyQadam, xatoDueSoni, rejaBormi, streakMatn, aniqlikMatn, kunlikMaqsad, type BugunKirish } from '../sat/bugun.ts';
+import { afzallikTozala } from '../sat/afzallik.ts';
 
 const bosh: BugunKirish = { mockFaol: null, xatoDue: 0, sozDue: 0, rejaBor: false, tahlil: null, oxirgiBall: null, bankSavol: 120 };
 
@@ -71,4 +72,17 @@ test('streak and accuracy text', () => {
   assert.equal(streakMatn(7), '7 days');
   assert.equal(aniqlikMatn(0, 0), null);
   assert.equal(aniqlikMatn(8, 6), '75%');
+});
+
+test('daily goal line: set and not set', () => {
+  assert.deepEqual(kunlikMaqsad(30), { matn: 'Daily goal: 30 min', havola: 'Change', havolaNomi: 'Change your daily study goal' });
+  assert.equal(kunlikMaqsad(null).matn, null);
+  assert.equal(kunlikMaqsad(null).havola, 'Set a daily goal');
+  assert.equal(kunlikMaqsad(0).matn, null);
+});
+
+test('daily goal line reads cleaned preferences only', () => {
+  assert.equal(kunlikMaqsad(afzallikTozala({ kunlikDaqiqa: 45 }).kunlikDaqiqa).matn, 'Daily goal: 45 min');
+  assert.equal(kunlikMaqsad(afzallikTozala({ kunlikDaqiqa: 37 }).kunlikDaqiqa).matn, null);
+  assert.equal(kunlikMaqsad(afzallikTozala('buzuq').kunlikDaqiqa).matn, null);
 });
