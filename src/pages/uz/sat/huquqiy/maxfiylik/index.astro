@@ -36,7 +36,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     <ul>
       <li><strong>Email</strong>: for sign-in, confirmation and password reset emails.</li>
       <li><strong>Password</strong>: checked by Supabase Auth. Tayanch does not keep passwords in its own tables.</li>
-      <li><strong>Name and nickname</strong> (nickname optional): you enter them on your profile. The nickname may later appear on leaderboards.</li>
+      <li><strong>Name and nickname</strong> (nickname optional): you enter them on your profile. Others see your nickname only if you join the leaderboard (see "Leaderboard" below).</li>
       <li><strong>SAT goal</strong> (optional): target score, current best score and test date.</li>
       <li><strong>Consent records</strong>: when you agreed to this policy and the Terms of Use, which version, that you are {minYosh} or older, and your age group.</li>
       {vq && <li><strong>If you are under {vq.yoshgacha}</strong>: your parent's or guardian's name and when they gave consent.</li>}
@@ -52,11 +52,21 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>your answer to each question, whether it was correct and the time spent;</li>
       <li>your review queue of missed questions and your bookmarks;</li>
       <li>official test scores and mistakes (if you enter them), your study plan and vocabulary progress;</li>
+      <li>XP records counted from your answers, and whether you joined the leaderboard;</li>
       <li>plan quota counters (how many questions you used today);</li>
       <li>reports or feedback you send about a question.</li>
     </ul>
     <p>This data runs your results page, review and recommendations. Without an account, results stay only in your browser.</p>
 
+    <h2 id="reyting">Leaderboard (optional)</h2>
+    <p>In the SAT section, XP is counted on the server from your answers and only you can see it. Joining the leaderboard is optional and off by default:</p>
+    <ul>
+      <li>If you join, other signed-in users see only your nickname, your weekly or monthly XP and your rank. Your country is shown only if you allow it.</li>
+      <li>Your name, email and photo are never shown on the leaderboard.</li>
+      <li>You can leave at any time: you disappear from the list right away and keep your XP.</li>
+      <li>Offensive nicknames are refused, and a moderator can hide a nickname from the leaderboard.</li>
+      {vq && <li>Users under {vq.yoshgacha} (and accounts without an age group) cannot join or see the leaderboard: they see only their own XP.</li>}
+    </ul>
     <h2>Teacher groups</h2>
     <p>If you join a SAT group with a code from your teacher, the server keeps: your name in the group, the date you joined, what you chose to share and when, and, if you are under 18, your parent or guardian's name and when they agreed.</p>
     <p>Your teacher sees only what you chose (a summary, accuracy by topic, or both), and only from practice after the day you joined. Your email, age, individual answers, mistake log, test scores and payments are never shown. If you leave the group or your teacher removes you, the membership record is deleted and your teacher sees nothing more.</p>
