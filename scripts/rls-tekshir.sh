@@ -88,6 +88,7 @@ echo "security definer: hammasida search_path belgilangan"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/kun_savoli_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/xato_daftari_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/obuna_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
+"${PSQL[@]}" -f "$ROOT/supabase/tests/xavfsizlik_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/adaptiv_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/xabar_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/ai_tutor_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
