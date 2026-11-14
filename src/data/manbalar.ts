@@ -621,6 +621,24 @@ export const manbalar: Manba[] = [
     tekshirilganSana: '2026-11-11',
     izoh: "Rasmiy emas (College Board emas). Google blogi, 2026-01-21: \"partnering with The Princeton Review to bring full-length, no-cost practice SATs\" Gemini ilovasida. Gemini AI izohlari xato bo'lishi mumkin. Sifati tekshirilmagan.",
   },
+  {
+    id: 'BC01',
+    nomi: 'Free IELTS practice and sample tests',
+    tashkilot: 'British Council IELTS',
+    havola: 'https://takeielts.britishcouncil.org/prepare/ielts-free-practice-mock-tests',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "IELTS Academic, General Training va UKVI uchun to'rt ko'nikma bo'yicha mashq testlari; sahifada \"completely free to use\" va o'tgan imtihonlardagi haqiqiy savollar ishlatilgani yozilgan. Kompyuter formati bilan tanishish testi ham bor. Eski manzil (/take-ielts/prepare/free-ielts-english-practice-tests) shu sahifaga yo'naltiriladi.",
+  },
+  {
+    id: 'IE08',
+    nomi: 'IELTS: egalik va savdo belgisi (ielts.org sahifa osti)',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Sahifa ostida: \"IELTS is jointly owned by the British Council; IDP IELTS; and Cambridge University Press & Assessment\"; IELTS nomi va logolari ro'yxatdan o'tgan savdo belgisi, IELTS Partners tomonidan himoyalanadi.",
+  },
   // P30 (mock imtihon). CB30–CB35 va CB40 boshqa branch'larda band. Matnlar WebFetch xulosasidan (2026-11-12).
   {
     id: 'CB41',
