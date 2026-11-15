@@ -1,211 +1,71 @@
 ---
-// Lift: istalgan sahifadan istalgan qavatga bir bosishda o'tish (Tayanch binosi, 5 qavat).
-// Ko'rinishlar:
-//   yon    — bo'lim yon paneli, logo ostida (>= 1024px). Yig'ilgan panelda ustun, yozuvsiz.
-//   menyu  — 1-qavat yuqori menyusining o'ng tomoni (>= 1024px).
-//   fokus  — yon panelsiz mashq sahifasi sarlavhasi (>= 1024px).
-//   pastki — telefon (< 1024px): pastdagi 5 tugmali panel. Pastga 48px dan ko'p aylantirilsa yashirinadi,
-//            yuqoriga 24px, sahifa tepasi yoki oxirida, yoki Tab bilan fokus kelsa chiqadi.
-//            Yon panel ochiq (lift inert) bo'lsa holat o'zgarmaydi. body pastki bo'shlig'i o'zgarmaydi.
-//            SAT (BolimQobiq) da pastki Lift yo'q: o'rnida SatTabBar, Lift esa telefonda yon panel ichida (yon varianti).
-// Oldingi qavat sessionStorage "tayanch:qavat" da; qavat o'zgarsa qisqa "2 → 3" ko'rsatkichi.
+// Qavatlar: JavaScriptsiz ochiladigan umumiy navigatsiya.
 import Suhbatdosh from './Suhbatdosh.astro';
 import { qavatlar, joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
-import { matn, yolTili } from '../data/umumiyMatn';
+import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
 
-interface Props { variant: 'yon' | 'menyu' | 'fokus' | 'pastki' }
-const { variant } = Astro.props;
 const joriy = joriyQavat(Astro.url.pathname);
-const jq = qavatI(joriy);
+const qavat = qavatI(joriy);
 const til = yolTili(Astro.url.pathname);
 const M = matn[til];
-// Yorliq ko'rinadigan matn bilan boshlanadi (WCAG 2.5.3): telefonda "3 SAT", boshqa joyda "3".
-const yorliq = (q: (typeof qavatlar)[number]) =>
-  `${variant === 'pastki' ? `${q.raqam} ${q.qisqaNom}, ` : ''}${M.qavat(q.raqam)}, ${q.nomi}${q.holat === 'tez-orada' ? M.lift.tezOrada : ''}`;
 ---
-<nav
-  class={`lift lift-${variant}`}
-  aria-label={M.lift.nomi}
-  data-joriy={joriy}
-  data-panel-tashqari={variant === 'pastki' ? '' : undefined}
->
-  <ol class="lift-tugmalar">
-    {qavatlar.map((q) => (
-      <li>
-        <a
-          href={yol(q.manzil)}
-          class={q.holat === 'tez-orada' ? 'tez' : undefined}
-          data-floor={q.raqam}
-          aria-current={q.raqam === joriy ? 'location' : undefined}
-          aria-label={yorliq(q)}
-          title={yorliq(q)}
-        >
-          <span class="raqam">{q.raqam}</span>
-          {variant === 'pastki' && <>{' '}<span class="qisqa">{q.qisqaNom}</span></>}
-          {q.holat === 'tez-orada' && <span class="nuqta" aria-hidden="true"></span>}
-        </a>
-      </li>
-    ))}
-    <Suhbatdosh qavat={joriy} inglizcha={til === 'en'} variant={variant} />
-  </ol>
-  {variant === 'yon' ? (
-    <p class="lift-yozuv">
-      <span class="lift-joriy">{M.qavat(joriy)} · {jq.nomi}</span>
-      <span class="lift-harakat" aria-hidden="true" hidden></span>
-    </p>
-  ) : (
-    <span class="lift-harakat" aria-hidden="true" hidden></span>
-  )}
-</nav>
-
-<script>
-  // Lift animatsiyasi: oldingi qavat sessionStorage'da. Ishlamasa animatsiya yo'q, xato yo'q.
-  const KALIT = 'tayanch:qavat';
-  const nav = document.querySelector<HTMLElement>('.lift[data-joriy]');
-  if (nav) {
-    const joriy = Number(nav.dataset.joriy);
-    let oldingi: number | null = null;
-    try {
-      oldingi = Number(sessionStorage.getItem(KALIT)) || null;
-      sessionStorage.setItem(KALIT, String(joriy));
-    } catch { oldingi = null; }
-    if (oldingi && oldingi !== joriy) {
-      const yuqori = joriy > oldingi;
-      const strelka = yuqori
-        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>'
-        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
-      document.querySelectorAll<HTMLElement>('.lift-harakat').forEach((el) => {
-        el.innerHTML = `${strelka}<span>${oldingi} → ${joriy}</span>`;
-        el.classList.add(yuqori ? 'yuqoriga' : 'pastga');
-        el.hidden = false;
-        setTimeout(() => el.classList.add('ketdi'), 1800);
-        setTimeout(() => { el.hidden = true; }, 2300);
-      });
-    }
-  }
-
-  // Telefon: pastki lift aylantirganda yashirinadi (dizayn rejasi B, 2-bosqich). Holat saqlanmaydi.
-  const pastki = document.querySelector<HTMLElement>('.lift-pastki');
-  if (pastki) {
-    const tor = window.matchMedia('(max-width: 1023.98px)');
-    const YASHIR = 48;
-    const CHIQAR = 24;
-    let oxirgi = window.scrollY;
-    let ankr = oxirgi;
-    let yonalish = 0;
-    let yashirin = false;
-    let kutyapti = false;
-    const qoy = (y: boolean) => {
-      if (y === yashirin) return;
-      yashirin = y;
-      pastki.classList.toggle('yashirin', y);
-    };
-    const tekshir = () => {
-      kutyapti = false;
-      const y = window.scrollY;
-      if (pastki.inert) { oxirgi = y; ankr = y; return; }
-      const oxirida = window.innerHeight + y >= document.documentElement.scrollHeight - 2;
-      if (!tor.matches || y <= YASHIR || oxirida || pastki.contains(document.activeElement)) {
-        qoy(false); oxirgi = y; ankr = y; return;
-      }
-      const farq = y - oxirgi;
-      if (farq !== 0 && Math.sign(farq) !== yonalish) { yonalish = Math.sign(farq); ankr = oxirgi; }
-      if (yonalish > 0 && y - ankr > YASHIR) qoy(true);
-      else if (yonalish < 0 && ankr - y > CHIQAR) qoy(false);
-      oxirgi = y;
-    };
-    window.addEventListener('scroll', () => {
-      if (!kutyapti) { kutyapti = true; requestAnimationFrame(tekshir); }
-    }, { passive: true });
-    pastki.addEventListener('focusin', () => qoy(false));
-    tor.addEventListener('change', tekshir);
-  }
-</script>
+<details class="lift" name="tayanch-navigatsiya">
+  <summary aria-controls="lift-panel">
+    <span class="lift-joriy">{M.qavat(joriy)} · {qavat.nomi}</span>
+    <span class="lift-ochish">{M.lift.nomi}</span>
+  </summary>
+  <nav id="lift-panel" class="lift-panel nav-shisha" aria-label={M.lift.nomi}>
+    <ol role="list">
+      {qavatlar.map((q) => {
+        const holat = qavatHolatMatni(q.holat, til) ?? M.lift.ochiq;
+        const nom = M.qavat(q.raqam) + ' · ' + q.nomi;
+        const yorliq = nom + ', ' + holat;
+        return (
+          <li>
+            <a href={yol(q.manzil)} aria-current={q.raqam === joriy ? 'location' : undefined} aria-label={yorliq} title={yorliq}>
+              <span>{nom}</span>
+              <span class="lift-holat">{holat}</span>
+            </a>
+          </li>
+        );
+      })}
+      <Suhbatdosh qavat={joriy} inglizcha={til === 'en'} variant="qavatlar" />
+    </ol>
+  </nav>
+</details>
 
 <style>
-  .lift-tugmalar { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--b-1); }
-  /* Har tugma o'z qavat rangida (a[data-floor]); joriy qavat DS chip tanlangan holatida.
-     Fon zich (--color-surface). */
-  .lift-tugmalar a {
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    width: var(--control-height-md); height: var(--control-height-md);
-    border-radius: var(--radius-full);
-    background: var(--color-surface); color: var(--floor-text);
-    text-decoration: none; font-weight: var(--font-weight-extrabold); font-size: var(--text-body-size);
+  .lift { min-inline-size: 0; justify-self: center; max-inline-size: 100%; }
+  summary {
+    min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
+    padding-inline: var(--space-2); list-style: none; cursor: pointer;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    color: var(--matn); line-height: var(--text-caption-lh);
+    border-radius: var(--radius-md);
   }
-  @media (hover: hover) and (pointer: fine) { .lift-tugmalar a:not([aria-current]):hover { background: var(--floor-subtle); } }
-  .lift-tugmalar a:active { transform: var(--bosilish); }
-  .lift-tugmalar a[aria-current='location'] { background: var(--floor-ui); color: var(--floor-ui-text); }
-  .lift-tugmalar a.tez[aria-current='location'] .raqam { color: var(--rang-asosiy-matn); }
-  .lift-tugmalar a.tez[aria-current='location'] .nuqta { background: var(--rang-asosiy-matn); }
-  .nuqta {
-    position: absolute; top: 7px; right: 9px;
-    width: 6px; height: 6px; border-radius: var(--r-toliq);
-    background: var(--matn-sust);
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { background: var(--color-surface-sunken); }
+  .lift-joriy {
+    max-inline-size: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    font-size: var(--text-body-size); font-weight: var(--font-weight-bold);
   }
-
-  .lift-yozuv { margin: var(--b-2) 0 0; display: flex; align-items: center; gap: var(--b-2); flex-wrap: wrap; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
-  .lift-harakat {
-    display: inline-flex; align-items: center; gap: var(--b-1);
-    padding: 2px 8px; border-radius: var(--r-toliq);
-    background: var(--rang-asosiy-och); color: var(--rang-havola);
-    font-size: var(--matn-mayda); font-weight: 800; white-space: nowrap;
-    transition: opacity var(--harakat-sekin) var(--harakat-egri);
+  .lift-ochish, .lift-holat { font-size: var(--text-caption-size); }
+  .lift-ochish { text-decoration: underline; }
+  .lift-panel {
+    position: absolute; inset-block-start: 100%; inset-inline: var(--space-2);
+    max-inline-size: calc(var(--space-16) * 6); margin-inline: auto;
+    max-block-size: calc(100dvh - var(--space-14) - var(--space-4)); overflow-y: auto;
+    padding: var(--space-2); border: var(--border-width-1) solid var(--card-line);
+    border-radius: var(--radius-lg);
   }
-  .lift-harakat[hidden] { display: none; }
-  .lift-harakat.yuqoriga { animation: lift-yuqori var(--harakat-sekin) var(--harakat-egri); }
-  .lift-harakat.pastga { animation: lift-past var(--harakat-sekin) var(--harakat-egri); }
-  .lift-harakat.ketdi { opacity: 0; }
-  @keyframes lift-yuqori { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
-  @keyframes lift-past { from { transform: translateY(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) {
-    .lift-harakat.yuqoriga, .lift-harakat.pastga { animation: none; }
+  ol { list-style: none; margin: 0; padding: 0; }
+  a {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-1) var(--space-2);
+    min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
+    padding-inline: var(--space-3); text-decoration: none; color: var(--matn);
+    border-radius: var(--radius-md);
   }
-
-  /* Yon panel */
-  .lift-yon .lift-tugmalar { flex-wrap: wrap; }
-  .lift-yon { padding: 0 var(--b-4) var(--b-2); }
-  :global([data-sidebar='yigilgan']) .lift-yon { padding-inline: var(--b-3); }
-  :global([data-sidebar='yigilgan']) .lift-yon .lift-tugmalar { flex-direction: column; align-items: center; }
-  :global([data-sidebar='yigilgan']) .lift-yon .lift-yozuv { display: none; }
-
-  /* Menyu va fokus sarlavhasi */
-  .lift-menyu, .lift-fokus { display: flex; align-items: center; gap: var(--b-2); }
-  .lift-fokus .lift-tugmalar a { width: var(--size-touch-min); height: var(--control-height-md); }
-
-  /* Telefon: pastki panel */
-  .lift-pastki {
-    position: fixed; z-index: 25; left: 0; right: 0; bottom: 0;
-    /* Zich panel, 1px yuqori chiziq. 64px tugma + 2 x 4px = 72px: global.css dagi body pastki bo'shlig'iga mos. */
-    background: var(--color-surface);
-    border-top: var(--border-width-1) solid var(--color-border);
-    padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
-  }
-  .lift-pastki { transition: transform var(--harakat-orta) var(--harakat-egri); }
-  .lift-pastki.yashirin { transform: translateY(calc(100% + 1px)); }
-  @media (prefers-reduced-motion: reduce) {
-    .lift-pastki { transition: none; }
-  }
-  .lift-pastki .lift-tugmalar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--b-1); }
-  .lift-pastki .lift-tugmalar:has(> :global([data-suhbatdosh]:not([hidden]))) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .lift-pastki .lift-tugmalar a {
-    width: auto; height: var(--size-bottombar); border-radius: var(--radius-md);
-    flex-direction: column; gap: 0;
-  }
-  .lift-pastki .raqam { font-size: var(--text-body-size); line-height: var(--text-button-lh); }
-  .lift-pastki .qisqa { font-size: 11px; font-weight: 700; line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lift-pastki .nuqta { top: 6px; right: calc(50% - 16px); }
-  .lift-pastki .lift-harakat { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); box-shadow: var(--soya); }
-  .lift-pastki .lift-harakat.yuqoriga, .lift-pastki .lift-harakat.pastga { animation: none; }
-
-  @media (max-width: 1023.98px) {
-    .lift-yon, .lift-menyu, .lift-fokus { display: none; }
-    /* SAT: telefonda pastda tab bar (SatTabBar), shuning uchun qavat lifti chiqib keladigan yon panelda (hamburger menyu). */
-    :global(.yon[data-bolim='sat']) .lift-yon { display: block; padding-bottom: var(--b-3); }
-  }
-  @media (min-width: 1024px) {
-    .lift-pastki { display: none; }
-  }
+  a:hover, a[aria-current] { background: var(--color-surface-sunken); }
+  a[aria-current] { font-weight: var(--font-weight-bold); text-decoration: underline; }
 </style>

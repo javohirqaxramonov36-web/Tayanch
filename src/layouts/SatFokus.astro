@@ -4,12 +4,13 @@
 import '../styles/global.css';
 import BoshQism from '../components/BoshQism.astro';
 import { yol } from '../lib/yol';
+import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
-import Lift from '../components/Lift.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import SatSinxron from '../components/SatSinxron.astro';
 import { matn } from '../data/umumiyMatn';
+import { kursHavola, kursOchiq, kursPreview, kursMavzulari, mavzuManzili } from '../lib/sat/kursKatalog';
 // SAT bo'limi: matn inglizcha (CLAUDE.md).
 const M = matn.en;
 
@@ -28,7 +29,18 @@ export interface Props {
   liftPastki?: boolean;
   indeks?: boolean;
 }
-const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish, liftPastki = true, indeks = false } = Astro.props;
+const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish, indeks = false } = Astro.props;
+const qisqaMashq = Astro.url.pathname === yol('/uz/sat/mashq/test/');
+const kursSahifasi = (kursPreview || kursOchiq) && Astro.url.pathname.startsWith(kursHavola());
+const joriyMavzu = kursSahifasi
+  ? kursMavzulari.find((mavzu) => Astro.url.pathname.startsWith(kursHavola(mavzuManzili(mavzu))))
+  : undefined;
+const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainSlug === joriyMavzu.domainSlug)
+  .map((mavzu) => {
+    const href = kursHavola(mavzuManzili(mavzu));
+    const current: 'page' | 'location' | undefined = mavzu.id === joriyMavzu.id ? (href === Astro.url.pathname ? 'page' : 'location') : undefined;
+    return { href, current, nomi: mavzu.topic };
+  }) : [];
 ---
 <!doctype html>
 <html lang="en" data-floor={joriyQavat(Astro.url.pathname)}>
@@ -37,7 +49,8 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
   </head>
   <body class="fokus">
     <a class="otish" href="#asosiy">{M.otish}</a>
-    <header class="fokus-bosh">
+    <BolimYon bolim="sat" />
+    <section class:list={['fokus-bosh', { 'fokus-qisqa': qisqaMashq }]} aria-labelledby="fokus-nomi">
       <a class="yopish" href={yopish?.href ?? yol('/uz/sat/')} aria-label={yopish?.yorliq ?? M.fokus.qaytish}>
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
       </a>
@@ -54,15 +67,28 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
         </div>
       ) : <span class="fokus-oraliq" aria-hidden="true"></span>}
       <slot name="amal" />
-      <Lift variant="fokus" />
-    </header>
+    </section>
     <main id="asosiy" class="fokus-asosiy">
-      <div class="fokus-yol"><QavatYoli bandlar={bandlar} sahifaNomi={title.split(' · ')[0]} /></div>
-      <slot />
+      <div class="fokus-yol"><QavatYoli bandlar={bandlar} sahifaNomi={title.split(' · ')[0]} ota={yopish?.href} /></div>
+      {joriyMavzu ? (
+        <div class="fokus-kurs">
+          <div class="fokus-kurs-ichki">
+            <details class="fokus-kurs-tel">
+              <summary>Course topics</summary>
+              <nav aria-label="Course topics" class="fokus-kurs-nav">
+                {mavzuBandlari.map(({ href, current, nomi }) => <a href={href} aria-current={current}>{nomi}</a>)}
+              </nav>
+            </details>
+            <nav aria-label="Course topics" class="fokus-kurs-nav fokus-kurs-keng">
+              {mavzuBandlari.map(({ href, current, nomi }) => <a href={href} aria-current={current}>{nomi}</a>)}
+            </nav>
+          </div>
+          <slot />
+        </div>
+      ) : <slot />}
     </main>
     <SatEslatma />
     <SatSinxron />
-    {liftPastki && <Lift variant="pastki" />}
   </body>
 </html>
 
@@ -91,10 +117,48 @@ const { title, description, ustki, nomi, progressNomi, yol: bandlar = [], yopish
   .fokus-bosh .fokus-oraliq { flex: 1; }
   .fokus-asosiy { flex: 1; padding: var(--b-6) var(--b-8) var(--b-10); }
   .fokus-yol { max-width: 760px; margin: 0 auto var(--b-5); }
+  .fokus-kurs { margin-inline: auto; max-inline-size: var(--size-content-max); }
+  .fokus-kurs-ichki { color: var(--matn); }
+  .fokus-kurs-ichki summary, .fokus-kurs-nav a {
+    min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
+    align-content: center; padding-inline: var(--space-3);
+  }
+  .fokus-kurs-ichki summary { cursor: pointer; font-weight: var(--font-weight-bold); }
+  .fokus-kurs-nav { display: grid; }
+  .fokus-kurs-keng { display: none; }
+  .fokus-kurs-nav [aria-current] {
+    background: var(--color-surface-sunken); border-radius: var(--radius-md); font-weight: var(--font-weight-bold);
+  }
+  @media (min-width: 1024px) {
+    .fokus-kurs {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+      align-items: start; gap: var(--space-8);
+    }
+    .fokus-kurs-ichki { position: sticky; inset-block-start: var(--space-16); }
+    .fokus-kurs-tel { display: none; }
+    .fokus-kurs-keng { display: grid; }
+  }
 
   @media (max-width: 640px) {
     .fokus-bosh { padding: var(--b-3) var(--b-4); }
     .fokus-bosh .jarayon { order: 5; flex-basis: 100%; max-width: none; margin-left: 0; }
     .fokus-asosiy { padding: var(--b-6) var(--b-4); }
+
+    /* Desmos va progress keyin yangilanganda ham ustunlar va satrlar joyida qoladi. */
+    .fokus-qisqa {
+      display: grid;
+      grid-template-columns: var(--size-touch-min) minmax(0, 1fr) calc(var(--space-14) * 2);
+      grid-template-rows: var(--control-height-md) var(--space-5);
+      gap: var(--b-2);
+    }
+    .fokus-qisqa .ustki, .fokus-qisqa .nomi {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .fokus-qisqa .desmos-havola { grid-area: 1 / 3; justify-self: end; }
+    .fokus-qisqa .jarayon {
+      grid-area: 2 / 1 / 3 / -1;
+      display: grid; grid-template-columns: minmax(0, 1fr) 8ch; gap: var(--b-2);
+    }
+    .fokus-qisqa .progress-matn { text-align: end; }
   }
 </style>
