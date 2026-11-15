@@ -1,0 +1,1 @@
+var e=`/Tayanch/_astro/katex.min.CdaDuyQQ.css`;export{e as default};

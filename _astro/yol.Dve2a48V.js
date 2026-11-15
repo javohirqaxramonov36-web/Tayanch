@@ -1,0 +1,1 @@
+function e(e){return`/Tayanch/`.replace(/\/$/,``)+(e.startsWith(`/`)?e:`/`+e)}export{e as t};

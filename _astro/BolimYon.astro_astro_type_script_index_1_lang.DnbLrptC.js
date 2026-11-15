@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/upgradeBandUlash.DzHLCZ87.js","_astro/rolldown-runtime.DK3Fl9T5.js","_astro/satTarif.8kzGKC2X.js","_astro/hisobSozlama.4R8bbNcx.js","_astro/tarifJadval.a6coStv9.js"])))=>i.map(i=>d[i]);
+import{t as e}from"./hisobHolat.DDdxqqxW.js";import{t}from"./preload-helper.CEJzHj9v.js";e(),document.querySelector(`[data-upgrade-band]`)&&t(()=>import(`./upgradeBandUlash.DzHLCZ87.js`).then(e=>e.n).then(e=>e.upgradeBandUlash()),__vite__mapDeps([0,1,2,3,4])).catch(()=>{});
