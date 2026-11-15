@@ -490,3 +490,14 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
 ```
 
 Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
+
+## Suhbatdoshning yopiq sinovi
+
+Suhbatdosh Tayanch sahifalarida ishlaydi. Brauzer Supabase sessiyasi orqali ovozli navbatni `suhbatdosh` funksiyasiga yuboradi. Funksiya har so‘rovda hisobni tekshiradi va quyidagi egadan boshqa hisoblarga yopiq turadi. Suhbat matni va audio bazaga yozilmaydi.
+
+1. Private `suhbatdosh-bilim` bucket migratsiyasini qo‘llang. `knowledge/` ichidan faqat `sat.md`, `ielts.md`, `common-app.md`, `scoir-coalition.md`, `fee-waivers.md` va `kaplan-pathways.md` fayllarini bucket ildiziga yuklang. Mavzu parchalari matn provayderiga yuborilgani uchun faqat ulashish mumkin bo‘lgan bilimni yuklang.
+2. Funksiya secrets’ida `SUHBATDOSH_EGA_ID` (Tayanch Auth’dagi egasining UUID’i), `SUHBATDOSH_AZURE_REGION`, `SUHBATDOSH_AZURE_F0_KEY` va `SUHBATDOSH_GEMINI_FREE_KEY` ni sozlang. Azure Speech resursida F0’ni tanlang. Gemini kaliti uchun billing yoqilmagan alohida loyiha ishlating. Bepul Gemini transkript va tanlangan manba parchalaridan mahsulotlarini yaxshilashda foydalanishi mumkin. Tayanchda xizmat tanlanishi funksiya sozlamasi orqali boshqariladi.
+3. `supabase functions deploy suhbatdosh --no-verify-jwt --use-api` funksiyani joylaydi. Kod JWT’ni Supabase Auth orqali tekshiradi. Egasi kirganida Lift’da Suhbatdosh tugmasi chiqadi.
+4. Egasi va boshqa hisob bilan kirishni tekshiring. Telefon brauzerida mikrofon bilan yangi o‘zbekcha savol yozib yuboring va qaytgan ovozni tinglang. `SUHBATDOSH_EGA_ID` olib tashlansa, funksiya hamma hisobga yopiladi.
+
+Rasmiy manbalar, 2026-11-15 — [Azure Speech F0 va kvotalar](https://azure.microsoft.com/en-us/pricing/details/speech/), [uz-UZ nutq va Madina ovozi](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support), [Gemini API narxlari va bepul tarifdagi ma’lumot ishlatilishi](https://ai.google.dev/gemini-api/docs/pricing).

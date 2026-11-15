@@ -9,6 +9,7 @@
 //            Yon panel ochiq (lift inert) bo'lsa holat o'zgarmaydi. body pastki bo'shlig'i o'zgarmaydi.
 //            SAT (BolimQobiq) da pastki Lift yo'q: o'rnida SatTabBar, Lift esa telefonda yon panel ichida (yon varianti).
 // Oldingi qavat sessionStorage "tayanch:qavat" da; qavat o'zgarsa qisqa "2 → 3" ko'rsatkichi.
+import Suhbatdosh from './Suhbatdosh.astro';
 import { qavatlar, joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
 import { matn, yolTili } from '../data/umumiyMatn';
@@ -17,7 +18,8 @@ interface Props { variant: 'yon' | 'menyu' | 'fokus' | 'pastki' }
 const { variant } = Astro.props;
 const joriy = joriyQavat(Astro.url.pathname);
 const jq = qavatI(joriy);
-const M = matn[yolTili(Astro.url.pathname)];
+const til = yolTili(Astro.url.pathname);
+const M = matn[til];
 // Yorliq ko'rinadigan matn bilan boshlanadi (WCAG 2.5.3): telefonda "3 SAT", boshqa joyda "3".
 const yorliq = (q: (typeof qavatlar)[number]) =>
   `${variant === 'pastki' ? `${q.raqam} ${q.qisqaNom}, ` : ''}${M.qavat(q.raqam)}, ${q.nomi}${q.holat === 'tez-orada' ? M.lift.tezOrada : ''}`;
@@ -45,6 +47,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
         </a>
       </li>
     ))}
+    <Suhbatdosh qavat={joriy} inglizcha={til === 'en'} variant={variant} />
   </ol>
   {variant === 'yon' ? (
     <p class="lift-yozuv">
@@ -162,6 +165,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
   }
 
   /* Yon panel */
+  .lift-yon .lift-tugmalar { flex-wrap: wrap; }
   .lift-yon { padding: 0 var(--b-4) var(--b-2); }
   :global([data-sidebar='yigilgan']) .lift-yon { padding-inline: var(--b-3); }
   :global([data-sidebar='yigilgan']) .lift-yon .lift-tugmalar { flex-direction: column; align-items: center; }
@@ -185,6 +189,7 @@ const yorliq = (q: (typeof qavatlar)[number]) =>
     .lift-pastki { transition: none; }
   }
   .lift-pastki .lift-tugmalar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--b-1); }
+  .lift-pastki .lift-tugmalar:has(> :global([data-suhbatdosh]:not([hidden]))) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .lift-pastki .lift-tugmalar a {
     width: auto; height: var(--size-bottombar); border-radius: var(--radius-md);
     flex-direction: column; gap: 0;
