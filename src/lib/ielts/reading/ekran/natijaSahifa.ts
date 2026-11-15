@@ -29,4 +29,5 @@ export async function ishgaTushirNatija(): Promise<void> {
     testHolat: typeof test === 'string' ? test : undefined,
     avto: param.get('avto') === '1',
   });
+  if (param.get('yakun') === '1') document.getElementById('rn-sarlavha')?.focus();
 }

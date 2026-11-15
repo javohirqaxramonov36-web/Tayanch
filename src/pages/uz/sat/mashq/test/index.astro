@@ -41,7 +41,8 @@ import { yol } from '../../../../../lib/yol';
       </fieldset>
     </section>
 
-    <section class="izoh" id="izoh" aria-live="polite" hidden>
+    <p class="sr" id="izoh-xabar" role="status" aria-atomic="true"></p>
+    <section class="izoh" id="izoh" aria-labelledby="izoh-sarlavha" hidden>
       <p class="izoh-sarlavha" id="izoh-sarlavha"></p>
       <p id="izoh-matn"></p>
     </section>
@@ -125,6 +126,7 @@ import { yol } from '../../../../../lib/yol';
     $('keyingi').hidden = true;
     $('otkazish').hidden = false;
     $('izoh').hidden = true;
+    $('izoh-xabar').textContent = '';
     progress(i);
   };
 
@@ -158,6 +160,7 @@ import { yol } from '../../../../../lib/yol';
     $('otkazish').hidden = true;
     $('keyingi').hidden = false;
     $('keyingi').focus();
+    $('izoh-xabar').textContent = $('izoh-sarlavha').textContent;
     progress(i + 1);
     const d = new Date();
     saqla({
@@ -259,6 +262,7 @@ import { yol } from '../../../../../lib/yol';
     display: flex; flex-direction: column; gap: var(--b-2);
   }
   .izoh[hidden] { display: none; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
   .izoh-sarlavha { font-size: 18px; font-weight: 800; }
 

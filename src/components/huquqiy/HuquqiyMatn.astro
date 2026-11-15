@@ -17,8 +17,8 @@ const { til, kalit, sana, kirish, tekshirish = [] } = Astro.props;
 const joriy = huquqiySahifalar.find((s) => s.kalit === kalit)!;
 const boshqalar = huquqiySahifalar.filter((s) => s.kalit !== kalit);
 const t = til === 'en'
-  ? { sana: 'Draft dated', ochiq: 'To be checked before publishing', yana: 'Other legal pages', tilda: 'Uzbek version (main text)', tilYol: joriy.uz.yol }
-  : { sana: 'Qoralama sanasi', ochiq: "Nashrdan oldin tekshirish kerak", yana: 'Boshqa huquqiy sahifalar', tilda: 'English version (SAT)', tilYol: joriy.en.yol };
+  ? { sana: 'Draft dated', ochiq: 'Open questions', yana: 'Other legal pages', tilda: 'Uzbek version (main text)', tilYol: joriy.uz.yol }
+  : { sana: 'Qoralama sanasi', ochiq: "Ochiq masalalar", yana: 'Boshqa huquqiy sahifalar', tilda: 'English version (SAT)', tilYol: joriy.en.yol };
 const nomi = til === 'en' ? joriy.en.nomi : joriy.uz.nomi;
 ---
 <section class="ichki huquqiy">

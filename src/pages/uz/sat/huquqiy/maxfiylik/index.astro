@@ -69,7 +69,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>Payment status is written only from inPAY's server message.</li>
       <li>
         {voyagaYetmaganTolov === null
-          ? <>Rule for payments by users under 18: <span class="tekshir">to be checked</span> (author and lawyer decision).</>
+          ? <>Rule for payments by users under 18: not yet confirmed.</>
           : voyagaYetmaganTolov === 'faqat-18'
             ? <>Only users aged 18 or older can pay.</>
             : <>If you are under 18, pay with your parent's or guardian's consent and their payment method.</>}
@@ -99,7 +99,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>
         Payment records: when the account is deleted they are unlinked from it (who paid is removed); the amount, date and inPAY number
         {tolovSaqlashYil === null
-          ? <> are kept for accounting. Period: <span class="tekshir">to be checked</span>.</>
+          ? <> are kept for accounting. Period: not yet confirmed.</>
           : <> are kept for {tolovSaqlashYil} years.</>}
       </li>
       <li>A record that an account was deleted (account number and time, no email) stays in the security log.</li>
