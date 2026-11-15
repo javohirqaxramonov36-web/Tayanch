@@ -490,3 +490,14 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
 ```
 
 Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
+
+## Suhbatdoshning yopiq sinovi
+
+Suhbatdosh Tayanch sahifalarida ishlaydi. Brauzer Supabase sessiyasi orqali ovozli navbatni `suhbatdosh` funksiyasiga yuboradi. Funksiya har so‘rovda hisobni tekshiradi va quyidagi egadan boshqa hisoblarga yopiq turadi. Suhbat matni va audio bazaga yozilmaydi.
+
+1. Private `suhbatdosh-bilim` bucket migratsiyasini qo‘llang. `knowledge/` ichidan faqat `sat.md`, `ielts.md`, `common-app.md`, `scoir-coalition.md`, `fee-waivers.md` va `kaplan-pathways.md` fayllarini bucket ildiziga yuklang. Mavzu parchalari matn provayderiga yuborilgani uchun faqat ulashish mumkin bo‘lgan bilimni yuklang.
+2. Funksiya secrets’ida `SUHBATDOSH_EGA_ID` (Tayanch Auth’dagi egasining UUID’i), `SUHBATDOSH_GEMINI_FREE_KEY` ni sozlang. Gemini kaliti uchun billing yoqilmagan alohida loyiha ishlating. Nutq matnga va javobga Gemini 3.5 Flash-Lite orqali aylanadi. Gemini 3.8 Flash-Lite TTS javobni o‘zbekcha ovozlashtiradi. Bepul Gemini audio, savol va tanlangan manba parchalaridan mahsulotlarini yaxshilashda foydalanishi mumkin.
+3. `supabase functions deploy suhbatdosh --no-verify-jwt --use-api` funksiyani joylaydi. Kod JWT’ni Supabase Auth orqali tekshiradi. Egasi kirganida Lift’da Suhbatdosh tugmasi chiqadi.
+4. Egasi va boshqa hisob bilan kirishni tekshiring. Telefon brauzerida mikrofon bilan yangi o‘zbekcha savol yozib yuboring va qaytgan ovozni tinglang. `SUHBATDOSH_EGA_ID` olib tashlansa, funksiya hamma hisobga yopiladi.
+
+Rasmiy manbalar, 2026-11-15 — [Google o‘zbekcha ovoz sintezi](https://aistudio.google.com/docs/speech-generation#supported-languages), [Gemini API narxlari va bepul tarifdagi ma’lumot ishlatilishi](https://ai.google.dev/gemini-api/docs/pricing).

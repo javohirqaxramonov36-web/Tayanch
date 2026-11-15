@@ -2,12 +2,12 @@
 // Qavat kirish fotosi: bo'lim kirish sahifasining tepasida, matndan alohida (matn foto ustida emas).
 // Fotolar: Higgsfield gpt_image_2_6 (og:image bilan bir to'plam, uslub: docs/og-rasmlar.md).
 // Bezak foto: ma'lumot tashimaydi, shuning uchun alt="" (ekran o'quvchi o'tkazib yuboradi).
-// Fayllar public/qavat/<slug>-{800,1344}.webp (manba 1344×752, kattalashtirilmagan).
+// Fayllar public/qavat/<slug>-{720,800,1344}.webp (manba 1344×752, kattalashtirilmagan).
 import { yol } from '../lib/yol';
 
 type FotoSlug = 'top-admission' | 'sat' | 'ielts' | 'eyuf';
-interface Props { bolim: FotoSlug }
-const { bolim } = Astro.props;
+interface Props { bolim: FotoSlug; ilk?: boolean }
+const { bolim, ilk = true } = Astro.props;
 
 // Kompyuterda 3:1 kesim: har fotoda asosiy predmet ko'rinadigan vertikal nuqta.
 const fokus: Record<FotoSlug, string> = {
@@ -17,17 +17,20 @@ const fokus: Record<FotoSlug, string> = {
   eyuf: '50% 55%',
 };
 const asos = yol(`/qavat/${bolim}`);
+const sizes = bolim === 'eyuf'
+  ? 'min(calc(100vw - 40px), 1120px)'
+  : '(max-width: 1023px) min(calc(100vw - 32px), 928px), min(calc(100vw - 368px), 960px)';
 ---
 <img
   class="qavat-foto"
   src={`${asos}-1344.webp`}
-  srcset={`${asos}-800.webp 800w, ${asos}-1344.webp 1344w`}
-  sizes="(max-width: 640px) 100vw, 1160px"
+  srcset={`${asos}-720.webp 720w, ${asos}-800.webp 800w, ${asos}-1344.webp 1344w`}
+  sizes={sizes}
   width="1344"
   height="752"
   alt=""
-  loading="eager"
-  fetchpriority="high"
+  loading={ilk ? 'eager' : 'lazy'}
+  fetchpriority={ilk ? 'high' : undefined}
   decoding="async"
   style={`--foto-fokus: ${fokus[bolim]}`}
 />

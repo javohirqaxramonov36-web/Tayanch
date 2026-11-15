@@ -1,27 +1,98 @@
 ---
 import { korinadiganDeadlinelar } from '../data/deadline';
 import type { BolimSlug } from '../data/bolimlar';
+import { muddatChegarasi } from '../lib/muddat';
+import { rasmiyManbalar } from '../data/manbalar';
 
 // limit: ro'yxat sana bo'yicha tartiblangan, shuning uchun eng yaqin N tasi qoladi.
 interface Props { bolim?: BolimSlug; faqatKelajak?: boolean; limit?: number }
 const { bolim, faqatKelajak = false, limit } = Astro.props;
-const royxat = korinadiganDeadlinelar({ bolim, faqatKelajak }).slice(0, limit);
-const bugun = new Date().toISOString().slice(0, 10);
+const royxat = korinadiganDeadlinelar({ bolim });
 ---
 {royxat.length > 0 ? (
-  <ul class="royxat">
-    {royxat.map((d) => (
-      <li class={d.sana < bugun ? 'otgan' : ''}>
-        <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
-        {d.sana < bugun && <span class="yorliq">o'tgan</span>}
-        <span>{d.dastur}: {d.bosqich}</span>
-        <span class="kichik sust">Manba: {d.manbaIdlar.join(', ')}. Tekshirilgan: {d.tekshirilganSana}</span>
-      </li>
-    ))}
-  </ul>
+  <>
+    <div data-muddat-limit={limit ?? ''}>
+      <ul class="royxat">
+        {royxat.map((d) => {
+          const { kun, oxir } = muddatChegarasi(d.sana, d.soat, d.utcSiljish);
+          return <li data-oxir={oxir} data-muddat-kun={kun}>
+            <div class="muddat-sana">
+              <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
+              <span class="yorliq" data-muddat-holat hidden></span>
+            </div>
+            {!d.vaqtMintaqasi && <span class="kichik sust">Vaqt mintaqasi rasmiy manbada ko'rsatilmagan.</span>}
+            <span>{d.dastur}: {d.bosqich}</span>
+            {rasmiyManbalar(d.manbaIdlar).map((m) => (
+              <span class="kichik sust">
+                <a href={m.havola}>{m.nomi}</a> ({new URL(m.havola).hostname}) · Tekshirilgan: {m.tekshirilganSana}
+                {d.muddatManbasi?.havola === m.havola && <> · Qayta tekshirilgan: {d.muddatManbasi.tekshirilganSana}</>}
+              </span>
+            ))}
+            <span class="kichik sust">Muddat tekshirilgan sana: {d.tekshirilganSana}</span>
+          </li>;
+        })}
+      </ul>
+      {faqatKelajak && <p class="bosh" data-yaqin-yoq hidden>Hozircha tasdiqlangan yaqin muddat yo'q.</p>}
+      <details hidden><summary>O'tgan muddatlar</summary><ul class="royxat"></ul></details>
+    </div>
+    <script is:inline>
+      (() => {
+        const box = document.currentScript.previousElementSibling;
+        const list = box.firstElementChild;
+        const archive = box.lastElementChild;
+        const limit = Number(box.dataset.muddatLimit) || Infinity;
+        const empty = box.querySelector('[data-yaqin-yoq]');
+        function update() {
+          const now = Date.now();
+          let active = 0;
+          for (const row of Array.from(list.children)) {
+            const past = now >= Number(row.dataset.oxir);
+            row.hidden = !past && ++active > limit;
+            if (past) archive.lastElementChild.append(row);
+          }
+          list.hidden = !active;
+          archive.hidden = !archive.lastElementChild.children.length;
+          if (empty) empty.hidden = !!active;
+        }
+        update();
+        box.addEventListener('muddat:yangila', update);
+      })();
+    </script>
+  </>
 ) : (
   <p class="bosh">Hozircha rasmiy manba bilan tasdiqlangan muddat yo'q.</p>
 )}
+
+<script>
+  import { muddatHolati, keyingiMuddatYangilanishi } from '../lib/muddat';
+
+  const royxatlar = document.querySelectorAll('[data-muddat-limit]');
+  const qatorlar = [...document.querySelectorAll<HTMLElement>('[data-muddat-kun]')].map((qator) => ({
+    kun: Number(qator.dataset.muddatKun),
+    oxir: Number(qator.dataset.oxir),
+    holat: qator.querySelector<HTMLElement>('[data-muddat-holat]')!,
+  }));
+  let taymer: number | undefined;
+
+  function yangila() {
+    window.clearTimeout(taymer);
+    const hozir = Date.now();
+    let keyingi = Infinity;
+    for (const royxat of royxatlar) royxat.dispatchEvent(new Event('muddat:yangila'));
+    for (const { kun, oxir, holat } of qatorlar) {
+      holat.textContent = muddatHolati(hozir, kun, oxir);
+      holat.hidden = false;
+      keyingi = Math.min(keyingi, keyingiMuddatYangilanishi(hozir, kun, oxir));
+    }
+    if (Number.isFinite(keyingi)) taymer = window.setTimeout(yangila, keyingi - hozir);
+  }
+
+  if (qatorlar.length) {
+    yangila();
+    addEventListener('pageshow', (e) => { if (e.persisted) yangila(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) yangila(); });
+  }
+</script>
 
 <style>
   .royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
@@ -31,7 +102,11 @@ const bugun = new Date().toISOString().slice(0, 10);
     padding: var(--b-4) var(--b-5);
     display: flex; flex-direction: column; gap: var(--b-1);
   }
-  .royxat li.otgan { opacity: 0.6; }
+  [hidden] { display: none !important; }
+  details:not([hidden]) { margin-top: var(--b-3); }
+  summary { cursor: pointer; }
+  .muddat-sana { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-1) var(--b-3); }
+  .muddat-sana .yorliq { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .bosh {
     background: var(--fon-ikkinchi);
     border: 1px dashed var(--chiziq-kuchli);

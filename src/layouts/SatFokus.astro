@@ -38,7 +38,7 @@ const joriyMavzu = kursSahifasi
 const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainSlug === joriyMavzu.domainSlug)
   .map((mavzu) => {
     const href = kursHavola(mavzuManzili(mavzu));
-    const current = mavzu.id === joriyMavzu.id ? (href === Astro.url.pathname ? 'page' : 'location') : undefined;
+    const current: 'page' | 'location' | undefined = mavzu.id === joriyMavzu.id ? (href === Astro.url.pathname ? 'page' : 'location') : undefined;
     return { href, current, nomi: mavzu.topic };
   }) : [];
 ---

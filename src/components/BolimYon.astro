@@ -304,6 +304,7 @@ const ieltsGuruhlar = [
   const ustki = document.querySelector<HTMLElement>('header.ustki-qator')!;
   ustki.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || event.defaultPrevented) return;
+    if (event.target instanceof Element && event.target.closest('dialog[open]')) return;
     const panel = ochiqPanel();
     if (!panel) return;
     event.preventDefault();

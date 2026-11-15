@@ -1,5 +1,6 @@
 ---
 // Qavatlar: JavaScriptsiz ochiladigan umumiy navigatsiya.
+import Suhbatdosh from './Suhbatdosh.astro';
 import { qavatlar, joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
 import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
@@ -29,6 +30,7 @@ const M = matn[til];
           </li>
         );
       })}
+      <Suhbatdosh qavat={joriy} inglizcha={til === 'en'} variant="qavatlar" />
     </ol>
   </nav>
 </details>

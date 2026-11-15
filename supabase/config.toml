@@ -80,3 +80,7 @@ verify_jwt = false
 # o'chirishda qayta autentifikatsiya JWT `amr` vaqti bilan tekshiriladi.
 [functions.hisob-malumot]
 verify_jwt = false
+
+# JWT Supabase Auth orqali funksiya ichida tekshiriladi.
+[functions.suhbatdosh]
+verify_jwt = false
