@@ -13,9 +13,13 @@ const royxat = korinadiganDeadlinelar({ bolim });
   <>
     <div data-muddat-limit={limit ?? ''}>
       <ul class="royxat">
-        {royxat.map((d) => (
-          <li data-oxir={muddatChegarasi(d.sana, d.soat, d.utcSiljish).oxir}>
-            <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
+        {royxat.map((d) => {
+          const { kun, oxir } = muddatChegarasi(d.sana, d.soat, d.utcSiljish);
+          return <li data-oxir={oxir} data-muddat-kun={kun}>
+            <div class="muddat-sana">
+              <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
+              <span class="yorliq" data-muddat-holat hidden></span>
+            </div>
             {!d.vaqtMintaqasi && <span class="kichik sust">Vaqt mintaqasi rasmiy manbada ko'rsatilmagan.</span>}
             <span>{d.dastur}: {d.bosqich}</span>
             {rasmiyManbalar(d.manbaIdlar).map((m) => (
@@ -25,8 +29,8 @@ const royxat = korinadiganDeadlinelar({ bolim });
               </span>
             ))}
             <span class="kichik sust">Muddat tekshirilgan sana: {d.tekshirilganSana}</span>
-          </li>
-        ))}
+          </li>;
+        })}
       </ul>
       {faqatKelajak && <p class="bosh" data-yaqin-yoq hidden>Hozircha tasdiqlangan yaqin muddat yo'q.</p>}
       <details hidden><summary>O'tgan muddatlar</summary><ul class="royxat"></ul></details>
@@ -54,6 +58,17 @@ const royxat = korinadiganDeadlinelar({ bolim });
   <p class="bosh">Hozircha rasmiy manba bilan tasdiqlangan muddat yo'q.</p>
 )}
 
+<script>
+  import { muddatHolati } from '../lib/muddat';
+
+  const hozir = Date.now();
+  for (const qator of document.querySelectorAll<HTMLElement>('[data-muddat-kun]')) {
+    const holat = qator.querySelector<HTMLElement>('[data-muddat-holat]')!;
+    holat.textContent = muddatHolati(hozir, Number(qator.dataset.muddatKun), Number(qator.dataset.oxir));
+    holat.hidden = false;
+  }
+</script>
+
 <style>
   .royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
   .royxat li {
@@ -65,6 +80,8 @@ const royxat = korinadiganDeadlinelar({ bolim });
   [hidden] { display: none !important; }
   details:not([hidden]) { margin-top: var(--b-3); }
   summary { cursor: pointer; }
+  .muddat-sana { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-1) var(--b-3); }
+  .muddat-sana .yorliq { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .bosh {
     background: var(--fon-ikkinchi);
     border: 1px dashed var(--chiziq-kuchli);
