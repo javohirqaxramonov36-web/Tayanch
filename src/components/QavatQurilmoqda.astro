@@ -30,7 +30,6 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
   tekshirilmagan={["Bo'lim hali qurilmoqda: bu sahifada faqat tavsif va rasmiy manbali muddatlar bor."]}
 >
   <section class="ichki qurilmoqda" aria-labelledby="q-h">
-    <QavatFoto bolim={bolim} />
     <p class="pill">Qavat qurilmoqda</p>
     <h1 id="q-h">{q.raqam}-qavat · {q.nomi}</h1>
     <p class="tavsif">{b.tavsif}</p>
@@ -49,6 +48,7 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
       <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
     </section>
 
+    <QavatFoto bolim={bolim} />
     <Zina />
   </section>
 </Asosiy>

@@ -172,41 +172,6 @@ const tekshirilmagan = [
       })();
     </script>
 
-    <section class="blok" aria-labelledby="muddat-sarlavha">
-      <div class="blok-bosh">
-        <h2 id="muddat-sarlavha">Yaqin muddatlar</h2>
-        <a class="havola" href={yol('/uz/deadline/')}>Barcha muddatlar</a>
-      </div>
-      <div class="chiptalar">
-        {chiptalar.map((c) => (
-          <article class="chipta" data-yopilish={c.yopilish} data-ochilish={c.ochilish}>
-            <span class="teshik teshik-tepa" aria-hidden="true"></span>
-            <span class="teshik teshik-past" aria-hidden="true"></span>
-            <div class="chipta-asosiy">
-              <div class="chipta-matn">
-                <p class="ustki">{c.ustki}</p>
-                <p class="chipta-sana">{c.katta}</p>
-                <p class="chipta-qator">{c.matn}</p>
-                {c.izoh && <p class="ikkinchi kichik">{c.izoh}</p>}
-                <p class="sust kichik chipta-manba">Manba: <a href={c.manba.havola} rel="noopener">{c.manba.tashkilot}</a></p>
-                <a class="havola kalendar" href={yol(`/uz/top-admission/kalendar/${c.id}.ics`)} download={`${c.id}.ics`} aria-label={`Kalendarga qo'shish: ${c.ustki}, oxirgi kun ${c.korishokKatta}`}>
-                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4" /></svg>
-                  Kalendarga qo'shish
-                </a>
-              </div>
-              <span class="muhr" role="img" aria-label={`Rasmiy manbada tekshirilgan, ${c.manba.tekshirilganSana}`}>
-                <b>TEKSHIRILGAN</b><span>{c.manba.tekshirilganSana}</span>
-              </span>
-            </div>
-            <div class="korishok">
-              <span class="korishok-katta">{c.korishokKatta}</span>
-              <span class="korishok-matn">{c.korishokMatn}</span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-
     <section class="blok" aria-labelledby="yonalish-sarlavha">
       <h2 id="yonalish-sarlavha">Yo'nalishlar</h2>
       <div class="yonalishlar">
@@ -244,6 +209,41 @@ const tekshirilmagan = [
     </section>
 
     <div class="yol-qator">
+    <section class="blok" aria-labelledby="muddat-sarlavha">
+      <div class="blok-bosh">
+        <h2 id="muddat-sarlavha">Yaqin muddatlar</h2>
+        <a class="havola" href={yol('/uz/deadline/')}>Barcha muddatlar</a>
+      </div>
+      <div class="chiptalar">
+        {chiptalar.map((c) => (
+          <article class="chipta" data-yopilish={c.yopilish} data-ochilish={c.ochilish}>
+            <span class="teshik teshik-tepa" aria-hidden="true"></span>
+            <span class="teshik teshik-past" aria-hidden="true"></span>
+            <div class="chipta-asosiy">
+              <div class="chipta-matn">
+                <p class="ustki">{c.ustki}</p>
+                <p class="chipta-sana">{c.katta}</p>
+                <p class="chipta-qator">{c.matn}</p>
+                {c.izoh && <p class="ikkinchi kichik">{c.izoh}</p>}
+                <p class="sust kichik chipta-manba">Manba: <a href={c.manba.havola} rel="noopener">{c.manba.tashkilot}</a></p>
+                <a class="havola kalendar" href={yol(`/uz/top-admission/kalendar/${c.id}.ics`)} download={`${c.id}.ics`} aria-label={`Kalendarga qo'shish: ${c.ustki}, oxirgi kun ${c.korishokKatta}`}>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4" /></svg>
+                  Kalendarga qo'shish
+                </a>
+              </div>
+              <span class="muhr" role="img" aria-label={`Rasmiy manbada tekshirilgan, ${c.manba.tekshirilganSana}`}>
+                <b>TEKSHIRILGAN</b><span>{c.manba.tekshirilganSana}</span>
+              </span>
+            </div>
+            <div class="korishok">
+              <span class="korishok-katta">{c.korishokKatta}</span>
+              <span class="korishok-matn">{c.korishokMatn}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="mening-yolim" id="mening-yolim" aria-labelledby="mening-sarlavha" data-mening-yolim>
       <h2 id="mening-sarlavha" class="ustki">Mening yo'lim</h2>
       <div data-holat="bosh">
