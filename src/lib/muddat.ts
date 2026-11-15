@@ -59,3 +59,10 @@ export function muddatHolati(hozir: number, kun: number, oxir: number): string {
   if (hozir >= kun) return 'Bugun tugaydi';
   return `${Math.ceil((kun - hozir) / KUN_MS)} kun qoldi`;
 }
+
+/** Keyingi kalendar chegarasi yoki yopilish vaqti. O‘tgan yozuv uchun taymer kerak emas. */
+export function keyingiMuddatYangilanishi(hozir: number, kun: number, oxir: number): number {
+  if (hozir >= oxir) return Infinity;
+  if (hozir >= kun) return oxir;
+  return kun - (Math.ceil((kun - hozir) / KUN_MS) - 1) * KUN_MS;
+}

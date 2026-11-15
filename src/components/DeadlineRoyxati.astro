@@ -40,17 +40,22 @@ const royxat = korinadiganDeadlinelar({ bolim });
         const box = document.currentScript.previousElementSibling;
         const list = box.firstElementChild;
         const archive = box.lastElementChild;
-        const now = Date.now();
         const limit = Number(box.dataset.muddatLimit) || Infinity;
-        let active = 0;
-        for (const row of Array.from(list.children)) {
-          if (now >= Number(row.dataset.oxir)) archive.lastElementChild.append(row);
-          else if (++active > limit) row.hidden = true;
-        }
-        list.hidden = active === 0;
-        archive.hidden = !archive.lastElementChild.children.length;
         const empty = box.querySelector('[data-yaqin-yoq]');
-        if (empty) empty.hidden = active > 0;
+        function update() {
+          const now = Date.now();
+          let active = 0;
+          for (const row of Array.from(list.children)) {
+            const past = now >= Number(row.dataset.oxir);
+            row.hidden = !past && ++active > limit;
+            if (past) archive.lastElementChild.append(row);
+          }
+          list.hidden = !active;
+          archive.hidden = !archive.lastElementChild.children.length;
+          if (empty) empty.hidden = !!active;
+        }
+        update();
+        box.addEventListener('muddat:yangila', update);
       })();
     </script>
   </>
@@ -59,13 +64,33 @@ const royxat = korinadiganDeadlinelar({ bolim });
 )}
 
 <script>
-  import { muddatHolati } from '../lib/muddat';
+  import { muddatHolati, keyingiMuddatYangilanishi } from '../lib/muddat';
 
-  const hozir = Date.now();
-  for (const qator of document.querySelectorAll<HTMLElement>('[data-muddat-kun]')) {
-    const holat = qator.querySelector<HTMLElement>('[data-muddat-holat]')!;
-    holat.textContent = muddatHolati(hozir, Number(qator.dataset.muddatKun), Number(qator.dataset.oxir));
-    holat.hidden = false;
+  const royxatlar = document.querySelectorAll('[data-muddat-limit]');
+  const qatorlar = [...document.querySelectorAll<HTMLElement>('[data-muddat-kun]')].map((qator) => ({
+    kun: Number(qator.dataset.muddatKun),
+    oxir: Number(qator.dataset.oxir),
+    holat: qator.querySelector<HTMLElement>('[data-muddat-holat]')!,
+  }));
+  let taymer: number | undefined;
+
+  function yangila() {
+    window.clearTimeout(taymer);
+    const hozir = Date.now();
+    let keyingi = Infinity;
+    for (const royxat of royxatlar) royxat.dispatchEvent(new Event('muddat:yangila'));
+    for (const { kun, oxir, holat } of qatorlar) {
+      holat.textContent = muddatHolati(hozir, kun, oxir);
+      holat.hidden = false;
+      keyingi = Math.min(keyingi, keyingiMuddatYangilanishi(hozir, kun, oxir));
+    }
+    if (Number.isFinite(keyingi)) taymer = window.setTimeout(yangila, keyingi - hozir);
+  }
+
+  if (qatorlar.length) {
+    yangila();
+    addEventListener('pageshow', (e) => { if (e.persisted) yangila(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) yangila(); });
   }
 </script>
 
