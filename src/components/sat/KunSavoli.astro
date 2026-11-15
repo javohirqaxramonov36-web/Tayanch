@@ -270,7 +270,7 @@ const kirish = yol('/uz/hisob/kirish/');
       if (!entries.some((entry) => entry.isIntersecting)) return;
       kuzat.disconnect();
       void boshla();
-    }, { rootMargin: '160px' });
+    }, { rootMargin: '64px' });
     kuzat.observe(yaqin);
   } else {
     addEventListener('scroll', () => void boshla(), { once: true, passive: true });

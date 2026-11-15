@@ -55,7 +55,7 @@ import { yol } from '../../lib/yol';
 
 <script>
   import type { sarlavhaHolati, MaqsadProfil } from '../../lib/satMaqsad';
-  import { maqsadMatn as M } from '../../data/satMaqsadMatn';
+  import type { maqsadMatn } from '../../data/satMaqsadMatn';
 
   const quti = document.querySelector<HTMLElement>('[data-maqsad-sarlavha]');
   const el = (teg: string, cls?: string, matn?: string) => {
@@ -65,7 +65,7 @@ import { yol } from '../../lib/yol';
     return e;
   };
 
-  function korsat(q: HTMLElement, p: MaqsadProfil, h: ReturnType<typeof sarlavhaHolati>) {
+  function korsat(q: HTMLElement, p: MaqsadProfil, h: ReturnType<typeof sarlavhaHolati>, M: typeof maqsadMatn) {
     const tahrir = q.dataset.tahrir!;
     q.querySelector<HTMLElement>('[data-ms-taklif]')!.hidden = h.tur !== 'sozlanmagan';
     q.querySelector<HTMLElement>('[data-ms-bor]')!.hidden = h.tur === 'sozlanmagan';
@@ -116,11 +116,12 @@ import { yol } from '../../lib/yol';
         .select('target_score, current_score, exam_date, sat_setup_at').eq('id', uid).maybeSingle();
       if (error || !data) return;
       const profil = data as MaqsadProfil;
-      const [{ sarlavhaHolati }, { toshkentBugun }] = await Promise.all([
+      const [{ sarlavhaHolati }, { toshkentBugun }, { maqsadMatn: M }] = await Promise.all([
         import('../../lib/satMaqsad'),
         import('../../lib/muddat'),
+        import('../../data/satMaqsadMatn'),
       ]);
-      const chiz = (p: MaqsadProfil) => korsat(quti, p, sarlavhaHolati(p, toshkentBugun()));
+      const chiz = (p: MaqsadProfil) => korsat(quti, p, sarlavhaHolati(p, toshkentBugun()), M);
       chiz(profil);
 
       const keyinroq = quti.querySelector<HTMLButtonElement>('[data-ms-keyinroq]')!;
