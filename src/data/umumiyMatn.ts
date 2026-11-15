@@ -1,7 +1,7 @@
 // Umumiy komponentlar matni: o'zbekcha (1, 2, 4, 5-qavat) va inglizcha (3-qavat SAT, CLAUDE.md qoidasi).
 // `uz` qiymatlari avvalgi matn bilan harfma-harf bir xil: boshqa qavatlar HTML'i o'zgarmasligi kerak.
 // Inglizcha matnni muallif tekshiradi.
-import type { BolimSlug } from './bolimlar';
+import type { Bolim, BolimSlug } from './bolimlar';
 import type { Qiyinlik } from './darsTurlar';
 
 export type Til = 'uz' | 'en';
@@ -16,7 +16,8 @@ const uz = {
   otish: "Asosiy matnga o'tish",
   qavat: (n: number) => `${n}-qavat`,
   qavatYoli: 'Qayerdaman',
-  lift: { nomi: 'Qavatlar (lift)', tezOrada: ', tez orada' },
+  qavatOta: 'Yuqori sahifa',
+  lift: { nomi: 'Qavatlar', ochiq: 'Ochiq', qoralama: 'Qoralama', tezOrada: 'tez orada' },
   zina: { nomi: "Zina: qo'shni qavatlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
   qavatlarAro: 'Boshqa qavatda',
   yon: {
@@ -111,7 +112,8 @@ const en: Matn = {
   otish: 'Skip to main content',
   qavat: (n) => `Floor ${n}`,
   qavatYoli: 'You are here',
-  lift: { nomi: 'Floors (lift)', tezOrada: ', coming soon' },
+  qavatOta: 'Parent page',
+  lift: { nomi: 'Floors', ochiq: 'Open', qoralama: 'Draft', tezOrada: 'coming soon' },
   zina: { nomi: 'Stairs: neighboring floors', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
   qavatlarAro: 'On another floor',
   yon: {
@@ -200,3 +202,9 @@ const en: Matn = {
 };
 
 export const matn: Record<Til, Matn> = { uz, en };
+
+export function qavatHolatMatni(holat: Bolim['holat'], til: Til): string | undefined {
+  const { qoralama, tezOrada } = matn[til].lift;
+  if (holat === 'qoralama') return qoralama;
+  if (holat === 'tez-orada') return tezOrada;
+}

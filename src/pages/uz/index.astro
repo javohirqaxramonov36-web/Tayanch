@@ -6,6 +6,7 @@ import MuallifYoli from '../../components/MuallifYoli.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
 import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
+import { qavatHolatMatni } from '../../data/umumiyMatn';
 import { yol } from '../../lib/yol';
 import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
@@ -64,7 +65,8 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
     <ul class="kartalar">
       {bolimlar.map((b) => {
         // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
-        const ochiq = b.holat === 'ochiq';
+        const ochiq = b.holat !== 'tez-orada';
+        const holat = qavatHolatMatni(b.holat, 'uz');
         const raqam = qavatlar.find((q) => q.slug === b.slug)?.raqam;
         const manzil = yol(`/uz/${b.slug}/`);
         return (
@@ -90,9 +92,10 @@ const bosqichlar = ['Maqsad', 'Imtihon', 'Hujjat va esse', 'Ariza', 'Natija'];
                   ))}
                 </ul>
               )}
+              {b.holat === 'qoralama' && <span class="yorliq karta-yorliq">{holat}</span>}
               {ochiq
                 ? <a class="tugma tugma-asosiy karta-tugma karta-havola" href={manzil} data-bino-yoq={raqam}>{b.nomi}'ni boshlash</a>
-                : <span class="yorliq karta-yorliq" id={`tez-${b.slug}`}>Tez orada</span>}
+                : <span class="yorliq karta-yorliq" id={`tez-${b.slug}`}>{holat}</span>}
             </article>
           </li>
         );

@@ -190,6 +190,30 @@ a.boshlash {
   font-weight: var(--text-caption-weight);
 }
 
+.nav-shisha {
+  background: var(--color-surface);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav-shisha {
+    background: var(--nav-glass-sheen), var(--nav-glass-bg);
+    -webkit-backdrop-filter: var(--nav-glass-desktop);
+    backdrop-filter: var(--nav-glass-desktop);
+  }
+  @media (max-width: 768px) {
+    .nav-shisha {
+      -webkit-backdrop-filter: var(--nav-glass-mobile);
+      backdrop-filter: var(--nav-glass-mobile);
+    }
+  }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .nav-shisha {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 /* DS link karta (2026-11-13): zich fon, 1px chegara, statik yengil soya. Hover faqat sichqoncha bilan,
    faqat transform. Qavat urg'usi kartaning data-floor'idan (borilayotgan qavat): .ds-karta-belgi doirasi
    --floor-ui; matn neytral. */
@@ -225,11 +249,13 @@ a.ds-karta:active { transform: var(--bosilish); }
 .qavat-yoli-orami:not(:empty) + section,
 .qavat-yoli-orami:not(:empty) + div { padding-top: var(--b-6) !important; }
 
-/* Telefonda pastki panel (lift yoki SAT tab bar) kontentni yopmasin */
-@media (max-width: 1023.98px) {
-  body:has(.lift-pastki, .sat-tab) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
-  /* Fokus yoki scrollIntoView elementni pastki panel ostiga yashirmasin (WCAG 2.4.11) */
-  html:has(.lift-pastki, .sat-tab) { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+/* Yuqori navigatsiya klaviatura fokusini yopmasin. */
+html:has(.ustki-qator) { scroll-padding-top: calc(var(--space-14) + var(--space-2)); }
+
+/* Huquqiy va manba havolalari kichik ekranda ham alohida bosiladi. */
+:is(.footer, .sat-eslatma) nav a {
+  display: inline-flex; align-items: center;
+  min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
 }
 
 @media (prefers-reduced-motion: reduce) {
