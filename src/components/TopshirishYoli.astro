@@ -15,7 +15,7 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
     <div class="ty-bosh-matn">
       <span class="ustki">Top Admission · Vosita</span>
       <h1>Topshirish yo'li</h1>
-      <p class="kirish">Uchta savolga javob bering: qaysi davlat, qaysi daraja va grant kerakmi. Sizga mos ariza yo'llari chiqadi. Har kartani aylantirsangiz, rasmiy manbadagi faktlar va hali tekshirilmagan joylar ko'rinadi.</p>
+      <p class="kirish">Uchta savolga javob bering: qaysi davlat, qaysi daraja va grant kerakmi. Sizga mos ariza yo'llari chiqadi. Kartani aylantirib, rasmiy manbalar va muhim izohlarni ko'ring.</p>
       <div class="yorliqlar">
         <span class="pill pill-namuna" id="namuna-yorliq" hidden>Namuna</span>
         <span class="pill">Javoblar faqat shu brauzerda</span>
@@ -191,11 +191,7 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       }
       orqa.append(el('span', 'orqa-sarlavha', 'Muhim izohlar'));
       const yl = el('ul', 'yoq');
-      y.tekshirilmagan.forEach((t) => {
-        const li = el('li');
-        li.append(el('span', 'ogoh-yorliq', 'tekshirish kerak'), el('span', null, t));
-        yl.append(li);
-      });
+      y.tekshirilmagan.forEach((t) => yl.append(el('li', null, t)));
       orqa.append(yl);
       const qayt = el('button', 'tugma qayt-tugma', 'Orqaga');
       qayt.setAttribute('aria-label', `${y.nomi}: orqaga`);
@@ -380,8 +376,6 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   @media (hover: hover) and (pointer: fine) { .yollar :global(.faktlar a:hover) { text-decoration: underline; } }
   .yollar :global(.yoq li) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); display: flex; align-items: flex-start; gap: var(--b-2); }
   .yollar :global(.yoq li > span:last-child) { flex: 1; min-width: 0; }
-  .yollar :global(.ogoh-yorliq) { flex: none; white-space: nowrap; margin-top: 1px; }
-  .yollar :global(.ogoh-yorliq) { padding: 1px 8px; border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: 12px; font-weight: 700; }
   .yollar :global(.orqa-sarlavha) { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
   .yollar :global(.qayt-tugma) { margin-top: auto; align-self: flex-start; background: var(--fon); border: 1.5px solid var(--matn); }
   @media (hover: hover) and (pointer: fine) { .yollar :global(.qayt-tugma:hover) { background: var(--fon-ikkinchi); } }
