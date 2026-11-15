@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check:live-paths": "node scripts/check-live-paths.mjs",
     "preview": "astro preview",
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
