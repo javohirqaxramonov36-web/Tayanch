@@ -15,7 +15,7 @@ interface Props { bolim: BolimSlug }
 const { bolim } = Astro.props;
 const b = bolimlar.find((x) => x.slug === bolim)!;
 const q = qavatlar.find((x) => x.slug === bolim)!;
-const muddatlar = korinadiganDeadlinelar({ bolim, faqatKelajak: true });
+const muddatlar = korinadiganDeadlinelar({ bolim });
 const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
 ---
 <Asosiy
