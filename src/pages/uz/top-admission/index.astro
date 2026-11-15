@@ -53,7 +53,6 @@ const tekshirilmagan = [
   "Türkiye Bursları 2027-yil e'loni (taqvimda yil yozilmagan)",
   "Stipendium Hungaricum 2027/28 e'loni va muddati (hali chiqmagan)",
   "El-yurt umidi muddatining vaqt mintaqasi (Toshkent deb olindi)",
-  "Stipendium Hungaricum va boshqa yo'nalishlar sahifalari hali yozilmagan",
 ];
 ---
 <BolimQobiq
@@ -505,4 +504,6 @@ const tekshirilmagan = [
     .savol-zinasi { transition: none; }
     @media (hover: hover) and (pointer: fine) { .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); } }
   }
+  /* Preview ostidagi ichki staging yozuvi kesiladi. Hujjat izohi HTMLda. */
+  .previewlar img { height: auto; aspect-ratio: 960 / 480; object-fit: cover; object-position: top; }
 </style>

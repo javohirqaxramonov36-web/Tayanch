@@ -2,6 +2,7 @@
 import { korinadiganDeadlinelar } from '../data/deadline';
 import type { BolimSlug } from '../data/bolimlar';
 import { muddatChegarasi } from '../lib/muddat';
+import { rasmiyManbalar } from '../data/manbalar';
 
 // limit: ro'yxat sana bo'yicha tartiblangan, shuning uchun eng yaqin N tasi qoladi.
 interface Props { bolim?: BolimSlug; faqatKelajak?: boolean; limit?: number }
@@ -17,8 +18,13 @@ const royxat = korinadiganDeadlinelar({ bolim });
             <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
             {!d.vaqtMintaqasi && <span class="kichik sust">Vaqt mintaqasi rasmiy manbada ko'rsatilmagan.</span>}
             <span>{d.dastur}: {d.bosqich}</span>
-            {d.muddatManbasi && <span class="kichik sust"><a href={d.muddatManbasi.havola}>Muddat e'loni</a> · Tekshirilgan: {d.muddatManbasi.tekshirilganSana}</span>}
-            <span class="kichik sust">Manba: {d.manbaIdlar.join(', ')}. Tekshirilgan: {d.tekshirilganSana}</span>
+            {rasmiyManbalar(d.manbaIdlar).map((m) => (
+              <span class="kichik sust">
+                <a href={m.havola}>{m.nomi}</a> ({new URL(m.havola).hostname}) · Tekshirilgan: {m.tekshirilganSana}
+                {d.muddatManbasi?.havola === m.havola && <> · Qayta tekshirilgan: {d.muddatManbasi.tekshirilganSana}</>}
+              </span>
+            ))}
+            <span class="kichik sust">Muddat tekshirilgan sana: {d.tekshirilganSana}</span>
           </li>
         ))}
       </ul>

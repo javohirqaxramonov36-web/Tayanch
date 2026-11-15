@@ -15,8 +15,8 @@ const rasmiy = rasmiyManbalar(manbalar);
   <div class="oxiri-karta">
     <h2 id="oxiri-sarlavha">Manbalar va tekshiruv</h2>
 
-    <h3>Rasmiy manbalar</h3>
-    {rasmiy.length > 0 ? (
+    {rasmiy.length > 0 && <>
+      <h3>Rasmiy manbalar</h3>
       <ul>
         {rasmiy.map((m) => (
           <li>
@@ -24,9 +24,7 @@ const rasmiy = rasmiyManbalar(manbalar);
           </li>
         ))}
       </ul>
-    ) : (
-      <p class="ikkinchi">Bu sahifada hali rasmiy manbaga tayangan qoida yoki muddat yo'q.</p>
-    )}
+    </>}
 
     <dl>
       <dt>Sahifa tekshirilgan sana</dt>
@@ -35,12 +33,10 @@ const rasmiy = rasmiyManbalar(manbalar);
       <dd>{keyingiTekshiruv ?? 'belgilanmagan'}</dd>
     </dl>
 
-    <h3>Tekshirilmagan joylar</h3>
-    {tekshirilmagan.length > 0 ? (
+    {tekshirilmagan.length > 0 && <>
+      <h3>Muhim izohlar</h3>
       <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul>
-    ) : (
-      <p class="ikkinchi">Yo'q.</p>
-    )}
+    </>}
   </div>
 </section>
 
