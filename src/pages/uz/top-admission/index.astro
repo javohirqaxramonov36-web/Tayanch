@@ -51,7 +51,6 @@ const xaritaKodlar = [
 const tekshirilmagan = [
   "Türkiye Bursları 2027-yil e'loni (taqvimda yil yozilmagan)",
   "Stipendium Hungaricum 2027/28 e'loni va muddati (hali chiqmagan)",
-  "El-yurt umidi muddatining vaqt mintaqasi (Toshkent deb olindi)",
 ];
 ---
 <BolimQobiq
@@ -215,7 +214,7 @@ const tekshirilmagan = [
       </div>
       <div class="chiptalar">
         {chiptalar.map((c) => (
-          <article class="chipta" data-yopilish={c.yopilish} data-ochilish={c.ochilish}>
+          <article class="chipta" data-ochilish={c.ochilish} data-kun={c.chegara.kun} data-oxir={c.chegara.oxir}>
             <span class="teshik teshik-tepa" aria-hidden="true"></span>
             <span class="teshik teshik-past" aria-hidden="true"></span>
             <div class="chipta-asosiy">
@@ -294,28 +293,22 @@ const tekshirilmagan = [
 </BolimQobiq>
 
 <script>
-  import { toshkentBugun, kunFarqi } from '../../../lib/muddat';
-  // 1) Chiptadagi qolgan kun: bugungi sana Toshkent bo'yicha. JS bo'lmasa sana va "oxirgi kun" qoladi.
-  const bugun = toshkentBugun();
-  document.querySelectorAll<HTMLElement>('.chipta[data-yopilish]').forEach((ch) => {
+  import { muddatHolati } from '../../../lib/muddat';
+  // JS bo‘lmasa chipta sanasi va "oxirgi kun" yorlig‘i qoladi.
+  const hozir = Date.now();
+  document.querySelectorAll<HTMLElement>('.chipta[data-oxir]').forEach((ch) => {
     const katta = ch.querySelector('.korishok-katta');
     const matn = ch.querySelector('.korishok-matn');
     const korishok = ch.querySelector('.korishok');
     if (!katta || !matn || !korishok) return;
-    const { yopilish = '', ochilish } = ch.dataset;
-    if (ochilish && bugun < ochilish) {
-      katta.textContent = String(kunFarqi(bugun, ochilish));
-      matn.textContent = 'kun ochilishiga';
-    } else if (bugun <= yopilish) {
-      const n = kunFarqi(bugun, yopilish);
-      katta.textContent = n === 0 ? 'Bugun' : String(n);
-      matn.textContent = n === 0 ? 'oxirgi kun' : 'kun qoldi';
-    } else {
-      katta.textContent = "O'tgan";
-      matn.textContent = 'muddat tugagan';
-      korishok.classList.add('otgan');
-    }
-    korishok.classList.add('son');
+    const { ochilish, kun, oxir } = ch.dataset;
+    const oldin = ochilish && hozir < Date.parse(`${ochilish}T00:00:00+14:00`);
+    const holat = oldin ? 'Ochilishi kutilmoqda' : muddatHolati(hozir, Number(kun), Number(oxir));
+    const [birinchi, ...qolgan] = holat.split(' ');
+    katta.textContent = birinchi;
+    matn.textContent = qolgan.join(' ');
+    korishok.classList.toggle('son', /^\d+$/.test(birinchi));
+    korishok.classList.toggle('otgan', holat === 'Tugadi');
   });
 
   // 2) Mening yo'lim: Topshirish yo'li javoblari, faqat o'qiladi (spetsifikatsiya 3-band).

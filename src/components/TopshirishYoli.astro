@@ -57,8 +57,9 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
 
 <script>
   import { yollarniTanla, type Javoblar } from '../lib/yollarniTanla';
+  import { muddatHolati } from '../lib/muddat';
 
-  type Fakt = { matn: string; manbaId: string; muddat?: string; vaqtli?: boolean };
+  type Fakt = { matn: string; manbaId: string; muddat?: { kun: number; oxir: number }; vaqtli?: boolean };
   type Yol = { id: string; nomi: string; kod: string; ikonka: string; tavsif: string; qadamlar: string[]; faktlar: Fakt[]; tekshirilmagan: string[] };
   type Malumot = {
     SAVOLLAR: Record<string, { variantlar: { id: string; nomi: string; izoh?: string }[] }>;
@@ -98,12 +99,6 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       s.innerHTML = ichi;
       return s;
     };
-    const yopildimi = (iso: string) => new Date(iso).getTime() - Date.now() < 0;
-    const qolganKun = (iso: string) => {
-      const farq = new Date(iso).getTime() - Date.now();
-      if (farq < 0) return "muddat o'tdi";
-      return Math.ceil(farq / 86400000) + ' kun qoldi';
-    };
 
     const savollarniChiz = () => {
       KALITLAR.forEach((k) => {
@@ -136,8 +131,9 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
 
     const kartaChiz = (id: string, birinchi: boolean) => {
       const y = M.YOLLAR[id];
-      const muddatli = y.faktlar.find((f) => f.muddat);
-      const yopiq = !!(muddatli && yopildimi(muddatli.muddat!));
+      const muddat = y.faktlar.find((f) => f.muddat)?.muddat;
+      const hozir = Date.now();
+      const yopiq = !!muddat && hozir >= muddat.oxir;
       const faktlar = yopiq ? y.faktlar.filter((f) => !f.vaqtli) : y.faktlar;
 
       const k = el('article', 'karta' + (birinchi ? ' asosiy-yol' : ''));
@@ -161,7 +157,7 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
       old.append(ol);
       const past = el('div', 'karta-past');
       past.append(el('span', 'meta sanoq',
-        muddatli && !yopiq ? 'Hujjat qabuli: ' + qolganKun(muddatli.muddat!) : `${faktlar.length} ta rasmiy fakt · ${y.tekshirilmagan.length} ta tekshirilmagan`));
+        muddat && !yopiq ? 'Hujjat qabuli: ' + muddatHolati(hozir, muddat.kun, muddat.oxir) : `${faktlar.length} ta rasmiy fakt · ${y.tekshirilmagan.length} ta tekshirilmagan`));
       const aylan = el('button', 'tugma', "Manbalarni ko'rish");
       aylan.type = 'button';
       aylan.setAttribute('aria-label', `${y.nomi}: manbalarni ko'rish`);
@@ -193,7 +189,7 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
         });
         orqa.append(fl);
       }
-      orqa.append(el('span', 'orqa-sarlavha', 'Tekshirilmagan joylar'));
+      orqa.append(el('span', 'orqa-sarlavha', 'Muhim izohlar'));
       const yl = el('ul', 'yoq');
       y.tekshirilmagan.forEach((t) => {
         const li = el('li');
