@@ -4,7 +4,6 @@
 // Keyin bo'limning o'z dizayni bilan almashtiriladi.
 import Asosiy from '../layouts/Asosiy.astro';
 import DeadlineRoyxati from './DeadlineRoyxati.astro';
-import Zina from './Zina.astro';
 import QavatFoto from './QavatFoto.astro';
 import { bolimlar, type BolimSlug } from '../data/bolimlar';
 import { qavatlar } from '../data/qavatlar';
@@ -49,7 +48,6 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
     </section>
 
     <QavatFoto bolim={bolim} />
-    <Zina />
   </section>
 </Asosiy>
 
