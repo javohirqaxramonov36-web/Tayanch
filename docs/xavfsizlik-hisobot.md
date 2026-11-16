@@ -186,5 +186,6 @@ Ochiq kalit (anon yoki publishable) dizayn bo'yicha ochiq: uni bilish RLS'ni che
 - `npm run repo:tekshir`: muammo yo'q.
 - `npm run build`: 58 sahifa, xatosiz.
 - Jonli baza (faqat SELECT): RLS o'chiq jadval yo'q; anon jadval huquqi yo'q; anon RPC faqat kun savoli (+ F10); X3, X4, X4b, X5, X6, X7, X8, X9 toza;
+- Jonli baza, 2026-11-16: `20261116094217_cheklovlar_p26` qo'llandi (dry-run faqat shu faylni ko'rsatdi). Keyin faqat SELECT bilan tekshirildi: `bookmarks_insert_own` uchala shart bilan, RLS o'chiq jadval yo'q, anon RPC faqat `daily_question_public` va `check_daily_answer`. Sinalmagan: saytdagi "Save" tugmasi jonli hisob bilan.
   `config diff`: e'lon qilingan sozlamalarda farq yo'q.
 - Sinalmagan: jonli bazada A/B yozuvli RLS sinovi (yozish ruxsati kerak), axe/VoiceOver, haqiqiy telefon, CAPTCHA (yoqilmagan).
