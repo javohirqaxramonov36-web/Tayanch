@@ -277,7 +277,13 @@ begin
   insert into public.plan_tasks (plan_id, title) select id, 'SINOV vazifa' from public.study_plans limit 1;
   insert into public.feedback (message) values ('SINOV fikr');
   insert into public.reports (question_id, reason) values (q1, 'typo');
-  insert into public.events (name, props) values ('sinov.event', '{"a": 1}');
+  -- P25 (20261112143717): events ga faqat private.track yozadi, mijoz faqat track_event('plan_viewed').
+  begin
+    insert into public.events (name, props) values ('sinov.event', '{"a": 1}');
+    raise exception 'FAIL 07: A events ga to''g''ridan-to''g''ri yozdi';
+  exception when insufficient_privilege then null;
+  end;
+  perform public.track_event('plan_viewed');
   begin
     perform 1 from public.events limit 1;
     raise exception 'FAIL 07: A events ni o''qidi';
@@ -288,7 +294,7 @@ begin
     raise exception 'FAIL 07: tayanch: prefiksisiz kalit yozildi';
   exception when check_violation then null;
   end;
-  raise notice 'OK 07 A: profil, consent_at trigger, user_state, bookmarks, official_*, reja, feedback, reports, events (faqat yozish)';
+  raise notice 'OK 07 A: profil, consent_at trigger, user_state, bookmarks, official_*, reja, feedback, reports, events (faqat track_event orqali)';
 
   -- Storage: berilgan savol rasmi ko'rinadi, boshqasi yo'q
   if not exists (select 1 from storage.objects where bucket_id = 'question-figures' and name = 'sinov/fig1.png') then

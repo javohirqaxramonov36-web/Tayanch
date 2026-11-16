@@ -1,10 +1,10 @@
 // Obuna sahifasi uchun sun'iy holatlar (P22). FAQAT dev rejimida: sahifa `import.meta.env.DEV` ichida
-// dinamik import qiladi, production build'ga kirmaydi. Ochish: /uz/sat/hisob/obuna/?sinov=faol|5kun|tugagan|hech
+// dinamik import qiladi, production build'ga kirmaydi. Ochish: /uz/sat/hisob/obuna/?sinov=faol|5kun|tugagan|hech|kvota
 // Narx, sana va to'lovlar shu yerda to'qilgan namuna; ular haqiqiy hisob yoki bazadan emas.
 import type { ObunaYozuv, TolovYozuv } from './obunaHolat';
 import type { UsageJavob } from './usageBar';
 
-export type SinovTur = 'faol' | '5kun' | 'tugagan' | 'hech';
+export type SinovTur = 'faol' | '5kun' | 'tugagan' | 'hech' | 'kvota';
 
 export interface SinovMalumot {
   tariflar: { code: string; name: string; price_uzs: number | null; period_days: number | null; features: unknown; limits: unknown }[];
@@ -13,7 +13,7 @@ export interface SinovMalumot {
   tolovlar: TolovYozuv[];
 }
 
-export const sinovTurmi = (s: string | null): s is SinovTur => s === 'faol' || s === '5kun' || s === 'tugagan' || s === 'hech';
+export const sinovTurmi = (s: string | null): s is SinovTur => s === 'faol' || s === '5kun' || s === 'tugagan' || s === 'hech' || s === 'kvota';
 
 export function sinovMalumot(tur: SinovTur, hozir: Date): SinovMalumot {
   const kun = (n: number) => new Date(hozir.getTime() + n * 86_400_000).toISOString();
@@ -48,5 +48,26 @@ export function sinovMalumot(tur: SinovTur, hozir: Date): SinovMalumot {
       };
     case 'hech':
       return { tariflar, usage: usage('free'), obunalar: [], tolovlar: [] };
+    case 'kvota': {
+      // Limitli namuna (to'qilgan raqamlar, haqiqiy tarif emas): jadval, "Not included" va metrlarni ko'rish uchun.
+      const kvTariflar = [
+        { ...tariflar[0], limits: { questions: { max: 20, per: 'day' }, mock_first: { max: 1, per: 'month' }, new_words: { max: 0, per: 'day' } } },
+        { ...tariflar[1], limits: { ai_messages: { max: 30, per: 'day' }, ai_messages_month: { max: 300, per: 'month' } }, features: ['analytics_extended', { flag: 'vocab_my_words' }, 'Sample feature (test data)'] },
+      ];
+      return {
+        tariflar: kvTariflar,
+        usage: {
+          plan: { code: 'free', name: 'Free' },
+          limits: {
+            questions: { max: 20, per: 'day', used: 12, remaining: 8 },
+            mock_first: { max: 1, per: 'month', used: 1, remaining: 0, resets_at: kun(10) },
+            new_words: { max: 0, per: 'day', used: 0, remaining: 0 },
+          },
+          today: { questions: 12, sessions: 2 },
+        },
+        obunalar: [],
+        tolovlar: [],
+      };
+    }
   }
 }

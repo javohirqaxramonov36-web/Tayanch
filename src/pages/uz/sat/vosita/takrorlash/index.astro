@@ -185,6 +185,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
 
 <script>
   import { javobniYoz, bugun } from '../../../../../lib/darsSaqlash';
+  import { holatOchir } from '../../../../../lib/holat';
   import { sinxronla, guruhla, javobdanKeyin, holatniYoz, takrorKalit, type TakrorHolat } from '../../../../../lib/takrorlash';
   import { sababOqi, sababYoz } from '../../../../../lib/xatoSabab';
   import { hisobMijoz } from '../../../../../lib/hisob';
@@ -775,7 +776,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
   tozala.addEventListener('click', () => { $('tasdiq').hidden = false; tozala.hidden = true; $('tasdiq-yoq').focus(); });
   $('tasdiq-yoq').addEventListener('click', () => { $('tasdiq').hidden = true; tozala.hidden = false; tozala.focus(); });
   $('tasdiq-ha').addEventListener('click', () => {
-    try { localStorage.removeItem(takrorKalit(BOLIM)); } catch { /* ruxsat yo'q */ }
+    holatOchir(takrorKalit(BOLIM));
     holat = sinxronla(BOLIM, new Set(savol.keys()));
     $('tasdiq').hidden = true; tozala.hidden = false;
     if (!$('sessiya').hidden) royxatgaQayt(); else royxatniChiz();
@@ -814,7 +815,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
   .darslar { display: flex; flex-direction: column; gap: var(--b-2); }
   .darslar ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--b-2); }
   .darslar a { min-height: 48px; display: flex; align-items: center; padding: 0 var(--b-4); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); color: var(--rang-havola); font-weight: 700; text-decoration: none; }
-  .darslar a:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
+  @media (hover: hover) and (pointer: fine) { .darslar a:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); } }
   .darslar a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
   /* Tablar: segment ko'rinishi, telefonda 2×2 */
@@ -824,7 +825,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
     background: var(--fon-ikkinchi); color: var(--matn); border: 2px solid transparent; font: inherit; font-weight: 700;
     display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--b-2); text-align: center;
   }
-  .tab:hover { border-color: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .tab:hover { border-color: var(--chiziq-kuchli); } }
   .tab[aria-selected='true'] { background: var(--matn); color: var(--fon); }
   .tab-son { font-variant-numeric: tabular-nums; font-weight: 800; }
   .tab:focus-visible, .tab-panel:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
@@ -884,16 +885,6 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
 
   .tugmalar, .s-tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .s-tugmalar { justify-content: flex-end; }
-  .katta { min-height: var(--control-height-md); padding: 0 28px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
-  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
-  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
-  .katta.asosiy:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .katta.ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .katta.qora { background: var(--matn); color: var(--fon); }
-  .katta:focus-visible, .takror :global(.matn-tugma:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .takror :global(.matn-tugma) { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; text-decoration: none; }
-  .takror :global(.matn-tugma:hover) { background: var(--sirt-ikkinchi); }
-  .takror :global(.kok-tugma) { color: var(--rang-havola); }
   .s-tugmalar .kok-tugma { margin-right: auto; }
   .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
   .tozalash { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); }
@@ -915,15 +906,17 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
   }
   .variantlar :global(.variant input) { position: absolute; opacity: 0; pointer-events: none; }
   .variantlar :global(.variant:has(input:focus-visible)) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .variantlar :global(.variant:hover) { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(.variant:hover) { border-color: var(--rang-asosiy); } }
   .variantlar :global(.harf) { width: 32px; height: 32px; flex: none; border-radius: var(--r-logo); display: grid; place-items: center; font-size: var(--matn-kichik); font-weight: 800; background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
   .variantlar :global(.v-matn) { flex: 1; min-width: 0; }
   .variantlar :global(.variant:has(input:checked)) { border-color: var(--rang-asosiy); }
   .variantlar :global(.variant:has(input:checked) .harf), .variantlar :global(.variant.togri .harf) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .variantlar :global(.variant:has(input:disabled)) { cursor: default; }
-  .variantlar :global(.variant:has(input:disabled):hover) { border-color: var(--chiziq-kuchli); }
-  .variantlar :global(.variant.togri), .variantlar :global(.variant.togri:hover) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
-  .variantlar :global(.variant.xato), .variantlar :global(.variant.xato:hover) { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(.variant:has(input:disabled):hover) { border-color: var(--chiziq-kuchli); } }
+  .variantlar :global(.variant.togri) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(.variant.togri:hover) { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); } }
+  .variantlar :global(.variant.xato) { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(.variant.xato:hover) { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; } }
   .variantlar :global(.variant.xato .harf) { background: var(--matn); color: var(--fon); }
   .izoh { border-radius: var(--r-katta); padding: var(--b-6); background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
   .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }

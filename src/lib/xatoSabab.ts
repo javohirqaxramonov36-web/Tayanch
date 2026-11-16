@@ -1,7 +1,7 @@
 // Dars xatolarining sababi va izohi ("Why I missed it"), faqat brauzerda (P09, muallif ruxsati 2026-11-11).
 // Kalit tayanch:<bolim>-xato-sabab, shakli: { versiya: 1, savollar: { [id]: { teg, izoh } } }.
 // Bank savollarida teg va izoh serverda (review_queue.reason_tag, note). Bitta kalit = bitta shakl.
-// O'qish/yozish darsSaqlash orqali: P04 (PR #59) merge bo'lgach kalit uning ro'yxatiga qo'shilsa, hisobga sinxronlanadi.
+// O'qish/yozish darsSaqlash orqali: tayanch:sat-xato-sabab P04 ro'yxatida (holatBirlashtir.ts), hisob bilan sinxronlanadi.
 import { oqi, yoz } from './darsSaqlash';
 import type { DarsBolim } from '../data/darsTurlar';
 
