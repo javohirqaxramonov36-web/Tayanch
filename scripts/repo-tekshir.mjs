@@ -10,6 +10,7 @@ const yolQoidalari = [
   { nomi: "College Board mock testlari papkasi", re: /(^|\/)SAT mock testlar\//i },
   { nomi: "College Board Question Bank papkasi", re: /(^|\/)SAT-question bank\//i },
   { nomi: "Kurs materiallari papkasi", re: /(^|\/)SAT-kurs materillari\//i },
+  { nomi: "Xususiy SAT kursi kontenti", re: /(^|\/)content\/sat-(?:math|english)\//i },
   { nomi: "College Board practice test fayli", re: /(^|\/)sat-practice-test-[^/]*$/i },
   { nomi: "College Board scoring fayli", re: /(^|\/)scoring-sat-practice-[^/]*$/i },
   { nomi: "UUID nomli JSON (savol banki eksporti)", re: /(^|\/)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[^/]*\.json$/i },

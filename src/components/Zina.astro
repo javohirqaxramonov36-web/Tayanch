@@ -3,10 +3,11 @@
 // 1-qavatda faqat yuqoriga, 5-qavatda faqat pastga.
 import { qavatlar, joriyQavat } from '../data/qavatlar';
 import { yol } from '../lib/yol';
-import { matn, yolTili } from '../data/umumiyMatn';
+import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
 
 const n = joriyQavat(Astro.url.pathname);
-const M = matn[yolTili(Astro.url.pathname)];
+const til = yolTili(Astro.url.pathname);
+const M = matn[til];
 const past = qavatlar[n - 2];
 const yuqori = qavatlar[n];
 const kartalar = [
@@ -24,7 +25,7 @@ const kartalar = [
         {yon === 'past' ? M.zina.past : M.zina.yuqori} · {M.qavat(q.raqam)}
       </span>
       <span class="z-nom">{M.qavat(q.raqam)}: {q.nomi}</span>
-      {q.holat === 'tez-orada' && <span class="z-pill">{M.zina.qurilmoqda}</span>}
+      {q.holat !== 'ochiq' && <span class="z-pill">{qavatHolatMatni(q.holat, til)}</span>}
       {(q.slug === 'sat' || q.slug === 'ielts') && <span class="z-pill" lang="en">Beta</span>}
     </a>
   ))}

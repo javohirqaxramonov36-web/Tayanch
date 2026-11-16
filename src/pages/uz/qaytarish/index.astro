@@ -19,15 +19,14 @@ const { qaytarishKun } = huquqiyOchiq;
   keyingiTekshiruv="2026-12-11"
   manbalar={['IP03']}
   tekshirilmagan={[
-    "Qaytarish muddati va qaysi holatlarda qaytariladi: muallif va yurist qarori kerak",
-    "Raqamli xizmat uchun qaytarish bo'yicha qonun talabi (\"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonun): lex.uz da tekshirish kerak",
-    "inPAY orqali qaytarish qanday qilinadi va pul kartaga necha kunda tushadi: inPAY hujjati va sinov kerak",
+    "Raqamli xizmat uchun qaytarish bo'yicha qonun talabi (\"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonun): hali aniqlanmagan",
+    "inPAY orqali qaytarish qanday qilinadi va pul kartaga necha kunda tushadi: hali tasdiqlanmagan",
   ]}
 >
   <HuquqiyMatn til="uz" kalit="qaytarish" sana="2026-11-11" kirish="Bu siyosat SAT bo'limidagi pullik tariflarga tegishli.">
     <h2>Qachon pul qaytariladi</h2>
     {qaytarishKun === null ? (
-      <p>Qaytarish muddati va shartlari hali belgilanmagan: <span class="tekshir">tekshirish kerak</span> (muallif va yurist qarori). Belgilangunga qadar har murojaat alohida ko'rib chiqiladi.</p>
+      <p>Qaytarish muddati va shartlari hali belgilanmagan. Belgilangunga qadar har murojaat alohida ko'rib chiqiladi.</p>
     ) : (
       <p>To'lovdan keyin {qaytarishKun} kun ichida murojaat qilsangiz, pul qaytarilishi mumkin. Batafsil shartlar shu yerda yoziladi.</p>
     )}
@@ -41,7 +40,7 @@ const { qaytarishKun } = huquqiyOchiq;
     </ol>
 
     <h2>Pul qanday qaytariladi</h2>
-    <p>Pul to'lov qilingan usulga (Click yoki Payme orqali kartaga) inPAY orqali qaytariladi. Qancha vaqtda tushishi: <span class="tekshir">tekshirish kerak</span>.</p>
+    <p>Pul to'lov qilingan usulga (Click yoki Payme orqali kartaga) inPAY orqali qaytariladi. Qancha vaqtda tushishi: hali aniqlanmagan.</p>
 
     <h2>Hisobni o'chirish va qaytarish</h2>
     <p>Hisobni o'chirsangiz, faol obuna ham tugaydi. Pulni qaytarishni xohlasangiz, hisobni o'chirishdan <strong>oldin</strong> murojaat qiling: o'chirilgandan keyin to'lovni hisobingizga bog'lab bo'lmaydi.</p>

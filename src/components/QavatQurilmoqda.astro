@@ -4,7 +4,6 @@
 // Keyin bo'limning o'z dizayni bilan almashtiriladi.
 import Asosiy from '../layouts/Asosiy.astro';
 import DeadlineRoyxati from './DeadlineRoyxati.astro';
-import Zina from './Zina.astro';
 import QavatFoto from './QavatFoto.astro';
 import { bolimlar, type BolimSlug } from '../data/bolimlar';
 import { qavatlar } from '../data/qavatlar';
@@ -15,7 +14,7 @@ interface Props { bolim: BolimSlug }
 const { bolim } = Astro.props;
 const b = bolimlar.find((x) => x.slug === bolim)!;
 const q = qavatlar.find((x) => x.slug === bolim)!;
-const muddatlar = korinadiganDeadlinelar({ bolim, faqatKelajak: true });
+const muddatlar = korinadiganDeadlinelar({ bolim });
 const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
 ---
 <Asosiy
@@ -30,7 +29,6 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
   tekshirilmagan={["Bo'lim hali qurilmoqda: bu sahifada faqat tavsif va rasmiy manbali muddatlar bor."]}
 >
   <section class="ichki qurilmoqda" aria-labelledby="q-h">
-    <QavatFoto bolim={bolim} />
     <p class="pill">Qavat qurilmoqda</p>
     <h1 id="q-h">{q.raqam}-qavat · {q.nomi}</h1>
     <p class="tavsif">{b.tavsif}</p>
@@ -49,7 +47,7 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
       <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
     </section>
 
-    <Zina />
+    <QavatFoto bolim={bolim} ilk={false} />
   </section>
 </Asosiy>
 

@@ -23,14 +23,14 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
   keyingiTekshiruv="2026-12-11"
   manbalar={['LX02', 'LX03', 'LX04']}
   tekshirilmagan={[
-    "GitHub Pages xostingi tashrif buyuruvchilar haqida qanday texnik ma'lumot (masalan, IP manzil) yozishi: GitHub'ning rasmiy hujjatida tekshirish kerak",
-    "Xat yuborish uchun email Google'ning Gmail xizmatiga beriladi: Google LLC EU-US Data Privacy Framework ro'yxatida ekani (VM 415-son qarori, 2-band sharti) tekshirish kerak",
-    "Supabase o'z jurnallarida va zaxira nusxalarida ma'lumotni qancha muddat saqlashi: Supabase hujjatida tekshirish kerak",
-    "inPAY, Click va Payme to'lov ma'lumotini qancha va qayerda saqlashi: ularning shartlarida tekshirish kerak",
-    "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: huquqshunos fikri kerak",
-    "To'lov yozuvlarini hisob o'chirilgandan keyin qancha saqlash kerakligi (buxgalteriya va soliq qonunchiligi): yurist yoki buxgalter javobi kerak",
-    "AI Tutor: Anthropic API so'rov va javoblarni qancha muddat saqlashi va ularni model o'qitishda ishlatmasligi Anthropic tijorat shartlarida tekshirish kerak (AI yoqilishidan oldin)",
-    "AI Tutor: xabarni AQShdagi Anthropic xizmatiga uzatish Qonun 15 va 27¹-moddalari (LX02) va VM 415-son qarori (LX04) bo'yicha ruxsat etilganmi: huquqshunos fikri kerak (AI yoqilishidan oldin)",
+    "GitHub Pages xostingi tashrif buyuruvchilar haqida qanday texnik ma'lumot (masalan, IP manzil) yozishi: hali tasdiqlanmagan",
+    "Xat yuborish uchun email Google'ning Gmail xizmatiga beriladi: Google LLC EU-US Data Privacy Framework ro'yxatida ekani (VM 415-son qarori, 2-band sharti) hali tasdiqlanmagan",
+    "Supabase o'z jurnallarida va zaxira nusxalarida ma'lumotni qancha muddat saqlashi: hali tasdiqlanmagan",
+    "inPAY, Click va Payme to'lov ma'lumotini qancha va qayerda saqlashi: hali tasdiqlanmagan",
+    "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: hali tasdiqlanmagan",
+    "To'lov yozuvlarini hisob o'chirilgandan keyin qancha saqlash kerakligi (buxgalteriya va soliq qonunchiligi): hali aniqlanmagan",
+    "AI Tutor: Anthropic API so'rov va javoblarni qancha muddat saqlashi va ularni model o'qitishda ishlatmasligi hali tasdiqlanmagan",
+    "AI Tutor: xabarni AQShdagi Anthropic xizmatiga uzatish Qonun 15 va 27¹-moddalari (LX02) va VM 415-son qarori (LX04) bo'yicha ruxsat etilganmi: hali tasdiqlanmagan",
   ]}
 >
   <HuquqiyMatn til="uz" kalit="maxfiylik" sana="2026-11-11" kirish="Hisob ixtiyoriy: saytning bepul qismi hisobsiz ham ishlaydi.">
@@ -83,7 +83,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>To'lov holati faqat inPAY xabari (server) orqali yoziladi.</li>
       <li>
         {voyagaYetmaganTolov === null
-          ? <>18 yoshgacha bo'lganlar to'lovi qoidasi: <span class="tekshir">tekshirish kerak</span> (muallif va yurist qarori).</>
+          ? <>18 yoshgacha bo'lganlar to'lovi qoidasi: hali aniqlanmagan.</>
           : voyagaYetmaganTolov === 'faqat-18'
             ? <>To'lovni faqat 18 yoshga to'lgan foydalanuvchi qiladi.</>
             : <>18 yoshgacha bo'lsangiz, to'lovni ota-ona yoki vasiy roziligi bilan va ularning to'lov vositasidan qiling.</>}
@@ -113,7 +113,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>
         To'lov yozuvlari: hisob o'chirilganda hisobdan uziladi (kimga tegishliligi o'chadi), summa, sana va inPAY raqami
         {tolovSaqlashYil === null
-          ? <> buxgalteriya hisobi uchun saqlanadi. Muddat: <span class="tekshir">tekshirish kerak</span>.</>
+          ? <> buxgalteriya hisobi uchun saqlanadi. Muddat: hali aniqlanmagan.</>
           : <> {tolovSaqlashYil} yil saqlanadi.</>}
       </li>
       <li>Hisob o'chirilganini qayd qiluvchi yozuv (hisob raqami va vaqt, emailsiz) xavfsizlik jurnalida qoladi.</li>

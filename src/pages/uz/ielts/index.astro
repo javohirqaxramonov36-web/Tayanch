@@ -4,7 +4,6 @@
 // British Council sahifasi tekshirib bo'lmadi: havolasiz, "tekshirilmoqda".
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
-import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
 import { qollanmalar, asos, mashqlar, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
 import { manbalar } from '../../../data/manbalar';
@@ -23,18 +22,15 @@ const bolimlar: { nomi: string; vaqt: string; ikonka: string; daqiqa: [number, n
 const engUzun = Math.max(...bolimlar.map((b) => b.daqiqa[1]));
 const ulush = (n: number) => Math.round((n / engUzun) * 1000) / 1000;
 const tezQollanmalar = qollanmalar.filter((q) => !q.qism).length;
-// Manbalar blokidagi "hali yozilmagan" ro'yxati ma'lumotdan: qo'llanma qo'shilsa, o'zi yangilanadi.
-const yozilmagan = [...qollanmalar.filter((q) => !q.qism), asos].map((q) => q.nomi);
-const yozilmaganMatn = yozilmagan.length > 1 ? `${yozilmagan.slice(0, -1).join(', ')} va ${yozilmagan.at(-1)}` : yozilmagan.join('');
 const qadamlar = [
   { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
-  { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
+  { nomi: 'Rasmiy namunani ishla', tavsif: "Rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
   { nomi: '30 kunlik reja tuz', tavsif: "Uchta savolga javob ber: reja qiyin bo'limingga ko'proq kun ajratadi.", havola: 'Reja tuzish', href: reja },
 ];
 const namunalar = [
   { nomi: 'IELTS.org', tavsif: "Academic namuna topshiriqlari: to'rt ko'nikma, Listening va Reading uchun javob kalitlari.", manba: m('IE03') },
   { nomi: 'IDP', tavsif: 'Bepul tanishuv testlari: Listening, Reading, Writing va Speaking 1-qism.', manba: m('ID01') },
-  { nomi: 'British Council', tavsif: "Bepul mashq testlari sahifasi tekshirilmoqda, havola tekshiruvdan keyin qo'yiladi.", manba: null },
+  { nomi: 'British Council', tavsif: "Mashq sahifasidagi shartlar hali tasdiqlanmagan.", manba: null },
 ];
 ---
 <BolimQobiq
@@ -223,7 +219,7 @@ const namunalar = [
 
     <section id="rasmiy" class="rasmiy" aria-labelledby="rasmiy-h">
       <div class="r-bosh">
-        <h2 id="rasmiy-h">Rasmiy bepul namunalar</h2>
+        <h2 id="rasmiy-h">Rasmiy mashq namunalari</h2>
         <p class="izoh-m">Mashqni rasmiy namunadan boshla: format va qiyinlik haqiqiy imtihonga eng yaqin shu yerda. Havolalar tashqi saytga, yangi oynada ochiladi.</p>
       </div>
       <ul class="r-royxat">
@@ -258,17 +254,13 @@ const namunalar = [
       </div>
     </section>
 
-    <Zina />
 
     <ManbaBlok
       manbalar={['IE01', 'IE03', 'ID01']}
       tekshirilgan="2026-11-05"
       keyingiTekshiruv="2026-12-05"
       tekshirilmagan={[
-        "British Council'ning bepul mashq testlari sahifasi (saytga ulanib bo'lmadi).",
         "IELTS.org namunalari bepulligi sahifada yozilmagan.",
-        "Savdo belgisi haqidagi eslatma matni.",
-        `${yozilmaganMatn} qo'llanmalari hali yozilmagan.`,
       ]}
     />
   </div>
