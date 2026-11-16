@@ -7,8 +7,11 @@
 // Ixtiyoriy kill switch (maxfiy emas): AI_TUTOR_OFF = 1 | true -> ai-tutor provayderga hech narsa yubormaydi.
 // Ixtiyoriy (maxfiy emas): SAYT_URL, TOLOV_ORIGINLAR (vergul bilan).
 
-export const STANDART_SAYT_URL = 'https://javohirqaxramonov36-web.github.io/Tayanch';
+// 2026-11-16: sayt tayanchedu.uz ga ko'chdi. Eski github.io origin ko'chish tugaguncha qoladi
+// (eski manzilda ochiq qolgan sahifalar so'rov yubora olsin).
+export const STANDART_SAYT_URL = 'https://tayanchedu.uz';
 export const STANDART_ORIGINLAR = [
+  'https://tayanchedu.uz',
   'https://javohirqaxramonov36-web.github.io',
   'http://localhost:4321',
   'http://127.0.0.1:4321',

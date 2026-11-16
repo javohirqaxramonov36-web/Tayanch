@@ -1,7 +1,7 @@
 # Tayanch
 
 Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq, interaktiv yo'riqnoma sayti.
-Astro, GitHub Pages (GitHub Actions orqali). Manzil: https://javohirqaxramonov36-web.github.io/Tayanch/
+Astro, GitHub Pages (GitHub Actions orqali). Manzil: https://tayanchedu.uz/ (2026-11-16 gacha https://javohirqaxramonov36-web.github.io/Tayanch/)
 
 ## Tayanch binosi: 5 qavat
 
@@ -32,7 +32,7 @@ npm run build    # dist/ ga qurish
 | Joy | Nima uchun |
 | --- | --- |
 | `DESIGN.md` | Dizayn tizimi: ranglar, shrift, o'lchamlar, komponentlar |
-| `astro.config.mjs` | `site` va `base` ("/Tayanch", harf katta-kichikligiga sezgir) |
+| `astro.config.mjs` | `site` (`https://tayanchedu.uz`); `base` yo'q, sayt domen ildizida. Domen `public/CNAME` da |
 | `src/styles/tokens.css` | DESIGN.md dagi tokenlar. Kodda xom qiymat yozilmaydi |
 | `src/layouts/Asosiy.astro` | Umumiy qolip: menyu, sahifa oxiri bloki, footer |
 | `src/components/` | Menyu, Footer, SahifaOxiri, DeadlineRoyxati, MaqsadTesti, Lift, QavatYoli, Zina, BolimYon |

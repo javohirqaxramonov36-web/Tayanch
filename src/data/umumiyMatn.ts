@@ -9,7 +9,7 @@ export type Til = 'uz' | 'en';
 /** Bo'lim tili: SAT inglizcha, qolganlari o'zbekcha */
 export const bolimTili = (bolim: BolimSlug | 'umumiy'): Til => (bolim === 'sat' ? 'en' : 'uz');
 
-/** Sahifa manzilidan til (base bilan ham ishlaydi): /Tayanch/uz/sat/... -> en */
+/** Sahifa manzilidan til (base bilan ham ishlaydi): /uz/sat/... -> en */
 export const yolTili = (pathname: string): Til => (/\/uz\/sat(\/|$)/.test(pathname) ? 'en' : 'uz');
 
 const uz = {

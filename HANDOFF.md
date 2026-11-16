@@ -1,6 +1,6 @@
 # Tayanch: sessiyalar orasida holat (2026-11-09)
 
-Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://javohirqaxramonov36-web.github.io/Tayanch/uz/
+Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://tayanchedu.uz/uz/ (domen 2026-11-16 da olingan, ko'chish tartibi `docs/domen.md`; oldin https://javohirqaxramonov36-web.github.io/Tayanch/uz/)
 
 Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5 qavatning hammasi). Boshqa `Tayanch-*-prep` papkalarida faqat dizayn fayllari bor.
 
@@ -237,7 +237,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 
 - **Interaktiv darslar**: yangi dars oldidan `docs/interaktiv-dars-standarti.md` o'qiladi. Yangi bo'lim savollari `src/data/<bolim>Darslar/` + `tekshiruv.ts`; `npm run savollar:tekshir` 0 farq.
 - **Node**: standart `node` (v22.23.2) Astro 7 uchun eski. Shunday ishga tushiring: `PATH=/opt/homebrew/bin:$PATH npm run build` (Homebrew Node 26).
-- **Lokal ko'rish**: `PATH=/opt/homebrew/bin:$PATH npx astro preview --port 4321` → http://localhost:4321/Tayanch/uz/
+- **Lokal ko'rish**: `PATH=/opt/homebrew/bin:$PATH npx astro preview --port 4321` → http://localhost:4321/uz/ (2026-11-16 dan base yo'q)
 - **Vizual tekshiruv**: Playwright Chromium bu mashinada o'rnatilmaydi (yuklanadi, lekin arxivdan chiqarishda to'xtaydi). Shuning uchun `korib-chiquvchi` agenti ishlamaydi. Tekshiruv ilova ichidagi brauzerda (Claude Browser) qilinadi.
 - **Agentlar**: `.claude/agents/` (manba-tekshiruvchi, quruvchi, korib-chiquvchi, qoida-qorovuli). Repo sessiyadan keyin klonlangani uchun ular nom bilan chaqirilmadi; general-purpose agentga ularning `.md` fayli o'qitildi.
 - **Bir papkada ikki sessiya ishlamasin.** 2026-11-05 da parallel sessiya `DESIGN.md` va `tokens.css` ni o'zgartirgan, bu o'zgarishlar boshqa commit'ga aralashib ketdi.
