@@ -1,5 +1,5 @@
 // SAT musobaqalari (P32, 2-PR): server javob turlari va sof funksiyalar (xato matni, vaqt, guruhlash, qolgan vaqt).
-// Sahifa: src/pages/uz/sat/vosita/musobaqa/index.astro. Server: public.contest_*, 20261113125033_musobaqa.sql.
+// Sahifa: src/pages/uz/sat/vosita/musobaqa/index.astro. Server: public.contest_*, 20261116124750_musobaqa.sql.
 // Matn inglizcha (SAT bo'limi).
 import type { ServerSavol } from './sessiya.ts';
 

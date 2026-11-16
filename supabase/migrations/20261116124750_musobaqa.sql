@@ -1,4 +1,4 @@
--- 20261113125033. P32 2-PR: SAT musobaqalari (vaqt oynasi, savollar to'plami, natija jadvali). Mukofot yo'q.
+-- 20261116124750. P32 2-PR: SAT musobaqalari (vaqt oynasi, savollar to'plami, natija jadvali). Mukofot yo'q.
 -- Qoidalar hujjati: docs/xp-qoidasi.md, "Musobaqa" bo'limi. Takror ishga tushirish xavfsiz.
 --
 -- Asosiy fikrlar:
@@ -18,11 +18,11 @@
 --     'adult' (private.leaderboard_eligible). Boshqalar faqat o'z natijasini ko'radi.
 
 ------------------------------------------------------------------------------
--- 1. practice_sessions.mode: 'contest'
+-- 1. practice_sessions.mode: 'contest' (20261113180000_kurs_sessiya dagi ro'yxat + 'contest')
 ------------------------------------------------------------------------------
 alter table public.practice_sessions drop constraint if exists practice_sessions_mode_check;
 alter table public.practice_sessions add constraint practice_sessions_mode_check
-  check (mode in ('practice', 'timed', 'daily', 'review', 'contest'));
+  check (mode in ('practice', 'timed', 'daily', 'review', 'mock', 'course_practice', 'mini_test', 'contest'));
 
 ------------------------------------------------------------------------------
 -- 2. Jadvallar
@@ -137,7 +137,7 @@ as $$
   select least(p_c.ends_at, p_started + make_interval(mins => p_c.duration_min))
 $$;
 
--- Savollar: faqat tasdiqlangan va rasmsiz; musobaqa boshlangach qo'shish/o'zgartirish/o'chirish yo'q.
+-- Savollar: faqat tasdiqlangan, rasmsiz va kursga tegishli bo'lmagan (sat-kurs: tegi); musobaqa boshlangach qo'shish/o'zgartirish/o'chirish yo'q.
 -- (Butun musobaqani o'chirish mumkin: kaskad paytida musobaqa qatori allaqachon yo'q.)
 create or replace function private.contest_questions_guard()
 returns trigger
@@ -162,6 +162,9 @@ begin
     end if;
     if v_q.figure is not null then
       raise exception 'question_has_figure' using errcode = '22023';
+    end if;
+    if cardinality(private.course_tags(v_q.tags)) > 0 then
+      raise exception 'question_in_course' using errcode = '22023';
     end if;
     return new;
   end if;
@@ -337,9 +340,9 @@ $$;
 
 ------------------------------------------------------------------------------
 -- 4. Mavjud funksiyalar: musobaqa savollarini oldindan berilishdan himoya
+--    Asos: 20261113180000_kurs_sessiya dagi versiyalar. O'zgarish faqat "private.contest_reserved" qatorlari.
 ------------------------------------------------------------------------------
 
--- filtered_questions (0008 dan): o'zgarish faqat "and not private.contest_reserved(q.id)".
 create or replace function private.filtered_questions(p_user uuid, f jsonb)
 returns setof public.questions
 language plpgsql
@@ -357,6 +360,7 @@ begin
   select q.*
   from public.questions q
   where q.status = 'verified'
+    and cardinality(private.course_tags(q.tags)) = 0
     and not private.contest_reserved(q.id)
     and (f ->> 'section' is null or q.section = f ->> 'section')
     and (jsonb_typeof(f -> 'domains') is distinct from 'array' or jsonb_array_length(f -> 'domains') = 0
@@ -375,7 +379,6 @@ begin
 end
 $$;
 
--- daily_pick (20261111220000 dan): o'zgarish faqat ikki joyda "and not private.contest_reserved(q.id)".
 create or replace function private.daily_pick(p_day date)
 returns uuid
 language plpgsql
@@ -389,7 +392,8 @@ begin
   select p.question_id into v_qid
     from public.daily_picks p
     join public.questions q on q.id = p.question_id
-   where p.day = p_day and q.status = 'verified' and q.figure is null and not private.contest_reserved(q.id);
+   where p.day = p_day and q.status = 'verified' and q.figure is null
+     and cardinality(private.course_tags(q.tags)) = 0 and not private.contest_reserved(q.id);
   if found then
     return v_qid;
   end if;
@@ -399,7 +403,8 @@ begin
 
   select q.id into v_qid
     from public.questions q
-   where q.status = 'verified' and q.figure is null and not private.contest_reserved(q.id)
+   where q.status = 'verified' and q.figure is null
+     and cardinality(private.course_tags(q.tags)) = 0 and not private.contest_reserved(q.id)
    order by (q.section <> v_section),
             (select max(p.day) from public.daily_picks p where p.question_id = q.id) nulls first,
             md5(q.external_id || p_day::text)
@@ -418,7 +423,72 @@ begin
 end
 $$;
 
--- add_to_review (20261110120000 dan): tugamagan musobaqa savoli takrorlash ro'yxatiga qo'yilmaydi.
+-- Mock imtihon formasi: tugamagan musobaqa savoli olinmaydi.
+create or replace function private.mock_build_form(p_user uuid)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_form uuid;
+  v_no   integer;
+  v_seen uuid[];
+  b      record;
+  q      record;
+  v_got  integer;
+  v_flip integer;
+  v_ids  uuid[] := '{}';
+  v_mods smallint[] := '{}';
+  v_keys numeric[] := '{}';
+begin
+  select coalesce(max(f.form_no), 0) + 1 into v_no from public.mock_forms f where f.user_id = p_user;
+  insert into public.mock_forms (user_id, form_no) values (p_user, v_no) returning id into v_form;
+
+  select coalesce(array_agg(distinct x.qid), '{}') into v_seen from (
+    select a.question_id as qid from public.attempts a where a.user_id = p_user
+    union
+    select fq.question_id from public.mock_form_questions fq
+      join public.mock_forms f on f.id = fq.form_id
+     where f.user_id = p_user and f.id <> v_form
+  ) x;
+
+  for b in select * from private.mock_blueprint() loop
+    v_got := 0;
+    v_flip := (random() < 0.5)::integer;
+    for q in
+      with pool as (
+        select p.id, p.skill, p.difficulty, (p.id = any (v_seen)) as seen, random() as rnd
+          from public.questions p
+         where p.status = 'verified' and p.section = b.b_section and p.domain = b.b_domain
+           and cardinality(private.course_tags(p.tags)) = 0
+           and not private.contest_reserved(p.id)
+      ), ranked as (
+        select pool.*, row_number() over (partition by pool.skill order by pool.seen, pool.rnd) as rn from pool
+      ), picked as (
+        select r.id, r.difficulty from ranked r order by r.seen, r.rn, r.rnd limit b.b_per_module * 2
+      )
+      select pk.id, pk.difficulty, row_number() over (order by pk.difficulty, random()) as k from picked pk
+    loop
+      v_got := v_got + 1;
+      v_ids := v_ids || q.id;
+      v_mods := v_mods || ((case when b.b_section = 'rw' then 1 else 3 end) + ((q.k + v_flip) % 2))::smallint;
+      v_keys := v_keys || ((case when b.b_section = 'rw' then b.b_ord * 10 else 0 end) + q.difficulty + random() * 0.5)::numeric;
+    end loop;
+    if v_got < b.b_per_module * 2 then
+      raise exception 'mock_not_ready' using errcode = '55000';
+    end if;
+  end loop;
+
+  insert into public.mock_form_questions (form_id, module, position, question_id)
+  select v_form, t.m, row_number() over (partition by t.m order by t.key), t.id
+    from unnest(v_ids, v_mods, v_keys) as t (id, m, key);
+
+  return v_form;
+end
+$$;
+
+-- Tugamagan musobaqa savoli takrorlash ro'yxatiga qo'yilmaydi.
 create or replace function public.add_to_review(p_question uuid)
 returns jsonb
 language plpgsql
@@ -431,7 +501,8 @@ declare
 begin
   if not exists (select 1 from public.session_questions sq
                  join public.practice_sessions s on s.id = sq.session_id
-                 where s.user_id = v_user and sq.question_id = p_question) then
+                 where s.user_id = v_user and sq.question_id = p_question
+                   and (s.mode <> 'mini_test' or s.finished_at is not null)) then
     raise exception 'question_not_in_session' using errcode = 'P0002';
   end if;
   if private.contest_reserved(p_question) then
@@ -448,8 +519,8 @@ begin
 end
 $$;
 
--- submit_answer (20261111220000 dan). O'zgarish faqat 'contest' sessiyasida: private.contest_submit ga o'tadi
--- (vaqt oynasi, natija yashirin, kvota va review_queue yo'q, attempts ga yozilmaydi). Qolgani avvalgidek.
+-- submit_answer: contest sessiyasi private.contest_submit ga o'tadi (vaqt oynasi, natija yashirin, kvota va
+-- review_queue yo'q, attempts ga yozilmaydi). Boshqa rejimlar o'zgarmagan private.record_session_answer da.
 create or replace function public.submit_answer(p_session uuid, p_question uuid, p_answer text, p_time_ms integer default null)
 returns jsonb
 language plpgsql
@@ -460,100 +531,20 @@ declare
   v_user    uuid := private.require_user();
   v_session public.practice_sessions;
   v_q       public.questions;
-  v_attempt public.attempts;
-  v_correct boolean;
-  v_today   date := private.today_tashkent();
-  v_box     smallint;
 begin
   select * into v_session from public.practice_sessions s where s.id = p_session and s.user_id = v_user;
-  if not found then
-    raise exception 'session_not_found' using errcode = 'P0002';
-  end if;
-  if not exists (select 1 from public.session_questions sq
-                 where sq.session_id = p_session and sq.question_id = p_question) then
-    raise exception 'question_not_in_session' using errcode = 'P0002';
-  end if;
-
-  select * into v_q from public.questions q where q.id = p_question;
-  if not found or v_q.status <> 'verified' then
-    raise exception 'question_unavailable' using errcode = 'P0002';
-  end if;
-
-  if v_session.mode = 'contest' then
+  if found and v_session.mode = 'contest' then
+    if not exists (select 1 from public.session_questions sq
+                   where sq.session_id = p_session and sq.question_id = p_question) then
+      raise exception 'question_not_in_session' using errcode = 'P0002';
+    end if;
+    select * into v_q from public.questions q where q.id = p_question;
+    if not found or v_q.status <> 'verified' then
+      raise exception 'question_unavailable' using errcode = 'P0002';
+    end if;
     return private.contest_submit(v_user, v_session, v_q, p_answer, p_time_ms);
   end if;
-
-  select * into v_attempt from public.attempts a where a.session_id = p_session and a.question_id = p_question;
-  if found then
-    return jsonb_build_object(
-      'is_correct', v_attempt.is_correct,
-      'correct', case v_q.format when 'mcq' then v_q.correct -> 'choice' else v_q.correct -> 'accepted' end,
-      'explanation', v_q.explanation,
-      'already_answered', true);
-  end if;
-
-  if v_session.finished_at is not null then
-    raise exception 'session_finished' using errcode = '55000';
-  end if;
-
-  if v_session.mode = 'daily' and v_session.daily_date <> v_today then
-    raise exception 'daily_expired' using errcode = '55000';
-  end if;
-
-  if p_answer is null or char_length(p_answer) > 100 then
-    raise exception 'invalid_answer' using errcode = '22023';
-  end if;
-
-  v_correct := private.check_answer(v_q.format, v_q.correct, p_answer);
-
-  insert into public.attempts (user_id, session_id, question_id, answer, is_correct, time_ms, question_version)
-  values (v_user, p_session, p_question, p_answer, v_correct,
-          case when p_time_ms >= 0 then p_time_ms end, v_q.version)
-  on conflict (session_id, question_id) do nothing;
-
-  if not found then
-    -- Boshqa so'rov shu orada yozib ulgurdi: uning natijasi qaytadi, kvota va navbat qayta o'zgarmaydi.
-    select * into v_attempt from public.attempts a where a.session_id = p_session and a.question_id = p_question;
-    return jsonb_build_object(
-      'is_correct', v_attempt.is_correct,
-      'correct', case v_q.format when 'mcq' then v_q.correct -> 'choice' else v_q.correct -> 'accepted' end,
-      'explanation', v_q.explanation,
-      'already_answered', true);
-  end if;
-
-  -- Takrorlash navbati (src/lib/takrorlash.ts bilan bir xil):
-  -- xato → 1-quti, ertaga; takrorlash sessiyasida to'g'ri → keyingi quti (1→2: 3 kun, 2→3: 7, 3→4: 14), 4-qutida → 5 (o'zlashtirildi).
-  if not v_correct then
-    insert into public.review_queue (user_id, question_id, box, next_due, first_missed_at, last_reviewed_at)
-    values (v_user, p_question, 1, v_today + 1, now(), now())
-    on conflict (user_id, question_id) do update
-      set box = 1, next_due = v_today + 1, last_reviewed_at = now();
-  elsif v_session.mode = 'review' then
-    select r.box into v_box from public.review_queue r
-     where r.user_id = v_user and r.question_id = p_question for update;
-    if found and v_box < 5 then
-      update public.review_queue r
-         set box = v_box + 1,
-             next_due = v_today + case v_box when 1 then 3 when 2 then 7 when 3 then 14 else 0 end,
-             last_reviewed_at = now()
-       where r.user_id = v_user and r.question_id = p_question;
-    end if;
-  end if;
-
-  update public.practice_sessions s
-     set finished_at = now()
-   where s.id = p_session and s.finished_at is null
-     and (select count(*) from public.attempts a where a.session_id = p_session) >= s.question_count;
-
-  if v_session.mode <> 'daily' then
-    perform private.consume_quota(v_user, 'answers', 1);
-  end if;
-
-  return jsonb_build_object(
-    'is_correct', v_correct,
-    'correct', case v_q.format when 'mcq' then v_q.correct -> 'choice' else v_q.correct -> 'accepted' end,
-    'explanation', v_q.explanation,
-    'already_answered', false);
+  return private.record_session_answer(v_user, p_session, p_question, p_answer, p_time_ms, false);
 end
 $$;
 
@@ -814,6 +805,7 @@ revoke all on function private.contest_entry_info(public.contests, public.contes
 revoke all on function private.contest_submit(uuid, public.practice_sessions, public.questions, text, integer) from public, anon, authenticated;
 revoke all on function private.filtered_questions(uuid, jsonb) from public, anon, authenticated;
 revoke all on function private.daily_pick(date) from public, anon, authenticated;
+revoke all on function private.mock_build_form(uuid) from public, anon, authenticated;
 
 revoke all on function public.add_to_review(uuid) from public, anon;
 revoke all on function public.submit_answer(uuid, uuid, text, integer) from public, anon;

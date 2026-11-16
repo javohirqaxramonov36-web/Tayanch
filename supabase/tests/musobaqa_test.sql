@@ -1,4 +1,4 @@
--- P32 2-PR musobaqa sinovlari (20261113125033_musobaqa): vaqt oynasi, natija yashirinligi, kvota/XP/review yo'qligi,
+-- P32 2-PR musobaqa sinovlari (20261116124750_musobaqa): vaqt oynasi, natija yashirinligi, kvota/XP/review yo'qligi,
 -- savollar bankdan chiqarilishi, natija jadvali (opt-in, 18+), RLS. reyting_test.sql kabi: bitta tranzaksiya, ROLLBACK.
 -- Tranzaksiya ichida now() o'zgarmaydi: "vaqt o'tdi" holatlari musobaqa/urinish vaqtlarini postgres sifatida surib qilinadi.
 \set ON_ERROR_STOP on
@@ -23,15 +23,15 @@ insert into public.questions
 select 'mt-' || g, 'math', 'MT-domain', 'MT-skill', 2, 'mcq', 'SINOV musobaqa ' || g,
        '[{"key": "A", "text": "SINOV a"}, {"key": "B", "text": "SINOV b"}]', '{"choice": "B"}', 'SINOV izoh', null,
        'draft', 'sinov', null
-  from generate_series(1, 5) g;
+  from generate_series(1, 6) g;
 
 do $$
 begin
   if exists (select 1 from information_schema.columns
              where table_schema = 'public' and table_name = 'questions' and column_name = 'verified_at') then
-    execute 'update public.questions set status = ''verified'', verified_by = ''sinov2'', verified_at = now() where external_id in (''mt-1'', ''mt-2'', ''mt-3'', ''mt-4'')';
+    execute 'update public.questions set status = ''verified'', verified_by = ''sinov2'', verified_at = now() where external_id in (''mt-1'', ''mt-2'', ''mt-3'', ''mt-4'', ''mt-6'')';
   else
-    update public.questions set status = 'verified', verified_by = 'sinov2' where external_id in ('mt-1', 'mt-2', 'mt-3', 'mt-4');
+    update public.questions set status = 'verified', verified_by = 'sinov2' where external_id in ('mt-1', 'mt-2', 'mt-3', 'mt-4', 'mt-6');
   end if;
 end
 $$;
@@ -41,8 +41,12 @@ select
   set_config('mt.q2', (select id::text from public.questions where external_id = 'mt-2'), true),
   set_config('mt.q3', (select id::text from public.questions where external_id = 'mt-3'), true),
   set_config('mt.q4', (select id::text from public.questions where external_id = 'mt-4'), true),
-  set_config('mt.q5', (select id::text from public.questions where external_id = 'mt-5'), true)
+  set_config('mt.q5', (select id::text from public.questions where external_id = 'mt-5'), true),
+  set_config('mt.q6', (select id::text from public.questions where external_id = 'mt-6'), true)
 \gset
+
+-- mt-6: kurs savoli (sat-kurs: tegi) musobaqaga olinmaydi
+update public.questions set tags = array['sat-kurs:sinov'] where external_id = 'mt-6';
 
 ------------------------------------------------------------------------------
 -- Muallif: yaratish va tekshiruvlar (postgres)
@@ -71,6 +75,12 @@ begin
   exception when invalid_parameter_value then null;
   end;
   begin
+    perform private.contest_create('mt-kurs', 'SINOV course', now() + interval '1 hour', now() + interval '2 hours', 30,
+                                   array[current_setting('mt.q6')::uuid]);
+    raise exception 'FAIL M01: kurs savoli musobaqaga qo''shildi';
+  exception when invalid_parameter_value then null;
+  end;
+  begin
     perform private.contest_create('MT Yomon', 'SINOV slug', now() + interval '1 hour', now() + interval '2 hours', 30, array[q1]);
     raise exception 'FAIL M01: noto''g''ri slug qabul qilindi';
   exception when check_violation then null;
@@ -85,7 +95,7 @@ begin
   -- Boshlanmagan musobaqada savolni almashtirish mumkin
   update public.contest_questions set position = 9 where question_id = q4;
   update public.contest_questions set position = 1 where question_id = q4;
-  raise notice 'OK M01 yaratish: o''tgan vaqt, tasdiqlanmagan savol, takror savol va noto''g''ri slug rad etiladi';
+  raise notice 'OK M01 yaratish: o''tgan vaqt, tasdiqlanmagan savol, kurs savoli, takror savol va noto''g''ri slug rad etiladi';
 
   -- Savollar bank va kun savolidan chiqariladi (musobaqa tugaguncha)
   if exists (select 1 from private.filtered_questions(null, '{}') q where q.id in (q1, q2, q3, q4)) then

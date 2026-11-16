@@ -64,7 +64,7 @@ Faqat `tayanch:sat-reyting` (tanlangan davr va doira). XP va jadval brauzerda sa
 ## Musobaqa (P32, 2-PR)
 
 - **Holat**: qoralama, 2026-11-13. Spetsifikatsiyani muallif 2026-11-13 da tasdiqlagan. Mukofot yo'q (2026-11-12 qarori). Mukofot qo'shilsa, muallif qoidalari va huquqiy matni kerak.
-- **Kod**: migratsiya `supabase/migrations/20261113125033_musobaqa.sql`, sinov `supabase/tests/musobaqa_test.sql` (M01–M18, `npm run db:tekshir`), sahifa `/uz/sat/vosita/musobaqa/` (inglizcha "Contests"), mantiq `src/lib/sat/musobaqa.ts`, dev holatlari `?sinov=mehmon|royxat|yaqin|ochiq|ishlayapti|topshirgan|tugagan|kichik` (`musobaqaSinov.ts`, faqat dev).
+- **Kod**: migratsiya `supabase/migrations/20261116124750_musobaqa.sql`, sinov `supabase/tests/musobaqa_test.sql` (M01–M18, `npm run db:tekshir`), sahifa `/uz/sat/vosita/musobaqa/` (inglizcha "Contests"), mantiq `src/lib/sat/musobaqa.ts`, dev holatlari `?sinov=mehmon|royxat|yaqin|ochiq|ishlayapti|topshirgan|tugagan|kichik` (`musobaqaSinov.ts`, faqat dev).
 
 ### Qoidalar
 
@@ -83,11 +83,11 @@ Faqat `tayanch:sat-reyting` (tanlangan davr va doira). XP va jadval brauzerda sa
 
 ### Savollar oldindan ochilmasligi
 
-Musobaqa savollari yaratilgandan `ends_at` gacha (`private.contest_reserved`) Savol banki (`filtered_questions`, `question_counts`), kun savoli (`daily_pick`) va "Add to redo list" dan chiqariladi. Tugagach bankka qaytadi. Muallif savolni musobaqaga qo'shishdan oldin u bilan mashq qilgan foydalanuvchilar javobni biladi: musobaqa uchun yangi tasdiqlangan savollar tanlash tavsiya etiladi. `contest_questions` jadvalini mijoz o'qiy olmaydi.
+Musobaqa savollari yaratilgandan `ends_at` gacha (`private.contest_reserved`) Savol banki (`filtered_questions`, `question_counts`), kun savoli (`daily_pick`), mock imtihon formasi (`mock_build_form`) va "Add to redo list" dan chiqariladi. `mock_readiness` (admin hisoboti) ularni hali sanaydi. Tugagach bankka qaytadi. Muallif savolni musobaqaga qo'shishdan oldin u bilan mashq qilgan foydalanuvchilar javobni biladi: musobaqa uchun yangi tasdiqlangan savollar tanlash tavsiya etiladi. `contest_questions` jadvalini mijoz o'qiy olmaydi.
 
 ### Musobaqa yaratish (muallif, SQL editor)
 
-Faqat `status = 'verified'` va rasmsiz savollar (trigger tekshiradi), 1–50 ta, takrorsiz, boshlanish kelajakda.
+Faqat `status = 'verified'`, rasmsiz va kursga tegishli bo'lmagan (`sat-kurs:` tegisiz) savollar (trigger tekshiradi), 1–50 ta, takrorsiz, boshlanish kelajakda.
 
 ```sql
 select private.contest_create(
