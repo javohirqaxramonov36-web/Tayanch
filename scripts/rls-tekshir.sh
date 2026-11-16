@@ -144,24 +144,3 @@ if [[ "$OTDI" == "3" && "$SON" == "3" ]]; then
 else
   echo "XATO: K06 parallel: o'tdi=$OTDI, hisoblagich=$SON (kutilgan 3 va 3)"; exit 1
 fi
-
-# P26 C06: events kunlik chegarasi (500) parallel so'rovlarda ham ushlanadi. Bugun 495 ta yozuv bor, 30 ta alohida
-# ulanish bir vaqtda yozadi: aynan 5 tasi o'tishi kerak (pg_advisory_xact_lock). Insert tranzaksiyasi 0.3 s ochiq turadi, shunda qulfsiz
-# variantda so'rovlar bir-birining yozuvini ko'rmay chegarani oshiradi (sinov buni ushlaydi). Ma'lumot oxirida o'chiriladi.
-U_CHK="00000000-0000-4000-8000-0000000000f7"
-CLAIMS="{\"sub\": \"$U_CHK\", \"role\": \"authenticated\"}"
-"${PSQL[@]}" -c "insert into auth.users (id, email, raw_user_meta_data) values ('$U_CHK', 'cp@sinov.invalid', '{}');
-  insert into public.events (user_id, name) select '$U_CHK', 'sinov.oldin' from generate_series(1, 495);" >/dev/null
-for i in $(seq 1 30); do
-  ( "${PSQL[@]}" -At -c "set role authenticated; select set_config('request.jwt.claims', '$CLAIMS', false); select pg_sleep(0.2); begin; insert into public.events (name) values ('sinov.parallel'); select pg_sleep(0.3); commit;" \
-      >/dev/null 2>&1 && echo ok > "$TMP/chk.$i" || echo rad > "$TMP/chk.$i" ) &
-done
-wait
-OTDI="$(cat "$TMP"/chk.* | grep -c '^ok$' || true)"
-SON="$("${PSQL[@]}" -At -c "select count(*) from public.events where user_id = '$U_CHK'")"
-"${PSQL[@]}" -c "delete from auth.users where id = '$U_CHK';" >/dev/null
-if [[ "$OTDI" == "5" && "$SON" == "500" ]]; then
-  echo "  NOTICE: OK C06 parallel: 30 ta bir vaqtdagi event so'rovidan 5 tasi o'tdi (495 + 5 = chegara 500)"
-else
-  echo "XATO: C06 parallel: o'tdi=$OTDI, jami=$SON (kutilgan 5 va 500)"; exit 1
-fi
