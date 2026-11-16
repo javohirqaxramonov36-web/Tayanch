@@ -96,6 +96,15 @@ export const satGuruhlar: SatGuruh[] = [
         manbalar: [],
         tekshirilmagan: ['The XP numbers and the daily limit are starting values chosen by Tayanch and may change.'],
       },
+      {
+        qism: 'vosita/musobaqa/',
+        tayyor: true,
+        nomi: 'Contests',
+        tavsif: 'Timed contests with original SAT-style questions: one attempt inside a time window, results by nickname after it ends. No prizes. Needs an account.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['Contests have not been tried with real accounts in a browser yet.'],
+      },
     ],
   },
   {
@@ -318,7 +327,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
     ],
   },
   { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/reyting/'].map(s) }] },
+  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/reyting/', 'vosita/musobaqa/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/'].map(s) }] },
   { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
 ];

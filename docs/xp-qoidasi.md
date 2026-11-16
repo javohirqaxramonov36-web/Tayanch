@@ -1,6 +1,6 @@
 # XP va reyting qoidasi (P32, 1-PR)
 
-- **Holat**: qoralama, 2026-11-12. Qarorlarni muallif boshqaruvchi sessiyaga topshirgan (2026-11-12): 18 yoshgacha reytingga qo'shilmaydi, mukofot yo'q, musobaqa 2-PR da.
+- **Holat**: qoralama, 2026-11-12. Qarorlarni muallif boshqaruvchi sessiyaga topshirgan (2026-11-12): 18 yoshgacha reytingga qo'shilmaydi, mukofot yo'q, musobaqa 2-PR da (pastdagi "Musobaqa" bo'limi).
 - **Muallif tasdig'i kerak**: pastdagi hamma raqam (2/3/4/5/5 XP, kuniga 300, 3 soniya) **boshlang'ich qiymat**. O'zgarsa, ikki joy birga yangilanadi: `private.xp_rule` (yangi migratsiyada `create or replace`) va `src/data/satReyting.ts` (`xpQoida`).
 - **Kod**: migratsiya `supabase/migrations/20261112184613_reyting.sql`, sinov `supabase/tests/reyting_test.sql` (R01–R18, `npm run db:tekshir`), sahifa `/uz/sat/vosita/reyting/`, mantiq `src/lib/sat/reyting.ts`.
 
@@ -61,6 +61,45 @@ Reytingga faqat `auth.users.raw_user_meta_data ->> 'age_group' = 'adult'` bo'lga
 
 Faqat `tayanch:sat-reyting` (tanlangan davr va doira). XP va jadval brauzerda saqlanmaydi.
 
-## Musobaqa (2-PR, hali qurilmagan)
+## Musobaqa (P32, 2-PR)
 
-Vaqt oynasi, savollar to'plami, natija jadvali. `practice_sessions.mode` ga `contest` qo'shiladi. Mukofot yo'q (2026-11-12 qarori). Mukofot bo'lsa, muallif qoidalari va huquqiy matni kerak.
+- **Holat**: qoralama, 2026-11-13. Spetsifikatsiyani muallif 2026-11-13 da tasdiqlagan. Mukofot yo'q (2026-11-12 qarori). Mukofot qo'shilsa, muallif qoidalari va huquqiy matni kerak.
+- **Kod**: migratsiya `supabase/migrations/20261113125033_musobaqa.sql`, sinov `supabase/tests/musobaqa_test.sql` (M01–M18, `npm run db:tekshir`), sahifa `/uz/sat/vosita/musobaqa/` (inglizcha "Contests"), mantiq `src/lib/sat/musobaqa.ts`, dev holatlari `?sinov=mehmon|royxat|yaqin|ochiq|ishlayapti|topshirgan|tugagan|kichik` (`musobaqaSinov.ts`, faqat dev).
+
+### Qoidalar
+
+| Narsa | Qoida |
+| --- | --- |
+| Vaqt oynasi | `starts_at` ≤ hozir < `ends_at` bo'lsa boshlash mumkin. Bir foydalanuvchiga bitta urinish (`contest_entries` PK). |
+| Shaxsiy muddat | `least(ends_at, started_at + duration_min)`. Muddatdan keyin javob `contest_closed`. |
+| Javob | `submit_answer` contest sessiyasida `private.contest_answers` ga yozadi (attempts ga EMAS). Natija (`is_correct`, `correct`, `explanation`) qaytmaydi. Saqlangan javob o'zgarmaydi. |
+| Kvota | Sarflanmaydi (`contest_start`, `submit_answer`). |
+| XP | Berilmaydi (attempts ga yozilmagani uchun trigger ishlamaydi). |
+| Takrorlash | Xato javob `review_queue` ga tushmaydi; tugamagan musobaqa savolini `add_to_review` qabul qilmaydi. |
+| Ball | To'g'ri javoblar soni. Teng ballda vaqt: boshlashdan oxirgi saqlangan javobgacha (muddat bilan cheklangan). Teng ball va vaqt = bir xil o'rin (`rank()`). Javob bermagan qatnashchi jadvalga kirmaydi. |
+| Natija jadvali | Faqat `ends_at` dan keyin (`contest_results`). Faqat 1-PR qoidasi: `leaderboard_members` a'zosi, yashirilmagan, ruxsat etilgan laqab, `age_group = 'adult'`. Eng ko'pi 100 qator + o'z qatori. Ko'rinadi: o'rin, laqab, (ruxsat bo'lsa) mamlakat, ball, vaqt. |
+| 18 yoshgacha | Qatnasha oladi, jadvalni ko'rmaydi, faqat o'z bali (o'rinsiz). Cheklov 1-PR dagi kabi: `age_group` foydalanuvchi o'zgartira oladigan `user_metadata` da. |
+| Sharh | `contest_review`: tugagach, faqat qatnashganga: savol, javobi, to'g'ri javob, tushuntirish. |
+
+### Savollar oldindan ochilmasligi
+
+Musobaqa savollari yaratilgandan `ends_at` gacha (`private.contest_reserved`) Savol banki (`filtered_questions`, `question_counts`), kun savoli (`daily_pick`) va "Add to redo list" dan chiqariladi. Tugagach bankka qaytadi. Muallif savolni musobaqaga qo'shishdan oldin u bilan mashq qilgan foydalanuvchilar javobni biladi: musobaqa uchun yangi tasdiqlangan savollar tanlash tavsiya etiladi. `contest_questions` jadvalini mijoz o'qiy olmaydi.
+
+### Musobaqa yaratish (muallif, SQL editor)
+
+Faqat `status = 'verified'` va rasmsiz savollar (trigger tekshiradi), 1–50 ta, takrorsiz, boshlanish kelajakda.
+
+```sql
+select private.contest_create(
+  'nov-math-1',                       -- slug: kichik harf, raqam, '-' (3–40)
+  'November Math Sprint',             -- sarlavha (inglizcha, sahifada ko'rinadi)
+  '2026-11-20 18:00+05',              -- boshlanish (Toshkent)
+  '2026-11-20 21:00+05',              -- tugash
+  30,                                 -- shaxsiy vaqt, daqiqa (1–300)
+  array['<savol uuid>', '<savol uuid>']::uuid[],
+  'Ten algebra questions.'            -- ixtiyoriy tavsif
+);
+```
+
+- Boshlangungacha: savollarni `contest_questions` da o'zgartirish, `published = false` qilib yashirish, `delete from public.contests where slug = '...'` bilan o'chirish mumkin.
+- Boshlangach: savollar, `starts_at` va `duration_min` qulflanadi (`contest_started`). `ends_at` ni uzaytirish yoki qisqartirish mumkin (muddat qayta hisoblanadi).
