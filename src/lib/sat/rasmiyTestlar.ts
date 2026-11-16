@@ -54,6 +54,18 @@ export const BAL_QADAM = 10;
 export const MODUL_SAVOLLARI: Record<SavolBolim, number> = { rw: 27, math: 22 };
 export const CHEGARA = { nomi: 80, izohTest: 2000, izohXato: 1000, daqiqaMax: 300 } as const;
 
+/** Saqlanadigan ma'lumot hajmi chegarasi (bayt, UTF-8 JSON). Hisob bilan sinxronda user_state qatori 256 KB: zaxira qoladi. */
+export const HAJM_CHEGARA = 200 * 1024;
+export const omborHajmi = (o: Ombor): number => new TextEncoder().encode(JSON.stringify(o)).length;
+/**
+ * Yangi holatni saqlash mumkinmi: chegaradan oshmasa yoki eskisidan katta bo'lmasa (o'chirish va qisqartirish doim mumkin).
+ */
+export const sigadimi = (yangi: Ombor, eski: Ombor): boolean => {
+  const h = omborHajmi(yangi);
+  return h <= HAJM_CHEGARA || h <= omborHajmi(eski);
+};
+export const HAJM_XABARI = 'Storage limit reached. Delete old tests or shorten notes to add more.';
+
 export const BOLIM_NOMI: Record<SavolBolim, string> = { rw: 'Reading & Writing', math: 'Math' };
 export const TUR_NOMI: Record<TestTuri, string> = { practice: 'Practice test', real: 'Real SAT' };
 

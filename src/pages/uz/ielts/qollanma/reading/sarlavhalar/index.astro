@@ -260,7 +260,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
     background: var(--fon); color: var(--matn); font: inherit; cursor: pointer;
     border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
   }
-  .ir-paragraf:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .ir-paragraf:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
   .ir-paragraf:focus-visible, .ir-sarlavha:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .ir-paragraf[aria-pressed='true'] { border-color: var(--rang-asosiy); box-shadow: inset 4px 0 0 var(--rang-asosiy); }
   .ir-paragraf:disabled { cursor: default; }
@@ -277,7 +277,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
     background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer;
     border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq);
   }
-  .ir-sarlavha:hover:not(:disabled) { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .ir-sarlavha:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
   .ir-sarlavha[aria-pressed='true'] { border-color: var(--rang-asosiy); }
   .ir-sarlavha:disabled { cursor: default; }
   .ir-sarlavha.ir-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }

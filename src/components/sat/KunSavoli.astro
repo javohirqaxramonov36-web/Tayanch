@@ -295,19 +295,6 @@ const kirish = yol('/uz/hisob/kirish/');
   /* Jonli hudud doim DOM'da va ko'rinadigan bo'lib qoladi (display: none bo'lsa yangi xabar e'lon qilinmasligi mumkin). */
   .kun-xabar { margin: 0; color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
 
-  .kun-tugma {
-    display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2);
-    min-height: 52px; padding: 0 var(--b-6); border: 0; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 800; font-size: var(--matn-asosiy); text-decoration: none; cursor: pointer;
-  }
-  .kun-tugma:active { transform: var(--bosilish); }
-  .kun-asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .kun-asosiy:hover { background: var(--rang-asosiy-toq); }
-  .kun-asosiy[aria-disabled='true'] { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .kun-asosiy[aria-disabled='true']:active { transform: none; }
-  .kun-ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .kun-ikkinchi:hover { background: var(--chiziq); }
-
   .kun-eskirgan, .kun-ertaga {
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
     background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6);

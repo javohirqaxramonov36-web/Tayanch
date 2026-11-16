@@ -294,7 +294,7 @@ const sanaQisqa = (s: string) => s.split('-').reverse().join('.');
   .variant { position: relative; display: inline-flex; }
   .variant input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
   .variant span { min-height: 44px; padding: var(--b-2) var(--b-4); display: inline-flex; align-items: center; border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font-weight: 700; cursor: pointer; }
-  .variant:hover span { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .variant:hover span { border-color: var(--rang-asosiy); } }
   .variant input:checked + span { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .variant input:focus-visible + span { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
   .sana-maydon { display: flex; flex-direction: column; gap: var(--b-2); margin-top: var(--b-2); }
@@ -324,9 +324,6 @@ const sanaQisqa = (s: string) => s.split('-').reverse().join('.');
   .havola-tayanch { color: var(--rang-havola); }
   .tez-orada { min-height: 44px; display: inline-flex; align-items: center; color: var(--matn-ikkinchi); font-weight: 700; }
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
-  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
-  .matn-tugma:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
   .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
   .tasdiq[hidden], .matn-tugma[hidden] { display: none; }
 

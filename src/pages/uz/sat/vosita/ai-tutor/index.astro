@@ -1,0 +1,519 @@
+---
+// SAT · Tools · AI tutor (P33): o'z xatosi (Tayanch original savoli) yoki o'z SAT savoli bo'yicha AI bilan suhbat.
+// Faqat kirgan foydalanuvchi (hisobQorovul). AI faqat serverda (Edge Function ai-tutor); kalit brauzerga chiqmaydi.
+// Holatlar: kutish, Supabase yo'q, yopiq (kill switch / byudjet), tarifda yo'q, tayyor; yuborishda: band, xato.
+// Rejim: "One of my mistakes" (attempt_id, ?attempt= bilan oldindan tanlanadi) yoki "My own question".
+// Klaviatura: rejim radio guruhi (strelkalar), Ctrl/Cmd+Enter yuboradi; javob aria-live hududida o'qiladi.
+// Tarix hisobda (ai_conversations, ai_messages): ochish, bittasini o'chirish, hammasini o'chirish (ikki bosqichli tasdiq).
+// Brauzer xotirasi ishlatilmaydi. Dev mock: ?mock=tayyor|yopiq|tarif|limit|cb (faqat dev).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import UsageBar from '../../../../../components/sat/UsageBar.astro';
+import { XABAR_MAX } from '../../../../../lib/sat/aiTutor';
+import { yol } from '../../../../../lib/yol';
+
+const tekshirilmagan = [
+  'The tutor is off until the author sets the AI key, a monthly budget and plan limits.',
+  'Answers come from an AI model and can contain mistakes. For your mistakes, only the final answer is checked against the answer key, not every step.',
+  'Personal details and copied test material are filtered automatically. The filter can miss things, so please leave them out yourself.',
+];
+---
+<BolimQobiq
+  title="AI tutor · SAT"
+  description="Ask an AI tutor about a mistake on a Tayanch practice question or about an SAT skill in your own words. Answers can be wrong."
+  turi="vosita"
+  yol={['Tools']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki tutor" data-plans={yol('/uz/sat/hisob/obuna/')} data-bank={yol('/uz/sat/mashq/bank/')}>
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>AI tutor</h1>
+      <p class="lead">Ask about a mistake you made on a Tayanch practice question, or about an SAT skill in your own words.</p>
+    </header>
+
+    <aside class="eslatma" aria-labelledby="ai-eslatma-h">
+      <h2 id="ai-eslatma-h" class="eslatma-h">AI can make mistakes</h2>
+      <ul>
+        <li>Explanations of your mistakes are checked against the answer key. Other answers are not checked.</li>
+        <li>The tutor doesn't work with official College Board questions or leaked test material.</li>
+        <li>It can't predict or promise a score.</li>
+        <li>Don't share your name, phone number or other personal details. <a href={yol('/uz/maxfiylik/') + '#ai-tutor'}>How your messages are stored</a></li>
+      </ul>
+    </aside>
+
+    <p class="holat-matn" role="status" data-kutish>Loading…</p>
+    <p class="ogoh" data-yoq hidden>Accounts are not connected on this copy of the site.</p>
+    <p class="ogoh" data-yopiq hidden>The AI tutor is turned off right now. Your saved conversations are still below.</p>
+    <p class="ogoh" data-tarif hidden>The AI tutor isn't included in your plan. <a href={yol('/uz/sat/hisob/obuna/')}>See plans</a></p>
+    <p class="alert" role="alert" data-oqish-xato hidden>Couldn't load the tutor. Refresh the page and try again.</p>
+
+    <section class="suhbat-blok" aria-labelledby="ai-suhbat-h" data-suhbat hidden>
+      <div class="suhbat-bosh">
+        <h2 id="ai-suhbat-h">Conversation</h2>
+        <button type="button" class="tugma tugma-ikkinchi kichik-tugma" id="ai-yangi" data-tayyor hidden>New conversation</button>
+      </div>
+      <p class="kichik ikkinchi" id="ai-joriy" hidden></p>
+      <ol class="xabarlar" id="ai-xabarlar" aria-live="polite" aria-relevant="additions"></ol>
+      <p class="kichik ikkinchi" id="ai-bosh-izoh">Your conversation will appear here.</p>
+
+      <form class="forma" id="ai-forma" novalidate data-tayyor hidden>
+        <fieldset class="guruh" id="ai-rejim">
+          <legend>What do you want to ask about?</legend>
+          <div class="variantlar">
+            <label class="variant">
+              <input type="radio" name="rejim" value="attempt" />
+              <span class="variant-nom">One of my mistakes</span>
+            </label>
+            <label class="variant">
+              <input type="radio" name="rejim" value="own" checked />
+              <span class="variant-nom">My own question about an SAT skill</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="maydon" id="ai-xato-blok" hidden>
+          <label for="ai-xato">Mistake</label>
+          <p class="izoh" id="ai-xato-izoh">Your recent wrong answers on Tayanch practice questions.</p>
+          <select class="kirit" id="ai-xato" aria-describedby="ai-xato-izoh"></select>
+          <p class="izoh" id="ai-xato-yoq" hidden>No mistakes on Tayanch practice questions yet. <a href={yol('/uz/sat/mashq/bank/')}>Practice in the question bank</a></p>
+        </div>
+
+        <div class="maydon">
+          <label for="ai-matn">Your message</label>
+          <p class="izoh" id="ai-matn-izoh">In your own words. Don't paste questions from official tests. Ctrl+Enter or ⌘+Enter sends.</p>
+          <textarea class="kirit matn-maydon" id="ai-matn" rows="4" maxlength={XABAR_MAX} aria-describedby="ai-matn-izoh ai-sanoq ai-xato-matn"></textarea>
+          <p class="izoh sanoq" id="ai-sanoq" aria-live="off">0 / {XABAR_MAX}</p>
+          <p class="xato" id="ai-xato-matn" role="alert" hidden></p>
+        </div>
+
+        <div class="tugmalar">
+          <button type="submit" class="tugma tugma-asosiy" id="ai-yubor">Send</button>
+        </div>
+      </form>
+
+      <div class="foydalanish" data-tayyor hidden>
+        <h3 id="ai-sarf-h" class="kichik-h">Your AI tutor usage</h3>
+        <UsageBar sarlavhaId="ai-sarf-h" />
+      </div>
+    </section>
+
+    <section class="tarix" aria-labelledby="ai-tarix-h" data-tarix hidden>
+      <h2 id="ai-tarix-h">Saved conversations</h2>
+      <p class="kichik ikkinchi">Saved in your account. You can delete any of them at any time.</p>
+      <ul class="tarix-royxat" id="ai-tarix"></ul>
+      <p class="kichik ikkinchi" id="ai-tarix-bosh" hidden>No saved conversations.</p>
+      <div class="tugmalar" id="ai-hammasi-blok">
+        <button type="button" class="tugma tugma-ikkinchi" id="ai-hammasi">Delete all history</button>
+        <span class="tasdiq" id="ai-tasdiq" hidden>
+          <span class="tasdiq-matn">Delete every conversation? This can't be undone.</span>
+          <button type="button" class="tugma tugma-asosiy" id="ai-tasdiq-ha">Delete all</button>
+          <button type="button" class="matn-tugma" id="ai-tasdiq-yoq">Cancel</button>
+        </span>
+      </div>
+      <p class="holat" id="ai-tarix-holat" role="status" hidden></p>
+    </section>
+
+    <ManbaBlok manbalar={[]} tekshirilgan="2026-11-12" keyingiTekshiruv="2026-12-12" tekshirilmagan={tekshirilmagan} />
+  </div>
+</BolimQobiq>
+
+<style>
+  .tutor [hidden] { display: none !important; }
+  .tutor { display: flex; flex-direction: column; gap: var(--space-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 700; }
+  .pill-chiziq { border: var(--border-width-1) dashed var(--color-text-secondary); color: var(--color-text-secondary); }
+  .lead { font-size: var(--font-size-body-d); color: var(--color-text-secondary); max-width: var(--size-measure); }
+  .holat-matn { color: var(--color-text-secondary); }
+  .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); max-width: var(--size-measure); }
+  .ogoh a { color: inherit; font-weight: 700; }
+  .alert { font-weight: 700; line-height: 1.5; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+
+  .eslatma {
+    max-width: var(--size-measure); padding: var(--space-4) var(--space-5);
+    border: var(--border-width-1) solid var(--color-border); border-left: var(--border-width-3) solid var(--floor-ui);
+    border-radius: var(--radius-md); background: var(--color-surface);
+  }
+  .eslatma-h { font-size: var(--text-body-size); margin: 0 0 var(--space-2); }
+  .eslatma ul { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-small-size); line-height: 1.5; }
+  .eslatma a { color: var(--color-link); }
+
+  .suhbat-blok, .tarix { display: flex; flex-direction: column; gap: var(--space-4); max-width: var(--size-measure); }
+  .suhbat-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .suhbat-bosh h2, .tarix h2 { margin: 0; }
+  .kichik-tugma { min-height: var(--size-touch-min); }
+  .kichik-h { font-size: var(--text-body-size); margin: 0 0 var(--space-2); }
+
+  .xabarlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .xabarlar :global(.xb) { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); line-height: 1.6; overflow-wrap: anywhere; }
+  .xabarlar :global(.xb-user) { background: var(--color-surface-sunken); align-self: flex-end; max-width: 90%; }
+  .xabarlar :global(.xb-ai) { background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); }
+  .xabarlar :global(.xb-kim) { font-size: var(--text-caption-size); font-weight: 700; color: var(--color-text-secondary); }
+  .xabarlar :global(.xb-matn) { white-space: pre-wrap; margin: 0; }
+  .xabarlar :global(.xb-belgi) { font-size: var(--text-small-size); color: var(--color-text-secondary); margin: 0; }
+  .xabarlar :global(.xb-belgi-ok) { color: var(--color-text-primary); font-weight: 700; }
+
+  .forma { display: flex; flex-direction: column; gap: var(--space-5); }
+  .maydon { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .maydon label, .guruh legend { font-weight: 700; }
+  .izoh { font-size: var(--text-small-size); color: var(--color-text-secondary); line-height: 1.5; }
+  .izoh a { color: var(--color-link); }
+  .sanoq { text-align: right; font-variant-numeric: tabular-nums; }
+  .kirit {
+    width: 100%; min-height: var(--size-control-md); padding: 0 var(--space-4);
+    border: var(--border-width-2) solid var(--chiziq-maydon); border-radius: var(--radius-md);
+    background: var(--color-bg); color: var(--color-text-primary); font: inherit; font-size: var(--text-body-size);
+  }
+  .matn-maydon { padding: var(--space-3) var(--space-4); resize: vertical; line-height: 1.5; }
+  .kirit:focus-visible { outline: none; border-color: var(--input-border-focus); box-shadow: var(--focus-ring); }
+  .kirit[aria-invalid='true'] { border-color: var(--color-warning-text); }
+  .kirit:disabled { background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+  .xato { font-size: var(--text-small-size); font-weight: 700; color: var(--color-warning-text); line-height: 1.5; }
+  .guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .guruh legend { padding: 0; margin-bottom: var(--space-2); }
+  .variantlar { display: flex; flex-direction: column; gap: var(--space-2); }
+  .variant {
+    display: flex; align-items: center; gap: var(--space-3);
+    min-height: var(--size-touch-min); padding: var(--space-3) var(--space-4);
+    border: var(--border-width-2) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); cursor: pointer;
+  }
+  .variant:has(input:checked) { border-color: var(--floor-ui); }
+  .variant:has(input:focus-visible) { box-shadow: var(--focus-ring); }
+  .variant input { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); margin: 0; accent-color: var(--floor-ui); cursor: pointer; }
+  .variant input:focus-visible { outline: none; }
+  .variant-nom { font-weight: 700; }
+
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .tasdiq { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .tasdiq-matn { font-weight: 700; }
+  .holat { font-weight: 700; line-height: 1.5; color: var(--color-text-primary); background: var(--color-surface-sunken); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); }
+  .foydalanish { padding-top: var(--space-4); border-top: var(--border-width-1) solid var(--color-border); }
+
+  .tarix-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .tarix-royxat :global(li) {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-3);
+    padding: var(--space-3) var(--space-4); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface);
+  }
+  .tarix-royxat :global(.tr-nom) { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; flex: 1 1 14rem; overflow-wrap: anywhere; }
+  .tarix-royxat :global(.tr-sana) { font-size: var(--text-small-size); color: var(--color-text-secondary); }
+  .tarix-royxat :global(.tr-tugmalar) { display: flex; gap: var(--space-2); }
+  .tarix-royxat :global([aria-current='true']) { border-color: var(--floor-ui); }
+
+  @media (max-width: 36rem) {
+    .tugmalar .tugma { width: 100%; }
+    .xabarlar :global(.xb-user) { max-width: 100%; }
+    .tarix-royxat :global(.tr-tugmalar) { width: 100%; }
+    .tarix-royxat :global(.tr-tugmalar .tugma) { flex: 1; }
+  }
+</style>
+
+<script>
+  import { hisobMijoz, hisobQorovul, yuklanish } from '../../../../../lib/hisob';
+  import { kvotaNomi } from '../../../../../data/satTarif';
+  import { usageBarniChiz } from '../../../../../lib/sat/usageBar';
+  import {
+    aiUsage, attemptParam, qisqaSana, tekshiruvYozuv, tutorHolati, tutorXatoMatni, xatoYozuv, XABAR_MAX,
+    type Suhbat, type TutorXabar, type XatoTanlov,
+  } from '../../../../../lib/sat/aiTutor';
+  import { haqiqiyApi, type TutorApi } from '../../../../../lib/sat/aiTutorApi';
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const ildiz = $<HTMLElement>('.tutor');
+  const forma = $<HTMLFormElement>('#ai-forma');
+  const matn = $<HTMLTextAreaElement>('#ai-matn');
+  const sanoq = $<HTMLElement>('#ai-sanoq');
+  const xatoMatn = $<HTMLElement>('#ai-xato-matn');
+  const yubor = $<HTMLButtonElement>('#ai-yubor');
+  const xatoTanlov = $<HTMLSelectElement>('#ai-xato');
+  const xatoBlok = $<HTMLElement>('#ai-xato-blok');
+  const xabarlarEl = $<HTMLOListElement>('#ai-xabarlar');
+  const boshIzoh = $<HTMLElement>('#ai-bosh-izoh');
+  const joriyEl = $<HTMLElement>('#ai-joriy');
+  const tarixEl = $<HTMLUListElement>('#ai-tarix');
+  const tarixHolat = $<HTMLElement>('#ai-tarix-holat');
+  const rejimlar = () => [...forma.querySelectorAll<HTMLInputElement>('input[name="rejim"]')];
+  const rejim = () => (forma.querySelector<HTMLInputElement>('input[name="rejim"]:checked')?.value ?? 'own') as 'attempt' | 'own';
+
+  const kodNomi: Record<string, string> = { ai_messages: kvotaNomi.ai_messages, ai_messages_month: kvotaNomi.ai_messages_month };
+
+  let api: TutorApi | null = null;
+  let tayyor = false;
+  let joriy: Suhbat | null = null;
+  let xatolar: XatoTanlov[] = [];
+
+  function matnXatosi(t: string | null) {
+    xatoMatn.textContent = t ?? '';
+    xatoMatn.hidden = !t;
+    if (t) matn.setAttribute('aria-invalid', 'true');
+    else matn.removeAttribute('aria-invalid');
+  }
+
+  function xabarQosh(x: TutorXabar) {
+    const li = document.createElement('li');
+    li.className = `xb ${x.role === 'user' ? 'xb-user' : 'xb-ai'}`;
+    const kim = document.createElement('span');
+    kim.className = 'xb-kim';
+    kim.textContent = x.role === 'user' ? 'You' : 'AI tutor';
+    const p = document.createElement('p');
+    p.className = 'xb-matn';
+    p.textContent = x.content;
+    li.append(kim, p);
+    if (x.role === 'assistant') {
+      const b = document.createElement('p');
+      b.className = `xb-belgi${x.check_status === 'verified' ? ' xb-belgi-ok' : ''}`;
+      b.textContent = `${tekshiruvYozuv(x.check_status)} AI can make mistakes.`;
+      li.append(b);
+    }
+    xabarlarEl.append(li);
+    boshIzoh.hidden = true;
+  }
+
+  function suhbatniTozala() {
+    joriy = null;
+    xabarlarEl.replaceChildren();
+    boshIzoh.hidden = false;
+    joriyEl.hidden = true;
+    rejimlar().forEach((r) => (r.disabled = !tayyor));
+    xatoTanlov.disabled = !tayyor;
+    tarixEl.querySelectorAll('li').forEach((li) => li.removeAttribute('aria-current'));
+  }
+
+  function rejimniYangila() {
+    const xato = rejim() === 'attempt';
+    xatoBlok.hidden = !xato;
+    $<HTMLElement>('#ai-xato-yoq').hidden = !xato || xatolar.length > 0;
+    xatoTanlov.hidden = xatolar.length === 0;
+  }
+
+  function xatolarniChiz(oldindan: number | null) {
+    xatoTanlov.replaceChildren(...xatolar.map((x) => {
+      const o = document.createElement('option');
+      o.value = String(x.attempt_id);
+      o.textContent = xatoYozuv(x);
+      return o;
+    }));
+    if (oldindan && xatolar.some((x) => x.attempt_id === oldindan)) {
+      xatoTanlov.value = String(oldindan);
+      const r = rejimlar().find((x) => x.value === 'attempt');
+      if (r) r.checked = true;
+    }
+    rejimniYangila();
+  }
+
+  function tarixniChiz(royxat: Suhbat[]) {
+    tarixEl.replaceChildren(...royxat.map((s) => {
+      const li = document.createElement('li');
+      li.dataset.id = s.id;
+      if (joriy?.id === s.id) li.setAttribute('aria-current', 'true');
+      const nom = document.createElement('span');
+      nom.className = 'tr-nom';
+      const t = document.createElement('span');
+      t.textContent = s.title;
+      const d = document.createElement('span');
+      d.className = 'tr-sana';
+      d.textContent = `${s.mode === 'attempt' ? 'Mistake' : 'Own question'} · ${qisqaSana(s.updated_at)}`;
+      nom.append(t, d);
+      const tg = document.createElement('span');
+      tg.className = 'tr-tugmalar';
+      const och = document.createElement('button');
+      och.type = 'button';
+      och.className = 'tugma tugma-ikkinchi';
+      och.textContent = 'Open';
+      och.setAttribute('aria-label', `Open: ${s.title}`);
+      och.addEventListener('click', () => suhbatniOch(s));
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'tugma tugma-ikkinchi';
+      del.textContent = 'Delete';
+      del.setAttribute('aria-label', `Delete: ${s.title}`);
+      del.addEventListener('click', () => bittasiniOchir(s, del));
+      tg.append(och, del);
+      li.append(nom, tg);
+      return li;
+    }));
+    $<HTMLElement>('#ai-tarix-bosh').hidden = royxat.length > 0;
+    $<HTMLElement>('#ai-hammasi-blok').hidden = royxat.length === 0;
+  }
+
+  function holatXabari(t: string) {
+    tarixHolat.textContent = t;
+    tarixHolat.hidden = false;
+  }
+
+  async function tarixniYangila() {
+    if (!api) return;
+    tarixniChiz(await api.suhbatlar());
+  }
+
+  async function sarfniYangila() {
+    if (!api) return;
+    const { usage } = await api.holat();
+    const ub = ildiz.querySelector<HTMLElement>('[data-usage-bar]');
+    if (ub) usageBarniChiz(ub, aiUsage(usage), kodNomi);
+  }
+
+  async function suhbatniOch(s: Suhbat) {
+    if (!api) return;
+    try {
+      const x = await api.xabarlar(s.id);
+      suhbatniTozala();
+      joriy = s;
+      x.forEach(xabarQosh);
+      joriyEl.textContent = `Continuing: ${s.title}`;
+      joriyEl.hidden = false;
+      // Davom etayotgan suhbatda rejim va xato o'zgarmaydi
+      const r = rejimlar().find((v) => v.value === s.mode);
+      if (r) r.checked = true;
+      if (s.mode === 'attempt' && s.attempt_id) xatoTanlov.value = String(s.attempt_id);
+      rejimniYangila();
+      rejimlar().forEach((v) => (v.disabled = true));
+      xatoTanlov.disabled = true;
+      tarixEl.querySelector(`li[data-id="${CSS.escape(s.id)}"]`)?.setAttribute('aria-current', 'true');
+      matn.focus();
+    } catch {
+      holatXabari("Couldn't open this conversation. Try again.");
+    }
+  }
+
+  async function bittasiniOchir(s: Suhbat, tugma: HTMLButtonElement) {
+    if (!api) return;
+    tugma.disabled = true;
+    try {
+      await api.ochir(s.id);
+      if (joriy?.id === s.id) suhbatniTozala();
+      await tarixniYangila();
+      holatXabari('Conversation deleted.');
+    } catch {
+      tugma.disabled = false;
+      holatXabari("Couldn't delete the conversation. Try again.");
+    }
+  }
+
+  // Hammasini o'chirish: ikki bosqichli tasdiq (dialog emas)
+  const hammasi = $<HTMLButtonElement>('#ai-hammasi');
+  const tasdiq = $<HTMLElement>('#ai-tasdiq');
+  hammasi.addEventListener('click', () => {
+    hammasi.hidden = true;
+    tasdiq.hidden = false;
+    $<HTMLButtonElement>('#ai-tasdiq-yoq').focus();
+  });
+  $<HTMLButtonElement>('#ai-tasdiq-yoq').addEventListener('click', () => {
+    tasdiq.hidden = true;
+    hammasi.hidden = false;
+    hammasi.focus();
+  });
+  $<HTMLButtonElement>('#ai-tasdiq-ha').addEventListener('click', async (e) => {
+    if (!api) return;
+    const t = e.currentTarget as HTMLButtonElement;
+    t.disabled = true;
+    try {
+      await api.hammasiniOchir();
+      suhbatniTozala();
+      await tarixniYangila();
+      holatXabari('All conversations deleted.');
+    } catch {
+      holatXabari("Couldn't delete the history. Try again.");
+    } finally {
+      t.disabled = false;
+      tasdiq.hidden = true;
+      hammasi.hidden = false;
+    }
+  });
+
+  $<HTMLButtonElement>('#ai-yangi').addEventListener('click', () => {
+    suhbatniTozala();
+    rejimniYangila();
+    matn.focus();
+  });
+
+  rejimlar().forEach((r) => r.addEventListener('change', rejimniYangila));
+  matn.addEventListener('input', () => {
+    sanoq.textContent = `${matn.value.length} / ${XABAR_MAX}`;
+    if (!xatoMatn.hidden) matnXatosi(null);
+  });
+  matn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      forma.requestSubmit();
+    }
+  });
+
+  forma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!api || !tayyor || yubor.getAttribute('aria-busy') === 'true') return;
+    const xabar = matn.value.trim();
+    if (!xabar) return matnXatosi(tutorXatoMatni('empty_message'));
+    if (xabar.length > XABAR_MAX) return matnXatosi(tutorXatoMatni('message_too_long'));
+    const r = rejim();
+    const attemptId = r === 'attempt' ? Number(xatoTanlov.value) : undefined;
+    if (r === 'attempt' && !attemptId) return matnXatosi(tutorXatoMatni('attempt_not_found'));
+    matnXatosi(null);
+    yuklanish(yubor, true, 'Sending…');
+    const n = await api.yubor({ mode: r, message: xabar, attempt_id: attemptId, conversation_id: joriy?.id ?? null });
+    yuklanish(yubor, false);
+    if (!n.ok) {
+      matnXatosi(tutorXatoMatni(n.kod));
+      if (n.kod === 'ai_paused') sarfniYangila().catch(() => {});
+      if (n.kod === 'quota_exceeded') sarfniYangila().catch(() => {});
+      return;
+    }
+    xabarQosh({ role: 'user', content: xabar });
+    xabarQosh({ role: 'assistant', content: n.data.reply, check_status: n.data.check });
+    matn.value = '';
+    sanoq.textContent = `0 / ${XABAR_MAX}`;
+    if (!joriy && n.data.conversation_id) {
+      joriy = { id: n.data.conversation_id, mode: r, attempt_id: attemptId ?? null, title: '', updated_at: new Date().toISOString() };
+      rejimlar().forEach((v) => (v.disabled = true));
+      xatoTanlov.disabled = true;
+    }
+    await Promise.all([tarixniYangila(), sarfniYangila()]).catch(() => {});
+    matn.focus();
+  });
+
+  async function boshla() {
+    const kutish = $<HTMLElement>('[data-kutish]');
+    const mock = import.meta.env.DEV ? new URLSearchParams(location.search).get('mock') : null;
+    try {
+      if (mock) {
+        const { mockApi } = await import('../../../../../lib/sat/aiTutorMock');
+        api = mockApi(mock as Parameters<typeof mockApi>[0]);
+      } else {
+        if (!hisobMijoz()) {
+          kutish.hidden = true;
+          $<HTMLElement>('[data-yoq]').hidden = false;
+          return;
+        }
+        const sessiya = await hisobQorovul();
+        if (!sessiya) return;
+        api = haqiqiyApi(sessiya.user.id);
+      }
+      if (!api) throw new Error('api');
+      const [{ status, usage }, xl] = await Promise.all([api.holat(), api.xatolar()]);
+      xatolar = xl;
+      const h = tutorHolati(status);
+      tayyor = h === 'tayyor';
+      kutish.hidden = true;
+      $<HTMLElement>('[data-yopiq]').hidden = h !== 'yopiq';
+      $<HTMLElement>('[data-tarif]').hidden = h !== 'tarifda-yoq';
+      document.querySelectorAll<HTMLElement>('[data-tayyor]').forEach((el) => (el.hidden = !tayyor));
+      $<HTMLElement>('[data-suhbat]').hidden = false;
+      $<HTMLElement>('[data-tarix]').hidden = false;
+      if (tayyor) {
+        xatolarniChiz(attemptParam(location.search));
+        const ub = ildiz.querySelector<HTMLElement>('[data-usage-bar]');
+        if (ub) usageBarniChiz(ub, aiUsage(usage), kodNomi);
+      }
+      await tarixniYangila();
+    } catch {
+      kutish.hidden = true;
+      $<HTMLElement>('[data-oqish-xato]').hidden = false;
+    }
+  }
+
+  // Tarixdagi suhbatni AI yopiq bo'lsa ham o'qish mumkin (forma yashirin), lekin davom ettirib bo'lmaydi.
+  boshla();
+</script>

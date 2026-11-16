@@ -2,7 +2,9 @@
 //
 // Supabase o'zi beradi: SUPABASE_URL, SUPABASE_SECRET_KEYS (yangi), SUPABASE_SERVICE_ROLE_KEY (eski, hali beriladi).
 // Muallif Supabase Secrets'ga qo'yadi: INPAY_SECRET_KEY (sk_test_… / sk_live_…), INPAY_WEBHOOK_SECRET (whsec_…),
-// MUVOFIQLASH_SECRET (inpay-muvofiqlash ni chaqirish uchun, o'zi yaratgan tasodifiy satr).
+// MUVOFIQLASH_SECRET (inpay-muvofiqlash ni chaqirish uchun, o'zi yaratgan tasodifiy satr),
+// AI_API_KEY (ai-tutor: Anthropic API kaliti; bo'lmasa AI yopiq).
+// Ixtiyoriy kill switch (maxfiy emas): AI_TUTOR_OFF = 1 | true -> ai-tutor provayderga hech narsa yubormaydi.
 // Ixtiyoriy (maxfiy emas): SAYT_URL, TOLOV_ORIGINLAR (vergul bilan).
 
 export const STANDART_SAYT_URL = 'https://javohirqaxramonov36-web.github.io/Tayanch';
@@ -18,6 +20,8 @@ export interface Sozlama {
   inpaySecretKey?: string;
   inpayWebhookSecret?: string;
   muvofiqlashSecret?: string;
+  aiApiKey?: string;
+  aiTutorOff: boolean;
   saytUrl: string;
   originlar: string[];
 }
@@ -54,6 +58,8 @@ export function sozlamaniOl(o: MuhitOquvchi): Sozlama {
     inpaySecretKey: o('INPAY_SECRET_KEY') || undefined,
     inpayWebhookSecret: o('INPAY_WEBHOOK_SECRET') || undefined,
     muvofiqlashSecret: o('MUVOFIQLASH_SECRET') || undefined,
+    aiApiKey: o('AI_API_KEY') || undefined,
+    aiTutorOff: /^(1|true|yes|on)$/i.test((o('AI_TUTOR_OFF') ?? '').trim()),
     saytUrl: (o('SAYT_URL') || STANDART_SAYT_URL).replace(/\/+$/, ''),
     originlar: originlar.length ? originlar : [...STANDART_ORIGINLAR],
   };
@@ -76,6 +82,7 @@ export function yetishmaydi(s: Sozlama, kerak: ReadonlyArray<keyof Sozlama>): st
     ['inpaySecretKey', 'INPAY_SECRET_KEY'],
     ['inpayWebhookSecret', 'INPAY_WEBHOOK_SECRET'],
     ['muvofiqlashSecret', 'MUVOFIQLASH_SECRET'],
+    ['aiApiKey', 'AI_API_KEY'],
   ]);
   const xato = kerak.filter((k) => !s[k]).map((k) => nomlar.get(k) ?? String(k));
   if (kerak.includes('inpaySecretKey') && s.inpaySecretKey && !inpayKalitRejimi(s.inpaySecretKey)) {

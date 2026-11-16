@@ -385,19 +385,18 @@ const tekshirilmagan = [
     min-height: var(--size-touch-min); padding: 0 var(--space-4);
     border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli);
     background: transparent; color: var(--color-text-primary); font: inherit; font-size: var(--text-small-size); font-weight: 700;
-    cursor: pointer; transition: background-color var(--duration-fast) var(--ease-state), border-color var(--duration-fast) var(--ease-state);
+    cursor: pointer;
   }
-  .variantlar :global(button.variant:hover) { background: var(--floor-subtle); }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(button.variant:hover) { background: var(--floor-subtle); } }
   .variantlar :global(button.variant[aria-pressed='true']) { background: var(--floor-subtle); border-color: var(--floor-ui); border-width: var(--border-width-2); }
   .variantlar :global(.variant-belgi) { display: none; color: var(--floor-text); }
   .variantlar :global(button.variant[aria-pressed='true'] .variant-belgi) { display: block; }
   .vosita-past { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-4); padding-top: var(--b-1); }
-  .katta-tugma { min-height: var(--control-height-md); padding-inline: 26px; font-weight: 800; }
 
   /* Savol progressi (3D): saytdagi Zina emas */
   .sahna { flex: 1 1 300px; perspective: 900px; display: grid; place-items: center; gap: var(--b-2); min-height: 260px; }
-  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform .8s var(--harakat-egri); }
-  .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); }
+  .savol-zinasi { position: relative; width: 300px; height: 220px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); transition: transform var(--duration-base) var(--harakat-egri); }
+  @media (hover: hover) and (pointer: fine) { .sahna:hover .savol-zinasi { transform: rotateX(54deg) rotateZ(-30deg); } }
   .pog { position: absolute; width: 92px; height: 92px; transform-style: preserve-3d; }
   .pog .ust { position: absolute; inset: 0; background: var(--fon); border: 1.5px solid var(--matn); border-radius: 4px; transform: translateZ(var(--h)); display: grid; place-items: center; transform-style: preserve-3d; }
   /* Yozuv zina ustida tik turadi: preserve-3d bo'lmasa qarama-qarshi burilish matnni yassilab, o'qib bo'lmas qilardi */
@@ -409,7 +408,7 @@ const tekshirilmagan = [
   .p3 { left: 208px; top: 0; --h: 84px; }
   .sahna-izoh { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
   /* Chipda javob berilgan savol pog'onasi yonadi */
-  .pog.bajarildi .ust { background: var(--floor-ui); color: var(--floor-ui-text); transition: background-color var(--duration-base) var(--ease-state); }
+  .pog.bajarildi .ust { background: var(--floor-ui); color: var(--floor-ui-text); }
 
   .blok { display: grid; gap: var(--b-5); }
   .blok-bosh { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--b-3); }
@@ -504,6 +503,6 @@ const tekshirilmagan = [
   }
   @media (prefers-reduced-motion: reduce) {
     .savol-zinasi { transition: none; }
-    .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); }
+    @media (hover: hover) and (pointer: fine) { .sahna:hover .savol-zinasi { transform: rotateX(58deg) rotateZ(-38deg); } }
   }
 </style>

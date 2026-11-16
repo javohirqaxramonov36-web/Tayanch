@@ -3,7 +3,7 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
 import { hisobMijoz } from './hisob';
 
-export type FunksiyaNomi = 'tolov-yaratish' | 'inpay-holat' | 'hisob-malumot';
+export type FunksiyaNomi = 'tolov-yaratish' | 'inpay-holat' | 'hisob-malumot' | 'ai-tutor';
 export type FunksiyaNatija<T> = { ok: true; data: T } | { ok: false; kod: string; status: number };
 
 export async function funksiya<T>(nomi: FunksiyaNomi, tana: Record<string, unknown>): Promise<FunksiyaNatija<T>> {

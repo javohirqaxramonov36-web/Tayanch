@@ -1,0 +1,275 @@
+---
+// SAT · Join a group (P34): taklif kodi → guruh va o'qituvchi → rozilik (nima ulashiladi) → qo'shilish.
+// Qarorlar: docs/qarorlar/004-guruhlar.md. ?kod=XXXX (o'qituvchining "Copy join link") kodni oldindan to'ldiradi.
+// Kirmagan foydalanuvchi kirish sahifasiga ?keyin=<yo'l + ?kod> bilan yuboriladi (kod yo'qolmaydi, xotira kerak emas).
+// Ulashish belgilari standart holatda o'chiq. 18 yoshgacha (server aytadi) ota-ona ismi va tasdiq belgisi majburiy.
+// Xatolar: tepada ro'yxat (role="alert", fokus unga), maydon ostida matn va aria-invalid. localStorage ishlatilmaydi.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import '../../../../../styles/guruh.css';
+import { guruhMatn as M } from '../../../../../data/satGuruhMatn';
+import { yol } from '../../../../../lib/yol';
+
+const guruhlar = yol('/uz/sat/guruh/');
+---
+<BolimQobiq
+  title="Join a group · SAT"
+  description="Join your teacher's SAT group with an invite code and choose what they can see."
+  turi="vosita"
+  yol={['Account', 'Groups']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki guruh-sahifa" data-guruhlar={guruhlar}>
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Account</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1 id="q-h1" tabindex="-1">{M.qSarlavha}</h1>
+      <p class="lead">{M.qLead}</p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>{M.kutish}</p>
+    <p class="ogoh" data-yoq hidden>{M.hisobYoq}</p>
+    <p class="alert" role="alert" data-oqish-xato hidden></p>
+
+    <form class="forma" id="kod-forma" novalidate aria-labelledby="q-h1" hidden>
+      <div class="maydon">
+        <label for="q-kod">{M.qKod}</label>
+        <p class="izoh" id="q-kod-izoh">{M.qKodIzoh}</p>
+        <input class="kirit kod-kirit" id="q-kod" type="text" inputmode="text" autocomplete="off" autocapitalize="characters"
+          spellcheck="false" maxlength="12" required aria-describedby="q-kod-izoh q-kod-xato" />
+        <p class="xato" id="q-kod-xato" hidden></p>
+      </div>
+      <div class="tugmalar"><button type="submit" class="tugma tugma-asosiy" id="q-top">{M.qTop}</button></div>
+    </form>
+
+    <section class="karta" id="rozilik" aria-labelledby="r-h" hidden>
+      <h2 id="r-h" tabindex="-1">{M.qRozilikSarlavha}</h2>
+      <dl class="malumot">
+        <div><dt>{M.qGuruh}</dt><dd id="r-guruh"></dd></div>
+        <div><dt>{M.qOqituvchi}</dt><dd id="r-ustoz"></dd></div>
+      </dl>
+      <p class="ogoh" id="r-holat" hidden></p>
+
+      <form class="forma" id="r-forma" novalidate aria-labelledby="r-h">
+        <div class="alert xatolar" id="r-xatolar" role="alert" tabindex="-1" hidden>
+          <p>{M.xatolarSarlavha}</p>
+          <ul></ul>
+        </div>
+        <div class="maydon">
+          <label for="r-ism">{M.qIsm}</label>
+          <p class="izoh" id="r-ism-izoh">{M.qIsmIzoh}</p>
+          <input class="kirit" id="r-ism" type="text" maxlength="80" autocomplete="name" required aria-describedby="r-ism-izoh r-ism-xato" />
+          <p class="xato" id="r-ism-xato" hidden></p>
+        </div>
+        <fieldset class="guruh-fs">
+          <legend>{M.ulashishLegend}</legend>
+          <p class="izoh">{M.doimo}</p>
+          <label class="variant">
+            <input type="checkbox" id="r-s" />
+            <span class="variant-matn"><span class="variant-nom">{M.xulosaNomi}</span><span class="variant-izoh">{M.xulosaIzoh}</span></span>
+          </label>
+          <label class="variant">
+            <input type="checkbox" id="r-t" />
+            <span class="variant-matn"><span class="variant-nom">{M.mavzuNomi}</span><span class="variant-izoh">{M.mavzuIzoh}</span></span>
+          </label>
+          <p class="izoh">{M.hechQachon}</p>
+        </fieldset>
+        <fieldset class="guruh-fs" id="r-vasiy" hidden>
+          <legend>{M.vasiyLegend}</legend>
+          <p class="izoh">{M.vasiyIzoh}</p>
+          <div class="maydon">
+            <label for="r-v-ism">{M.vasiyIsm}</label>
+            <input class="kirit" id="r-v-ism" type="text" maxlength="80" autocomplete="off" aria-describedby="r-v-ism-xato" />
+            <p class="xato" id="r-v-ism-xato" hidden></p>
+          </div>
+          <label class="variant">
+            <input type="checkbox" id="r-v-tasdiq" aria-describedby="r-v-tasdiq-xato" />
+            <span class="variant-matn"><span class="variant-nom">{M.vasiyTasdiq}</span></span>
+          </label>
+          <p class="xato" id="r-v-tasdiq-xato" hidden></p>
+        </fieldset>
+        <p class="alert" role="alert" id="r-xato" hidden></p>
+        <div class="tugmalar">
+          <button type="submit" class="tugma tugma-asosiy" id="r-qoshil">{M.qQoshil}</button>
+        </div>
+      </form>
+      <div class="tugmalar">
+        <a class="tugma tugma-asosiy" id="r-guruhlarga" href={guruhlar} hidden>{M.qGuruhlarga}</a>
+        <button type="button" class="tugma tugma-ikkinchi" id="r-boshqa">{M.qBoshqaKod}</button>
+      </div>
+    </section>
+
+    <section class="karta" id="tayyor" aria-labelledby="t-xabar" hidden>
+      <p class="holat" role="status" id="t-xabar" tabindex="-1"></p>
+      <div class="tugmalar"><a class="tugma tugma-asosiy" href={guruhlar}>{M.qGuruhlarga}</a></div>
+    </section>
+  </div>
+</BolimQobiq>
+
+<style>
+  .malumot { margin: 0; display: grid; gap: var(--space-3); }
+  .malumot div { display: flex; flex-direction: column; gap: var(--space-1); }
+  .malumot dt { font-size: var(--text-caption-size); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-secondary); }
+  .malumot dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  .kod-kirit { font-family: var(--font-family-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .xatolar:focus { outline: none; box-shadow: var(--focus-ring); }
+  .xatolar ul { margin: var(--space-2) 0 0; padding-left: var(--space-5); }
+  .xatolar a { color: inherit; }
+  #r-h:focus, #q-h1:focus, #t-xabar:focus { outline: none; }
+</style>
+
+<script>
+  import { hisobMijoz, hisobQorovul, hisobYoli, rozilikHolati, rozilikYoli, maydonXatosi, xatolarRoyxati, yuklanish, xabar } from '../../../../../lib/hisob';
+  import { guruhApi, GuruhXatosi, type GuruhApi } from '../../../../../lib/sat/guruhApi';
+  import { kodKorinishi, kodniTozala, kodTogrimi, type Korinish } from '../../../../../lib/sat/guruh';
+  import { guruhMatn as M, guruhXatoMatni } from '../../../../../data/satGuruhMatn';
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const kodForma = $<HTMLFormElement>('#kod-forma');
+  const kod = $<HTMLInputElement>('#q-kod');
+  const top = $<HTMLButtonElement>('#q-top');
+  const rozilik = $<HTMLElement>('#rozilik');
+  const rForma = $<HTMLFormElement>('#r-forma');
+  const ism = $<HTMLInputElement>('#r-ism');
+  const s = $<HTMLInputElement>('#r-s');
+  const t = $<HTMLInputElement>('#r-t');
+  const vasiy = $<HTMLElement>('#r-vasiy');
+  const vIsm = $<HTMLInputElement>('#r-v-ism');
+  const vTasdiq = $<HTMLInputElement>('#r-v-tasdiq');
+  const qoshil = $<HTMLButtonElement>('#r-qoshil');
+  const xatolar = $<HTMLElement>('#r-xatolar');
+  let api: GuruhApi;
+  let joriyKod = '';
+  let topilgan: Korinish | null = null;
+
+  const xatoMatn = (e: unknown) => guruhXatoMatni[e instanceof GuruhXatosi ? e.kod : 'network'];
+
+  const xatolarniKorsat = (royxat: [HTMLInputElement, string][]) => xatolarRoyxati(xatolar, royxat);
+
+  function kodgaQayt() {
+    rozilik.hidden = true;
+    topilgan = null;
+    kodForma.hidden = false;
+    kod.focus();
+    kod.select();
+  }
+
+  function rozilikniKorsat(k: Korinish) {
+    topilgan = k;
+    $('#r-guruh').textContent = k.name;
+    $('#r-ustoz').textContent = k.teacher_name;
+    const holat = $<HTMLElement>('#r-holat');
+    const toxta = k.own_group ? guruhXatoMatni.own_group : k.already_member ? guruhXatoMatni.already_member : null;
+    xabar(holat, toxta);
+    rForma.hidden = !!toxta;
+    $<HTMLElement>('#r-guruhlarga').hidden = !k.already_member;
+    vasiy.hidden = !k.minor;
+    s.checked = false;
+    t.checked = false;
+    vIsm.value = '';
+    vTasdiq.checked = false;
+    xatolarniKorsat([]);
+    xabar($('#r-xato'), null);
+    kodForma.hidden = true;
+    rozilik.hidden = false;
+    $<HTMLElement>('#r-h').focus();
+  }
+
+  kodForma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    xabar($('[data-oqish-xato]'), null);
+    if (!kodTogrimi(kod.value)) {
+      maydonXatosi(kod, M.qKodXato);
+      kod.focus();
+      return;
+    }
+    maydonXatosi(kod, null);
+    joriyKod = kodniTozala(kod.value);
+    yuklanish(top, true, M.qTopilmoqda);
+    try {
+      rozilikniKorsat(await api.korinish(joriyKod));
+    } catch (err) {
+      maydonXatosi(kod, xatoMatn(err));
+      kod.focus();
+    } finally {
+      yuklanish(top, false);
+    }
+  });
+
+  rForma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!topilgan) return;
+    xabar($('#r-xato'), null);
+    const juft: [HTMLInputElement, string | null][] = [
+      [ism, ism.value.trim().length >= 2 ? null : M.qIsmXato],
+    ];
+    if (topilgan.minor) {
+      juft.push([vIsm, vIsm.value.trim().length >= 2 ? null : M.qVasiyIsmXato]);
+      juft.push([vTasdiq, vTasdiq.checked ? null : M.qVasiyTasdiqXato]);
+    }
+    juft.forEach(([el, m]) => maydonXatosi(el, m));
+    const bor = juft.filter((x): x is [HTMLInputElement, string] => !!x[1]);
+    xatolarniKorsat(bor);
+    if (bor.length) return;
+    yuklanish(qoshil, true, M.saqlanmoqda);
+    try {
+      await api.qoshil(joriyKod, ism.value.trim(), {
+        summary: s.checked, topics: t.checked,
+        guardianName: topilgan.minor ? vIsm.value.trim() : undefined,
+        guardianConfirm: topilgan.minor ? vTasdiq.checked : undefined,
+      });
+      rozilik.hidden = true;
+      const x = $<HTMLElement>('#t-xabar');
+      x.textContent = M.qQoshildi(topilgan.name);
+      $<HTMLElement>('#tayyor').hidden = false;
+      history.replaceState(null, '', location.pathname);
+      x.focus();
+    } catch (err) {
+      xabar($('#r-xato'), xatoMatn(err));
+    } finally {
+      yuklanish(qoshil, false);
+    }
+  });
+
+  $<HTMLButtonElement>('#r-boshqa').addEventListener('click', kodgaQayt);
+  kod.addEventListener('input', () => maydonXatosi(kod, null));
+  [ism, vIsm].forEach((el) => el.addEventListener('input', () => maydonXatosi(el, null)));
+  vTasdiq.addEventListener('change', () => maydonXatosi(vTasdiq, null));
+
+  async function yukla() {
+    const c = hisobMijoz();
+    const kutish = $<HTMLElement>('[data-kutish]');
+    if (!c) {
+      kutish.hidden = true;
+      $<HTMLElement>('[data-yoq]').hidden = false;
+      return;
+    }
+    try {
+      // Kirish va rozilik sahifalariga ?kod= bilan yuboriladi: hisobQorovul faqat pathname'ni uzatadi.
+      const keyin = location.pathname + location.search;
+      const { data } = await c.auth.getSession();
+      if (!data.session) {
+        location.replace(`${hisobYoli('kirish')}?keyin=${encodeURIComponent(keyin)}`);
+        return;
+      }
+      if ((await rozilikHolati(c, data.session)) === 'yoq') {
+        location.replace(rozilikYoli(keyin));
+        return;
+      }
+      const sessiya = await hisobQorovul();
+      if (!sessiya) return;
+      api = guruhApi(c);
+      kutish.hidden = true;
+      kodForma.hidden = false;
+      const url = new URLSearchParams(location.search).get('kod');
+      if (url && kodTogrimi(url)) {
+        kod.value = kodKorinishi(url);
+        kodForma.requestSubmit();
+      }
+    } catch {
+      kutish.hidden = true;
+      xabar($('[data-oqish-xato]'), M.oqishXato);
+    }
+  }
+
+  yukla();
+</script>
