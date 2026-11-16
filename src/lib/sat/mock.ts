@@ -8,6 +8,7 @@
 //   - Ball "taxminiy": 200 + 600 × to'g'ri / jami, 10 ga yaxlitlangan (server bilan bir xil formula). Rasmiy ball emas.
 
 import type { SavolBolimi, SavolFormati } from './savolTuri';
+import type { Tarmoq, TarmoqSabab } from './adaptiv';
 
 export type MockBosqich = 'ready' | 'module' | 'break' | 'done';
 export type MockHolatTuri = 'active' | 'finished' | 'abandoned';
@@ -83,8 +84,13 @@ export interface MockNatijaSavol extends MockSavol {
   reason_tag: string | null;
 }
 
+/** Bo'lim 2-modulining tarmog'i (P31, serverda tanlanadi). Eski urinishlarda yoki tanlanmagan bo'lsa null. */
+export interface MockTarmoq { branch: Tarmoq; reason: TarmoqSabab }
+
 export interface MockNatija extends Omit<MockHolat, 'questions'> {
   questions: MockNatijaSavol[];
+  /** Faqat natijada (imtihon davomida server bermaydi). P31 migratsiyasidan oldingi serverda bo'lmaydi. */
+  adaptive?: { rw: MockTarmoq | null; math: MockTarmoq | null } | null;
 }
 
 export interface MockKredit { max: number | null; per: string; used: number; resets_at: string }
@@ -135,6 +141,17 @@ export function modulNomi(modul: number): string {
 }
 
 export const SINOV_YOZUVI = 'Estimated score. This is not an official SAT score.';
+
+/**
+ * Natija ekranidagi adaptive-style izohi (P31). Faqat 'oson' / 'qiyin' da; 'standart' yoki ma'lumot yo'q → null.
+ * Rasmiy SAT algoritmi yoki IRT deb da'vo qilinmaydi; ball formulasi tarmoqqa qaramasligi ochiq aytiladi.
+ */
+export function tarmoqIzohi(bolim: SavolBolimi, t: MockTarmoq | null | undefined): string | null {
+  if (!t || (t.branch !== 'oson' && t.branch !== 'qiyin')) return null;
+  const toplam = t.branch === 'qiyin' ? 'a harder' : 'an easier';
+  return `${BOLIM_NOMI[bolim]}: Module 2 was ${toplam} set of questions, chosen from your Module 1 accuracy (adaptive-style). `
+    + "This is Tayanch's own rule, not the official SAT algorithm. The estimated score counts correct answers only and does not adjust for the harder or easier set.";
+}
 
 // ---------- Ball ----------
 

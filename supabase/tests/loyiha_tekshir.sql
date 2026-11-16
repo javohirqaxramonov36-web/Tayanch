@@ -45,6 +45,8 @@ kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('official_tests', 'authenticated', 'DELETE,INSERT,SELECT,UPDATE'),
   ('mock_answers', 'anon', ''),
   ('mock_answers', 'authenticated', ''),
+  ('mock_attempt_questions', 'anon', ''),
+  ('mock_attempt_questions', 'authenticated', ''),
   ('mock_attempts', 'anon', ''),
   ('mock_attempts', 'authenticated', ''),
   ('mock_form_questions', 'anon', ''),
@@ -174,8 +176,8 @@ rpc as (
 natija (tartib, tekshiruv, holat, tafsilot) as (
   -- 1. RLS hamma public jadvalda
   select 10, 'rls: public jadvallar',
-         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 36 then 'ok' else 'XATO' end,
-         count(*) || ' jadval (kutilgan 36); RLS o''chiq: '
+         case when count(*) filter (where not relrowsecurity) = 0 and count(*) = 37 then 'ok' else 'XATO' end,
+         count(*) || ' jadval (kutilgan 37); RLS o''chiq: '
            || coalesce(string_agg(relname, ', ' order by relname) filter (where not relrowsecurity), 'yo''q')
     from jadvallar
 

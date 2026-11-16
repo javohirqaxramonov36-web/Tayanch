@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import {
   bolimBall, qolganMs, tanaffusTugashi, ekranTuri, modulNomi, mockMahalliyTekshir, bushMockMahalliy, modulgaMosla,
   javoblarniBirlashtir, navbatBolagi, navbatdanOl, mockXarita, mockXaritaYorliq, topshirishOgohi, kreditMatni,
-  natijaJadvali, modulVaqtlari, mockXatosi, MOCK_KALIT, type MockModul,
+  natijaJadvali, modulVaqtlari, mockXatosi, tarmoqIzohi, MOCK_KALIT, type MockModul,
 } from '../sat/mock.ts';
 import { savolTaksonomiya } from '../../data/satTaksonomiya.ts';
 
@@ -167,4 +167,27 @@ test('SQL ko\'nikmalar ro\'yxati satTaksonomiya.ts bilan bir xil, blueprint 27/2
   assert.equal(jami('rw'), 27);
   assert.equal(jami('math'), 22);
   assert.deepEqual(bp.map((m) => `${m[1]}|${m[2]}`).sort(), Object.entries(savolTaksonomiya).flatMap(([b, d]) => Object.keys(d).map((dom) => `${b}|${dom}`)).sort());
+});
+
+test('tarmoqIzohi (P31): faqat oson / qiyin, rasmiy algoritm deb da\'vo yo\'q', () => {
+  const q = tarmoqIzohi('rw', { branch: 'qiyin', reason: 'ustida' })!;
+  assert.match(q, /^Reading and Writing: Module 2 was a harder set/);
+  assert.match(q, /adaptive-style/);
+  assert.match(q, /not the official SAT algorithm/);
+  assert.match(tarmoqIzohi('math', { branch: 'oson', reason: 'ostida' })!, /^Math: Module 2 was an easier set/);
+  assert.equal(tarmoqIzohi('rw', { branch: 'standart', reason: 'savol-kam' }), null);
+  assert.equal(tarmoqIzohi('math', null), null);
+  assert.equal(tarmoqIzohi('math', undefined), null);
+  for (const t of ['qiyin', 'oson'] as const) {
+    const m = tarmoqIzohi('rw', { branch: t, reason: 'ustida' })!;
+    assert.doesNotMatch(m, /IRT|same as the real SAT|official score/i);
+  }
+});
+
+test('SQL (P31 ulash): tarmoq mock_close_module da, server qoidasi chaqiriladi, payload\'da tarmoq yo\'q', () => {
+  const sql = readFileSync(new URL('../../../supabase/migrations/20261113111947_mock_adaptiv.sql', import.meta.url), 'utf8');
+  assert.match(sql, /perform private\.mock_adapt\(a\.id, a\.current_module, v_sess\)/);
+  assert.match(sql, /private\.adaptive_branch\(v_section, v_correct, v_total, v_easy, v_hard\)/);
+  const payload = sql.slice(sql.indexOf('create or replace function private.mock_payload'), sql.indexOf('create or replace function public.mock_save'));
+  assert.doesNotMatch(payload, /next_branch|adaptive/);
 });

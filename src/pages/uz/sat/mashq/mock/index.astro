@@ -2,7 +2,7 @@
 // Mock imtihon kirishi (P30). Tuzilma (statik, CB03 / CB41 / CB42), holat va tarix faqat Supabase mock_status RPC'dan
 // (hisob bilan): statik build'da foydalanuvchi ma'lumoti yo'q. Imtihon ekrani: /uz/sat/mashq/mock/imtihon/?id=.
 // Server: supabase/migrations/20261113012418_mock_imtihon.sql. Sof mantiq: src/lib/sat/mock.ts.
-// Dev mock: src/lib/sat/mockImtihonMock.ts (?mock=oddiy|qisqa|tayyor-emas|kvota|xato, &tozala=1; faqat DEV).
+// Dev mock: src/lib/sat/mockImtihonMock.ts (?mock=oddiy|qisqa|tayyor-emas|kvota|xato|natija-qiyin|natija-oson, &tozala=1; faqat DEV).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import MockUslub from '../../../../../components/sat/MockUslub.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
@@ -265,7 +265,7 @@ const TUZILMA = [
 
   async function ishga() {
     const p = new URLSearchParams(location.search);
-    // Faqat dev: ?mock=oddiy|qisqa|tayyor-emas|kvota|xato (&tozala=1). Prod build'da bu shox va mock moduli yo'q.
+    // Faqat dev: ?mock=oddiy|qisqa|tayyor-emas|kvota|xato|natija-qiyin|natija-oson (&tozala=1). Prod build'da bu shox va mock moduli yo'q.
     if (import.meta.env.DEV && p.get('mock')) {
       const { mockApi, mockTozala } = await import('../../../../../lib/sat/mockImtihonMock');
       if (p.get('tozala')) { mockTozala(); p.delete('tozala'); history.replaceState(null, '', `${location.pathname}?${p}`); }
