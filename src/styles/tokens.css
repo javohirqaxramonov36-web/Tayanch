@@ -328,6 +328,19 @@
 :root{ --card-line:color-mix(in srgb, var(--color-neutral-900) 8%, transparent); }
 :root[data-mavzu='qorongi']{ --card-line:color-mix(in srgb, var(--color-neutral-0) 9%, transparent); }
 
+/* Glass is applied only to the shared navigation and its floating panels. */
+:root {
+  --nav-glass-bg:color-mix(in srgb, var(--color-surface) 94%, transparent);
+  --nav-glass-mobile:blur(var(--space-2));
+  --nav-glass-desktop:blur(var(--space-10)) saturate(1.65);
+  --nav-glass-sheen:linear-gradient(160deg, color-mix(in srgb, var(--color-neutral-0) 75%, transparent), transparent 48%);
+}
+:root[data-mavzu='qorongi'] {
+  --nav-glass-bg:color-mix(in srgb, var(--color-neutral-925) 96%, transparent);
+  --nav-glass-desktop:blur(var(--space-10)) saturate(1.35);
+  --nav-glass-sheen:linear-gradient(160deg, color-mix(in srgb, var(--color-neutral-0) 4%, transparent), transparent 48%);
+}
+
 /* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
    ========================================================================== */

@@ -130,3 +130,23 @@ export function rejaBormi(xom: string | null): boolean {
     return false;
   }
 }
+
+export interface KunlikMaqsad {
+  /** "Daily goal: 30 min" yoki null (tanlanmagan). */
+  matn: string | null;
+  /** Havola matni: tanlangan bo'lsa "Change", aks holda "Set a daily goal". */
+  havola: string;
+  /** Ekran o'quvchi uchun to'liq nom ("Change" yolg'iz tushunarsiz). */
+  havolaNomi: string;
+}
+
+/**
+ * Today blokidagi kunlik o'qish maqsadi satri (My SAT profile, tayanch:sat-afzallik.kunlikDaqiqa).
+ * Faqat ko'rsatish: vaqt o'lchanmaydi, streak hisoblanmaydi. Kiruvchi qiymat afzallikTozala dan o'tgan bo'lishi kerak.
+ */
+export function kunlikMaqsad(kunlikDaqiqa: number | null): KunlikMaqsad {
+  if (kunlikDaqiqa == null || !(kunlikDaqiqa > 0)) {
+    return { matn: null, havola: 'Set a daily goal', havolaNomi: 'Set a daily study goal in your SAT profile' };
+  }
+  return { matn: `Daily goal: ${kunlikDaqiqa} min`, havola: 'Change', havolaNomi: 'Change your daily study goal' };
+}

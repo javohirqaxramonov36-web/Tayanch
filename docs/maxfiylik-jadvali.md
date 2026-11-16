@@ -24,9 +24,11 @@ Holat: **qoralama**, yurist tekshirmagan. "Tekshirish kerak" ustunidagi savollar
 | O'qituvchi guruhi a'zoligi: guruhdagi ism, qo'shilgan sana, ulashish tanlovi, rozilik versiyasi va vaqti, 18 yoshgacha ota-ona ismi va tasdiq vaqti | `group_members` | O'qituvchi o'quvchi ruxsat bergan natijani ko'rishi (P34, `docs/qarorlar/004-guruhlar.md`) | Guruhda turguncha; chiqish, chiqarilish yoki guruh o'chishi bilan o'chadi | O'chadi | Ha |
 | O'qituvchi guruhlari va guruh tarifi: guruh nomi, o'quvchilarga ko'rinadigan ism, taklif kodi, limitlar, muddat | `groups`, `group_licenses` | Guruh boshqaruvi | Hisob yoki guruh o'chirilguncha | O'chadi (a'zoliklar ham) | Ha |
 | Noto'g'ri taklif kodi urinishlari (vaqt) | `private.group_code_attempts` | Kodni taxmin qilishdan himoya (soatiga 20) | 1 soat (keyingi tekshiruvda o'chiriladi) | O'chadi | Yo'q |
+| AI Tutor suhbatlari va xabarlari | `ai_conversations`, `ai_messages` (P33); kunlik so'rov hisobi `private.ai_usage` | Tutor javobi, suhbat tarixi | Hisob ochiq turguncha | Suhbat va xabarlar o'chadi; `private.ai_usage` qoladi, `user_id` null | Ha (`private.ai_usage` dan tashqari). Maxfiylik sahifasi matnida hali yo'q (2026-11-13) |
+| Mock imtihon: forma va urinishlar | `mock_forms`, `mock_attempts` (modul va javoblar `mock_modules`, `mock_answers` da, urinish bilan) | To'liq mock imtihon (P30) | Hisob ochiq turguncha | O'chadi | Ha (`mock_modules`, `mock_answers` alohida emas). Maxfiylik sahifasi matnida hali yo'q (2026-11-13) |
 | To'lov: tarif, summa, holat, sana, inPAY raqami | `payments` | To'lov va buxgalteriya | **Tekshirish kerak** (buxgalter/yurist) | Qoladi, `user_id` null (migratsiya 20261112090000) | Ha (`raw` dan tashqari) |
 | inPAY webhook jurnali | `payment_events` (foydalanuvchiga to'g'ridan bog'lanmagan, buyurtma raqami bilan) | Takror webhookni aniqlash, nizolar | **Tekshirish kerak** | Qoladi | Yo'q |
-| Admin va xavfsizlik jurnali | `audit_log` (`account_deleted`: hisob ID va to'langan to'lovlar soni, email yo'q) | Xavfsizlik, nizolar | **Tekshirish kerak** | Qoladi | Yo'q |
+| Admin va xavfsizlik jurnali | `audit_log` (`account_deleted`: hisob ID va to'langan to'lovlar soni, email yo'q; o'chirish bajarilmasa `account_delete_failed` va xato kodi) | Xavfsizlik, nizolar | **Tekshirish kerak** | Qoladi | Yo'q |
 | Supabase texnik jurnallari va zaxira nusxalari | Supabase | Xizmat ishlashi | **Tekshirish kerak** (Supabase hujjati) | Supabase muddati bo'yicha | Yo'q |
 
 ## Uchinchi tomonlar

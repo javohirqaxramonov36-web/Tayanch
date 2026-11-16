@@ -16,26 +16,24 @@ const M = matn[yolTili(Astro.url.pathname)].manba;
 <section class="manba" aria-labelledby="manba-h">
   <h2 id="manba-h">{M.sarlavha}</h2>
   <dl>
-    <div>
+    {rasmiy.length > 0 && <div>
       <dt>{M.rasmiy}</dt>
       <dd>
-        {rasmiy.length > 0 ? (
           <ul>
             {rasmiy.map((m) => (
               <li><a href={m.havola} rel="noopener">{m.nomi}</a> ({m.tashkilot}, {m.id})</li>
             ))}
           </ul>
-        ) : M.yoq}
       </dd>
-    </div>
+    </div>}
     <div><dt>{M.tekshirilgan}</dt><dd>{tekshirilgan}</dd></div>
     <div><dt>{M.keyingi}</dt><dd>{keyingiTekshiruv}</dd></div>
-    <div>
+    {tekshirilmagan.length > 0 && <div>
       <dt>{M.tekshirilmagan}</dt>
       <dd>
-        {tekshirilmagan.length > 0 ? <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul> : M.yoq}
+        <ul>{tekshirilmagan.map((t) => <li>{t}</li>)}</ul>
       </dd>
-    </div>
+    </div>}
   </dl>
 </section>
 

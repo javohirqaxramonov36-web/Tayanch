@@ -36,6 +36,10 @@ const JADVALLAR: Array<{ nomi: string; ustun: string; tanlov?: string }> = [
   { nomi: 'group_licenses', ustun: 'user_id' },
   { nomi: 'groups', ustun: 'owner_id' },
   { nomi: 'group_members', ustun: 'user_id' },
+  { nomi: 'ai_conversations', ustun: 'user_id' },
+  { nomi: 'ai_messages', ustun: 'user_id' },
+  { nomi: 'mock_forms', ustun: 'user_id' },
+  { nomi: 'mock_attempts', ustun: 'user_id' },
   {
     nomi: 'payments',
     ustun: 'user_id',
@@ -98,20 +102,35 @@ Deno.serve((req) =>
       // O'qib bo'lmasa xavfsiz tomonga: o'chirish to'xtaydi.
       return error ? true : (count ?? 0) > 0;
     },
-    ochir: async (userId) => {
-      if (!admin) return { ok: false, xato: 'admin_yoq' };
+    auditYoz: async (userId) => {
+      if (!admin) return null;
       const { count } = await admin.from('payments').select('id', { count: 'exact', head: true }).eq('user_id', userId);
       // Xavfsizlik jurnali: hisob raqami va vaqt, email yo'q (Maxfiylik siyosati, "Qancha saqlanadi").
-      const audit = await admin.from('audit_log').insert({
-        actor: 'hisob-malumot',
-        action: 'account_deleted',
-        target_table: 'auth.users',
-        target_id: userId,
-        details: { payments_unlinked: count ?? 0 },
-      });
-      if (audit.error) return { ok: false, xato: 'audit' };
+      const { data, error } = await admin
+        .from('audit_log')
+        .insert({
+          actor: 'hisob-malumot',
+          action: 'account_deleted',
+          target_table: 'auth.users',
+          target_id: userId,
+          details: { payments_unlinked: count ?? 0 },
+        })
+        .select('id')
+        .single();
+      return error || !data ? null : Number(data.id);
+    },
+    ochir: async (userId) => {
+      if (!admin) return { ok: false, xato: 'admin_yoq' };
       const { error } = await admin.auth.admin.deleteUser(userId);
-      return error ? { ok: false, xato: error.message } : { ok: true };
+      // Masalan payments.user_id hali "on delete restrict" bo'lsa (20261112090000 qo'llanmagan): 500 unexpected_failure.
+      return error ? { ok: false, xato: `${error.status ?? '-'}:${error.code ?? 'nomalum'}` } : { ok: true };
+    },
+    auditBekor: async (auditId, xato) => {
+      if (!admin) return;
+      await admin
+        .from('audit_log')
+        .update({ action: 'account_delete_failed', details: { xato } })
+        .eq('id', auditId);
     },
     hozir: () => Math.floor(Date.now() / 1000),
     jurnal: log,
