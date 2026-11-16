@@ -6,9 +6,9 @@ import '../styles/global.css';
 import BoshQism from '../components/BoshQism.astro';
 import BolimYon from '../components/BolimYon.astro';
 import QavatYoli from '../components/QavatYoli.astro';
-import Lift from '../components/Lift.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
+import SatSinxron from '../components/SatSinxron.astro';
 import type { BolimSlug } from '../data/bolimlar';
 import { bolimTili, matn } from '../data/umumiyMatn';
 
@@ -44,11 +44,11 @@ const sahifaNomi = title.split(' · ')[0];
       <main id="asosiy">
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
         <slot />
+        <p class="ichki beta-holat" lang="en">Beta — in development</p>
       </main>
       {bolim === 'sat' && <SatEslatma />}
-      <p class="ichki beta-holat" lang="en">Beta — in development</p>
+      {bolim === 'sat' && <SatSinxron />}
     </div>
-    <Lift variant="pastki" />
   </body>
 </html>
 
@@ -58,15 +58,6 @@ const sahifaNomi = title.split(' · ')[0];
   .bolim-qobiq .kontent-ustun .beta-holat { margin: 0; padding-block: var(--b-4) var(--b-6); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
 
   @media (min-width: 1024px) {
-    .bolim-qobiq {
-      display: grid;
-      grid-template-columns: var(--yon-kenglik) minmax(0, 1fr);
-      align-items: start;
-    }
-    [data-sidebar='yigilgan'] .bolim-qobiq { grid-template-columns: var(--yon-yigilgan) minmax(0, 1fr); }
-    .bolim-qobiq > .yon { grid-column: 1; grid-row: 1; }
-    .bolim-qobiq > .kontent-ustun { grid-column: 2; grid-row: 1; min-height: 100vh; display: flex; flex-direction: column; }
-    .bolim-qobiq > .kontent-ustun > main { flex: 1; }
-    .bolim-qobiq .kontent-ustun .ichki { padding-inline: var(--b-10); margin: 0; max-width: calc(960px + 2 * var(--b-10)); }
+    .bolim-qobiq .kontent-ustun .ichki { padding-inline: var(--b-10); max-width: calc(960px + 2 * var(--b-10)); }
   }
 </style>

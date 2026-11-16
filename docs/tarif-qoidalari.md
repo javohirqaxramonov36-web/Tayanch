@@ -60,6 +60,13 @@ Keyin shu jadval yangilanadi. Kod o'zgarmaydi; `UsageBar` va Savol banki yangi l
 
 - Limitli kalit: "12 of 20", "8 left today · Resets at midnight (Tashkent time)" va shkala. Shkala `aria-hidden`, chunki ma'lumot matnda bor.
 - Cheklovsiz kalit: bugungi soni va "No limit on your plan", shkalasiz.
+- `max: 0`: "Not included" va "Not part of your plan", shkalasiz ("0 of 0" emas, tugagan limit ham hisoblanmaydi).
+
+## Subscription sahifasi (2026-11-13)
+
+`/uz/sat/hisob/obuna/` (sahifa nomi "Subscription"): joriy tarif va sarf metrlari, tariflar (Monthly / 3 months; server qabul qilmaydigan davr o'chiq, "Coming soon"), Pro va Max kartalari "What's included" bilan, Free | Pro | Max taqqoslash jadvali, FAQ, to'lov tarixi. Jadval va karta ro'yxati `src/lib/sat/tarifJadval.ts` da faqat `plans.limits` va `plans.features` dan quriladi (qatorlar tartibi va nomi `satTarif.jadvalQatorlari`): kalit yo'q "No limit", `max 0` "Not included", AI kalitlari yo'q "Not included", bazada yo'q (faol emas) tarif "Coming soon". Raqam qo'yilsa sahifa o'zi yangilanadi.
+
+**TarifDialog** (`src/components/sat/TarifDialog.astro`, `src/lib/sat/tarifDialog.ts`): server `quota_exceeded` qaytarganda tavsiya tarif (Pro) nima berishini ko'rsatadi, "Maybe later" / "See plans". Ulangan joylar: Savol banki (Start bosilganda), Mock test (yangi test yoki retake boshlanganda), mashq sessiyasi (javob yuborilganda, sahifada bir marta). Umumiy yordamchi `tarifTaklifiniOch(manba, matn, fokus)` (`supabaseTaklifManba(c)`; dev'da `tarifDialogSinov.ts`). Limit oldindan ma'lum bo'lsa tugma o'chiq turadi va sababi yoziladi, oyna chiqmaydi. Tavsiya tarifdagi foydalanuvchiga chiqmaydi. Ulanmagan: Lug'at (`new_words` qoldig'i oldindan ma'lum, sahifa ichida xabar beradi), AI tutor (hozir hamma tarifda yopiq, "not included" xabari oldindan chiqadi). Dev: `/uz/sat/mashq/bank/?mock=kvota2`, `/uz/sat/mashq/sessiya/?mock=kvota`, `/uz/sat/mashq/mock/?mock=kvota`, obuna sahifasi `?sinov=kvota`.
 - Limit tugaganda halol xabar chiqadi: qachon tiklanishi, saqlangan ma'lumot joyida qolishi va "See plans" havolasi. Ogohlantiruvchi rang, taymer, "oxirgi imkoniyat" kabi bosim yo'q.
 
 ## Sinovlar
@@ -73,3 +80,8 @@ Keyin shu jadval yangilanadi. Kod o'zgarmaydi; `UsageBar` va Savol banki yangi l
   - K05: `usage_status` shakli va mijoz huquqlari.
 - K06, parallel: `scripts/rls-tekshir.sh` oxirida 10 ta alohida ulanish ishga tushadi, limit 3, natija aynan 3. Atomik bo'lmagan versiya bilan sinab ko'rilgan: test xatoni ushlaydi.
 - `src/lib/testlar/usageBar.test.ts`: qatorlar, tugash holati, Toshkent bo'yicha tiklanish sanasi.
+
+## Yon paneldagi Upgrade bandi (2026-11-13)
+
+`BolimYon` (faqat SAT, Subscription sahifasining o'zida yo'q): "Upgrade to <tavsiya tarif nomi>" va izoh. Faqat kirgan va amaldagi tarifi `free` bo'lgan foydalanuvchiga ko'rinadi; pullik, noma'lum yoki xato holatda yashirin. Izoh `upgradeIzohi`: tavsiya tarif Free'dan farq qiladigan jadval qatorlari nomi (ko'pi bilan 2 ta), farq bo'lmasa "Compare plans". Raqam yozilmaydi. supabase-js yuklanmaydi: `tayanch:auth` dagi token bilan REST (`rpc/usage_status`, `plans`), natija sessionStorage `tayanch:sat-tarif-kesh` da 10 daqiqa (foydalanuvchi id bilan); Subscription sahifasi va muvaffaqiyatli to'lov keshni tozalaydi. Mantiq `src/lib/sat/upgradeBand.ts` (testlar), brauzer qismi `upgradeBandUlash.ts`. Dev: istalgan SAT sahifasida `?upgrade=sinov`.
+

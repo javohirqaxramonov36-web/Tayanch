@@ -18,6 +18,7 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | `migrations/20261111120000_analitika.sql` | Analitika paneli (P14): `analytics_summary()` (yig'indi serverda, kun chegarasi Asia/Tashkent), `private.has_feature`, `plans.features` ga `analytics_extended` (Pro, Max). Sinov `tests/analitika_test.sql`. Jonli bazaga 2026-11-11 da qo'llangan (PR #91 merge va deploy'dan keyin). |
 | `migrations/20261111200000_tarif_max.sql` | Tarif nomi Elite -> Max (muallif, 2026-11-11): `plans` da `elite` qatori `max` / `Max` bo'ladi, qolgan ustunlar o'zgarmaydi. `elite` ga obuna yoki to'lov havolasi bo'lsa FK xatosi bilan to'xtaydi. |
 | `migrations/20261111210000_kvota_p19.sql` | P19 kvota: `usage_status()` ga `resets_at` va `today_resets_at`, `private.period_end`. Qoidalar: `docs/tarif-qoidalari.md`. Sinov `tests/kvota_test.sql` (K00–K05) va `scripts/rls-tekshir.sh` dagi K06 (parallel). |
+| `migrations/20261112143717_metrikalar.sql` | P25 metrikalar: `private.track` (yagona yozuvchi: nom va xossa ro'yxati, soatiga 60 ta, `plan_viewed` 10 daqiqada 1), `public.track_event` (mijoz, faqat `plan_viewed`), trigger'lar (`signup`, `first_session`, `session_completed`, `daily_question_answered`, `payment_started`, `payment_success`), `profiles.usage_analytics`. Mijozning `events` ga to'g'ridan-to'g'ri INSERT huquqi olib tashlangan. So'rovlar `../docs/metrikalar.sql`, sinov `tests/metrikalar_test.sql` (M01–M11) va `tests/metrikalar_sorov_malumot.sql` (MS01). |
 | `functions/tolov-yaratish/`, `functions/inpay-webhook/`, `functions/inpay-holat/`, `functions/inpay-muvofiqlash/` | Edge Function'lar: inPAY to'lovi, webhook, holat va muvofiqlashtirish (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
@@ -489,3 +490,14 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
 ```
 
 Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
+
+## Suhbatdoshning yopiq sinovi
+
+Suhbatdosh Tayanch sahifalarida ishlaydi. Brauzer Supabase sessiyasi orqali ovozli navbatni `suhbatdosh` funksiyasiga yuboradi. Funksiya har so‘rovda hisobni tekshiradi va quyidagi egadan boshqa hisoblarga yopiq turadi. Suhbat matni va audio bazaga yozilmaydi.
+
+1. Private `suhbatdosh-bilim` bucket migratsiyasini qo‘llang. `knowledge/` ichidan faqat `sat.md`, `ielts.md`, `common-app.md`, `scoir-coalition.md`, `fee-waivers.md` va `kaplan-pathways.md` fayllarini bucket ildiziga yuklang. Mavzu parchalari matn provayderiga yuborilgani uchun faqat ulashish mumkin bo‘lgan bilimni yuklang.
+2. Funksiya secrets’ida `SUHBATDOSH_EGA_ID` (Tayanch Auth’dagi egasining UUID’i), `SUHBATDOSH_GEMINI_FREE_KEY` ni sozlang. Gemini kaliti uchun billing yoqilmagan alohida loyiha ishlating. Nutq matnga va javobga Gemini 3.5 Flash-Lite orqali aylanadi. Gemini 3.8 Flash-Lite TTS javobni o‘zbekcha ovozlashtiradi. Bepul Gemini audio, savol va tanlangan manba parchalaridan mahsulotlarini yaxshilashda foydalanishi mumkin.
+3. `supabase functions deploy suhbatdosh --no-verify-jwt --use-api` funksiyani joylaydi. Kod JWT’ni Supabase Auth orqali tekshiradi. Egasi kirganida Lift’da Suhbatdosh tugmasi chiqadi.
+4. Egasi va boshqa hisob bilan kirishni tekshiring. Telefon brauzerida mikrofon bilan yangi o‘zbekcha savol yozib yuboring va qaytgan ovozni tinglang. `SUHBATDOSH_EGA_ID` olib tashlansa, funksiya hamma hisobga yopiladi.
+
+Rasmiy manbalar, 2026-11-15 — [Google o‘zbekcha ovoz sintezi](https://aistudio.google.com/docs/speech-generation#supported-languages), [Gemini API narxlari va bepul tarifdagi ma’lumot ishlatilishi](https://ai.google.dev/gemini-api/docs/pricing).

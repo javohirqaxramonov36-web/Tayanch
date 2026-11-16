@@ -1,0 +1,14 @@
+---
+// SAT kirish sahifasi: sessiya kaliti bor bo'lsa, sahifa chizilishidan oldin <html data-sat-kirgan> qo'yadi.
+// Shu belgi bilan tanishtiruv qismi yashirinadi va "Today" bloki (SatBugun) ko'rinadi, sakrash bo'lmaydi.
+// Faqat o'qiydi (kalit hisobSozlama.sessiyaKaliti). Sessiya serverda tasdiqlanmasa SatBugun belgini olib tashlaydi.
+// Sahifada hero'dan oldin turishi kerak.
+import { hisobSozlama } from '../../data/hisobSozlama';
+const kalit = hisobSozlama.sessiyaKaliti;
+---
+<script is:inline define:vars={{ kalit }}>
+  try {
+    const s = JSON.parse(localStorage.getItem(kalit) || 'null');
+    if (s && s.user) document.documentElement.setAttribute('data-sat-kirgan', '');
+  } catch (e) { /* localStorage yopiq: mehmon ko'rinishi */ }
+</script>

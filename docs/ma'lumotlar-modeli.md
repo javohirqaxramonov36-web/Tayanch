@@ -37,7 +37,7 @@ storage: question-figures     (yopiq bucket, imzolangan URL)
 
 | Jadval | Nima | Mijoz (authenticated) | Kim yozadi |
 | --- | --- | --- | --- |
-| `profiles` | ism, taxallus, davlat, maqsad ball, hozirgi eng yaxshi ball (`current_score`), imtihon sanasi, SAT sozlash vaqti (`sat_setup_at`), rozilik, til | o'zini o'qiydi; ruxsat etilgan ustunlarni yangilaydi | trigger yaratadi; `consent_at` ni trigger qo'yadi |
+| `profiles` | ism, taxallus, davlat, maqsad ball, hozirgi eng yaxshi ball (`current_score`), imtihon sanasi, SAT sozlash vaqti (`sat_setup_at`), rozilik, til, statistikani ulashish (`usage_analytics`, standart `true`) | o'zini o'qiydi; ruxsat etilgan ustunlarni yangilaydi | trigger yaratadi; `consent_at` ni trigger qo'yadi |
 | `questions` | savol banki (`draft`/`verified`/`hidden`, `verified_by` ≠ `author`, `verified_at`, `version`; P05 maydonlari `drafted_by`, `tags`, `content_hash`: ADR 002) | **hech narsa** | service role |
 | `practice_sessions` | sessiya (`practice`, `timed`, `daily`, `review`) | o'zini o'qiydi | RPC |
 | `session_questions` | sessiyaga berilgan savollar | o'zini o'qiydi | RPC |
@@ -57,7 +57,7 @@ storage: question-figures     (yopiq bucket, imzolangan URL)
 | `daily_picks` | kun savoli tanlovi (`day` → `question_id`, hamma uchun bitta) | **hech narsa** | RPC (`daily_pick`) |
 | `reports` | savoldagi xato haqida xabar | o'zini o'qiydi, qo'shadi | mijoz |
 | `feedback` | fikr-mulohaza | o'zini o'qiydi, qo'shadi | mijoz |
-| `events` | analitika hodisasi (P25) | faqat qo'shadi | mijoz |
+| `events` | birinchi tomon metrikasi (P25): `name`, `props` (ruxsat etilgan kalitlar, faqat slug/son/boolean), vaqt; IP va qurilma ma'lumoti yo'q | **hech narsa** (faqat `track_event('plan_viewed')` RPC) | `private.track` (trigger'lar, RPC); so'rovlar `docs/metrikalar.sql` |
 | `audit_log` | admin amallari | **hech narsa** | admin funksiyalari |
 
 `anon` (hisobsiz): faqat faol `plans` va tasdiqlangan `vocab_words` ni o'qiydi. RPC faqat kun savoli uchun (`daily_question_public`, `check_daily_answer`, hech narsa yozmaydi); hisobsiz progress brauzerda (`tayanch:*`) qoladi.

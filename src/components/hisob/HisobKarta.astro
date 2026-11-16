@@ -4,6 +4,7 @@
 // Uslub: DESIGN.md, tokens.css; xato rangi ogohlik juftligi (qizil yo'q).
 // Holat "qoralama" (noindex). Maxfiylik va Shartlar (P23) yozilgan; "chop-etilgan" ga o'tkazish muallif qarori (ADR 001).
 import Asosiy from '../../layouts/Asosiy.astro';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
 import type { HisobSahifaMalumot } from '../../data/hisobSahifalar';
 
 interface Props {
@@ -12,13 +13,14 @@ interface Props {
   lead?: string;
 }
 const { sahifa, lead } = Astro.props;
+const hisobBor = Boolean(PUBLIC_SUPABASE_URL && PUBLIC_SUPABASE_ANON_KEY);
 ---
 <Asosiy title={sahifa.nomi} description={sahifa.tavsif} turi="umumiy" bolim="umumiy" holat="qoralama" sahifaOxiri={false} yol={['Hisob']}>
   <section class="ichki hisob-ichki">
-    <div class="hisob">
+    <div class="hisob" data-hisob-ochiq={hisobBor ? undefined : "yoq"}>
       <h1 id="hisob-sarlavha">{sahifa.nomi}</h1>
       {lead && <p class="hisob-lead">{lead}</p>}
-      <p class="hisob-ogoh" data-hisob-yoq hidden>
+      <p class="hisob-ogoh" data-hisob-yoq hidden={hisobBor}>
         Hisob ochish saytda hali ishlamaydi. Qolgan hamma narsa hisobsiz ishlaydi: natijalaringiz shu brauzerda saqlanadi.
       </p>
       <slot />
@@ -40,7 +42,7 @@ const { sahifa, lead } = Astro.props;
     background: var(--sirt); border: 1px solid var(--chiziq); border-radius: var(--r-katta);
     padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-5);
   }
-  .hisob-karta[hidden], .hisob [hidden] { display: none; }
+  .hisob-karta[hidden], .hisob [hidden], .hisob[data-hisob-ochiq="yoq"] [data-hisob-bor] { display: none; }
   .hisob-forma { display: flex; flex-direction: column; gap: var(--b-5); }
   .hisob-maydon { display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
   .hisob-maydon label { font-weight: 700; }
@@ -91,8 +93,6 @@ const { sahifa, lead } = Astro.props;
 
   .hisob-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); align-items: center; }
   .hisob .tugma { width: 100%; }
-  .hisob .tugma:disabled { cursor: not-allowed; opacity: 1; background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
-  .hisob .tugma-asosiy[aria-busy='true'] { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
   .hisob-havola { color: var(--rang-havola); font-weight: 700; }
   .hisob-qator { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); flex-wrap: wrap; }
   .hisob-past { text-align: center; color: var(--matn-ikkinchi); }

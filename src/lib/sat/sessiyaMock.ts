@@ -1,4 +1,4 @@
-// FAQAT DEV: sessiya sahifasini bazasiz sinash uchun soxta server (?mock=oddiy|taymerli|qisqa|uzilish|kvota|xato).
+// FAQAT DEV: sessiya sahifasini bazasiz sinash uchun soxta server (?mock=oddiy|taymerli|qisqa|uzilish|kvota|xato|mini).
 // oddiy: 10 savol, taymersiz; taymerli: 10 savol (Math 95,5 s/savol); qisqa: taymerli, 70 s; kvota: 3 javobdan keyin
 // quota_exceeded; xato: get_session server xatosi; boshqa id: session_not_found.
 // Sahifa buni faqat `import.meta.env.DEV` ichida dinamik import qiladi: prod build'ga kirmaydi (dist'da tekshiriladi).
@@ -7,9 +7,9 @@
 // Savollar: 4 tasi src/data/satSavolNamuna.ts dan (Sample), 6 tasi shu yerda yasalgan oddiy namuna tenglamalar.
 import { namunaSavollar } from '../../data/satSavolNamuna.ts';
 import namunaRasm from '../../assets/sat/namuna-uchburchak.svg?url';
-import type { SessiyaApi, ServerSavol } from './sessiya.ts';
+import type { SessiyaApi, ServerSavol, SessiyaRejimi } from './sessiya.ts';
 
-export type MockTur = 'oddiy' | 'taymerli' | 'qisqa' | 'uzilish' | 'kvota' | 'xato';
+export type MockTur = 'oddiy' | 'taymerli' | 'qisqa' | 'uzilish' | 'kvota' | 'xato' | 'mini';
 
 const SERVER = 'tayanch:dev-sessiya-mock';
 const OFLAYN = 'tayanch:dev-sessiya-oflayn';
@@ -20,10 +20,11 @@ export const MOCK_ID: Record<MockTur, string> = {
   uzilish: '00000000-0000-4000-8000-000000000004',
   kvota: '00000000-0000-4000-8000-000000000005',
   xato: '00000000-0000-4000-8000-000000000006',
+  mini: '00000000-0000-4000-8000-000000000007',
 };
 
 interface Yozuv {
-  mode: 'practice' | 'timed';
+  mode: SessiyaRejimi;
   started_at: string;
   finished_at: string | null;
   limit: number | null;
@@ -80,7 +81,7 @@ export function mockApi(tur: MockTur): SessiyaApi {
   const hammasi = savollar();
   const topSavol = (qid: string) => hammasi.find((s) => s.q.id === qid);
   const yangi = (): Yozuv => ({
-    mode: tur === 'taymerli' || tur === 'qisqa' ? 'timed' : 'practice',
+    mode: tur === 'mini' ? 'mini_test' : tur === 'taymerli' || tur === 'qisqa' ? 'timed' : 'practice',
     started_at: new Date().toISOString(),
     finished_at: null,
     limit: tur === 'taymerli' ? 10 * 95_455 : tur === 'qisqa' ? 70_000 : null,
@@ -104,6 +105,8 @@ export function mockApi(tur: MockTur): SessiyaApi {
       tarmoq();
       const y = sessiya(id);
       const h = oqi();
+      const passed = Object.values(y.attempts).filter((a) => a.is_correct).length * 10 >= hammasi.length * 7;
+      const mini = y.mode === 'mini_test' && y.finished_at;
       return {
         session_id: id, mode: y.mode, started_at: y.started_at, finished_at: y.finished_at,
         server_now: new Date().toISOString(), time_limit_ms: y.limit,
@@ -113,12 +116,22 @@ export function mockApi(tur: MockTur): SessiyaApi {
           return { question_id: qid, answer: a.answer, is_correct: a.is_correct, correct: s.q.format === 'mcq' ? s.togri[0] : s.togri, explanation: s.izoh, time_ms: a.time_ms };
         }),
         review: Object.entries(h.review ?? {}).filter(([qid]) => topSavol(qid)).map(([question_id, reason_tag]) => ({ question_id, reason_tag })),
+        ...(y.mode === 'mini_test' ? {
+          course: { v: 1, set_id: 'sample', topic_id: 'Sample', stage: 'mini_test' },
+        } : {}),
+        ...(mini ? {
+          elapsed_ms: Date.parse(mini) - Date.parse(y.started_at), passed, topic_passed: passed,
+          skipped_solutions: hammasi.filter(({ q }) => !y.attempts[q.id]).map(({ q, togri, izoh }) => ({
+            question_id: q.id, correct: q.format === 'mcq' ? togri[0] : togri, explanation: izoh,
+          })),
+        } : {}),
       };
     },
     async yubor(id, qid, javob, timeMs) {
       await kut(600);
       tarmoq();
       const y = sessiya(id);
+      if (y.mode === 'mini_test') throw { message: 'mini_test_requires_batch' };
       const s = topSavol(qid);
       if (!s) throw { message: 'question_not_in_session' };
       const correct = s.q.format === 'mcq' ? s.togri[0] : s.togri;
@@ -140,6 +153,24 @@ export function mockApi(tur: MockTur): SessiyaApi {
       y.finished_at ??= new Date().toISOString();
       saqla(id, y);
       return { finished_at: y.finished_at };
+    },
+    async miniTestniYakunla(id, javoblar) {
+      await kut(400);
+      tarmoq();
+      const y = sessiya(id);
+      if (!y.finished_at) {
+        const h = oqi();
+        for (const { question_id, answer, time_ms } of javoblar) {
+          const s = topSavol(question_id)!;
+          const is_correct = togrimi(s, answer);
+          y.attempts[question_id] = { answer, is_correct, time_ms: time_ms ?? 0, at: Date.now() };
+          if (!is_correct) h.review[question_id] ??= null;
+        }
+        y.finished_at = new Date().toISOString();
+        h.sessiyalar[id] = y;
+        yoz(h);
+      }
+      return this.ol(id);
     },
     async navbatgaQosh(qid) {
       await kut(300); tarmoq();

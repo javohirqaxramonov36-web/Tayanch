@@ -68,7 +68,7 @@ import { SABABLAR, IZOH_MAX } from '../../lib/sat/xabar';
     display: flex; align-items: center; justify-content: center;
     background: var(--fon-ikkinchi); color: var(--matn); cursor: pointer;
   }
-  .xd-yop:hover { background: var(--sirt-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .xd-yop:hover { background: var(--sirt-ikkinchi); } }
   .xd-savol { margin: 0; color: var(--matn-ikkinchi); font-weight: 600; }
   .xd-savol:empty { display: none; }
   .xd-forma { display: flex; flex-direction: column; gap: var(--b-4); }
@@ -103,7 +103,6 @@ import { SABABLAR, IZOH_MAX } from '../../lib/sat/xabar';
   .xd-tayyor { display: flex; flex-direction: column; gap: var(--b-4); }
   .xd-tayyor-matn { margin: 0; line-height: 1.6; }
   .xd-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
-  .xd-amal .tugma[aria-busy='true'] { cursor: progress; }
   @media (max-width: 560px) {
     .xd-ichi { padding: var(--b-5); }
     .xd-amal > * { flex: 1 1 100%; }

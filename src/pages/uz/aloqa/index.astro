@@ -16,13 +16,12 @@ const { aloqaEmail, sotuvchi } = huquqiyOchiq;
   holat="qoralama"
   tekshirilgan="2026-11-11"
   keyingiTekshiruv="2026-12-11"
-  tekshirilmagan={["Ommaviy murojaat emaili va javob muddati: muallif beradi"]}
 >
   <HuquqiyMatn til="uz" kalit="aloqa" sana="2026-11-11">
     <h2>Murojaat manzili</h2>
     {aloqaEmail
       ? <p>Email: <a href={`mailto:${aloqaEmail}`}>{aloqaEmail}</a></p>
-      : <p>Email: <span class="tekshir">tekshirish kerak</span> (muallif ommaviy manzilni beradi).</p>}
+      : <p>Ommaviy email manzili va javob muddati hali e’lon qilinmagan.</p>}
     {sotuvchi && <p>Sotuvchi: {sotuvchi.nomi}, {sotuvchi.manzil}.</p>}
 
     <h2>Nima haqida yozish mumkin</h2>

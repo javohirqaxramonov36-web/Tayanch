@@ -3,6 +3,8 @@
 // Narxi yo'q yoki faol emas tarif ekranda "Not available yet" bo'ladi, to'lov tugmasi chiqmaydi.
 // Matn inglizcha (SAT bo'limi qoidasi); kod nomlari o'zbekcha.
 
+import type { QatorTur } from '../lib/sat/tarifJadval';
+
 export type TarifKod = 'free' | 'pro' | 'max';
 export type DavrKod = 'oylik' | '3oylik';
 export type TolovUsuli = 'click' | 'payme' | 'uzcard-humo';
@@ -53,6 +55,8 @@ export const kvotaNomi: Record<string, string> = {
   review_sessions: 'Review sessions',
   new_words: 'New words', // P15
   plan_rebuilds: 'Plan rebuilds', // P13
+  mock_first: 'New mock tests', // P30
+  mock_retake: 'Mock retakes', // P30
   ai_messages: 'AI tutor messages', // P33
   ai_messages_month: 'AI tutor messages this month', // P33
 };
@@ -60,7 +64,27 @@ export const kvotaNomi: Record<string, string> = {
 /** plans.features dagi mashina bayrog'i -> Free ga tushganda "nima cheklanadi" ro'yxatidagi nom (P22). */
 export const bayroqNomi: Record<string, string> = {
   analytics_extended: 'Extended analytics (accuracy by difficulty, timing)',
+  vocab_my_words: 'Add your own words', // P15
 };
+
+/**
+ * Taqqoslash jadvali va karta "What's included" qatorlari (tartib shu). Qiymat har doim bazadan (plans), bu yerda faqat nom.
+ * answers va daily ataylab yo'q (answers = questions bilan bir xil, daily P10 dan sarflanmaydi); biror tarifda
+ * limiti qo'yilsa jadval oxiriga o'zi qo'shiladi (tarifJadval.taqqoslashJadvali).
+ */
+export const jadvalQatorlari: QatorTur[] = [
+  { tur: 'kvota', kalit: 'questions', nomi: 'Question bank questions' },
+  { tur: 'kvota', kalit: 'sessions', nomi: 'Practice sessions' },
+  { tur: 'kvota', kalit: 'review_sessions', nomi: 'Mistake review sessions' },
+  { tur: 'kvota', kalit: 'mock_first', nomi: 'New mock tests' },
+  { tur: 'kvota', kalit: 'mock_retake', nomi: 'Mock retakes' },
+  { tur: 'kvota', kalit: 'new_words', nomi: 'New vocabulary words' },
+  { tur: 'kvota', kalit: 'plan_rebuilds', nomi: 'Study plan rebuilds' },
+  // AI Tutor: kalit yo'q = yopiq (P33), kunlik va oylik birga.
+  { tur: 'kvota', kalit: 'ai_messages', oylikKalit: 'ai_messages_month', yopiqStandart: true, nomi: 'AI tutor messages' },
+  { tur: 'bayroq', kalit: 'analytics_extended', nomi: 'Extended analytics' },
+  { tur: 'bayroq', kalit: 'vocab_my_words', nomi: 'Add your own words' },
+];
 
 /** Brauzerda faqat oxirgi to'lov raqami (qaytish sahifasi uchun). Karta ma'lumoti hech qayerda saqlanmaydi. */
 export const TOLOV_KALITI = 'tayanch:sat-tolov';

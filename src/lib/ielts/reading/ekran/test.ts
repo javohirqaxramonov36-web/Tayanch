@@ -438,7 +438,7 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
     );
 
     if (saqlandi) {
-      location.replace(`${yol(READING_YOL.natija)}?urinish=${encodeURIComponent(urinish.id)}${avto ? '&avto=1' : ''}`);
+      location.replace(`${yol(READING_YOL.natija)}?urinish=${encodeURIComponent(urinish.id)}&yakun=1${avto ? '&avto=1' : ''}`);
       return;
     }
     // Nothing was persisted: show the result on this page, it cannot be opened anywhere else.

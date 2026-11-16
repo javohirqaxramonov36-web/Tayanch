@@ -1,6 +1,6 @@
 # SAT mock imtihon: adaptive-style 2-modul (P31)
 
-Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (PR #141, branch `sat-adaptiv-qaror`, ochiq). Mock imtihonga (P30, PR #144 da merge qilingan) ulash: branch `sat-adaptiv-ulash` (2026-11-16, PR #141 ga bog'liq), pastdagi "P30 ga ulash". Migratsiyalar (`20261112163208_adaptiv_kalibr.sql`, `20261113072953_adaptiv_tarmoq.sql`, `20261113111947_mock_adaptiv.sql`) jonli bazaga **qo'llanmagan**, muallif ruxsati kutilmoqda.
+Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (PR #141, branch `sat-adaptiv-qaror`, ochiq). Mock imtihonga (P30, PR #144 da merge qilingan) ulash: branch `sat-adaptiv-ulash` (2026-11-16, PR #141 ga bog'liq), pastdagi "P30 ga ulash". Migratsiya `20261112163208_adaptiv_kalibr.sql` jonli bazaga 2026-11-13 da qo'llangan; `20261113072953_adaptiv_tarmoq.sql` va `20261113111947_mock_adaptiv.sql` **qo'llanmagan**, muallif ruxsati kutilmoqda.
 
 ## Bu nima va nima emas
 
@@ -142,5 +142,5 @@ Claude qarori, muallif topshirig'i bilan (2026-11-13). Reja (2026-11-12) P30 loy
 ## Keyingi qadam
 
 1. PR #141 va `sat-adaptiv-ulash` PR'i merge (muallif ruxsati).
-2. Migratsiyalar jonli bazaga faqat muallif ruxsati bilan, tartibda: `20261112163208_adaptiv_kalibr.sql`, `20261113072953_adaptiv_tarmoq.sql`, `20261113111947_mock_adaptiv.sql` (`db push --dry-run`, keyin push; P30 migratsiyasi `20261113012418` jonli bazada bo'lishi shart).
+2. Migratsiyalar jonli bazaga faqat muallif ruxsati bilan, tartibda: `20261113072953_adaptiv_tarmoq.sql`, `20261113111947_mock_adaptiv.sql` (`db push --dry-run`, keyin push). `20261112163208_adaptiv_kalibr.sql` va P30 `20261113012418_mock_imtihon.sql` jonli bazada bor (2026-11-13).
 3. `admin_mock_readiness()` ga qiyinlik darajalari bo'yicha son (muvozanat shartini kuzatish uchun).

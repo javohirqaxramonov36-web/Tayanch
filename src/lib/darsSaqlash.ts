@@ -1,27 +1,14 @@
 // Interaktiv darslar: brauzerda saqlash (faqat shu qurilma). Har o'qish va yozish try/catch ichida:
 // maxfiy oyna yoki bloklangan saqlashda sahifa baribir ishlaydi, faqat progress eslab qolinmaydi.
 // Kalitlar bo'lim bo'yicha: tayanch:<bolim>-dars-progress, tayanch:<bolim>-xato-daftari (darsTurlar.ts).
+// O'qish va yozish saqlash adapteri orqali (holat.ts): hisobsiz avvalgidek faqat localStorage,
+// hisob bilan va rozilikdan keyin SAT kalitlari server bilan sinxronlanadi.
 import { darsKalitlari, type DarsBolim } from '../data/darsTurlar';
+import { holatOqi, holatYoz } from './holat';
 
-export function oqi<T>(kalit: string, zaxira: T): T {
-  try {
-    const v = localStorage.getItem(kalit);
-    if (v == null) return zaxira;
-    const q = JSON.parse(v);
-    return q ?? zaxira;
-  } catch {
-    return zaxira;
-  }
-}
+export const oqi = <T>(kalit: string, zaxira: T): T => holatOqi(kalit, zaxira);
 
-export function yoz(kalit: string, qiymat: unknown): boolean {
-  try {
-    localStorage.setItem(kalit, JSON.stringify(qiymat));
-    return true;
-  } catch {
-    return false;
-  }
-}
+export const yoz = (kalit: string, qiymat: unknown): boolean => holatYoz(kalit, qiymat);
 
 export type SavolHolati = 'togri' | 'xato';
 export type Progress = Record<string, Record<string, SavolHolati>>;

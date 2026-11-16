@@ -15,11 +15,11 @@ const { aloqaEmail, sotuvchi } = huquqiyOchiq;
   yol={['Legal']}
   holat="qoralama"
 >
-  <HuquqiyMatn til="en" kalit="aloqa" sana="2026-11-11" tekshirish={['Public contact email and reply time: from the author.']}>
+  <HuquqiyMatn til="en" kalit="aloqa" sana="2026-11-11">
     <h2>Where to write</h2>
     {aloqaEmail
       ? <p>Email: <a href={`mailto:${aloqaEmail}`}>{aloqaEmail}</a></p>
-      : <p>Email: <span class="tekshir">to be checked</span> (the author will provide a public address).</p>}
+      : <p>A public contact email and response time have yet to be published.</p>}
     {sotuvchi && <p>Seller: {sotuvchi.nomi}, {sotuvchi.manzil}.</p>}
 
     <h2>What you can write about</h2>

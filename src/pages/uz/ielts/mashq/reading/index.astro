@@ -44,9 +44,15 @@ const imkonIkonka = [
       {testSoni > 0 ? (
         <a class="tugma tugma-asosiy katta" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1`}>{RM.boshla}</a>
       ) : (
-        <button type="button" class="tugma tugma-asosiy katta" id="rb-boshla" disabled>{RM.boshla}</button>
+        <>
+          <p class="boshla-izoh">Reading testlari tayyorlanmoqda. Hozir shu darslardan boshlashingiz mumkin.</p>
+          <ul class="boshla-darslar">
+            <li><a href={yol('/uz/ielts/qollanma/reading/tfng/')}>True / False / Not Given</a></li>
+            <li><a href={yol('/uz/ielts/qollanma/reading/sarlavhalar/')}>Sarlavhalarni moslash</a></li>
+          </ul>
+        </>
       )}
-      <p class="boshla-izoh">{testSoni === 0 ? RM.testYoq : testSoni === 1 ? RM.bittaTest : RM.tasodif}</p>
+      {testSoni > 0 && <p class="boshla-izoh">{testSoni === 1 ? RM.bittaTest : RM.tasodif}</p>}
       <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
     </section>
 
@@ -125,8 +131,6 @@ const imkonIkonka = [
   .eslatma svg { flex: none; }
 
   .boshla { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3); }
-  .tugma.katta { min-height: 64px; padding: 16px 40px; font-size: var(--matn-katta); font-weight: 800; }
-  .tugma.katta:disabled { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); cursor: not-allowed; }
   .boshla-izoh { color: var(--matn-ikkinchi); line-height: 1.5; }
   .boshla-davom { padding: var(--b-3) var(--b-4); border-radius: var(--r-yon); background: var(--rang-asosiy-och); color: var(--matn); font-weight: 700; line-height: 1.5; }
   .boshla-davom[hidden] { display: none; }
@@ -167,7 +171,6 @@ const imkonIkonka = [
     h1 { font-size: 32px; }
     h2 { font-size: 24px; }
     .boshla { align-items: stretch; }
-    .tugma.katta { padding-inline: var(--b-6); }
     .format > div { padding: var(--b-4); }
     .format dd { font-size: 19px; }
     .kul, .ogoh { padding: var(--b-5); }
