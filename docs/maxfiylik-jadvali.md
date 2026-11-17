@@ -12,6 +12,8 @@ Holat: **qoralama**, yurist tekshirmagan. "Tekshirish kerak" ustunidagi savollar
 | Ism, taxallus, SAT maqsad, joriy ball, imtihon sanasi, rozilik versiyasi va vaqti, yosh guruhi, ota-ona ismi | `profiles` | Profil, rozilik dalili (LX02 21-modda) | Hisob ochiq turguncha | O'chadi (cascade) | Ha |
 | Yo'l xaritasi javoblari | `onboarding_profiles` | Bosh sahifadagi yo'l xaritasi | Hisob ochiq turguncha | O'chadi | Ha |
 | Mashq sessiyalari, javoblar, to'g'riligi, vaqt | `practice_sessions`, `attempts` (savollar ro'yxati `session_questions` da, sessiya bilan) | Natijalar, takrorlash, tavsiyalar | Hisob ochiq turguncha | O'chadi | Ha (`session_questions` alohida emas) |
+| XP yozuvlari (tur, XP, kun) | `xp_events` (faqat trigger yozadi, P32) | Reyting va o'z XP'si | Hisob ochiq turguncha | O'chadi (cascade) | Ha |
+| Reytingda qatnashish: qo'shilgan vaqt (rozilik), mamlakatni ko'rsatish, moderator yashirgani | `leaderboard_members` (P32) | Ixtiyoriy reyting: boshqa kattalarga faqat laqab, XP, o'rin va ruxsat bo'lsa mamlakat ko'rinadi | Chiqquncha yoki hisob ochiq turguncha | O'chadi (cascade) | Ha |
 | Takrorlash navbati, belgilangan savollar | `review_queue`, `bookmarks` | Takrorlash | Hisob ochiq turguncha | O'chadi | Ha |
 | Rasmiy test natijalari va xatolari | `official_tests`, `official_mistakes` | Test tracker | Hisob ochiq turguncha | O'chadi | Ha |
 | O'quv reja | `study_plans`, `plan_tasks` | Reja tuzgich | Hisob ochiq turguncha | O'chadi | Ha |
@@ -20,10 +22,15 @@ Holat: **qoralama**, yurist tekshirmagan. "Tekshirish kerak" ustunidagi savollar
 | Obuna | `subscriptions` | Tarif imkoniyatlari | Hisob ochiq turguncha | O'chadi (faol obuna ham) | Ha |
 | Kvota hisoblagichlari | `usage_counters` | Free/Pro cheklovlari | Hisob ochiq turguncha | O'chadi | Ha |
 | Savol haqida xabar, fikr | `reports`, `feedback` | Savol sifatini tuzatish | Hisob ochiq turguncha | O'chadi | Ha |
-| Analitika hodisalari | `events` (hozircha brauzer yozmaydi) | Mahsulot statistikasi | Hisob ochiq turguncha | O'chadi | Ha |
+| Foydalanish statistikasi (P25): hodisa nomi, vaqti, ruxsat etilgan xossalar (rejim, savollar soni, bo'lim, to'g'riligi, tarif, summa, livemode); IP, qurilma, sahifa, matn yo'q | `events` (yozuvchi `private.track`: trigger'lar va `track_event('plan_viewed')`) | Umumiy mahsulot metrikalari (`docs/metrikalar.sql`) | Hisob ochiq turguncha. `profiles.usage_analytics = false` bo'lsa yangisi yozilmaydi, to'lovsiz eskilari darhol o'chadi (to'lov hodisalari qoladi) | O'chadi (cascade) | Ha |
+| O'qituvchi guruhi a'zoligi: guruhdagi ism, qo'shilgan sana, ulashish tanlovi, rozilik versiyasi va vaqti, 18 yoshgacha ota-ona ismi va tasdiq vaqti | `group_members` | O'qituvchi o'quvchi ruxsat bergan natijani ko'rishi (P34, `docs/qarorlar/004-guruhlar.md`) | Guruhda turguncha; chiqish, chiqarilish yoki guruh o'chishi bilan o'chadi | O'chadi | Ha |
+| O'qituvchi guruhlari va guruh tarifi: guruh nomi, o'quvchilarga ko'rinadigan ism, taklif kodi, limitlar, muddat | `groups`, `group_licenses` | Guruh boshqaruvi | Hisob yoki guruh o'chirilguncha | O'chadi (a'zoliklar ham) | Ha |
+| Noto'g'ri taklif kodi urinishlari (vaqt) | `private.group_code_attempts` | Kodni taxmin qilishdan himoya (soatiga 20) | 1 soat (keyingi tekshiruvda o'chiriladi) | O'chadi | Yo'q |
+| AI Tutor suhbatlari va xabarlari | `ai_conversations`, `ai_messages` (P33); kunlik so'rov hisobi `private.ai_usage` | Tutor javobi, suhbat tarixi | Hisob ochiq turguncha | Suhbat va xabarlar o'chadi; `private.ai_usage` qoladi, `user_id` null | Ha (`private.ai_usage` dan tashqari). Maxfiylik sahifasi matnida hali yo'q (2026-11-13) |
+| Mock imtihon: forma va urinishlar | `mock_forms`, `mock_attempts` (modul va javoblar `mock_modules`, `mock_answers` da, urinish bilan) | To'liq mock imtihon (P30) | Hisob ochiq turguncha | O'chadi | Ha (`mock_modules`, `mock_answers` alohida emas). Maxfiylik sahifasi matnida hali yo'q (2026-11-13) |
 | To'lov: tarif, summa, holat, sana, inPAY raqami | `payments` | To'lov va buxgalteriya | **Tekshirish kerak** (buxgalter/yurist) | Qoladi, `user_id` null (migratsiya 20261112090000) | Ha (`raw` dan tashqari) |
 | inPAY webhook jurnali | `payment_events` (foydalanuvchiga to'g'ridan bog'lanmagan, buyurtma raqami bilan) | Takror webhookni aniqlash, nizolar | **Tekshirish kerak** | Qoladi | Yo'q |
-| Admin va xavfsizlik jurnali | `audit_log` (`account_deleted`: hisob ID va to'langan to'lovlar soni, email yo'q) | Xavfsizlik, nizolar | **Tekshirish kerak** | Qoladi | Yo'q |
+| Admin va xavfsizlik jurnali | `audit_log` (`account_deleted`: hisob ID va to'langan to'lovlar soni, email yo'q; o'chirish bajarilmasa `account_delete_failed` va xato kodi) | Xavfsizlik, nizolar | **Tekshirish kerak** | Qoladi | Yo'q |
 | Supabase texnik jurnallari va zaxira nusxalari | Supabase | Xizmat ishlashi | **Tekshirish kerak** (Supabase hujjati) | Supabase muddati bo'yicha | Yo'q |
 
 ## Uchinchi tomonlar

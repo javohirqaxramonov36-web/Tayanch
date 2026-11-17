@@ -12,11 +12,13 @@ CLI buyruqlarini Claude muallif ko'radigan Terminal panelida ishga tushiradi; mu
 | --- | --- |
 | `migrations/20261108000001_asos.sql` … `09_storage.sql` | Tartiblangan migratsiyalar. Takror ishga tushirilsa buzilmaydi. |
 | `migrations/20261109000010_tolov_inpay.sql` | To'lov SQL funksiyalari (`payment_create`, `payment_set_invoice`, `payment_apply_event`), faqat service_role. Jadvallarga tegmaydi. 10-bo'lim. |
+| `migrations/20261109120000_questions_p05.sql` | 0010: `questions` ni P05 savol formatiga moslash (ADR 002). |
 | `migrations/20261110000011_tolov_audit_muvofiqlash.sql` | `payment_events.payload` tozalash trigger'i va `payment_pending_stale` (P21), 10-bo'lim. |
 | `migrations/20261110120000_sessiya.sql` | Mashq sessiyasi sahifasi (P08): `get_session`, `finish_session`, `add_to_review`; `submit_answer` yangilangan (parallel so'rov, yakunlangan sessiya). Sinov `tests/sessiya_test.sql`. |
 | `migrations/20261111120000_analitika.sql` | Analitika paneli (P14): `analytics_summary()` (yig'indi serverda, kun chegarasi Asia/Tashkent), `private.has_feature`, `plans.features` ga `analytics_extended` (Pro, Max). Sinov `tests/analitika_test.sql`. Jonli bazaga 2026-11-11 da qo'llangan (PR #91 merge va deploy'dan keyin). |
 | `migrations/20261111200000_tarif_max.sql` | Tarif nomi Elite -> Max (muallif, 2026-11-11): `plans` da `elite` qatori `max` / `Max` bo'ladi, qolgan ustunlar o'zgarmaydi. `elite` ga obuna yoki to'lov havolasi bo'lsa FK xatosi bilan to'xtaydi. |
 | `migrations/20261111210000_kvota_p19.sql` | P19 kvota: `usage_status()` ga `resets_at` va `today_resets_at`, `private.period_end`. Qoidalar: `docs/tarif-qoidalari.md`. Sinov `tests/kvota_test.sql` (K00–K05) va `scripts/rls-tekshir.sh` dagi K06 (parallel). |
+| `migrations/20261112143717_metrikalar.sql` | P25 metrikalar: `private.track` (yagona yozuvchi: nom va xossa ro'yxati, soatiga 60 ta, `plan_viewed` 10 daqiqada 1), `public.track_event` (mijoz, faqat `plan_viewed`), trigger'lar (`signup`, `first_session`, `session_completed`, `daily_question_answered`, `payment_started`, `payment_success`), `profiles.usage_analytics`. Mijozning `events` ga to'g'ridan-to'g'ri INSERT huquqi olib tashlangan. So'rovlar `../docs/metrikalar.sql`, sinov `tests/metrikalar_test.sql` (M01–M11) va `tests/metrikalar_sorov_malumot.sql` (MS01). |
 | `functions/tolov-yaratish/`, `functions/inpay-webhook/`, `functions/inpay-holat/`, `functions/inpay-muvofiqlash/` | Edge Function'lar: inPAY to'lovi, webhook, holat va muvofiqlashtirish (10-bo'lim). `_shared/` umumiy kod, `tests/` Deno testlari. |
 | `tests/lokal-shim.sql` | **Faqat lokal sinov uchun**: oddiy Postgres'da Supabase rollari, `auth`, `storage` o'xshatmasi. Supabase loyihasida ishga tushirilmaydi. |
 | `tests/rls_test.sql` | RLS va RPC sinovlari (ikki foydalanuvchi, anonim, service role). Bitta tranzaksiyada, oxirida `ROLLBACK`. `psql` bilan; haqiqiy loyihada parolsiz `supabase db query` va vaqtinchalik nusxa bilan sinalgan (6-bo'lim). |
@@ -43,7 +45,7 @@ Tayanch uchun xulosa:
 - Bepul reja faqat sinov va yopiq beta uchun. Loyiha to'xtatilsa, saytdagi kirish va mashq ishlamaydi (statik sahifalar ishlayveradi).
 - Backup yo'q: muhim o'zgarishdan oldin muallif qo'lda eksport qiladi va faylni **repo papkasidan tashqarida** saqlaydi (unda foydalanuvchi ma'lumoti bo'ladi). Usul (`supabase db dump` yoki Homebrew `pg_dump` session pooler orqali): sinalmagan, birinchi haqiqiy foydalanuvchidan oldin sinaladi.
 - Email bilan ro'yxatdan o'tish jamoadan tashqaridagi foydalanuvchilarga ishlashi uchun o'z SMTP serveri kerak (P28, 2.4-bo'lim).
-- **Pro rejaga o'tish qarori P28 da qabul qilinadi.**
+- **Pro rejaga o'tish qarori P28 da qabul qilinadi.** Tavsiya va chiqarish ro'yxati: `docs/chiqarish-royxati.md` (2026-11-12, qaror muallifda).
 - To'lov (inPAY) ishga tushmaguncha `subscriptions` ga faqat `admin_grant_plan` yozadi.
 
 ## 1. Loyiha yaratish
@@ -64,15 +66,22 @@ Manbalar (tekshirildi 2026-11-09): supabase.com/docs/guides/auth/redirect-urls, 
 
 Dashboard → Authentication → URL Configuration (`/dashboard/project/_/auth/url-configuration`).
 
-**Site URL** (havolada `redirectTo` bo'lmasa shu ishlatiladi):
+**Site URL** (havolada `redirectTo` bo'lmasa shu ishlatiladi). 2026-11-16: sayt `tayanchedu.uz` ga ko'chdi (`docs/domen.md`):
 
 ```
-https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
+https://tayanchedu.uz/uz/hisob/kirish/
 ```
 
-**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod uchta manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`, Google → `callback/` (query'siz, 2.5). Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
+**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod uchta manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`, Google → `callback/` (query'siz, 2.5). Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Eski github.io qatorlari ko'chish tugaguncha qoladi (eski xatlardagi havolalar uchun); eski base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
 
 ```
+https://tayanchedu.uz/uz/hisob/kirish/
+https://tayanchedu.uz/uz/hisob/kirish/**
+https://tayanchedu.uz/uz/hisob/parol-tiklash/
+https://tayanchedu.uz/uz/hisob/callback/
+https://tayanchedu.uz/uz/sat/hisob/kirish/**
+https://tayanchedu.uz/uz/sat/hisob/parol-tiklash/
+http://localhost:4321/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/
@@ -140,13 +149,13 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 2. **Audience**: User type **External**. Holat "Testing": faqat qo'shilgan test foydalanuvchilar kira oladi (100 tagacha); sinov uchun muallif email'i qo'shiladi.
 3. **Data Access (Scopes)**: `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi.
 4. **Clients** → Create client → turi **Web application**, nomi masalan "Tayanch web".
-   - **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz, oxirida `/` yo'q) va lokal `http://localhost:4321`.
+   - **Authorized JavaScript origins**: `https://tayanchedu.uz` (2026-11-16 dan), eski `https://javohirqaxramonov36-web.github.io` (yo'lsiz, oxirida `/` yo'q) va lokal `http://localhost:4321`.
    - **Authorized redirect URIs**: Supabase Dashboard → Authentication → Sign In / Providers → Google sahifasidagi **Callback URL** (`https://<ref>.supabase.co/auth/v1/callback`; nusxa ko'chiriladi). Sayt manzili bu yerga **yozilmaydi**.
    - Client ID va Client Secret chiqadi.
 
 **Supabase Dashboard** → Authentication → Sign In / Providers → **Google**: "Enable", Client ID va Client Secret qo'yiladi, Save. Qolgan maydonlar standart.
 
-**URL Configuration** (2.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/Tayanch/uz/hisob/callback/` qo'shiladi (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/Tayanch/**` allaqachon bor. **Qo'llangan (2026-11-09)**: `config diff` da yagona e'lon qilingan farq shu callback qatori edi; muallif "ha" degandan keyin `supabase config push --remote=<ref> --yes`, keyingi `config diff` da e'lon qilingan farq 0 (e'lon qilinmagan 8 ta sozlama o'zgarmadi).
+**URL Configuration** (2.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/uz/hisob/callback/` qo'shiladi (2026-11-16 dan `https://tayanchedu.uz/uz/hisob/callback/`, eskisi `…github.io/Tayanch/uz/hisob/callback/`) (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/**` (eski `/Tayanch/**`) ro'yxatda. **Qo'llangan (2026-11-09)**: `config diff` da yagona e'lon qilingan farq shu callback qatori edi; muallif "ha" degandan keyin `supabase config push --remote=<ref> --yes`, keyingi `config diff` da e'lon qilingan farq 0 (e'lon qilinmagan 8 ta sozlama o'zgarmadi).
 
 **Tartib**: provider yoqilmaguncha saytdagi Google tugmasi Supabase'ning `{"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}` sahifasini ochadi (2026-11-09, lokal sinov). Shuning uchun Google sozlamalari **merge va deploy'dan oldin** qilinadi.
 
@@ -344,7 +353,18 @@ select public.admin_hide_question('<external_id>', 'sabab', 'muallif');
 
 ## 9. Savol qo'shish
 
-Savollar migratsiyaga yozilmaydi. Ular alohida (keyingi vazifa) service role bilan `questions` ga yuklanadi: `status = 'draft'`, muallif tekshirgach `verified` va `verified_by`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+Savollar migratsiyaga yozilmaydi. Ular P05 importi bilan service role orqali `questions` ga yuklanadi (`docs/savol-formati.md` §7, ADR 002): `external_id` bo'yicha upsert, tasdiqlanmagani `draft`, muallif tasdiqlagani (`verified_by` ≠ `author`, `verified_at`) `verified`. College Board materiali qo'yilmaydi. Rasm `question-figures` bucket'iga, yo'li `figure.path` ga.
+
+**0010 holati (2026-11-09):** Tayanch loyihasiga **qo'llangan** (muallif ishga tushirdi; `migration list` da 0001–0010 local = remote, yangi ustunlar `gen types` da ko'rindi). Keyingi migratsiyalar uchun tartib: `supabase --workdir "$PWD" migration list --remote=<ref>`, so'ng `db push --remote=<ref> --dry-run`, keyin `db push --remote=<ref>`. Bu branch'da `supabase/config.toml` yo'q: `--workdir` siz CLI yuqoridagi papkaga chiqib ketadi va "remote migration not found locally" deydi. Tekshirish (SQL Editor):
+
+```sql
+select column_name from information_schema.columns
+ where table_schema = 'public' and table_name = 'questions'
+   and column_name in ('drafted_by', 'verified_at', 'tags', 'content_hash');          -- 4 qator
+select conname from pg_constraint where conrelid = 'public.questions'::regclass
+   and conname in ('questions_verified_rule', 'questions_draft_rule', 'questions_figure_alt',
+                   'questions_source_original', 'questions_drafted_by');               -- 5 qator
+```
 
 ## 10. To'lov: inPAY Edge Function'lari
 
@@ -385,15 +405,15 @@ select received_at, event_id, provider_order_id, error from public.payment_event
 | `INPAY_SECRET_KEY` | inPAY kabineti → Kassa → API v2 kalitlari | `sk_test_…` sinov, `sk_live_…` jonli. To'liq faqat yaratilganda bir marta ko'rsatiladi |
 | `INPAY_WEBHOOK_SECRET` | `GET /webhooks/secret/` (faqat `sk_live_` bilan) yoki kabinet (tekshirish kerak) | `whsec_…`, sinov va jonli xabarlar uchun bitta |
 | `MUVOFIQLASH_SECRET` | O'zingiz yaratasiz (masalan `openssl rand -hex 32`), Supabase Secrets va Vault'ga bir xil qiymat | `inpay-muvofiqlash` ni faqat Cron chaqira olishi uchun (`X-Cron-Secret`) |
-| `SAYT_URL` (ixtiyoriy, maxfiy emas) | | Standart `https://javohirqaxramonov36-web.github.io/Tayanch` |
-| `TOLOV_ORIGINLAR` (ixtiyoriy, maxfiy emas) | | Vergul bilan. Standart: GitHub Pages va `localhost:4321` |
+| `SAYT_URL` (ixtiyoriy, maxfiy emas) | | Standart `https://tayanchedu.uz` (2026-11-16 gacha `…github.io/Tayanch`). Secret qo'yilgan bo'lsa, yangilanadi yoki o'chiriladi |
+| `TOLOV_ORIGINLAR` (ixtiyoriy, maxfiy emas) | | Vergul bilan. Standart: `https://tayanchedu.uz`, eski GitHub Pages va `localhost:4321`. Secret qo'yilgan bo'lsa, `https://tayanchedu.uz` qo'shiladi |
 
 `SUPABASE_URL` va service kaliti (`SUPABASE_SECRET_KEYS` yoki eski `SUPABASE_SERVICE_ROLE_KEY`) Supabase o'zi beradi. Funksiya sozlama yetishmasa `500 server_not_configured` qaytaradi va logga faqat NOMINI yozadi.
 
 ### inPAY kabinetida (muallif, deploy'dan oldin)
 
 1. Kassa → API v2 kalitlari: kalit yaratish (avval `sk_test_`).
-2. Oq ro'yxat (https://inpay.uz/merchant/whitelist/): `javohirqaxramonov36-web.github.io` (return_url) va `uvwejvjrsswssgydwevm.supabase.co` (webhook_url). Aks holda inPAY `domain_not_whitelisted` qaytaradi.
+2. Oq ro'yxat (https://inpay.uz/merchant/whitelist/): `tayanchedu.uz` (return_url, 2026-11-16 dan), eski `javohirqaxramonov36-web.github.io` va `uvwejvjrsswssgydwevm.supabase.co` (webhook_url). Aks holda inPAY `domain_not_whitelisted` qaytaradi.
 3. IP cheklovi o'chiq: Edge Function'ning chiquvchi IP manzili doimiy ekani tasdiqlanmagan (tekshirish kerak).
 
 ### Deploy (faqat muallif "ha" deganidan keyin)
@@ -477,3 +497,14 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
 ```
 
 Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
+
+## Suhbatdoshning yopiq sinovi
+
+Suhbatdosh Tayanch sahifalarida ishlaydi. Brauzer Supabase sessiyasi orqali ovozli navbatni `suhbatdosh` funksiyasiga yuboradi. Funksiya har so‘rovda hisobni tekshiradi va quyidagi egadan boshqa hisoblarga yopiq turadi. Suhbat matni va audio bazaga yozilmaydi.
+
+1. Private `suhbatdosh-bilim` bucket migratsiyasini qo‘llang. `knowledge/` ichidan faqat `sat.md`, `ielts.md`, `common-app.md`, `scoir-coalition.md`, `fee-waivers.md` va `kaplan-pathways.md` fayllarini bucket ildiziga yuklang. Mavzu parchalari matn provayderiga yuborilgani uchun faqat ulashish mumkin bo‘lgan bilimni yuklang.
+2. Funksiya secrets’ida `SUHBATDOSH_EGA_ID` (Tayanch Auth’dagi egasining UUID’i), `SUHBATDOSH_GEMINI_FREE_KEY` ni sozlang. Gemini kaliti uchun billing yoqilmagan alohida loyiha ishlating. Nutq matnga va javobga Gemini 3.5 Flash-Lite orqali aylanadi. Gemini 3.8 Flash-Lite TTS javobni o‘zbekcha ovozlashtiradi. Bepul Gemini audio, savol va tanlangan manba parchalaridan mahsulotlarini yaxshilashda foydalanishi mumkin.
+3. `supabase functions deploy suhbatdosh --no-verify-jwt --use-api` funksiyani joylaydi. Kod JWT’ni Supabase Auth orqali tekshiradi. Egasi kirganida Lift’da Suhbatdosh tugmasi chiqadi.
+4. Egasi va boshqa hisob bilan kirishni tekshiring. Telefon brauzerida mikrofon bilan yangi o‘zbekcha savol yozib yuboring va qaytgan ovozni tinglang. `SUHBATDOSH_EGA_ID` olib tashlansa, funksiya hamma hisobga yopiladi.
+
+Rasmiy manbalar, 2026-11-15 — [Google o‘zbekcha ovoz sintezi](https://aistudio.google.com/docs/speech-generation#supported-languages), [Gemini API narxlari va bepul tarifdagi ma’lumot ishlatilishi](https://ai.google.dev/gemini-api/docs/pricing).

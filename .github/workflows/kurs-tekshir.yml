@@ -1,0 +1,27 @@
+name: SAT kursini tekshirish
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  kurs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: python -m pip install -r scripts/kurs/requirements.txt
+      - run: npm run repo:tekshir
+      - run: npm run kurs:tekshir -- --katalog
+      - run: npm run kurs:sinov
+      - run: npm run savol:sinov

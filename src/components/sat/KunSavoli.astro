@@ -64,7 +64,7 @@ const kirish = yol('/uz/hisob/kirish/');
 </section>
 
 <script>
-  import { savolChiz, type SavolKorsatkich } from '../../lib/sat/savolKorsatkich';
+  import type { SavolKorsatkich } from '../../lib/sat/savolKorsatkich';
   import { BOSH_HOLAT, type SavolHolati } from '../../lib/sat/savolTuri';
   import {
     KUN_KALIT, KUN_MATN as M, mehmonOqi, togriJavobMatni, bolimNomi, sanaMatni, keyingiVaqtMatni, streakMatni,
@@ -147,7 +147,7 @@ const kirish = yol('/uz/hisob/kirish/');
     }
   }
 
-  function chiz() {
+  async function chiz() {
     const q = j.question!;
     $('kun-izoh').textContent = api.kirgan ? M.izohKirgan : M.izohMehmon;
     $('kun-sana').textContent = sanaMatni(j.date);
@@ -177,6 +177,7 @@ const kirish = yol('/uz/hisob/kirish/');
     };
 
     korsatkich?.yoq();
+    const { savolChiz } = await import('../../lib/sat/savolKorsatkich');
     korsatkich = savolChiz($('kun-savol-joy'), {
       savol: { id: q.id, section: q.section, format: q.format, passage: q.passage ?? null, stem: q.stem, options: q.options ?? null, figure: null },
       holat,
@@ -232,7 +233,7 @@ const kirish = yol('/uz/hisob/kirish/');
     }
     if (!j?.question) { ildiz.hidden = true; return; }
     await mehmonJavobiniOtkaz();
-    chiz();
+    try { await chiz(); } catch { ildiz.hidden = true; return; }
     ildiz.hidden = false;
     if (fokus) {
       $('kun-h').tabIndex = -1;
@@ -259,7 +260,21 @@ const kirish = yol('/uz/hisob/kirish/');
     await yuklash();
   }
 
-  boshla();
+  // The next visible block marks the position of the hidden daily question.
+  const yaqin = document.getElementById('yol-h');
+  if (document.documentElement.hasAttribute('data-sat-kirgan') ||
+      (import.meta.env.DEV && new URLSearchParams(location.search).has('kun-mock'))) {
+    void boshla();
+  } else if (yaqin && 'IntersectionObserver' in window) {
+    const kuzat = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      kuzat.disconnect();
+      void boshla();
+    }, { rootMargin: '64px' });
+    kuzat.observe(yaqin);
+  } else {
+    addEventListener('scroll', () => void boshla(), { once: true, passive: true });
+  }
 </script>
 
 <style>
@@ -294,19 +309,6 @@ const kirish = yol('/uz/hisob/kirish/');
   .kun-amal { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-4); }
   /* Jonli hudud doim DOM'da va ko'rinadigan bo'lib qoladi (display: none bo'lsa yangi xabar e'lon qilinmasligi mumkin). */
   .kun-xabar { margin: 0; color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
-
-  .kun-tugma {
-    display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2);
-    min-height: 52px; padding: 0 var(--b-6); border: 0; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 800; font-size: var(--matn-asosiy); text-decoration: none; cursor: pointer;
-  }
-  .kun-tugma:active { transform: var(--bosilish); }
-  .kun-asosiy { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .kun-asosiy:hover { background: var(--rang-asosiy-toq); }
-  .kun-asosiy[aria-disabled='true'] { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .kun-asosiy[aria-disabled='true']:active { transform: none; }
-  .kun-ikkinchi { background: var(--sirt-ikkinchi); color: var(--matn); }
-  .kun-ikkinchi:hover { background: var(--chiziq); }
 
   .kun-eskirgan, .kun-ertaga {
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);

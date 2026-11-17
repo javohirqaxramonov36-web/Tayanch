@@ -1,0 +1,533 @@
+---
+// SAT · Groups (P34): o'quvchi guruhlari va ulashish sozlamasi; guruh tarifli o'qituvchi uchun guruhlar va natija.
+// Qarorlar: docs/qarorlar/004-guruhlar.md. Server: 20261113100000_guruhlar_p34.sql (hamma amal group_* RPC orqali).
+// Holatlar: kutish → (hisob yo'q | o'qish xatosi | tayyor). O'qituvchi bo'limi faqat litsenziya yoki guruh bo'lsa ko'rinadi.
+// Xavfli amallar (chiqish, arxiv, o'chirish, o'quvchini chiqarish): kartochka ichida tasdiq paneli, fokus savolga,
+// "Cancel" fokusni tugmaga qaytaradi. Natija jadvali telefonda kartochkaga aylanadi (data-label).
+// Foydalanuvchi matni (ism, guruh nomi) faqat textContent bilan yoziladi. localStorage ishlatilmaydi.
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import '../../../../styles/guruh.css';
+import { guruhMatn as M } from '../../../../data/satGuruhMatn';
+import { yol } from '../../../../lib/yol';
+
+const qoshilish = yol('/uz/sat/guruh/qoshilish/');
+---
+<BolimQobiq
+  title="Groups · SAT"
+  description="Join your teacher's group and choose what they can see. Teachers on the group plan can follow their students' practice."
+  turi="vosita"
+  yol={['Account']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki guruh-sahifa" data-qoshilish={qoshilish}>
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Account</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>{M.sarlavha}</h1>
+      <p class="lead">{M.lead}</p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>{M.kutish}</p>
+    <p class="ogoh" data-yoq hidden>{M.hisobYoq}</p>
+    <p class="alert" role="alert" data-oqish-xato hidden></p>
+    <p class="holat" role="status" id="g-elon" hidden></p>
+
+    <section class="bolak" aria-labelledby="azo-h" data-ichi hidden>
+      <div class="bolak-bosh">
+        <h2 id="azo-h">{M.azoSarlavha}</h2>
+        <a class="tugma tugma-ikkinchi" href={qoshilish}>{M.qoshilishHavola}</a>
+      </div>
+      <p class="izoh" id="azo-bosh" hidden>{M.azoBosh}</p>
+      <ul class="kartalar" id="azo-royxat"></ul>
+    </section>
+
+    <section class="bolak" aria-labelledby="oq-h" id="oqituvchi" hidden>
+      <h2 id="oq-h">{M.oqituvchiSarlavha}</h2>
+      <p class="izoh" id="oq-litsenziya"></p>
+
+      <form class="forma karta" id="yarat-forma" novalidate aria-labelledby="yarat-h" hidden>
+        <h3 id="yarat-h">{M.yaratSarlavha}</h3>
+        <div class="maydon">
+          <label for="y-nom">{M.guruhNomi}</label>
+          <p class="izoh" id="y-nom-izoh">{M.guruhNomiIzoh}</p>
+          <input class="kirit" id="y-nom" type="text" maxlength="80" autocomplete="off" required aria-describedby="y-nom-izoh y-nom-xato" />
+          <p class="xato" id="y-nom-xato" hidden></p>
+        </div>
+        <div class="maydon">
+          <label for="y-ustoz">{M.ustozNomi}</label>
+          <p class="izoh" id="y-ustoz-izoh">{M.ustozNomiIzoh}</p>
+          <input class="kirit" id="y-ustoz" type="text" maxlength="80" autocomplete="name" required aria-describedby="y-ustoz-izoh y-ustoz-xato" />
+          <p class="xato" id="y-ustoz-xato" hidden></p>
+        </div>
+        <p class="alert" role="alert" id="yarat-xato" hidden></p>
+        <div class="tugmalar"><button type="submit" class="tugma tugma-asosiy" id="y-tugma">{M.yarat}</button></div>
+      </form>
+
+      <p class="izoh" id="oq-bosh" hidden>{M.oqituvchiBosh}</p>
+      <ul class="kartalar" id="guruh-royxat"></ul>
+    </section>
+  </div>
+
+  <template id="t-azolik">
+    <li class="karta">
+      <h3 data-guruh></h3>
+      <p class="izoh"><span data-ustoz></span> · <span data-sana></span></p>
+      <p class="ogoh" data-arxiv hidden>{M.arxivda}</p>
+      <form class="forma" novalidate data-ruxsat>
+        <fieldset class="guruh-fs">
+          <legend>{M.ulashishLegend}</legend>
+          <p class="izoh">{M.doimo}</p>
+          <label class="variant">
+            <input type="checkbox" data-s />
+            <span class="variant-matn"><span class="variant-nom">{M.xulosaNomi}</span><span class="variant-izoh">{M.xulosaIzoh}</span></span>
+          </label>
+          <label class="variant">
+            <input type="checkbox" data-t />
+            <span class="variant-matn"><span class="variant-nom">{M.mavzuNomi}</span><span class="variant-izoh">{M.mavzuIzoh}</span></span>
+          </label>
+          <p class="izoh">{M.hechQachon}</p>
+        </fieldset>
+        <fieldset class="guruh-fs vasiy" data-vasiy hidden>
+          <legend>{M.vasiyLegend}</legend>
+          <p class="izoh">{M.vasiyKengaytirish}</p>
+          <div class="maydon">
+            <label data-v-ism-label>{M.vasiyIsm}</label>
+            <input class="kirit" type="text" maxlength="80" autocomplete="off" data-v-ism />
+          </div>
+          <label class="variant">
+            <input type="checkbox" data-v-tasdiq />
+            <span class="variant-matn"><span class="variant-nom">{M.vasiyTasdiq}</span></span>
+          </label>
+        </fieldset>
+        <p class="alert" role="alert" data-xato hidden></p>
+        <div class="tugmalar">
+          <button type="submit" class="tugma tugma-asosiy" data-saqlash>{M.ruxsatSaqlash}</button>
+          <button type="button" class="tugma tugma-ikkinchi" data-chiq>{M.chiqish}</button>
+        </div>
+      </form>
+      <div class="tasdiq" data-tasdiq hidden>
+        <p tabindex="-1" data-tasdiq-savol></p>
+        <div class="tugmalar">
+          <button type="button" class="tugma tugma-xavf" data-tasdiq-ha></button>
+          <button type="button" class="tugma tugma-ikkinchi" data-tasdiq-yoq>{M.bekor}</button>
+        </div>
+      </div>
+    </li>
+  </template>
+
+  <template id="t-guruh">
+    <li class="karta">
+      <div class="karta-bosh">
+        <h3 data-nom></h3>
+        <span class="pill pill-chiziq" data-arxiv hidden>{M.arxivBelgi}</span>
+      </div>
+      <p class="izoh"><span data-ustoz></span> · <span data-soni></span></p>
+      <div class="kod-blok" data-kod-blok>
+        <p class="kod-nom">{M.kod}</p>
+        <p class="kod" data-kod></p>
+        <div class="tugmalar">
+          <button type="button" class="tugma tugma-ikkinchi" data-nusxa-kod>{M.kodNusxa}</button>
+          <button type="button" class="tugma tugma-ikkinchi" data-nusxa-havola>{M.havolaNusxa}</button>
+          <button type="button" class="tugma tugma-ikkinchi" data-kod-yangi aria-describedby="">{M.kodYangi}</button>
+        </div>
+        <p class="izoh" data-kod-izoh>{M.kodYangiIzoh}</p>
+      </div>
+      <div class="tugmalar">
+        <button type="button" class="tugma tugma-asosiy" aria-expanded="false" data-natija-tugma>{M.natijaKorsat}</button>
+        <button type="button" class="tugma tugma-ikkinchi" data-arxivla>{M.arxivla}</button>
+        <button type="button" class="tugma tugma-ikkinchi" data-ochir>{M.ochir}</button>
+      </div>
+      <div class="tasdiq" data-tasdiq hidden>
+        <p tabindex="-1" data-tasdiq-savol></p>
+        <div class="tugmalar">
+          <button type="button" class="tugma tugma-xavf" data-tasdiq-ha></button>
+          <button type="button" class="tugma tugma-ikkinchi" data-tasdiq-yoq>{M.bekor}</button>
+        </div>
+      </div>
+      <p class="alert" role="alert" data-xato hidden></p>
+      <div class="natija" data-natija hidden></div>
+    </li>
+  </template>
+</BolimQobiq>
+
+
+<script>
+  import type { Session } from '@supabase/supabase-js';
+  import { hisobMijoz, hisobQorovul, maydonXatosi, yuklanish, xabar } from '../../../../lib/hisob';
+  import { guruhApi, GuruhXatosi, type GuruhApi } from '../../../../lib/sat/guruhApi';
+  import {
+    aniqlik, kengaytiradimi, kodKorinishi, necheKunOldin, nofaolmi, sanaYoz,
+    type Azo, type Azolik, type OqituvchiGuruh,
+  } from '../../../../lib/sat/guruh';
+  import { guruhMatn as M, guruhXatoMatni } from '../../../../data/satGuruhMatn';
+
+  const $ = <T extends HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s)!;
+  const sahifa = $<HTMLElement>('.guruh-sahifa');
+  const qoshilishYoli = sahifa.dataset.qoshilish!;
+  const elon = $<HTMLElement>('#g-elon');
+  let api: GuruhApi;
+  let minor = false;
+  let idSon = 0;
+  const yangiId = (p: string) => `${p}-${++idSon}`;
+
+  const xatoMatn = (e: unknown) => guruhXatoMatni[e instanceof GuruhXatosi ? e.kod : 'network'];
+  const ayt = (m: string | null) => xabar(elon, m);
+
+  /** Kartochka ichidagi tasdiq paneli: savol, tasdiq tugmasi; "Cancel" fokusni chaqirgan tugmaga qaytaradi. */
+  function tasdiqla(karta: HTMLElement, tugma: HTMLButtonElement, savol: string, ha: string, amal: () => Promise<void>) {
+    const panel = $<HTMLElement>('[data-tasdiq]', karta);
+    const p = $<HTMLElement>('[data-tasdiq-savol]', panel);
+    const haT = $<HTMLButtonElement>('[data-tasdiq-ha]', panel);
+    const yoqT = $<HTMLButtonElement>('[data-tasdiq-yoq]', panel);
+    p.textContent = savol;
+    haT.textContent = ha;
+    delete haT.dataset.asl;
+    panel.hidden = false;
+    p.focus();
+    const yop = (fokus = true) => {
+      panel.hidden = true;
+      haT.onclick = null;
+      yoqT.onclick = null;
+      if (fokus) tugma.focus();
+    };
+    yoqT.onclick = () => yop();
+    haT.onclick = async () => {
+      const xato = $<HTMLElement>('[data-xato]', karta);
+      xabar(xato, null);
+      yuklanish(haT, true, M.saqlanmoqda);
+      try {
+        await amal();
+        yuklanish(haT, false);
+        yop(false);
+      } catch (e) {
+        yuklanish(haT, false);
+        xabar(xato, xatoMatn(e));
+      }
+    };
+  }
+
+  // ---- O'quvchi: a'zoliklar ----
+
+  function azolikKartasi(a: Azolik): HTMLElement {
+    const li = ($<HTMLTemplateElement>('#t-azolik').content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement;
+    $('[data-guruh]', li).textContent = a.group_name;
+    $('[data-ustoz]', li).textContent = M.oqituvchiNomi(a.teacher_name);
+    $('[data-sana]', li).textContent = M.qoshilganSana(sanaYoz(a.joined_at));
+    $('[data-arxiv]', li).hidden = !a.archived;
+    const forma = $<HTMLFormElement>('[data-ruxsat]', li);
+    const s = $<HTMLInputElement>('[data-s]', li);
+    const t = $<HTMLInputElement>('[data-t]', li);
+    const vasiy = $<HTMLElement>('[data-vasiy]', li);
+    const vIsm = $<HTMLInputElement>('[data-v-ism]', li);
+    const vTasdiq = $<HTMLInputElement>('[data-v-tasdiq]', li);
+    const vId = yangiId('v-ism');
+    vIsm.id = vId;
+    $<HTMLLabelElement>('[data-v-ism-label]', li).htmlFor = vId;
+    const saqlash = $<HTMLButtonElement>('[data-saqlash]', li);
+    const xato = $<HTMLElement>('[data-xato]', li);
+    let oldin = { s: a.share_summary, t: a.share_topics };
+    s.checked = oldin.s;
+    t.checked = oldin.t;
+    // Arxivdagi guruhda ulashish ma'nosiz (o'qituvchi ko'rmaydi): faqat chiqish qoladi.
+    if (a.archived) { s.disabled = true; t.disabled = true; saqlash.hidden = true; }
+
+    const vasiyKerak = () => minor && kengaytiradimi(oldin, { s: s.checked, t: t.checked });
+    const vasiyniYangila = () => { vasiy.hidden = !vasiyKerak(); };
+    s.addEventListener('change', vasiyniYangila);
+    t.addEventListener('change', vasiyniYangila);
+
+    forma.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      xabar(xato, null);
+      ayt(null);
+      const kerak = vasiyKerak();
+      if (kerak && vIsm.value.trim().length < 2) { xabar(xato, M.qVasiyIsmXato); vIsm.focus(); return; }
+      if (kerak && !vTasdiq.checked) { xabar(xato, M.qVasiyTasdiqXato); vTasdiq.focus(); return; }
+      yuklanish(saqlash, true, M.saqlanmoqda);
+      try {
+        await api.ruxsatniYangila(a.id, {
+          summary: s.checked, topics: t.checked,
+          guardianName: kerak ? vIsm.value.trim() : undefined, guardianConfirm: kerak ? vTasdiq.checked : undefined,
+        });
+        oldin = { s: s.checked, t: t.checked };
+        vIsm.value = '';
+        vTasdiq.checked = false;
+        vasiyniYangila();
+        ayt(M.ruxsatSaqlandi);
+      } catch (err) {
+        xabar(xato, xatoMatn(err));
+      } finally {
+        yuklanish(saqlash, false);
+      }
+    });
+
+    const chiq = $<HTMLButtonElement>('[data-chiq]', li);
+    chiq.addEventListener('click', () => tasdiqla(li, chiq, M.chiqishSavol(a.group_name), M.chiqishTasdiq, async () => {
+      await api.chiq(a.id);
+      li.remove();
+      $<HTMLElement>('#azo-bosh').hidden = $<HTMLElement>('#azo-royxat').children.length > 0;
+      ayt(M.chiqildi(a.group_name));
+      $<HTMLElement>('#azo-h').setAttribute('tabindex', '-1');
+      $<HTMLElement>('#azo-h').focus();
+    }));
+    return li;
+  }
+
+  async function azoliklarniYukla() {
+    const r = await api.meningGuruhlarim();
+    minor = r.minor;
+    const ul = $<HTMLElement>('#azo-royxat');
+    ul.replaceChildren(...r.memberships.map(azolikKartasi));
+    $<HTMLElement>('#azo-bosh').hidden = r.memberships.length > 0;
+  }
+
+  // ---- O'qituvchi ----
+
+  function katak(tr: HTMLTableRowElement, label: string, matn: string | Node, bosh = false): HTMLTableCellElement {
+    const td = document.createElement('td');
+    td.dataset.label = label;
+    if (typeof matn === 'string') {
+      td.textContent = matn;
+      if (bosh) td.className = 'yoq';
+    } else td.append(matn);
+    tr.append(td);
+    return td;
+  }
+
+  function oxirgiMatn(iso: string | null): string {
+    const k = necheKunOldin(iso, new Date());
+    if (k === null) return M.hali;
+    return k === 0 ? M.bugun : M.kunOldin(k);
+  }
+
+  function natijaJadvali(g: OqituvchiGuruh, azolar: Azo[], karta: HTMLElement, panel: HTMLElement) {
+    const izoh = Object.assign(document.createElement('p'), { className: 'izoh', textContent: M.jadvalIzoh });
+    if (!azolar.length) {
+      panel.replaceChildren(izoh, Object.assign(document.createElement('p'), { textContent: M.azoBoshJadval }));
+      return;
+    }
+    const jadval = document.createElement('table');
+    jadval.className = 'jadval';
+    const caption = Object.assign(document.createElement('caption'), { className: 'ekranda-yoq', textContent: `${g.name}: ${M.natijaKorsat}` });
+    const thead = document.createElement('thead');
+    const htr = document.createElement('tr');
+    [M.ustunIsm, M.ustunQoshilgan, M.ustunJavob, M.ustun7, M.ustunAniqlik, M.ustunOxirgi, M.ustunMavzu, ''].forEach((m) => {
+      const th = Object.assign(document.createElement('th'), { scope: 'col', textContent: m });
+      if (!m) th.append(Object.assign(document.createElement('span'), { className: 'ekranda-yoq', textContent: M.chiqar }));
+      htr.append(th);
+    });
+    thead.append(htr);
+    const tbody = document.createElement('tbody');
+    const hozir = new Date();
+    for (const a of azolar) {
+      const tr = document.createElement('tr');
+      const th = Object.assign(document.createElement('th'), { scope: 'row', textContent: a.name });
+      tr.append(th);
+      katak(tr, M.ustunQoshilgan, sanaYoz(a.joined_at));
+      const x = a.summary;
+      if (x) {
+        katak(tr, M.ustunJavob, String(x.answered));
+        katak(tr, M.ustun7, String(x.answered_7d));
+        const f = aniqlik(x.correct, x.answered);
+        katak(tr, M.ustunAniqlik, f === null ? '–' : `${f}%`);
+        const td = katak(tr, M.ustunOxirgi, oxirgiMatn(x.last_active));
+        if (nofaolmi(x, hozir)) {
+          td.append(document.createElement('br'), Object.assign(document.createElement('span'), { className: 'nofaol', textContent: M.nofaol }));
+        }
+      } else {
+        [M.ustunJavob, M.ustun7, M.ustunAniqlik, M.ustunOxirgi].forEach((l) => katak(tr, l, M.ulashilmagan, true));
+      }
+      if (a.topics) {
+        if (!a.topics.length) katak(tr, M.ustunMavzu, M.hali, true);
+        else {
+          const ul = document.createElement('ul');
+          a.topics.forEach((m) => ul.append(Object.assign(document.createElement('li'), {
+            textContent: `${M.bolimNomi[m.section]} · ${M.mavzuQator(m.domain, aniqlik(m.correct, m.answered), m.answered)}`,
+          })));
+          katak(tr, M.ustunMavzu, ul);
+        }
+      } else katak(tr, M.ustunMavzu, M.ulashilmagan, true);
+      const chiqar = Object.assign(document.createElement('button'), { type: 'button', className: 'tugma tugma-ikkinchi tugma-kichik', textContent: M.chiqar });
+      chiqar.setAttribute('aria-label', `${M.chiqar}: ${a.name}`);
+      chiqar.addEventListener('click', () => tasdiqla(karta, chiqar, M.chiqarSavol(a.name), M.chiqarTasdiq, async () => {
+        await api.azoniChiqar(g.id, a.id);
+        tr.remove();
+        g.members -= 1;
+        sonniYoz(karta, g);
+        ayt(M.chiqarildi(a.name));
+        $<HTMLButtonElement>('[data-natija-tugma]', karta).focus();
+      }));
+      const td = document.createElement('td');
+      td.append(chiqar);
+      tr.append(td);
+      tbody.append(tr);
+    }
+    jadval.append(caption, thead, tbody);
+    panel.replaceChildren(izoh, jadval);
+  }
+
+  let maxAzo = 0;
+  const sonniYoz = (karta: HTMLElement, g: OqituvchiGuruh) => {
+    $('[data-soni]', karta).textContent = M.azolarSoni(g.members, maxAzo);
+  };
+
+  async function nusxala(matn: string) {
+    try {
+      await navigator.clipboard.writeText(matn);
+      ayt(M.nusxalandi);
+    } catch {
+      ayt(M.nusxaXato);
+    }
+  }
+
+  function guruhKartasi(g: OqituvchiGuruh, litsenziyaBor: boolean): HTMLElement {
+    const li = ($<HTMLTemplateElement>('#t-guruh').content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement;
+    $('[data-nom]', li).textContent = g.name;
+    $('[data-ustoz]', li).textContent = M.oqituvchiNomi(g.teacher_name);
+    sonniYoz(li, g);
+    $('[data-arxiv]', li).hidden = !g.archived;
+    const kodEl = $<HTMLElement>('[data-kod]', li);
+    kodEl.textContent = kodKorinishi(g.invite_code);
+    const izohId = yangiId('kod-izoh');
+    $<HTMLElement>('[data-kod-izoh]', li).id = izohId;
+    const yangi = $<HTMLButtonElement>('[data-kod-yangi]', li);
+    yangi.setAttribute('aria-describedby', izohId);
+    const xato = $<HTMLElement>('[data-xato]', li);
+    const natijaT = $<HTMLButtonElement>('[data-natija-tugma]', li);
+    const panel = $<HTMLElement>('[data-natija]', li);
+    panel.id = yangiId('natija');
+    natijaT.setAttribute('aria-controls', panel.id);
+
+    const faol = !g.archived && litsenziyaBor;
+    $<HTMLElement>('[data-kod-blok]', li).hidden = g.archived;
+    natijaT.hidden = !faol;
+    $<HTMLButtonElement>('[data-arxivla]', li).hidden = g.archived;
+
+    $<HTMLButtonElement>('[data-nusxa-kod]', li).addEventListener('click', () => nusxala(kodKorinishi(g.invite_code)));
+    $<HTMLButtonElement>('[data-nusxa-havola]', li).addEventListener('click', () =>
+      nusxala(`${location.origin}${qoshilishYoli}?kod=${encodeURIComponent(g.invite_code)}`));
+    yangi.addEventListener('click', async () => {
+      xabar(xato, null);
+      yuklanish(yangi, true, M.saqlanmoqda);
+      try {
+        g.invite_code = await api.kodniYangila(g.id);
+        kodEl.textContent = kodKorinishi(g.invite_code);
+        ayt(M.kodYangilandi);
+      } catch (e) {
+        xabar(xato, xatoMatn(e));
+      } finally {
+        yuklanish(yangi, false);
+      }
+    });
+
+    natijaT.addEventListener('click', async () => {
+      if (natijaT.getAttribute('aria-expanded') === 'true') {
+        natijaT.setAttribute('aria-expanded', 'false');
+        natijaT.textContent = M.natijaKorsat;
+        delete natijaT.dataset.asl;
+        panel.hidden = true;
+        return;
+      }
+      xabar(xato, null);
+      yuklanish(natijaT, true, M.kutish);
+      try {
+        const r = await api.natija(g.id);
+        natijaJadvali(g, r.members, li, panel);
+        panel.hidden = false;
+        yuklanish(natijaT, false);
+        natijaT.textContent = M.natijaYopish;
+        delete natijaT.dataset.asl;
+        natijaT.setAttribute('aria-expanded', 'true');
+      } catch (e) {
+        yuklanish(natijaT, false);
+        xabar(xato, xatoMatn(e));
+      }
+    });
+
+    const arx = $<HTMLButtonElement>('[data-arxivla]', li);
+    arx.addEventListener('click', () => tasdiqla(li, arx, M.arxivSavol(g.name), M.arxivTasdiq, async () => {
+      await api.arxivla(g.id);
+      await oqituvchiniYukla();
+      ayt(M.arxivlandi(g.name));
+      $<HTMLElement>('#oq-h').setAttribute('tabindex', '-1');
+      $<HTMLElement>('#oq-h').focus();
+    }));
+    const och = $<HTMLButtonElement>('[data-ochir]', li);
+    och.addEventListener('click', () => tasdiqla(li, och, M.ochirSavol(g.name), M.ochirTasdiq, async () => {
+      await api.ochir(g.id);
+      await oqituvchiniYukla();
+      ayt(M.ochirildi(g.name));
+      $<HTMLElement>('#oq-h').setAttribute('tabindex', '-1');
+      $<HTMLElement>('#oq-h').focus();
+    }));
+    return li;
+  }
+
+  async function oqituvchiniYukla() {
+    const r = await api.oqituvchi();
+    const bolim = $<HTMLElement>('#oqituvchi');
+    // Litsenziyasiz va guruhsiz foydalanuvchi (oddiy o'quvchi) o'qituvchi bo'limini ko'rmaydi.
+    bolim.hidden = !r.license && !r.groups.length;
+    if (bolim.hidden) return;
+    const l = r.license;
+    maxAzo = l?.max_members ?? 0;
+    $('#oq-litsenziya').textContent = l
+      ? `${M.litsenziya(l.max_groups, l.max_members)}${l.ends_at ? ` ${M.litsenziyaGacha(sanaYoz(l.ends_at))}` : ''}`
+      : `${M.litsenziyaYoq}`;
+    $<HTMLElement>('#yarat-forma').hidden = !l;
+    $<HTMLElement>('#oq-bosh').hidden = r.groups.length > 0;
+    $<HTMLElement>('#guruh-royxat').replaceChildren(...r.groups.map((g) => guruhKartasi(g, !!l)));
+  }
+
+  const yForma = $<HTMLFormElement>('#yarat-forma');
+  const yNom = $<HTMLInputElement>('#y-nom');
+  const yUstoz = $<HTMLInputElement>('#y-ustoz');
+  yForma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const xato = $<HTMLElement>('#yarat-xato');
+    xabar(xato, null);
+    ayt(null);
+    const nom = yNom.value.trim();
+    const ustoz = yUstoz.value.trim();
+    maydonXatosi(yNom, nom.length >= 2 ? null : guruhXatoMatni.invalid_name);
+    maydonXatosi(yUstoz, ustoz.length >= 2 ? null : guruhXatoMatni.invalid_teacher_name);
+    if (nom.length < 2) return yNom.focus();
+    if (ustoz.length < 2) return yUstoz.focus();
+    const tugma = $<HTMLButtonElement>('#y-tugma');
+    yuklanish(tugma, true, M.saqlanmoqda);
+    try {
+      await api.yarat(nom, ustoz);
+      yNom.value = '';
+      await oqituvchiniYukla();
+      ayt(M.yaratildi(nom));
+    } catch (err) {
+      xabar(xato, xatoMatn(err));
+    } finally {
+      yuklanish(tugma, false);
+    }
+  });
+  [yNom, yUstoz].forEach((el) => el.addEventListener('input', () => maydonXatosi(el, null)));
+
+  async function yukla() {
+    const c = hisobMijoz();
+    const kutish = $<HTMLElement>('[data-kutish]');
+    if (!c) {
+      kutish.hidden = true;
+      $<HTMLElement>('[data-yoq]').hidden = false;
+      return;
+    }
+    try {
+      const sessiya: Session | null = await hisobQorovul();
+      if (!sessiya) return;
+      api = guruhApi(c);
+      await Promise.all([azoliklarniYukla(), oqituvchiniYukla()]);
+      kutish.hidden = true;
+      $<HTMLElement>('[data-ichi]').hidden = false;
+    } catch (e) {
+      kutish.hidden = true;
+      xabar($('[data-oqish-xato]'), e instanceof GuruhXatosi && e.kod === 'auth' ? guruhXatoMatni.auth : M.oqishXato);
+    }
+  }
+
+  yukla();
+</script>

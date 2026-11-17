@@ -1,0 +1,201 @@
+---
+// P35, 1-qism: Reading & Writing qo'llanmasi (statik, JS va localStorage yo'q).
+// Faktlar faqat CB06 dan (2026-11-12 da qayta o'qildi). "How to work it" va "After a mistake": Tayanch tavsiyasi, rasmiy emas.
+// Matn original; College Board savol, passage yoki tushuntirish matni ishlatilmaydi.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { yol } from '../../../../../lib/yol';
+
+const TEKSHIRILGAN = '2026-11-12';
+const sat = (qism: string) => yol(`/uz/sat/${qism}`);
+
+interface Domen {
+  id: string;
+  nomi: string;
+  nima: string;
+  qadamlar: string[];
+  dars: { nomi: string; qism: string };
+}
+
+// Domen nomlari va "nima" qatori CB06 mazmunining o'z so'zimiz bilan qisqa bayoni.
+const domenlar: Domen[] = [
+  {
+    id: 'information-ideas',
+    nomi: 'Information and Ideas',
+    nima: 'Understanding what a text says, reasoning from it, and finding and judging information in texts and graphs.',
+    qadamlar: [
+      'Read the question first, so you know what you are looking for: a main idea, a detail, or support for a claim.',
+      'Find the exact words or data point that answer it. With a table or graph, check the title, labels and units before the numbers.',
+      'Choose the option the text or data actually shows. Rule out options that go further than the text, even if they sound true.',
+    ],
+    dars: { nomi: 'Mark the evidence', qism: 'qollanma/reading-writing/dalil/' },
+  },
+  {
+    id: 'craft-structure',
+    nomi: 'Craft and Structure',
+    nima: 'Understanding and using words in context, seeing how and why a text is built, and connecting two related texts.',
+    qadamlar: [
+      'Before you look at the options, say in your own words what the blank or the underlined part needs.',
+      'Look for clues around it: a contrast word, an example, a definition, or a change in tone.',
+      'Pick the option closest to your own word. For a question about purpose, ask what job the sentence does in the text.',
+    ],
+    dars: { nomi: 'Vocabulary in context', qism: 'qollanma/reading-writing/lugat-kontekstda/' },
+  },
+  {
+    id: 'expression-ideas',
+    nomi: 'Expression of Ideas',
+    nima: 'Revising a text so it works better and meets a stated goal.',
+    qadamlar: [
+      'Name how the two ideas relate before you read the options: contrast, cause and effect, example, or more of the same.',
+      'Choose the transition that names that relation, not the one that only sounds formal.',
+      'When the question names a goal, check each option against that goal, not against what reads best.',
+    ],
+    dars: { nomi: 'Transition words', qism: 'qollanma/reading-writing/otish-sozlari/' },
+  },
+  {
+    id: 'conventions',
+    nomi: 'Standard English Conventions',
+    nima: 'Editing for sentence structure, usage and punctuation.',
+    qadamlar: [
+      'Compare the options and find what changes: a punctuation mark, a verb form, a pronoun.',
+      'Name the rule behind that change. For example, two complete sentences cannot be joined by a comma alone.',
+      'Read the whole sentence with your choice and check that the subject and verb still agree.',
+    ],
+    dars: { nomi: 'Find the error', qism: 'qollanma/reading-writing/xatoni-toping/' },
+  },
+];
+
+const sabablar = [
+  'I misread the question.',
+  'I could not point to the words in the text that prove my answer.',
+  'I did not know the rule.',
+  'I ran out of time.',
+  'I changed a right answer.',
+];
+---
+<BolimQobiq
+  title="Reading & Writing guide · SAT"
+  description="What the SAT Reading and Writing section tests, a way to work each of its four question domains, and what to do after a mistake. Linked to Tayanch lessons and the question bank."
+  turi="qollanma"
+  yol={['Guides']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki rw">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>Reading &amp; Writing on the SAT®</h1>
+      <p class="lead">The section has four kinds of questions. For each one: what it asks, a short way to work it, and the Tayanch lesson to practice it.</p>
+    </header>
+
+    <p class="ogoh" role="note"><b>No score is guaranteed.</b> The steps on this page are a Tayanch recommendation, not official College Board advice. The facts about the test come from the College Board page listed at the bottom.</p>
+
+    <section class="bolak" aria-labelledby="test-h">
+      <h2 id="test-h">What the section tests</h2>
+      <ul class="faktlar">
+        <li>Each question comes with one short text, or a pair of texts, of 25 to 150 words.</li>
+        <li>The texts come from literature, history and social studies, the humanities, and science.</li>
+        <li>Every question is multiple choice, and there are four content domains. Each of the two modules has questions from all four.</li>
+        <li>Questions on similar skills are grouped together, and they go from easier to harder.</li>
+      </ul>
+      <p class="kichik ikkinchi">Source: College Board, SAT Reading and Writing overview (CB06), checked {TEKSHIRILGAN.split('-').reverse().join('.')}. The page does not say how many questions each domain has.</p>
+      <nav aria-label="Domains on this page">
+        <ul class="mundarija">
+          {domenlar.map((d) => <li><a href={`#${d.id}`}>{d.nomi}</a></li>)}
+        </ul>
+      </nav>
+    </section>
+
+    <div class="domenlar">
+      {domenlar.map((d, i) => (
+        <section class="karta" id={d.id} aria-labelledby={`${d.id}-h`}>
+          <div class="k-bosh">
+            <span class="raqam" aria-hidden="true">{i + 1}</span>
+            <h2 id={`${d.id}-h`}>{d.nomi}</h2>
+          </div>
+          <div class="k-qism">
+            <h3>What it asks</h3>
+            <p>{d.nima}</p>
+          </div>
+          <div class="k-qism">
+            <h3>How to work it <span class="kichik ikkinchi tavsiya">Tayanch recommendation</span></h3>
+            <ol class="qadamlar">
+              {d.qadamlar.map((q) => <li>{q}</li>)}
+            </ol>
+          </div>
+          <div class="k-qism">
+            <h3>Practice on Tayanch</h3>
+            <ul class="havolalar">
+              <li><a href={sat(d.dars.qism)}>Lesson: {d.dars.nomi}</a></li>
+              <li><a href={sat('mashq/bank/')}>Question bank<span class="ekranda-yoq">: {d.nomi}</span></a></li>
+            </ul>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <section class="bolak" aria-labelledby="xato-h">
+      <h2 id="xato-h">After a mistake</h2>
+      <p>A wrong answer is useful if you know why it happened. For each one, write down its domain and pick the reason that fits best:</p>
+      <ul class="sabablar">
+        {sabablar.map((s) => <li>{s}</li>)}
+      </ul>
+      <p>Then solve it again a few days later, without looking at the answer first. Mistakes you make in Tayanch lessons go to your mistake log.</p>
+      <ul class="havolalar">
+        <li><a href={sat('vosita/takrorlash/')}>Mistake log: review</a></li>
+        <li><a href={sat('vosita/natijalar/')}>My results</a></li>
+      </ul>
+    </section>
+
+    <ManbaBlok
+      manbalar={['CB06']}
+      tekshirilgan={TEKSHIRILGAN}
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={[
+        'The steps under "How to work it" and "After a mistake" are a Tayanch recommendation, not official College Board advice.',
+        'The official page does not give the number of questions in each domain or list skill names; the lesson titles are Tayanch\'s own.',
+        'Each domain links to one Tayanch lesson; a lesson covers only part of its domain.',
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<style>
+  .rw { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--matn-h2); }
+  h3 { font-size: var(--matn-katta); font-weight: 800; }
+  p, li { line-height: 1.6; }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); }
+  a { color: var(--rang-havola); }
+
+  .bolak { display: flex; flex-direction: column; gap: var(--b-4); max-width: 72ch; }
+  .faktlar, .sabablar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); }
+  .mundarija { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5); }
+  .mundarija a, .havolalar a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; }
+
+  .domenlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-5); }
+  .karta { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-5); min-width: 0; scroll-margin-top: calc(var(--b-16) + var(--b-4)); }
+  .k-bosh { display: flex; align-items: center; gap: var(--b-3); }
+  .k-bosh h2 { font-size: var(--matn-h3); font-weight: 800; }
+  .raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-size: var(--matn-kichik); font-weight: 800; }
+  .k-qism { display: flex; flex-direction: column; gap: var(--b-2); }
+  .tavsiya { font-weight: 700; font-size: var(--matn-mayda); margin-left: var(--b-2); white-space: nowrap; }
+  .qadamlar { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: var(--b-2); }
+  .havolalar { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--b-5); }
+
+  @media (max-width: 900px) {
+    .domenlar { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .rw { padding-top: var(--b-8); gap: var(--b-8); }
+    .karta { padding: var(--b-5); }
+    .tavsiya { display: block; margin-left: 0; }
+  }
+</style>

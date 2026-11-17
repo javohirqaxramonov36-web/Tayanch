@@ -5,11 +5,19 @@ project_id = "tayanch"
 
 [auth]
 # Havolada redirectTo bo'lmasa shu manzil ishlatiladi.
-site_url = "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/"
+site_url = "https://tayanchedu.uz/uz/hisob/kirish/"
 # Hisob 1-qavatda (/uz/hisob/, 2026-11-09). Tasdiqlash xati -> kirish/ (ba'zan ?keyin= bilan),
 # parol tiklash -> parol-tiklash/. Lokal: astro dev/preview 4321.
 # Eski /uz/sat/hisob/ manzillari ham qoladi: ular yangi joyga yo'naltiradi (yangi kod deploy bo'lguncha ham ishlaydi).
+# 2026-11-16: sayt tayanchedu.uz ga ko'chdi. Eski github.io qatorlari ko'chish tugaguncha qoladi
+# (eski xatlardagi havolalar va keshlangan sahifalar uchun); keyin olib tashlanadi.
 additional_redirect_urls = [
+  "https://tayanchedu.uz/uz/hisob/kirish/",
+  "https://tayanchedu.uz/uz/hisob/kirish/**",
+  "https://tayanchedu.uz/uz/hisob/parol-tiklash/",
+  "https://tayanchedu.uz/uz/hisob/callback/",
+  "https://tayanchedu.uz/uz/sat/hisob/kirish/**",
+  "https://tayanchedu.uz/uz/sat/hisob/parol-tiklash/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/",
@@ -17,6 +25,7 @@ additional_redirect_urls = [
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/callback/",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/kirish/**",
   "https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/hisob/parol-tiklash/",
+  "http://localhost:4321/**",
   "http://localhost:4321/Tayanch/**",
 ]
 # Formadagi hisobSozlama.parolMinUzunlik bilan bir xil.
@@ -72,7 +81,15 @@ verify_jwt = false
 [functions.inpay-muvofiqlash]
 verify_jwt = false
 
+# ai-tutor (P33): foydalanuvchi kod ichida auth.getUser bilan tekshiriladi; AI kaliti AI_API_KEY secret'da.
+[functions.ai-tutor]
+verify_jwt = false
+
 # hisob-malumot (P23): ma'lumot eksporti va hisobni o'chirish. Foydalanuvchi kod ichida auth.getUser bilan,
 # o'chirishda qayta autentifikatsiya JWT `amr` vaqti bilan tekshiriladi.
 [functions.hisob-malumot]
+verify_jwt = false
+
+# JWT Supabase Auth orqali funksiya ichida tekshiriladi.
+[functions.suhbatdosh]
 verify_jwt = false

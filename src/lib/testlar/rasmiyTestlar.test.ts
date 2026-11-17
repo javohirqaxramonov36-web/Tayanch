@@ -3,7 +3,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   balXatosi, testniTekshir, xatoniTekshir, omborniTozala, urinishlar, konikmaStatistikasi,
-  csvKatak, testlarCsv, xatolarCsv, chizmaHisobla, domenTop, type RasmiyTest, type RasmiyXato, type Ombor,
+  csvKatak, testlarCsv, xatolarCsv, chizmaHisobla, domenTop, omborHajmi, sigadimi, HAJM_CHEGARA,
+  type RasmiyTest, type RasmiyXato, type Ombor,
 } from '../sat/rasmiyTestlar.ts';
 import { namunaOmbor } from '../sat/rasmiyTestlarNamuna.ts';
 
@@ -101,4 +102,19 @@ test('chart: points in date order, axis within 400-1600', () => {
   assert.equal(bitta.nuqtalar[0].x, 48 + (640 - 64) / 2);
   const chekka = chizmaHisobla([{ ...o.testlar[0], rw: 800, math: 800 }], { en: 640, boy: 280, chap: 48, ong: 16, tepa: 24, past: 40 });
   assert.ok(chekka.max === 1600 && chekka.min === 1400);
+});
+
+test('storage limit: new data over 200 KB is refused, deleting and shortening always allowed', () => {
+  const xato = (i: number, izoh: string): RasmiyXato => ({ id: `x${i}`, t: i, testId: 't1', bolim: 'math', modul: 1, savol: 1, konikma: '', domen: '', sabab: 'other', izoh, hal: false });
+  const test1: RasmiyTest = { id: 't1', t: 1, turi: 'practice', nomi: 'P1', sana: '2026-11-01', rw: 600, math: 600, daqiqa: null, izoh: '' };
+  const kichik: Ombor = { versiya: 1, testlar: [test1], xatolar: [xato(1, 'short')] };
+  assert.ok(sigadimi({ ...kichik, xatolar: [...kichik.xatolar, xato(2, 'ok')] }, kichik));
+  // ~250 x 1000 belgi ≈ 250 KB: chegaradan katta
+  const katta: Ombor = { ...kichik, xatolar: Array.from({ length: 250 }, (_, i) => xato(i, 'a'.repeat(1000))) };
+  assert.ok(omborHajmi(katta) > HAJM_CHEGARA);
+  assert.equal(sigadimi(katta, kichik), false, 'chegaradan oshgan yangi holat rad etiladi');
+  assert.equal(sigadimi({ ...katta, xatolar: [...katta.xatolar, xato(999, 'x')] }, katta), false);
+  assert.ok(sigadimi({ ...katta, xatolar: katta.xatolar.slice(1) }, katta), "o'chirish doim mumkin");
+  // bo'sh ombor: JSON uzunligi (ASCII)
+  assert.equal(omborHajmi({ versiya: 1, testlar: [], xatolar: [] }), JSON.stringify({ versiya: 1, testlar: [], xatolar: [] }).length);
 });

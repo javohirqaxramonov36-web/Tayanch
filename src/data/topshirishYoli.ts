@@ -1,9 +1,10 @@
 // "Topshirish yo'li" vositasi (2-qavat, Top Admission) ma'lumotlari.
 // Manba: prototip (branch prototip-topshirish-yoli, prototip/topshirish-yoli.html). Matnlar o'zgartirilmagan.
 // Har fakt faqat manbalar.ts dagi "rasmiy" ID bilan; aks holda build xato beradi.
-// EYUF muddati deadline.ts dan olinadi (Toshkent vaqti, +05:00).
+// EYUF muddati deadline.ts dan olinadi.
 import { manbalar } from './manbalar';
 import { deadlinelar } from './deadline';
+import { muddatChegarasi } from '../lib/muddat';
 
 export type SavolKalit = 'davlat' | 'daraja' | 'grant';
 export interface Variant { id: string; nomi: string; izoh?: string }
@@ -56,8 +57,8 @@ export const IKONKA = {
 export interface Fakt {
   matn: string;
   manbaId: string;
-  /** ISO muddat: shu bo'lsa karta qolgan kunni ko'rsatadi */
-  muddat?: string;
+  /** Kalendar kunining boshlanishi va kartani eskirgan deb belgilash chegarasi. */
+  muddat?: ReturnType<typeof muddatChegarasi>;
   /** Tanlov yopilgach ko'rsatilmaydigan fakt (sana, kvota) */
   vaqtli?: boolean;
 }
@@ -78,7 +79,7 @@ const eyufMuddat = deadlinelar.find((d) => d.id === 'eyuf-2026-2-hujjat');
 if (!eyufMuddat || !eyufMuddat.soat) throw new Error("topshirishYoli: deadline.ts da 'eyuf-2026-2-hujjat' (sana + soat) topilmadi");
 const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
 const [eY, eO, eK] = eyufMuddat.sana.split('-').map(Number);
-const EYUF_MUDDAT_ISO = `${eyufMuddat.sana}T${eyufMuddat.soat}:00+05:00`;
+const eyufChegara = muddatChegarasi(eyufMuddat.sana, eyufMuddat.soat, eyufMuddat.utcSiljish);
 const eyufYopilish = `${eK}-${OYLAR[eO - 1]}, ${eyufMuddat.soat}`;
 
 export const YOLLAR: Record<string, Yol> = {
@@ -140,7 +141,7 @@ export const YOLLAR: Record<string, Yol> = {
     tavsif: "O'zbekiston davlat jamg'armasining xorijda o'qish uchun stipendiyasi.",
     qadamlar: ['Qabul xati va hujjatlar', 'el-yurt.uz/application orqali ariza', 'Tanlov bosqichlari', 'Natija'],
     faktlar: [
-      { matn: `${eY}-yil 2-tanlov: hujjatlar 1–${eyufYopilish} gacha.`, manbaId: 'EY01', muddat: EYUF_MUDDAT_ISO, vaqtli: true },
+      { matn: `${eY}-yil 2-tanlov: hujjatlar 1–${eyufYopilish} gacha. Vaqt mintaqasi rasmiy manbada ko'rsatilmagan.`, manbaId: 'EY01', muddat: eyufChegara, vaqtli: true },
       { matn: 'Kvota 290 ta: bakalavriat 101, magistratura 158, doktorantura 31.', manbaId: 'EY01', vaqtli: true },
       { matn: 'Ariza el-yurt.uz/application platformasi orqali.', manbaId: 'EY01' },
     ],

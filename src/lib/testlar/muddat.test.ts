@@ -2,6 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { toshkentBugun, sanaTogri, kunFarqi, kunHolati, yilQosh } from '../muddat.ts';
+import { muddatChegarasi, muddatHolati, keyingiMuddatYangilanishi } from '../muddat.ts';
 import { ballXatosi, sanaXatosi, kelgusiSanalar, sarlavhaHolati } from '../satMaqsad.ts';
 import { satSanalar } from '../../data/satSanalar.ts';
 
@@ -29,6 +30,25 @@ test('day status: future, today, past', () => {
   assert.deepEqual(kunHolati('2026-11-11', '2027-01-13'), { tur: 'kelajak', kun: 63 });
   assert.deepEqual(kunHolati('2026-11-11', '2026-11-11'), { tur: 'bugun', kun: 0 });
   assert.deepEqual(kunHolati('2026-11-11', '2026-11-07'), { tur: 'otgan', kun: -4 });
+});
+
+test('unknown EYUF timezone: archive only after the calendar day ends in UTC−12', () => {
+  const { kun, oxir } = muddatChegarasi('2026-11-15', '23:59');
+  assert.equal(kun, Date.parse('2026-11-15T12:00Z'));
+  assert.equal(oxir, Date.parse('2026-11-16T12:00Z'));
+  assert.equal(muddatHolati(kun - 1, kun, oxir), '1 kun qoldi');
+  assert.equal(muddatHolati(kun, kun, oxir), 'Bugun tugaydi');
+  assert.equal(muddatHolati(oxir - 1, kun, oxir), 'Bugun tugaydi');
+  assert.equal(muddatHolati(oxir, kun, oxir), 'Tugadi');
+});
+
+test('known timezone: refresh at local midnight and after the last available minute', () => {
+  const { kun, oxir } = muddatChegarasi('2026-11-15', '23:59', 300);
+  assert.equal(oxir, Date.parse('2026-11-15T19:00Z'));
+  assert.equal(keyingiMuddatYangilanishi(kun - 86_400_001, kun, oxir), kun - 86_400_000);
+  assert.equal(keyingiMuddatYangilanishi(kun - 1, kun, oxir), kun);
+  assert.equal(keyingiMuddatYangilanishi(kun, kun, oxir), oxir);
+  assert.equal(keyingiMuddatYangilanishi(oxir, kun, oxir), Infinity);
 });
 
 test('add years keeps leap day valid', () => {

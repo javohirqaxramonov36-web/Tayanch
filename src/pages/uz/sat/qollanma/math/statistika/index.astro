@@ -242,7 +242,7 @@ const X = (v: number) => 20 + 19 * v;
   .dars .s-yozuv { fill: var(--matn); font-size: 13px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 4px; }
   .dars .s-nuqta { cursor: grab; outline: none; }
   .dars .s-doira { fill: var(--fon); stroke: var(--matn); stroke-width: 3; }
-  .dars .s-nuqta:hover .s-doira { stroke: var(--rang-havola); }
+  @media (hover: hover) and (pointer: fine) { .dars .s-nuqta:hover .s-doira { stroke: var(--rang-havola); } }
   .dars .s-nuqta:focus-visible .s-doira { stroke: var(--rang-asosiy); stroke-width: 5; }
   .dars .s-hit { fill: transparent; }
 </style>

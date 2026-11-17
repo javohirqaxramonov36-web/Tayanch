@@ -22,9 +22,9 @@ export const IKONKA = {
 } as const;
 
 export const qollanmalar: IeltsBand[] = [
-  { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", ikonka: IKONKA.listening },
+  { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", qism: 'qollanma/listening/', ikonka: IKONKA.listening },
   { nomi: 'Reading', tavsif: 'Skimming, scanning, True/False/Not Given', qism: 'qollanma/reading/', ikonka: IKONKA.reading },
-  { nomi: 'Writing Task 2', tavsif: 'Insho tuzilishi va reja', ikonka: IKONKA.writing },
+  { nomi: 'Writing Task 2', tavsif: "Mezonlar, insho tuzilmasi va o'zini tekshirish", qism: 'qollanma/writing-task-2/', ikonka: IKONKA.writing },
   { nomi: 'Speaking', tavsif: "Uch qism va o'zingni yozib eshitish", qism: 'qollanma/speaking/', ikonka: IKONKA.speaking },
 ];
 
@@ -45,10 +45,14 @@ export const mashqlar: IeltsBand[] = [
   { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
   { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
   { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
+  { nomi: 'Harf va raqam diktanti', tavsif: 'Ism, telefon, sana va narxni tinglab yozish', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
 ];
 
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
+  { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
 ];
 
 export const KALIT_IELTS_REJA = 'tayanch:ielts-reja';
+/** Writing Task 2 insho mashqi qoralamasi (mavzu, matn, taymer, o'zini tekshirish belgilari) */
+export const KALIT_IELTS_WRITING_T2 = 'tayanch:ielts-writing-t2';

@@ -1,0 +1,111 @@
+---
+// P24 "Report a problem" dialogi: sabab (majburiy) va ixtiyoriy izoh. Sahifaga bir marta qo'yiladi.
+// Boshqaruv: src/lib/sat/xabarDialog.ts (xabarDialogUlash). Sof mantiq va matn: src/lib/sat/xabar.ts.
+// Matn inglizcha (SAT bo'limi).
+import { SABABLAR, IZOH_MAX } from '../../lib/sat/xabar';
+---
+<dialog class="xd" id="xabar-dialog" aria-labelledby="xd-h" lang="en">
+  <div class="xd-ichi">
+    <div class="xd-bosh">
+      <h2 id="xd-h" tabindex="-1">Report a problem</h2>
+      <button type="button" class="xd-yop" data-xd-yop aria-label="Close">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </div>
+    <p class="xd-savol" id="xd-savol"></p>
+
+    <form class="xd-forma" id="xd-forma" novalidate>
+      <fieldset class="xd-guruh">
+        <legend>What's wrong?</legend>
+        {SABABLAR.map((s, i) => (
+          <div class="xd-variant">
+            <input type="radio" name="xd-sabab" id={`xd-sabab-${i}`} value={s.qiymat} aria-describedby="xd-sabab-xato" />
+            <label for={`xd-sabab-${i}`}>{s.nomi}</label>
+          </div>
+        ))}
+      </fieldset>
+      <p class="xd-xato" id="xd-sabab-xato" hidden></p>
+
+      <div class="xd-maydon">
+        <label for="xd-izoh">Details <span class="xd-ixtiyoriy">(optional)</span></label>
+        <p class="xd-yordam" id="xd-izoh-yordam">Tell us what looks wrong. Don't include personal information.</p>
+        <textarea id="xd-izoh" name="xd-izoh" rows="4" maxlength={IZOH_MAX} aria-describedby="xd-izoh-yordam xd-sanoq"></textarea>
+        <p class="xd-sanoq" id="xd-sanoq">0 / {IZOH_MAX}</p>
+      </div>
+
+      <p class="xd-holat" id="xd-holat" role="alert" hidden></p>
+
+      <div class="xd-amal">
+        <button type="button" class="tugma tugma-ikkinchi" data-xd-yop>Cancel</button>
+        <button type="submit" class="tugma tugma-asosiy" id="xd-yubor">Send report</button>
+      </div>
+    </form>
+
+    <div class="xd-tayyor" id="xd-tayyor" hidden>
+      <p class="xd-tayyor-matn" id="xd-tayyor-matn"></p>
+      <div class="xd-amal">
+        <button type="button" class="tugma tugma-asosiy" data-xd-yop id="xd-tayyor-yop">Close</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style is:global>
+  /* Global: dialog sahifa skriptidan boshqariladi; sinflar xd- bilan boshlanadi. */
+  .xd {
+    width: min(520px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
+    border: 1px solid var(--chiziq-kuchli); border-radius: var(--r-katta); padding: 0;
+    background: var(--fon); color: var(--matn);
+  }
+  .xd::backdrop { background: var(--parda); }
+  .xd [hidden] { display: none !important; }
+  .xd-ichi { padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4); }
+  .xd-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
+  .xd-bosh h2 { margin: 0; font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .xd-bosh h2:focus { outline: none; }
+  .xd-yop {
+    flex: none; width: 48px; height: 48px; border-radius: var(--r-yon); border: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--fon-ikkinchi); color: var(--matn); cursor: pointer;
+  }
+  @media (hover: hover) and (pointer: fine) { .xd-yop:hover { background: var(--sirt-ikkinchi); } }
+  .xd-savol { margin: 0; color: var(--matn-ikkinchi); font-weight: 600; }
+  .xd-savol:empty { display: none; }
+  .xd-forma { display: flex; flex-direction: column; gap: var(--b-4); }
+  .xd-guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-1); }
+  .xd-guruh legend { padding: 0; margin-bottom: var(--b-2); font-weight: 700; }
+  .xd-variant { display: flex; align-items: center; gap: var(--b-3); min-height: 44px; }
+  .xd-variant input {
+    flex: none; width: 24px; height: 24px; margin: 0;
+    accent-color: var(--rang-asosiy); cursor: pointer;
+  }
+  .xd-variant label { flex: 1; min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+  .xd-maydon { display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
+  .xd-maydon label { font-weight: 700; }
+  .xd-ixtiyoriy { font-weight: 500; color: var(--matn-sust); }
+  .xd-yordam, .xd-sanoq { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
+  .xd-sanoq { text-align: right; font-variant-numeric: tabular-nums; }
+  .xd-maydon textarea {
+    width: 100%; min-height: 112px; padding: var(--b-3) var(--b-4); resize: vertical;
+    border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    background: var(--fon); color: var(--matn); font: inherit; line-height: 1.5;
+  }
+  .xd-variant input:focus-visible, .xd-maydon textarea:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px;
+  }
+  .xd-xato { margin: 0; font-size: var(--matn-kichik); font-weight: 700; color: var(--rang-ogoh-matn); }
+  .xd-xato::before { content: '! '; }
+  .xd-holat {
+    margin: 0; font-weight: 700; line-height: 1.5;
+    color: var(--rang-ogoh-matn); background: var(--rang-ogoh-fon);
+    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4);
+  }
+  .xd-tayyor { display: flex; flex-direction: column; gap: var(--b-4); }
+  .xd-tayyor-matn { margin: 0; line-height: 1.6; }
+  .xd-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
+  @media (max-width: 560px) {
+    .xd-ichi { padding: var(--b-5); }
+    .xd-amal > * { flex: 1 1 100%; }
+    .xd-amal { flex-direction: column-reverse; }
+  }
+</style>
