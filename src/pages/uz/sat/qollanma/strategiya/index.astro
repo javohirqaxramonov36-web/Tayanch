@@ -1,0 +1,130 @@
+---
+// P18 "Strategy": imtihon tuzilmasi (faqat rasmiy, CB03/CB30) va vaqt, o'tkazish, taxmin, tekshirish odatlari.
+// Har da'vo yonida yorliq: "Official · CBxx", "Tayanch calculation" yoki "Author's experience".
+// Muallif matni src/data/satStrategiya.ts da (bo'sh: "The author will fill this in"). Interaktiv qism yo'q.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import QollanmaBolim from '../../../../../components/sat/QollanmaBolim.astro';
+import { yol } from '../../../../../lib/yol';
+import { STRATEGIYA, TUZILMA, TEKSHIRILGAN_P18, KEYINGI_TEKSHIRUV_P18 } from '../../../../../data/satStrategiya';
+
+const jamiSavol = TUZILMA.reduce((s, t) => s + t.savollar, 0);
+const jamiVaqt = TUZILMA.reduce((s, t) => s + t.jamiVaqt, 0);
+const muallifBosh = STRATEGIYA.filter((b) => b.muallif.length === 0).map((b) => b.sarlavha);
+---
+<BolimQobiq
+  title="Strategy · SAT"
+  description="How the digital SAT is built, from official College Board pages, and habits for pacing, skipping, guessing and checking. No score is guaranteed."
+  turi="qollanma"
+  yol={['Guides']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki st">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>SAT® strategy</h1>
+      <p class="lead">First, how the test is built: only from official College Board pages. Then habits for pacing, skipping, guessing and checking your answers.</p>
+    </header>
+
+    <p class="ogoh" role="note"><b>No score is guaranteed.</b> Every claim has a label. "Official" means it is on a College Board page (the ID is listed at the bottom). "Author's experience" is one student's experience, not a rule.</p>
+
+    <section class="tuzilma" aria-labelledby="tuzilma-h">
+      <h2 id="tuzilma-h">How the test is built</h2>
+      <p class="kichik"><span class="yorliq-rasmiy">Official · CB03</span></p>
+      <table class="jadval">
+        <caption class="ekranda-yoq">SAT sections, modules, questions and time</caption>
+        <thead>
+          <tr><th scope="col">Section</th><th scope="col">Modules</th><th scope="col">Time per module</th><th scope="col">Questions</th><th scope="col">Section time</th></tr>
+        </thead>
+        <tbody>
+          {TUZILMA.map((t) => (
+            <tr>
+              <th scope="row" data-l="Section">{t.bolim}</th>
+              <td data-l="Modules">{t.modullar}</td>
+              <td data-l="Time per module">{t.modulVaqti} minutes</td>
+              <td data-l="Questions">{t.savollar}</td>
+              <td data-l="Section time">{t.jamiVaqt} minutes</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr><th scope="row" data-l="Section">Total</th><td data-l="Modules">4</td><td data-l="Time per module"></td><td data-l="Questions">{jamiSavol}</td><td data-l="Section time">{jamiVaqt} minutes (2 h 14 min)</td></tr>
+        </tfoot>
+      </table>
+      <ul class="faktlar">
+        <li><span class="yorliq-rasmiy">Official · CB03</span><p>There is a 10-minute break between the Reading and Writing section and the Math section.</p></li>
+        <li><span class="yorliq-rasmiy">Official · CB03, CB30</span><p>The test is adaptive. The first module of each section has easy, medium and hard questions. The second module is more or less difficult depending on how you did in the first module.</p></li>
+      </ul>
+    </section>
+
+    {STRATEGIYA.map((b) => <QollanmaBolim bolim={b} />)}
+
+    <section class="keyingi" aria-labelledby="keyingi-h">
+      <h2 id="keyingi-h" class="h3">Next</h2>
+      <ul>
+        <li><a href={yol('/uz/sat/qollanma/vaqt/')}>Timing and retakes</a>: test dates, score sending and a checklist before a retake.</li>
+        <li><a href={yol('/uz/sat/qollanma/qayerdan-boshlash/')}>Where to start</a>: a step-by-step self-study path.</li>
+      </ul>
+    </section>
+
+    <ManbaBlok
+      manbalar={['CB03', 'CB26', 'CB30']}
+      tekshirilgan={TEKSHIRILGAN_P18}
+      keyingiTekshiruv={KEYINGI_TEKSHIRUV_P18}
+      tekshirilmagan={[
+        ...(muallifBosh.length > 0 ? [`Author's experience is not written yet: ${muallifBosh.join(', ')}.`] : []),
+        'The average time per question is a Tayanch calculation (module time divided by questions in the module), not an official number.',
+        'CB30 is a College Board blog post; the page does not show a publication date.',
+        'The Bluebook tools were checked on the tools page only, not inside the app.',
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<style>
+  .st { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--matn-h2); }
+  .h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .lead { font-size: var(--matn-katta); line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6; }
+  a { color: var(--rang-havola); font-weight: 700; }
+
+  .tuzilma { display: flex; flex-direction: column; gap: var(--b-4); }
+  .yorliq-rasmiy {
+    display: inline-block; padding: 1px 10px; border-radius: var(--r-toliq); border: 1.5px solid var(--rang-havola);
+    color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.02em;
+  }
+  .faktlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .faktlar li { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); line-height: 1.6; }
+  .faktlar p { margin: 0; max-width: 68ch; }
+
+  .jadval { width: 100%; border-collapse: collapse; font-size: var(--matn-kichik); line-height: 1.5; font-variant-numeric: tabular-nums; }
+  .jadval th, .jadval td { text-align: left; vertical-align: top; padding: var(--b-3); border-bottom: 1px solid var(--chiziq); }
+  .jadval thead th { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); border-bottom: 1.5px solid var(--matn); }
+  .jadval tbody th, .jadval tfoot th { font-weight: 800; }
+  .jadval tfoot td, .jadval tfoot th { border-bottom: 0; border-top: 1.5px solid var(--matn); font-weight: 700; }
+
+  .keyingi { display: flex; flex-direction: column; gap: var(--b-3); }
+  .keyingi ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.6; }
+  .keyingi a { display: inline-flex; align-items: center; min-height: 44px; }
+
+  @media (max-width: 760px) {
+    .jadval thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .jadval, .jadval tbody, .jadval tfoot, .jadval tr, .jadval th, .jadval td { display: block; width: 100%; }
+    .jadval tr { border: 1.5px solid var(--matn); border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); margin-bottom: var(--b-3); }
+    .jadval th, .jadval td, .jadval tfoot td, .jadval tfoot th { border: 0; padding: var(--b-2) 0; }
+    .jadval td:empty { display: none; }
+    .jadval td::before { content: attr(data-l); display: block; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+    .jadval tbody th, .jadval tfoot th { font-size: var(--matn-katta); }
+  }
+  @media (max-width: 640px) {
+    .st { padding-top: 28px; gap: var(--b-8); }
+  }
+</style>
