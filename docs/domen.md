@@ -6,11 +6,13 @@ Sayt `https://javohirqaxramonov36-web.github.io/Tayanch/` dan `https://tayanched
 
 - Registrator: ahost.uz (SUVAN NET), 1 yil, keyingi to'lov 16.11.2027. `tayanch.uz` band edi.
 - Hisob, shartnoma va telefon tasdig'i: muallifda. ahost email tasdig'i: muallif qiladi.
-- `.uz` domeni cctld.uz moderatsiyasidan keyin (dushanba–juma, ish vaqtida) faollashadi. 2026-11-16 holati: ahost "faollashtirishni kutmoqda", `.uz` zonasi `NXDOMAIN` qaytaradi, ahost'da "DNS xostingni yoqish" ishlamadi.
+- `.uz` domeni cctld.uz moderatsiyasidan keyin (dushanba–juma, ish vaqtida) faollashadi. 2026-11-16: ahost "faollashtirishni kutmoqda", `.uz` zonasi `NXDOMAIN`. 2026-11-17 ertalab: faollashgan (WHOIS ACTIVE, ahost "Domen nomi faol").
+- 2026-11-17 (Claude, muallif ruxsati bilan): ahost'da DNS xosting yoqildi, WHOIS'da NS `rdns1/rdns2/rdns3.ahost.uz`. Yozuvlar qo'yildi (jadval pastda). ahost standart yozuvlaridan `@` A `185.196.212.52` → `185.199.108.153` va `www` CNAME `tayanchedu.uz` → GitHub ga o'zgartirildi; `mail`, `ftp` CNAME, MX, DKIM, SPF, DMARC (ahost pochtasi uchun) tegilmagan, hech narsa o'chirilmagan. Uchala `rdns*.ahost.uz` to'rtta IP va `www` CNAME ni qaytaradi (`dig @rdns1.ahost.uz`, sinalgan).
+- Ochiq: o'sha kuni `.uz` zonasi hali eski NS (`dns1/dns2.ahost.uz`, `ns1/ns2.ahost.cloud`) ga delegatsiya qilardi, ular REFUSED, shuning uchun 8.8.8.8 va 1.1.1.1 SERVFAIL. cctld zonani yangilagach o'tadi (muddati: tekshirish kerak). Tekshirish: `dig NS tayanchedu.uz @ns1.uz +noall +authority` da `rdns*` chiqsin, `dig +short A tayanchedu.uz @8.8.8.8` to'rtta IP.
 
 ## DNS (ahost: Mening domenlarim → tayanchedu.uz → Boshqarish)
 
-1. "DNS xosting" → "DNS xostingni yoqish" (NS `rdns1/2/3.ahost.uz` ga o'zgaradi).
+1. "DNS xosting" → "DNS xostingni yoqish" (NS `rdns1/2/3.ahost.uz` ga o'zgaradi). Yozuvlar "DNS menejer" ichida (iframe); saqlashda `you_cannot_edit_zone_that_is_not_your_own_zone` chiqsa, ahost sessiyasi tugagan bo'lishi mumkin: qayta kirib takrorlash.
 2. Yozuvlar (GitHub Pages hujjati, apex domen):
 
 | Nom | Turi | Qiymat |
