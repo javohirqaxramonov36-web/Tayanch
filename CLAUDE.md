@@ -29,7 +29,7 @@ Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qaro
 - Build: `PATH=/opt/homebrew/bin:$PATH npm run build` (standart Node 22 Astro 7 uchun eski).
 
 ## Loyiha
-- Astro, statik sayt, GitHub Pages. `astro.config.mjs`: base "/Tayanch" (harf katta-kichikligiga sezgir), `trailingSlash: 'always'`.
+- Astro, statik sayt, GitHub Pages. Manzil https://tayanchedu.uz (2026-11-16, ahost.uz, DNS va Pages sozlamasi `docs/domen.md`). `astro.config.mjs`: `site` shu domen, `base` yo'q (ildiz), `trailingSlash: 'always'`. Eski `/Tayanch/...` havolalarini `404.astro` yangi yo'lga o'tkazadi.
 - Sayt 5 qavatli bino: 1 Navigator, 2 Top Admission, 3 SAT prep, 4 IELTS prep, 5 EYUF prep. Sahifalar `src/pages/uz/<bolim>/`, qolip `BolimQobiq`.
 - Dizayn: Tayanch Design System (2026-11-09; manba `docs/ds/`), qoidalar `DESIGN.md` (tokenlar, qavat ranglari, sirtlar, komponentlar, yagona tugma, "Taqiqlar"). Qiymatlar faqat `src/styles/tokens.css` dan, xom rang/o'lcham yozilmaydi; yangi kodda DS nomlari. Shrift Onest.
 - Ichki havola faqat `yol()` orqali (`src/lib/yol.ts`). Ma'lumotlar: `src/data/` (`qavatlar.ts`, `bolimlar.ts`, `manbalar.ts`, `deadline.ts`).
