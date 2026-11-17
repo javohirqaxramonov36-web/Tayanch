@@ -166,7 +166,7 @@ const IK = {
   import { komponentSavoli, togriMatn, chegaraOtildi, vaqtMatni, davomiylikMatni, keyingiUrinishMs, idTogrimi, SABABLAR, type ServerSavol } from '../../../../../../lib/sat/sessiya';
   import {
     MOCK_KALIT, mockMahalliyTekshir, modulgaMosla, javoblarniBirlashtir, navbatBolagi, navbatdanOl, mockXarita, mockXaritaYorliq,
-    topshirishOgohi, qolganMs, tanaffusTugashi, joriyModul, ekranTuri, modulNomi, mockXatosi, natijaJadvali, modulVaqtlari,
+    topshirishOgohi, tarmoqIzohi, qolganMs, tanaffusTugashi, joriyModul, ekranTuri, modulNomi, mockXatosi, natijaJadvali, modulVaqtlari,
     BOLIM_NOMI, SINOV_YOZUVI,
     type MockApi, type MockHolat, type MockMahalliy, type MockNatija, type MockNatijaSavol, type SaqlashBand,
   } from '../../../../../../lib/sat/mock';
@@ -679,6 +679,17 @@ const IK = {
     quti.append(dl);
     quti.append(el('p', 'mk-matn', 'How the estimate works: each section score is 200 + 600 × (correct answers ÷ questions), rounded to the nearest 10. The real SAT uses its own scoring method for adaptive modules, so a real score can be different. Use this number to compare your own mock tests, not to predict your SAT score.'));
 
+    // P31: adaptive-style 2-modul izohi (faqat oson / qiyin tarmoqda; imtihon davomida ko'rsatilmaydi).
+    const izohlar = (['rw', 'math'] as const).map((b) => tarmoqIzohi(b, N.adaptive?.[b])).filter((x): x is string => !!x);
+    if (izohlar.length) {
+      const ab = el('section', 'mk-bolim');
+      ab.setAttribute('aria-labelledby', 'adaptiv-h');
+      const ah = el('h2', '', 'How Module 2 was chosen');
+      ah.id = 'adaptiv-h';
+      ab.append(ah, ...izohlar.map((t) => el('p', 'mk-bolim-izoh', t)));
+      quti.append(ab);
+    }
+
     const tavsiyalar = new Set(N.questions.filter((q) => q.is_correct !== true)
       .map((q) => tavsiyaKursYoli(kursMavzular, q, otilgan)).filter((href) => href !== undefined));
     if (tavsiyalar.size) {
@@ -901,7 +912,7 @@ const IK = {
   // ---------- Boshlash ----------
   async function boshla() {
     const p = new URLSearchParams(location.search);
-    // Faqat dev: ?mock=oddiy|qisqa|tayyor-emas|kvota|xato. Prod build'da bu shox va mock moduli yo'q.
+    // Faqat dev: ?mock=oddiy|qisqa|tayyor-emas|kvota|xato|natija-qiyin|natija-oson. Prod build'da bu shox va mock moduli yo'q.
     if (import.meta.env.DEV && p.get('mock') && !api) {
       const { mockApi } = await import('../../../../../../lib/sat/mockImtihonMock');
       api = mockApi(p.get('mock') as Parameters<typeof mockApi>[0]);

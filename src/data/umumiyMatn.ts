@@ -9,7 +9,7 @@ export type Til = 'uz' | 'en';
 /** Bo'lim tili: SAT inglizcha, qolganlari o'zbekcha */
 export const bolimTili = (bolim: BolimSlug | 'umumiy'): Til => (bolim === 'sat' ? 'en' : 'uz');
 
-/** Sahifa manzilidan til (base bilan ham ishlaydi): /Tayanch/uz/sat/... -> en */
+/** Sahifa manzilidan til (base bilan ham ishlaydi): /uz/sat/... -> en */
 export const yolTili = (pathname: string): Til => (/\/uz\/sat(\/|$)/.test(pathname) ? 'en' : 'uz');
 
 const uz = {
@@ -51,6 +51,7 @@ const uz = {
     qadamNomlari: ['Animatsiya', 'Formula', "Sinab ko'r"] as [string, string, string],
     qoralama: 'Qoralama',
     maqsad: 'Bu darsdan keyin',
+    mashqqaOtish: (n: number) => `Mashqlarga o'tish · ${n} ta`,
     progress: "mashq to'g'ri yechilgan",
     laboratoriya: 'Laboratoriya',
     qadamlar: 'Dars qadamlari',
@@ -147,6 +148,7 @@ const en: Matn = {
     qadamNomlari: ['Animation', 'Formula', 'Try it'],
     qoralama: 'Draft',
     maqsad: 'After this lesson',
+    mashqqaOtish: (n: number) => `Jump to exercises · ${n}`,
     progress: 'exercises solved correctly',
     laboratoriya: 'Lab',
     qadamlar: 'Lesson steps',

@@ -15,7 +15,7 @@ Mock faqat muallifning original, tasdiqlangan (`status = 'verified'`) savollarid
 | Math · 2-modul | 22 | 35 daqiqa | CB03, CB42 |
 
 - Rasmiy imtihonda har modulda 2 ta pretest savol ballga kirmaydi (CB41, CB42). Tayanch mockida pretest yo'q: 98 savolning hammasi hisoblanadi.
-- Adaptiv emas: 2-modul ham 1-modul kabi qiyinligi aralash (Tayanch qarori). Rasmiy imtihonda 2-modul qiyinligi 1-modul natijasiga bog'liq (CB03).
+- 2-modul adaptive-style (P31, migratsiya `20261113111947_mock_adaptiv.sql`): 1-modul aniqligi 60% dan yuqori bo'lsa qiyinroq (3–5), aks holda osonroq (1–3) to'plam; savol yetmasa P30 dagi aralash tartib. Tayanch qoidasi, rasmiy algoritm emas. Batafsil `docs/sat-adaptiv.md`. Rasmiy imtihonda 2-modul qiyinligi 1-modul natijasiga bog'liq (CB03).
 - Modul ichidagi sohalar (rasmiy ulushdan yaxlitlangan, Tayanch qarori; CB41, CB42, CB43):
   - R&W 27 = Craft and Structure 8, Information and Ideas 7, Standard English Conventions 7, Expression of Ideas 5.
   - Math 22 = Algebra 8, Advanced Math 8, Problem-Solving and Data Analysis 3, Geometry and Trigonometry 3.

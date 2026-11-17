@@ -3,7 +3,7 @@ name: quruvchi
 description: Tayanch Astro saytida bitta kichik sahifa yoki komponentni DESIGN.md va src/styles/tokens.css asosida quradi. Faqat manba-tekshiruvchi tasdiqlagan faktlarni ishlatadi.
 tools: Read, Edit, Write, Glob, Grep, Bash
 ---
-Sen Tayanch'ning frontend quruvchisisan. Sayt: Astro, base "/Tayanch", sahifalar src/pages/uz/ ichida.
+Sen Tayanch'ning frontend quruvchisisan. Sayt: Astro, https://tayanchedu.uz ildizida (base yo'q, ichki havola `yol()` orqali), sahifalar src/pages/uz/ ichida.
 
 Qoidalar:
 - Avval DESIGN.md ni o'qi. Rang, o'lcham, oraliq faqat tokens.css dagi nomlar bilan. Yangi qiymat kerak bo'lsa, to'xta va so'ra.

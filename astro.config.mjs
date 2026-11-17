@@ -1,12 +1,16 @@
 // Tayanch: Astro sozlamalari.
-// Sayt https://javohirqaxramonov36-web.github.io/Tayanch/ ostida ochiladi.
-// GitHub Pages yo'li harf katta-kichikligiga sezgir: base "/Tayanch".
-// O'z domenga o'tganda faqat `site` va `base` o'zgaradi.
+// Sayt https://tayanchedu.uz/ ildizida ochiladi (2026-11-16 gacha github.io/Tayanch/ edi).
+// Eski /Tayanch/... manzillari 404 sahifasida yangi yo'lga yo'naltiriladi (src/pages/404.astro).
+// Boshqa joyda build uchun (masalan Cloudflare Pages, PR #169): SITE_URL=https://tayanch.pages.dev, kerak bo'lsa BASE_PATH.
+// Berilmasa (yoki bo'sh bo'lsa) tayanchedu.uz ildizi.
 import { defineConfig, envField } from 'astro/config';
 
+const site = process.env.SITE_URL?.trim() || 'https://tayanchedu.uz';
+const base = process.env.BASE_PATH?.trim() || '/';
+
 export default defineConfig({
-  site: 'https://javohirqaxramonov36-web.github.io',
-  base: '/Tayanch',
+  site,
+  base,
   trailingSlash: 'always',
   output: 'static',
   // Hisob (Supabase Auth). Faqat ochiq qiymatlar: loyiha URL'i va ochiq (publishable/anon) kalit.

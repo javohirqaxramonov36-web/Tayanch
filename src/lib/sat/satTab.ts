@@ -26,7 +26,7 @@ const TARTIB: readonly { kalit: Exclude<SatTabKalit, 'today'>; nomi: string }[] 
   { kalit: 'plan', nomi: 'Plan' },
 ];
 
-/** "/Tayanch/uz/sat/mashq/bank/" -> "mashq/bank/". SAT tashqarisida null. */
+/** "/uz/sat/mashq/bank/" (base bilan ham) -> "mashq/bank/". SAT tashqarisida null. */
 export function satQism(pathname: string): string | null {
   const i = pathname.indexOf('/uz/sat/');
   if (i < 0) return pathname.endsWith('/uz/sat') ? '' : null;
