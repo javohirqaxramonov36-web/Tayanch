@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { hisobMalumot, type MalumotBogliqlik, oxirgiKirish, QAYTA_KIRISH_SONIYA } from '../hisob-malumot/handler.ts';
 
-const SAYT = 'https://javohirqaxramonov36-web.github.io';
+const SAYT = 'https://tayanchedu.uz';
 const EGA = '00000000-0000-4000-8000-00000000000a';
 const HOZIR = 1_800_000_000;
 
