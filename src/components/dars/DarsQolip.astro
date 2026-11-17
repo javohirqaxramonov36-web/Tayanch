@@ -10,6 +10,7 @@ import { darsQavatlarAro } from '../../data/qavatlarAro';
 import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
 import { tinishmi } from '../../lib/belgilashGuruh';
 import { bolimTili, matn } from '../../data/umumiyMatn';
+import { yol } from '../../lib/yol';
 
 interface Props {
   bolim: DarsBolim;
@@ -54,6 +55,10 @@ const {
 // Qolip matni bo'lim tilida (SAT: inglizcha). Lug'at: src/data/umumiyMatn.ts
 const til = bolimTili(bolim);
 const M = matn[til].dars;
+const keyingiNomi = keyingi && (keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi));
+const katalog = bolim === 'ielts' ? '/uz/ielts/qollanma/reading/'
+  : bolim === 'sat' && Astro.url.pathname.includes('/reading-writing/') ? '/uz/sat/qollanma/reading-writing/'
+  : bolim === 'sat' ? '/uz/sat/qollanma/qayerdan-boshlash/' : null;
 const qadamNomlari = Astro.props.qadamNomlari ?? M.qadamNomlari;
 const HARF = 'ABCD';
 const qadamlar = [
@@ -78,14 +83,26 @@ const qadamlar = [
         <span class="pill pill-chiziq">{M.qoralama}</span>
       </p>
       <h1>{sarlavha}</h1>
+      {keyingi && <a class="dars-keyingi" href={keyingi.href}>{keyingiNomi}</a>}
       <p class="lead">{lead}</p>
+      <a class="tugma tugma-ikkinchi mashqqa" href="#mashqlar">
+        {M.mashqqaOtish(savollar.length)}
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+      </a>
     </header>
 
     <section class="maqsad" aria-labelledby="maqsad-h">
-      <div class="maqsad-matn">
-        <h2 id="maqsad-h" class="kichik-h">{M.maqsad}</h2>
+      <details class="maqsad-matn" open data-maqsad-yigma>
+        <summary>
+          <h2 id="maqsad-h" class="kichik-h">{M.maqsad}</h2>
+          <svg class="maqsad-ok" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </summary>
         <ul>{maqsadlar.map((m) => <li>{m}</li>)}</ul>
-      </div>
+      </details>
+      <script is:inline>
+        // Telefonda "Bu darsdan keyin" yopiq: birinchi ekranga laboratoriya sig'adi. Chizilishdan oldin ishlaydi.
+        if (matchMedia('(max-width: 719px)').matches) document.querySelector('[data-maqsad-yigma]')?.removeAttribute('open');
+      </script>
       <div class="maqsad-progress">
         <p class="kichik"><span id="progress-son">0</span> / {savollar.length} {M.progress}</p>
         <div class="progress" aria-hidden="true"><span id="progress-chiziq"></span></div>
@@ -118,6 +135,7 @@ const qadamlar = [
     </section>
 
     <section class="mashqlar" aria-labelledby="mashq-h" id="mashqlar">
+      <p class="sr" id="dars-javob-xabari" role="status" aria-atomic="true"></p>
       <div class="m-bosh">
         <h2 id="mashq-h">{M.mashqlar}</h2>
         <p class="kichik ikkinchi">{M.mashqIzoh(imtihon)}</p>
@@ -125,7 +143,7 @@ const qadamlar = [
 
       <nav class="savol-nuqtalar" aria-label={M.mashqRoyxati}>
         {savollar.map((s, i) => (
-          <button type="button" class="nuqta" data-i={i} aria-label={M.mashq(i + 1)}>{i + 1}</button>
+          <button type="button" class="nuqta" data-i={i} aria-label={M.mashq(i + 1)} aria-current={i === 0 ? 'step' : undefined}>{i + 1}</button>
         ))}
       </nav>
 
@@ -184,7 +202,7 @@ const qadamlar = [
                 ))}
               </div>
             )}
-            <div class="izoh" aria-live="polite" hidden>
+            <div class="izoh" hidden>
               <p class="izoh-sarlavha"></p>
               <p class="izoh-xato"></p>
               <p class="izoh-yechim"><b>{M.yechim}</b> {s.yechim}</p>
@@ -201,7 +219,7 @@ const qadamlar = [
     </section>
 
     <section class="xulosa" aria-labelledby="xulosa-h" id="xulosa">
-      <h2 id="xulosa-h">{M.xulosa}</h2>
+      <h2 id="xulosa-h" tabindex="-1">{M.xulosa}</h2>
       <ul class="xulosa-royxat">{xulosa.map((x) => <li>{x}</li>)}</ul>
       {Astro.slots.has('xulosa-oxiri') && <slot name="xulosa-oxiri" />}
 
@@ -226,7 +244,12 @@ const qadamlar = [
         <p class="kichik ikkinchi" id="saqlash-holat">{M.saqlash}</p>
       </section>
 
-      {keyingi && (
+      {katalog ? (
+        <nav class="dars-davomi" aria-label={til === 'en' ? 'Lesson navigation' : 'Dars navigatsiyasi'}>
+          {keyingi && <a class="katta asosiy keyingi-dars" href={keyingi.href}>{M.keyingiQadam(keyingi.nomi)}</a>}
+          <a class="katta ikkinchi" href={yol(katalog)}>{til === 'en' ? 'Back to the guide' : "Qo'llanmaga qaytish"}</a>
+        </nav>
+      ) : keyingi && (
         <a class="katta asosiy keyingi-dars" href={keyingi.href}>{keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi)}</a>
       )}
       <QavatlarAro kartalar={darsQavatlarAro[modul] ?? []} daraja="h3" />
@@ -285,6 +308,7 @@ const qadamlar = [
   // ---------- Mashqlar ----------
   const fieldsetlar = [...document.querySelectorAll<HTMLFieldSetElement>('.savol')];
   const nuqtalar = [...document.querySelectorAll<HTMLButtonElement>('.savol-nuqtalar .nuqta')];
+  const javobXabari = document.getElementById('dars-javob-xabari')!;
   let joriy = 0;
 
   const holatniChiz = () => {
@@ -295,7 +319,8 @@ const qadamlar = [
       if (h === 'togri') togri++;
       n.dataset.holat = h ?? '';
       n.setAttribute('aria-label', `${M.mashq(i + 1)}${h === 'togri' ? M.nuqtaTogri : h === 'xato' ? M.nuqtaXato : ''}`);
-      n.toggleAttribute('aria-current', i === joriy);
+      if (i === joriy) n.setAttribute('aria-current', 'step');
+      else n.removeAttribute('aria-current');
     });
     document.getElementById('progress-son')!.textContent = String(togri);
     document.getElementById('progress-chiziq')!.style.width = `${(togri / savollar.length) * 100}%`;
@@ -304,6 +329,7 @@ const qadamlar = [
 
   const korsat = (i: number, fokus = false) => {
     joriy = i;
+    javobXabari.textContent = '';
     fieldsetlar.forEach((f, j) => { f.hidden = j !== i; });
     holatniChiz();
     if (fokus) fieldsetlar[i].querySelector<HTMLElement>('.s-matn')?.focus();
@@ -315,6 +341,7 @@ const qadamlar = [
   const qisqa = (m: string) => { const s = m.split(' '); return s.length > 7 ? `${s.slice(0, 7).join(' ')}…` : m; };
 
   const tiklash = (f: HTMLFieldSetElement) => {
+    javobXabari.textContent = '';
     const i = fieldsetlar.indexOf(f);
     const g = guruhlar[i];
     const soz = savollar[i].belgilash?.tur === 'soz';
@@ -426,6 +453,7 @@ const qadamlar = [
       f.querySelector<HTMLButtonElement>('.keyingi')!.hidden = false;
       // Tekshirish tugmasi yashirindi: fokus yo'qolmasin (WCAG 2.4.3), natija aria-live orqali o'qiladi
       f.querySelector<HTMLButtonElement>('.keyingi')!.focus({ preventScroll: true });
+      javobXabari.textContent = sarlavha;
       const saqlandi = javobniYoz(bolim, modul, s.id, togrimi, saqlanadigan);
       document.getElementById('saqlash-holat')!.textContent = saqlandi
         ? M.saqlash
@@ -435,7 +463,11 @@ const qadamlar = [
     f.querySelector<HTMLButtonElement>('.qayta')!.addEventListener('click', () => { tiklash(f); (g ? g.tugmalar[0] : inputlar[0])?.focus(); });
     f.querySelector<HTMLButtonElement>('.keyingi')!.addEventListener('click', () => {
       if (i < fieldsetlar.length - 1) korsat(i + 1, true);
-      else document.getElementById('xulosa-h')!.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      else {
+        const xulosa = document.getElementById('xulosa-h')!;
+        xulosa.focus({ preventScroll: true });
+        xulosa.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
     });
   });
   nuqtalar.forEach((n, i) => n.addEventListener('click', () => korsat(i, true)));
@@ -505,11 +537,23 @@ const qadamlar = [
   .dars .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
   .dars .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .dars h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); text-wrap: balance; }
+  .dars .dars-keyingi {
+    align-self: flex-start; display: inline-flex; align-items: center;
+    min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
+    color: var(--rang-havola); font-weight: var(--font-weight-bold);
+  }
   .dars .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 62ch; }
 
   .dars .maqsad { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-wrap: wrap; gap: var(--b-6); justify-content: space-between; }
-  .dars .maqsad-matn { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .dars .maqsad-matn { flex: 1 1 320px; min-width: 0; display: block; }
   .dars .maqsad ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-1); }
+  .dars .mashqqa { align-self: flex-start; gap: var(--b-2); }
+  .dars .maqsad-matn summary { display: flex; align-items: center; gap: var(--b-2); min-height: 44px; cursor: pointer; list-style: none; border-radius: var(--r-orta); }
+  .dars .maqsad-matn summary::-webkit-details-marker { display: none; }
+  .dars .maqsad-ok { flex: none; transition: transform var(--harakat-tez) var(--harakat-egri); }
+  .dars .maqsad-matn[open] .maqsad-ok { transform: rotate(180deg); }
+  .dars .maqsad-matn summary:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .dars .maqsad-matn[open] > ul { margin-top: var(--b-2); }
   .dars .maqsad-progress { flex: 0 1 240px; display: flex; flex-direction: column; gap: var(--b-2); justify-content: flex-end; }
   .dars .progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .dars .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); }
@@ -657,6 +701,12 @@ const qadamlar = [
 
   /* Xulosa va Xato daftari */
   .dars .xulosa { display: flex; flex-direction: column; gap: var(--b-5); align-items: flex-start; }
+  .dars #xulosa-h:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
+  .dars .dars-davomi { display: flex; flex-wrap: wrap; gap: var(--b-2); max-inline-size: 100%; }
+  .dars .dars-davomi a { white-space: normal; text-align: center; }
+  @media (max-width: 36rem) {
+    .dars .dars-davomi, .dars .dars-davomi a { inline-size: 100%; }
+  }
   .dars .xulosa-royxat { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); max-width: 62ch; }
   .dars .daftar { align-self: stretch; border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); }
   .dars .daftar h3 { font-size: 20px; }
@@ -674,6 +724,7 @@ const qadamlar = [
     .dars h1 { font-size: 34px; }
     .dars h2, .dars .manba h2 { font-size: 26px; }
     .dars .lead { font-size: 17px; }
+    .dars .maqsad { padding: var(--b-3) var(--b-5) var(--b-4); gap: var(--b-2); }
     .dars .savol-karta { padding: var(--b-5); }
     .dars .s-matn { font-size: 19px; }
     .dars .s-tugmalar .katta { flex: 1 1 100%; }

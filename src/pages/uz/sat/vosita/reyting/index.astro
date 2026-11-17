@@ -1,0 +1,517 @@
+---
+// SAT reyting (P32, 1-PR): haftalik va oylik XP jadvali, laqab bilan, ixtiyoriy (opt-in). Musobaqa 2-PR da.
+// XP ni faqat server yozadi (attempts trigger) va o'qiydi (leaderboard*, 20261112184613_reyting.sql). Qoidalar: docs/xp-qoidasi.md.
+// Holatlar: mehmon (kirish havolasi) · 18 yoshgacha yoki yosh guruhi yo'q (faqat o'z XP'si) · qatnashmagan (o'z XP'si,
+// jadval, qo'shilish formasi) · qatnashgan (jadval, laqabni o'zgartirish, chiqish tasdiq bilan).
+// Jadval: o'z qatori rang bilan emas, qalin yozuv va "You" yorlig'i bilan; qizil/yashil yo'q (DESIGN.md).
+// Klaviatura: davr va doira tabiiy radio guruh (strelkalar). Telefon: 3 ustun, uzun laqab qatorga sig'adi.
+// Brauzerda faqat tayanch:sat-reyting (tanlangan davr va doira). Sun'iy holatlar (faqat dev): ?sinov=mehmon|yangi|azo|kichik|uzun
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { xpCheklovlar, xpQatorlar, laqabNaqsh, mamlakatlar, jadvalHajmi } from '../../../../../data/satReyting';
+import { yol } from '../../../../../lib/yol';
+---
+<BolimQobiq
+  title="Leaderboard · SAT"
+  description="Weekly and monthly XP from SAT practice on Tayanch. Taking part is optional and only your nickname is shown."
+  turi="vosita"
+  yol={['Practice']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <div class="ichki reyting">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>Leaderboard</h1>
+      <p class="lead">Earn XP for practice, review and the question of the day. Joining the leaderboard is optional: other users see only your nickname and XP.</p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>Checking your account…</p>
+    <p class="ogoh" data-yoq hidden>Accounts are not available on this site yet.</p>
+    <p class="ogoh" data-sinov-belgi hidden>Test data (development only). Nicknames below are samples, not real users.</p>
+
+    <section class="panel" data-mehmon hidden aria-labelledby="mehmon-sarlavha">
+      <h2 id="mehmon-sarlavha" class="h3">Sign in to see the leaderboard</h2>
+      <p>XP is counted from answers saved to your account. Without an account, nothing is counted or shown.</p>
+      <a class="tugma tugma-asosiy" data-kirish href={yol('/uz/hisob/kirish/')}>Sign in</a>
+    </section>
+
+    <p class="xato" role="alert" data-xato hidden></p>
+
+    <div data-ichi hidden>
+      <section class="panel xp" aria-labelledby="xp-sarlavha">
+        <h2 id="xp-sarlavha" class="kichik-sarlavha">Your XP</h2>
+        <dl class="xp-son">
+          <div><dt>Today</dt><dd data-xp="today">0</dd></div>
+          <div><dt>This week</dt><dd data-xp="week">0</dd></div>
+          <div><dt>This month</dt><dd data-xp="month">0</dd></div>
+        </dl>
+        <p class="ikkinchi kichik" data-chegara></p>
+      </section>
+
+      <section class="panel" data-kichik hidden aria-labelledby="kichik-sarlavha">
+        <h2 id="kichik-sarlavha" class="h3">The leaderboard is for 18 and older</h2>
+        <p>Your account is not marked as 18 or older, so you are not shown on the leaderboard and cannot see it. You still earn XP and see it above.</p>
+      </section>
+
+      <section class="panel" data-azo hidden aria-labelledby="azo-sarlavha">
+        <h2 id="azo-sarlavha" class="kichik-sarlavha">Your place on the leaderboard</h2>
+        <p data-azo-matn></p>
+        <p class="ogoh" data-yashirin hidden>A moderator has hidden your nickname from the leaderboard. Your XP is not affected.</p>
+        <p class="ogoh" data-laqab-yomon hidden>Your nickname cannot be shown. Choose a different one to appear on the leaderboard.</p>
+        <div class="tugmalar" data-azo-tugmalar>
+          <button type="button" class="tugma tugma-ikkinchi" data-tahrir aria-expanded="false" aria-controls="qoshil-forma">Change nickname or country</button>
+          <button type="button" class="tugma tugma-ikkinchi" data-chiq>Leave the leaderboard</button>
+        </div>
+        <div class="tasdiq" data-chiq-tasdiq hidden role="group" aria-labelledby="chiq-savol">
+          <p id="chiq-savol"><strong>Leave the leaderboard?</strong> You disappear from it right away. Your XP stays in your account, and you can join again later.</p>
+          <div class="tugmalar">
+            <button type="button" class="tugma tugma-asosiy" data-chiq-ha>Leave</button>
+            <button type="button" class="tugma tugma-ikkinchi" data-chiq-yoq>Stay</button>
+          </div>
+        </div>
+      </section>
+
+      <form class="panel forma" id="qoshil-forma" data-forma hidden novalidate aria-labelledby="forma-sarlavha">
+        <h2 id="forma-sarlavha" class="h3" data-forma-sarlavha>Join the leaderboard</h2>
+        <p class="ikkinchi">You are not on the leaderboard unless you join. Other signed-in users will see your nickname, XP and, only if you allow it, your country. Your name, email and photo are never shown.</p>
+        <div class="maydon">
+          <label for="r-laqab">Nickname</label>
+          <input id="r-laqab" name="laqab" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+            pattern={laqabNaqsh} minlength="3" maxlength="20" required aria-describedby="r-laqab-izoh r-laqab-xato" />
+          <p class="ikkinchi kichik" id="r-laqab-izoh">3 to 20 Latin letters, digits or underscores (_). Do not use your real name.</p>
+          <p class="maydon-xato" id="r-laqab-xato" hidden></p>
+        </div>
+        <div class="maydon">
+          <label for="r-mamlakat">Country (optional)</label>
+          <select id="r-mamlakat" name="mamlakat">
+            <option value="">Prefer not to say</option>
+            {mamlakatlar.map((m) => <option value={m} data-mamlakat={m}>{m}</option>)}
+          </select>
+        </div>
+        <label class="belgi-qator">
+          <input type="checkbox" id="r-korsat" name="korsat" disabled />
+          <span>Show my country next to my nickname and let me see a leaderboard for my country</span>
+        </label>
+        <div class="tugmalar">
+          <button type="submit" class="tugma tugma-asosiy" data-yubor>Join the leaderboard</button>
+          <button type="button" class="tugma tugma-ikkinchi" data-bekor hidden>Cancel</button>
+        </div>
+      </form>
+
+      <section class="jadval-blok" data-jadval-blok hidden aria-labelledby="jadval-sarlavha">
+        <h2 id="jadval-sarlavha" class="h3">Leaderboard</h2>
+        <div class="tanlovlar">
+          <fieldset class="segment">
+            <legend class="kichik-sarlavha">Period</legend>
+            <div class="segment-ichi">
+              <label class="segment-variant"><input type="radio" name="davr" value="week" checked /><span>This week</span></label>
+              <label class="segment-variant"><input type="radio" name="davr" value="month" /><span>This month</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="segment" data-doira-guruh>
+            <legend class="kichik-sarlavha">Who</legend>
+            <div class="segment-ichi">
+              <label class="segment-variant"><input type="radio" name="doira" value="all" checked /><span>Everyone</span></label>
+              <label class="segment-variant"><input type="radio" name="doira" value="country" disabled aria-describedby="doira-izoh" /><span>My country</span></label>
+            </div>
+            <p class="ikkinchi kichik" id="doira-izoh" data-doira-izoh>To use this, join with your country and allow it to be shown.</p>
+          </fieldset>
+        </div>
+
+        <p class="jadval-xabar" role="status" data-jadval-xabar></p>
+        <p class="ikkinchi" data-bosh hidden>No one on the leaderboard has XP for this period yet.</p>
+        <table class="jadval" data-jadval hidden>
+          <caption data-sarlavha>Top {jadvalHajmi}</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="son">Rank</th>
+              <th scope="col">Nickname</th>
+              <th scope="col" class="son">XP</th>
+            </tr>
+          </thead>
+          <tbody data-qatorlar></tbody>
+        </table>
+        <p class="ikkinchi kichik" data-yangilanish></p>
+      </section>
+
+      <section class="qoida" aria-labelledby="qoida-sarlavha">
+        <h2 id="qoida-sarlavha" class="kichik-sarlavha">How XP works</h2>
+        <table class="qoida-jadval">
+          <caption class="ekranda-yoq">XP for each action</caption>
+          <thead><tr><th scope="col">Action</th><th scope="col" class="son">XP</th></tr></thead>
+          <tbody>
+            {xpQatorlar.map((q) => <tr><td>{q.nima}</td><td class="son">{q.xp}</td></tr>)}
+          </tbody>
+        </table>
+        <ul>
+          {xpCheklovlar.map((c) => <li>{c}</li>)}
+          <li>Weeks start on Monday and months on the 1st, at 00:00 Tashkent time.</li>
+          <li>Equal XP means an equal rank. XP is not a score prediction: it only counts practice.</li>
+        </ul>
+      </section>
+    </div>
+
+    <ManbaBlok
+      manbalar={[]}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={[
+        'The XP numbers and the daily limit are starting values chosen by Tayanch and may change.',
+        'The leaderboard has not been tried with real accounts in a browser yet.',
+        'The 18+ check uses the age group you chose when you signed up. Tayanch cannot verify it.',
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { hisobMijoz, hisobQorovul, hisobYoli } from '../../../../../lib/hisob';
+  import { jadvalHajmi, reytingKaliti } from '../../../../../data/satReyting';
+  import {
+    jadvalSarlavhasi, laqabXatoKodimi, laqabXatosi, reytingXatoMatni, tanlovniOqi, yangilanishMatni,
+    type Davr, type Doira, type Jadval, type JadvalQator, type MenHolat,
+  } from '../../../../../lib/sat/reyting';
+
+  type Api = {
+    men: () => Promise<MenHolat>;
+    jadval: (d: Davr, o: Doira) => Promise<Jadval>;
+    qoshil: (laqab: string, mamlakat: string | null, korsat: boolean) => Promise<MenHolat>;
+    chiq: () => Promise<MenHolat>;
+  };
+
+  const $ = <T extends HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s)!;
+  const kutish = $('[data-kutish]');
+  const ichi = $('[data-ichi]');
+  const forma = $<HTMLFormElement>('[data-forma]');
+  const laqab = $<HTMLInputElement>('#r-laqab');
+  const laqabXato = $('#r-laqab-xato');
+  const mamlakat = $<HTMLSelectElement>('#r-mamlakat');
+  const korsat = $<HTMLInputElement>('#r-korsat');
+  const yubor = $<HTMLButtonElement>('[data-yubor]');
+  const jadvalXabar = $('[data-jadval-xabar]');
+  let api: Api | null = null;
+  let men: MenHolat | null = null;
+  let tanlov = (() => { try { return tanlovniOqi(localStorage.getItem(reytingKaliti)); } catch { return tanlovniOqi(null); } })();
+  let sorov = 0;
+
+  const xato = (m: string | null) => { const el = $('[data-xato]'); el.textContent = m ?? ''; el.hidden = !m; };
+  const kod = (e: unknown) => (e as { message?: string } | null)?.message;
+  const mamlakatNomi = (() => {
+    try { const d = new Intl.DisplayNames(['en'], { type: 'region' }); return (c: string) => d.of(c) ?? c; } catch { return (c: string) => c; }
+  })();
+
+  // Mamlakat ro'yxatidagi nomlar (server faqat kodni biladi)
+  mamlakat.querySelectorAll<HTMLOptionElement>('option[data-mamlakat]').forEach((o) => { o.textContent = mamlakatNomi(o.value); });
+  const korsatniYangila = () => { korsat.disabled = !mamlakat.value; if (!mamlakat.value) korsat.checked = false; };
+  mamlakat.addEventListener('change', korsatniYangila);
+
+  function maydonXato(m: string | null) {
+    laqabXato.textContent = m ?? '';
+    laqabXato.hidden = !m;
+    laqab.setAttribute('aria-invalid', m ? 'true' : 'false');
+  }
+  laqab.addEventListener('input', () => maydonXato(null));
+
+  function formaniOch(ochiq: boolean) {
+    forma.hidden = !ochiq;
+    const tahrir = $<HTMLButtonElement>('[data-tahrir]');
+    tahrir.setAttribute('aria-expanded', String(ochiq && !!men?.joined));
+    if (ochiq && men) {
+      laqab.value = men.nickname ?? '';
+      mamlakat.value = men.country ?? '';
+      korsatniYangila();
+      korsat.checked = !!men.show_country && !!men.country;
+    }
+  }
+
+  function menniKorsat(m: MenHolat) {
+    men = m;
+    (['today', 'week', 'month'] as const).forEach((k) => { $(`[data-xp="${k}"]`).textContent = m.xp[k].toLocaleString('en-US'); });
+    $('[data-chegara]').textContent = `Daily limit: ${m.daily_cap} XP. Today you have ${m.xp.today} of ${m.daily_cap}.`;
+
+    $('[data-kichik]').hidden = m.eligible;
+    $('[data-jadval-blok]').hidden = !m.eligible;
+    const azo = m.eligible && m.joined;
+    $('[data-azo]').hidden = !azo;
+    $('[data-chiq-tasdiq]').hidden = true;
+    $('[data-azo-tugmalar]').hidden = false;
+    if (azo) {
+      const joy = m.country && m.show_country ? `, shown with ${mamlakatNomi(m.country)}` : '';
+      $('[data-azo-matn]').textContent = `You appear as ${m.nickname}${joy}.`;
+      $('[data-yashirin]').hidden = !m.hidden;
+      $('[data-laqab-yomon]').hidden = m.nickname_ok;
+    }
+    // Forma: qatnashmagan kattalar uchun doim ochiq; a'zo uchun faqat "Change" bosilganda
+    $('[data-forma-sarlavha]').textContent = m.joined ? 'Change nickname or country' : 'Join the leaderboard';
+    yubor.textContent = m.joined ? 'Save changes' : 'Join the leaderboard';
+    $('[data-bekor]').hidden = !m.joined;
+    formaniOch(m.eligible && (!m.joined || !m.nickname_ok));
+
+    // "My country": faqat mamlakatini ko'rsatgan a'zo
+    const mening = document.querySelector<HTMLInputElement>('input[name="doira"][value="country"]')!;
+    const mumkin = azo && !!m.country && m.show_country;
+    mening.disabled = !mumkin;
+    $('[data-doira-izoh]').hidden = mumkin;
+    if (!mumkin && tanlov.doira === 'country') tanlov.doira = 'all';
+    document.querySelectorAll<HTMLInputElement>('input[name="davr"]').forEach((r) => { r.checked = r.value === tanlov.davr; });
+    document.querySelectorAll<HTMLInputElement>('input[name="doira"]').forEach((r) => { r.checked = r.value === tanlov.doira; });
+  }
+
+  function qator(q: JadvalQator, ajratgich = false) {
+    const tr = document.createElement('tr');
+    if (q.me) tr.classList.add('men');
+    if (ajratgich) tr.classList.add('ajratgich');
+    const orin = document.createElement('td');
+    orin.className = 'son';
+    orin.textContent = String(q.rank);
+    const nom = document.createElement('th');
+    nom.scope = 'row';
+    const ism = document.createElement(q.me ? 'strong' : 'span');
+    ism.className = 'laqab';
+    ism.textContent = q.nickname;
+    nom.append(ism);
+    if (q.me) nom.append(' ', Object.assign(document.createElement('span'), { className: 'yorliq', textContent: 'You' }));
+    if (q.country) {
+      const c = Object.assign(document.createElement('span'), { className: 'mamlakat', textContent: q.country, title: mamlakatNomi(q.country) });
+      c.setAttribute('aria-label', mamlakatNomi(q.country));
+      nom.append(' ', c);
+    }
+    const xp = document.createElement('td');
+    xp.className = 'son';
+    xp.textContent = q.xp.toLocaleString('en-US');
+    tr.append(orin, nom, xp);
+    return tr;
+  }
+
+  async function jadvalniYukla() {
+    if (!api || !men?.eligible) return;
+    const n = ++sorov;
+    try { localStorage.setItem(reytingKaliti, JSON.stringify(tanlov)); } catch { /* xotira yopiq: tanlov eslanmaydi */ }
+    const tb = $('[data-jadval]');
+    tb.setAttribute('aria-busy', 'true');
+    jadvalXabar.textContent = 'Loading the leaderboard…';
+    try {
+      const j = await api.jadval(tanlov.davr, tanlov.doira);
+      if (n !== sorov) return; // eskirgan javob
+      $('[data-sarlavha]').textContent = jadvalSarlavhasi(j, jadvalHajmi) + (j.country ? ` · ${mamlakatNomi(j.country)}` : '');
+      const qatorlar = j.rows.map((q) => qator(q));
+      if (j.me) qatorlar.push(qator(j.me, true));
+      $('[data-qatorlar]').replaceChildren(...qatorlar);
+      tb.hidden = j.rows.length === 0;
+      $('[data-bosh]').hidden = j.rows.length > 0;
+      $('[data-yangilanish]').textContent = yangilanishMatni(j.resets_at, j.period);
+      const ozi = j.rows.find((q) => q.me) ?? j.me;
+      jadvalXabar.textContent = ozi ? `You are ranked ${ozi.rank} with ${ozi.xp} XP.` : '';
+    } catch (e) {
+      if (n !== sorov) return;
+      jadvalXabar.textContent = reytingXatoMatni(kod(e));
+    } finally {
+      if (n === sorov) tb.removeAttribute('aria-busy');
+    }
+  }
+
+  document.querySelectorAll<HTMLInputElement>('input[name="davr"], input[name="doira"]').forEach((r) => r.addEventListener('change', () => {
+    if (!r.checked) return;
+    if (r.name === 'davr') tanlov.davr = r.value as Davr; else tanlov.doira = r.value as Doira;
+    jadvalniYukla();
+  }));
+
+  forma.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!api || yubor.disabled) return;
+    xato(null);
+    const m = laqabXatosi(laqab.value);
+    if (m) { maydonXato(m); laqab.focus(); return; }
+    yubor.disabled = true;
+    yubor.setAttribute('aria-busy', 'true');
+    const asl = yubor.textContent;
+    yubor.textContent = 'Saving…';
+    try {
+      const yangi = await api.qoshil(laqab.value.trim(), mamlakat.value || null, korsat.checked);
+      menniKorsat(yangi);
+      await jadvalniYukla();
+      jadvalXabar.textContent = yangi.joined ? `You are on the leaderboard as ${yangi.nickname}.` : jadvalXabar.textContent;
+    } catch (err) {
+      const k = kod(err);
+      if (laqabXatoKodimi(k)) { maydonXato(reytingXatoMatni(k)); laqab.focus(); }
+      else xato(reytingXatoMatni(k));
+    } finally {
+      yubor.disabled = false;
+      yubor.removeAttribute('aria-busy');
+      if (yubor.textContent === 'Saving…') yubor.textContent = asl;
+    }
+  });
+
+  $('[data-tahrir]').addEventListener('click', () => { formaniOch(Boolean(forma.hidden)); if (!forma.hidden) laqab.focus(); });
+  $('[data-bekor]').addEventListener('click', () => { formaniOch(false); maydonXato(null); $<HTMLButtonElement>('[data-tahrir]').focus(); });
+
+  // Chiqish: ikki qadam (tasdiq bloki), Esc yoki "Stay" bekor qiladi
+  const tasdiq = $('[data-chiq-tasdiq]');
+  const tasdiqniYop = () => { tasdiq.hidden = true; $('[data-azo-tugmalar]').hidden = false; $<HTMLButtonElement>('[data-chiq]').focus(); };
+  $('[data-chiq]').addEventListener('click', () => {
+    formaniOch(false);
+    $('[data-azo-tugmalar]').hidden = true;
+    tasdiq.hidden = false;
+    $<HTMLButtonElement>('[data-chiq-yoq]').focus();
+  });
+  $('[data-chiq-yoq]').addEventListener('click', tasdiqniYop);
+  tasdiq.addEventListener('keydown', (e) => { if (e.key === 'Escape') tasdiqniYop(); });
+  $('[data-chiq-ha]').addEventListener('click', async () => {
+    const b = $<HTMLButtonElement>('[data-chiq-ha]');
+    if (!api || b.disabled) return;
+    b.disabled = true;
+    b.setAttribute('aria-busy', 'true');
+    try {
+      menniKorsat(await api.chiq());
+      await jadvalniYukla();
+      jadvalXabar.textContent = 'You left the leaderboard. Your XP is kept.';
+      laqab.focus();
+    } catch (err) {
+      xato(reytingXatoMatni(kod(err)));
+    } finally {
+      b.disabled = false;
+      b.removeAttribute('aria-busy');
+    }
+  });
+
+  async function apiOl(): Promise<Api | 'mehmon' | null> {
+    if (import.meta.env.DEV) {
+      const s = new URLSearchParams(location.search).get('sinov');
+      const sinov = await import('../../../../../lib/sat/reytingSinov');
+      if (sinov.sinovTurmi(s)) {
+        $('[data-sinov-belgi]').hidden = false;
+        if (s === 'mehmon') return 'mehmon';
+        let m = sinov.sinovMen(s);
+        return {
+          men: async () => m,
+          jadval: async (d, o) => sinov.sinovJadval(m.joined ? s : 'yangi', d, o),
+          qoshil: async (l, c, k) => {
+            if (/admin|fuck/i.test(l)) throw new Error('nickname_not_allowed');
+            if (l.toLowerCase() === 'sample_01') throw new Error('nickname_taken');
+            m = { ...m, joined: true, nickname: l, nickname_ok: true, country: c, show_country: k && !!c };
+            return m;
+          },
+          chiq: async () => (m = { ...m, joined: false }),
+        };
+      }
+    }
+    const c = hisobMijoz();
+    if (!c) return null;
+    const { data } = await c.auth.getSession();
+    if (!data.session) return 'mehmon';
+    if (!(await hisobQorovul())) return null; // rozilik sahifasiga yo'naltirildi
+    const rpc = async <T,>(nom: string, args?: Record<string, unknown>) => {
+      const { data: d, error } = await c.rpc(nom, args);
+      if (error) throw new Error(error.message);
+      return d as T;
+    };
+    return {
+      men: () => rpc<MenHolat>('leaderboard_me'),
+      jadval: (d, o) => rpc<Jadval>('leaderboard', { p_period: d, p_scope: o }),
+      qoshil: (l, cc, k) => rpc<MenHolat>('leaderboard_join', { p_nickname: l, p_country: cc, p_show_country: k }),
+      chiq: () => rpc<MenHolat>('leaderboard_leave'),
+    };
+  }
+
+  (async () => {
+    const a = await apiOl();
+    kutish.hidden = true;
+    if (a === null) { if (!hisobMijoz()) $('[data-yoq]').hidden = false; return; }
+    if (a === 'mehmon') {
+      $<HTMLAnchorElement>('[data-kirish]').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname)}`;
+      $('[data-mehmon]').hidden = false;
+      return;
+    }
+    api = a;
+    menniKorsat(await api.men());
+    ichi.hidden = false;
+    await jadvalniYukla();
+  })().catch((e) => {
+    kutish.hidden = true;
+    xato(reytingXatoMatni(kod(e)));
+  });
+</script>
+
+<style>
+  .reyting [hidden] { display: none !important; }
+  .reyting { display: flex; flex-direction: column; gap: var(--b-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill { padding: 4px 12px; border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-chiziq { border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
+  .holat-matn { color: var(--matn-ikkinchi); }
+  .xato { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; }
+  [data-ichi]:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-8); }
+  .kichik-sarlavha { font-size: var(--matn-kichik); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .h3 { font-size: var(--matn-h3); }
+  .kichik { font-size: var(--matn-kichik); }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+
+  .panel { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); }
+  .panel p { max-width: 62ch; }
+  .panel > .tugma { align-self: flex-start; }
+  .xp { background: var(--fon-ikkinchi); border: 0; }
+  .xp-son { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--b-4); margin: 0; }
+  .xp-son dt { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .xp-son dd { margin: 0; font-size: var(--matn-h3); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .tasdiq { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .tugma:disabled { cursor: progress; }
+
+  .forma .maydon { display: flex; flex-direction: column; gap: var(--b-1); }
+  .forma label { font-weight: 700; }
+  .forma input[type='text'], .forma select {
+    min-height: 48px; padding: 0 var(--b-4); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    background: var(--fon); color: var(--matn); font: inherit; font-size: 17px; max-width: 24rem; width: 100%;
+  }
+  .forma input[aria-invalid='true'] { border-color: var(--input-error-border); }
+  .forma input:focus-visible, .forma select:focus-visible, .belgi-qator input:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .maydon-xato { font-weight: 700; color: var(--input-error-text); }
+  .belgi-qator { display: flex; align-items: flex-start; gap: var(--b-3); font-weight: 400 !important; max-width: 62ch; }
+  .belgi-qator input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; }
+  .belgi-qator:has(input:disabled) { color: var(--matn-sust); }
+
+  .jadval-blok { display: flex; flex-direction: column; gap: var(--b-4); }
+  .tanlovlar { display: flex; flex-wrap: wrap; gap: var(--b-5); }
+  .segment { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
+  .segment legend { padding: 0; margin-bottom: var(--b-2); }
+  .segment-ichi { display: inline-flex; align-self: flex-start; padding: var(--b-1); gap: var(--b-1); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); }
+  .segment-variant { position: relative; }
+  .segment-variant input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .segment-variant input:disabled { cursor: not-allowed; }
+  .segment-variant span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--b-5); border-radius: var(--r-toliq); font-weight: 700; color: var(--matn-ikkinchi); }
+  .segment-variant input:checked + span { background: var(--sirt); color: var(--matn); box-shadow: var(--soya); }
+  .segment-variant input:disabled + span { color: var(--matn-sust); }
+  .segment-variant input:focus-visible + span { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+
+  .jadval-xabar:empty { display: none; }
+  .jadval-xabar { font-weight: 700; }
+  /* Jadval: neytral ranglar; o'z qatori qalin yozuv, "You" yorlig'i va chegara bilan (rang ma'no tashimaydi). */
+  .jadval { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .jadval caption { text-align: left; font-weight: 700; padding-bottom: var(--b-3); color: var(--matn-ikkinchi); }
+  .jadval th[scope='col'] { text-align: left; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); padding: var(--b-2) var(--b-3); border-bottom: 1.5px solid var(--chiziq-kuchli); }
+  .jadval :global(td), .jadval :global(th[scope='row']) { padding: var(--b-3); border-bottom: 1px solid var(--chiziq); text-align: left; font-weight: 400; overflow-wrap: anywhere; }
+  .jadval .son, .jadval :global(.son) { text-align: right; width: 5.5em; white-space: nowrap; }
+  .jadval :global(tr.men) { background: var(--fon-ikkinchi); }
+  .jadval :global(tr.men td), .jadval :global(tr.men th) { font-weight: 800; }
+  .jadval :global(tr.ajratgich td), .jadval :global(tr.ajratgich th) { border-top: 2px dashed var(--chiziq-kuchli); }
+  .jadval :global(.yorliq) { padding: 2px 8px; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .jadval :global(.mamlakat) { font-size: var(--matn-mayda); color: var(--matn-ikkinchi); font-weight: 700; letter-spacing: 0.04em; }
+  @media (max-width: 480px) {
+    .xp-son dd { font-size: var(--matn-katta); }
+    .jadval .son, .jadval :global(.son) { width: 3.5em; }
+    .jadval :global(td), .jadval :global(th[scope='row']) { padding: var(--b-3) var(--b-2); }
+  }
+
+  .qoida { display: flex; flex-direction: column; gap: var(--b-3); }
+  .qoida-jadval { width: 100%; max-width: 40rem; border-collapse: collapse; }
+  .qoida-jadval th { text-align: left; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); padding: var(--b-2) var(--b-3); border-bottom: 1.5px solid var(--chiziq-kuchli); }
+  .qoida-jadval td { padding: var(--b-2) var(--b-3); border-bottom: 1px solid var(--chiziq); }
+  .qoida-jadval .son { text-align: right; white-space: nowrap; font-weight: 700; }
+  .qoida ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-2); color: var(--matn-ikkinchi); max-width: 70ch; }
+</style>

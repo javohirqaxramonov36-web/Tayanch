@@ -7,7 +7,7 @@
 //  - chegara: oddiy matn 4.5:1, katta matn (>= 24px yoki >= 18.66px qalin) 3:1.
 //  - aria-hidden, ko'rinmas va disabled elementlar o'tkazib yuboriladi.
 // Ishlatish: `npm run build`, `astro preview`, bu faylni dist/ ga nusxalab sahifaga yuklang, so'ng
-//   await kontrastTekshir(['/Tayanch/uz/', ...], ['yorug', 'qorongi'])
+//   await kontrastTekshir(['/uz/', ...], ['yorug', 'qorongi'])
 (function () {
   const parse = (s) => {
     if (!s || s === 'transparent') return [0, 0, 0, 0];

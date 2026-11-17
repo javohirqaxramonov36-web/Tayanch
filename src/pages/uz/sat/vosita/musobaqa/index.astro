@@ -1,0 +1,655 @@
+---
+// SAT musobaqalari (P32, 2-PR): vaqt oynasi, savollar to'plami, natija jadvali. Mukofot yo'q.
+// Server: public.contest_* (20261116124750_musobaqa.sql). Qoidalar: docs/xp-qoidasi.md, "Musobaqa".
+// Ko'rinishlar: ro'yxat (mehmon ham ko'radi) · ?c=<slug>: kutilmoqda · boshlash · yechish (taymer, savol, Save, Finish
+// tasdiq bilan) · topshirildi (natija oyna yopilgach) · tugagan (natija jadvali, o'z bali, o'z sharhi).
+// Javob saqlangach qulflanadi; to'g'ri/xato musobaqa tugaguncha ko'rsatilmaydi (server ham qaytarmaydi).
+// Jadval: faqat laqab, 18+ va reytingga qo'shilganlar (1-PR qoidasi); o'z qatori qalin va "You" bilan, qizil/yashil yo'q.
+// Klaviatura: savol komponenti (A–D, strelkalar), oddiy tugmalar; Esc Finish tasdig'ini yopadi. Telefon: bir ustun.
+// Brauzerda hech narsa saqlanmaydi (holat serverda). Sun'iy holatlar (faqat dev):
+// ?sinov=mehmon|royxat|yaqin|ochiq|ishlayapti|topshirgan|tugagan|kichik
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
+import { yol } from '../../../../../lib/yol';
+---
+<BolimQobiq
+  title="Contests · SAT"
+  description="Timed SAT practice contests on Tayanch with original questions. Results show nicknames only. No prizes."
+  turi="vosita"
+  yol={['Practice']}
+  bolim="sat"
+  holat="qoralama"
+>
+  <SavolUslub />
+  <div class="ichki musobaqa">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1 data-sarlavha>Contests</h1>
+      <p class="lead" data-lead>Solve the same set of original SAT-style questions as everyone else within a time window. You get one attempt. Results open when the contest ends. There are no prizes.</p>
+    </header>
+
+    <p class="holat-matn" role="status" data-kutish>Loading contests…</p>
+    <p class="ogoh" data-yoq hidden>Accounts are not available on this site yet.</p>
+    <p class="ogoh" data-sinov-belgi hidden>Test data (development only). Contests, questions and nicknames are samples, not real.</p>
+    <p class="xato" role="alert" data-xato hidden></p>
+
+    <!-- Ro'yxat -->
+    <div class="qatlam" data-royxat hidden>
+      <section class="panel" data-mehmon hidden aria-labelledby="mehmon-sarlavha">
+        <h2 id="mehmon-sarlavha" class="h3">Sign in to take part</h2>
+        <p>Your answers and time are saved to your account. Without an account you can only see the schedule.</p>
+        <a class="tugma tugma-asosiy" data-kirish href={yol('/uz/hisob/kirish/')}>Sign in</a>
+      </section>
+
+      <section aria-labelledby="ochiq-sarlavha" data-guruh="open">
+        <h2 id="ochiq-sarlavha" class="h3">Open now</h2>
+        <ul class="kartalar" data-kartalar></ul>
+        <p class="ikkinchi" data-bosh>No contest is open right now.</p>
+      </section>
+      <section aria-labelledby="keyin-sarlavha" data-guruh="upcoming">
+        <h2 id="keyin-sarlavha" class="h3">Upcoming</h2>
+        <ul class="kartalar" data-kartalar></ul>
+        <p class="ikkinchi" data-bosh>No contests are scheduled yet.</p>
+      </section>
+      <section aria-labelledby="tugagan-sarlavha" data-guruh="ended">
+        <h2 id="tugagan-sarlavha" class="h3">Ended</h2>
+        <ul class="kartalar" data-kartalar></ul>
+        <p class="ikkinchi" data-bosh>No past contests yet.</p>
+      </section>
+
+      <section class="qoida" aria-labelledby="qoida-sarlavha">
+        <h2 id="qoida-sarlavha" class="kichik-sarlavha">How contests work</h2>
+        <ul>
+          <li>Each contest has a window. You can start any time inside it, once. Your timer starts when you press Start and stops at the time limit or when the window closes, whichever comes first.</li>
+          <li>Each answer is final once you save it. You do not see whether it is right until the contest ends.</li>
+          <li>Your score is the number of correct answers. Equal scores are ordered by time, from your start to your last saved answer. Equal score and time share a rank.</li>
+          <li>The results table shows nicknames only, and only for accounts marked 18 or older that joined the <a href={yol('/uz/sat/vosita/reyting/')}>leaderboard</a>. Everyone who took part sees their own score.</li>
+          <li>Contest answers do not use your plan's daily limits and do not give XP. Questions are original and checked by a Tayanch author. There are no prizes.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Bitta musobaqa -->
+    <div class="qatlam" data-musobaqa hidden>
+      <p><a class="orqaga" href="./" data-orqaga>All contests</a></p>
+      <dl class="malumot">
+        <div><dt>Window</dt><dd data-m="oyna"></dd></div>
+        <div><dt>Time limit</dt><dd data-m="vaqt"></dd></div>
+        <div><dt>Questions</dt><dd data-m="savol"></dd></div>
+        <div><dt>Status</dt><dd data-m="holat"></dd></div>
+      </dl>
+      <p class="ikkinchi kichik">Times are in your local time.</p>
+
+      <section class="panel" data-m-mehmon hidden aria-labelledby="m-mehmon-sarlavha">
+        <h2 id="m-mehmon-sarlavha" class="h3">Sign in to take part</h2>
+        <p>Your answers and time are saved to your account.</p>
+        <a class="tugma tugma-asosiy" data-m-kirish href={yol('/uz/hisob/kirish/')}>Sign in</a>
+      </section>
+
+      <section class="panel" data-yaqin hidden aria-labelledby="yaqin-sarlavha">
+        <h2 id="yaqin-sarlavha" class="h3">This contest has not started yet</h2>
+        <p data-yaqin-matn></p>
+      </section>
+
+      <section class="panel" data-boshlash hidden aria-labelledby="boshlash-sarlavha">
+        <h2 id="boshlash-sarlavha" class="h3">Ready to start?</h2>
+        <p data-boshlash-matn></p>
+        <ul class="royxat-ichki">
+          <li>You get one attempt. Leaving the page does not stop the timer.</li>
+          <li>Save each answer before moving on. Saved answers cannot be changed.</li>
+          <li>Work on your own, as on test day. Please do not share the questions until the contest ends.</li>
+        </ul>
+        <button type="button" class="tugma tugma-asosiy" data-boshla>Start contest</button>
+      </section>
+
+      <section class="yechish" data-yechish hidden aria-labelledby="yechish-sarlavha">
+        <h2 id="yechish-sarlavha" class="ekranda-yoq">Contest questions</h2>
+        <div class="taymer-qator">
+          <p class="taymer"><span class="kichik-sarlavha">Time left</span> <span class="taymer-son" data-taymer aria-hidden="true">--:--</span></p>
+          <p class="ikkinchi" data-progress role="status"></p>
+        </div>
+        <p class="ekranda-yoq" aria-live="polite" data-taymer-elon></p>
+        <div data-savol-joy></div>
+        <p class="ikkinchi" data-saqlangan hidden>Answer saved. It cannot be changed.</p>
+        <div class="tugmalar">
+          <button type="button" class="tugma tugma-ikkinchi" data-oldingi>Previous</button>
+          <button type="button" class="tugma tugma-asosiy" data-saqla disabled>Save answer</button>
+          <button type="button" class="tugma tugma-ikkinchi" data-keyingi>Next</button>
+        </div>
+        <div class="tugmalar">
+          <button type="button" class="tugma tugma-ikkinchi" data-yakun>Finish contest</button>
+        </div>
+        <div class="tasdiq" data-yakun-tasdiq hidden role="group" aria-labelledby="yakun-savol">
+          <p id="yakun-savol"><strong>Finish now?</strong> <span data-yakun-matn></span></p>
+          <div class="tugmalar">
+            <button type="button" class="tugma tugma-asosiy" data-yakun-ha>Finish</button>
+            <button type="button" class="tugma tugma-ikkinchi" data-yakun-yoq>Keep going</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-topshirildi hidden aria-labelledby="topshirildi-sarlavha" tabindex="-1">
+        <h2 id="topshirildi-sarlavha" class="h3">Your answers are saved</h2>
+        <p data-topshirildi-matn></p>
+      </section>
+
+      <section class="natija" data-natija hidden aria-labelledby="natija-sarlavha">
+        <h2 id="natija-sarlavha" class="h3">Results</h2>
+        <p class="natija-men" data-natija-men></p>
+        <p class="ikkinchi" data-natija-izoh hidden></p>
+        <p class="ikkinchi" data-natija-bosh hidden>No one on the leaderboard took part in this contest.</p>
+        <table class="jadval" data-jadval hidden>
+          <caption data-jadval-sarlavha></caption>
+          <thead>
+            <tr>
+              <th scope="col" class="son">Rank</th>
+              <th scope="col">Nickname</th>
+              <th scope="col" class="son">Score</th>
+              <th scope="col" class="son">Time</th>
+            </tr>
+          </thead>
+          <tbody data-qatorlar></tbody>
+        </table>
+        <div class="sharh" data-sharh-blok hidden>
+          <button type="button" class="tugma tugma-ikkinchi" data-sharh-och aria-expanded="false" aria-controls="sharh-royxat">Show my answers</button>
+          <p class="ikkinchi" role="status" data-sharh-holat></p>
+          <ol class="sharh-royxat" id="sharh-royxat" data-sharh hidden></ol>
+        </div>
+      </section>
+    </div>
+
+    <ManbaBlok
+      manbalar={[]}
+      tekshirilgan="2026-11-13"
+      keyingiTekshiruv="2026-12-13"
+      tekshirilmagan={[
+        'Contests have not been tried with real accounts in a browser yet.',
+        'The 18+ check uses the age group you chose when you signed up. Tayanch cannot verify it.',
+        'A contest score is not an SAT score and does not predict one.',
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { hisobMijoz, hisobQorovul, hisobYoli } from '../../../../../lib/hisob';
+  import { savolChiz, type SavolKorsatkich } from '../../../../../lib/sat/savolKorsatkich';
+  import { BOSH_HOLAT, type SavolHolati } from '../../../../../lib/sat/savolTuri';
+  import { komponentSavoli, vaqtMatni, type ServerSavol } from '../../../../../lib/sat/sessiya';
+  import {
+    daqiqaElonmi, guruhla, musobaqaXatoMatni, natijaSarlavhasi, natijaVaqti, oynaMatni, qolganVaqt, slugOl, togriYoz, vaqtYoz,
+    type Musobaqa, type MusobaqaHolat, type NatijaQator, type Natijalar, type Royxat, type Sharh, type YuborJavob,
+  } from '../../../../../lib/sat/musobaqa';
+
+  type Api = {
+    royxat: () => Promise<Royxat>;
+    holat: (slug: string) => Promise<MusobaqaHolat>;
+    boshla: (slug: string) => Promise<MusobaqaHolat>;
+    yubor: (sid: string, qid: string, javob: string, ms: number) => Promise<YuborJavob>;
+    yakunla: (slug: string) => Promise<MusobaqaHolat>;
+    natija: (slug: string) => Promise<Natijalar>;
+    sharh: (slug: string) => Promise<Sharh>;
+  };
+
+  const $ = <T extends HTMLElement = HTMLElement>(s: string, ota: ParentNode = document) => ota.querySelector<T>(s)!;
+  const kod = (e: unknown) => (e as { message?: string } | null)?.message;
+  const xato = (m: string | null) => { const el = $('[data-xato]'); el.textContent = m ?? ''; el.hidden = !m; };
+  const mamlakatNomi = (() => {
+    try { const d = new Intl.DisplayNames(['en'], { type: 'region' }); return (c: string) => d.of(c) ?? c; } catch { return (c: string) => c; }
+  })();
+  const holatNomi = { open: 'Open now', upcoming: 'Upcoming', ended: 'Ended' } as const;
+  const daqiqa = (n: number) => `${n} minute${n === 1 ? '' : 's'}`;
+
+  let api: Api | null = null;
+  let mehmon = false;
+  let slug: string | null = null;
+  let joriy: MusobaqaHolat | null = null;
+  let tartib = 0;
+  let korsatkich: SavolKorsatkich | null = null;
+  const qoralama = new Map<string, string>(); // saqlanmagan tanlov (faqat xotirada)
+  let savolOchildi = 0;
+  let taymer: number | undefined;
+  let soatOlingan = 0;
+  let oldingiMs: number | null = null;
+  let band = false;
+
+  // ---------- Ro'yxat ----------
+  function karta(m: Musobaqa): HTMLLIElement {
+    const li = Object.assign(document.createElement('li'), { className: 'karta' });
+    const h = document.createElement('h3');
+    const a = Object.assign(document.createElement('a'), { href: `?c=${encodeURIComponent(m.slug)}`, textContent: m.title });
+    h.append(a);
+    li.append(h);
+    if (m.description) li.append(Object.assign(document.createElement('p'), { className: 'ikkinchi', textContent: m.description }));
+    const dl = Object.assign(document.createElement('dl'), { className: 'karta-mal' });
+    for (const [k, v] of [['Window', oynaMatni(m.starts_at, m.ends_at)], ['Time limit', daqiqa(m.duration_min)], ['Questions', String(m.question_count)]]) {
+      const d = document.createElement('div');
+      d.append(Object.assign(document.createElement('dt'), { textContent: k }), Object.assign(document.createElement('dd'), { textContent: v }));
+      dl.append(d);
+    }
+    li.append(dl);
+    if (m.entry) {
+      const t = m.entry.finished ? (m.status === 'ended' ? 'You took part' : 'You finished') : 'In progress';
+      li.append(Object.assign(document.createElement('p'), { className: 'pill pill-chiziq karta-pill', textContent: t }));
+    }
+    return li;
+  }
+
+  async function royxatniKorsat() {
+    const r = await api!.royxat();
+    const g = guruhla(r.contests);
+    for (const k of ['open', 'upcoming', 'ended'] as const) {
+      const s = $(`[data-guruh="${k}"]`);
+      $('[data-kartalar]', s).replaceChildren(...g[k].map(karta));
+      $('[data-bosh]', s).hidden = g[k].length > 0;
+    }
+    $('[data-mehmon]').hidden = !mehmon;
+    $('[data-royxat]').hidden = false;
+  }
+
+  // ---------- Bitta musobaqa ----------
+  function korinishlar(nom: string | null) {
+    for (const k of ['m-mehmon', 'yaqin', 'boshlash', 'yechish', 'topshirildi', 'natija']) $(`[data-${k}]`).hidden = k !== nom;
+  }
+
+  function malumot(m: Musobaqa) {
+    $('[data-sarlavha]').textContent = m.title;
+    $('[data-lead]').textContent = m.description ?? 'A timed SAT practice contest with original questions.';
+    document.title = `${m.title} · Contests · SAT`;
+    $('[data-m="oyna"]').textContent = oynaMatni(m.starts_at, m.ends_at);
+    $('[data-m="vaqt"]').textContent = daqiqa(m.duration_min);
+    $('[data-m="savol"]').textContent = String(m.question_count);
+    $('[data-m="holat"]').textContent = holatNomi[m.status];
+  }
+
+  async function musobaqaniKorsat(h?: MusobaqaHolat) {
+    clearInterval(taymer);
+    if (mehmon) {
+      const r = await api!.royxat();
+      const m = r.contests.find((x) => x.slug === slug);
+      if (!m) throw new Error('contest_not_found');
+      malumot(m);
+      $<HTMLAnchorElement>('[data-m-kirish]').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname + location.search)}`;
+      korinishlar('m-mehmon');
+      $('[data-musobaqa]').hidden = false;
+      return;
+    }
+    joriy = h ?? await api!.holat(slug!);
+    soatOlingan = Date.now();
+    const m = joriy;
+    malumot(m);
+    $('[data-musobaqa]').hidden = false;
+
+    if (m.status === 'upcoming') {
+      $('[data-yaqin-matn]').textContent = `It opens on ${vaqtYoz(m.starts_at)}. Come back then to start.`;
+      korinishlar('yaqin');
+    } else if (m.status === 'ended') {
+      korinishlar('natija');
+      await natijaniKorsat();
+    } else if (!m.entry) {
+      const qolgan = Math.max(0, Math.floor((Date.parse(m.ends_at) - Date.parse(m.server_now)) / 60000));
+      const qisqa = qolgan < m.duration_min ? ` The window closes in ${daqiqa(qolgan)}, so you will have less time than the full limit.` : '';
+      $('[data-boshlash-matn]').textContent = `You have ${daqiqa(m.duration_min)} for ${m.question_count} questions from the moment you press Start.${qisqa}`;
+      korinishlar('boshlash');
+    } else if (m.entry.finished || !m.questions) {
+      $('[data-topshirildi-matn]').textContent = `You answered ${m.entry.answered} of ${m.question_count} questions. Results and correct answers open on ${vaqtYoz(m.ends_at)}.`;
+      korinishlar('topshirildi');
+    } else {
+      korinishlar('yechish');
+      const birinchi = m.questions.findIndex((q) => !(q.id in (m.answers ?? {})));
+      tartib = birinchi >= 0 ? birinchi : 0;
+      savolniChiz();
+      taymerniBoshla();
+    }
+  }
+
+  function savolHolati(q: ServerSavol): SavolHolati {
+    const saqlangan = joriy?.answers?.[q.id];
+    const javob = saqlangan ?? qoralama.get(q.id);
+    return {
+      ...BOSH_HOLAT, ochirilgan: [],
+      javobBerilgan: saqlangan !== undefined,
+      tanlangan: q.format === 'mcq' ? javob ?? null : null,
+      sprQiymat: q.format === 'spr' ? javob ?? '' : undefined,
+    };
+  }
+
+  function tugmalarniYangila() {
+    const qs = joriy!.questions!;
+    const q = qs[tartib];
+    const saqlangan = joriy!.answers?.[q.id] !== undefined;
+    $<HTMLButtonElement>('[data-oldingi]').disabled = tartib === 0;
+    $<HTMLButtonElement>('[data-keyingi]').disabled = tartib === qs.length - 1;
+    const saqla = $<HTMLButtonElement>('[data-saqla]');
+    saqla.hidden = saqlangan || q.format === 'spr'; // SPR: komponentning o'z "Save answer" tugmasi
+    saqla.disabled = band || !qoralama.get(q.id);
+    $('[data-saqlangan]').hidden = !saqlangan;
+    const n = Object.keys(joriy!.answers ?? {}).length;
+    $('[data-progress]').textContent = `Question ${tartib + 1} of ${qs.length} · ${n} saved`;
+  }
+
+  function savolniChiz() {
+    const q = joriy!.questions![tartib];
+    korsatkich?.yoq();
+    const joy = $('[data-savol-joy]');
+    joy.replaceChildren();
+    savolOchildi = Date.now();
+    korsatkich = savolChiz(joy, {
+      savol: komponentSavoli(q, null),
+      holat: savolHolati(q),
+      rejim: 'taymerli',
+      raqam: tartib + 1,
+      onSelect: (k) => {
+        if (k) qoralama.set(q.id, k); else qoralama.delete(q.id);
+        korsatkich?.yangila(savolHolati(q));
+        tugmalarniYangila();
+      },
+      onSubmitSpr: (v) => { qoralama.set(q.id, v); saqla(); },
+    });
+    tugmalarniYangila();
+  }
+
+  async function saqla() {
+    if (!joriy?.questions || !joriy.entry || band) return;
+    const q = joriy.questions[tartib];
+    const javob = qoralama.get(q.id);
+    if (!javob) return;
+    band = true;
+    tugmalarniYangila();
+    xato(null);
+    try {
+      await api!.yubor(joriy.entry.session_id, q.id, javob, Date.now() - savolOchildi);
+      joriy.answers = { ...(joriy.answers ?? {}), [q.id]: javob };
+      qoralama.delete(q.id);
+      const qs = joriy.questions;
+      if (Object.keys(joriy.answers).length >= qs.length) { band = false; await musobaqaniKorsat(); $('[data-topshirildi]').focus(); return; }
+      const keyingi = qs.findIndex((x, i) => i > tartib && !(x.id in joriy!.answers!));
+      const qaytadan = qs.findIndex((x) => !(x.id in joriy!.answers!));
+      tartib = keyingi >= 0 ? keyingi : qaytadan;
+      band = false;
+      savolniChiz();
+      $<HTMLElement>('.sk-savol', $('[data-savol-joy]'))?.focus?.();
+    } catch (e) {
+      band = false;
+      const k = kod(e);
+      xato(musobaqaXatoMatni(k));
+      if (k === 'contest_closed' || k === 'session_finished') await musobaqaniKorsat();
+      else tugmalarniYangila();
+    }
+  }
+
+  function taymerniBoshla() {
+    const m = joriy!;
+    oldingiMs = null;
+    const qadam = () => {
+      const ms = qolganVaqt(m.entry!.deadline, m.server_now, soatOlingan, Date.now());
+      $('[data-taymer]').textContent = vaqtMatni(ms);
+      const elon = daqiqaElonmi(oldingiMs, ms);
+      if (elon && (oldingiMs === null || ms <= 5 * 60000 || Math.ceil(ms / 60000) % 5 === 0)) $('[data-taymer-elon]').textContent = elon;
+      oldingiMs = ms;
+      if (ms <= 0) { clearInterval(taymer); musobaqaniKorsat().catch((e) => xato(musobaqaXatoMatni(kod(e)))); }
+    };
+    qadam();
+    taymer = window.setInterval(qadam, 1000);
+  }
+
+  function natijaQator(q: NatijaQator, ajratgich = false) {
+    const tr = document.createElement('tr');
+    if (q.me) tr.classList.add('men');
+    if (ajratgich) tr.classList.add('ajratgich');
+    const orin = Object.assign(document.createElement('td'), { className: 'son', textContent: String(q.rank) });
+    const nom = document.createElement('th');
+    nom.scope = 'row';
+    nom.append(Object.assign(document.createElement(q.me ? 'strong' : 'span'), { className: 'laqab', textContent: q.nickname }));
+    if (q.me) nom.append(' ', Object.assign(document.createElement('span'), { className: 'yorliq', textContent: 'You' }));
+    if (q.country) {
+      const c = Object.assign(document.createElement('span'), { className: 'mamlakat', textContent: q.country, title: mamlakatNomi(q.country) });
+      c.setAttribute('aria-label', mamlakatNomi(q.country));
+      nom.append(' ', c);
+    }
+    const ball = Object.assign(document.createElement('td'), { className: 'son', textContent: String(q.score) });
+    const vaqt = Object.assign(document.createElement('td'), { className: 'son', textContent: natijaVaqti(q.time_ms) });
+    tr.append(orin, nom, ball, vaqt);
+    return tr;
+  }
+
+  async function natijaniKorsat() {
+    const n = await api!.natija(slug!);
+    const men = $('[data-natija-men]');
+    if (n.me) {
+      const orin = n.me.rank ? ` Your rank: ${n.me.rank}.` : '';
+      men.textContent = `You scored ${n.me.score} of ${n.question_count} in ${natijaVaqti(n.me.time_ms)}.${orin}`;
+    } else {
+      men.textContent = n.entered ? 'You started this contest but did not save any answers, so you have no score.' : 'You did not take part in this contest.';
+    }
+    const izoh = $('[data-natija-izoh]');
+    izoh.hidden = true;
+    if (!n.eligible) {
+      izoh.textContent = 'The results table is open only to accounts marked 18 or older. You can still see your own score.';
+      izoh.hidden = false;
+    } else if (n.me && !n.me.rank) {
+      izoh.replaceChildren('You are not in the table because you have not joined the ',
+        Object.assign(document.createElement('a'), { href: $<HTMLAnchorElement>('.qoida a').href, textContent: 'leaderboard' }), '.');
+      izoh.hidden = false;
+    }
+    const jadval = $('[data-jadval]');
+    jadval.hidden = !n.eligible || n.rows.length === 0;
+    $('[data-natija-bosh]').hidden = !n.eligible || n.rows.length > 0;
+    $('[data-jadval-sarlavha]').textContent = natijaSarlavhasi(n);
+    const qatorlar = n.rows.map((q) => natijaQator(q));
+    if (n.me_row) qatorlar.push(natijaQator(n.me_row, true));
+    $('[data-qatorlar]').replaceChildren(...qatorlar);
+    $('[data-sharh-blok]').hidden = !n.entered;
+  }
+
+  async function sharhniOch() {
+    const tugma = $<HTMLButtonElement>('[data-sharh-och]');
+    const ol = $('[data-sharh]');
+    if (!ol.hidden) { ol.hidden = true; tugma.setAttribute('aria-expanded', 'false'); tugma.textContent = 'Show my answers'; return; }
+    if (!ol.childElementCount) {
+      $('[data-sharh-holat]').textContent = 'Loading your answers…';
+      const s = await api!.sharh(slug!);
+      for (const b of s.items) {
+        const li = document.createElement('li');
+        li.className = 'sharh-band';
+        if (!b.answer) li.append(Object.assign(document.createElement('p'), { className: 'ikkinchi kichik', textContent: 'Not answered.' }));
+        const joy = document.createElement('div');
+        li.append(joy);
+        ol.append(li);
+        savolChiz(joy, {
+          savol: komponentSavoli({ ...b, domain: '', skill: '' }, null),
+          holat: {
+            ...BOSH_HOLAT, ochirilgan: [], javobBerilgan: true,
+            tanlangan: b.format === 'mcq' ? b.answer : null,
+            sprQiymat: b.format === 'spr' ? b.answer ?? '' : undefined,
+            natija: { togrimi: !!b.is_correct, togriJavob: togriYoz(b.correct), izoh: b.explanation },
+          },
+          rejim: 'taymersiz',
+          raqam: b.position,
+        });
+      }
+      $('[data-sharh-holat]').textContent = '';
+    }
+    ol.hidden = false;
+    tugma.setAttribute('aria-expanded', 'true');
+    tugma.textContent = 'Hide my answers';
+  }
+
+  // ---------- Hodisalar ----------
+  $('[data-boshla]').addEventListener('click', async () => {
+    const b = $<HTMLButtonElement>('[data-boshla]');
+    if (b.disabled) return;
+    b.disabled = true;
+    b.setAttribute('aria-busy', 'true');
+    xato(null);
+    try {
+      await musobaqaniKorsat(await api!.boshla(slug!));
+      $<HTMLElement>('[data-yechish] h2').setAttribute('tabindex', '-1');
+      $<HTMLElement>('[data-yechish] h2').focus();
+    } catch (e) {
+      xato(musobaqaXatoMatni(kod(e)));
+    } finally {
+      b.disabled = false;
+      b.removeAttribute('aria-busy');
+    }
+  });
+  $('[data-saqla]').addEventListener('click', saqla);
+  $('[data-oldingi]').addEventListener('click', () => { if (tartib > 0) { tartib--; savolniChiz(); } });
+  $('[data-keyingi]').addEventListener('click', () => { if (joriy?.questions && tartib < joriy.questions.length - 1) { tartib++; savolniChiz(); } });
+
+  const tasdiq = $('[data-yakun-tasdiq]');
+  const tasdiqniYop = () => { tasdiq.hidden = true; $<HTMLButtonElement>('[data-yakun]').hidden = false; $<HTMLButtonElement>('[data-yakun]').focus(); };
+  $('[data-yakun]').addEventListener('click', () => {
+    const qolgan = (joriy?.questions?.length ?? 0) - Object.keys(joriy?.answers ?? {}).length;
+    $('[data-yakun-matn]').textContent = qolgan > 0
+      ? `${qolgan} question${qolgan === 1 ? ' is' : 's are'} not saved and will count as wrong. You cannot come back after this.`
+      : 'You cannot come back after this.';
+    $<HTMLButtonElement>('[data-yakun]').hidden = true;
+    tasdiq.hidden = false;
+    $<HTMLButtonElement>('[data-yakun-yoq]').focus();
+  });
+  $('[data-yakun-yoq]').addEventListener('click', tasdiqniYop);
+  tasdiq.addEventListener('keydown', (e) => { if (e.key === 'Escape') tasdiqniYop(); });
+  $('[data-yakun-ha]').addEventListener('click', async () => {
+    const b = $<HTMLButtonElement>('[data-yakun-ha]');
+    if (b.disabled) return;
+    b.disabled = true;
+    try {
+      tasdiq.hidden = true;
+      $<HTMLButtonElement>('[data-yakun]').hidden = false;
+      await musobaqaniKorsat(await api!.yakunla(slug!));
+      $('[data-topshirildi]').focus();
+    } catch (e) {
+      xato(musobaqaXatoMatni(kod(e)));
+    } finally {
+      b.disabled = false;
+    }
+  });
+  $('[data-sharh-och]').addEventListener('click', () => sharhniOch().catch((e) => { $('[data-sharh-holat]').textContent = musobaqaXatoMatni(kod(e)); }));
+
+  // ---------- API ----------
+  async function apiOl(): Promise<Api | null> {
+    if (import.meta.env.DEV) {
+      const s = new URLSearchParams(location.search).get('sinov');
+      const sinov = await import('../../../../../lib/sat/musobaqaSinov');
+      if (sinov.sinovTurmi(s)) {
+        $('[data-sinov-belgi]').hidden = false;
+        mehmon = s === 'mehmon';
+        slug = slugOl(location.search) ?? sinov.sinovSlug(s);
+        return sinov.sinovApi(s);
+      }
+    }
+    const c = hisobMijoz();
+    if (!c) return null;
+    const { data } = await c.auth.getSession();
+    mehmon = !data.session;
+    if (!mehmon && !(await hisobQorovul())) return null; // rozilik sahifasiga yo'naltirildi
+    const rpc = async <T,>(nom: string, args?: Record<string, unknown>) => {
+      const { data: d, error } = await c.rpc(nom, args);
+      if (error) throw new Error(error.message);
+      return d as T;
+    };
+    return {
+      royxat: () => rpc<Royxat>('contest_list'),
+      holat: (s) => rpc<MusobaqaHolat>('contest_state', { p_slug: s }),
+      boshla: (s) => rpc<MusobaqaHolat>('contest_start', { p_slug: s }),
+      yubor: (sid, qid, j, ms) => rpc<YuborJavob>('submit_answer', { p_session: sid, p_question: qid, p_answer: j, p_time_ms: Math.round(ms) }),
+      yakunla: (s) => rpc<MusobaqaHolat>('contest_finish', { p_slug: s }),
+      natija: (s) => rpc<Natijalar>('contest_results', { p_slug: s }),
+      sharh: (s) => rpc<Sharh>('contest_review', { p_slug: s }),
+    };
+  }
+
+  (async () => {
+    slug = slugOl(location.search);
+    const a = await apiOl();
+    $('[data-kutish]').hidden = true;
+    if (!a) { if (!hisobMijoz()) $('[data-yoq]').hidden = false; return; }
+    api = a;
+    if (mehmon) $<HTMLAnchorElement>('[data-kirish]').href = `${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname)}`;
+    if (slug) await musobaqaniKorsat();
+    else await royxatniKorsat();
+  })().catch((e) => {
+    $('[data-kutish]').hidden = true;
+    xato(musobaqaXatoMatni(kod(e)));
+    if (slug) $('[data-musobaqa]').hidden = false;
+  });
+</script>
+
+<style>
+  .musobaqa [hidden] { display: none !important; }
+  .musobaqa { display: flex; flex-direction: column; gap: var(--b-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .pill, .kartalar :global(.pill) { padding: 4px 12px; border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-chiziq, .kartalar :global(.pill-chiziq) { border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); }
+  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
+  .holat-matn { color: var(--matn-ikkinchi); }
+  .xato { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; }
+  .qatlam:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-8); }
+  .kichik-sarlavha { font-size: var(--matn-kichik); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .h3 { font-size: var(--matn-h3); }
+  .kichik { font-size: var(--matn-kichik); }
+  .ikkinchi { color: var(--matn-ikkinchi); }
+  .ekranda-yoq { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .panel { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); }
+  .panel p { max-width: 62ch; }
+  .panel > .tugma { align-self: flex-start; }
+  .panel:focus { outline: none; }
+  .panel:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .tugma:disabled { cursor: not-allowed; }
+  .tugma[aria-busy='true'] { cursor: progress; }
+  .tasdiq { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .royxat-ichki { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-2); max-width: 62ch; }
+
+  section[data-guruh] { display: flex; flex-direction: column; gap: var(--b-4); }
+  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  .kartalar:empty { display: none; }
+  .kartalar :global(.karta) { display: flex; flex-direction: column; gap: var(--b-3); padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); }
+  .kartalar :global(.karta h3) { font-size: var(--matn-katta); }
+  .kartalar :global(.karta-mal), .malumot { display: grid; gap: var(--b-2) var(--b-4); margin: 0; }
+  .kartalar :global(.karta-mal) { grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); }
+  .kartalar :global(.karta-mal div), .malumot div { display: flex; flex-direction: column; gap: 2px; }
+  .kartalar :global(.karta-mal dt), .malumot dt { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .kartalar :global(.karta-mal dd), .malumot dd { margin: 0; font-weight: 700; }
+  .kartalar :global(.karta-pill) { align-self: flex-start; }
+  .kartalar :global(.ikkinchi) { color: var(--matn-ikkinchi); }
+  .malumot { grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); padding: var(--b-5); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .orqaga { font-weight: 700; }
+
+  .yechish:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-5); }
+  .taymer-qator { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--b-3); }
+  .taymer { display: flex; align-items: baseline; gap: var(--b-3); }
+  .taymer-son { font-size: var(--matn-h3); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  .natija:not([hidden]) { display: flex; flex-direction: column; gap: var(--b-4); }
+  .natija-men { font-size: var(--matn-katta); font-weight: 700; }
+  .jadval { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .jadval caption { text-align: left; font-weight: 700; padding-bottom: var(--b-3); color: var(--matn-ikkinchi); }
+  .jadval th[scope='col'] { text-align: left; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); padding: var(--b-2) var(--b-3); border-bottom: 1.5px solid var(--chiziq-kuchli); }
+  .jadval :global(td), .jadval :global(th[scope='row']) { padding: var(--b-3); border-bottom: 1px solid var(--chiziq); text-align: left; font-weight: 400; overflow-wrap: anywhere; }
+  .jadval .son, .jadval :global(.son) { text-align: right; width: 5.5em; white-space: nowrap; }
+  .jadval :global(tr.men) { background: var(--fon-ikkinchi); }
+  .jadval :global(tr.men td), .jadval :global(tr.men th) { font-weight: 800; }
+  .jadval :global(tr.ajratgich td), .jadval :global(tr.ajratgich th) { border-top: 2px dashed var(--chiziq-kuchli); }
+  .jadval :global(.yorliq) { padding: 2px 8px; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
+  .jadval :global(.mamlakat) { font-size: var(--matn-mayda); color: var(--matn-ikkinchi); font-weight: 700; letter-spacing: 0.04em; }
+  @media (max-width: 480px) {
+    .jadval .son, .jadval :global(.son) { width: auto; }
+    .jadval :global(td), .jadval :global(th[scope='row']), .jadval th[scope='col'] { padding: var(--b-3) var(--b-2); }
+  }
+
+  .sharh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .sharh > .tugma { align-self: flex-start; }
+  .sharh [data-sharh-holat]:empty { display: none; }
+  .sharh-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-6); }
+  .sharh-royxat :global(.sharh-band) { display: flex; flex-direction: column; gap: var(--b-2); }
+
+  .qoida { display: flex; flex-direction: column; gap: var(--b-3); }
+  .qoida ul { margin: 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-2); color: var(--matn-ikkinchi); max-width: 70ch; }
+</style>

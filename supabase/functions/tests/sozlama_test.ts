@@ -11,6 +11,10 @@ Deno.test('sozlamaniOl: standart sayt va originlar, oxirgi / olib tashlanadi', (
   assert.equal(s.serviceKey, 'eski-kalit');
   assert.equal(s.saytUrl, STANDART_SAYT_URL);
   assert.deepEqual(s.originlar, [...STANDART_ORIGINLAR]);
+  // Ko'chish davrida yangi domen ham, eski github.io ham ruxsat etilgan.
+  assert.equal(STANDART_SAYT_URL, 'https://tayanchedu.uz');
+  assert.ok(s.originlar.includes('https://tayanchedu.uz'));
+  assert.ok(s.originlar.includes('https://javohirqaxramonov36-web.github.io'));
 });
 
 Deno.test('sozlamaniOl: SUPABASE_SECRET_KEYS (JSON) eski kalitdan ustun; JSON bo\'lmasa eskisi', () => {

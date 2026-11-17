@@ -2,7 +2,7 @@
 // "Boshqa qavatda": dars yoki vosita oxirida boshqa qavatdagi keyingi qadam (Zina uslubida karta).
 // Ma'lumot: src/data/qavatlarAro.ts. Kartalar bo'lmasa hech narsa chizilmaydi.
 import { qavatI, joriyQavat } from '../data/qavatlar';
-import { matn, yolTili } from '../data/umumiyMatn';
+import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
 import type { QavatlarAroKarta } from '../data/qavatlarAro';
 
 interface Props {
@@ -12,7 +12,8 @@ interface Props {
 }
 const { kartalar, daraja = 'h2' } = Astro.props;
 const pathname = Astro.url.pathname;
-const M = matn[yolTili(pathname)];
+const til = yolTili(pathname);
+const M = matn[til];
 const joriy = joriyQavat(pathname);
 const Sarlavha = daraja;
 // Sahifada bitta bo'ladi
@@ -36,7 +37,7 @@ const id = 'qavatlar-aro-h';
               </span>
               <span class="qa-nom" lang={k.nomiTili}>{k.nomi}</span>
               <span class="qa-izoh">{k.izoh}</span>
-              {q.holat === 'tez-orada' && <span class="qa-pill">{M.zina.qurilmoqda}</span>}
+              {q.holat !== 'ochiq' && <span class="qa-pill">{qavatHolatMatni(q.holat, til)}</span>}
               {(q.slug === 'sat' || q.slug === 'ielts') && <span class="qa-pill" lang="en">Beta</span>}
             </a>
           </li>

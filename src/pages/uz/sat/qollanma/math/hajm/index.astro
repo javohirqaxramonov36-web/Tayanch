@@ -1,5 +1,5 @@
 ---
-// Hajm laboratoriyasi (3D). Three.js faqat sahna ekranga yaqinlashganda yuklanadi (src/lib/hajmSahna.ts).
+// Hajm laboratoriyasi (3D). Three.js faqat o‘quvchi sahnani ochganda yuklanadi.
 // Prototip: docs/prototip/tayanch-3d-laboratoriya.html (SAT bo'limi). Matn inglizcha (CLAUDE.md).
 import { darsSavollari } from '../../../../../../data/satDarslar';
 import { yol } from '../../../../../../lib/yol';
@@ -39,14 +39,17 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   ]}
 >
   <div slot="sahna">
-    <div class="sahna-quti hajm-quti" id="hajm-quti" tabindex="0" role="application" aria-roledescription="3D scene" aria-label="Volume scene. Rotate with the arrow keys, zoom with plus and minus." aria-describedby="hajm-tavsif">
+    <div class="sahna-quti hajm-quti" id="hajm-quti">
       <canvas id="hajm-canvas" aria-hidden="true"></canvas>
       <svg class="hajm-poster" id="hajm-poster" viewBox="0 0 200 150" aria-hidden="true">
         <ellipse cx="100" cy="40" rx="45" ry="12" fill="none" stroke="currentColor" stroke-width="2" />
         <path d="M55 40v70c0 7 20 12 45 12s45-5 45-12V40" fill="none" stroke="currentColor" stroke-width="2" />
         <path d="M100 40h45" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
       </svg>
-      <p class="hajm-holat" id="hajm-holat">Loading the 3D scene…</p>
+      <div class="hajm-holat">
+        <button type="button" class="kichik-tugma" id="hajm-och" hidden>Open 3D</button>
+        <p id="hajm-holat" role="status"></p>
+      </div>
     </div>
     <p class="sr" id="hajm-tavsif" aria-live="polite"></p>
     <div class="sahna-tugmalar">
@@ -185,7 +188,11 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
     else if (a === 'yaqin') sahna.yaqinlashtir(0.85); else if (a === 'uzoq') sahna.yaqinlashtir(1 / 0.85);
     else if (a === 'tikla') sahna.tikla();
   };
-  document.querySelectorAll<HTMLButtonElement>('[data-amal]').forEach((b) => b.addEventListener('click', () => amal(b.dataset.amal!)));
+  const kamera = document.querySelectorAll<HTMLButtonElement>('[data-amal]');
+  kamera.forEach((b) => {
+    b.disabled = true;
+    b.addEventListener('click', () => amal(b.dataset.amal!));
+  });
   const quti = $('hajm-quti');
   quti.addEventListener('keydown', (e) => {
     if (!sahna) return;
@@ -198,25 +205,45 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   });
 
   // ---------- Three.js ni kechiktirib yuklash ----------
-  let yuklandi = false;
+  const och = $('hajm-och') as HTMLButtonElement;
+  const holatMatni = $('hajm-holat');
+  const harakat = matchMedia('(prefers-reduced-motion: reduce)');
+  const mavjudEmas = 'The 3D scene is unavailable. The formula and exercises still work.';
+  och.hidden = harakat.matches;
   const yukla = async () => {
-    if (yuklandi) return; yuklandi = true;
+    if (och.disabled || harakat.matches) return;
+    och.disabled = true;
     try {
+      const webgl = document.createElement('canvas').getContext('webgl2');
+      if (!webgl) {
+        holatMatni.textContent = mavjudEmas;
+        return;
+      }
+      webgl.getExtension('WEBGL_lose_context')?.loseContext();
+      holatMatni.textContent = 'Loading the 3D scene…';
       const { sahnaYarat } = await import('../../../../../../lib/hajmSahna');
+      if (harakat.matches) return;
       sahna = sahnaYarat(quti, $('hajm-canvas') as HTMLCanvasElement);
       sahna.yangila({ ...holat });
+      quti.tabIndex = 0;
+      quti.setAttribute('role', 'application');
+      quti.setAttribute('aria-roledescription', '3D scene');
+      quti.setAttribute('aria-label', 'Volume scene. Rotate with the arrow keys, zoom with plus and minus.');
+      quti.setAttribute('aria-describedby', 'hajm-tavsif');
       quti.classList.add('tayyor');
-      $('hajm-holat').hidden = true;
+      kamera.forEach((b) => b.disabled = false);
+      och.hidden = true;
+      holatMatni.textContent = '';
+      quti.focus({ preventScroll: true });
     } catch {
-      $('hajm-holat').textContent = "The 3D scene could not be opened (the browser does not support WebGL or it is turned off). The formula and exercises still work.";
-      document.querySelectorAll('[data-amal]').forEach((b) => b.setAttribute('disabled', ''));
+      holatMatni.textContent = mavjudEmas;
     }
   };
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { io.disconnect(); yukla(); } }, { rootMargin: '200px' });
-    io.observe(quti);
-  } else yukla();
-  addEventListener('pagehide', () => { diskniToxtat(); sahna?.yoq(); sahna = null; yuklandi = false; });
+  och.addEventListener('click', yukla);
+  addEventListener('pagehide', (e) => {
+    diskniToxtat();
+    if (!e.persisted) sahna?.yoq();
+  });
 
   matnlarniYangila();
 </script>
@@ -225,7 +252,8 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   .dars .hajm-quti { height: 320px; touch-action: pan-y; }
   @container (min-width: 780px) { .dars .hajm-quti { height: 460px; } }
   .dars .hajm-quti:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
-  .dars .hajm-quti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
+  .dars .hajm-quti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: none; touch-action: pan-y; cursor: grab; }
+  .dars .hajm-quti.tayyor canvas { display: block; }
   .dars .hajm-quti.ushlangan canvas { cursor: grabbing; }
   .dars .hajm-poster { position: absolute; inset: 15% 20%; width: 60%; height: 60%; color: var(--matn-sust); }
   .dars .hajm-quti.tayyor .hajm-poster { display: none; }

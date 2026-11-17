@@ -4,7 +4,7 @@ import type { TolovSorovi, YaratishNatijasi } from '../_shared/inpay.ts';
 import type { RpcNatija } from '../_shared/turlar.ts';
 import { type YaratishBogliqlik, tolovYaratish } from '../tolov-yaratish/handler.ts';
 
-const SAYT = 'https://javohirqaxramonov36-web.github.io';
+const SAYT = 'https://tayanchedu.uz';
 const USER = '00000000-0000-4000-8000-00000000000c';
 const PID = '11111111-2222-4333-8444-555555555555';
 
@@ -24,7 +24,7 @@ function bogliqlik(o: {
   const h: Holat = { rpc: [], inpay: [], jurnal: [] };
   const d: YaratishBogliqlik = {
     supabaseUrl: 'https://sinov.supabase.co',
-    saytUrl: `${SAYT}/Tayanch`,
+    saytUrl: SAYT,
     originlar: [SAYT],
     yetishmaydi: o.yetishmaydi ?? [],
     foydalanuvchi: (jwt) => Promise.resolve(jwt === 'yaroqli-jwt' ? USER : null),
@@ -166,7 +166,7 @@ Deno.test('muvaffaqiyat: summa bazadan, set_invoice, checkout_url', async () => 
     planCode: 'pro',
     amountUzs: 1000,
     description: 'Tayanch SAT Pro, 30 days',
-    returnUrl: `${SAYT}/Tayanch/uz/sat/hisob/tolov-natija/?tolov=${PID}`,
+    returnUrl: `${SAYT}/uz/sat/hisob/tolov-natija/?tolov=${PID}`,
     webhookUrl: 'https://sinov.supabase.co/functions/v1/inpay-webhook',
   });
   assert.equal(h.rpc[1].nomi, 'payment_set_invoice');

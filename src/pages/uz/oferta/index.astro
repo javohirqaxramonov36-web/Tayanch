@@ -19,11 +19,10 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
   keyingiTekshiruv="2026-12-11"
   manbalar={['IP03']}
   tekshirilmagan={[
-    "Sotuvchi rekvizitlari (YaTT yoki MChJ nomi, STIR, manzil): muallif beradi",
-    "inPAY merchant shartnomasi oferta tili va majburiy bandlarini talab qiladimi: muallif shartnomadan aniqlaydi",
-    "Oferta qaysi tilda yuridik kuchga ega (o'zbek, rus, ingliz): yurist javobi kerak",
-    "Fuqarolik kodeksi va \"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonundagi tegishli moddalar: lex.uz da tekshirish kerak, hozircha matnda modda raqami yo'q",
-    "Raqamli xizmat uchun elektron chek yoki hisob-faktura talabi: buxgalter javobi kerak",
+    "inPAY merchant shartnomasi oferta tili va majburiy bandlarini talab qiladimi: hali tasdiqlanmagan",
+    "Oferta qaysi tilda yuridik kuchga ega (o'zbek, rus, ingliz): hali aniqlanmagan",
+    "Fuqarolik kodeksi va \"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonundagi tegishli moddalar hali ko‘rsatilmagan",
+    "Raqamli xizmat uchun elektron chek yoki hisob-faktura talabi: hali aniqlanmagan",
   ]}
 >
   <HuquqiyMatn til="uz" kalit="oferta" sana="2026-11-11" kirish="Bu oferta tarif sahifasidagi pullik tariflarga tegishli.">
@@ -32,7 +31,7 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
       Sotuvchi:
       {sotuvchi
         ? <> {sotuvchi.nomi}, STIR {sotuvchi.stir}, manzil: {sotuvchi.manzil}.</>
-        : <> <span class="tekshir">tekshirish kerak</span> (nomi, STIR va manzil muallifdan kutilmoqda).</>}
+        : <> yuridik nomi, STIR va manzili hali e’lon qilinmagan.</>}
     </p>
     <p>Xaridor: tarifni to'lagan, Tayanch hisobiga ega foydalanuvchi.</p>
 
@@ -54,7 +53,7 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
       <li>Avtomatik takroriy to'lov hozircha yo'q: muddat tugagach, xohlasangiz yangi to'lov qilasiz.</li>
       <li>
         {voyagaYetmaganTolov === null
-          ? <>18 yoshgacha bo'lgan xaridorlar: <span class="tekshir">tekshirish kerak</span> (muallif va yurist qarori).</>
+          ? <>18 yoshgacha bo'lganlar uchun xarid qoidasi hali belgilanmagan.</>
           : voyagaYetmaganTolov === 'faqat-18'
             ? <>Xaridor 18 yoshga to'lgan bo'lishi kerak.</>
             : <>18 yoshgacha bo'lsangiz, to'lovni ota-ona yoki vasiy roziligi bilan va ularning to'lov vositasidan qilasiz.</>}
@@ -71,7 +70,7 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
     </ul>
 
     <h2>7. Nizolar</h2>
-    <p>Nizolar avval muzokara yo'li bilan hal qilinadi: <a href={yol('/uz/aloqa/')}>Aloqa</a>. Hal bo'lmasa, O'zbekiston Respublikasi qonunchiligiga muvofiq ko'riladi. Aniq tartib: <span class="tekshir">tekshirish kerak</span> (yurist).</p>
+    <p>Nizolar avval muzokara yo'li bilan hal qilinadi: <a href={yol('/uz/aloqa/')}>Aloqa</a>. Hal bo'lmasa, O'zbekiston Respublikasi qonunchiligiga muvofiq ko'riladi. Aniq tartib: hali e’lon qilinmagan.</p>
 
     <h2>8. O'zgarishlar</h2>
     <p>Oferta o'zgarsa, yangi sana shu sahifa boshida yoziladi. Avval to'langan muddat to'lov paytidagi shartlar bilan tugaydi.</p>
