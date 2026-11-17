@@ -45,7 +45,8 @@ Muhim: yangi build (`base` yo'q) eski github.io/Tayanch/ manzilida ishlamaydi (C
 5. **Sayt yangi domenda ochilgach:** `supabase config diff --remote=uvwejvjrsswssgydwevm` → muallif "ha" → `supabase config push`. Edge Function'larni qayta deploy (`sozlama.ts` o'zgargan). Supabase Secrets'da `SAYT_URL` yoki `TOLOV_ORIGINLAR` qo'yilgan bo'lsa (faqat NOMI tekshiriladi): `SAYT_URL` → `https://tayanchedu.uz` yoki o'chirish; `TOLOV_ORIGINLAR` ga `https://tayanchedu.uz` qo'shish. **Bajarildi 2026-11-17 (muallif "ha"):** `config push` faqat `site_url` va `additional_redirect_urls` ni o'zgartirdi (e'lon qilinmagan 17 ta sozlama tegilmagan). Deploy qilingan 6 ta funksiya qayta deploy: `tolov-yaratish`, `inpay-webhook`, `inpay-holat` (v10), `inpay-muvofiqlash` (v6), `hisob-malumot`, `suhbatdosh` (v5), `verify_jwt` o'zgarmagan; `ai-tutor` avvaldan deploy qilinmagan, tegilmagan. `SAYT_URL` va `TOLOV_ORIGINLAR` secretlari yo'q (standart koddan). Preflight: `tayanchedu.uz` va github.io → 204, begona origin → 403.
 6. **Sinov:** bosh sahifa, SAT, email bilan kirish, Google bilan kirish, eski `https://javohirqaxramonov36-web.github.io/Tayanch/uz/sat/` yangi manzilga o'tishi, to'lov sahifasi (return_url).
    - Sinalgan (2026-11-17, curl va brauzer): `https://tayanchedu.uz/`, `/uz/`, `/uz/sat/`, `/uz/hisob/kirish/` 200; `http://` → `https://` 301; `www` → apex 301; `github.io/Tayanch/uz/sat/` → `https://tayanchedu.uz/uz/sat/` 301 (GitHub `/Tayanch` ni olib tashlaydi); `tayanchedu.uz/Tayanch/uz/sat/` 404.astro orqali `/uz/sat/` ga o'tadi; Supabase `authorize?provider=google` → 302 accounts.google.com.
-   - Sinalmagan: haqiqiy Google va email bilan kirish yangi domenda, to'lov (return_url), telefon.
+   - Muallif sinagan (2026-11-17): Google bilan kirish yangi domenda ishladi.
+   - Sinalmagan: email bilan kirish yangi domenda, to'lov (return_url), telefon.
 
 ## Bilinadigan oqibatlar
 
