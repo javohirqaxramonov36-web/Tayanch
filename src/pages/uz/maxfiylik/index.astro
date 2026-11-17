@@ -38,7 +38,7 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     <ul>
       <li><strong>Email</strong>: kirish, tasdiqlash va parolni tiklash xatlari uchun.</li>
       <li><strong>Parol</strong>: uni Supabase Auth tekshiradi. Tayanch o'z jadvallarida parol saqlamaydi.</li>
-      <li><strong>Ism va taxallus</strong> (taxallus ixtiyoriy): profil sahifasida o'zingiz yozasiz. Taxallus keyinchalik reytinglarda ko'rinishi mumkin.</li>
+      <li><strong>Ism va taxallus</strong> (taxallus ixtiyoriy): profil sahifasida o'zingiz yozasiz. Taxallus faqat o'zingiz reytingga qo'shilsangiz boshqalarga ko'rinadi (pastdagi "Reyting" bo'limi).</li>
       <li><strong>SAT maqsadi</strong> (ixtiyoriy): maqsad ball, hozirgi eng yaxshi ball va imtihon sanasi.</li>
       <li><strong>Rozilik belgilari</strong>: shu siyosat va Foydalanish shartlariga rozi bo'lgan vaqt va versiya, yoshingiz {minYosh} da yoki undan kattaligi va yosh guruhi.</li>
       {vq && <li><strong>{vq.yoshgacha} yoshgacha bo'lsangiz</strong>: ota-ona yoki vasiyning ismi va u rozilik bergan vaqt.</li>}
@@ -54,11 +54,21 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li>har savolga javobingiz, to'g'ri yoki noto'g'riligi va sarflangan vaqt;</li>
       <li>xato qilingan savollarni takrorlash navbati va belgilangan savollar;</li>
       <li>rasmiy test natijalaringiz va xatolaringiz (o'zingiz kiritsangiz), o'quv reja va lug'at progressi;</li>
+      <li>javoblaringizdan hisoblangan XP (ochko) yozuvlari va reytingda qatnashishingiz (qo'shilsangiz);</li>
       <li>tarif kvotasi hisoblagichlari (bugun nechta savol ishlatilgani);</li>
       <li>savol haqida yuborgan xabaringiz yoki fikringiz.</li>
     </ul>
     <p>Bu ma'lumot natijalar sahifasi, takrorlash va tavsiyalar ishlashi uchun kerak. Hisobsiz ishlasangiz, natijalar faqat brauzeringizda qoladi.</p>
 
+    <h2 id="reyting">Reyting (ixtiyoriy)</h2>
+    <p>SAT bo'limida javoblaringiz uchun XP (ochko) serverda hisoblanadi va faqat o'zingizga ko'rinadi. Reytingga qo'shilish ixtiyoriy va standart holatda o'chiq:</p>
+    <ul>
+      <li>Qo'shilsangiz, hisobga kirgan boshqa foydalanuvchilar faqat taxallusingiz, haftalik yoki oylik XP va o'rningizni ko'radi. Mamlakatingiz faqat o'zingiz ruxsat bersangiz ko'rinadi.</li>
+      <li>Ismingiz, emailingiz va rasmingiz reytingda hech qachon ko'rsatilmaydi.</li>
+      <li>Reytingdan istalgan vaqtda chiqishingiz mumkin: siz darhol ro'yxatdan yo'qolasiz, XP esa o'zingizda qoladi.</li>
+      <li>Nomaqbul taxallus qabul qilinmaydi, moderator taxallusni reytingdan yashirishi mumkin.</li>
+      {vq && <li>{vq.yoshgacha} yoshgacha bo'lganlar (va yosh guruhi belgilanmagan hisoblar) reytingga qo'shilmaydi va uni ko'rmaydi: ular faqat o'z XP'sini ko'radi.</li>}
+    </ul>
     <h2>O'qituvchi guruhlari</h2>
     <p>O'qituvchingiz bergan kod bilan SAT guruhiga qo'shilsangiz, serverda saqlanadi: guruhdagi ismingiz, qo'shilgan sana, nimani ulashishni tanlaganingiz va rozilik vaqti, 18 yoshgacha bo'lsangiz ota-ona yoki vasiy ismi va tasdiq vaqti.</p>
     <p>O'qituvchi faqat siz tanlagan qismni ko'radi (umumiy natija, mavzular bo'yicha aniqlik yoki ikkalasi), faqat qo'shilgan kundan keyingi mashqlar bo'yicha. Email, yosh, alohida javoblar, xato daftari, test ballari va to'lovlar ko'rsatilmaydi. Guruhdan chiqsangiz yoki o'qituvchi sizni chiqarsa, a'zolik yozuvi o'chadi va o'qituvchi endi hech narsa ko'rmaydi.</p>

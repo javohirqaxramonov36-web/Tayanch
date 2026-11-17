@@ -102,6 +102,15 @@ export const satGuruhlar: SatGuruh[] = [
         tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
       },
       {
+        qism: 'vosita/reyting/',
+        tayyor: true,
+        nomi: 'Leaderboard',
+        tavsif: 'Weekly and monthly XP from practice, review and the question of the day. Joining is optional and only your nickname is shown. Needs an account.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['The XP numbers and the daily limit are starting values chosen by Tayanch and may change.'],
+      },
+      {
         qism: 'vosita/ai-tutor/',
         tayyor: true,
         nomi: 'AI tutor',
@@ -358,7 +367,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
       { nomi: 'Reading & Writing lessons', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
     ],
   },
-  { nomi: 'Progress', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/takrorlash/', 'vosita/rasmiy-testlar/'].map(s) }] },
+  { nomi: 'Progress', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/takrorlash/', 'vosita/rasmiy-testlar/', 'vosita/reyting/'].map(s) }] },
   { nomi: 'Plan', qismlar: [{ sahifalar: ['vosita/reja/', 'hisob/maqsad/', 'vosita/ai-tutor/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/profil/', 'hisob/obuna/', 'guruh/', 'hisob/fikr/'].map(s) }] },
 ];
