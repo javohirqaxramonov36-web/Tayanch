@@ -1,0 +1,1 @@
+var e=e=>({progress:`tayanch:${e}-dars-progress`,xatoDaftari:`tayanch:${e}-xato-daftari`});export{e as t};
