@@ -25,8 +25,14 @@ test('limit reached: honest message, bar full, never over 100%', () => {
   assert.equal(q.izoh, 'All used today · Resets at midnight (Tashkent time)');
   assert.equal(q.foiz, 100);
   assert.equal(q.tugagan, true);
+});
+
+test('max 0 means not included: no "0 of 0", no bar, not a reached limit', () => {
   const [z] = usageQatorlari({ limits: { questions: { max: 0, used: 0 } } }, nomlar);
-  assert.equal(z.tugagan, true);
+  assert.equal(z.asosiy, 'Not included');
+  assert.equal(z.izoh, 'Not part of your plan');
+  assert.equal(z.foiz, null);
+  assert.equal(z.tugagan, false);
 });
 
 test('monthly key: date in Tashkent time (UTC evening before is already the 1st)', () => {

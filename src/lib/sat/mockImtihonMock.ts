@@ -1,6 +1,10 @@
-// FAQAT DEV: mock imtihon sahifalarini bazasiz sinash uchun soxta server (?mock=oddiy|qisqa|tayyor-emas|kvota|xato).
+// FAQAT DEV: mock imtihon sahifalarini bazasiz sinash uchun soxta server
+// (?mock=oddiy|qisqa|tayyor-emas|kvota|xato|natija-qiyin|natija-oson).
 // oddiy: rasmiy vaqt (32 / 35 daqiqa, 10 daqiqa tanaffus); qisqa: modul 90 s, tanaffus 20 s, grace 5 s (to'liq o'tkazish
 // sinovi); tayyor-emas: mock_not_ready; kvota: yangi mock krediti tugagan (retake bitta bor); xato: mock_status xatosi.
+// natija-qiyin / natija-oson: tarixda bitta tugagan namuna mock (ikkala bo'limda 2-modul qiyin / oson tarmoqda), natija
+// ekranidagi adaptive-style izohini ko'rish uchun. Holat alohida kalitda: tayanch:dev-mock-imtihon:<tur>.
+// Tarmoq (P31) serverdagi kabi 1-/3-modul yopilganda tanlanadi: tarmoqTanla + har soha bo'yicha yetarlilik.
 // Sahifalar buni faqat `import.meta.env.DEV` ichida dinamik import qiladi: prod build'ga kirmaydi.
 // "Server" holati localStorage `tayanch:dev-mock-imtihon` da (qayta yuklash va uzilish sinovi uchun).
 // Uzilish: localStorage `tayanch:dev-mock-oflayn` = "1" bo'lsa har so'rov TypeError("Failed to fetch") beradi.
@@ -8,11 +12,12 @@
 import namunaRasm from '../../assets/sat/namuna-uchburchak.svg?url';
 import { savolTaksonomiya } from '../../data/satTaksonomiya.ts';
 import {
-  bolimBall, type MockApi, type MockHolat, type MockNatija, type MockNatijaSavol, type MockStatus, type MockSozlama, type SaqlashBand,
+  bolimBall, type MockApi, type MockTarmoq, type MockHolat, type MockNatija, type MockNatijaSavol, type MockStatus, type MockSozlama, type SaqlashBand,
 } from './mock.ts';
 import type { SavolBolimi } from './savolTuri.ts';
+import { tarmoqQiyinliklari, tarmoqTanla } from './adaptiv.ts';
 
-export type MockTur = 'oddiy' | 'qisqa' | 'tayyor-emas' | 'kvota' | 'xato';
+export type MockTur = 'oddiy' | 'qisqa' | 'tayyor-emas' | 'kvota' | 'xato' | 'natija-qiyin' | 'natija-oson';
 
 const SERVER = 'tayanch:dev-mock-imtihon';
 const OFLAYN = 'tayanch:dev-mock-oflayn';
@@ -29,6 +34,9 @@ interface Urinish {
   modules: Record<number, { started_at: string; deadline_at: string; submitted_at: string | null; auto: boolean }>;
   answers: Record<string, { answer: string | null; flagged: boolean; time_ms: number }>;
   graded: Record<string, boolean>;
+  /** P31: adaptiv 2-/4-modul savollari (faqat oson / qiyin tarmoqda) va tanlangan tarmoq. */
+  moslash?: Record<number, string[]>;
+  tarmoq?: { rw?: MockTarmoq; math?: MockTarmoq };
 }
 interface Forma { form_no: number; savollar: { module: number; id: string }[] }
 interface Holat { formalar: Record<string, Forma>; urinishlar: Record<string, Urinish>; review: Record<string, string | null>; sarf: { first: number; retake: number } }
@@ -39,27 +47,27 @@ const BLUEPRINT: [SavolBolimi, string, number][] = [
 ];
 
 const kut = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const oqi = (): Holat => {
-  try { return JSON.parse(localStorage.getItem(SERVER) ?? '') as Holat; } catch { return { formalar: {}, urinishlar: {}, review: {}, sarf: { first: 0, retake: 0 } }; }
+const oqi = (kalit: string): Holat => {
+  try { return JSON.parse(localStorage.getItem(kalit) ?? '') as Holat; } catch { return { formalar: {}, urinishlar: {}, review: {}, sarf: { first: 0, retake: 0 } }; }
 };
-const yoz = (h: Holat) => localStorage.setItem(SERVER, JSON.stringify(h));
+const yoz = (kalit: string, h: Holat) => localStorage.setItem(kalit, JSON.stringify(h));
 const xato = (message: string, code = 'P0001') => Object.assign(new Error(message), { code });
 function tarmoq() {
   if (localStorage.getItem(OFLAYN) === '1') throw new TypeError('Failed to fetch');
 }
 export function mockTozala() {
-  localStorage.removeItem(SERVER);
+  for (const k of Object.keys(localStorage)) if (k === SERVER || k.startsWith(`${SERVER}:`)) localStorage.removeItem(k);
   for (const k of Object.keys(localStorage)) if (k.startsWith('tayanch:sat-mock:v1:')) localStorage.removeItem(k);
 }
 
-/** Har ko'nikmaga 8 ta oddiy namuna savol (bazadagi tayyorlik qoidasi kabi). */
+/** Har ko'nikmaga 12 ta oddiy namuna savol (tayyorlik qoidasi N = 8 dan ko'p: adaptiv tarmoqlar har sohada to'lishi uchun). */
 function bank(): Gen[] {
   const r: Gen[] = [];
   let n = 0;
   for (const [section, domenlar] of Object.entries(savolTaksonomiya) as [SavolBolimi, Record<string, readonly string[]>][]) {
     for (const [domain, skills] of Object.entries(domenlar)) {
       for (const skill of skills) {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 12; i++) {
           n++;
           const keys = ['A', 'B', 'C', 'D'];
           const togriKey = keys[n % 4];
@@ -95,6 +103,7 @@ export function mockApi(tur: MockTur): MockApi {
   const sozlama: MockSozlama = tur === 'qisqa'
     ? { rw_module_ms: 90_000, math_module_ms: 90_000, break_ms: 20_000, grace_ms: 5_000 }
     : { rw_module_ms: 1_920_000, math_module_ms: 2_100_000, break_ms: 600_000, grace_ms: 30_000 };
+  const kalit = tur.startsWith('natija-') ? `${SERVER}:${tur}` : SERVER;
   const savollar = bank();
   const qMap = new Map(savollar.map((q) => [q.id, q]));
   const modulMs = (m: number) => (m <= 2 ? sozlama.rw_module_ms : sozlama.math_module_ms);
@@ -103,10 +112,11 @@ export function mockApi(tur: MockTur): MockApi {
   async function tayyor<T>(f: (h: Holat) => T, kechikish = 150): Promise<T> {
     await kut(kechikish);
     tarmoq();
-    const h = oqi();
+    const h = oqi(kalit);
+    if (tur.startsWith('natija-') && !Object.keys(h.urinishlar).length) namunaYakunla(h, tur === 'natija-qiyin' ? 'qiyin' : 'oson');
     for (const u of Object.values(h.urinishlar)) tick(h, u);
     const r = f(h);
-    yoz(h);
+    yoz(kalit, h);
     return structuredClone(r);
   }
 
@@ -125,7 +135,38 @@ export function mockApi(tur: MockTur): MockApi {
     return id;
   }
 
-  const formaSavollari = (h: Holat, u: Urinish, m: number) => h.formalar[u.form_id].savollar.filter((s) => s.module === m);
+  /** Urinishning modul savollari: adaptiv almashtirish bo'lsa o'sha, aks holda forma (server private.mock_questions kabi). */
+  const formaSavollari = (h: Holat, u: Urinish, m: number) =>
+    u.moslash?.[m]?.map((id) => ({ module: m, id })) ?? h.formalar[u.form_id].savollar.filter((s) => s.module === m);
+  const urinishSavollari = (h: Holat, u: Urinish) => [1, 2, 3, 4].flatMap((m) => formaSavollari(h, u, m));
+
+  /** P31: 1-/3-modul yopilganda keyingi modul tarmog'i (server private.mock_adapt bilan bir xil qoida). */
+  function moslash(h: Holat, u: Urinish, modul: 1 | 3) {
+    const bolim: SavolBolimi = modul === 1 ? 'rw' : 'math';
+    const keyingi = modul + 1;
+    const qs = formaSavollari(h, u, modul);
+    const togri = qs.filter((s) => u.graded[s.id]).length;
+    const ishlatilgan = new Set(urinishSavollari(h, u).filter((s) => s.module !== keyingi).map((s) => s.id));
+    const nomzod = savollar.filter((q) => q.section === bolim && !ishlatilgan.has(q.id));
+    const soni = (t: 'oson' | 'qiyin') => nomzod.filter((q) => tarmoqQiyinliklari(t)!.includes(q.difficulty)).length;
+    let t = tarmoqTanla({ togri, jami: qs.length }, bolim, { oson: soni('oson'), qiyin: soni('qiyin') });
+    const bp = BLUEPRINT.filter(([b]) => b === bolim);
+    if (t.tarmoq !== 'standart') {
+      const ql = tarmoqQiyinliklari(t.tarmoq)!;
+      if (bp.some(([, d, n]) => nomzod.filter((q) => q.domain === d && ql.includes(q.difficulty)).length < n)) {
+        t = { ...t, tarmoq: 'standart', sabab: 'savol-kam' };
+      }
+    }
+    (u.tarmoq ??= {})[bolim] = { branch: t.tarmoq, reason: t.sabab };
+    if (t.tarmoq === 'standart') return;
+    const ql = tarmoqQiyinliklari(t.tarmoq)!;
+    const tanlov: { id: string; key: number }[] = [];
+    bp.forEach(([, d, n], ord) => {
+      nomzod.filter((q) => q.domain === d && ql.includes(q.difficulty)).sort(() => Math.random() - 0.5).slice(0, n)
+        .forEach((q) => tanlov.push({ id: q.id, key: (bolim === 'rw' ? ord * 10 : 0) + q.difficulty + Math.random() * 0.5 }));
+    });
+    (u.moslash ??= {})[keyingi] = tanlov.sort((a, b) => a.key - b.key).map((x) => x.id);
+  }
 
   function yop(h: Holat, u: Urinish, auto: boolean) {
     if (u.status !== 'active' || u.phase !== 'module') return;
@@ -140,9 +181,10 @@ export function mockApi(tur: MockTur): MockApi {
       if (!togri) h.review[s.id] = h.review[s.id] ?? null;
     }
     mod.submitted_at = tugash; mod.auto = auto;
+    if (u.current_module === 1 || u.current_module === 3) moslash(h, u, u.current_module);
     if (u.current_module === 4) {
       const hisob = (b: SavolBolimi) => {
-        const qs = h.formalar[u.form_id].savollar.filter((s) => qMap.get(s.id)!.section === b);
+        const qs = urinishSavollari(h, u).filter((s) => qMap.get(s.id)!.section === b);
         const c = qs.filter((s) => u.graded[s.id]).length;
         return { correct: c, total: qs.length, score: bolimBall(c, qs.length) };
       };
@@ -162,6 +204,36 @@ export function mockApi(tur: MockTur): MockApi {
     }
   }
 
+  /** natija-* holati: bitta tugagan mock. 1-modullarda 25/27 va 21/22 (qiyin) yoki 9/27 va 6/22 (oson) to'g'ri. */
+  function namunaYakunla(h: Holat, maqsad: 'qiyin' | 'oson') {
+    const fid = formaYasa(h);
+    h.sarf.first++;
+    const boshi = Date.now() - 3 * 3_600_000;
+    const u: Urinish = {
+      id: crypto.randomUUID(), form_id: fid, kind: 'first', status: 'active', phase: 'module', current_module: 1,
+      started_at: new Date(boshi).toISOString(), finished_at: null, break_started_at: null, scores: null, modules: {}, answers: {}, graded: {},
+    };
+    h.urinishlar[u.id] = u;
+    const ulush: Record<number, number> = maqsad === 'qiyin' ? { 1: 25 / 27, 2: 0.6, 3: 21 / 22, 4: 0.55 } : { 1: 9 / 27, 2: 0.7, 3: 6 / 22, 4: 0.65 };
+    let vaqt = boshi;
+    for (const m of [1, 2, 3, 4]) {
+      if (m === 3) vaqt += sozlama.break_ms;
+      u.current_module = m; u.phase = 'module';
+      u.modules[m] = { started_at: new Date(vaqt).toISOString(), deadline_at: new Date(vaqt + modulMs(m)).toISOString(), submitted_at: null, auto: false };
+      const qs = formaSavollari(h, u, m);
+      const k = Math.round(qs.length * ulush[m]);
+      qs.forEach((s, i) => {
+        const q = qMap.get(s.id)!;
+        const notogri = q.format === 'spr' ? String(Number(q.togri) + 1) : ['A', 'B', 'C', 'D'].find((x) => x !== q.togri)!;
+        u.answers[s.id] = { answer: i < k ? q.togri : notogri, flagged: false, time_ms: 60_000 };
+      });
+      vaqt += modulMs(m) - 120_000;
+      yop(h, u, false);
+      u.modules[m].submitted_at = new Date(vaqt).toISOString();
+    }
+    u.finished_at = new Date(vaqt).toISOString();
+  }
+
   const savolChiqar = (q: Gen, position: number) => ({
     id: q.id, position, section: q.section, format: q.format, passage: q.passage, stem: q.stem, options: q.options, figure: q.figure,
   });
@@ -174,7 +246,7 @@ export function mockApi(tur: MockTur): MockApi {
       current_module: u.current_module, started_at: u.started_at, finished_at: u.finished_at, break_started_at: u.break_started_at,
       server_now: new Date().toISOString(), config: sozlama, scores: u.scores,
       modules: [1, 2, 3, 4].map((m) => ({
-        module: m, section: m <= 2 ? 'rw' : 'math', question_count: f.savollar.filter((s) => s.module === m).length, time_ms: modulMs(m),
+        module: m, section: m <= 2 ? 'rw' : 'math', question_count: formaSavollari(h, u, m).length, time_ms: modulMs(m),
         started_at: u.modules[m]?.started_at ?? null, deadline_at: u.modules[m]?.deadline_at ?? null,
         submitted_at: u.modules[m]?.submitted_at ?? null, auto_submitted: u.modules[m]?.auto ?? false,
       })),
@@ -265,9 +337,8 @@ export function mockApi(tur: MockTur): MockApi {
     natija: (id) => tayyor((h): MockNatija => {
       const u = ol(h, id);
       if (u.status !== 'finished') throw xato('mock_not_finished', '55000');
-      const f = h.formalar[u.form_id];
       const pos: Record<number, number> = {};
-      const questions: MockNatijaSavol[] = f.savollar.map((s) => {
+      const questions: MockNatijaSavol[] = urinishSavollari(h, u).map((s) => {
         const q = qMap.get(s.id)!;
         pos[s.module] = (pos[s.module] ?? 0) + 1;
         const a = u.answers[s.id];
@@ -278,7 +349,7 @@ export function mockApi(tur: MockTur): MockApi {
           in_review: s.id in h.review, reason_tag: h.review[s.id] ?? null,
         };
       });
-      return { ...payload(h, u), questions };
+      return { ...payload(h, u), questions, adaptive: { rw: u.tarmoq?.rw ?? null, math: u.tarmoq?.math ?? null } };
     }),
     navbatgaQosh: async (qid) => { await tayyor((h) => { h.review[qid] = h.review[qid] ?? null; }, 120); },
     sabab: async (qid, tag) => { await tayyor((h) => { if (qid in h.review) h.review[qid] = tag; }, 120); },

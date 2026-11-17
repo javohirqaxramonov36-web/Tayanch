@@ -112,7 +112,7 @@ await sinov('Kirish: brauzerda ma\'lumot bor → dialog so\'raladi, rozilikgacha
   assert.deepEqual(sorov, {
     'tayanch:sat-javoblar': 2, 'tayanch:sat-dars-progress': 3, 'tayanch:sat-xato-daftari': 2,
     'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1, 'tayanch:sat-xato-sabab': 2,
-    'tayanch:sat-rasmiy-testlar': 3,
+    'tayanch:sat-rasmiy-testlar': 3, 'tayanch:sat-afzallik': 0,
   });
   assert.equal(A.oqishlar + A.yozishlar, 0);
   // Rozilikdan oldingi yozish ham yuborilmaydi

@@ -11,6 +11,7 @@ export const SINXRON_KALITLAR = [
   'tayanch:sat-reja',
   'tayanch:sat-xato-sabab',
   'tayanch:sat-rasmiy-testlar',
+  'tayanch:sat-afzallik',
 ] as const;
 // tayanch:sat-lugat bu yerda yo'q: P15 (PR #99) dan beri lug'at o'z jadvallarida (vocab_progress, vocab_import_local).
 export type SinxronKalit = (typeof SINXRON_KALITLAR)[number];
@@ -118,6 +119,15 @@ const SHAKLLAR: Record<SinxronKalit, Shakl> = {
       return m;
     },
     yig: (y) => (y.has('reja') ? y.get('reja') : null),
+  },
+  // tayanch:sat-afzallik: bitta obyekt (My SAT profile, src/lib/sat/afzallik.ts) → bitta yozuv "afzallik"
+  'tayanch:sat-afzallik': {
+    ajrat(q) {
+      const m: Yozuvlar = new Map();
+      if (obyektmi(q)) m.set('afzallik', q);
+      return m;
+    },
+    yig: (y) => (y.has('afzallik') ? y.get('afzallik') : null),
   },
 };
 

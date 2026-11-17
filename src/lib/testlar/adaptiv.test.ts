@@ -1,4 +1,4 @@
-// P31: adaptive-style 2-modul tanlash va kalibrlash. Sun'iy (soxta) javoblar bilan; chegara faqat sinov ichida beriladi.
+// P31: adaptive-style 2-modul tanlash va kalibrlash. Sun'iy (soxta) javoblar bilan; boshqa chegaralar faqat sinov ichida.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -7,7 +7,7 @@ import {
 } from '../sat/adaptiv.ts';
 import { adaptivSozlama, type AdaptivSozlama } from '../../data/satAdaptiv.ts';
 
-/** Sinov chegarasi: haqiqiy qiymat emas, muallif hali bermagan. */
+/** Sinov chegarasi: standartdan (60) boshqa qiymatni faqat sinov ichida berish uchun. */
 const sinov = (chegara: number | null): AdaptivSozlama => ({ ...adaptivSozlama, chegara });
 const yetarli = { oson: 40, qiyin: 40 };
 
@@ -15,9 +15,21 @@ const yetarli = { oson: 40, qiyin: 40 };
 const modul = (javoblar: boolean[]) => ({ togri: javoblar.filter(Boolean).length, jami: javoblar.length });
 const takror = (togri: number, jami: number) => modul(Array.from({ length: jami }, (_, i) => i < togri));
 
-test('default config: threshold is not set, so adaptivity is off', () => {
-  assert.equal(adaptivSozlama.chegara, null);
-  assert.deepEqual(tarmoqTanla(takror(27, 27), 'rw', yetarli), { tarmoq: 'standart', sabab: 'chegara-yoq', aniqlik: 100 });
+test('default config: threshold is 60 (strictly above → hard); null still turns adaptivity off', () => {
+  assert.equal(adaptivSozlama.chegara, 60);
+  // R&W 27: 17 to'g'ri = 63.0% → qiyin, 16 = 59.3% → oson. Math 22: 14 = 63.6% → qiyin, 13 = 59.1% → oson.
+  assert.deepEqual(tarmoqTanla(takror(17, 27), 'rw', yetarli), { tarmoq: 'qiyin', sabab: 'ustida', aniqlik: 17 / 27 * 100 });
+  assert.equal(tarmoqTanla(takror(16, 27), 'rw', yetarli).tarmoq, 'oson');
+  assert.equal(tarmoqTanla(takror(14, 22), 'math', yetarli).tarmoq, 'qiyin');
+  assert.equal(tarmoqTanla(takror(13, 22), 'math', yetarli).tarmoq, 'oson');
+  // Aynan 60% (masalan 3/5) qat'iy katta emas → oson.
+  assert.equal(tarmoqTanla(takror(3, 5), 'rw', yetarli).sabab, 'ostida');
+  // Float xatosi tenglikni "ustida" qilmaydi: 7/10 × 100 = 70.00000000000001, chegara 70 → oson.
+  assert.equal(tarmoqTanla(takror(7, 10), 'rw', yetarli, sinov(70)).tarmoq, 'oson');
+  assert.deepEqual(adaptivHolat('rw', yetarli), { yoqilgan: true });
+  // null: adaptivlik o'chiq, 2-modul standart tartibda.
+  assert.deepEqual(tarmoqTanla(takror(27, 27), 'rw', yetarli, sinov(null)), { tarmoq: 'standart', sabab: 'chegara-yoq', aniqlik: 100 });
+  assert.deepEqual(adaptivHolat('rw', yetarli, sinov(null)), { yoqilgan: false, sabab: 'chegara-yoq' });
 });
 
 test('synthetic answers: strong module 1 → hard branch, weak → easy branch (R&W and Math)', () => {
@@ -94,4 +106,20 @@ test('SQL defaults match satAdaptiv.ts (N and bands)', () => {
   for (const m of sql.matchAll(/p_min_answers integer default (\d+)/g)) assert.equal(Number(m[1]), minJavob);
   const bands = [...sql.matchAll(/p_bands numeric\[\] default '\{([\d,]+)\}'/g)].map((m) => m[1]);
   assert.deepEqual(bands, [pogonalar.join(','), pogonalar.join(',')]);
+});
+
+test('SQL branch config matches satAdaptiv.ts (threshold, branch difficulties, minimum counts)', () => {
+  const papka = new URL('../../../supabase/migrations/', import.meta.url);
+  const fayl = readdirSync(papka).find((f) => f.endsWith('_adaptiv_tarmoq.sql'));
+  assert.ok(fayl, 'adaptiv_tarmoq migratsiyasi topilmadi');
+  const sql = readFileSync(new URL(fayl, papka), 'utf8');
+  const son = (kalit: string) => Number(sql.match(new RegExp(`'${kalit}', (\\d+)`))?.[1]);
+  const royxat = (kalit: string) =>
+    sql.match(new RegExp(`'${kalit}', jsonb_build_array\\(([\\d, ]+)\\)`))?.[1].split(',').map(Number);
+  const s = adaptivSozlama;
+  assert.equal(son('threshold'), s.chegara);
+  assert.deepEqual(royxat('easy'), [...s.tarmoqQiyinlik.oson]);
+  assert.deepEqual(royxat('hard'), [...s.tarmoqQiyinlik.qiyin]);
+  assert.equal(son('min_rw'), s.minSavolTarmoq.rw);
+  assert.equal(son('min_math'), s.minSavolTarmoq.math);
 });

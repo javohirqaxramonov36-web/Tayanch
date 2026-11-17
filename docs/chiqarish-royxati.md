@@ -60,9 +60,9 @@ Tavsiya: **A**, lekin birinchi hafta ichida emas: hozircha B tartibi (lokal sino
 | Band | Holat |
 | --- | --- |
 | Email tasdiqlash yoqilgan, parol kamida 8 belgi | bajarildi (2026-11-09, `config.toml`, README 2.2) |
-| Site URL production manzilda (`…github.io/Tayanch/uz/hisob/kirish/`) | bajarildi (README 2.1) |
+| Site URL production manzilda (`https://tayanchedu.uz/uz/hisob/kirish/`; 2026-11-16 gacha `…github.io/Tayanch/…`) | `config.toml` da yangilangan, `config push` domen ishga tushgach (`docs/domen.md`) |
 | Redirect URL'lar production manzillarga (`kirish/`, `parol-tiklash/`, `callback/`) | bajarildi (README 2.1) |
-| Lokal `http://localhost:4321/Tayanch/**` redirect'i ro'yxatda | ataylab qoldirilgan (lokal sinov uchun). Olib tashlash: muallif qarori; olib tashlansa `config.toml` dan va `config push` bilan |
+| Lokal `http://localhost:4321/**` (va eski `/Tayanch/**`) redirect'i ro'yxatda | ataylab qoldirilgan (lokal sinov uchun). Olib tashlash: muallif qarori; olib tashlansa `config.toml` dan va `config push` bilan |
 | `?keyin=` query bilan redirect glob'ga mos kelishi | **tekshirish kerak** (README 2.1) |
 | O'z SMTP: Gmail SMTP, yuboruvchi "Tayanch", soatiga 30 xat | bajarildi (2026-11-10, README 2.4). Muallif tasdiqladi: parol tiklash xati keldi |
 | SMTP logini muallifning asosiy Gmail manzili (alohida hisob emas) | xavf: shu hisob paroli o'zgarsa App Password bekor bo'ladi va xat ketmaydi. Tavsiya: keyin alohida hisobga o'tish (README 2.4, 1-qadam). **muallif bajaradi** |

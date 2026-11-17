@@ -43,3 +43,26 @@ export function kunHolati(bugun: string, sana: string): { tur: KunTuri; kun: num
   const kun = kunFarqi(bugun, sana);
   return { tur: kun > 0 ? 'kelajak' : kun === 0 ? 'bugun' : 'otgan', kun };
 }
+
+const KUN_MS = 86_400_000;
+
+/** Mintaqa ko‘rsatilmasa, kalendar kunining UTC−12 dagi oxirini kutamiz. */
+export function muddatChegarasi(sana: string, soat?: string, utcSiljish?: number) {
+  const kun = Date.parse(`${sana}T00:00:00Z`) - (utcSiljish ?? -720) * 60_000;
+  const [s, d] = (soat ?? '23:59').split(':').map(Number);
+  const oxir = utcSiljish === undefined ? kun + KUN_MS : kun + (s * 60 + d + 1) * 60_000;
+  return { kun, oxir };
+}
+
+export function muddatHolati(hozir: number, kun: number, oxir: number): string {
+  if (hozir >= oxir) return 'Tugadi';
+  if (hozir >= kun) return 'Bugun tugaydi';
+  return `${Math.ceil((kun - hozir) / KUN_MS)} kun qoldi`;
+}
+
+/** Keyingi kalendar chegarasi yoki yopilish vaqti. O‘tgan yozuv uchun taymer kerak emas. */
+export function keyingiMuddatYangilanishi(hozir: number, kun: number, oxir: number): number {
+  if (hozir >= oxir) return Infinity;
+  if (hozir >= kun) return oxir;
+  return kun - (Math.ceil((kun - hozir) / KUN_MS) - 1) * KUN_MS;
+}

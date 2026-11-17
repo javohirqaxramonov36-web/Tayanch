@@ -10,9 +10,8 @@
 // Qoidalar: external_id bo'yicha upsert; verified_by bo'lmasa (yoki hash mos kelmasa) status=draft, aks holda verified.
 // "namuna" tegli savol bazaga yuklanmaydi. Bazadagi mazmun o'zgargan, lekin version oshmagan savol rad etiladi.
 import { readFileSync } from 'node:fs';
-import { dirname, extname, resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
-import { argumentlar, bazaQatori, hammasiniTekshir, joyNomi, mazmunHash, namunaTeg, savolFayllari, savollarPapkasi, xatoBilanChiq } from './savol/umumiy.mjs';
+import { argumentlar, hammasiniTekshir, importQatori, joyNomi, namunaTeg, savolFayllari, savollarPapkasi, xatoBilanChiq } from './savol/umumiy.mjs';
 
 const a = argumentlar();
 const apply = a.apply === true;
@@ -44,17 +43,7 @@ for (const n of natijalar) {
 }
 
 // ---------- 2. Qatorlar ----------
-const qatorlar = tayyor.map((n) => {
-  const s = n.savol;
-  const hash = mazmunHash(s);
-  let rasm = null;
-  if (s.figure) {
-    const manba = resolve(dirname(n.fayl), s.figure.src);
-    const yol = `${s.section}/${s.external_id}/${hash.slice(0, 12)}${extname(manba).toLowerCase()}`;
-    rasm = { manba, yol, turi: s.figure.type === 'svg' ? 'image/svg+xml' : 'image/png' };
-  }
-  return { n, rasm, qator: bazaQatori(s, { hash, figureYol: rasm?.yol ?? null }) };
-});
+const qatorlar = tayyor.map((n) => importQatori(n));
 
 // ---------- 3. Bazadagi holat (kalit bo'lsa; dry-run'da faqat o'qiladi) ----------
 let supabase = null;

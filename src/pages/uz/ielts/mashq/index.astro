@@ -66,7 +66,6 @@ import { yol } from '../../../../lib/yol';
       keyingiTekshiruv="2026-12-10"
       tekshirilmagan={[
         "Listening savollari soni (40), Writing topshiriqlari soni (2) va Speaking qismlari soni (3) bu sahifa uchun rasmiy manbada alohida tekshirilmagan.",
-        "Listening, Writing, Speaking va Full Mock Test hali qurilmagan: muddat belgilanmagan.",
       ]}
     />
   </div>
@@ -94,7 +93,7 @@ import { yol } from '../../../../lib/yol';
     color: var(--matn); text-decoration: none;
   }
   a.karta { border: 1.5px solid var(--matn); background: var(--fon); }
-  a.karta:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); }
+  @media (hover: hover) and (pointer: fine) { a.karta:hover { border-color: var(--rang-asosiy); transform: var(--kotarilish); } }
   .karta.nofaol { background: var(--fon-ikkinchi); }
   .k-ust { display: flex; align-items: center; justify-content: space-between; gap: var(--b-2); margin-bottom: var(--b-3); }
   .k-ikonka { color: var(--rang-havola); }

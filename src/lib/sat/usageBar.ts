@@ -53,6 +53,10 @@ export function usageQatorlari(u: UsageJavob | null | undefined, nomlar: Record<
     .sort(saralash)
     .map((kalit): UsageQator => {
       const q = limits[kalit];
+      // max 0: tarifga kirmagan imkoniyat. "0 of 0" emas, "Not included" (tugagan limit ham emas).
+      if (Math.trunc(q.max) === 0) {
+        return { kalit, nomi: nomlar[kalit] ?? kalit, asosiy: 'Not included', izoh: 'Not part of your plan', foiz: null, tugagan: false };
+      }
       const used = Math.max(0, Math.trunc(q.used ?? 0));
       const max = Math.trunc(q.max);
       const qolgan = Math.max(0, max - used);

@@ -31,7 +31,7 @@ export const satGuruhlar: SatGuruh[] = [
       {
         qism: 'mashq/test/',
         tayyor: true,
-        nomi: 'Test',
+        nomi: 'Short tests',
         tavsif: 'Short practice tests in Reading & Writing and Math. For a full mock test, links to official materials are provided.',
         turi: 'mashq',
         manbalar: ['CB01'],
@@ -102,6 +102,15 @@ export const satGuruhlar: SatGuruh[] = [
         tekshirilmagan: ['The review intervals are a Tayanch choice, not an official recommendation.'],
       },
       {
+        qism: 'vosita/reyting/',
+        tayyor: true,
+        nomi: 'Leaderboard',
+        tavsif: 'Weekly and monthly XP from practice, review and the question of the day. Joining is optional and only your nickname is shown. Needs an account.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['The XP numbers and the daily limit are starting values chosen by Tayanch and may change.'],
+      },
+      {
         qism: 'vosita/ai-tutor/',
         tayyor: true,
         nomi: 'AI tutor',
@@ -112,6 +121,15 @@ export const satGuruhlar: SatGuruh[] = [
           'The tutor is off until the author sets the AI key, a monthly budget and plan limits.',
           'Answers come from an AI model and can contain mistakes. Only the final answer of a mistake explanation is checked, not every step.',
         ],
+      },
+      {
+        qism: 'vosita/musobaqa/',
+        tayyor: true,
+        nomi: 'Contests',
+        tavsif: 'Timed contests with original SAT-style questions: one attempt inside a time window, results by nickname after it ends. No prizes. Needs an account.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['Contests have not been tried with real accounts in a browser yet.'],
       },
     ],
   },
@@ -270,6 +288,16 @@ export const satGuruhlar: SatGuruh[] = [
     nomi: 'Account',
     sahifalar: [
       {
+        // 2026-11-13: SAT "men" markazi (maqsad, afzalliklar, saqlangan ish, tarif). Hisob sozlamalari 1-qavatda.
+        qism: 'hisob/profil/',
+        tayyor: true,
+        nomi: 'My SAT profile',
+        tavsif: 'Your SAT goal and test date, study preferences, saved work and plan in one place.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['Saved work counts have not been checked with a real account yet.'],
+      },
+      {
         qism: 'hisob/maqsad/',
         tayyor: true,
         nomi: 'Goal and test date',
@@ -281,8 +309,8 @@ export const satGuruhlar: SatGuruh[] = [
       {
         qism: 'hisob/obuna/',
         tayyor: true,
-        nomi: 'Plans',
-        tavsif: 'Choose a SAT plan and pay through inPAY. Each payment covers one prepaid period; nothing renews automatically.',
+        nomi: 'Subscription',
+        tavsif: 'Your SAT plan, usage and payments. Compare plans and pay through inPAY. Each payment covers one prepaid period; nothing renews automatically.',
         turi: 'vosita',
         manbalar: ['IP03'],
         tekshirilmagan: ['Prices and usage limits are not set yet.'],
@@ -322,9 +350,10 @@ export const turiNomi: Record<SatTuri | 'bolim-kirishi', string> = {
   qollanma: 'Guide',
 };
 
-/** Yon panel guruhlari (dizayn rejasi B, 3-bosqich, muallif tanlovi 2026-11-09).
+/** Yon panel guruhlari. 2026-11-13 dan (rekonstruksiya 1-bosqich, muallif tanlovi): Today (bo'lim kirishi,
+ *  BolimYon'dagi birinchi havola) · Practice · Learn · Progress · Plan · Account.
  *  SAT kirish sahifasi va sahifa yo'li `satGuruhlar` dan foydalanadi, u o'zgarmaydi.
- *  "Coming soon": hali yozilmagan sahifalar (tayyor emas) yon panelda havola emas. */
+ *  Hali yozilmagan sahifalar (tayyor emas) yon panelda ko'rsatilmaydi: URL ishlaydi, "tez orada" sahifasi chiqadi. */
 export interface SatYonGuruh {
   nomi: string;
   qismlar: { nomi?: string; sahifalar: SatSahifa[] }[];
@@ -338,25 +367,27 @@ const s = (qism: string) => {
 };
 
 export const satYonGuruhlar: SatYonGuruh[] = [
-  { nomi: 'Start here', qismlar: [{ sahifalar: ['qollanma/qayerdan-boshlash/'].map(s) }] },
-  { nomi: 'Guides', qismlar: [{ sahifalar: ['qollanma/reading-writing/'].map(s) }] },
+  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/bank/', 'mashq/mock/', 'mashq/test/', 'mashq/lugat/'].map(s) }] },
   {
-    nomi: 'Lessons',
+    nomi: 'Learn',
     qismlar: [
-      { nomi: 'Math', sahifalar: ['hajm', 'grafik', 'birlik-aylana', 'statistika'].map((q) => s(`qollanma/math/${q}/`)) },
-      { nomi: 'Reading & Writing', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
+      { nomi: 'Guides', sahifalar: ['qollanma/qayerdan-boshlash/', 'qollanma/reading-writing/'].map(s) },
+      { nomi: 'Math lessons', sahifalar: ['hajm', 'grafik', 'birlik-aylana', 'statistika'].map((q) => s(`qollanma/math/${q}/`)) },
+      { nomi: 'Reading & Writing lessons', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
     ],
   },
-  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/test/', 'mashq/mock/', 'mashq/bank/', 'mashq/lugat/'].map(s) }] },
-  { nomi: 'Tools', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/rasmiy-testlar/', 'vosita/reja/', 'vosita/takrorlash/', 'vosita/ai-tutor/'].map(s) }] },
-  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/maqsad/', 'hisob/obuna/', 'hisob/fikr/', 'guruh/'].map(s) }] },
-  { nomi: 'Coming soon', tezOrada: true, qismlar: [{ sahifalar: satSahifalar.filter((x) => !x.tayyor) }] },
+  { nomi: 'Progress', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/takrorlash/', 'vosita/rasmiy-testlar/', 'vosita/reyting/', 'vosita/musobaqa/'].map(s) }] },
+  { nomi: 'Plan', qismlar: [{ sahifalar: ['vosita/reja/', 'hisob/maqsad/', 'vosita/ai-tutor/'].map(s) }] },
+  { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/profil/', 'hisob/obuna/', 'guruh/', 'hisob/fikr/'].map(s) }] },
 ];
 
-// Har tayyor sahifa yon panelda aynan bir marta bo'lishi kerak (yangi sahifa qo'shilsa build eslatadi).
+// Har tayyor sahifa yon panelda aynan bir marta bo'lishi kerak, tayyor bo'lmagani esa umuman bo'lmasligi kerak
+// (yangi sahifa qo'shilsa yoki tayyor bo'lsa build eslatadi).
 {
   const yonda = satYonGuruhlar.flatMap((g) => g.qismlar.flatMap((q) => q.sahifalar));
-  const yoq = satSahifalar.filter((x) => !yonda.includes(x));
+  const yoq = satSahifalar.filter((x) => x.tayyor && !yonda.includes(x));
+  const tayyorEmas = yonda.filter((x) => !x.tayyor);
+  if (tayyorEmas.length) throw new Error(`satYonGuruhlar: tayyor bo'lmagan sahifa yon panelda: ${tayyorEmas.map((x) => x.qism).join(', ')}`);
   if (yoq.length || new Set(yonda).size !== yonda.length) {
     throw new Error(`satYonGuruhlar: yon panelda yo'q yoki takroriy sahifa: ${yoq.map((x) => x.qism).join(', ')}`);
   }

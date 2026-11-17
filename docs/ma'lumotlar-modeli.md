@@ -77,6 +77,7 @@ Hammasi `security definer`, `search_path = ''`, execute faqat `authenticated` da
 | `start_review_session(limit)` | muddati kelgan takrorlash savollari | `review_sessions` +1, `questions` +n |
 | `usage_status()` | tarif, cheklovlar, bugungi sarf | sarflamaydi |
 | `analytics_summary()` | analitika paneli (P14): jami, ko'nikma va bo'lim bo'yicha aniqlik, 90 kunlik faollik, streak, xato sababi teglari; `analytics_extended` bayrog'i bo'lsa qiyinlik bo'yicha aniqlik va median vaqt | sarflamaydi |
+| `leaderboard_me()`, `leaderboard_join(...)`, `leaderboard_leave()`, `leaderboard(period, scope)` | reyting (P32): o'z XP'si, opt-in/out, top 50 (faqat laqab, XP, ruxsat bo'lsa mamlakat). `xp_events` va `leaderboard_members` jadvallari: o'zini o'qiydi, yozish faqat trigger/RPC. Qoida: `docs/xp-qoidasi.md` | sarflamaydi |
 | `can_read_question_figure(name)` | Storage policy yordamchisi | sarflamaydi |
 | `admin_grant_plan(...)`, `admin_hide_question(...)` | yangi obuna / yashirilgan savol id, `audit_log` | service role |
 

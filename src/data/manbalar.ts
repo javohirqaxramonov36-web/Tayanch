@@ -187,6 +187,15 @@ export const manbalar: Manba[] = [
     izoh: "Listening va Reading: 40 savol, har to'g'ri javob 1 ball; xom ball 9 bandli shkalaga o'tkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yo'q. Kerakli ball test versiyasiga qarab biroz o'zgaradi.",
   },
   {
+    id: 'IE05',
+    nomi: 'IELTS Academic: Writing test format',
+    tashkilot: 'IELTS (ielts.org)',
+    havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-writing',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-12',
+    izoh: "Writing 60 daqiqa, 2 task, ikkalasi majburiy. Task 2: ko'rinish, dalil yoki muammo muhokamasi; kamida 250 so'z, 40 daqiqadan ko'p sarflamaslik tavsiya etiladi; akademik yoki yarim rasmiy/neytral uslub; misollar o'z tajribangdan bo'lishi mumkin. Task 2 Writing balliga Task 1 dan ikki baravar ko'p hissa qo'shadi. To'rt mezon: Task achievement/response, Coherence and cohesion, Lexical resource, Grammatical range and accuracy (har birining ta'rifi sahifada). Jazo: mavzuga aloqasiz yozish, eslatma yoki bullet ko'rinishida yozish, ko'chirilgan matn (qattiq jazo). 250 dan ko'p yozish jazolanmaydi, lekin tekshirishga vaqt qolmasligi mumkin. Tekshiriladigan ko'nikmalar: muammoga yechim taklif qilish, fikr bildirish va asoslash, dalil, fikr va oqibatlarni solishtirish, g'oya va dalilni baholash va e'tiroz bildirish.",
+  },
+  {
     id: 'ID01',
     nomi: 'Free IELTS practice tests',
     tashkilot: 'IDP IELTS',
@@ -666,6 +675,15 @@ export const manbalar: Manba[] = [
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
     izoh: "Sohalar bo'yicha savol soni: Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7; \"Questions from all four categories appear in each test module.\" Pretest soni bu sahifada yo'q.",
+  },
+  {
+    id: 'CB44',
+    nomi: 'SAT School Day Bluebook Test Directions, Math Module Directions',
+    tashkilot: 'College Board',
+    havola: 'https://satsuite.collegeboard.org/media/pdf/english-sat-test-directions-bb.pdf#page=7',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-13',
+    izoh: "SPR: musbat uchun 5, manfiy uchun minus bilan 6 belgi. Bitta javob kiritiladi. Sig'magan kasr o'nlikka aylantiriladi, sig'magan o'nlik kesiladi yoki yaxlitlanadi. Aralash son kasr yoki o'nlikka aylantiriladi. Oxirgi nuqta, manfiy nol va aynan yarimdagi yaxlitlash qoidasi ko'rsatilmagan.",
   },
 ];
 
