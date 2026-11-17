@@ -38,7 +38,7 @@ Sayt `https://javohirqaxramonov36-web.github.io/Tayanch/` dan `https://tayanched
 
 Muhim: yangi build (`base` yo'q) eski github.io/Tayanch/ manzilida ishlamaydi (CSS va havolalar domen ildiziga qaraydi), eski build esa custom domenda ishlamaydi. Shuning uchun merge va Custom domain ketma-ket, DNS tayyor bo'lgandan keyin qilinadi.
 
-1. **Merge'dan oldin:** DNS yozuvlari qo'yilgan va `dig` to'rtta IP qaytaradi.
+1. **Merge'dan oldin:** DNS yozuvlari qo'yilgan va `dig` to'rtta IP qaytaradi. **Bajarildi 2026-11-17 12:11:** `.uz` delegatsiyasi `rdns1/2/3.ahost.uz`, 8.8.8.8 va 1.1.1.1 to'rtta IP va `www` CNAME ni qaytaradi; `http://tayanchedu.uz` GitHub'ning "Site not found" (404) sahifasini beradi, ya'ni so'rov GitHub'ga yetib boryapti, Custom domain hali qo'yilmagan.
 2. **Merge'dan oldin (zararsiz, qo'shimcha):** Google Cloud (`tayanch-auth-2611`) → Clients → "Tayanch web" → Authorized JavaScript origins ga `https://tayanchedu.uz`. inPAY oq ro'yxati (https://inpay.uz/merchant/whitelist/) ga `tayanchedu.uz`. **Bajarildi 2026-11-17:** Google "OAuth client saved" (origins: github.io, `localhost:4321`, `https://tayanchedu.uz`; kuchga kirishi 5 daqiqadan bir necha soatgacha); inPAY "Callback whitelist" (kassa #63627) "qo'shildi va darhol ishlaydi". Eslatma: Google Cloud konsoliga `tayanch9@gmail.com` bilan kiriladi; `javohirqaxramonov36` hisobida 2026-11-17 da "You need additional access" chiqdi.
 3. **Merge** → "Saytni joylash" Actions tugashini kutish.
 4. **Darhol:** GitHub repo Settings → Pages → Custom domain `tayanchedu.uz` → Save. DNS tekshiruvi o'tgach (sertifikat bir necha daqiqadan 24 soatgacha) "Enforce HTTPS".
