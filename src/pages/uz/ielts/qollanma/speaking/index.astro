@@ -1,0 +1,767 @@
+---
+// IELTS Speaking qo'llanmasi. Qolip: Reading va Writing qo'llanmalari (Tayanch-IELTS-dizayn.md, "Qollanma" ekrani).
+// Format, qismlar va mezonlar: IE06 (ielts.org, 2026-11-12). Part 2 rejasi, tuzoqlar va tekshiruv savollari Tayanch tavsiyasi.
+// Savollar va kartochkalar Tayanch uchun yozilgan namuna.
+// Gapirish mashqi: mikrofon faqat tugma bosilganda so'raladi (MediaRecorder). Audio hech qayerga yuborilmaydi va
+// saqlanmaydi: faqat sahifa ochiq turganda xotirada. tayanch:ielts-speaking da faqat kartochka, eslatma va belgilar.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { IKONKA } from '../../../../../data/ieltsSahifalar';
+import { manbalar } from '../../../../../data/manbalar';
+import { yol } from '../../../../../lib/yol';
+
+const KALIT = 'tayanch:ielts-speaking';
+const ie06 = manbalar.find((x) => x.id === 'IE06')!;
+const mundarija = [
+  { id: 'qismlar', nomi: 'Uch qism' },
+  { id: 'mezonlar', nomi: 'Baholash mezonlari' },
+  { id: 'part2', nomi: 'Part 2 rejasi' },
+  { id: 'tuzoq', nomi: 'Tuzoqlar' },
+  { id: 'mashq', nomi: 'Gapirish mashqi' },
+];
+const qismlar = [
+  ['Part 1', 'Tanishuv va suhbat', '4–5 daqiqa', "Imtihonchi o'zini tanishtiradi, shaxsingni tekshiradi va tanish mavzularda savol beradi: uy, oila, ish, o'qish, qiziqishlar. Kundalik mavzuda fikr va ma'lumot berish tekshiriladi."],
+  ['Part 2', 'Monolog', '3–4 daqiqa', "Kartochka beriladi: unda gapirish kerak bo'lgan bandlar va tushuntirish kerak bo'lgan bitta jihat bor. 1 daqiqa tayyorgarlik (qalam va qog'oz beriladi), keyin 2 daqiqa gapirasan. Vaqt tugaganda imtihonchi to'xtatadi va 1–2 savol berishi mumkin."],
+  ['Part 3', 'Muhokama', '4–5 daqiqa', "Part 2 mavzusiga bog'liq masalalar umumiyroq va chuqurroq muhokama qilinadi. Fikrni tushuntirish, tahlil qilish va taxmin qilish tekshiriladi."],
+];
+const mezonlar = [
+  ['Fluency and coherence', "Ortiqcha ikkilanishsiz, normal tezlikda gapira olishing. Gap va fikrlarni mantiqiy tartibda aytish, bog'lovchi vositalarni (bog'lovchi so'zlar, olmoshlar) o'rinli ishlatish."],
+  ['Lexical resource', "So'z boyligi doirasi va ma'noni ifodalash uchun so'zlarni qanchalik to'g'ri va o'rinli ishlatishing. Kerakli so'zni bilmaganda uni boshqa so'zlar bilan ifodalay olish ham shu mezonga kiradi."],
+  ['Grammatical range and accuracy', "Grammatik tuzilmalar doirasi va ularni qanchalik to'g'ri va o'rinli ishlatishing."],
+  ['Pronunciation', "Nutqing ortiqcha kuch sarflamasdan tushunilishi."],
+];
+const part2Reja = [
+  ['Kalit so\'zlar, gap emas', "1 daqiqada har bandga 2–3 kalit so'z yoz. To'liq gap yozishga vaqt yetmaydi."],
+  ['Har bandga taxminan 30 soniya', "Kartochkadagi 3 band va \"explain\" qismi: 4 bo'lak, har biri taxminan 30 soniya."],
+  ['"Explain" ni oxiriga saqla', "Nima uchun muhimligi, nima his qilganing: monologning eng shaxsiy va uzun qismi."],
+  ["Vaqt qolsa, misol qo'sh", "Yangi band qidirma: aytganingga bitta aniq voqea yoki tafsilot qo'sh."],
+];
+const tuzoqlar = [
+  ["Part 2 da vaqt tugamay to'xtash.", "Kartochka va eslatmalar 2 daqiqa gapirishga yetadigan qilib tuzilgan: imtihonchi o'zi to'xtatadi.", 'IE06'],
+  ["So'zni bilmay to'xtab qolish.", "Boshqa so'zlar bilan tushuntir: bu ham Lexical resource da hisobga olinadi.", 'IE06'],
+  ["Part 1 da bir so'zli javob.", "\"Yes, I do\" bilan tugatma: sabab yoki misol qo'shib, 2–3 gap ayt.", null],
+  ["Yodlangan javob.", "Tayyor matnni aytish savolga mos kelmay qoladi va tabiiy eshitilmaydi. Yodlama, rejani mashq qil.", null],
+  ["Part 3 da shaxsiy hikoyaga qaytish.", "Part 3 umumiyroq: \"people in my country\", \"in the future\" kabi kenroq nuqtai nazardan gapir.", null],
+] as const;
+// Namuna savollar: Tayanch uchun yozilgan, rasmiy IELTS savoli emas.
+const part1 = [
+  'Do you prefer studying in the morning or in the evening? Why?',
+  'How often do you use public transport in your city?',
+  'What kind of music do you enjoy listening to?',
+  'Is there a skill you would like to learn in the future?',
+];
+const kartochkalar = [
+  {
+    id: 'joy', nomi: 'Sevimli joy',
+    mavzu: 'Describe a place in your city where you like to spend time.',
+    bandlar: ['where it is', 'how often you go there', 'what you do there'],
+    explain: 'and explain why you like this place.',
+    part3: ['Why do some people prefer quiet places to busy ones?', 'How have public places in cities changed in recent years?', 'Should cities spend more money on parks or on roads? Why?'],
+  },
+  {
+    id: 'konikma', nomi: "Kattalardan o'rganilgan ko'nikma",
+    mavzu: 'Describe a useful skill you learned from an older person.',
+    bandlar: ['what the skill is', 'who taught you', 'how you learned it'],
+    explain: 'and explain why this skill is useful to you.',
+    part3: ['What skills do young people today learn from their grandparents?', 'Is it better to learn a practical skill from a person or from a video?', 'Which skills will be more important in the future?'],
+  },
+  {
+    id: 'kutish', nomi: 'Kutish',
+    mavzu: 'Describe a time when you had to wait for something.',
+    bandlar: ['what you were waiting for', 'how long you waited', 'what you did while waiting'],
+    explain: 'and explain how you felt about it.',
+    part3: ['Why do many people find waiting difficult?', 'Has technology made people less patient?', 'In which situations is it important to be patient?'],
+  },
+];
+// O'zini tekshirish: IE06 dagi mezon ta'riflari asosida Tayanch tuzgan.
+const tekshiruv = [
+  { mezon: 'Fluency and coherence', savollar: [
+    ['fc1', 'Uzoq pauzalarsiz, normal tezlikda gapirdim.'],
+    ['fc2', "Fikrlarim tartibli edi: avval asosiy fikr, keyin sabab va misol."],
+    ['fc3', "Bog'lovchilar (because, so, for example) o'rinli edi, bittasini qayta-qayta takrorlamadim."],
+  ] },
+  { mezon: 'Lexical resource', savollar: [
+    ['lr1', "So'zni bilmaganimda to'xtab qolmay, boshqacha tushuntirdim."],
+    ['lr2', "Mavzuga oid aniq so'zlar ishlatdim, faqat \"good\", \"nice\" emas."],
+    ['lr3', "Bitta so'zni qayta-qayta takrorlamadim."],
+  ] },
+  { mezon: 'Grammatical range and accuracy', savollar: [
+    ['gr1', "O'tgan voqea haqida o'tgan zamonda gapirdim."],
+    ['gr2', "Oddiy va qo'shma gaplar aralash edi (because, which, when)."],
+    ['gr3', "Ega-kesim moslashuvi (he goes) va artikllarda xato kam edi."],
+  ] },
+  { mezon: 'Pronunciation', savollar: [
+    ['pr1', "Yozuvni eshitganda har so'z tushunarli."],
+    ['pr2', "Muhim so'zlarga urg'u berdim, ovozim bir xil ohangda emas."],
+    ['pr3', "Tez gapirganda so'z oxirlari yutilib ketmadi."],
+  ] },
+];
+const sozlama = { kalit: KALIT, kartochkalar: kartochkalar.map((k) => ({ id: k.id, part3: k.part3 })) };
+const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 14 0v-1M12 18v4"/>';
+---
+<BolimQobiq
+  title="Speaking qo'llanmasi · IELTS"
+  description="IELTS Speaking: uch qism, to'rt baholash mezoni, Part 2 rejasi, tuzoqlar va o'zingni yozib eshitadigan gapirish mashqi."
+  turi="qollanma"
+  yol={["Qo'llanmalar"]}
+  bolim="ielts"
+  holat="qoralama"
+>
+  <div class="ichki qol">
+    <header class="bosh">
+      <p class="pill-qator"><span class="ustki-kok">Qo'llanma</span><span class="pill-ochiq">ochiq</span></p>
+      <h1>Speaking: <span class="kok">o'zingni eshit</span></h1>
+      <p class="lead">Speaking imtihonchi bilan yuzma-yuz suhbat. Bu qo'llanma uch qismni, imtihonchi nimaga qarashini va o'zingni yozib, qayta eshitib tekshirishni ko'rsatadi.</p>
+    </header>
+
+    <section class="format" aria-label="Format kartasi">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.speaking} />Bo'lim</span><span class="f-qiymat">Speaking</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">11–14 daqiqa</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Qismlar</span><span class="f-qiymat">3 ta</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" /></svg>Shakl</span><span class="f-qiymat">Yuzma-yuz</span><span class="f-izoh">suhbat yozib olinadi</span></div>
+    </section>
+
+    <details class="mundarija-tel">
+      <summary>
+        Mundarija
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </summary>
+      <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
+    </details>
+
+    <div class="ikki">
+      <article class="maqola">
+        <section id="qismlar" aria-labelledby="qismlar-h">
+          <h2 id="qismlar-h">Uch qism</h2>
+          <p class="izoh-m">Har qism nutqni boshqa tomondan tekshiradi (<a href={ie06.havola} rel="noopener">ielts.org</a>).</p>
+          <ol class="qismlar">
+            {qismlar.map(([n, s, v, t]) => (
+              <li>
+                <p class="q-bosh"><b lang="en">{n}</b><span>{s}</span><span class="izoh">{v}</span></p>
+                <p class="ikkinchi-m">{t}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section id="mezonlar" aria-labelledby="mezonlar-h">
+          <h2 id="mezonlar-h">Baholash mezonlari</h2>
+          <p class="izoh-m">Sertifikatlangan imtihonchi butun suhbat davomida to'rt mezon bo'yicha baholaydi. Ta'riflar o'z so'zlarimiz bilan.</p>
+          <ul class="turlar">
+            {mezonlar.map(([n, t]) => <li><span class="t-nom" lang="en">{n}</span><span class="t-matn">{t}</span></li>)}
+          </ul>
+        </section>
+
+        <section id="part2" aria-labelledby="part2-h">
+          <h2 id="part2-h">Part 2 rejasi</h2>
+          <p class="izoh-m">1 daqiqa tayyorgarlikdan qanday foydalanish. Bu Tayanch tavsiyasi, rasmiy qoida emas.</p>
+          <div class="juft">
+            {part2Reja.map(([n, t]) => <div class="kul"><h3>{n}</h3><p class="ikkinchi-m">{t}</p></div>)}
+          </div>
+        </section>
+
+        <section id="tuzoq" aria-labelledby="tuzoq-h">
+          <h2 id="tuzoq-h">Tuzoqlar</h2>
+          <ol class="tuzoqlar">
+            {tuzoqlar.map(([b, t, m], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span><span class="izoh">{m ? ' (ielts.org asosida)' : ' (Tayanch tavsiyasi)'}</span></p></li>)}
+          </ol>
+        </section>
+
+        <section id="mashq" class="mashq" aria-labelledby="mashq-h" data-sozlama={JSON.stringify(sozlama)}>
+          <div class="m-bosh">
+            <h2 id="mashq-h">Gapirish mashqi</h2>
+            <span class="izoh">Ball qo'yilmaydi</span>
+          </div>
+          <p class="maxfiy"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>Ovozing hech qayerga yuborilmaydi va saqlanmaydi: yozuv faqat sahifa ochiq turganda shu qurilmada turadi. Kerak bo'lsa, o'zing yuklab olasan.</span></p>
+          <p class="ogoh" id="mik-xabar" role="status" hidden></p>
+
+          <div class="tablar" role="tablist" aria-label="Speaking qismlari">
+            <button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true">Part 1</button>
+            <button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">Part 2</button>
+            <button type="button" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">Part 3</button>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+            <p class="izoh-m">Har savolga 2–3 gap bilan javob ber: javob, sabab, misol. Yozib olishni boshlab, savollarni ketma-ket o'qib javob ber. <span class="pill-namuna">Namuna</span></p>
+            <ol class="savollar" lang="en">{part1.map((s) => <li>{s}</li>)}</ol>
+            <div class="yozgich" data-yozgich="part1">
+              <div class="y-qator">
+                <button type="button" class="katta-q asosiy-q" data-amal="boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Yozishni boshlash</button>
+                <button type="button" class="katta-q toxtat-q" data-amal="toxtat" hidden>To'xtatish</button>
+                <span class="y-vaqt" role="timer" aria-label="Yozuv davomiyligi">00:00</span>
+                <span class="y-belgi" hidden>Yozilmoqda</span>
+              </div>
+              <div class="y-natija" hidden>
+                <audio controls preload="metadata"></audio>
+                <div class="y-tugmalar">
+                  <a class="chiziq-tugma" data-amal="yuklab" download>Yuklab olish</a>
+                  <button type="button" class="matn-tugma" data-amal="ochir">Yozuvni o'chirish</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+            <p class="ustki-yorliq" id="kartochka-h">Kartochka tanla <span class="pill-namuna">Namuna</span></p>
+            <div class="kartochkalar" role="group" aria-labelledby="kartochka-h">
+              {kartochkalar.map((k, i) => <button type="button" class="k-tanlov" aria-pressed={i === 0 ? 'true' : 'false'} data-karta={k.id}>{k.nomi}</button>)}
+            </div>
+            {kartochkalar.map((k, i) => (
+              <div class="kartochka" lang="en" data-karta-matn={k.id} hidden={i !== 0}>
+                <p class="k-mavzu">{k.mavzu}</p>
+                <p>You should say:</p>
+                <ul>{k.bandlar.map((b) => <li>{b}</li>)}</ul>
+                <p>{k.explain}</p>
+              </div>
+            ))}
+            <div class="bosqich-qator">
+              <div class="b-taymer">
+                <span class="ustki-yorliq" id="p2-bosqich">Tayyorgarlik</span>
+                <span class="katta-vaqt" id="p2-vaqt" role="timer" aria-labelledby="p2-bosqich">01:00</span>
+              </div>
+              <div class="y-tugmalar">
+                <button type="button" class="chiziq-tugma" id="tayyor-boshla">Tayyorgarlikni boshlash</button>
+                <button type="button" class="katta-q asosiy-q" id="gapir-boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Gapirishni boshlash</button>
+              </div>
+            </div>
+            <label class="ustki-yorliq" for="eslatma">Eslatmalar (kalit so'zlar)</label>
+            <textarea id="eslatma" rows="4" lang="en" spellcheck="false" placeholder="Har bandga 2–3 so'z…"></textarea>
+            <div class="yozgich" data-yozgich="part2" data-chegara="120000">
+              <div class="y-qator">
+                <button type="button" class="katta-q toxtat-q" data-amal="toxtat" hidden>To'xtatish</button>
+                <span class="y-vaqt" role="timer" aria-label="Gapirish vaqti">00:00</span>
+                <span class="y-belgi" hidden>Yozilmoqda</span>
+              </div>
+              <div class="y-natija" hidden>
+                <audio controls preload="metadata"></audio>
+                <div class="y-tugmalar">
+                  <a class="chiziq-tugma" data-amal="yuklab" download>Yuklab olish</a>
+                  <button type="button" class="matn-tugma" data-amal="ochir">Yozuvni o'chirish</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+            <p class="izoh-m">Part 2 dagi kartochka mavzusi bo'yicha umumiyroq savollar. Har javobda fikr, sabab va misol bo'lsin. <span class="pill-namuna">Namuna</span></p>
+            <ol class="savollar" id="part3-savollar" lang="en">{kartochkalar[0].part3.map((s) => <li>{s}</li>)}</ol>
+            <div class="yozgich" data-yozgich="part3">
+              <div class="y-qator">
+                <button type="button" class="katta-q asosiy-q" data-amal="boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Yozishni boshlash</button>
+                <button type="button" class="katta-q toxtat-q" data-amal="toxtat" hidden>To'xtatish</button>
+                <span class="y-vaqt" role="timer" aria-label="Yozuv davomiyligi">00:00</span>
+                <span class="y-belgi" hidden>Yozilmoqda</span>
+              </div>
+              <div class="y-natija" hidden>
+                <audio controls preload="metadata"></audio>
+                <div class="y-tugmalar">
+                  <a class="chiziq-tugma" data-amal="yuklab" download>Yuklab olish</a>
+                  <button type="button" class="matn-tugma" data-amal="ochir">Yozuvni o'chirish</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="sr" id="elon" aria-live="polite"></p>
+
+          <div class="tekshiruv">
+            <h3>Yozuvni eshitib, o'zingni tekshir</h3>
+            <p class="izoh-m">Bajarilgan bandlarni belgila. Halol belgila: bu faqat o'zing uchun.</p>
+            {tekshiruv.map((g) => (
+              <fieldset class="t-guruh">
+                <legend lang="en">{g.mezon}</legend>
+                {g.savollar.map(([id, m]) => (
+                  <button type="button" class="t-band" aria-pressed="false" data-band={id}>
+                    <span class="katakcha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7" /></svg></span>
+                    <span>{m}</span>
+                  </button>
+                ))}
+              </fieldset>
+            ))}
+            <p class="t-xulosa" id="t-xulosa" aria-live="polite"></p>
+          </div>
+
+          <div class="tozalash">
+            <button type="button" class="matn-tugma" id="tozala">Eslatma va belgilarni o'chirish</button>
+            <span class="tasdiq" id="tasdiq" hidden>Eslatma va belgilar o'chirilsinmi? Yozuvlar ham o'chadi.
+              <button type="button" class="matn-tugma" id="tasdiq-ha">Ha, o'chirish</button>
+              <button type="button" class="matn-tugma" id="tasdiq-yoq">Bekor qilish</button>
+            </span>
+          </div>
+        </section>
+
+        <section class="keyingi" aria-labelledby="keyingi-h">
+          <p class="ustki-yorliq kok-q">Keyingi qadam</p>
+          <h2 id="keyingi-h">Har kuni bitta Part 2 kartochkasini yozib eshit</h2>
+          <p class="k-matn">Bir haftadan keyin birinchi va oxirgi yozuvni solishtir. Reja vositasi Speaking kunlarini haftaga bo'lib beradi.</p>
+          <div class="k-tugmalar">
+            <a class="katta asosiy" href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja tuzish</a>
+            <a class="katta qora-tugma" href={yol('/uz/ielts/#rasmiy')}>Rasmiy namunalar</a>
+          </div>
+        </section>
+      </article>
+      <nav class="mundarija" aria-label="Sahifa mundarijasi">
+        <p class="ustki-yorliq">Mundarija</p>
+        {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
+      </nav>
+    </div>
+
+    <ManbaBlok
+      manbalar={['IE06']}
+      tekshirilgan="2026-11-12"
+      keyingiTekshiruv="2026-12-12"
+      tekshirilmagan={[
+        "Band descriptors (har mezon bo'yicha band qanday qo'yilishi) bu sahifada berilmagan.",
+        "Part 2 rejasi, tuzoqlar (\"Tayanch tavsiyasi\" deb belgilanganlari) va tekshiruv savollari rasmiy talab emas.",
+        "Savollar va kartochkalar Tayanch uchun yozilgan namuna, rasmiy IELTS savoli emas.",
+        "Yozib olish haqiqiy telefonlarda (ayniqsa iPhone Safari) sinalmagan.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<script>
+  interface Sozlama { kalit: string; kartochkalar: { id: string; part3: string[] }[] }
+  interface Holat { v: 1; karta: string; eslatma: string; belgilar: string[] }
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const S = JSON.parse($('mashq').dataset.sozlama || '{}') as Sozlama;
+  const bosh = (): Holat => ({ v: 1, karta: S.kartochkalar[0].id, eslatma: '', belgilar: [] });
+  const mmss = (ms: number) => { const s = Math.max(0, Math.round(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
+  const elon = (t: string) => { $('elon').textContent = t; };
+
+  // ---------- Saqlash (audio emas) ----------
+  function oqi(): Holat {
+    try {
+      const x = JSON.parse(localStorage.getItem(S.kalit) ?? 'null') as Holat | null;
+      if (!x || x.v !== 1) return bosh();
+      return {
+        v: 1,
+        karta: S.kartochkalar.some((k) => k.id === x.karta) ? x.karta : S.kartochkalar[0].id,
+        eslatma: typeof x.eslatma === 'string' ? x.eslatma.slice(0, 2000) : '',
+        belgilar: Array.isArray(x.belgilar) ? x.belgilar.filter((b) => typeof b === 'string') : [],
+      };
+    } catch { return bosh(); }
+  }
+  let h = oqi();
+  const saqla = () => { try { localStorage.setItem(S.kalit, JSON.stringify(h)); } catch { /* ruxsat yo'q: sahifa ichida ishlayveradi */ } };
+
+  // ---------- Yorliqlar (WAI-ARIA tabs: strelka, Home, End) ----------
+  const tablar = [...document.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+  function tabTanla(i: number, fokus: boolean) {
+    tablar.forEach((t, j) => {
+      const tanlangan = i === j;
+      t.setAttribute('aria-selected', String(tanlangan));
+      t.tabIndex = tanlangan ? 0 : -1;
+      $(t.getAttribute('aria-controls')!).hidden = !tanlangan;
+    });
+    if (fokus) tablar[i].focus();
+  }
+  tablar.forEach((t, i) => {
+    t.addEventListener('click', () => tabTanla(i, false));
+    t.addEventListener('keydown', (e) => {
+      const n = tablar.length;
+      const yangi = e.key === 'ArrowRight' ? (i + 1) % n : e.key === 'ArrowLeft' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
+      if (yangi < 0) return;
+      e.preventDefault();
+      tabTanla(yangi, true);
+    });
+  });
+
+  // ---------- Yozib olish ----------
+  const MIME = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+  const qollaydimi = typeof window.MediaRecorder !== 'undefined' && !!navigator.mediaDevices?.getUserMedia;
+  const mikXabar = (t: string) => { const el = $('mik-xabar'); el.textContent = t; el.hidden = !t; };
+  if (!qollaydimi) mikXabar("Bu brauzer ovoz yozishni qo'llamaydi. Mashqni taymer bilan ovozsiz davom ettirishing mumkin.");
+
+  interface Yozgich {
+    el: HTMLElement; nom: string; chegara: number;
+    rec: MediaRecorder | null; oqim: MediaStream | null; boshlandi: number; tik?: number; url: string | null;
+  }
+  let faol: Yozgich | null = null;
+  const yozgichlar = new Map<string, Yozgich>();
+  document.querySelectorAll<HTMLElement>('[data-yozgich]').forEach((el) => {
+    yozgichlar.set(el.dataset.yozgich!, { el, nom: el.dataset.yozgich!, chegara: Number(el.dataset.chegara || 0), rec: null, oqim: null, boshlandi: 0, url: null });
+  });
+  const q = <T extends HTMLElement>(y: Yozgich, s: string) => y.el.querySelector<T>(s)!;
+
+  function yozgichChiz(y: Yozgich) {
+    const ishlayapti = y.rec?.state === 'recording';
+    const boshla = y.el.querySelector<HTMLButtonElement>('[data-amal=boshla]');
+    if (boshla) { boshla.hidden = ishlayapti; boshla.disabled = !qollaydimi; }
+    q<HTMLButtonElement>(y, '[data-amal=toxtat]').hidden = !ishlayapti;
+    q(y, '.y-belgi').hidden = !ishlayapti;
+    q(y, '.y-natija').hidden = !y.url || ishlayapti;
+  }
+  function vaqtChiz(y: Yozgich) {
+    const otdi = Date.now() - y.boshlandi;
+    q(y, '.y-vaqt').textContent = y.chegara ? mmss(y.chegara - otdi) : mmss(otdi);
+    if (y.chegara && y.rec?.state === 'recording') {
+      const qoldi = y.chegara - otdi;
+      if (qoldi <= 10000 && qoldi > 9500) elon('10 soniya qoldi.');
+      if (qoldi <= 0) { toxtat(y); elon("Vaqt tugadi. Imtihonchi shu yerda to'xtatadi."); }
+    }
+  }
+
+  async function boshla(y: Yozgich): Promise<boolean> {
+    if (!qollaydimi) return false;
+    if (faol && faol !== y) toxtat(faol);
+    let oqim: MediaStream;
+    try {
+      oqim = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+      const nom = (e as DOMException)?.name;
+      mikXabar(nom === 'NotAllowedError' || nom === 'SecurityError'
+        ? "Mikrofonga ruxsat berilmadi. Brauzer sozlamalarida ruxsat berib, qayta urin yoki taymer bilan ovozsiz mashq qil."
+        : "Mikrofon topilmadi yoki band. Uni tekshirib, qayta urin.");
+      return false;
+    }
+    mikXabar('');
+    const mime = MIME.find((m) => MediaRecorder.isTypeSupported?.(m));
+    let rec: MediaRecorder;
+    try {
+      rec = new MediaRecorder(oqim, mime ? { mimeType: mime } : undefined);
+    } catch {
+      oqim.getTracks().forEach((t) => t.stop());
+      mikXabar("Ovoz yozishni boshlab bo'lmadi. Sahifani yangilab, qayta urin yoki taymer bilan ovozsiz mashq qil.");
+      return false;
+    }
+    const bolaklar: Blob[] = [];
+    rec.addEventListener('dataavailable', (e) => { if (e.data.size) bolaklar.push(e.data); });
+    rec.addEventListener('stop', () => {
+      oqim.getTracks().forEach((t) => t.stop());
+      const turi = rec.mimeType || mime || 'audio/webm';
+      if (y.url) URL.revokeObjectURL(y.url);
+      y.url = bolaklar.length ? URL.createObjectURL(new Blob(bolaklar, { type: turi })) : null;
+      if (y.url) {
+        q<HTMLAudioElement>(y, 'audio').src = y.url;
+        const a = q<HTMLAnchorElement>(y, '[data-amal=yuklab]');
+        a.href = y.url;
+        a.download = `tayanch-speaking-${y.nom}.${turi.includes('mp4') ? 'm4a' : turi.includes('ogg') ? 'ogg' : 'webm'}`;
+      }
+      yozgichChiz(y);
+      if (y.url) elon('Yozuv tayyor. Uni eshitib, quyidagi ro\'yxat bo\'yicha tekshir.');
+    });
+    try {
+      rec.start(1000);
+    } catch {
+      oqim.getTracks().forEach((t) => t.stop());
+      mikXabar("Ovoz yozishni boshlab bo'lmadi. Sahifani yangilab, qayta urin yoki taymer bilan ovozsiz mashq qil.");
+      return false;
+    }
+    y.rec = rec; y.oqim = oqim; y.boshlandi = Date.now();
+    faol = y;
+    clearInterval(y.tik);
+    y.tik = window.setInterval(() => vaqtChiz(y), 250);
+    vaqtChiz(y);
+    yozgichChiz(y);
+    q<HTMLButtonElement>(y, '[data-amal=toxtat]').focus();
+    elon('Yozib olish boshlandi.');
+    return true;
+  }
+  function toxtat(y: Yozgich) {
+    clearInterval(y.tik);
+    if (y.rec && y.rec.state !== 'inactive') y.rec.stop();
+    if (faol === y) faol = null;
+    yozgichChiz(y);
+    q(y, '.y-natija').querySelector<HTMLElement>('audio')?.focus?.();
+  }
+  function ochir(y: Yozgich) {
+    if (y.url) URL.revokeObjectURL(y.url);
+    y.url = null;
+    q<HTMLAudioElement>(y, 'audio').removeAttribute('src');
+    q(y, '.y-vaqt').textContent = y.chegara ? mmss(y.chegara) : '00:00';
+    yozgichChiz(y);
+  }
+  yozgichlar.forEach((y) => {
+    y.el.querySelector('[data-amal=boshla]')?.addEventListener('click', () => { void boshla(y); });
+    q(y, '[data-amal=toxtat]').addEventListener('click', () => { toxtat(y); if (y.nom === 'part2') p2Holat('tugadi'); });
+    q(y, '[data-amal=ochir]').addEventListener('click', () => { ochir(y); if (y.nom === 'part2') p2Holat('boshlanmagan'); });
+    if (y.chegara) q(y, '.y-vaqt').textContent = mmss(y.chegara);
+    yozgichChiz(y);
+  });
+  addEventListener('pagehide', () => { if (faol) toxtat(faol); });
+
+  // ---------- Part 2: kartochka, tayyorgarlik, gapirish ----------
+  const p2 = yozgichlar.get('part2')!;
+  const TAYYOR_MS = 60000;
+  let tayyorTik: number | undefined;
+  let tayyorTugash = 0;
+  type P2 = 'boshlanmagan' | 'tayyorgarlik' | 'gapirish' | 'tugadi';
+  function p2Holat(x: P2) {
+    $('p2-bosqich').textContent = x === 'gapirish' ? 'Gapirish' : x === 'tugadi' ? 'Tugadi' : 'Tayyorgarlik';
+    $<HTMLButtonElement>('tayyor-boshla').hidden = x !== 'boshlanmagan';
+    $<HTMLButtonElement>('gapir-boshla').hidden = x === 'gapirish' || x === 'tugadi';
+    if (x === 'boshlanmagan') $('p2-vaqt').textContent = mmss(TAYYOR_MS);
+    if (x !== 'tayyorgarlik') { clearInterval(tayyorTik); tayyorTik = undefined; }
+    if (x === 'tugadi') $('p2-vaqt').textContent = mmss(Math.min(Date.now() - p2.boshlandi, p2.chegara));
+  }
+  function tayyorChiz() {
+    const qoldi = tayyorTugash - Date.now();
+    $('p2-vaqt').textContent = mmss(qoldi);
+    if (qoldi <= 10000 && qoldi > 9750) elon('Tayyorgarlikka 10 soniya qoldi.');
+    if (qoldi <= 0) { elon('Tayyorgarlik tugadi. Gapirishni boshla.'); void gapir(); }
+  }
+  $('tayyor-boshla').addEventListener('click', () => {
+    tayyorTugash = Date.now() + TAYYOR_MS;
+    p2Holat('tayyorgarlik');
+    tayyorTik = window.setInterval(tayyorChiz, 250);
+    tayyorChiz();
+    $('eslatma').focus();
+    elon("Tayyorgarlik boshlandi: 1 daqiqa. Eslatmalarni yoz.");
+  });
+  async function gapir() {
+    clearInterval(tayyorTik); tayyorTik = undefined;
+    if (p2.url) ochir(p2);
+    p2Holat('gapirish');
+    const ok = await boshla(p2);
+    if (!ok) {
+      // Mikrofonsiz: faqat 2 daqiqalik taymer
+      p2.boshlandi = Date.now();
+      clearInterval(p2.tik);
+      p2.tik = window.setInterval(() => {
+        const qoldi = p2.chegara - (Date.now() - p2.boshlandi);
+        $('p2-vaqt').textContent = mmss(qoldi);
+        if (qoldi <= 0) { clearInterval(p2.tik); p2Holat('tugadi'); elon("Vaqt tugadi. Imtihonchi shu yerda to'xtatadi."); }
+      }, 250);
+      return;
+    }
+    // Yozish davomida katta taymer ham gapirish vaqtini ko'rsatadi
+    const ichki = window.setInterval(() => {
+      if (p2.rec?.state !== 'recording') { clearInterval(ichki); p2Holat('tugadi'); return; }
+      $('p2-vaqt').textContent = mmss(p2.chegara - (Date.now() - p2.boshlandi));
+    }, 250);
+  }
+  $('gapir-boshla').addEventListener('click', () => { void gapir(); });
+
+  const kartaTugmalar = [...document.querySelectorAll<HTMLButtonElement>('.k-tanlov')];
+  function kartaQoy(id: string) {
+    h.karta = id;
+    kartaTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.karta === id)));
+    document.querySelectorAll<HTMLElement>('[data-karta-matn]').forEach((el) => { el.hidden = el.dataset.kartaMatn !== id; });
+    const k = S.kartochkalar.find((x) => x.id === id)!;
+    $('part3-savollar').replaceChildren(...k.part3.map((s) => { const li = document.createElement('li'); li.textContent = s; return li; }));
+  }
+  kartaTugmalar.forEach((b) => b.addEventListener('click', () => {
+    if (b.dataset.karta === h.karta) return;
+    if (faol === p2) toxtat(p2);
+    ochir(p2);
+    p2Holat('boshlanmagan');
+    kartaQoy(b.dataset.karta!);
+    saqla();
+  }));
+
+  const eslatma = $<HTMLTextAreaElement>('eslatma');
+  let eTaymer: number | undefined;
+  eslatma.addEventListener('input', () => { clearTimeout(eTaymer); eTaymer = window.setTimeout(() => { h.eslatma = eslatma.value; saqla(); }, 400); });
+
+  // ---------- O'zini tekshirish ----------
+  const bandlar = [...document.querySelectorAll<HTMLButtonElement>('.t-band')];
+  function xulosa() {
+    bandlar.forEach((b) => b.setAttribute('aria-pressed', String(h.belgilar.includes(b.dataset.band!))));
+    const n = bandlar.filter((b) => h.belgilar.includes(b.dataset.band!)).length;
+    $('t-xulosa').textContent = n === 0 ? '' : `${bandlar.length} banddan ${n} tasi belgilandi. Belgilanmaganlari keyingi yozuvda e'tibor beriladigan joylar.`;
+  }
+  bandlar.forEach((b) => b.addEventListener('click', () => {
+    const id = b.dataset.band!;
+    h.belgilar = h.belgilar.includes(id) ? h.belgilar.filter((x) => x !== id) : [...h.belgilar, id];
+    xulosa();
+    saqla();
+  }));
+
+  // ---------- O'chirish: sahifa ichidagi tasdiq ----------
+  const tozala = $<HTMLButtonElement>('tozala');
+  tozala.addEventListener('click', () => { $('tasdiq').hidden = false; tozala.hidden = true; $('tasdiq-yoq').focus(); });
+  $('tasdiq-yoq').addEventListener('click', () => { $('tasdiq').hidden = true; tozala.hidden = false; tozala.focus(); });
+  $('tasdiq-ha').addEventListener('click', () => {
+    if (faol) toxtat(faol);
+    yozgichlar.forEach(ochir);
+    h = bosh();
+    try { localStorage.removeItem(S.kalit); } catch { /* ruxsat yo'q */ }
+    eslatma.value = '';
+    kartaQoy(h.karta);
+    p2Holat('boshlanmagan');
+    xulosa();
+    $('tasdiq').hidden = true; tozala.hidden = false; tozala.focus();
+  });
+
+  eslatma.value = h.eslatma;
+  kartaQoy(h.karta);
+  p2Holat('boshlanmagan');
+  xulosa();
+
+  // ---------- Mundarija ----------
+  const havolalar = [...document.querySelectorAll<HTMLAnchorElement>('.mundarija a')];
+  const bolimlar = havolalar.map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!)!);
+  const yangila = () => {
+    let joriy = 0;
+    bolimlar.forEach((s, i) => { if (s.getBoundingClientRect().top < 160) joriy = i; });
+    havolalar.forEach((a, i) => { if (i === joriy) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', yangila, { passive: true });
+  yangila();
+  const tel = document.querySelector<HTMLDetailsElement>('.mundarija-tel')!;
+  tel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { tel.open = false; }));
+</script>
+
+<style>
+  .qol { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); max-width: calc(912px + 2 * var(--b-10)) !important; }
+  .kok { color: var(--rang-havola); }
+  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  .ustki-yorliq { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--matn-ikkinchi); }
+  .izoh-m a { color: var(--rang-havola); }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+  h3 { font-size: var(--matn-h3); font-weight: 800; }
+  [hidden] { display: none !important; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
+  .pill-namuna { display: inline-block; padding: 2px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0; text-transform: none; }
+
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+
+  .format { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
+  .format > div { padding: var(--b-5) var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
+  .format > div + div { border-left: 1px solid var(--chiziq); }
+  .f-yorliq { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
+  .f-yorliq svg { color: var(--rang-havola); }
+  .f-qiymat { font-size: 18px; font-weight: 800; }
+  .f-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+
+  .mundarija-tel { display: none; }
+  .ikki { display: flex; gap: var(--b-10); align-items: flex-start; }
+  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-14); }
+  .maqola > section { display: flex; flex-direction: column; gap: var(--b-4); scroll-margin-top: var(--b-6); }
+
+  .qismlar { margin: 0; padding: 0; list-style: none; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .qismlar li { padding: var(--b-4) var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
+  .qismlar li + li { border-top: 1px solid var(--chiziq); }
+  .q-bosh { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-3); font-weight: 700; }
+
+  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .turlar li { padding: var(--b-4) var(--b-5); display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--b-4); row-gap: var(--b-1); }
+  .turlar li + li { border-top: 1px solid var(--chiziq); }
+  .t-nom { font-weight: 800; }
+  .t-matn { color: var(--matn-ikkinchi); line-height: 1.55; }
+
+  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .kul { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
+
+  .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }
+  .tuzoqlar li { display: flex; gap: var(--b-4); align-items: flex-start; }
+  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: var(--matn-kichik); }
+  .tuzoqlar p { margin-top: var(--b-1); line-height: 1.6; }
+
+  /* Gapirish mashqi: sahifadagi yagona soya */
+  .mashq { background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya); padding: 28px; gap: var(--b-5) !important; }
+  .m-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
+  .maxfiy { display: flex; gap: var(--b-3); align-items: flex-start; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); line-height: 1.5; font-size: var(--matn-kichik); font-weight: 600; }
+  .maxfiy svg { flex: none; margin-top: 2px; color: var(--rang-havola); }
+  .ogoh { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; line-height: 1.5; }
+
+  .tablar { display: flex; gap: var(--b-1); padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); align-self: flex-start; }
+  .tablar button { min-height: 44px; padding: 0 var(--b-5); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 800; cursor: pointer; }
+  .tablar button:hover { color: var(--matn); }
+  .tablar button[aria-selected='true'] { background: var(--matn); color: var(--fon); }
+  .panel { display: flex; flex-direction: column; gap: var(--b-4); }
+  .panel:focus-visible, .tablar button:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .savollar { margin: 0; padding-left: var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.55; font-weight: 600; }
+
+  .kartochkalar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .k-tanlov { min-height: 44px; padding: 0 var(--b-4); border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
+  .k-tanlov:hover { border-color: var(--rang-asosiy); }
+  .k-tanlov[aria-pressed='true'] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
+  .kartochka { padding: var(--b-5); border: 1.5px dashed var(--matn); border-radius: var(--r-orta); display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.55; }
+  .kartochka ul { margin: 0; padding-left: var(--b-6); }
+  .k-mavzu { font-weight: 800; font-size: 18px; }
+  .bosqich-qator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4); }
+  .b-taymer { display: flex; flex-direction: column; gap: var(--b-1); }
+  .katta-vaqt { font-size: 40px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  textarea {
+    width: 100%; resize: vertical; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta);
+    border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; line-height: 1.6;
+  }
+  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-color: var(--rang-asosiy); }
+  textarea::placeholder { color: var(--matn-sust); opacity: 1; }
+
+  .yozgich { display: flex; flex-direction: column; gap: var(--b-3); }
+  .y-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .y-vaqt { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .y-belgi { display: inline-flex; align-items: center; gap: var(--b-2); padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-mayda); font-weight: 800; }
+  .y-belgi::before { content: ''; width: 8px; height: 8px; border-radius: var(--r-toliq); background: currentColor; }
+  .y-natija { display: flex; flex-direction: column; gap: var(--b-3); }
+  audio { width: 100%; }
+  .y-tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+
+  .tekshiruv { display: flex; flex-direction: column; gap: var(--b-3); border-top: 1px solid var(--chiziq); padding-top: var(--b-5); }
+  .t-guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .t-guruh legend { padding: 0; margin: var(--b-2) 0; font-weight: 800; font-size: 18px; }
+  .t-band {
+    display: flex; align-items: center; gap: var(--b-3); text-align: left; min-height: 48px; padding: var(--b-2) var(--b-4);
+    border-radius: var(--r-orta); border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; line-height: 1.45; cursor: pointer;
+  }
+  .t-band:hover { border-color: var(--rang-asosiy); }
+  .katakcha { width: 24px; height: 24px; flex: none; border-radius: var(--r-kichik); border: 2px solid var(--matn-ikkinchi); display: grid; place-items: center; color: transparent; }
+  .t-band[aria-pressed='true'] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
+  .t-band[aria-pressed='true'] .katakcha { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .t-xulosa { font-weight: 700; line-height: 1.5; }
+  .t-xulosa:empty { display: none; }
+
+  .katta-q { display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2); min-height: var(--control-height-md); padding: 0 24px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; cursor: pointer; }
+  .asosiy-q { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+  .asosiy-q:hover { background: var(--btn-primary-bg-hover); }
+  .asosiy-q:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
+  .toxtat-q { background: var(--matn); color: var(--fon); }
+  .chiziq-tugma { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
+  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
+  .k-tanlov:focus-visible, .t-band:focus-visible, .katta-q:focus-visible, .chiziq-tugma:focus-visible, .matn-tugma:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .tozalash { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+
+  .keyingi { background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
+  .kok-q { color: var(--rang-asosiy-qorada); }
+  .keyingi h2 { font-size: 26px; line-height: 1.25; }
+  .k-matn { line-height: 1.6; color: var(--qora-matn-ikkinchi); }
+  .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
+  .katta { display: inline-flex; align-items: center; justify-content: center; min-height: var(--control-height-md); padding: 0 24px; border-radius: var(--r-toliq); text-decoration: none; font-weight: 800; }
+  .katta.asosiy { background: var(--qora-matn); color: var(--qora); }
+  .katta.asosiy:hover { background: var(--color-neutral-200); }
+  .katta.qora-tugma { background: var(--qora-sirt); color: var(--qora-matn); font-weight: 700; }
+
+  .mundarija { flex: 0 0 240px; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1); border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-3); }
+  .mundarija .ustki-yorliq { margin: var(--b-2) var(--b-3); }
+  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
+  .mundarija a:hover { background: var(--fon-ikkinchi); }
+  .mundarija a[aria-current='true'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+
+  @media (max-width: 1180px) {
+    .mundarija { display: none; }
+    .mundarija-tel { display: block; border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
+    .mundarija-tel summary { list-style: none; min-height: 52px; padding: 0 var(--b-4); display: flex; align-items: center; justify-content: space-between; font-weight: 800; cursor: pointer; }
+    .mundarija-tel summary::-webkit-details-marker { display: none; }
+    .mundarija-tel[open] summary svg { transform: rotate(180deg); }
+    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--b-2) var(--b-2); display: flex; flex-direction: column; gap: 2px; }
+    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
+    .mundarija-tel a:hover { background: var(--fon-ikkinchi); }
+  }
+  @media (max-width: 760px) {
+    .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .format > div:nth-child(3) { border-left: 0; }
+    .format > div:nth-child(n + 3) { border-top: 1px solid var(--chiziq); }
+    .juft, .turlar li { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .qol { padding-top: var(--b-6); gap: var(--b-8); }
+    h1 { font-size: 34px; }
+    h2 { font-size: 24px; }
+    .maqola { gap: var(--b-10); }
+    .mashq { padding: var(--b-5); }
+    .tablar { align-self: stretch; }
+    .tablar button { flex: 1; padding: 0 var(--b-2); }
+    .katta-q, .y-tugmalar .chiziq-tugma, .k-tugmalar .katta { width: 100%; }
+    .katta-vaqt { font-size: 32px; }
+  }
+</style>
