@@ -4,6 +4,7 @@ import { joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
 import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
 import { faylManzili } from '../lib/navigator/yolXaritasi';
+import { satYonGuruhlar } from '../data/satSahifalar';
 
 interface Props {
   /** Qavat va sahifa nomi orasidagi bandlar: ["Mashq"] */
@@ -12,9 +13,24 @@ interface Props {
   /** Dinamik sahifa uchun qolip allaqachon olgan ota manzil (base bilan). */
   ota?: string;
 }
-const { bandlar = [], sahifaNomi, ota } = Astro.props;
+const { bandlar: berilgan = [], sahifaNomi, ota } = Astro.props;
 const pathname = Astro.url.pathname;
 const n = joriyQavat(pathname);
+// SAT: yon panel guruhidagi sahifada guruh nomi yon paneldan (satYonGuruhlar) olinadi, sahifa bergan nomdan emas.
+// Yon panel ham shu manbadan, shuning uchun yo'l satri va panel guruhi bir xil ("Plan › Study planner").
+// Guruhda yo'q sahifalar (sessiya, mock imtihon, huquqiy) o'z bandlarini saqlaydi. docs/navigatsiya-qoidalari.md.
+const satBandlar = (() => {
+  const i = pathname.indexOf('/uz/sat/');
+  if (n !== 3 || i < 0) return undefined;
+  const qism = pathname.slice(i + '/uz/sat/'.length);
+  for (const g of satYonGuruhlar) {
+    for (const q of g.qismlar) {
+      if (q.sahifalar.some((s) => s.qism === qism)) return q.nomi ? [g.nomi, q.nomi] : [g.nomi];
+    }
+  }
+  return undefined;
+})();
+const bandlar = satBandlar ?? berilgan;
 const q = qavatI(n);
 const qavatManzili = yol(q.manzil);
 const qavatKirishi = pathname === qavatManzili;
