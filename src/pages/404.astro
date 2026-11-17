@@ -7,10 +7,21 @@ import { yol } from '../lib/yol';
   description="Bu manzilda sahifa yo'q."
   turi="umumiy"
   bolim="umumiy"
-  holat="chop-etilgan"
+  holat="qoralama"
+  canonical={false}
   sahifaOxiri={false}
 >
   <section class="ichki sahifa">
+    <script is:inline>
+      // 2026-11-16: sayt github.io/Tayanch/ dan tayanchedu.uz ildiziga ko'chdi.
+      // Eski /Tayanch/... havolasi (xat, xatcho'p, qidiruv) shu domendagi yangi yo'lga o'tadi; query va hash saqlanadi.
+      (function () {
+        var p = location.pathname;
+        if (p === '/Tayanch' || p.indexOf('/Tayanch/') === 0) {
+          location.replace((p.slice('/Tayanch'.length) || '/') + location.search + location.hash);
+        }
+      })();
+    </script>
     <h1>Sahifa topilmadi</h1>
     <p class="ikkinchi">Bu manzilda sahifa yo'q. Ehtimol u ko'chirilgan yoki hali qurilmagan.</p>
     <p><a class="tugma tugma-asosiy" href={yol('/uz/')}>Bosh sahifaga</a></p>

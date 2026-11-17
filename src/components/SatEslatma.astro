@@ -1,18 +1,30 @@
 ---
-// SAT bo'limi: har sahifa pastidagi savdo belgisi eslatmasi (BolimQobiq bolim="sat" va SatFokus).
+// SAT bo'limi: har sahifa pastidagi savdo belgisi eslatmasi va huquqiy havolalar (BolimQobiq bolim="sat" va SatFokus).
 // Qoida: CB08 (College Board trademark guidelines), belgilar ro'yxati: CB09. Manba yo'q bo'lsa build to'xtaydi.
-// Matn Tayanch uchun yozilgan (College Board namunasidan ko'chirilmagan), inglizcha: SAT bo'limi qoidasi.
-// Logo, rasm, brend rangi yo'q.
+// Matn CB08 dagi umumiy formula ("[Trademark] is a trademark [registered / owned] by the College Board, which is not
+// affiliated with, and does not endorse, this [product/site]."), 2026-11-11 da rasmiy sahifadan tekshirildi (P23).
+// Ikki belgi bitta jumlada: SAT® ro'yxatdan o'tgan, Bluebook™ egalik qilinadigan belgi (CB09). Logo, rasm, brend rangi yo'q.
+// "Natija kafolatlanmaydi" jumlasi ham shu yerda (P23: footer talabi).
 import { manbalar } from '../data/manbalar';
+import { huquqiySahifalar } from '../data/huquqiySahifalar';
+import { yol } from '../lib/yol';
 
 for (const id of ['CB08', 'CB09']) {
   if (!manbalar.some((m) => m.id === id)) throw new Error(`SatEslatma: manbalar.ts da ${id} topilmadi`);
 }
+const havolalar = huquqiySahifalar.map((s) => ({ href: s.en.yol, nomi: s.en.qisqa }));
 ---
-<footer class="sat-eslatma">
-  <p lang="en">
-    SAT® is a registered trademark and Bluebook™ is a trademark of the College Board.
-    Tayanch is an independent project: the College Board is not affiliated with this site and does not endorse it.
+<footer class="sat-eslatma" lang="en">
+  <p class="kafolat">Results are not guaranteed. Check every rule and deadline with the official source too.</p>
+  <nav aria-label="Legal pages">
+    <ul>
+      {havolalar.map((h) => <li><a href={yol(h.href)}>{h.nomi}</a></li>)}
+      <li><a href={yol('/uz/manbalar/')} hreflang="uz">Source log</a></li>
+    </ul>
+  </nav>
+  <p>
+    SAT® is a trademark registered by, and Bluebook™ is a trademark owned by, the College Board,
+    which is not affiliated with, and does not endorse, this website.
   </p>
 </footer>
 
@@ -20,6 +32,7 @@ for (const id of ['CB08', 'CB09']) {
   .sat-eslatma {
     border-top: 1px solid var(--chiziq);
     padding: var(--b-5) var(--b-4) var(--b-6);
+    display: flex; flex-direction: column; gap: var(--b-3);
   }
   .sat-eslatma p {
     margin: 0;
@@ -27,6 +40,12 @@ for (const id of ['CB08', 'CB09']) {
     font-size: var(--matn-kichik);
     line-height: 1.5;
     color: var(--matn-sust);
+  }
+  .sat-eslatma .kafolat { font-weight: 700; color: var(--matn-ikkinchi); }
+  .sat-eslatma ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5);
+    font-size: var(--matn-kichik);
   }
   @media (min-width: 1024px) {
     .sat-eslatma { padding-inline: var(--b-10); }

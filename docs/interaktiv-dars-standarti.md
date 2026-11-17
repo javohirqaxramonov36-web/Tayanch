@@ -17,7 +17,8 @@ Qolip: `src/components/dars/DarsQolip.astro`. Tartib o'zgarmaydi:
 5. **Keyingi dars** havolasi (ixtiyoriy) va **ManbaBlok** (rasmiy manba ID, tekshirilgan sana, keyingi tekshiruv, tekshirilmagan bandlar).
 
 Qolip prop'lari: `bolim`, `modul`, `savollar`, `yolBandlari`, `darsTuri`, `imtihon?`, `manbalar`, `tekshirilgan`,
-`keyingiTekshiruv`, `keyingi?: { nomi, href }` (`href` sahifada `yol()` bilan yasaladi), matn prop'lari.
+`keyingiTekshiruv`, `keyingi?: { nomi, href, turi? }` (`href` sahifada `yol()` bilan yasaladi; `turi: 'qadam'` keyingisi dars bo'lmasa: "Keyingi qadam"), matn prop'lari.
+Dars oxirida boshqa qavatdagi qadam: `src/data/qavatlarAro.ts` ga `modul` bo'yicha yoziladi (`QavatlarAro`).
 Ixtiyoriy: `qadamNomlari`, `savolTili` (savol matni va variantlar tili, R&W: `'en'`), `savolKorsatma` (oddiy A–D savol ustidagi o'zbekcha ko'rsatma), slot `xulosa-oxiri` (Xulosa ro'yxatidan keyingi blok).
 Savolda ixtiyoriy `parcha` maydoni (IELTS Reading): savol matni ustida `savolTili` tilida chiqadi, paragraflar `\n\n` bilan.
 Bo'limga xos qiymat qolip ichida qattiq yozilmaydi.
@@ -79,6 +80,7 @@ Turlar: `src/data/darsTurlar.ts`. Fayllar: `src/data/<bolim>Darslar/<modul>.ts`,
 
 - Faqat brauzerda. Kalitlar: `tayanch:<bolim>-dars-progress`, `tayanch:<bolim>-xato-daftari` (`darsKalitlari()`),
   takrorlash holati `tayanch:<bolim>-takrorlash` (`src/lib/takrorlash.ts`, daftarni faqat o'qiydi);
+  xato sababi va izohi `tayanch:<bolim>-xato-sabab` (`src/lib/xatoSabab.ts`, P09, muallif ruxsati 2026-11-11; qoidalar `docs/xato-daftari.md`);
   boshqasi kerak bo'lsa `tayanch:<bolim>-...` va avval muallifdan so'raladi. Bitta kalit = bitta shakl:
   boshqa sahifa shu kalitni o'qisa, shaklni o'zgartirmaydi.
 - Har o'qish va yozish `try/catch` ichida (`src/lib/darsSaqlash.ts`); saqlab bo'lmasa sahifa ishlaydi va buni aytadi.

@@ -1,0 +1,48 @@
+---
+// SAT · Storage and Cookies (inglizcha nusxa, P23 davomi, 2026-11-11). Asosiy matn: /uz/saqlash/. QORALAMA.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import HuquqiyMatn from '../../../../../components/huquqiy/HuquqiyMatn.astro';
+import { brauzerKalitlari } from '../../../../../data/brauzerKalitlari';
+import { yol } from '../../../../../lib/yol';
+---
+<BolimQobiq
+  title="Storage and Cookies · SAT"
+  description="What Tayanch keeps in your browser and how to clear it."
+  turi="qollanma"
+  bolim="sat"
+  yol={['Legal']}
+  holat="qoralama"
+>
+  <HuquqiyMatn
+    til="en"
+    kalit="saqlash"
+    sana="2026-11-11"
+    tekshirish={['Whether GitHub Pages or Supabase set cookies of their own.']}
+  >
+    <h2>In short</h2>
+    <ul>
+      <li>Tayanch does not use advertising, tracking or third-party analytics cookies.</li>
+      <li>The site uses your browser's <code>localStorage</code> and <code>sessionStorage</code>. Keys start with <code>tayanch</code>.</li>
+      <li>This data stays in your browser. Only the sign-in session is used to reach the Supabase server.</li>
+    </ul>
+
+    <h2>What is stored</h2>
+    <div class="jadval-orami">
+      <table>
+        <thead><tr><th scope="col">Key</th><th scope="col">Why</th><th scope="col">How long</th></tr></thead>
+        <tbody>
+          {brauzerKalitlari.map((k) => (
+            <tr><td><code>{k.kalit}</code></td><td>{k.en}</td><td>{k.sessiya ? 'Until you close the tab' : 'Until you clear it'}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>How to clear it</h2>
+    <ul>
+      <li>Delete this site's data in your browser settings ("site data").</li>
+      <li>Signing out removes the session key. Your answers and results stay in the browser.</li>
+      <li>To delete server data, see the <a href={yol('/uz/sat/huquqiy/maxfiylik/#ochirish')}>Privacy Policy</a>.</li>
+    </ul>
+  </HuquqiyMatn>
+</BolimQobiq>

@@ -1,0 +1,94 @@
+---
+// IELTS Reading test screen. Desktop: passage on the left, questions on the right.
+// Phone: "Matn / Savollar" tabs. The timer stays in the header. Logic: src/lib/ielts/reading/ekran/test.ts.
+import IeltsFokus from '../../../../../../layouts/IeltsFokus.astro';
+import '../../../../../../styles/ielts-reading.css';
+import { RM } from '../../../../../../data/ielts/readingMatn';
+import { saytTestlari } from '../../../../../../lib/ielts/reading/saytTestlari';
+import { yol } from '../../../../../../lib/yol';
+
+const testIdlar = (await saytTestlari()).map((t) => t.testId);
+---
+<IeltsFokus
+  title="Reading test · IELTS"
+  description="IELTS formatidagi Reading mashq testi: 60 daqiqa, 40 savol. Rasmiy test emas."
+  ustki={RM.ustki}
+  nomi={RM.testNomi}
+  chiqish={yol('/uz/ielts/mashq/reading/')}
+  chiqishNomi={RM.chiqish}
+>
+  <div class="rt-vaqt" id="rt-vaqt-oram" slot="amal" role="timer" aria-label={RM.qolganVaqt} hidden>
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 7v5l3 2" /></svg>
+    <span id="rt-vaqt">60:00</span>
+  </div>
+  <button type="button" class="tugma tugma-asosiy rt-yakunla" id="rt-yakunla" slot="amal" hidden>{RM.yakunlashQisqa}</button>
+
+  <div id="rt" data-testlar={JSON.stringify(testIdlar)}>
+    <h1 class="ekranda-yoq">{RM.testNomi}</h1>
+    <div class="rt-ogoh" id="rt-ogoh-xotira" role="alert" hidden></div>
+    <div class="rt-ogoh" id="rt-ogoh-tab" role="alert" hidden>
+      <p id="rt-ogoh-tab-matn"></p>
+      <button type="button" class="tugma" id="rt-shu-tab" hidden>{RM.shuTabda}</button>
+      <a class="tugma" id="rt-natija-havola" href={yol('/uz/ielts/mashq/reading/')} hidden>{RM.natijagaOt}</a>
+    </div>
+
+    <div class="rt-holat" id="rt-holat" role="status">
+      <p>{RM.yuklanmoqda}</p>
+      <noscript><p>Test ishlashi uchun brauzerda JavaScript yoqilgan bo'lishi kerak.</p></noscript>
+    </div>
+
+    <div class="rt-ish" id="rt-ish" hidden>
+      <div class="rt-ust">
+        <div class="rt-passagelar" id="rt-passagelar" role="group" aria-label={RM.passageTanlov}></div>
+        <div class="rt-tablar" id="rt-tablar" role="tablist" aria-label={RM.tablar}>
+          <button type="button" role="tab" id="rt-tab-matn" aria-controls="rt-matn" aria-selected="true">{RM.tabMatn}</button>
+          <button type="button" role="tab" id="rt-tab-savollar" aria-controls="rt-savollar" aria-selected="false" tabindex="-1">{RM.tabSavollar}</button>
+        </div>
+      </div>
+      <div class="rt-panellar">
+        <section class="rt-panel" id="rt-matn" tabindex="0" aria-label={RM.tabMatn}></section>
+        <section class="rt-panel" id="rt-savollar" tabindex="-1" aria-label={RM.tabSavollar}></section>
+      </div>
+      <nav class="rt-nav" aria-label={RM.savollarPaneli}>
+        <button type="button" class="rt-nav-tugma" id="rt-nav-tugma" aria-expanded="false" aria-controls="rt-nav-ichi">
+          <span id="rt-nav-son">{RM.panelTugma(0, 40)}</span>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6" /></svg>
+        </button>
+        <div class="rt-nav-ichi" id="rt-nav-ichi" hidden></div>
+      </nav>
+    </div>
+
+    <div class="rt-natija" id="rt-natija" hidden>
+      <div class="ichki rt-natija-ichki">
+        <h2 id="rt-natija-h" tabindex="-1">{RM.natijaSarlavha}</h2>
+        <div class="rn" id="rt-natija-ichi"></div>
+      </div>
+    </div>
+
+    <p class="ekranda-yoq" id="rt-elon" aria-live="polite"></p>
+
+    <dialog class="rt-dialog" id="rt-yakun" aria-labelledby="rt-yakun-h">
+      <div class="rt-dialog-ichi">
+        <h2 id="rt-yakun-h">{RM.yakunSarlavha}</h2>
+        <p id="rt-yakun-javobsiz"></p>
+        <p id="rt-yakun-belgi"></p>
+        <p class="ikkinchi">{RM.yakunIzoh}</p>
+        <div class="rt-dialog-amal">
+          <button type="button" class="tugma tugma-asosiy" id="rt-yakun-ha">{RM.yakunHa}</button>
+          <button type="button" class="tugma tugma-ikkinchi" id="rt-yakun-yoq">{RM.yakunYoq}</button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</IeltsFokus>
+
+<script>
+  import { ishgaTushirTest } from '../../../../../../lib/ielts/reading/ekran/test.ts';
+  ishgaTushirTest();
+</script>
+
+<style>
+  .rt-natija { padding-block: var(--b-8) var(--b-14); }
+  .rt-natija-ichki { max-width: calc(912px + 2 * var(--b-5)); display: flex; flex-direction: column; gap: var(--b-6); }
+  .rt-natija-ichki > h2 { font-size: 32px; line-height: 1.15; }
+</style>

@@ -19,10 +19,12 @@ for (const papka of readdirSync(dataPapka).filter((x) => x.endsWith('Darslar')).
 }
 
 // ---------- Variant matnini songa aylantirish ----------
-// "45π", "5π/6", "−1/2", "√3/2", "⅓", "17,5", "≈ 0,999", "x = 3", "(2; 5)" -> son yoki [x, y]
+// "45π", "5π/6", "−1/2", "√3/2", "⅓", "17.5", "≈ 0.999", "x = 3", "(2, 5)" -> son yoki [x, y]
+// Eski yozuv ham o'qiladi: o'nli vergul va nuqtali vergulli juftlik ("17,5", "(1,5; 2)").
 function son(matn: string): number | [number, number] | null {
-  let s = matn.trim().replace(/−/g, '-').replace(/,/g, '.').replace(/^≈\s*/, '').replace(/^[xy]\s*=\s*/, '').replace(/°$/, '');
-  const juft = s.match(/^\((.+);(.+)\)$/);
+  let s = matn.trim().replace(/−/g, '-').replace(/^≈\s*/, '').replace(/^[xy]\s*=\s*/, '').replace(/°$/, '');
+  const juft = s.includes(';') ? s.match(/^\((.+);(.+)\)$/) : s.match(/^\(([^,]+),([^,]+)\)$/);
+  if (!juft) s = s.replace(/,/g, '.');
   if (juft) {
     const a = son(juft[1]), b = son(juft[2]);
     return typeof a === 'number' && typeof b === 'number' ? [a, b] : null;

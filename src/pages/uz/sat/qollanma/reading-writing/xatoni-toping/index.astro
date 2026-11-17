@@ -8,11 +8,11 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
 
 // Laboratoriya misollari (mashq emas, natijasi saqlanmaydi). [..] ichida xato bo'lak.
 const misollar = [
-  { mavzu: 'Vergul', shablon: 'The storm knocked out the power[,] the whole street went dark.', tuzatish: ';', qoida: "Ikki mustaqil gap faqat vergul bilan ulanmaydi (comma splice). Nuqtali vergul, nuqta yoki \", and\" kerak." },
-  { mavzu: 'Nuqtali vergul', shablon: 'Although the road was icy[;] the driver stayed calm.', tuzatish: ',', qoida: "\"Although …\" tobe qism, mustaqil gap emas. Nuqtali vergulning ikki tomonida mustaqil gap bo'lishi kerak; bu yerda vergul." },
-  { mavzu: 'Ikki nuqta', shablon: 'The guide reminded us to bring[:] a map, water, and a jacket.', tuzatish: '', qoida: "Ikki nuqtadan oldin to'liq gap turadi. \"to bring\" to'ldiruvchini kutadi, shuning uchun belgi kerak emas." },
-  { mavzu: "Ega va fe'l", shablon: 'Each of the paintings in the hall [show] a different season.', tuzatish: 'shows', qoida: "Ega \"Each\" (birlik), \"of the paintings\" uni aniqlaydi xolos. Fe'l birlikda: shows." },
-  { mavzu: 'Zamon', shablon: 'Yesterday the team [finishes] the project and presented it to the class.', tuzatish: 'finished', qoida: "\"Yesterday\" va \"presented\" o'tgan zamonni ko'rsatadi. Ikkinchi fe'l ham o'tgan zamonda: finished." },
+  { mavzu: 'Comma', shablon: 'The storm knocked out the power[,] the whole street went dark.', tuzatish: ';', qoida: 'Two independent clauses cannot be joined by a comma alone (comma splice). A semicolon, a period or ", and" is needed.' },
+  { mavzu: 'Semicolon', shablon: 'Although the road was icy[;] the driver stayed calm.', tuzatish: ',', qoida: '"Although …" is a dependent part, not an independent clause. A semicolon needs an independent clause on both sides; here a comma is needed.' },
+  { mavzu: 'Colon', shablon: 'The guide reminded us to bring[:] a map, water, and a jacket.', tuzatish: '', qoida: 'A colon comes after a complete sentence. "to bring" needs its object, so no punctuation is needed.' },
+  { mavzu: 'Subject and verb', shablon: 'Each of the paintings in the hall [show] a different season.', tuzatish: 'shows', qoida: 'The subject is "Each" (singular); "of the paintings" only describes it. The verb is singular: shows.' },
+  { mavzu: 'Tense', shablon: 'Yesterday the team [finishes] the project and presented it to the class.', tuzatish: 'finished', qoida: '"Yesterday" and "presented" point to the past tense. Like the second verb, this one is in the past tense: finished.' },
 ];
 ---
 <DarsQolip
@@ -20,46 +20,46 @@ const misollar = [
   takrorlashHref={yol('/uz/sat/vosita/takrorlash/')}
   modul="rw-xato"
   savollar={darsSavollari['rw-xato']}
-  yolBandlari={['Reading & Writing darslari']}
-  darsTuri="Reading & Writing darsi"
+  yolBandlari={['Reading & Writing lessons']}
+  darsTuri="Reading & Writing lesson"
   imtihon="SAT"
   manbalar={['CB06']}
   tekshirilgan="2026-11-06"
   keyingiTekshiruv="2026-12-06"
-  title="Xatoni toping · SAT"
-  description="SAT Reading & Writing: gapdagi xatoli so'z yoki tinish belgisini toping va tuzating. Vergul, nuqtali vergul, ikki nuqta, ega va fe'l, zamon. 5 ta mashq."
+  title="Find the error · SAT"
+  description="SAT Reading & Writing: find the word or punctuation mark with the error in a sentence and fix it. Commas, semicolons, colons, subject and verb, tense. 5 exercises."
   yonalish="Standard English Conventions"
-  sarlavha="Xatoni toping: avval joyini, keyin tuzatishni"
-  lead="Grammatika savolida birinchi ish: xato qayerda ekanini ko'rish. Gapdagi so'z yoki belgini bosing, keyin uni qaysi qoida bilan tuzatishni tanlang. Har noto'g'ri variant bitta tipik xatoni ko'rsatadi."
-  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  sarlavha="Find the error: first its location, then the revision"
+  lead="In a grammar question, the first job is to see where the error is. Tap a word or punctuation mark in the sentence, then choose the rule that fixes it. Each wrong option shows one typical mistake."
+  qadamNomlari={['Example', 'Rule', 'Try it']}
   maqsadlar={[
-    "Ikki mustaqil gapni vergul, nuqtali vergul va ikki nuqta bilan to'g'ri ulaysiz.",
-    "Fe'lni yaqindagi otga emas, haqiqiy egaga moslaysiz.",
-    "Gapdagi vaqt so'zi va qo'shni fe'llardan to'g'ri zamonni tanlaysiz.",
+    'You join two independent clauses correctly with a comma, a semicolon and a colon.',
+    'You make the verb agree with its real subject, not with the nearest noun.',
+    'You choose the right tense from the time word and the neighboring verbs in the sentence.',
   ]}
   xulosa={[
-    "Ikki mustaqil gap: nuqta, nuqtali vergul yoki \", and / but / so\". Faqat vergul: comma splice.",
-    "Nuqtali vergulning ikki tomonida ham mustaqil gap bo'ladi. Tobe qismdan (Because, Although …) keyin vergul.",
-    "Ikki nuqtadan oldin to'liq gap turadi. Fe'l va uning to'ldiruvchisi orasiga belgi qo'yilmaydi.",
-    "Ega va fe'l: \"of …\" qismini tashlab o'qing, fe'l qolgan egaga moslashadi.",
-    "Zamon: aniq o'tgan vaqt (last winter, yesterday) bilan Past Simple; qo'shni fe'llar zamonini kuzating.",
+    'Two independent clauses: a period, a semicolon or ", and / but / so". A comma alone: comma splice.',
+    'A semicolon has an independent clause on both sides. After a dependent part (Because, Although …), use a comma.',
+    'A colon comes after a complete sentence. No punctuation goes between a verb and its object.',
+    'Subject and verb: read the sentence without the "of …" part; the verb agrees with the subject that is left.',
+    'Tense: with a specific past time (last winter, yesterday), use the Past Simple; watch the tense of the neighboring verbs.',
   ]}
-  keyingi={{ nomi: 'Dalilni belgilang', href: yol('/uz/sat/qollanma/reading-writing/dalil/') }}
+  keyingi={{ nomi: 'Mark the evidence', href: yol('/uz/sat/qollanma/reading-writing/dalil/') }}
   tekshirilmagan={[
-    "Mashq savollari va misollar Tayanch uchun yozilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-    "Mavzular tanlovi (vergul, nuqtali vergul, ikki nuqta, ega va fe'l, zamon) Tayanch tavsiyasi. Rasmiy sahifada domen tavsifi bor, mavzular ro'yxati yo'q.",
+    'The exercise questions and examples were written for Tayanch; those not yet reviewed by the author are marked "not verified".',
+    'The choice of topics (commas, semicolons, colons, subject and verb, tense) is a Tayanch recommendation. The official page has a description of the domain but no list of topics.',
   ]}
 >
   <div slot="sahna">
     <div class="sahna-quti rw-quti">
-      <p class="rw-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi" id="rw-mavzu"></span></p>
-      <div class="bolaklar soz-bolaklar" id="rw-gap" role="group" aria-label="Misol gap bo'laklari" lang="en"></div>
+      <p class="rw-namuna"><span class="pill">Sample</span> <span class="kichik ikkinchi" id="rw-mavzu"></span></p>
+      <div class="bolaklar soz-bolaklar" id="rw-gap" role="group" aria-label="Parts of the example sentence"></div>
       <div class="rw-tuzatilgan" id="rw-tuzatilgan">
-        <p class="kichik ikkinchi">Tuzatilgan gap</p>
-        <p class="rw-tuzatilgan-matn" id="rw-tuzatilgan-matn" lang="en"></p>
+        <p class="kichik ikkinchi">Corrected sentence</p>
+        <p class="rw-tuzatilgan-matn" id="rw-tuzatilgan-matn"></p>
       </div>
     </div>
-    <div class="segment sahna-tugmalar" role="group" aria-label="Misol mavzusi">
+    <div class="segment sahna-tugmalar" role="group" aria-label="Example topic">
       {misollar.map((m, i) => <button type="button" data-misol={i} aria-pressed={i === 0 ? 'true' : 'false'}>{m.mavzu}</button>)}
     </div>
     <p class="sahna-izoh" id="rw-holat" aria-live="polite"></p>
@@ -67,27 +67,27 @@ const misollar = [
   </div>
 
   <div slot="animatsiya">
-    <p>Sahnadagi gapda xatoli bo'lak uzuq tagchiziq va chiziq bilan, tuzatish esa ko'k fon bilan ko'rsatilgan. Mavzuni almashtirib, beshta tipik xatoni ko'ring.</p>
-    <div class="formula"><span class="kichik ikkinchi">Qoida</span><span class="f-qiymat rw-qoida" id="rw-qoida"></span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim topaman</button></div>
+    <p>In the sentence in the scene, the part with the error is shown with a dashed underline and a line through it, and the revision with a blue background. Switch topics to see five typical mistakes.</p>
+    <div class="formula"><span class="kichik ikkinchi">Rule</span><span class="f-qiymat rw-qoida" id="rw-qoida"></span></div>
+    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
     <dl class="rw-qoidalar">
-      <div><dt>Vergul</dt><dd>Ikki mustaqil gap (ega + kesim) faqat vergul bilan ulanmaydi. Tipik xato: comma splice.</dd></div>
-      <div><dt>Nuqtali vergul</dt><dd>Ikki tomonida mustaqil gap. Tipik xato: tobe qismdan keyin nuqtali vergul.</dd></div>
-      <div><dt>Ikki nuqta</dt><dd>Oldida to'liq gap, keyin ro'yxat yoki izoh. Tipik xato: fe'l va to'ldiruvchi orasida ikki nuqta.</dd></div>
-      <div><dt>Ega va fe'l</dt><dd>Fe'l haqiqiy egaga moslashadi. Tipik xato: yaqindagi otga moslash (The collection of letters were …).</dd></div>
-      <div><dt>Zamon</dt><dd>Vaqt so'zi va qo'shni fe'llar zamonni belgilaydi. Tipik xato: aniq o'tgan vaqt bilan Present Perfect.</dd></div>
+      <div><dt>Comma</dt><dd>Two independent clauses (subject + verb) cannot be joined by a comma alone. Typical mistake: comma splice.</dd></div>
+      <div><dt>Semicolon</dt><dd>An independent clause on both sides. Typical mistake: a semicolon after a dependent part.</dd></div>
+      <div><dt>Colon</dt><dd>A complete sentence before it, then a list or an explanation. Typical mistake: a colon between a verb and its object.</dd></div>
+      <div><dt>Subject and verb</dt><dd>The verb agrees with its real subject. Typical mistake: agreeing with the nearest noun (The collection of letters were …).</dd></div>
+      <div><dt>Tense</dt><dd>The time word and the neighboring verbs set the tense. Typical mistake: Present Perfect with a specific past time.</dd></div>
     </dl>
   </div>
 
   <div slot="sinab">
     <div class="vazifa">
-      <p><b>Vazifa.</b> Sahnadagi gapda xatoli so'z yoki belgini bosing. Klaviaturada: Tab bilan gapga kiring, strelkalar bilan yuring, Enter bilan belgilang.</p>
-      <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Hali belgilanmagan.</p>
+      <p><b>Task.</b> Tap the word or punctuation mark with the error in the sentence in the scene. With a keyboard: press Tab to enter the sentence, move with the arrow keys, press Enter to mark.</p>
+      <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Nothing marked yet.</p>
     </div>
-    <div class="segment"><button type="button" class="kichik-tugma" id="rw-keyingi-misol">Keyingi misol</button></div>
+    <div class="segment"><button type="button" class="kichik-tugma" id="rw-keyingi-misol">Next example</button></div>
   </div>
 </DarsQolip>
 
@@ -136,31 +136,31 @@ const misollar = [
       if (k > 0 && !tinishmi(b)) tuz.append(' ');
       if (k === xato) { const mk = document.createElement('mark'); mk.textContent = b; tuz.append(mk); } else tuz.append(b);
     });
-    if (m.tuzatish === '') tuz.setAttribute('aria-label', `${qosh(yangi)} (belgi olib tashlandi)`); else tuz.removeAttribute('aria-label');
+    if (m.tuzatish === '') tuz.setAttribute('aria-label', `${qosh(yangi)} (punctuation removed)`); else tuz.removeAttribute('aria-label');
 
     const g = belgilashGuruhi(gapQuti, (k) => {
-      if (k < 0) { $('rw-sinab-holat').textContent = 'Hali belgilanmagan.'; return; }
+      if (k < 0) { $('rw-sinab-holat').textContent = 'Nothing marked yet.'; return; }
       if (k === xato) {
         g.faol(false);
         g.tugmalar[k].classList.add('joy-xato');
         $('rw-tuzatilgan').hidden = false;
-        $('rw-sinab-holat').textContent = `Topdingiz: «${bolaklar[k]}» → «${m.tuzatish || 'belgisiz'}». ${m.qoida}`;
+        $('rw-sinab-holat').textContent = `You found it: «${bolaklar[k]}» → «${m.tuzatish || 'no punctuation'}». ${m.qoida}`;
         $('rw-sinab-holat').dataset.ok = '1';
       } else {
-        $('rw-sinab-holat').textContent = `«${bolaklar[k]}» to'g'ri yozilgan. Yana urinib ko'ring.`;
+        $('rw-sinab-holat').textContent = `«${bolaklar[k]}» is correct. Try again.`;
         $('rw-sinab-holat').dataset.ok = '';
       }
     });
     if (sinab) {
       $('rw-tuzatilgan').hidden = true;
-      $('rw-sinab-holat').textContent = 'Hali belgilanmagan.';
+      $('rw-sinab-holat').textContent = 'Nothing marked yet.';
       $('rw-sinab-holat').dataset.ok = '';
-      $('rw-holat').textContent = `${m.mavzu}: xatoli bo'lakni toping.`;
+      $('rw-holat').textContent = `${m.mavzu}: find the part with the error.`;
     } else {
       g.faol(false);
       g.tugmalar[xato].classList.add('joy-xato');
       $('rw-tuzatilgan').hidden = false;
-      $('rw-holat').textContent = `${m.mavzu}: xato «${bolaklar[xato]}», tuzatish «${m.tuzatish || 'belgisiz'}».`;
+      $('rw-holat').textContent = `${m.mavzu}: the error is «${bolaklar[xato]}», the revision is «${m.tuzatish || 'no punctuation'}».`;
     }
     segment.forEach((s, i) => s.setAttribute('aria-pressed', String(i === joriy)));
   }

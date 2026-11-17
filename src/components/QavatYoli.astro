@@ -1,36 +1,109 @@
 ---
-// "Qayerdaman" yo'li: "3-qavat › Mashq › Test". Oxirgi band havola emas (aria-current="page").
-// 1-qavat bosh sahifasida ko'rsatilmaydi.
+// Qavat, eng yaqin ota sahifa va joriy sahifa. Tor ekranda ota sahifa "…" bilan ko'rsatiladi.
 import { joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
+import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
+import { faylManzili } from '../lib/navigator/yolXaritasi';
+import { satYonGuruhlar } from '../data/satSahifalar';
 
 interface Props {
   /** Qavat va sahifa nomi orasidagi bandlar: ["Mashq"] */
   bandlar?: string[];
   sahifaNomi: string;
+  /** Dinamik sahifa uchun qolip allaqachon olgan ota manzil (base bilan). */
+  ota?: string;
 }
-const { bandlar = [], sahifaNomi } = Astro.props;
+const { bandlar: berilgan = [], sahifaNomi, ota } = Astro.props;
 const pathname = Astro.url.pathname;
 const n = joriyQavat(pathname);
+// SAT: yon panel guruhidagi sahifada guruh nomi yon paneldan (satYonGuruhlar) olinadi, sahifa bergan nomdan emas.
+// Yon panel ham shu manbadan, shuning uchun yo'l satri va panel guruhi bir xil ("Plan › Study planner").
+// Guruhda yo'q sahifalar (sessiya, mock imtihon, huquqiy) o'z bandlarini saqlaydi. docs/navigatsiya-qoidalari.md.
+const satBandlar = (() => {
+  const i = pathname.indexOf('/uz/sat/');
+  if (n !== 3 || i < 0) return undefined;
+  const qism = pathname.slice(i + '/uz/sat/'.length);
+  for (const g of satYonGuruhlar) {
+    for (const q of g.qismlar) {
+      if (q.sahifalar.some((s) => s.qism === qism)) return q.nomi ? [g.nomi, q.nomi] : [g.nomi];
+    }
+  }
+  return undefined;
+})();
+const bandlar = satBandlar ?? berilgan;
 const q = qavatI(n);
-const qavatKirishi = pathname === yol(q.manzil);
-const boshSahifa = n === 1 && qavatKirishi;
+const qavatManzili = yol(q.manzil);
+const qavatKirishi = pathname === qavatManzili;
+const til = yolTili(pathname);
+const M = matn[til];
+const qavatNomi = `${M.qavat(n)} · ${q.nomi}`;
+const iz = bandlar.filter(Boolean).join(' › ');
+const qoralama = q.holat === 'qoralama' ? qavatHolatMatni(q.holat, til) : undefined;
+const otaManzil = ota ?? Object.keys(import.meta.glob('/src/pages/uz/**/index.astro', { query: '?raw', import: 'default' }))
+  .map(faylManzili)
+  .filter((manzil): manzil is string => manzil !== null)
+  .map(yol)
+  .filter((manzil) => manzil !== pathname && pathname.startsWith(manzil))
+  .sort((a, b) => b.length - a.length)[0] ?? qavatManzili;
 ---
-{!boshSahifa && (
-  <nav class="qavat-yoli" aria-label="Qayerdaman">
-    <ol>
-      <li>{qavatKirishi ? <span>{n}-qavat</span> : <a href={yol(q.manzil)}>{n}-qavat</a>}</li>
-      {bandlar.map((b) => <li><span>{b}</span></li>)}
-      <li><span aria-current="page">{qavatKirishi ? q.nomi : sahifaNomi}</span></li>
-    </ol>
-  </nav>
-)}
+<nav class="qavat-yoli" aria-label={M.qavatYoli}>
+  <ol role="list">
+    <li class="qavat">
+      <a href={qavatKirishi ? '#asosiy' : qavatManzili} aria-current={qavatKirishi ? 'page' : undefined}>
+        <span class="matn">{qavatNomi}</span>
+      </a>
+    </li>
+    {!qavatKirishi && iz && (
+      <li class="ota">
+        <a href={otaManzil} aria-label={`${M.qavatOta} · ${iz}`}>
+          <span class="matn">{iz}</span>
+          <span class="qisqa" aria-hidden="true">…</span>
+        </a>
+      </li>
+    )}
+    {!qavatKirishi && (
+      <li class="sahifa">
+        <a href="#asosiy" aria-current="page" title={sahifaNomi}>
+          <span class="sahifa-matn">
+            {iz && <span class="matn joriy-bolim" aria-hidden="true">{bandlar.filter(Boolean).at(-1)}</span>}
+            <span class="matn">{sahifaNomi}</span>
+          </span>
+        </a>
+      </li>
+    )}
+  </ol>
+  {qoralama && <span class="holat">{qoralama}</span>}
+</nav>
 
 <style>
-  .qavat-yoli { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-1) var(--b-2); }
-  li { display: inline-flex; align-items: center; gap: var(--b-2); }
+  .qavat-yoli {
+    display: flex; align-items: center; gap: var(--b-1);
+    font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi);
+  }
+  ol { list-style: none; margin: 0; padding: 0; display: flex; min-inline-size: 0; align-items: center; gap: var(--b-1); }
+  li, a { display: flex; align-items: center; min-inline-size: 0; }
   li + li::before { content: '›'; color: var(--matn-sust); }
-  a { color: var(--rang-havola); font-weight: 700; display: inline-flex; align-items: center; min-height: 32px; }
+  a {
+    color: var(--rang-havola); font-weight: 700;
+    min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
+    padding-inline: var(--b-1);
+  }
+  .matn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sahifa-matn { min-inline-size: 0; }
+  .sahifa-matn .matn { display: block; }
+  .sahifa-matn .joriy-bolim { display: none; }
+  .qavat, .ota, .sahifa { min-inline-size: var(--size-touch-min); }
+  .holat { flex: none; font-size: var(--matn-mayda); }
+  .qisqa { display: none; }
   [aria-current='page'] { color: var(--matn); font-weight: 700; }
+  @media (max-width: 640px) {
+    .qavat { flex: none; max-inline-size: 50%; }
+    .ota { flex: none; }
+    .ota a { justify-content: center; }
+    .ota .matn { display: none; }
+    .qisqa { display: inline; }
+    .sahifa-matn .joriy-bolim {
+      display: block; color: var(--matn-ikkinchi); font-size: var(--text-caption-size);
+    }
+  }
 </style>
