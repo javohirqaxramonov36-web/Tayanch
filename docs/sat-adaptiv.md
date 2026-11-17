@@ -1,6 +1,6 @@
 # SAT mock imtihon: adaptive-style 2-modul (P31)
 
-Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (PR #141, 2026-11-17 da merge qilingan). Mock imtihonga (P30, PR #144 da merge qilingan) ulash: branch `sat-adaptiv-ulash`, PR #172, pastdagi "P30 ga ulash". Migratsiya `20261112163208_adaptiv_kalibr.sql` jonli bazaga 2026-11-13 da qo'llangan; `20261113072953_adaptiv_tarmoq.sql` va `20261113111947_mock_adaptiv.sql` **qo'llanmagan**, muallif ruxsati kutilmoqda.
+Holat: yadro PR #131 da merge qilingan (2026-11-12). Sozlama qiymatlari tasdiqlangan, `chegara = 60` (PR #141, 2026-11-17 da merge qilingan). Mock imtihonga (P30, PR #144 da merge qilingan) ulash: branch `sat-adaptiv-ulash`, PR #172, pastdagi "P30 ga ulash". Migratsiyalar `20261112163208_adaptiv_kalibr.sql` (2026-11-13), `20261113072953_adaptiv_tarmoq.sql` va `20261113111947_mock_adaptiv.sql` (2026-11-17) jonli bazaga qo'llangan.
 
 ## Bu nima va nima emas
 
@@ -137,10 +137,11 @@ Claude qarori, muallif topshirig'i bilan (2026-11-13). Reja (2026-11-12) P30 loy
 
 - Ballni tarmoqqa moslash (masalan qiyin tarmoqqa og'irlik) rasmiy algoritmga o'xshatishni va manbasiz raqamni talab qiladi. Hozircha yo'q, izohda aytilgan.
 - Muvozanat sharti (chegara 60 sababi): P30 1-modulni pool'dagi qiyinlik taqsimotiga qarab tuzadi. Jonli bazada savollar kelganda 1-modul qiyinlik taqsimotini tekshirish kerak.
-- Jonli Supabase bilan UI sinalmagan (jonli bazada savol yo'q, migratsiyalar qo'llanmagan).
+- Jonli Supabase bilan UI sinalmagan: migratsiyalar qo'llangan (2026-11-17), lekin jonli bazada verified savol 36 ta, mock ochilishi uchun kamida 240 kerak.
 
 ## Keyingi qadam
 
-1. PR #141 (2026-11-17) va PR #172 merge.
-2. Migratsiyalar jonli bazaga faqat muallif ruxsati bilan, tartibda: `20261113072953_adaptiv_tarmoq.sql`, `20261113111947_mock_adaptiv.sql` (`db push --dry-run`, keyin push). `20261112163208_adaptiv_kalibr.sql` va P30 `20261113012418_mock_imtihon.sql` jonli bazada bor (2026-11-13).
+1. PR #141 va PR #172 merge qilingan (2026-11-17).
+2. Jonli bazaga 2026-11-17 da qo'llangan (muallif ruxsati): `migration list` jonli bazada faqat shu 2 fayl yo'qligini ko'rsatdi, `db push --include-all --skip-vault --dry-run` faqat `20261113072953_adaptiv_tarmoq.sql` va `20261113111947_mock_adaptiv.sql` ni ko'rsatdi, keyin push. Faqat-o'qish tekshiruvi: `mock_attempt_questions` RLS yoqilgan, anon/authenticated uchun yopiq; `mock_modules.next_branch*` va CHECK (validated); `private.mock_adapt`, `private.mock_questions`, `private.adaptive_*` mijozga yopiq; `mock_close_module` `mock_adapt` ni chaqiradi, `mock_payload` da tarmoq yo'q, `get_mock_result` da `adaptive` bor. Jonli bazada mock urinishlari 0, verified savol 36 ta (mock uchun kamida 240 kerak), shuning uchun UI jonli sinalmagan.
 3. `admin_mock_readiness()` ga qiyinlik darajalari bo'yicha son (muvozanat shartini kuzatish uchun).
+4. Jonli bazada 240+ verified savol bo'lgach: hisob bilan mock oqimi va ikkala tarmoqni saytda sinash.
