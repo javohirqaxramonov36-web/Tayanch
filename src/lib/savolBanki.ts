@@ -170,3 +170,25 @@ export const sonMatni = (n: number) => `${n} ${n === 1 ? 'question matches' : 'q
 
 /** sessionStorage kaliti: start_session javobi. P08 sessiya sahifasi uni o'qimaydi (sessiya doim get_session dan), ochilganda o'chiradi. */
 export const SESSIYA_KALITI = 'tayanch:sat-sessiya';
+
+/**
+ * URL'dagi oldindan tanlov (P13 reja havolalari): ?section=rw|math&skills=a|b&difficulty=easy,medium&mode=practice|timed&size=20&retry=1.
+ * Noma'lum qiymatlar e'tiborsiz; taksonomiyada yo'q skill olinmaydi. Sessiyani boshlamaydi (Start'ni foydalanuvchi bosadi).
+ */
+export interface UrlTanlov { section?: SavolBolim; skills: string[]; qiyinlik: Qiyinlik[]; rejim?: Rejim; hajm?: Hajm; qaytaYechish: boolean }
+
+export function urlTanlov(search: string): UrlTanlov | null {
+  const p = new URLSearchParams(search);
+  const kalitlar = ['section', 'skills', 'difficulty', 'mode', 'size', 'retry'];
+  if (!kalitlar.some((k) => p.has(k))) return null;
+  const sec = p.get('section');
+  const section: SavolBolim | undefined = sec === 'rw' || sec === 'math' ? sec : undefined;
+  const bor = new Set(section ? Object.values(savolTaksonomiya[section]).flat() : []);
+  const skills = [...new Set((p.get('skills') ?? '').split('|').map((x) => x.trim()).filter((x) => bor.has(x)))];
+  const qiyinlik = [...new Set((p.get('difficulty') ?? '').split(',').filter((x): x is Qiyinlik => x === 'easy' || x === 'medium' || x === 'hard'))];
+  const m = p.get('mode');
+  const rejim: Rejim | undefined = m === 'practice' || m === 'timed' ? m : undefined;
+  const sz = p.get('size');
+  const hajm = HAJMLAR.find((h) => String(h) === sz);
+  return { section, skills, qiyinlik: qiyinlik.length === 3 ? [] : qiyinlik, rejim, hajm, qaytaYechish: p.get('retry') === '1' };
+}
