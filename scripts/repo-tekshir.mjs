@@ -10,6 +10,7 @@ const yolQoidalari = [
   { nomi: "College Board mock testlari papkasi", re: /(^|\/)SAT mock testlar\//i },
   { nomi: "College Board Question Bank papkasi", re: /(^|\/)SAT-question bank\//i },
   { nomi: "Kurs materiallari papkasi", re: /(^|\/)SAT-kurs materillari\//i },
+  { nomi: "Xususiy SAT kursi kontenti", re: /(^|\/)content\/sat-(?:math|english)\//i },
   { nomi: "College Board practice test fayli", re: /(^|\/)sat-practice-test-[^/]*$/i },
   { nomi: "College Board scoring fayli", re: /(^|\/)scoring-sat-practice-[^/]*$/i },
   { nomi: "UUID nomli JSON (savol banki eksporti)", re: /(^|\/)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[^/]*\.json$/i },
@@ -31,6 +32,10 @@ const matnQoidalari = [
   { nomi: "Shaxsiy kalit (PRIVATE KEY bloki)", re: /-----BEGIN (?:[A-Z]+ )*PRIVATE KEY-----/ },
   { nomi: "GitHub token", re: /\b(ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,})/ },
   { nomi: "AWS kirish kaliti", re: /\bAKIA[0-9A-Z]{16}\b/ },
+  // P26 (xavfsizlik auditi): inPAY API v2 kaliti, Supabase CLI/Management tokeni, parolli Postgres manzili.
+  { nomi: "inPAY API kaliti (sk_live_ / sk_test_)", re: /\bsk_(live|test)_[A-Za-z0-9]{12,}/ },
+  { nomi: "Supabase access token (sbp_)", re: /\bsbp_[a-f0-9]{40}\b/ },
+  { nomi: "Parolli Postgres manzili", re: /postgres(ql)?:\/\/[^:\s"'<>\[\]{}$]+:[^@\s"'<>\[\]{}$]{6,}@/i },
 ];
 
 // JWT ichida role=service_role bo'lsa xato. Ochiq (anon/publishable) kalit ham JWT bo'lishi mumkin, u ruxsat etilgan.
@@ -67,6 +72,11 @@ for (const fayl of fayllar) {
     continue; // index'da bor, diskda yo'q
   }
   if (buf.subarray(0, 8000).includes(0)) continue; // binar fayl
+
+  // 3. Original savollar repoda emas (javoblar oshkor bo'ladi): faqat namuna fayli ruxsat etilgan (docs/savol-formati.md).
+  if (/\.jsonl?$/i.test(fayl) && fayl !== 'docs/namuna-savol.json' && /"source"\s*:\s*"original"/.test(buf.toString('utf8'))) {
+    xatolar.push(`${fayl}  [Original savol fayli (source: "original") repoda; TAYANCH_SAVOLLAR_DIR ga ko'chiring]`);
+  }
 
   const qatorlar = buf.toString('utf8').split('\n');
   qatorlar.forEach((qator, i) => {

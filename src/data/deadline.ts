@@ -12,6 +12,8 @@ export interface DeadlineYozuvi {
   sana: string; // YYYY-MM-DD
   soat?: string;
   vaqtMintaqasi?: string;
+  utcSiljish?: number; // Rasmiy vaqt zonasining shu muddatdagi UTC siljishi, daqiqada.
+  muddatManbasi?: { havola: string; tekshirilganSana: string };
   manbaIdlar: string[];
   tekshirilganSana: string;
   kalendardaKorsatish: boolean;
@@ -25,6 +27,10 @@ export const deadlinelar: DeadlineYozuvi[] = [
     bosqich: 'Hujjat qabuli (el-yurt.uz/application)',
     sana: '2026-11-15',
     soat: '23:59',
+    muddatManbasi: {
+      havola: 'https://t.me/elyurtumidifoundation/16705',
+      tekshirilganSana: '2026-11-15',
+    },
     manbaIdlar: ['EY01'],
     tekshirilganSana: '2026-11-04',
     kalendardaKorsatish: true,
@@ -41,12 +47,10 @@ export const deadlinelar: DeadlineYozuvi[] = [
   },
 ];
 
-export function korinadiganDeadlinelar(opts: { bolim?: BolimSlug; faqatKelajak?: boolean } = {}) {
-  const bugun = new Date().toISOString().slice(0, 10);
+export function korinadiganDeadlinelar(opts: { bolim?: BolimSlug } = {}) {
   return deadlinelar
     .filter((d) => d.kalendardaKorsatish)
     .filter((d) => rasmiyManbalar(d.manbaIdlar).length > 0)
     .filter((d) => !opts.bolim || d.bolim === opts.bolim)
-    .filter((d) => !opts.faqatKelajak || d.sana >= bugun)
     .sort((a, b) => a.sana.localeCompare(b.sana));
 }

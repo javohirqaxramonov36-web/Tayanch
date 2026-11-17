@@ -3,10 +3,10 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
 import { hisobMijoz } from './hisob';
 
-export type FunksiyaNomi = 'tolov-yaratish' | 'inpay-holat' | 'hisob-malumot';
+export type FunksiyaNomi = 'tolov-yaratish' | 'inpay-holat' | 'hisob-malumot' | 'ai-tutor' | 'suhbatdosh';
 export type FunksiyaNatija<T> = { ok: true; data: T } | { ok: false; kod: string; status: number };
 
-export async function funksiya<T>(nomi: FunksiyaNomi, tana: Record<string, unknown>): Promise<FunksiyaNatija<T>> {
+export async function funksiya<T>(nomi: FunksiyaNomi, tana: Record<string, unknown>, signal?: AbortSignal): Promise<FunksiyaNatija<T>> {
   const c = hisobMijoz();
   if (!c || !PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) return { ok: false, kod: 'server_not_configured', status: 0 };
   const { data } = await c.auth.getSession();
@@ -18,6 +18,7 @@ export async function funksiya<T>(nomi: FunksiyaNomi, tana: Record<string, unkno
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, apikey: PUBLIC_SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(tana),
+      signal,
     });
   } catch {
     return { ok: false, kod: 'network_error', status: 0 };

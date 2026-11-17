@@ -18,12 +18,18 @@ export interface SavolKorsatkich {
   yoq(): void;
   /** Matn va formulalar chizilganda bajariladi */
   tayyor: Promise<void>;
+  /** Bo'sh javobni o'tkazishga ruxsat beradi, yaroqsiz SPR qiymatida xatoni ko'rsatadi. */
+  sprXatosiBormi(): boolean;
 }
 
 const M = {
   savol: (n: number) => `Question ${n}`,
   passage: 'Passage',
   belgila: 'Mark for review',
+  xabar: 'Report',
+  xabarlangan: 'Reported',
+  xabarIzoh: 'Report a problem with this question',
+  xabarlanganIzoh: 'You reported this question',
   ochirishRejimi: 'Cross out',
   ochirishRejimiIzoh: 'Cross out answer choices you have ruled out',
   ochirVariant: (k: string) => `Cross out choice ${k}`,
@@ -77,6 +83,7 @@ const IK = {
   togri: ['M5 12l5 5L20 7'],
   xato: ['M6 6l12 12M18 6L6 18'],
   ochirish: ['M4 12h16', 'M8 6h8a4 4 0 0 1 0 8', 'M16 18H8a4 4 0 0 1 0-8'],
+  xabar: ['M12 8v4', 'M12 16h.01', 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18'],
   ogoh: ['M12 9v4', 'M12 17h.01', 'M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'],
 };
 
@@ -86,7 +93,7 @@ function tekshirSavol(s: Savol): void {
 }
 
 export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): SavolKorsatkich {
-  const { savol, rejim, raqam } = props;
+  const { savol, rejim, raqam, kurs = false } = props;
   tekshirSavol(savol);
   let holat: SavolHolati = { ...props.holat, ochirilgan: [...props.holat.ochirilgan] };
   let ochirishRejimi = false;
@@ -137,6 +144,13 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   bayroq.append(ikonka(IK.bayroq), el('span', '', M.belgila));
   // "Mark for review" faqat onFlag berilganda (kun savolida yo'q: bitta savol, ko'rib chiqish ro'yxati yo'q).
   if (props.onFlag) asboblar.appendChild(bayroq);
+  // "Report" (P24) faqat onReport berilganda: hisob bilan ishlaydigan sahifalarda (namuna sahifasida yo'q).
+  const xabarTugma = el('button', 'sk-asbob sk-xabar');
+  xabarTugma.type = 'button';
+  xabarTugma.title = M.xabarIzoh;
+  const xabarMatn = el('span', '', M.xabar);
+  xabarTugma.append(ikonka(IK.xabar), xabarMatn);
+  if (props.onReport) asboblar.appendChild(xabarTugma);
 
   if (savol.figure) {
     const f = el('figure', 'sk-rasm');
@@ -159,7 +173,7 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   qism.appendChild(stem);
 
   // ---------- MCQ ----------
-  const variantlar: { kalit: string; radio: HTMLButtonElement; ochir: HTMLButtonElement; sr: HTMLSpanElement; qator: HTMLDivElement }[] = [];
+  const variantlar: { kalit: string; radio: HTMLButtonElement | HTMLInputElement; ochir: HTMLButtonElement; sr: HTMLSpanElement; qator: HTMLDivElement }[] = [];
   let guruh: HTMLDivElement | null = null;
   if (savol.format === 'mcq') {
     guruh = el('div', 'sk-variantlar');
@@ -167,9 +181,18 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     guruh.setAttribute('aria-labelledby', `${id}-stem`);
     for (const v of savol.options ?? []) {
       const qator = el('div', 'sk-qator');
-      const radio = el('button', 'sk-variant');
-      radio.type = 'button';
-      radio.setAttribute('role', 'radio');
+      const radio = kurs ? el('input', 'sk-sr sk-radio') : el('button', 'sk-variant');
+      const yorliq = kurs ? el('label', 'sk-variant') : radio;
+      if (radio instanceof HTMLInputElement && yorliq instanceof HTMLLabelElement) {
+        radio.type = 'radio';
+        radio.name = `${id}-variant`;
+        radio.id = `${id}-variant-${variantlar.length}`;
+        radio.value = v.key;
+        yorliq.htmlFor = radio.id;
+      } else {
+        radio.type = 'button';
+        radio.setAttribute('role', 'radio');
+      }
       radio.dataset.kalit = v.key;
       const harf = el('span', 'sk-harf', v.key);
       harf.setAttribute('aria-hidden', 'true');
@@ -178,7 +201,7 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
       const sr = el('span', 'sk-sr'); // holat matni: eliminated / correct answer
       // Nomi ichki matndan: "A. <variant matni>, eliminated"
       const harfSr = el('span', 'sk-sr', `${v.key}. `);
-      radio.append(harfSr, harf, vMatn, sr, ikonka(IK.togri, 'sk-belgi sk-belgi-togri', 2.5), ikonka(IK.xato, 'sk-belgi sk-belgi-xato', 2.5));
+      yorliq.append(harfSr, harf, vMatn, sr, ikonka(IK.togri, 'sk-belgi sk-belgi-togri', 2.5), ikonka(IK.xato, 'sk-belgi sk-belgi-xato', 2.5));
 
       const ochir = el('button', 'sk-ochir');
       ochir.type = 'button';
@@ -188,7 +211,9 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
       ochirHarf.setAttribute('aria-hidden', 'true');
       ochir.appendChild(ochirHarf);
 
-      qator.append(radio, ochir);
+      qator.append(radio);
+      if (kurs) qator.append(yorliq);
+      qator.append(ochir);
       guruh.appendChild(qator);
       variantlar.push({ kalit: v.key, radio, ochir, sr, qator });
     }
@@ -197,8 +222,11 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
 
   // ---------- SPR ----------
   let kiritish: HTMLInputElement | null = null;
+  let oxirgiSprQiymat = holat.sprQiymat;
   let xatoP: HTMLParagraphElement | null = null;
   let xatoMatn: HTMLSpanElement | null = null;
+  let xatoElon: HTMLDivElement | null = null;
+  let sprBelgilar: HTMLDivElement | null = null;
   let korinish: HTMLDivElement | null = null;
   let korinishQiymat: HTMLSpanElement | null = null;
   let yuborTugma: HTMLButtonElement | null = null;
@@ -220,19 +248,43 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     yuborTugma = el('button', 'sk-katta sk-asosiy', rejim === 'taymersiz' ? M.sprTekshir : M.sprSaqla);
     yuborTugma.type = 'button';
     qator.append(kiritish, yuborTugma);
-    const yordam = el('p', 'sk-yordam', M.sprYordam);
+    if (kurs) {
+      const maydon = kiritish;
+      sprBelgilar = el('div', 'sk-spr-belgilar');
+      sprBelgilar.setAttribute('role', 'group');
+      sprBelgilar.setAttribute('aria-label', 'Answer symbols');
+      for (const [belgi, nom] of [['−', 'Insert minus sign'], ['/', 'Insert slash'], ['.', 'Insert decimal point']]) {
+        const tugma = el('button', 'sk-belgi-tugma', belgi);
+        tugma.type = 'button';
+        tugma.setAttribute('aria-label', nom);
+        // Telefon klaviaturasi ochiq turganda tugma maydon fokusini olmasin.
+        tugma.addEventListener('pointerdown', (e) => e.preventDefault());
+        tugma.addEventListener('click', () => {
+          maydon.focus();
+          maydon.setRangeText(belgi === '−' ? '-' : belgi, maydon.selectionStart!, maydon.selectionEnd!, 'end');
+          maydon.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+        sprBelgilar.append(tugma);
+      }
+    }
+    const yordam = el('p', 'sk-yordam', kurs ? `${M.sprYordam} Use up to 5 characters, or 6 including a minus sign.` : M.sprYordam);
     yordam.id = `${id}-spr-yordam`;
     xatoP = el('p', 'sk-spr-xato');
     xatoP.id = `${id}-spr-xato`;
     xatoP.hidden = true;
     xatoMatn = el('span');
     xatoP.append(ikonka(IK.ogoh), xatoMatn);
+    xatoElon = el('div', 'sk-sr');
+    xatoElon.setAttribute('aria-live', 'polite');
+    xatoElon.setAttribute('aria-atomic', 'true');
     korinish = el('div', 'sk-korinish');
     korinish.id = `${id}-spr-korinish`;
     korinishQiymat = el('span', 'sk-korinish-qiymat');
     korinish.append(el('span', 'sk-korinish-yorliq', M.sprKorinish), korinishQiymat);
     korinish.hidden = true;
-    quti.append(label, qator, yordam, xatoP, korinish);
+    quti.append(label, qator);
+    if (sprBelgilar) quti.append(sprBelgilar);
+    quti.append(yordam, xatoP, xatoElon, korinish);
     qism.appendChild(quti);
   }
 
@@ -265,13 +317,19 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   }
 
   for (const v of variantlar) {
-    v.radio.addEventListener('click', () => tanla(v.kalit));
+    v.radio.addEventListener(kurs ? 'change' : 'click', () => tanla(v.kalit));
     v.ochir.addEventListener('click', () => ochir(v.kalit));
   }
 
   guruh?.addEventListener('keydown', (e) => {
     const joriy = variantlar.findIndex((v) => v.radio === document.activeElement);
     if (joriy < 0) return;
+    if (kurs && e.key === 'Enter') {
+      e.preventDefault();
+      tanla(variantlar[joriy].kalit);
+      return;
+    }
+    if (kurs && e.key.startsWith('Arrow') && !qulf()) return;
     let keyingi = -1;
     const n = variantlar.length;
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') keyingi = (joriy + 1) % n;
@@ -288,7 +346,7 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   ildiz.addEventListener('keydown', (e) => {
     if (savol.format !== 'mcq' || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
     const t = e.target as HTMLElement;
-    if (t.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (t.closest('input:not([type="radio"]), textarea, select, [contenteditable="true"]')) return;
     if (e.key.length !== 1) return;
     const v = variantlar.find((x) => x.kalit.toUpperCase() === e.key.toUpperCase());
     if (!v || qulf()) return;
@@ -302,10 +360,11 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   });
 
   bayroq.addEventListener('click', () => props.onFlag?.(!holat.belgilangan));
+  xabarTugma.addEventListener('click', () => props.onReport?.(xabarTugma));
 
   function sprKorsat(xom: string) {
     if (!korinish || !korinishQiymat) return;
-    const t = sprTekshir(xom);
+    const t = sprTekshir(xom, kurs);
     if (!t.ok) { korinish.hidden = true; return; }
     korinish.hidden = false;
     const [surat, maxraj] = t.qiymat.replace(/^-/, '').split('/');
@@ -316,7 +375,8 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
   }
 
   function sprXato(xabar: string | null) {
-    if (!kiritish || !xatoP || !xatoMatn) return;
+    if (!kiritish || !xatoP || !xatoMatn || !xatoElon) return;
+    xatoElon.textContent = xabar ?? '';
     if (xabar) {
       xatoMatn.textContent = xabar;
       xatoP.hidden = false;
@@ -329,9 +389,9 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     }
   }
 
-  function sprYubor() {
+  function sprQiymatOl() {
     if (!kiritish || qulf()) return;
-    const t = sprTekshir(kiritish.value);
+    const t = sprTekshir(kiritish.value, kurs);
     if (!t.ok) {
       sprXato(t.xabar);
       sprKorsat(kiritish.value);
@@ -339,7 +399,12 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
       return;
     }
     sprXato(null);
-    props.onSubmitSpr?.(t.qiymat);
+    return t.qiymat;
+  }
+
+  function sprYubor() {
+    const qiymat = sprQiymatOl();
+    if (qiymat !== undefined) props.onSubmitSpr?.(qiymat);
   }
 
   kiritish?.addEventListener('input', () => {
@@ -347,7 +412,7 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     sprKorsat(kiritish!.value);
   });
   kiritish?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); sprYubor(); }
+    if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); sprYubor(); }
   });
   yuborTugma?.addEventListener('click', sprYubor);
   if (kiritish?.value) sprKorsat(kiritish.value);
@@ -359,6 +424,8 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     ildiz.classList.toggle('sk-ochirish-rejimi', ochirishRejimi && !holat.javobBerilgan);
 
     bayroq.setAttribute('aria-pressed', String(holat.belgilangan));
+    xabarMatn.textContent = holat.xabarlangan ? M.xabarlangan : M.xabar;
+    xabarTugma.title = holat.xabarlangan ? M.xabarlanganIzoh : M.xabarIzoh;
     if (ochirishTugma) {
       ochirishTugma.setAttribute('aria-pressed', String(ochirishRejimi));
       ochirishTugma.hidden = holat.javobBerilgan;
@@ -370,10 +437,15 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
       const ochirilgan = holat.ochirilgan.includes(v.kalit);
       const togri = !!nat && nat.togriJavob === v.kalit;
       const xato = !!nat && tanlangan && !togri;
-      v.radio.setAttribute('aria-checked', String(tanlangan));
-      v.radio.tabIndex = v === fokuslanadigan ? 0 : -1;
-      if (holat.javobBerilgan) v.radio.setAttribute('aria-disabled', 'true');
-      else v.radio.removeAttribute('aria-disabled');
+      if (v.radio instanceof HTMLInputElement) {
+        v.radio.checked = tanlangan;
+        v.radio.disabled = holat.javobBerilgan;
+      } else {
+        v.radio.setAttribute('aria-checked', String(tanlangan));
+        v.radio.tabIndex = v === fokuslanadigan ? 0 : -1;
+        if (holat.javobBerilgan) v.radio.setAttribute('aria-disabled', 'true');
+        else v.radio.removeAttribute('aria-disabled');
+      }
       v.qator.classList.toggle('sk-tanlangan', tanlangan);
       v.qator.classList.toggle('sk-ochirilgan', ochirilgan);
       v.qator.classList.toggle('sk-togri', togri);
@@ -386,10 +458,13 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     if (kiritish && yuborTugma) {
       kiritish.readOnly = holat.javobBerilgan;
       yuborTugma.hidden = holat.javobBerilgan;
-      if (holat.sprQiymat !== undefined && document.activeElement !== kiritish && kiritish.value !== holat.sprQiymat) {
+      if (sprBelgilar) sprBelgilar.hidden = holat.javobBerilgan;
+      if (holat.sprQiymat !== undefined && (!kurs || holat.sprQiymat !== oxirgiSprQiymat)
+          && document.activeElement !== kiritish && kiritish.value !== holat.sprQiymat) {
         kiritish.value = holat.sprQiymat;
         sprKorsat(kiritish.value);
       }
+      oxirgiSprQiymat = holat.sprQiymat;
     }
 
     // Natija faqat o'zgarganda qayta yoziladi (aria-live qayta o'qimasin)
@@ -419,6 +494,9 @@ export function savolChiz(konteyner: HTMLElement, props: SavolKorsatkichProps): 
     },
     yoq() {
       ildiz.remove();
+    },
+    sprXatosiBormi() {
+      return !!kiritish?.value.trim() && sprQiymatOl() === undefined && !qulf();
     },
     tayyor: Promise.all(vadalar).then(() => undefined),
   };

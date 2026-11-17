@@ -6,6 +6,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      pages_asset_sha:
+        description: 'Oldindan tekshirilgan statik build commitining to‘liq SHA qiymati'
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -23,16 +29,59 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Statik build SHA tekshiruvi
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pages_asset_sha != '' }}
+        env:
+          PAGES_ASSET_SHA: ${{ inputs.pages_asset_sha }}
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" != refs/heads/main || ! "$PAGES_ASSET_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Statik nashr uchun main va to‘liq 40 belgili commit SHA kerak."
+            exit 1
+          fi
       - uses: actions/checkout@v7
+        if: ${{ github.event_name == 'push' || inputs.pages_asset_sha == '' }}
       # Taqiqlangan fayl yoki kalit qiymati repoda bo'lsa, build va joylash to'xtaydi (docs/kontent-siyosati.md).
       - name: Repo tekshiruvi
+        if: ${{ github.event_name == 'push' || inputs.pages_asset_sha == '' }}
         run: node scripts/repo-tekshir.mjs
       # Hisob (Supabase): faqat ochiq qiymatlar, repo Settings → Secrets and variables → Actions → Variables.
       # Berilmasa sayt baribir quriladi, hisob sahifalari "hali ishlamaydi" deydi (docs/lokal-ish-tartibi.md).
       - uses: withastro/action@v6
+        if: ${{ github.event_name == 'push' || inputs.pages_asset_sha == '' }}
         env:
+          TAYANCH_KURS_NASHR: '0'
           PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Statik build tarmog‘ini olish
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pages_asset_sha != '' }}
+        uses: actions/checkout@v7
+        with:
+          ref: refs/heads/pages-a1-${{ github.sha }}
+          path: pages-static
+          persist-credentials: false
+      - name: Statik build tarkibini tekshirish
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pages_asset_sha != '' }}
+        working-directory: pages-static
+        env:
+          PAGES_ASSET_SHA: ${{ inputs.pages_asset_sha }}
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$PAGES_ASSET_SHA"
+          test -f index.html
+          test -f uz/sat/kurs/matematika/algebra/a1/index.html
+          git ls-files --stage | awk '$1 != "100644" && $1 != "100755" { invalid=1 } END { exit invalid }'
+          if find . -path './.git' -prune -o -type f \
+            \( -name '*.sql' -o -name 'questions.json' -o -name 'import-receipt.json' -o -name 'lesson.md' -o -name 'REVIEW.md' -o -name 'tasdiqlash.txt' -o -name '.env*' \) -print | grep -q .; then
+            echo "::error::Statik build ichida xususiy fayl topildi."
+            exit 1
+          fi
+      - name: Tekshirilgan statik build’ni Pages artefaktiga yuklash
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pages_asset_sha != '' }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-static
 
   deploy:
     needs: build

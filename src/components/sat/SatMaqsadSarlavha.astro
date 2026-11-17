@@ -54,10 +54,8 @@ import { yol } from '../../lib/yol';
 </style>
 
 <script>
-  import { kirganFoydalanuvchi } from '../../lib/hisobHolat';
-  import { toshkentBugun } from '../../lib/muddat';
-  import { sarlavhaHolati, type MaqsadProfil } from '../../lib/satMaqsad';
-  import { maqsadMatn as M, sanaYoz } from '../../data/satMaqsadMatn';
+  import type { sarlavhaHolati, MaqsadProfil } from '../../lib/satMaqsad';
+  import type { maqsadMatn } from '../../data/satMaqsadMatn';
 
   const quti = document.querySelector<HTMLElement>('[data-maqsad-sarlavha]');
   const el = (teg: string, cls?: string, matn?: string) => {
@@ -67,9 +65,8 @@ import { yol } from '../../lib/yol';
     return e;
   };
 
-  function korsat(q: HTMLElement, p: MaqsadProfil) {
+  function korsat(q: HTMLElement, p: MaqsadProfil, h: ReturnType<typeof sarlavhaHolati>, M: typeof maqsadMatn) {
     const tahrir = q.dataset.tahrir!;
-    const h = sarlavhaHolati(p, toshkentBugun());
     q.querySelector<HTMLElement>('[data-ms-taklif]')!.hidden = h.tur !== 'sozlanmagan';
     q.querySelector<HTMLElement>('[data-ms-bor]')!.hidden = h.tur === 'sozlanmagan';
     q.hidden = false;
@@ -107,13 +104,11 @@ import { yol } from '../../lib/yol';
   }
 
   async function ishga() {
-    // Supabase klienti (~216KB) faqat brauzerda saqlangan sessiya bo'lsa yuklanadi: hisobsiz
-    // foydalanuvchida bu blok baribir yashirin qoladi (getSession bo'sh qaytardi).
-    if (!quti || !kirganFoydalanuvchi()) return;
-    const { hisobMijoz } = await import('../../lib/hisob');
-    const c = hisobMijoz();
-    if (!c) return;
+    if (!quti || !document.documentElement.hasAttribute('data-sat-kirgan')) return;
     try {
+      const { hisobMijoz } = await import('../../lib/hisob');
+      const c = hisobMijoz();
+      if (!c) return;
       const { data: s } = await c.auth.getSession();
       if (!s.session) return;
       const uid = s.session.user.id;
@@ -121,7 +116,13 @@ import { yol } from '../../lib/yol';
         .select('target_score, current_score, exam_date, sat_setup_at').eq('id', uid).maybeSingle();
       if (error || !data) return;
       const profil = data as MaqsadProfil;
-      korsat(quti, profil);
+      const [{ sarlavhaHolati }, { toshkentBugun }, { maqsadMatn: M }] = await Promise.all([
+        import('../../lib/satMaqsad'),
+        import('../../lib/muddat'),
+        import('../../data/satMaqsadMatn'),
+      ]);
+      const chiz = (p: MaqsadProfil) => korsat(quti, p, sarlavhaHolati(p, toshkentBugun()), M);
+      chiz(profil);
 
       const keyinroq = quti.querySelector<HTMLButtonElement>('[data-ms-keyinroq]')!;
       keyinroq.addEventListener('click', async () => {
@@ -136,7 +137,7 @@ import { yol } from '../../lib/yol';
           xato.hidden = false;
           return;
         }
-        korsat(quti, { ...profil, sat_setup_at: vaqt });
+        chiz({ ...profil, sat_setup_at: vaqt });
         quti.focus();
       });
     } catch { /* sarlavha ixtiyoriy: xato bo'lsa sahifa avvalgidek qoladi */ }

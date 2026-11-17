@@ -6,7 +6,6 @@ import Footer from '../components/Footer.astro';
 import SahifaOxiri from '../components/SahifaOxiri.astro';
 import BoshQism from '../components/BoshQism.astro';
 import QavatYoli from '../components/QavatYoli.astro';
-import Lift from '../components/Lift.astro';
 import { joriyQavat } from '../data/qavatlar';
 
 export interface Props {
@@ -21,19 +20,20 @@ export interface Props {
   manbalar?: string[];
   tekshirilmagan?: string[];
   sahifaOxiri?: boolean;
+  canonical?: boolean;
   /** Qavat yo'lidagi oraliq bandlar */
   yol?: string[];
 }
 
 const {
   title, description, til = 'uz', holat, tekshirilgan, keyingiTekshiruv,
-  manbalar = [], tekshirilmagan = [], sahifaOxiri = true, yol: bandlar = [],
+  manbalar = [], tekshirilmagan = [], sahifaOxiri = true, canonical, yol: bandlar = [],
 } = Astro.props;
 ---
 <!doctype html>
 <html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
   <head>
-    <BoshQism title={title} description={description} holat={holat} />
+    <BoshQism title={title} description={description} holat={holat} canonical={canonical} />
     <slot name="bosh" />
   </head>
   <body>
@@ -52,6 +52,5 @@ const {
       )}
     </main>
     <Footer />
-    <Lift variant="pastki" />
   </body>
 </html>

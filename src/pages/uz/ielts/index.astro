@@ -4,7 +4,6 @@
 // British Council sahifasi tekshirib bo'lmadi: havolasiz, "tekshirilmoqda".
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
-import Zina from '../../../components/Zina.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
 import { qollanmalar, asos, mashqlar, IKONKA, KALIT_IELTS_REJA } from '../../../data/ieltsSahifalar';
 import { manbalar } from '../../../data/manbalar';
@@ -25,13 +24,13 @@ const ulush = (n: number) => Math.round((n / engUzun) * 1000) / 1000;
 const tezQollanmalar = qollanmalar.filter((q) => !q.qism).length;
 const qadamlar = [
   { nomi: 'Format bilan tanish', tavsif: "To'rt bo'limning har birida nima so'raladi va qancha vaqt beriladi.", havola: 'Format kartalari', href: reading },
-  { nomi: 'Rasmiy namunani ishla', tavsif: "Bepul rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
+  { nomi: 'Rasmiy namunani ishla', tavsif: "Rasmiy namunani soat bilan ishla. Qaysi bo'lim qiyinroq ekani shunda ko'rinadi.", havola: 'Rasmiy namunalar', href: '#rasmiy' },
   { nomi: '30 kunlik reja tuz', tavsif: "Uchta savolga javob ber: reja qiyin bo'limingga ko'proq kun ajratadi.", havola: 'Reja tuzish', href: reja },
 ];
 const namunalar = [
   { nomi: 'IELTS.org', tavsif: "Academic namuna topshiriqlari: to'rt ko'nikma, Listening va Reading uchun javob kalitlari.", manba: m('IE03') },
   { nomi: 'IDP', tavsif: 'Bepul tanishuv testlari: Listening, Reading, Writing va Speaking 1-qism.', manba: m('ID01') },
-  { nomi: 'British Council', tavsif: "Bepul mashq testlari sahifasi tekshirilmoqda, havola tekshiruvdan keyin qo'yiladi.", manba: null },
+  { nomi: 'British Council', tavsif: "Mashq sahifasidagi shartlar hali tasdiqlanmagan.", manba: null },
 ];
 ---
 <BolimQobiq
@@ -220,7 +219,7 @@ const namunalar = [
 
     <section id="rasmiy" class="rasmiy" aria-labelledby="rasmiy-h">
       <div class="r-bosh">
-        <h2 id="rasmiy-h">Rasmiy bepul namunalar</h2>
+        <h2 id="rasmiy-h">Rasmiy mashq namunalari</h2>
         <p class="izoh-m">Mashqni rasmiy namunadan boshla: format va qiyinlik haqiqiy imtihonga eng yaqin shu yerda. Havolalar tashqi saytga, yangi oynada ochiladi.</p>
       </div>
       <ul class="r-royxat">
@@ -255,17 +254,13 @@ const namunalar = [
       </div>
     </section>
 
-    <Zina />
 
     <ManbaBlok
       manbalar={['IE01', 'IE03', 'ID01']}
       tekshirilgan="2026-11-05"
       keyingiTekshiruv="2026-12-05"
       tekshirilmagan={[
-        "British Council'ning bepul mashq testlari sahifasi (saytga ulanib bo'lmadi).",
         "IELTS.org namunalari bepulligi sahifada yozilmagan.",
-        "Savdo belgisi haqidagi eslatma matni.",
-        "Listening, Writing Task 2, Speaking va General English qo'llanmalari hali yozilmagan.",
       ]}
     />
   </div>
@@ -299,17 +294,6 @@ const namunalar = [
   .pill-tez { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
   .pill-ochiq { background: var(--rang-asosiy-och); color: var(--rang-havola); }
 
-  .katta {
-    display: inline-flex; align-items: center; justify-content: center; gap: var(--b-3);
-    min-height: var(--control-height-md); padding: 0 28px; border-radius: var(--r-toliq);
-    text-decoration: none; font-weight: 800; font-size: 16px;
-  }
-  .katta-56 { min-height: 56px; padding: 0 32px; font-size: 18px; }
-  .katta.asosiy { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
-  .katta.asosiy:hover { background: var(--btn-primary-bg-hover); }
-  .katta.ikkinchi { background: var(--fon-ikkinchi); color: var(--matn); font-weight: 700; }
-  .katta.ikkinchi:hover { background: var(--sirt-ikkinchi); }
-
   /* Hero */
   .hero { display: flex; gap: var(--b-8); align-items: stretch; }
   .hero-matn { flex: 3 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-5); }
@@ -325,7 +309,7 @@ const namunalar = [
   .format .ustki-yorliq { color: var(--rang-asosiy-qorada); }
   .format ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
   .f-qator { background: var(--qora-sirt); border: 1px solid var(--qora-chiziq); border-radius: var(--r-orta); padding: 12px 16px; display: flex; align-items: center; gap: var(--b-3); color: var(--qora-matn); text-decoration: none; }
-  a.f-qator:hover { background: var(--qora-chiziq); }
+  @media (hover: hover) and (pointer: fine) { a.f-qator:hover { background: var(--qora-chiziq); } }
   .f-matn { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   .f-strelka { flex: none; width: var(--size-icon-md); color: var(--qora-matn-ikkinchi); }
   /* Havolasiz qatorda ham strelka joyi: hamma chiziq bir shkalada */
@@ -376,7 +360,7 @@ const namunalar = [
   .q-matn h3 { font-size: var(--matn-h3); font-weight: 800; }
   .q-matn p { line-height: 1.6; color: var(--matn-ikkinchi); }
   .qadamlar a { align-self: center; font-weight: 700; white-space: nowrap; min-height: 48px; display: inline-flex; align-items: center; color: var(--rang-havola); }
-  .qadamlar a:hover { color: var(--rang-asosiy-toq); }
+  @media (hover: hover) and (pointer: fine) { .qadamlar a:hover { color: var(--rang-asosiy-toq); } }
 
   /* Reja kartasi: sahifadagi yagona soya */
   .reja-karta {
@@ -404,7 +388,7 @@ const namunalar = [
   .kul-blok > .ustki-yorliq { margin: var(--b-3) var(--b-4) var(--b-2); }
   .kul-blok ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-1); }
   .q-qator { background: var(--fon); border-radius: var(--r-orta); min-height: 64px; padding: 0 var(--b-4); display: flex; align-items: center; gap: var(--b-4); color: var(--matn); text-decoration: none; }
-  a.q-qator:hover { box-shadow: inset 0 0 0 1.5px var(--matn); }
+  @media (hover: hover) and (pointer: fine) { a.q-qator:hover { box-shadow: inset 0 0 0 1.5px var(--matn); } }
   .q-ikonka { flex: none; color: var(--rang-havola); }
   .nofaol .q-ikonka { color: var(--matn-sust); }
   .q-nom { flex: 1; min-width: 0; display: flex; flex-direction: column; padding-block: var(--b-2); }
@@ -422,7 +406,7 @@ const namunalar = [
   .r-royxat { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
   .r-royxat li + li { border-top: 1px solid var(--chiziq); }
   .r-qator { display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; align-items: center; column-gap: var(--b-6); min-height: 80px; padding: var(--b-3) 28px; color: var(--matn); text-decoration: none; }
-  a.r-qator:hover { background: var(--fon-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { a.r-qator:hover { background: var(--fon-ikkinchi); } }
   .r-nom { font-weight: 800; font-size: 18px; }
   .r-matn { display: flex; flex-direction: column; gap: var(--b-1); color: var(--matn-ikkinchi); }
   .r-url { font-size: var(--matn-kichik); font-weight: 500; color: var(--rang-havola); }

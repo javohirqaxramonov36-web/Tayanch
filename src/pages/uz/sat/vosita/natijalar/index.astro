@@ -1,4 +1,5 @@
 ---
+import { kursTavsiyaYollari } from '../../../../../lib/sat/kursKatalog';
 // Mening natijalarim. Dizayn: Tayanch-SAT-dizayn.md, "Natijalar" ekrani.
 // 1) Analitika paneli (P14): hisob bilan kirganda public.analytics_summary() RPC javobi (yig'indi serverda hisoblanadi).
 //    Chegaralar va N: src/data/satAnalitika.ts. Sof hisob: src/lib/sat/analitika.ts. Kun chegarasi Asia/Tashkent.
@@ -26,7 +27,7 @@ const holatIzohi = [
   holat="qoralama"
 >
   <script type="application/json" id="namuna-data" set:html={JSON.stringify(namunaJavoblar)} />
-  <div class="ichki natija">
+  <div class="ichki natija" data-kurs={JSON.stringify(kursTavsiyaYollari())}>
     <section class="bosh" aria-labelledby="nat-h">
       <p class="pill-qator"><span class="pill">Tool</span><span class="pill pill-chiziq" id="mock-pill" hidden>Sample data</span></p>
       <h1 id="nat-h">My results</h1>
@@ -203,7 +204,9 @@ const holatIzohi = [
 </BolimQobiq>
 
 <script>
+  import { kursBogliqlar, tavsiyaKursYoli, type KursTavsiyaMavzu } from '../../../../../lib/sat/kursTavsiya';
   import { KALIT_JAVOBLAR, javobniMosla, type Javob } from '../../../../../data/satNamuna';
+  import { holatOchir } from '../../../../../lib/holat';
 
   const namuna: Javob[] = JSON.parse(document.getElementById('namuna-data')!.textContent || '[]');
   const testUrl = (document.querySelector('.chiziq-blok a') as HTMLAnchorElement).href;
@@ -281,7 +284,7 @@ const holatIzohi = [
   ochirish.addEventListener('click', () => { oyna.returnValue = ''; oyna.showModal(); });
   oyna.addEventListener('close', () => {
     if (oyna.returnValue === 'ochir') {
-      try { localStorage.removeItem(KALIT_JAVOBLAR); } catch { /* ruxsat yo'q */ }
+      holatOchir(KALIT_JAVOBLAR);
       document.getElementById('ochirish-xabar')!.textContent = 'Results deleted.';
       chiz();
       (document.getElementById('nat-h') as HTMLElement).focus();
@@ -297,6 +300,7 @@ const holatIzohi = [
 <script>
   // Analitika paneli (P14). Holatlar: loading → ready | empty | anon | no-supabase | error.
   import { analitikaSozlama as A } from '../../../../../data/satAnalitika';
+  import { kursBogliqlar, tavsiyaKursYoli, type KursTavsiyaMavzu } from '../../../../../lib/sat/kursTavsiya';
   import { hisobMijoz, hisobYoli } from '../../../../../lib/hisob';
   import { xatoTuri, SESSIYA_KALITI } from '../../../../../lib/savolBanki';
   import { SABABLAR } from '../../../../../lib/sat/sessiya';
@@ -316,6 +320,7 @@ const holatIzohi = [
   const $ = (id: string) => document.getElementById(id)!;
   const SVG = 'http://www.w3.org/2000/svg';
 
+  const kursMavzular: KursTavsiyaMavzu[] = JSON.parse(document.querySelector<HTMLElement>('.natija')?.dataset.kurs ?? '[]');
   function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', matn = ''): HTMLElementTagNameMap[K] {
     const e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -442,7 +447,9 @@ const holatIzohi = [
     $('pl-streak-izoh').textContent = t.streak > 0 ? 'Days in a row with at least one answer' : 'Answer a question today to start a streak';
   }
 
-  function tavsiyaBlok(x: Xulosa) {
+  async function tavsiyaBlok(x: Xulosa) {
+    const c = kursMavzular.length ? hisobMijoz() : null;
+    const otilgan = new Set(c ? (await kursBogliqlar(c, kursMavzular)).passed : []);
     const r = tavsiyalar(x.skills);
     const ul = $('tavsiya');
     ul.replaceChildren(...r.map((s) => {
@@ -451,6 +458,12 @@ const holatIzohi = [
       bosh.append(el('span', 'tav-nom', s.skill), el('span', 'tav-bolim', `${BOLIM_NOMI[s.section] ?? s.section} · ${s.domain}`));
       const orta = el('div', 'tav-orta');
       orta.append(ustun(s.correct / s.attempts, s.holat), el('span', 'tav-son', aniqlikMatni(s)), holatBelgi(s.holat));
+      const href = tavsiyaKursYoli(kursMavzular, s, otilgan);
+      if (href) {
+        const kurs = el('a', undefined, 'Study in the Math course');
+        kurs.href = href;
+        bosh.append(kurs);
+      }
       li.append(bosh, orta, mashqTugma(s));
       return li;
     }));
@@ -724,7 +737,7 @@ const holatIzohi = [
     border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn);
     text-decoration: none; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap;
   }
-  .qatorlar :global(.qayta:hover) { background: var(--chiziq); }
+  @media (hover: hover) and (pointer: fine) { .qatorlar :global(.qayta:hover) { background: var(--chiziq); } }
   .bosh-holat { padding: var(--b-8); text-align: center; background: var(--fon-ikkinchi); border-radius: var(--r-katta); color: var(--matn-ikkinchi); }
   .bosh-holat[hidden] { display: none; }
 
@@ -733,17 +746,6 @@ const holatIzohi = [
   .m-sarlavha { font-weight: 800; }
   .m-matn { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .m-matn:empty { display: none; }
-  .chiziq-tugma {
-    min-height: 48px; padding: 0 22px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq);
-    background: var(--fon); color: var(--matn);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
-  }
-  .chiziq-tugma:disabled { opacity: 0.5; cursor: not-allowed; }
-  .asosiy-tugma {
-    min-height: 48px; padding: 0 22px; border: 0; border-radius: var(--r-toliq);
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
-  }
 
   .tasdiq {
     border: 1px solid var(--chiziq); border-radius: var(--r-katta); padding: var(--b-6);
@@ -777,7 +779,7 @@ const holatIzohi = [
     border: 0; border-radius: var(--r-toliq); background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
     font: inherit; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer;
   }
-  .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); }
+  @media (hover: hover) and (pointer: fine) { .holat-quti :global(.hq-amal:hover) { background: var(--rang-asosiy-toq); } }
 
   .tana { display: flex; flex-direction: column; gap: var(--b-10); }
   .tana[hidden] { display: none; }
@@ -831,7 +833,7 @@ const holatIzohi = [
     background: var(--sirt-ikkinchi); color: var(--matn);
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap; cursor: pointer;
   }
-  .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); } }
   .panel :global(.mashq-tugma:disabled) { opacity: 0.6; cursor: progress; }
   .panel :global(.mashq-xabar) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 28ch; }
   .panel :global(.mashq-xabar:empty) { display: none; }

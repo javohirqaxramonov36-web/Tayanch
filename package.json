@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check:live-paths": "node scripts/check-live-paths.mjs",
     "preview": "astro preview",
     "savollar:tekshir": "node scripts/savollarni-tekshir.ts",
     "savollar:jadval": "node scripts/savollarni-tekshir.ts --jadval",
@@ -12,13 +13,26 @@
     "navigator:sinov": "node --test 'src/lib/navigator/testlar/*.test.ts'",
     "savol-banki:sinov": "node --test 'src/lib/testlar/*.test.ts'",
     "db:tekshir": "bash scripts/rls-tekshir.sh",
-    "funksiyalar:tekshir": "deno test --no-lock --node-modules-dir=none supabase/functions/tests/ && deno check --no-lock --node-modules-dir=none supabase/functions/tolov-yaratish/index.ts supabase/functions/inpay-webhook/index.ts supabase/functions/inpay-holat/index.ts supabase/functions/inpay-muvofiqlash/index.ts supabase/functions/hisob-malumot/index.ts",
+    "funksiyalar:tekshir": "deno test --no-lock --node-modules-dir=none supabase/functions/tests/ && deno check --no-lock --node-modules-dir=none supabase/functions/tolov-yaratish/index.ts supabase/functions/inpay-webhook/index.ts supabase/functions/inpay-holat/index.ts supabase/functions/inpay-muvofiqlash/index.ts supabase/functions/hisob-malumot/index.ts supabase/functions/ai-tutor/index.ts supabase/functions/suhbatdosh/index.ts",
     "inpay:webhook-sinov": "node scripts/inpay-webhook-sinov.mjs",
     "lugat:import": "node scripts/lugat-import.mjs",
     "lugat:sinov": "node --test scripts/lugat/*.test.mjs",
     "check": "astro check",
     "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
-    "validate:tests": "node scripts/ielts-testlarni-tekshir.ts"
+    "validate:tests": "node scripts/ielts-testlarni-tekshir.ts",
+    "savol:tekshir": "node scripts/savol-tekshir.mjs",
+    "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",
+    "savol:tasdiqla": "node scripts/savol-tasdiqla.mjs",
+    "savol:import": "node --env-file-if-exists=.env scripts/savol-import.mjs",
+    "kurs:tekshir": "node scripts/kurs.mjs",
+    "kurs:import": "node scripts/kurs.mjs dry-run",
+    "kurs:tasdiqla": "node scripts/kurs.mjs tasdiqla",
+    "kurs:kochir": "node scripts/kurs.mjs kochir",
+    "kurs:konvert": "node scripts/kurs/konvert.mjs",
+    "kurs:korib-chiq": "node scripts/kurs/koribChiq.mjs",
+    "kurs:sinov": "node --test scripts/kurs/kurs.test.mjs",
+    "savol:sinov": "node --test scripts/savol/savol.test.mjs",
+    "sinxron:tekshir": "node scripts/sinxron-test.ts"
   },
   "dependencies": {
     "@fontsource-variable/onest": "^5.3.1",
@@ -28,6 +42,7 @@
     "three": "0.186.1"
   },
   "devDependencies": {
+    "katex": "^0.19.1",
     "@astrojs/check": "^0.9.12",
     "@types/node": "^26.6.6",
     "typescript": "^6.0.3"

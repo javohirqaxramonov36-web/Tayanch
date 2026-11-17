@@ -24,7 +24,7 @@ const { id, hidden = false } = Astro.props;
     display: inline-flex; align-items: center; gap: var(--b-2);
   }
   .desmos-havola[hidden] { display: none; }
-  .desmos-havola:hover { background: var(--chiziq-kuchli); }
+  @media (hover: hover) and (pointer: fine) { .desmos-havola:hover { background: var(--chiziq-kuchli); } }
   .tashqi { margin-left: calc(-1 * var(--b-1)); }
   .desmos-sr {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;

@@ -10,6 +10,7 @@ interface Api {
   sonlar(f: Record<string, unknown>): Promise<SonJavob>;
   boshlash(f: Record<string, unknown>, hajm: number, rejim: string): Promise<{ session_id: string | null; mode: string; questions: unknown[] }>;
   kvota(): Promise<UsageJavob>;
+  tariflar(): Promise<{ code: string; name: string; limits: unknown; features: unknown }[]>;
 }
 
 const kut = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -63,6 +64,14 @@ export function mockApi(tur: MockTur): Api {
       if (tur === 'kvota') return { plan: { code: 'free', name: 'Free' }, limits: { questions: { max: 20, per: 'day', used: 20, remaining: 0 } } };
       if (tur === 'kam') return { plan: { code: 'free', name: 'Free' }, limits: { questions: { max: 20, per: 'day', used: 8, remaining: 12 } } };
       return { plan: { code: 'free', name: 'Free' }, limits: {} };
+    },
+    // TarifDialog ro'yxati uchun to'qilgan namuna (haqiqiy tarif emas).
+    async tariflar() {
+      await kut(150);
+      return [
+        { code: 'free', name: 'Free', limits: { questions: { max: 20, per: 'day' } }, features: [] },
+        { code: 'pro', name: 'Pro', limits: {}, features: ['analytics_extended', 'Sample plan text (test data)'] },
+      ];
     },
   };
 }
