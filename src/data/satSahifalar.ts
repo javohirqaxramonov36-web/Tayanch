@@ -122,6 +122,15 @@ export const satGuruhlar: SatGuruh[] = [
           'Answers come from an AI model and can contain mistakes. Only the final answer of a mistake explanation is checked, not every step.',
         ],
       },
+      {
+        qism: 'vosita/musobaqa/',
+        tayyor: true,
+        nomi: 'Contests',
+        tavsif: 'Timed contests with original SAT-style questions: one attempt inside a time window, results by nickname after it ends. No prizes. Needs an account.',
+        turi: 'vosita',
+        manbalar: [],
+        tekshirilmagan: ['Contests have not been tried with real accounts in a browser yet.'],
+      },
     ],
   },
   {
@@ -367,7 +376,7 @@ export const satYonGuruhlar: SatYonGuruh[] = [
       { nomi: 'Reading & Writing lessons', sahifalar: ['xatoni-toping', 'dalil', 'otish-sozlari', 'lugat-kontekstda'].map((q) => s(`qollanma/reading-writing/${q}/`)) },
     ],
   },
-  { nomi: 'Progress', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/takrorlash/', 'vosita/rasmiy-testlar/', 'vosita/reyting/'].map(s) }] },
+  { nomi: 'Progress', qismlar: [{ sahifalar: ['vosita/natijalar/', 'vosita/takrorlash/', 'vosita/rasmiy-testlar/', 'vosita/reyting/', 'vosita/musobaqa/'].map(s) }] },
   { nomi: 'Plan', qismlar: [{ sahifalar: ['vosita/reja/', 'hisob/maqsad/', 'vosita/ai-tutor/'].map(s) }] },
   { nomi: 'Account', qismlar: [{ sahifalar: ['hisob/profil/', 'hisob/obuna/', 'guruh/', 'hisob/fikr/'].map(s) }] },
 ];
