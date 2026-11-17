@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      SAYT: https://javohirqaxramonov36-web.github.io/Tayanch
+      SAYT: https://tayanchedu.uz
       SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
       SUPABASE_OCHIQ_KALIT: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
     steps:

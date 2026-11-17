@@ -122,7 +122,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </summary>
       <nav aria-label="Sahifa mundarijasi">
-        {mundarija.map((b) => <a href={`#${b.id}`}>{b.nomi}</a>)}
+        {mundarija.map((b, i) => <a href={`#${b.id}`} data-bolim={b.id} aria-current={i === 0 ? 'location' : undefined}>{b.nomi}</a>)}
       </nav>
     </details>
 
@@ -148,7 +148,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
             <li>Barcha davlat fuqarolari ariza bera oladi. Türkiye fuqarolari va Türkiye universitetida shu darajada o'qiyotganlar bera olmaydi.</li>
             <li>Bitirganlar va joriy o'quv yili oxirida (avgustgacha) bitiradiganlar ariza bera oladi.</li>
           </ul>
-          <p class="izoh"><span class="yorliq yorliq-ogoh">tekshirish kerak</span> Yosh qaysi sanaga qarab hisoblanishi rasmiy sahifada yozilmagan.</p>
+          <p class="izoh">Yosh qaysi sanaga qarab hisoblanishi rasmiy sahifada yozilmagan.</p>
         </section>
 
         <section id="qabul" class="bolim" aria-labelledby="qabul-h">
@@ -229,7 +229,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
             <li>Turkcha C1 sertifikati bo'lmagan grant oluvchilar (ingliz tilidagi dasturga joylashganlar ham) 1 yillik turk tili kursida o'qiydi va yil oxirigacha C1 sertifikatini olishi kerak (TB04).</li>
             <li>Turk tili kursi dastur tilidan qat'i nazar hamma grant oluvchilarga bepul (TB05).</li>
           </ul>
-          <p class="izoh"><span class="yorliq yorliq-ogoh">tekshirish kerak</span> Kursdan ozod qilish shartlari rasmiy sahifalarda aniq yozilmagan.</p>
+          <p class="izoh">Kursdan ozod qilish shartlari rasmiy sahifalarda aniq yozilmagan.</p>
         </section>
 
         <section class="keyingi" aria-labelledby="keyingi-h">
@@ -244,7 +244,7 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
 
       <nav class="mund" aria-label="Sahifa mundarijasi" data-mundarija>
         <p class="ustki">Mundarija</p>
-        {mundarija.map((b) => <a href={`#${b.id}`} data-bolim={b.id}>{b.nomi}</a>)}
+        {mundarija.map((b, i) => <a href={`#${b.id}`} data-bolim={b.id} aria-current={i === 0 ? 'location' : undefined}>{b.nomi}</a>)}
       </nav>
     </div>
 
@@ -285,10 +285,9 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
     korishok.classList.add('son');
   });
 
-  // 2) Mundarija: ekrandagi bo'lim aria-current="location" bilan belgilanadi (faqat desktop mundarijasi).
-  const mund = document.querySelector<HTMLElement>('[data-mundarija]');
-  if (mund && 'IntersectionObserver' in window) {
-    const havolalar = [...mund.querySelectorAll<HTMLAnchorElement>('a[data-bolim]')];
+  // 2) Joriy bo'lim ikkala mundarijada belgilanadi.
+  if ('IntersectionObserver' in window) {
+    const havolalar = [...document.querySelectorAll<HTMLAnchorElement>('[data-mundarija] a, .mund-telefon a[data-bolim]')];
     const belgila = (id: string) => havolalar.forEach((a) => {
       if (a.dataset.bolim === id) a.setAttribute('aria-current', 'location');
       else a.removeAttribute('aria-current');
@@ -297,8 +296,8 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
       const korinadi = yozuvlar.filter((y) => y.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
       if (korinadi) belgila(korinadi.target.id);
     }, { rootMargin: '0px 0px -65% 0px' });
-    havolalar.forEach((a) => {
-      const el = document.getElementById(a.dataset.bolim || '');
+    new Set(havolalar.map((a) => a.dataset.bolim)).forEach((id) => {
+      const el = document.getElementById(id || '');
       if (el) kuzatuvchi.observe(el);
     });
   }
@@ -353,11 +352,11 @@ const Muhr = (id: string) => ({ label: `Rasmiy manbada tekshirilgan, ${m(id).tek
   /* Ikki ustun: matn + yopishqoq mundarija (desktop) */
   .ikki-ustun { display: flex; gap: var(--b-10); align-items: flex-start; }
   .asosiy-ustun { flex: 1; min-width: 0; display: grid; gap: var(--b-8); }
-  .mund { width: 220px; flex: none; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: 2px; border-left: 1.5px solid var(--chiziq); padding-left: var(--b-3); }
+  .mund { width: 220px; flex: none; position: sticky; top: var(--space-16); display: flex; flex-direction: column; gap: 2px; border-left: 1.5px solid var(--chiziq); padding-left: var(--b-3); }
   .mund .ustki { margin: 0 0 var(--b-2) var(--b-3); font-size: 12px; }
-  .mund a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--b-3); border-radius: 10px; text-decoration: none; color: var(--matn-ikkinchi); font-weight: 600; font-size: var(--matn-kichik); }
+  .mund a { display: flex; align-items: center; min-height: var(--size-touch-min); padding: 0 var(--b-3); border-radius: 10px; text-decoration: none; color: var(--matn-ikkinchi); font-weight: 600; font-size: var(--matn-kichik); }
   @media (hover: hover) and (pointer: fine) { .mund a:hover { background: var(--fon-ikkinchi); color: var(--matn); } }
-  .mund a[aria-current='location'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .mund a[aria-current], .mund-telefon a[aria-current] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
   .mund-telefon { display: none; }
 
   .bolim { display: grid; gap: var(--b-3); padding-top: var(--b-8); border-top: 1px solid var(--chiziq); scroll-margin-top: var(--b-6); }

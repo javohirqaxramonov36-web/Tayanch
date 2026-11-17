@@ -1,6 +1,6 @@
 // Tayanch binosi: 5 qavat (muallif qarori, 2026-11-05).
 // 2–5 qavat holati bolimlar.ts dan olinadi, bu yerda takrorlanmaydi.
-import { bolimlar, type BolimSlug } from './bolimlar';
+import { bolimlar, type Bolim, type BolimSlug } from './bolimlar';
 import { yol } from '../lib/yol';
 
 export interface Qavat {
@@ -10,8 +10,7 @@ export interface Qavat {
   qisqaNom: string;
   /** base'siz manzil: "/uz/sat/" */
   manzil: string;
-  /** ochiq yoki tez-orada (1-qavat doim ochiq) */
-  holat: 'ochiq' | 'tez-orada';
+  holat: Bolim['holat'];
   ikonka: string;
 }
 

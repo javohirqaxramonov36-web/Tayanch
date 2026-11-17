@@ -66,15 +66,22 @@ Manbalar (tekshirildi 2026-11-09): supabase.com/docs/guides/auth/redirect-urls, 
 
 Dashboard → Authentication → URL Configuration (`/dashboard/project/_/auth/url-configuration`).
 
-**Site URL** (havolada `redirectTo` bo'lmasa shu ishlatiladi):
+**Site URL** (havolada `redirectTo` bo'lmasa shu ishlatiladi). 2026-11-16: sayt `tayanchedu.uz` ga ko'chdi (`docs/domen.md`):
 
 ```
-https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
+https://tayanchedu.uz/uz/hisob/kirish/
 ```
 
-**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod uchta manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`, Google → `callback/` (query'siz, 2.5). Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
+**Redirect URLs** (ruxsat ro'yxati). Hisob sahifalari 1-qavatda (`/uz/hisob/`, 2026-11-09). Kod uchta manzilga qaytaradi: tasdiqlash xati → `kirish/` (ba'zan `?keyin=...` bilan), parol tiklash xati → `parol-tiklash/`, Google → `callback/` (query'siz, 2.5). Eski `/uz/sat/hisob/` manzillari ham ro'yxatda qoladi (ular yangi joyga yo'naltiradi). Eski github.io qatorlari ko'chish tugaguncha qoladi (eski xatlardagi havolalar uchun); eski base `/Tayanch` harf katta-kichikligiga sezgir. Aniq ro'yxat: `supabase/config.toml`.
 
 ```
+https://tayanchedu.uz/uz/hisob/kirish/
+https://tayanchedu.uz/uz/hisob/kirish/**
+https://tayanchedu.uz/uz/hisob/parol-tiklash/
+https://tayanchedu.uz/uz/hisob/callback/
+https://tayanchedu.uz/uz/sat/hisob/kirish/**
+https://tayanchedu.uz/uz/sat/hisob/parol-tiklash/
+http://localhost:4321/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/kirish/**
 https://javohirqaxramonov36-web.github.io/Tayanch/uz/hisob/parol-tiklash/
@@ -142,13 +149,13 @@ Oqim va sabablar: `docs/qarorlar/002-google-kirish.md`. Manbalar (2026-11-09): s
 2. **Audience**: User type **External**. Holat "Testing": faqat qo'shilgan test foydalanuvchilar kira oladi (100 tagacha); sinov uchun muallif email'i qo'shiladi.
 3. **Data Access (Scopes)**: `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile`. Boshqa scope qo'shilmaydi.
 4. **Clients** → Create client → turi **Web application**, nomi masalan "Tayanch web".
-   - **Authorized JavaScript origins**: `https://javohirqaxramonov36-web.github.io` (yo'lsiz, oxirida `/` yo'q) va lokal `http://localhost:4321`.
+   - **Authorized JavaScript origins**: `https://tayanchedu.uz` (2026-11-16 dan), eski `https://javohirqaxramonov36-web.github.io` (yo'lsiz, oxirida `/` yo'q) va lokal `http://localhost:4321`.
    - **Authorized redirect URIs**: Supabase Dashboard → Authentication → Sign In / Providers → Google sahifasidagi **Callback URL** (`https://<ref>.supabase.co/auth/v1/callback`; nusxa ko'chiriladi). Sayt manzili bu yerga **yozilmaydi**.
    - Client ID va Client Secret chiqadi.
 
 **Supabase Dashboard** → Authentication → Sign In / Providers → **Google**: "Enable", Client ID va Client Secret qo'yiladi, Save. Qolgan maydonlar standart.
 
-**URL Configuration** (2.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/Tayanch/uz/hisob/callback/` qo'shiladi (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/Tayanch/**` allaqachon bor. **Qo'llangan (2026-11-09)**: `config diff` da yagona e'lon qilingan farq shu callback qatori edi; muallif "ha" degandan keyin `supabase config push --remote=<ref> --yes`, keyingi `config diff` da e'lon qilingan farq 0 (e'lon qilinmagan 8 ta sozlama o'zgarmadi).
+**URL Configuration** (2.1, `config.toml`): Site URL o'zgarmaydi; Redirect URLs ga aniq `…/uz/hisob/callback/` qo'shiladi (2026-11-16 dan `https://tayanchedu.uz/uz/hisob/callback/`, eskisi `…github.io/Tayanch/uz/hisob/callback/`) (kod `redirectTo` ni query'siz yuboradi, `keyin` sessionStorage'da). Lokal `http://localhost:4321/**` (eski `/Tayanch/**`) ro'yxatda. **Qo'llangan (2026-11-09)**: `config diff` da yagona e'lon qilingan farq shu callback qatori edi; muallif "ha" degandan keyin `supabase config push --remote=<ref> --yes`, keyingi `config diff` da e'lon qilingan farq 0 (e'lon qilinmagan 8 ta sozlama o'zgarmadi).
 
 **Tartib**: provider yoqilmaguncha saytdagi Google tugmasi Supabase'ning `{"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}` sahifasini ochadi (2026-11-09, lokal sinov). Shuning uchun Google sozlamalari **merge va deploy'dan oldin** qilinadi.
 
@@ -398,15 +405,15 @@ select received_at, event_id, provider_order_id, error from public.payment_event
 | `INPAY_SECRET_KEY` | inPAY kabineti → Kassa → API v2 kalitlari | `sk_test_…` sinov, `sk_live_…` jonli. To'liq faqat yaratilganda bir marta ko'rsatiladi |
 | `INPAY_WEBHOOK_SECRET` | `GET /webhooks/secret/` (faqat `sk_live_` bilan) yoki kabinet (tekshirish kerak) | `whsec_…`, sinov va jonli xabarlar uchun bitta |
 | `MUVOFIQLASH_SECRET` | O'zingiz yaratasiz (masalan `openssl rand -hex 32`), Supabase Secrets va Vault'ga bir xil qiymat | `inpay-muvofiqlash` ni faqat Cron chaqira olishi uchun (`X-Cron-Secret`) |
-| `SAYT_URL` (ixtiyoriy, maxfiy emas) | | Standart `https://javohirqaxramonov36-web.github.io/Tayanch` |
-| `TOLOV_ORIGINLAR` (ixtiyoriy, maxfiy emas) | | Vergul bilan. Standart: GitHub Pages va `localhost:4321` |
+| `SAYT_URL` (ixtiyoriy, maxfiy emas) | | Standart `https://tayanchedu.uz` (2026-11-16 gacha `…github.io/Tayanch`). Secret qo'yilgan bo'lsa, yangilanadi yoki o'chiriladi |
+| `TOLOV_ORIGINLAR` (ixtiyoriy, maxfiy emas) | | Vergul bilan. Standart: `https://tayanchedu.uz`, eski GitHub Pages va `localhost:4321`. Secret qo'yilgan bo'lsa, `https://tayanchedu.uz` qo'shiladi |
 
 `SUPABASE_URL` va service kaliti (`SUPABASE_SECRET_KEYS` yoki eski `SUPABASE_SERVICE_ROLE_KEY`) Supabase o'zi beradi. Funksiya sozlama yetishmasa `500 server_not_configured` qaytaradi va logga faqat NOMINI yozadi.
 
 ### inPAY kabinetida (muallif, deploy'dan oldin)
 
 1. Kassa → API v2 kalitlari: kalit yaratish (avval `sk_test_`).
-2. Oq ro'yxat (https://inpay.uz/merchant/whitelist/): `javohirqaxramonov36-web.github.io` (return_url) va `uvwejvjrsswssgydwevm.supabase.co` (webhook_url). Aks holda inPAY `domain_not_whitelisted` qaytaradi.
+2. Oq ro'yxat (https://inpay.uz/merchant/whitelist/): `tayanchedu.uz` (return_url, 2026-11-16 dan), eski `javohirqaxramonov36-web.github.io` va `uvwejvjrsswssgydwevm.supabase.co` (webhook_url). Aks holda inPAY `domain_not_whitelisted` qaytaradi.
 3. IP cheklovi o'chiq: Edge Function'ning chiquvchi IP manzili doimiy ekani tasdiqlanmagan (tekshirish kerak).
 
 ### Deploy (faqat muallif "ha" deganidan keyin)
@@ -490,3 +497,14 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/onboarding_profiles_test.sql
 ```
 
 Qoidalar: RLS bilan faqat egasi o'qiydi va yozadi, `anon` ga huquq yo'q. `updated_at` ni mijoz yozadi; server kelajakdagi vaqtni `now()` ga tushiradi va eskiroq `updated_at` bilan kelgan UPDATE'ni e'tiborsiz qoldiradi (yangisi yutadi).
+
+## Suhbatdoshning yopiq sinovi
+
+Suhbatdosh Tayanch sahifalarida ishlaydi. Brauzer Supabase sessiyasi orqali ovozli navbatni `suhbatdosh` funksiyasiga yuboradi. Funksiya har so‘rovda hisobni tekshiradi va quyidagi egadan boshqa hisoblarga yopiq turadi. Suhbat matni va audio bazaga yozilmaydi.
+
+1. Private `suhbatdosh-bilim` bucket migratsiyasini qo‘llang. `knowledge/` ichidan faqat `sat.md`, `ielts.md`, `common-app.md`, `scoir-coalition.md`, `fee-waivers.md` va `kaplan-pathways.md` fayllarini bucket ildiziga yuklang. Mavzu parchalari matn provayderiga yuborilgani uchun faqat ulashish mumkin bo‘lgan bilimni yuklang.
+2. Funksiya secrets’ida `SUHBATDOSH_EGA_ID` (Tayanch Auth’dagi egasining UUID’i), `SUHBATDOSH_GEMINI_FREE_KEY` ni sozlang. Gemini kaliti uchun billing yoqilmagan alohida loyiha ishlating. Nutq matnga va javobga Gemini 3.5 Flash-Lite orqali aylanadi. Gemini 3.8 Flash-Lite TTS javobni o‘zbekcha ovozlashtiradi. Bepul Gemini audio, savol va tanlangan manba parchalaridan mahsulotlarini yaxshilashda foydalanishi mumkin.
+3. `supabase functions deploy suhbatdosh --no-verify-jwt --use-api` funksiyani joylaydi. Kod JWT’ni Supabase Auth orqali tekshiradi. Egasi kirganida Lift’da Suhbatdosh tugmasi chiqadi.
+4. Egasi va boshqa hisob bilan kirishni tekshiring. Telefon brauzerida mikrofon bilan yangi o‘zbekcha savol yozib yuboring va qaytgan ovozni tinglang. `SUHBATDOSH_EGA_ID` olib tashlansa, funksiya hamma hisobga yopiladi.
+
+Rasmiy manbalar, 2026-11-15 — [Google o‘zbekcha ovoz sintezi](https://aistudio.google.com/docs/speech-generation#supported-languages), [Gemini API narxlari va bepul tarifdagi ma’lumot ishlatilishi](https://ai.google.dev/gemini-api/docs/pricing).

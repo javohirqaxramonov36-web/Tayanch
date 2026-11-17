@@ -4,7 +4,7 @@ import { type HolatNatijasi, inpayHolatiniOgir, inpayTolovHolati } from '../_sha
 import type { RpcNatija } from '../_shared/turlar.ts';
 import { type BazaTolov, type HolatBogliqlik, inpayHolat } from '../inpay-holat/handler.ts';
 
-const SAYT = 'https://javohirqaxramonov36-web.github.io';
+const SAYT = 'https://tayanchedu.uz';
 const EGA = '00000000-0000-4000-8000-00000000000a';
 const BEGONA = '00000000-0000-4000-8000-00000000000b';
 const PID = '11111111-2222-4333-8444-555555555555';

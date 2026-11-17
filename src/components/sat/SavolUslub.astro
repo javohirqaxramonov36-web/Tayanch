@@ -60,6 +60,7 @@
   /* Variantlar (DESIGN.md: variant tugmasi) */
   .sk-variantlar { display: flex; flex-direction: column; gap: var(--b-3); }
   .sk-qator { display: flex; align-items: stretch; gap: var(--b-2); }
+  .sk-qator:has(.sk-radio) { position: relative; }
   .sk-variant {
     flex: 1; min-width: 0;
     min-height: 56px; padding: 10px 18px;
@@ -73,6 +74,10 @@
   @media (hover: hover) and (pointer: fine) { .sk-variant:hover { border-color: var(--rang-asosiy); } }
   .sk-variant:focus-visible, .sk-ochir:focus-visible, .sk-asbob:focus-visible, .sk-katta:focus-visible {
     outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
+  }
+  .sk-radio:focus-visible + .sk-variant, .sk-belgi-tugma:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-gap);
   }
   .sk-harf {
     width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);
@@ -146,6 +151,15 @@
   .sk-spr-maydon:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 1px; border-color: var(--rang-asosiy); }
   .sk-spr-maydon[aria-invalid='true'] { border-style: dashed; }
   .sk-spr-maydon:read-only { background: var(--fon-ikkinchi); }
+  .sk-spr-belgilar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .sk-spr-belgilar[hidden] { display: none; }
+  .sk-belgi-tugma {
+    min-width: var(--size-touch-min); min-height: var(--size-touch-min);
+    border: var(--border-width-1) solid var(--chiziq-maydon); border-radius: var(--r-kichik);
+    background: var(--sirt); color: var(--matn);
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .sk-belgi-tugma:hover { background: var(--fon-ikkinchi); }
   .sk-yordam { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 62ch; }
   .sk-spr-xato {
     margin: 0; align-self: flex-start;

@@ -125,6 +125,7 @@ const IK = {
 
 <script>
   import { imloToplamlar, KALIT_IELTS_IMLO, type ImloSoz, type ImloToplam } from '../../../../../data/ielts/imloToplamlar';
+  import { ingOvozYarat } from '../../../../../lib/ielts/ovoz';
 
   interface Javob { soz: ImloSoz; yozgan: string; togri: boolean }
   interface Saqlangan { v: 1; toplamlar: Record<string, { eng: number; jami: number; sana: string }> }
@@ -175,48 +176,21 @@ const IK = {
   let javoblar: Javob[] = [];
   let toliq = true; // to'liq to'plam (eng yaxshi natija faqat shunda yoziladi)
 
-  // ---------- Ovoz ----------
-  const ss: SpeechSynthesis | null = 'speechSynthesis' in window ? window.speechSynthesis : null;
-  let ovoz: SpeechSynthesisVoice | null = null;
-  let ovozsiz = !ss;
-  function ovozTanla() {
-    if (!ss) return;
-    const v = ss.getVoices();
-    if (!v.length) return; // ro'yxat hali yuklanmagan: lang bilan baribir urinib ko'riladi
-    const en = (x: SpeechSynthesisVoice, p: string) => x.lang.toLowerCase().replace('_', '-').startsWith(p);
-    // macOS'dagi o'yin ovozlari (Bubbles, Zarvox va h.k.) so'zni buzib o'qiydi: chetlatiladi.
-    const OYIN = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Grandma|Grandpa|Rocko)\b/;
-    const toza = v.filter((x) => en(x, 'en') && !OYIN.test(x.name));
-    const yaxshi = /Daniel|Google UK|United Kingdom|Kate|Serena|Arthur/;
-    ovoz = toza.find((x) => en(x, 'en-gb') && yaxshi.test(x.name))
-      ?? toza.find((x) => en(x, 'en-gb'))
-      ?? toza.find((x) => x.default)
-      ?? toza[0] ?? null;
-    ovozsiz = !ovoz;
-    ovozHolatiniKorsat();
-  }
+  // ---------- Ovoz (src/lib/ielts/ovoz.ts) ----------
+  let ovozsiz = !('speechSynthesis' in window);
   function ovozHolatiniKorsat() {
     $('ovoz-yoq').hidden = !ovozsiz;
     tinglashTugma.hidden = ovozsiz;
     ovozsizSorov.hidden = !ovozsiz;
     if (navbat.length && ovozsiz) ovozsizSorov.textContent = `Ma'nosi: ${navbat[i].tarjima}`;
   }
+  const ovoz = ingOvozYarat((yoq) => { ovozsiz = yoq; ovozHolatiniKorsat(); });
   let tinglashSoni = 0;
   function gapir() {
-    if (!ss || ovozsiz || !navbat.length) return;
-    ss.cancel();
-    const u = new SpeechSynthesisUtterance(navbat[i].soz);
-    u.lang = ovoz?.lang ?? 'en-GB';
-    if (ovoz) u.voice = ovoz;
-    u.rate = tinglashSoni === 0 ? 0.85 : 0.6;
-    ss.speak(u);
+    if (ovozsiz || !navbat.length) return;
+    ovoz.gapir(navbat[i].soz, tinglashSoni > 0);
     tinglashSoni++;
     tinglashMatn.textContent = 'Yana tinglash (sekinroq)';
-  }
-  if (ss) {
-    ovozTanla();
-    ss.addEventListener?.('voiceschanged', ovozTanla);
-    window.addEventListener('pagehide', () => ss.cancel());
   }
 
   const norm = (s: string) => s.trim().toLowerCase().replace(/[’‘`]/g, "'").replace(/\s+/g, ' ');
@@ -296,7 +270,7 @@ const IK = {
   }
 
   function natijaniKorsat() {
-    ss?.cancel();
+    ovoz.toxtat();
     const togriSoni = javoblar.filter((j) => j.togri).length;
     const xatolar = javoblar.filter((j) => !j.togri);
     natijaSon.textContent = `${javoblar.length} tadan ${togriSoni} ta to'g'ri.`;
@@ -326,7 +300,7 @@ const IK = {
   }
 
   function royxatgaQayt() {
-    ss?.cancel();
+    ovoz.toxtat();
     mashqBolim.hidden = true;
     natijaBolim.hidden = true;
     toplamBolim.hidden = false;

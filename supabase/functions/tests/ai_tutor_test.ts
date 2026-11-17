@@ -7,7 +7,7 @@ import type { RpcNatija } from '../_shared/turlar.ts';
 import { aiTutor, CHEGARA, MATN, type TutorBogliqlik } from '../ai-tutor/handler.ts';
 import type { SavolKonteksti } from '../ai-tutor/korsatma.ts';
 
-const SAYT = 'https://javohirqaxramonov36-web.github.io';
+const SAYT = 'https://tayanchedu.uz';
 const EGA = '00000000-0000-4000-8000-00000000000a';
 const CONV = '11111111-2222-4333-8444-555555555555';
 
