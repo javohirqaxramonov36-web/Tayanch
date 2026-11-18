@@ -342,6 +342,56 @@
 }
 
 /* ==========================================================================
+   Poydevor · Liquid Glass (ADR 005, 2026-11-18). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: glass-*, btn-glass-*, floor-*-glow). Stillar: shisha.css (.t-fon, .t-shisha, .t-tugma).
+   Qavat o'z PR'ida yoqmaguncha hech bir sahifa ishlatmaydi.
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · shisha uchun to'q siyoh va soya tusi (DS qiymatlari, neutral shkalada yo'q) */
+  --color-glass-ink-900:#121216; --color-glass-ink-850:#1C1C22; --color-glass-ink-800:#1D1D24;
+  --color-glass-shade:#281E14; --color-glass-shade-dark:#000000;
+
+  /* Qavat nuri (bezak, matn emas). Qiymatlar DS dan: hozirgi --color-floor-*-500 (1, 2, 4, 5-qavat)
+     3-PR (ds-qavat-ranglari) da shu tusga o'zgaradi, keyin glow color-mix(floor-*-500 60%) ga o'tadi.
+     SAT (#2F86FF) allaqachon bir xil. */
+  --color-floor-navigator-glow:rgb(184 208 44 / 0.6);
+  --color-floor-admission-glow:rgb(255 90 12 / 0.55);
+  --color-floor-sat-glow:rgb(47 134 255 / 0.6);
+  --color-floor-ielts-glow:rgb(39 96 222 / 0.6);
+  --color-floor-eyuf-glow:rgb(16 137 95 / 0.6);
+
+  /* SEMANTIC · shisha (yorug') */
+  --color-glass-bg:color-mix(in srgb, var(--color-neutral-0) 52%, transparent);
+  --color-glass-bg-strong:color-mix(in srgb, var(--color-neutral-0) 82%, transparent);
+  --color-glass-border:color-mix(in srgb, var(--color-neutral-0) 90%, transparent);
+  --color-glass-highlight:color-mix(in srgb, var(--color-neutral-0) 95%, transparent);
+  --color-btn-glass-bg:var(--color-glass-ink-900);
+  --color-btn-glass-text:var(--color-neutral-50);
+  --shadow-glass:inset 0 1px 0 var(--color-glass-highlight), 0 12px 32px -12px color-mix(in srgb, var(--color-glass-shade) 22%, transparent), 0 2px 6px color-mix(in srgb, var(--color-glass-shade) 6%, transparent);
+
+  /* PRIMITIVE / COMPONENT · o'lchamlar (mavzuga bog'liq emas) */
+  --size-glass-blur:24px;
+  --glass-backdrop:blur(var(--size-glass-blur)) saturate(1.6);
+  --btn-glass-height:52px;
+  --fon-nur-size:320px; --fon-nur-blur:48px; --fon-nur-opacity:0.9; --fon-nur-opacity-past:0.55;
+}
+:root[data-mavzu='qorongi']{
+  --color-glass-bg:color-mix(in srgb, var(--color-neutral-0) 7%, transparent);
+  --color-glass-bg-strong:color-mix(in srgb, var(--color-glass-ink-850) 82%, transparent);
+  --color-glass-border:color-mix(in srgb, var(--color-neutral-0) 14%, transparent);
+  --color-glass-highlight:color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
+  --color-btn-glass-bg:var(--color-glass-ink-800);
+  --color-btn-glass-text:var(--color-neutral-50);
+  --shadow-glass:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 18%, transparent), 0 18px 40px -16px color-mix(in srgb, var(--color-glass-shade-dark) 75%, transparent);
+}
+/* --nur ishlatadigan soyalar tugmaning o'zida hisoblanadi: shunda qavat konteksti (data-floor,
+   keyinroq .adm, .sat) bergan nur olinadi, :root niki emas. */
+.t-tugma{
+  --shadow-btn-glass:inset 0 1px 0 var(--color-glass-highlight), inset 0 -10px 18px -10px var(--nur), 0 12px 24px -10px var(--nur), 0 2px 4px color-mix(in srgb, var(--color-glass-shade-dark) 25%, transparent);
+  --shadow-btn-glass-hover:inset 0 1px 0 var(--color-glass-highlight), inset 0 -12px 20px -8px var(--nur), 0 16px 30px -10px var(--nur), 0 2px 4px color-mix(in srgb, var(--color-glass-shade-dark) 25%, transparent);
+}
+
+/* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
    ========================================================================== */
 :root{

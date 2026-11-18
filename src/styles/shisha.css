@@ -1,0 +1,137 @@
+/* Poydevor · Liquid Glass (ADR 005, 2026-11-18). Manba: Claude Design artifakti, versiya 15,
+   components/bundle.css "Poydevor" bloklari. Tokenlar tokens.css da, qoidalar DESIGN.md "Sirtlar".
+   Hozircha hech bir sahifa ishlatmaydi: har qavat o'z PR'ida yoqadi.
+   Saytga moslash:
+   - DS nomlari repo nomlariga: --glass-bg → --color-glass-bg, --surface → --color-surface va h.k.
+   - Harakat sayt qoidasi bo'yicha (DESIGN.md "Harakat"): faqat transform/opacity, --duration-fast,
+     :active = --bosilish (reduced motion'da siljish yo'q), hover faqat sichqoncha bilan.
+   - Zaxira: prefers-reduced-transparency, prefers-contrast: more va backdrop-filter yo'q holat. */
+
+/* ---------- Qavat nuri (1-qavat standarti :where(:root), tokens.css dagi data-floor tartibi) ---------- */
+:where(:root), [data-floor="1"] { --nur: var(--color-floor-navigator-glow); }
+[data-floor="2"] { --nur: var(--color-floor-admission-glow); }
+[data-floor="3"] { --nur: var(--color-floor-sat-glow); }
+[data-floor="4"] { --nur: var(--color-floor-ielts-glow); }
+[data-floor="5"] { --nur: var(--color-floor-eyuf-glow); }
+
+/* ---------- Shisha orqa foni: qavat nuridan ikki xira dog' (shisha ostida rang bo'lishi uchun) ---------- */
+.t-fon {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+.t-fon::before,
+.t-fon::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: var(--fon-nur-size);
+  height: var(--fon-nur-size);
+  border-radius: var(--radius-full);
+  background: var(--nur);
+  filter: blur(var(--fon-nur-blur));
+  opacity: var(--fon-nur-opacity);
+  pointer-events: none;
+}
+.t-fon::before { top: calc(var(--fon-nur-size) * -0.25); right: calc(var(--fon-nur-size) * -0.1875); }
+.t-fon::after { bottom: calc(var(--fon-nur-size) * -0.375); left: calc(var(--fon-nur-size) * -0.25); opacity: var(--fon-nur-opacity-past); }
+
+/* ---------- Liquid Glass sirti. Uzun matn, forma, test va savol faqat .t-shisha--zich da ---------- */
+.t-shisha {
+  border: var(--border-width-1) solid var(--color-glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-glass-bg);
+  box-shadow: var(--shadow-glass);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  backdrop-filter: var(--glass-backdrop);
+}
+.t-shisha--zich { background: var(--color-glass-bg-strong); }
+
+/* ---------- Kapsula tugma: to'q yaltiroq shisha, tepada statik aks, ostida qavat nuri ---------- */
+.t-tugma {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--btn-glass-height);
+  max-width: 100%;
+  padding: 0 var(--space-6);
+  border: var(--border-width-1) solid var(--color-glass-border);
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, var(--color-glass-highlight), transparent 55%) top / 100% 50% no-repeat, var(--color-btn-glass-bg);
+  background-blend-mode: soft-light, normal;
+  box-shadow: var(--shadow-btn-glass);
+  color: var(--color-btn-glass-text);
+  font: inherit;
+  font-size: var(--text-button-size);
+  line-height: var(--text-button-lh);
+  font-weight: var(--text-button-weight);
+  letter-spacing: var(--text-button-ls);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform var(--duration-fast) var(--ease-state), opacity var(--duration-fast) var(--ease-state);
+}
+.t-tugma[hidden] { display: none; }
+.t-tugma svg { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); }
+/* Soya darhol almashadi (animatsiyasiz), hover faqat sichqoncha bilan */
+@media (hover: hover) and (pointer: fine) {
+  .t-tugma:hover:not(:disabled, [aria-disabled='true']) { box-shadow: var(--shadow-btn-glass-hover); }
+}
+.t-tugma:active:not(:disabled, [aria-disabled='true']) { transform: var(--bosilish); }
+/* Fokus: global.css dagi umumiy halqa (a, button) */
+.t-tugma:is(:disabled, [aria-disabled='true']) {
+  border-color: var(--btn-disabled-border);
+  background: var(--btn-disabled-bg);
+  box-shadow: none;
+  color: var(--btn-disabled-text);
+  cursor: not-allowed;
+}
+/* Ikkinchi: shaffof shisha kapsula (o'zi shisha, shuning uchun shisha ichiga qo'yilmaydi) */
+.t-tugma--ikkinchi {
+  background: var(--color-glass-bg);
+  box-shadow: var(--shadow-glass);
+  color: var(--color-text-primary);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  backdrop-filter: var(--glass-backdrop);
+}
+@media (hover: hover) and (pointer: fine) {
+  .t-tugma--ikkinchi:hover:not(:disabled, [aria-disabled='true']) { box-shadow: var(--shadow-glass); }
+}
+/* Ikonka: kvadrat kapsula, matn yorlig'i aria-label da */
+.t-tugma--ikonka { width: var(--btn-glass-height); padding: 0; }
+
+/* ---------- Zaxira: blur yo'q brauzer ---------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .t-shisha,
+  .t-tugma--ikkinchi { background: var(--color-glass-bg-strong); }
+}
+/* ---------- Zaxira: shaffoflik kamaytirilgan yoki yuqori kontrast ---------- */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .t-shisha,
+  .t-shisha--zich {
+    border-color: var(--color-border);
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .t-tugma {
+    background: var(--color-action-primary-bg);
+    color: var(--color-action-primary-text);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .t-tugma:hover:not(:disabled, [aria-disabled='true']) { background: var(--color-action-primary-bg-hover); }
+  }
+  .t-tugma--ikkinchi,
+  .t-tugma--ikkinchi:hover:not(:disabled, [aria-disabled='true']) {
+    border-color: var(--btn-secondary-border);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

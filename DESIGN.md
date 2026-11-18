@@ -164,6 +164,41 @@ Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichi
 - **Bino SVG.** Blursiz qoladi, SVG blur filtri qaytmaydi.
 - **Telefonda tezlik.** Past darajali Android'da sinalmagan. Har shisha PR'ida haqiqiy telefonda tekshiriladi.
 
+#### Kodda (PR 2, `ds-poydevor-shisha`)
+
+Tokenlar `src/styles/tokens.css` ("Poydevor · Liquid Glass" bloki), stillar `src/styles/shisha.css` (`global.css` import qiladi). Hech bir sahifa hali ishlatmaydi.
+
+| DS nomi (artifakt) | Repo tokeni | Yorug' | Qorong'i |
+| --- | --- | --- | --- |
+| `glass-bg` | `--color-glass-bg` | oq 52% | oq 7% |
+| `glass-bg-strong` | `--color-glass-bg-strong` | oq 82% | `#1C1C22` 82% |
+| `glass-border` | `--color-glass-border` | oq 90% | oq 14% |
+| `glass-highlight` | `--color-glass-highlight` | oq 95% | oq 22% |
+| `glass-shadow` | `--shadow-glass` | ichki oq chiziq + iliq soya | ichki oq 18% + qora soya |
+| `glass-blur` | `--size-glass-blur` (24px), filtr `--glass-backdrop` = `blur() saturate(1.6)` | | |
+| `btn-glass-bg` | `--color-btn-glass-bg` | `#121216` | `#1D1D24` |
+| `btn-glass-text` | `--color-btn-glass-text` | `#F5F5F7` | `#F5F5F7` |
+| `floor-<qavat>-glow` | `--color-floor-<qavat>-glow` (5 ta) | mavzuga bog'liq emas | |
+
+- `floor-*-glow` DS qiymatlarida. 1, 2, 4, 5-qavatning hozirgi `floor-*-500` rangi 3-PR (`ds-qavat-ranglari`) da shu tusga o'tadi, keyin glow `floor-*-500` dan `color-mix` bilan olinadi.
+- Qavat nuri `--nur`: `data-floor` bo'yicha (`shisha.css`, 1-qavat standarti `:where(:root)`). Tugma soyasi `--shadow-btn-glass` / `--shadow-btn-glass-hover` `.t-tugma` ning o'zida hisoblanadi, shunda qavat konteksti bergan nur olinadi.
+- Sinflar: `.t-fon` (nur dog'lari, `--fon-nur-*`), `.t-shisha`, `.t-shisha--zich`, `.t-tugma`, `.t-tugma--ikkinchi`, `.t-tugma--ikonka`.
+- Harakat sayt qoidasi bo'yicha: `:active` = `--bosilish`, transition faqat `transform`/`opacity` `--duration-fast`, hover (soya) faqat sichqoncha bilan va darhol. Artifaktdagi 150 / 250 / 400ms va `translateY(1px)` olinmadi.
+- Zaxira: blur yo'q brauzerda shisha `--color-glass-bg-strong`; `prefers-reduced-transparency: reduce` yoki `prefers-contrast: more` da `--color-surface` + `--color-border`, tugma `--color-action-primary-*`, ikkinchi tugma `--color-surface` + `--btn-secondary-border`.
+- Fokus: umumiy halqa (`global.css`, `a`/`button`).
+
+**Kontrast (node, 2026-11-18).** Eng yomon holat: `.t-fon` nur dog'i markazi (blursiz), ustida `saturate(1.6)`, so'ng shisha.
+
+| Holat | Yorug' | Qorong'i |
+| --- | --- | --- |
+| `btn-glass-text` / `btn-glass-bg` | 17.16 | 15.39 |
+| Zich shisha, `text-primary` | 16.28+ | 12.91+ |
+| Zich shisha, `text-secondary` | 5.71+ | 5.63+ |
+| Shaffof shisha, `text-primary` | 12.58+ | 3.78 (1-qavat), qolganlari 5.47+ |
+| Shaffof shisha, `text-secondary` | 4.41 (4-qavat), qolganlari 4.64+ | 1.65–3.20 |
+
+Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat zich shishada. 1-qavat qorong'i mavzusida shaffof shisha nur dog'i ustiga qo'yilmaydi (yoki matn zich shishada bo'ladi). Qavat o'z PR'ida o'z foni va shishasi bilan qayta hisoblaydi.
+
 ### Hozir: shishasiz (2026-11-13), qavat o'z PR'iga yetguncha
 
 - Ustki qatorlar (`Menyu`, `BolimYon` ustki qatori, `SatFokus` sarlavhasi) va Lift telefon paneli: zich `--color-surface` fon, 1px `--color-border` chiziq.
