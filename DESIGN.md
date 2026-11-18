@@ -2,11 +2,36 @@
 
 Asos: **Tayanch Design System (DS)**, 2026-11-09. Manba fayllar: `docs/ds/tayanch-ds-tokens.css` (tokenlar, o'zgarmas manba) va `docs/ds/tayanch-ds-bino.txt` (shisha bino). DS artifact: https://claude.ai/artifact/VDa6kEFnybraLAMiR1JhP9.
 
-G'oya: besh qavatli bino. Besh qavat bir xil ko'rinadi, har qavat faqat o'z urg'u rangi bilan farqlanadi. Mobile-first, auditoriya 16–19 yosh. Yorug' studio foni, Onest shrifti, yumaloq tugmalar, shishasiz zich sirtlar (2026-11-13).
+G'oya: besh qavatli bino. Mobile-first, auditoriya 16–19 yosh.
+
+**2026-11-18 dan: bino qoidasi** (ADR `docs/qarorlar/005-qavat-ds.md`). Tizim ikki qatlamdan iborat:
+- **poydevor** hamma qavatda bir xil;
+- har qavatning o'z kuchli **mini-DS'i** bor.
+
+Asosiy material Liquid Glass. Manba: Claude Design artifakti "Tayanch Design System" https://claude.ai/artifact/MSiB7vTDiz7ri565yM2iwt (versiya 15).
+
+**O'tish davri.** Yangi qoidalar saytga PR'lar bilan bosqichma-bosqich kiradi (ADR 005, "O'tkazish"). Qavat o'z PR'iga yetguncha uning sahifalari pastdagi hozirgi qoidalar bilan ishlaydi: studio foni, shishasiz zich sirtlar (2026-11-13), Onest. Quyidagi bo'limlarda "hozir" va "yangi" alohida belgilangan.
 
 **A yo'nalish "Toza"** (2026-11-09, muallif tanladi; Claude Design maketi https://claude.ai/artifact/JXU8mCvXymmu3enj6NvubQ, artboard "A · Toza"): asos qora-oq, ranglar kam. Neytral shkala sovuq kulrang (`#F5F5F7` … `#111114`), havola va fokus alohida ko'k urg'u (`--color-accent-*`), asosiy tugma qora (qorong'ida oq). Shisha 2026-11-13 da olib tashlangan. Qavatlarning 5 rangi o'zgarmagan, ular faqat belgi, chip va bezakda. DS manba faylidagi (`docs/ds/`) neytral va brand qiymatlari endi faqat tarix uchun; amaldagi qiymatlar `tokens.css` da.
 
 Kodda xom qiymat yozilmaydi: komponent CSS'ida faqat `var(--...)`, qiymatlar faqat `src/styles/tokens.css` da.
+
+## Bino qoidasi (2026-11-18)
+
+| Poydevor (hamma qavatda bir xil) | Qavat o'zi belgilaydi |
+| --- | --- |
+| Matn shrifti Onest (`body`, `small`, `caption`, `button`) | Sarlavha va raqam shrifti |
+| `--space-*`, `--radius-*` | Qaysi radiusni qayerda ishlatish |
+| Liquid Glass: `glass-*` sirtlar, kapsula tugma `.t-tugma` (`btn-glass-*`), maydon, tab | Fon, sirtlar va bloklar, shisha tusi |
+| Fokus halqasi, holat ranglari (`success`, `warning`, `error`) | Urg'u rangi (bitta) va uning shkalasi |
+| Lift, yon panel, qavat yo'li, hisob bandi | Karta, ro'yxat va hero tuzilmasi, motiv |
+| Qavat nuri `floor-<qavat>-glow` (tugma osti, shisha orqasidagi dog') | Ikonka va rasm uslubi (poydevor chegarasida) |
+| Kontrast: matn 4.5:1, ma'noli chiziq va ikonka 3:1, ikkala mavzuda | |
+
+- **Prefiks.** Qavat tokenlari o'z prefiksi bilan yoziladi: `nav-*` (1), `adm-*` (2), `sat-*` (3), `ielts-*` (4), `eyuf-*` (5). Komponent boshqa qavat tokenini ishlatmaydi.
+- **Nomlash.** Repoda rang tokeni `--color-<DS nomi>` bo'ladi: `floor-sat-500` → `--color-floor-sat-500`, `sat-navy` → `--color-sat-navy`.
+- **Shrift tokenlari:** `--font-display`, `--font-mono`, `--font-sat`, `--font-ielts`, `--font-eyuf`.
+- **Qavat mini-DS'lari:** artifaktdagi `qavat-1-navigator.md` … `qavat-5-eyuf.md`. Qavat PR'i o'z bo'limini shu faylga ko'chiradi.
 
 ## Tokenlar
 
@@ -25,13 +50,15 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 
 `<html data-floor="1…5">` server tomonda qo'yiladi (`Asosiy`, `BolimQobiq`, `SatFokus`; `joriyQavat(Astro.url.pathname)`). Istalgan element `data-floor` olsa, uning ichida `--floor-*` shu qavatniki bo'ladi (Lift tugmasi, karta borilayotgan qavat rangida). 1-qavat standarti `:where(:root)` da: aks holda keyingi `:root` qoidasi `[data-floor="3"]` ni bosib ketadi.
 
-| Qavat | Kalit | Identifikatsiya (`fill`, 500) |
-| --- | --- | --- |
-| 1 Navigator | `navigator` | `#19D3E6` |
-| 2 Top Admission | `admission` | `#FFC21F` |
-| 3 SAT prep | `sat` | `#2F86FF` |
-| 4 IELTS prep | `ielts` | `#EF4841` |
-| 5 EYUF prep | `eyuf` | `#3BD879` |
+| Qavat | Kalit | Hozir (`fill`, 500) | Yangi (PR 3, ADR 005) |
+| --- | --- | --- | --- |
+| 1 Navigator | `navigator` | `#19D3E6` | laym `#B8D02C` |
+| 2 Top Admission | `admission` | `#FFC21F` | to'q sariq `#FF5A0C` |
+| 3 SAT prep | `sat` | `#2F86FF` | o'zgarmaydi |
+| 4 IELTS prep | `ielts` | `#EF4841` | elektr ko'k `#2760DE` |
+| 5 EYUF prep | `eyuf` | `#3BD879` | zumrad `#10895F` |
+
+3 va 4-qavat yangi ranglarda ikkalasi ko'k (1.57:1, muallif qarori 2026-11-18). Ular rang bilan emas, shrift, motiv va qavat raqami bilan ajraladi. Lift va binoda rang doim raqam bilan keladi.
 
 | Token | Roli |
 | --- | --- |
@@ -43,7 +70,7 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 | `--floor-ui-toq` / `--floor-ui-chuqur` | `--floor-ui` ning neutral-950 bilan aralashmasi (80% / 60%): 3D pog'ona yuzlari, Hajm 3D sahnasi, urg'u hover. Sayt qo'shimchasi, muallif tasdiqlagan |
 
 Qoidalar:
-- **CTA tugmalar qavatdan qat'i nazar bir xil** (`--btn-primary-*`: yorug'da brand-900, qorong'ida oq). Qavat rangi CTA bo'lmaydi.
+- **CTA tugmalar qavatdan qat'i nazar bir xil**. Hozir: `--btn-primary-*` (yorug'da brand-900, qorong'ida oq). Yangi: to'q kapsula `.t-tugma` (`btn-glass-*`), ostida qavat nuri. Qavat mini-DS'i bitta urg'u kapsula variantini o'z tokenidan berishi mumkin (`adm-accent`, `sat-blue-fill`, `ielts-accent`, `eyuf-accent`), sahifada bitta. `floor-*-500` CTA bo'lmaydi.
 - Qavat matn rangi karta va panel ustida matn sifatida ishlatilmaydi (yorug'da 4.5:1 ga yetmasligi mumkin). Karta ustida urg'u faqat `--floor-ui` doira, ikonka yoki chegarada; matn neytral (`--color-text-*`) yoki `--color-link`.
 - Matn ko'rinishidagi havola va ta'kid: `--color-link` (`--rang-havola`). Qavat 700 matn rangi studio foni pastida (`#D9DADE`) faqat 3.6:1.
 
@@ -70,6 +97,8 @@ Brauzerda saqlanadigan hamma kalit `tayanch:` bilan boshlanadi (`tayanch:mavzu`,
 
 **Studio foni** (`--gradient-studio`): radial gradient, tepada `--color-bg`, pastda `--color-bg-deep`. Gradient fon **faqat shu yerda**. U `body::before` da ekranga mahkamlangan qatlam (`position: fixed`), shuning uchun uzun sahifada pastki rang butun sahifaga cho'zilmaydi (`background-attachment: fixed` iOS'da ishlamaydi). `SatFokus` qolipida ham shu fon.
 
+**Yangi: shisha foni `.t-fon`** (PR 2 dan, qavat o'z PR'ida yoqadi). Bu qavat nuridan (`floor-<qavat>-glow`) chizilgan ikki xira dog'. U bo'lim yoki sahifa foni bo'ladi, chunki shisha ostida rang bo'lishi kerak. Qavat `.t-fon` ni yoqqanda u studio gradientining o'rnini oladi va yagona dekorativ fon bo'lib qoladi.
+
 ## Tipografiya
 
 Bitta oila: **Onest** (`@fontsource-variable/onest`, OFL-1.1, oila nomi `'Onest Variable'`), saytning o'zidan yuklanadi (tashqi so'rov yo'q). O'zbekcha belgilar: `ʻ ʼ` latin faylida, `Ғ Қ Ҳ` cyrillic-ext faylida, `Ў ў` cyrillic faylida. Hajm 3D sahnasidagi canvas matni ham Onest (`hajmSahna.ts`).
@@ -88,6 +117,18 @@ Bitta oila: **Onest** (`@fontsource-variable/onest`, OFL-1.1, oila nomi `'Onest 
 
 `h1–h3` ga rollar `global.css` da beriladi. Qator uzunligi 60–75 belgi (`--size-measure` 68ch).
 
+**Yangi: qavat sarlavha shriftlari** (PR 4, `@fontsource` orqali saytning o'zidan; har qavat faqat o'z shriftini yuklaydi). Matn hamma qavatda Onest qoladi.
+
+| Qavat | Sarlavha va raqam | `ʻ` / `ʼ` (2026-11-18, brauzerda tekshirildi) |
+| --- | --- | --- |
+| 1 Navigator | Barlow Condensed 700, yorliq JetBrains Mono | Barlow'da bor. JetBrains Mono'da `ʻ` yo'q, zaxira shriftdan chiqadi (muallif qabul qildi), mono yorliq qisqa |
+| 2 Top Admission | Onest 800 | bor |
+| 3 SAT prep | Sora 600 | yo'q: Sora faqat inglizcha matnda, SAT ichidagi o'zbekcha (`lang="uz"`) Onest'da |
+| 4 IELTS prep | Lexend 600 | bor |
+| 5 EYUF prep | Playfair Display 500/600, kursiv | bor |
+
+Raqam ustunlarida `font-variant-numeric: tabular-nums` (Sora'da ishlaydi). Playfair'da `lining-nums` ham qo'shiladi.
+
 Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichik-sarlavha` DS `--text-display-ls`, `--text-h1-ls`, `--text-h3-ls` ga ulangan. Sarlavhalar `text-wrap: balance`, abzaslar `text-wrap: pretty`.
 
 ## Bo'shliq va shakl
@@ -97,9 +138,33 @@ Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichi
 - Soya: `--shadow-1` (karta), `--shadow-2` (karta hover, eski `--soya`), `--shadow-3`. Qorong'ida soyada ichki yorug' chiziq bor.
 - Bosiladigan joy kamida 44px (`--size-touch-min`). Tugma 48px (`--control-height-md`).
 
-## Sirtlar (shishasiz)
+## Sirtlar
 
-**2026-11-13, muallif qarori:** Liquid Glass / glassmorphism butunlay olib tashlandi (dizayn qarori, lag tasdiqlanmagan bo'lsa ham). `backdrop-filter`, `--glass-*` tokenlari, `.shisha` va Bino SVG blur filtrlari yo'q.
+### Yangi: Liquid Glass (2026-11-18, ADR 005)
+
+2026-11-13 dagi "shisha yo'q" qarorini muallif bekor qildi. Shisha poydevorning asosiy materiali bo'ladi: karta, panel, tugma, maydon, tab, Lift. Kod PR 2 dan boshlab keladi, har qavat o'z PR'ida yoqadi.
+
+- **Sirt `.t-shisha`.**
+  - Fon `glass-bg`, chet `glass-border`.
+  - Radius `--radius-xl`, soya `glass-shadow`.
+  - `backdrop-filter: blur(glass-blur) saturate(1.6)`.
+  - Qavatda shisha tusli bo'ladi: `adm-glass`, `sat-glass`.
+- **Matn qoidasi.**
+  - Uzun matn, forma, test va savol ekrani faqat zich shishada (`glass-bg-strong`, qavatda `*-glass-strong`).
+  - Shaffof shishada faqat qisqa matn bo'ladi: nom, raqam, yorliq.
+  - Kontrast eng yomon holatda hisoblanadi: shaffof shisha nur dog'i markazida turganda.
+- **Ichma-ich blur yo'q.** Shisha ichidagi element tekis yoki zich sirt oladi.
+- **Kapsula tugma `.t-tugma`.**
+  - To'q yaltiroq shisha, tepada statik aks (`glass-highlight`).
+  - Ostida va soyasida qavat nuri `--nur`.
+  - Variantlar: `--ikkinchi` (shaffof), `--ikonka`.
+- **Zaxira holat.** `prefers-reduced-transparency: reduce` bo'lsa yoki brauzerda `backdrop-filter` yo'q bo'lsa:
+  - shisha zich yoki tekis sirtga o'tadi;
+  - tugma `action-primary-*` ga o'tadi.
+- **Bino SVG.** Blursiz qoladi, SVG blur filtri qaytmaydi.
+- **Telefonda tezlik.** Past darajali Android'da sinalmagan. Har shisha PR'ida haqiqiy telefonda tekshiriladi.
+
+### Hozir: shishasiz (2026-11-13), qavat o'z PR'iga yetguncha
 
 - Ustki qatorlar (`Menyu`, `BolimYon` ustki qatori, `SatFokus` sarlavhasi) va Lift telefon paneli: zich `--color-surface` fon, 1px `--color-border` chiziq.
 - Kartalar: `--card-bg` (= `--color-surface`, yorug'da oq), 1px `--card-border` (`--card-line`: yorug'da neutral-900 8%, qorong'ida oq 9%), statik `--card-shadow` (`--shadow-1`).
@@ -176,9 +241,11 @@ Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichi
 
 ## Taqiqlar
 
-- Studio fonidan boshqa gradient fon; gradient matn.
-- `backdrop-filter`, glassmorphism, SVG blur filtri; cheksiz animatsiya; `transition: all`; transform/opacity dan boshqa xossani animatsiya qilish.
-- Qavat rangini CTA yoki holat (xato / muvaffaqiyat) ma'nosida ishlatish.
+- Gradient fon: faqat studio foni, `.t-fon` nur dog'lari va `.t-tugma` dagi statik aks ruxsat etiladi. Gradient matn yo'q.
+- `backdrop-filter`: faqat `.t-shisha`, `.t-tugma` va qavat shisha sinflarida (ADR 005). Shaffof shishada uzun matn, forma, test yoki savol yo'q. Ichma-ich blur yo'q. SVG blur filtri yo'q.
+- Cheksiz animatsiya, `transition: all`, transform/opacity dan boshqa xossani animatsiya qilish.
+- Qavat rangini (`floor-*-500`) CTA, havola yoki holat (xato / muvaffaqiyat) ma'nosida ishlatish.
+- Bir qavat komponentida boshqa qavat tokeni (`nav-*`, `adm-*`, `sat-*`, `ielts-*`, `eyuf-*`).
 - Chap tomonda rangli chiziqli kartalar; uchta bir xil karta qatorini odat bo'yicha qo'yish.
 - Komponent CSS'ida xom rang yoki o'lcham.
 - Uydirma raqam yoki sharh.
