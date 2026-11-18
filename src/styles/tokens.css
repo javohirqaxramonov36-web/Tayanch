@@ -5,7 +5,8 @@
    - DS @container vp → @media (min-width: 768px).
    - <html data-floor> server tomonda (joriyQavat). 1-qavat standarti :where(:root) da,
      aks holda keyingi :root qoidasi [data-floor="3"] ni bosib ketadi.
-   - Shrift oilasi: 'Onest Variable' (@fontsource-variable/onest).
+   - Shrift oilasi: 'Onest Variable' (@fontsource-variable/onest). Qavat shriftlari --font-display … --font-eyuf
+     (DS PR 4), fayllari QavatShrifti.astro da.
    - Oxirida: sayt qo'shimchalari va eski o'zbekcha nomlarning DS ga ulanishi. */
 
 /* ==========================================================================
@@ -43,6 +44,15 @@
   --font-family-sans-inter:"Inter","Segoe UI",Roboto,"Noto Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-family-sans:var(--font-family-sans-onest);
   --font-family-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  /* Qavat sarlavha shriftlari (ADR 005, DS PR 4). Fayllar faqat o'z qavatida e'lon qilinadi (QavatShrifti.astro),
+     boshqa qavatda token zaxira oilaga tushadi. Matn hamma joyda --font-family-sans (Onest); 2-qavat Onest 800.
+     --font-mono faqat 1-qavat yorlig'i (nav-yorliq, nav-kod); --font-family-mono umumiy tizim mono (kod, taklif kodi)
+     bo'lib qoladi va --font-mono ning zaxirasi. */
+  --font-display:"Barlow Condensed",'Onest Variable',"Arial Narrow",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",var(--font-family-mono);
+  --font-sat:"Sora",'Onest Variable',system-ui,sans-serif;
+  --font-ielts:"Lexend",'Onest Variable',system-ui,sans-serif;
+  --font-eyuf:"Playfair Display",Georgia,"Times New Roman",serif;
   --font-weight-regular:400; --font-weight-medium:500; --font-weight-semibold:600; --font-weight-bold:700; --font-weight-extrabold:800;
   /* size / line-height / weight / letter-spacing — mobile (m) and desktop (d) */
   --font-size-display-m:40px; --line-height-display-m:44px; --font-weight-display-m:700; --letter-spacing-display-m:-0.035em;

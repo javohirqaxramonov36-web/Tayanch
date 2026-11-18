@@ -125,15 +125,24 @@ Bitta oila: **Onest** (`@fontsource-variable/onest`, OFL-1.1, oila nomi `'Onest 
 
 `h1–h3` ga rollar `global.css` da beriladi. Qator uzunligi 60–75 belgi (`--size-measure` 68ch).
 
-**Yangi: qavat sarlavha shriftlari** (PR 4, `@fontsource` orqali saytning o'zidan; har qavat faqat o'z shriftini yuklaydi). Matn hamma qavatda Onest qoladi.
+**Qavat sarlavha shriftlari** (DS PR 4, 2026-11-18: fayllar va tokenlar tayyor, sahifalar qavat PR'larida 5–9 yoqadi). Matn hamma qavatda Onest qoladi.
 
-| Qavat | Sarlavha va raqam | `ʻ` / `ʼ` (2026-11-18, brauzerda tekshirildi) |
-| --- | --- | --- |
-| 1 Navigator | Barlow Condensed 700, yorliq JetBrains Mono | Barlow'da bor. JetBrains Mono'da `ʻ` yo'q, zaxira shriftdan chiqadi (muallif qabul qildi), mono yorliq qisqa |
-| 2 Top Admission | Onest 800 | bor |
-| 3 SAT prep | Sora 600 | yo'q: Sora faqat inglizcha matnda, SAT ichidagi o'zbekcha (`lang="uz"`) Onest'da |
-| 4 IELTS prep | Lexend 600 | bor |
-| 5 EYUF prep | Playfair Display 500/600, kursiv | bor |
+| Qavat | Token | Sarlavha va raqam (paket) | `ʻ` U+02BB / `ʼ` U+02BC |
+| --- | --- | --- | --- |
+| 1 Navigator | `--font-display`, `--font-mono` | Barlow Condensed 700 (`@fontsource/barlow-condensed`), yorliq JetBrains Mono 400/500 (`@fontsource/jetbrains-mono`) | Barlow: bor / bor. JetBrains Mono: `ʻ` yo'q, `ʼ` bor; `ʻ` zaxira shriftdan chiqadi (muallif qabul qildi), mono yorliq qisqa |
+| 2 Top Admission | `--font-family-sans` 800 | Onest (yangi fayl yo'q) | bor / bor |
+| 3 SAT prep | `--font-sat` | Sora 600 (`@fontsource/sora`) | yo'q / yo'q: Sora faqat inglizcha matnda, SAT ichidagi o'zbekcha (`lang="uz"`) Onest'da |
+| 4 IELTS prep | `--font-ielts` | Lexend 600 (`@fontsource/lexend`) | bor / bor |
+| 5 EYUF prep | `--font-eyuf` | Playfair Display 400–900 variable, oddiy va kursiv (`@fontsource-variable/playfair-display`) | bor / bor (kursivda ham) |
+
+Belgilar ikki yo'l bilan tekshirildi (2026-11-18): woff fayllarning `cmap` jadvali va brauzerda kenglik o'lchovi (`"Shrift", serif` va `"Shrift", monospace` bir xil kenglik bersa, glif shriftning o'zida). Saytdagi matnning ko'pi oddiy `'` bilan yozilgan, u hamma shriftda bor.
+
+Yuklash qoidalari:
+- `@font-face` faqat `src/components/QavatShrifti.astro` da (`BoshQism` ichida, `joriyQavat` bo'yicha). Har sahifa faqat o'z qavatining qoidalarini inline `<style>` da oladi; qo'shimcha CSS so'rovi yo'q. Boshqa qavat tokeni (masalan bosh sahifada `--font-sat`) zaxira oilaga tushadi.
+- Subset faqat latin va latin-ext, `unicode-range` bilan: odatda faqat latin fayli keladi (`ʻ` `ʼ` latin'da). Kirill olinmagan: saytdagi o'zbekcha lotin.
+- Vazn faqat DS ishlatgani. JetBrains Mono statik (400 va 500 alohida 21 KB), Playfair variable (500, 600 va kursiv uchun 2 fayl, statikdan kichik).
+- `font-display: swap`. Brauzer faylni faqat shu oila biror elementda chizilganda yuklaydi, shuning uchun token ishlatilmaguncha tarmoq yuki o'zgarmaydi. Preload yo'q; qavat PR'i hero sarlavhasini yoqqanda faqat o'sha sahifaga, faqat latin faylini preload qilish ko'rib chiqiladi. Barlow Condensed Onest'dan ancha tor: swap paytida qator siljishi (CLS) qavat PR'ida tekshiriladi.
+- `--font-family-mono` umumiy tizim mono (kod, taklif kodi) bo'lib qoladi va `--font-mono` ning zaxirasi; `--font-mono` faqat 1-qavat yorlig'i.
 
 Raqam ustunlarida `font-variant-numeric: tabular-nums` (Sora'da ishlaydi). Playfair'da `lining-nums` ham qo'shiladi.
 
