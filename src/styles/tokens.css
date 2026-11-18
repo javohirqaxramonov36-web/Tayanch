@@ -406,6 +406,60 @@
 }
 
 /* ==========================================================================
+   3-qavat SAT mini-DS (ADR 005, PR 5a, 2026-11-18). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: sat-*, sat-panel-navy, sat-plitka, sat-tabbar; qavat-3-sat.md). Stillar: sat.css.
+   Faqat SAT sahifalarida ishlatiladi (DESIGN.md "Bino qoidasi": boshqa qavat sat-* ni olmaydi).
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · navy sahna (ikkala mavzuda bir xil) */
+  --color-sat-navy:#071C33; --color-sat-navy-raised:#0F2B4A; --color-sat-navy-high:#183A60;
+  --color-sat-mist:#EEF2F8;
+  --color-sat-on-navy:#EDF6FF; --color-sat-on-navy-muted:#A3B6CE;
+  --color-sat-sky:#7DB4FF; --color-sat-line-on-navy:#6B88AB;
+  --color-sat-blue:var(--color-floor-sat-500); /* belgi rangi: nur, hover chegara, grafik. Matn emas */
+  --color-sat-blue-fill:#2266E5;               /* tanlangan holat va ko'k kapsula */
+  --color-sat-on-blue-fill:var(--color-neutral-0);
+  --color-sat-glass-navy:rgb(16 46 82 / 0.62);
+  --color-sat-glass-navy-strong:rgb(12 36 64 / 0.9);
+  --color-sat-glass-navy-border:rgb(150 195 245 / 0.22);
+  --shadow-sat-panel-navy:inset 0 1px 0 rgb(255 255 255 / 0.12), 0 14px 32px -14px rgb(0 0 0 / 0.7);
+  --shadow-sat-plitka-hover:var(--shadow-sat-panel-navy), 0 10px 24px -10px var(--color-floor-sat-glow);
+  --shadow-sat-plitka-joriy:var(--shadow-sat-panel-navy), 0 10px 24px -8px var(--color-floor-sat-glow);
+
+  /* SEMANTIC · yorug' */
+  --color-sat-bg:var(--color-sat-mist);
+  --color-sat-surface:var(--color-neutral-0);
+  --color-sat-glass:rgb(255 255 255 / 0.6);
+  --color-sat-glass-strong:rgb(255 255 255 / 0.88);
+  --color-sat-glass-border:rgb(255 255 255 / 0.9);
+  --color-sat-text:var(--color-sat-navy);
+  --color-sat-text-muted:#4A5B73;
+  --color-sat-blue-text:var(--color-floor-sat-700);
+  --color-sat-line:#D3DCE8;
+  --color-sat-line-strong:#6F819A;
+
+  /* COMPONENT · o'lcham va tipografiya (Sora 600 = --font-sat, faqat inglizcha matn) */
+  --size-sat-plitka:64px; --size-sat-tabbar:56px;
+  --text-sat-hero-size:36px; --text-sat-hero-lh:40px; --text-sat-hero-ls:-0.02em;
+  --text-sat-h2-size:24px; --text-sat-h2-lh:30px; --text-sat-h2-ls:-0.01em;
+}
+:root[data-mavzu='qorongi']{
+  --color-sat-bg:var(--color-sat-navy);
+  --color-sat-surface:var(--color-sat-navy-raised);
+  --color-sat-glass:var(--color-sat-glass-navy);
+  --color-sat-glass-strong:var(--color-sat-glass-navy-strong);
+  --color-sat-glass-border:var(--color-sat-glass-navy-border);
+  --color-sat-text:var(--color-sat-on-navy);
+  --color-sat-text-muted:var(--color-sat-on-navy-muted);
+  --color-sat-blue-text:var(--color-sat-sky);
+  --color-sat-line:#1E3A5C;
+  --color-sat-line-strong:var(--color-sat-line-on-navy);
+}
+@media (min-width: 720px){
+  :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; }
+}
+
+/* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
    ========================================================================== */
 :root{

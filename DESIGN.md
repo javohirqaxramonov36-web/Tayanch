@@ -222,6 +222,30 @@ Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat
 - Kartalar: `--card-bg` (= `--color-surface`, yorug'da oq), 1px `--card-border` (`--card-line`: yorug'da neutral-900 8%, qorong'ida oq 9%), statik `--card-shadow` (`--shadow-1`).
 - Bino SVG: blursiz, glow va soya qatlamisiz.
 
+## Qavat mini-DS'lari
+
+### 3-qavat SAT (PR 5a `ds-sat-kirish`, 2026-11-18)
+
+Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". Hozircha faqat `/uz/sat/` kirishi yangi ko'rinishda; vositalar (5b), savol ekranlari (5c), tab bar (5d) keyingi PR'larda.
+
+- **Tokenlar** (`tokens.css`, "3-qavat SAT mini-DS"): `--color-sat-navy`, `-navy-raised`, `-navy-high`, `-mist`, `-on-navy`, `-on-navy-muted`, `-sky`, `-line-on-navy`, `-blue` (= `floor-sat-500`), `-blue-fill`, `-on-blue-fill`, `-glass-navy(-strong, -border)`; mavzuli `--color-sat-bg`, `-surface`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-blue-text`, `-line`, `-line-strong`. Soya `--shadow-sat-panel-navy`, `--shadow-sat-plitka-hover`, `--shadow-sat-plitka-joriy`. O'lcham `--size-sat-plitka` (64, ≥720px 72), `--size-sat-tabbar`. Tipografiya `--text-sat-hero-*` (36/40, ≥720px 56/60), `--text-sat-h2-*` (24/30), shrift `--font-sat` (Sora 600, faqat inglizcha).
+- **Stillar** `src/styles/sat.css` (faqat SAT sahifasi import qiladi): `.sat-sahna` (navy sahna, `.t-fon` bilan), `.sat-sarlavha`, `.sat-yorliq`, `.t-tugma.sat-tugma--kok`. Sahna poydevor tokenlarini (`--color-glass-*`, `--shadow-glass`, `--color-text-primary`, `--color-surface`, `--color-focus-ring`) navy qiymatga almashtiradi, shuning uchun ichida oddiy `.t-shisha`, `.t-shisha--zich`, `.t-tugma--ikkinchi` ishlatiladi (DS dagi `.sat-shisha` kerak emas). `overflow: clip`.
+- **`SatPlitka`** (`src/components/sat/SatPlitka.astro`): `<ul>` ichida `<a>` plitkalar, ikonka `.t-shisha` (navy shisha, `sat-sky`), ostida yorliq; joriy bo'lim `aria-current="page"` (ko'k fill). Hover (faqat sichqoncha): chet `sat-blue` va nur, darhol. Bosish: ikonka `--bosilish`, 150ms. Telefonda 3 ustun, ≥720px 6.
+- **Matn qoidasi.** Sahnada (nur dog'i ustida) matn faqat `sat-on-navy`; `on-navy-muted` va `sky` faqat zich shishada yoki 24px+ sarlavhada. Fokus sahnada `accent-400`, oraliq navy. Ko'k kapsula sahifada bitta.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: sahnadagi shisha tekis `sat-navy-raised` + `sat-line-on-navy` chet, ko'k kapsula tekis `sat-blue-fill` (hover'da ham).
+
+**Kontrast (node, 2026-11-18).** Eng yomon holat: `.t-fon` nur dog'i markazi (blursiz, `floor-sat-glow` × 0.9), shisha ostida `saturate(1.6)`.
+
+| Juftlik | Navy tekis | Nur markazi | Shaffof shisha / nur | Zich shisha / nur |
+| --- | --- | --- | --- | --- |
+| `sat-on-navy` | 15.72 | 6.69 | 9.43 | 13.28 |
+| `sat-on-navy-muted` | 8.29 | 3.53 | 4.98 | 7.00 |
+| `sat-sky` | 8.05 | 3.43 (faqat 24px+ sarlavha) | 4.83 | 6.80 |
+| Fokus `accent-500` / `accent-400` | 4.89 / 7.81 | 2.08 / 3.33 | 2.93 / 4.69 | 4.13 / 6.60 |
+| `sat-blue` (grafik, chet) | 4.89 | 2.08 (faqat hover bezagi) | 2.93 | 4.13 |
+
+`sat-on-blue-fill` / `sat-blue-fill` 5.12. Pastki bo'limlar (sahnadan tashqari): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
+
 ## Harakat
 
 - Davomiylik (2026-11-13): `--duration-fast` 150ms, `--duration-base` 200ms, `--duration-slow` 200ms, `--duration-stagger` 50ms. Hamma harakat 120–200ms.
