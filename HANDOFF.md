@@ -187,7 +187,7 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 - **Desmos** (2026-11-11, P29, muallif "faqat havola" variantini tanladi; ADR: `docs/qarorlar/003-desmos.md`, manba DS02): Desmos API (embed) ishlatilmaydi. Sabab: bepul Trial ochiq saytda production uchun yo'q, API kaliti maxfiy bo'lishi shart. Math savollarida `DesmosHavola` (`src/components/sat/DesmosHavola.astro`) desmos.com/calculator ni yangi tabda ochadi: mashq testi va mashq sessiyasida. Embed qo'shilsa, avval P23 (Maxfiylik) yangilanadi.
 - **Savollar faqat original** (2026-11-08): AI qoralama yozadi, muallif tekshirib tasdiqlaydi (`verified_by`). College Board materiallari saytga, repoga va bazaga qo'yilmaydi.
 - **Repo hozircha ochiq qoladi** (2026-11-08; avvalgi "yopiladi" javobi o'rniga, muallif qarorni Claude'ga topshirdi). Sabab va shart: 5-bo'lim, 11-savol.
-- **Yangi sahifa holati "qoralama"** (`noindex`). "chop-etilgan" ga faqat muallif aytganda o'tkaziladi.
+- **Yangi sahifa holati "qoralama"** (`noindex`). "chop-etilgan" ga faqat muallif aytganda o'tkaziladi. 2026-11-18 da muallif SAT va IELTS ni ochdi: kirish, qo'llanma, darslar (`DarsQolip`, Top Admission'dan tashqari), mashq va vosita sahifalari, SAT huquqiy sahifalari, SAT Practice test va Vocabulary (`SatFokus indeks`). `noindex` qolgan: "coming soon" (`[...qism]`), hisob, guruh, to'lov natijasi, sessiya, mock imtihon, IELTS test va natija ekrani, savol namunasi, Top Admission, EYUF. Sitemap (`scripts/sitemap.mjs`) noindex'siz sahifalarni o'zi oladi.
 - **Ish tartibi**: har vazifa yangi branch'da → PR → muallif "merge qil" deganidan keyin merge. `main` ga to'g'ridan-to'g'ri yozilmaydi.
 
 ## 5. Ochiq savollar (muallif javobi kerak)
