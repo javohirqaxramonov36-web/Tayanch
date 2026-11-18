@@ -24,11 +24,14 @@
   /* Havola va fokus urg'usi (A yo'nalish): qavat rangidan alohida */
   --color-accent-300:#93B2FF; --color-accent-400:#7FB0FF; --color-accent-500:#2F86FF; --color-accent-700:#264CD0;
   --color-brand-100:#F4F7FE; --color-brand-200:#BDCCFF; --color-brand-300:#8BA0F0; --color-brand-400:#5D72D9; --color-brand-500:#323CB3; --color-brand-600:#282E9C; --color-brand-700:#1E2282; --color-brand-800:#151866; --color-brand-900:#0D1049;
-  --color-floor-navigator-100:#EBFAFC; --color-floor-navigator-200:#C1F4FB; --color-floor-navigator-300:#94ECF7; --color-floor-navigator-400:#62E1F1; --color-floor-navigator-500:#19D3E6; --color-floor-navigator-600:#04A6B8; --color-floor-navigator-700:#017A8A; --color-floor-navigator-800:#00515E; --color-floor-navigator-900:#012C35;
-  --color-floor-admission-100:#FDF6E8; --color-floor-admission-200:#FFEBC3; --color-floor-admission-300:#FFDF9D; --color-floor-admission-400:#FFD271; --color-floor-admission-500:#FFC21F; --color-floor-admission-600:#CC9200; --color-floor-admission-700:#976600; --color-floor-admission-800:#633E02; --color-floor-admission-900:#331B00;
+  /* Qavat shkalalari (ADR 005, DS artifakti v15, 2026-11-18). 500 = belgi rangi; 700 va 400 = DS dagi
+     yorug' / qorong'i matn rangi (navigator: nav-lime-text). Qolganlari OKLCH da 400–500–700 orasidan hisoblangan.
+     SAT shkalasi o'zgarmagan. */
+  --color-floor-navigator-100:#F5FAE4; --color-floor-navigator-200:#E5F2B7; --color-floor-navigator-300:#D6E987; --color-floor-navigator-400:#C8E04A; --color-floor-navigator-500:#B8D02C; --color-floor-navigator-600:#879C1B; --color-floor-navigator-700:#5A6A0A; --color-floor-navigator-800:#3D4900; --color-floor-navigator-900:#232B00;
+  --color-floor-admission-100:#FFF5EE; --color-floor-admission-200:#FFD8BE; --color-floor-admission-300:#FEBB8C; --color-floor-admission-400:#FF9A4A; --color-floor-admission-500:#FF5A0C; --color-floor-admission-600:#DB4B05; --color-floor-admission-700:#B83C00; --color-floor-admission-800:#7D2600; --color-floor-admission-900:#471201;
   --color-floor-sat-100:#F2F7FF; --color-floor-sat-200:#C9DFFF; --color-floor-sat-300:#9EC5FE; --color-floor-sat-400:#6FA9FF; --color-floor-sat-500:#2F86FF; --color-floor-sat-600:#156AD9; --color-floor-sat-700:#0050B0; --color-floor-sat-800:#003982; --color-floor-sat-900:#002357;
-  --color-floor-ielts-100:#FEF4F3; --color-floor-ielts-200:#FFD1CB; --color-floor-ielts-300:#FEABA1; --color-floor-ielts-400:#FF7D71; --color-floor-ielts-500:#EF4841; --color-floor-ielts-600:#C92C2A; --color-floor-ielts-700:#A11618; --color-floor-ielts-800:#78040A; --color-floor-ielts-900:#500003;
-  --color-floor-eyuf-100:#ECFBF0; --color-floor-eyuf-200:#C4F7D0; --color-floor-eyuf-300:#9BF0B2; --color-floor-eyuf-400:#6EE695; --color-floor-eyuf-500:#3BD879; --color-floor-eyuf-600:#07AC5E; --color-floor-eyuf-700:#007F47; --color-floor-eyuf-800:#015631; --color-floor-eyuf-900:#002F1A;
+  --color-floor-ielts-100:#F3F7FF; --color-floor-ielts-200:#D2E1FF; --color-floor-ielts-300:#B0CAFF; --color-floor-ielts-400:#8FB3FF; --color-floor-ielts-500:#2760DE; --color-floor-ielts-600:#1F53CB; --color-floor-ielts-700:#1846B8; --color-floor-ielts-800:#0C308D; --color-floor-ielts-900:#07205C;
+  --color-floor-eyuf-100:#E5FEF1; --color-floor-eyuf-200:#BDF2D9; --color-floor-eyuf-300:#92E6C0; --color-floor-eyuf-400:#5ED9A8; --color-floor-eyuf-500:#10895F; --color-floor-eyuf-600:#0D7E57; --color-floor-eyuf-700:#0A7350; --color-floor-eyuf-800:#045036; --color-floor-eyuf-900:#022F1E;
   --color-success-100:#EEFAF3; --color-success-200:#BDE6CD; --color-success-300:#8BD0A8; --color-success-400:#57B784; --color-success-500:#02985F; --color-success-600:#047C4D; --color-success-700:#01613B; --color-success-800:#00482A; --color-success-900:#00301A;
   --color-warning-100:#FFF5EC; --color-warning-200:#FFDDC1; --color-warning-300:#FEC491; --color-warning-400:#FEA855; --color-warning-500:#EF8C0F; --color-warning-600:#C56E01; --color-warning-700:#9A5201; --color-warning-800:#713901; --color-warning-900:#4A2100;
   --color-error-100:#FEF4F4; --color-error-200:#FFC6CA; --color-error-300:#FF929D; --color-error-400:#ED5F75; --color-error-500:#CD1E4C; --color-error-600:#AF013B; --color-error-700:#8E002E; --color-error-800:#6D0021; --color-error-900:#4E0016;
@@ -112,6 +115,7 @@
   --color-text-disabled:var(--color-neutral-400);
   --color-text-inverse:var(--color-neutral-0);
   --color-on-floor:var(--color-neutral-950);
+  --color-on-floor-inverse:var(--color-neutral-0); /* to'q belgi rangi (4, 5-qavat) ustidagi matn */
 
   --color-brand:var(--color-brand-700);
   --color-link:var(--color-accent-700);
@@ -126,7 +130,8 @@
   --color-error-text:var(--color-error-600);     --color-error-ui:var(--color-error-600);     --color-error-subtle:var(--color-error-100);
   --color-info-text:var(--color-brand-600);      --color-info-ui:var(--color-brand-600);      --color-info-subtle:var(--color-brand-100);
 
-  /* floors: fill = identity (500), text = AA text on bg/surface, ui = 3:1 on bg, subtle = tinted surface */
+  /* floors: fill = identity (500), text = AA text on bg/surface, ui = AA on bg/surface (--rang-asosiy matn rangi ham), subtle = tinted surface.
+     Qorong'ida 4, 5-qavat ui = 400: 500 (elektr ko'k, zumrad) to'q fonda 3.5 / 4.4 (ADR 005, PR 3) */
   --color-floor-navigator-fill:var(--color-floor-navigator-500); --color-floor-navigator-text:var(--color-floor-navigator-700); --color-floor-navigator-ui:var(--color-floor-navigator-700); --color-floor-navigator-subtle:var(--color-floor-navigator-100);
   --color-floor-admission-fill:var(--color-floor-admission-500); --color-floor-admission-text:var(--color-floor-admission-700); --color-floor-admission-ui:var(--color-floor-admission-700); --color-floor-admission-subtle:var(--color-floor-admission-100);
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-700);             --color-floor-sat-ui:var(--color-floor-sat-600);             --color-floor-sat-subtle:var(--color-floor-sat-100);
@@ -158,6 +163,7 @@
   --color-text-disabled:var(--color-neutral-600);
   --color-text-inverse:var(--color-neutral-950);
   --color-on-floor:var(--color-neutral-950);
+  --color-on-floor-inverse:var(--color-neutral-0); /* to'q belgi rangi (4, 5-qavat) ustidagi matn */
 
   --color-brand:var(--color-brand-300);
   --color-link:var(--color-accent-300);
@@ -175,8 +181,8 @@
   --color-floor-navigator-fill:var(--color-floor-navigator-500); --color-floor-navigator-text:var(--color-floor-navigator-400); --color-floor-navigator-ui:var(--color-floor-navigator-500); --color-floor-navigator-subtle:color-mix(in srgb, var(--color-floor-navigator-900) 60%, var(--color-neutral-900));
   --color-floor-admission-fill:var(--color-floor-admission-500); --color-floor-admission-text:var(--color-floor-admission-400); --color-floor-admission-ui:var(--color-floor-admission-500); --color-floor-admission-subtle:color-mix(in srgb, var(--color-floor-admission-900) 60%, var(--color-neutral-900));
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-400);             --color-floor-sat-ui:var(--color-floor-sat-500);             --color-floor-sat-subtle:color-mix(in srgb, var(--color-floor-sat-900) 60%, var(--color-neutral-900));
-  --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-500);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
-  --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-500);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
+  --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-400);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
+  --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-400);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
 
   --color-indicator-off:var(--color-neutral-700);
   --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 12%, transparent);
@@ -217,14 +223,14 @@
   --floor-light-in-delay:calc(var(--duration-stagger) * 2);
   --floor-car-duration:var(--duration-base); --floor-car-ease:var(--ease-state);
 }
-/* floor context: any element with data-floor exposes --floor-* for its children */
-/* floor context: any element with data-floor exposes --floor-* for its children (1-qavat = :root standarti) */
-:where(:root), [data-floor="1"]{ --floor-fill:var(--color-floor-navigator-fill); --floor-text:var(--color-floor-navigator-text); --floor-ui:var(--color-floor-navigator-ui); --floor-subtle:var(--color-floor-navigator-subtle); }
-[data-floor="2"]{ --floor-fill:var(--color-floor-admission-fill); --floor-text:var(--color-floor-admission-text); --floor-ui:var(--color-floor-admission-ui); --floor-subtle:var(--color-floor-admission-subtle); }
-[data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); }
-[data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); }
-[data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); }
-[data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
+/* floor context: any element with data-floor exposes --floor-* for its children (1-qavat = :root standarti).
+   --floor-on-fill: belgi rangi (fill, 500) ustidagi matn, masalan bino yorlig'i (4, 5-qavatda oq). */
+:where(:root), [data-floor="1"]{ --floor-fill:var(--color-floor-navigator-fill); --floor-text:var(--color-floor-navigator-text); --floor-ui:var(--color-floor-navigator-ui); --floor-subtle:var(--color-floor-navigator-subtle); --floor-on-fill:var(--color-on-floor); }
+[data-floor="2"]{ --floor-fill:var(--color-floor-admission-fill); --floor-text:var(--color-floor-admission-text); --floor-ui:var(--color-floor-admission-ui); --floor-subtle:var(--color-floor-admission-subtle); --floor-on-fill:var(--color-on-floor); }
+[data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); --floor-on-fill:var(--color-on-floor); }
+[data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
+[data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
+[data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-on-fill:var(--color-on-floor); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
 
 /* desktop type roles (sayt: container query o'rniga media query) */
 @media (min-width: 768px){
@@ -351,14 +357,12 @@
   --color-glass-ink-900:#121216; --color-glass-ink-850:#1C1C22; --color-glass-ink-800:#1D1D24;
   --color-glass-shade:#281E14; --color-glass-shade-dark:#000000;
 
-  /* Qavat nuri (bezak, matn emas). Qiymatlar DS dan: hozirgi --color-floor-*-500 (1, 2, 4, 5-qavat)
-     3-PR (ds-qavat-ranglari) da shu tusga o'zgaradi, keyin glow color-mix(floor-*-500 60%) ga o'tadi.
-     SAT (#2F86FF) allaqachon bir xil. */
-  --color-floor-navigator-glow:rgb(184 208 44 / 0.6);
-  --color-floor-admission-glow:rgb(255 90 12 / 0.55);
-  --color-floor-sat-glow:rgb(47 134 255 / 0.6);
-  --color-floor-ielts-glow:rgb(39 96 222 / 0.6);
-  --color-floor-eyuf-glow:rgb(16 137 95 / 0.6);
+  /* Qavat nuri (bezak, matn emas): belgi rangining 60% i (to'q sariq 55%), DS floor-*-glow bilan bir xil. */
+  --color-floor-navigator-glow:color-mix(in srgb, var(--color-floor-navigator-500) 60%, transparent);
+  --color-floor-admission-glow:color-mix(in srgb, var(--color-floor-admission-500) 55%, transparent);
+  --color-floor-sat-glow:color-mix(in srgb, var(--color-floor-sat-500) 60%, transparent);
+  --color-floor-ielts-glow:color-mix(in srgb, var(--color-floor-ielts-500) 60%, transparent);
+  --color-floor-eyuf-glow:color-mix(in srgb, var(--color-floor-eyuf-500) 60%, transparent);
 
   /* SEMANTIC · shisha (yorug') */
   --color-glass-bg:color-mix(in srgb, var(--color-neutral-0) 52%, transparent);

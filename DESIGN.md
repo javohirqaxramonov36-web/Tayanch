@@ -50,13 +50,20 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 
 `<html data-floor="1…5">` server tomonda qo'yiladi (`Asosiy`, `BolimQobiq`, `SatFokus`; `joriyQavat(Astro.url.pathname)`). Istalgan element `data-floor` olsa, uning ichida `--floor-*` shu qavatniki bo'ladi (Lift tugmasi, karta borilayotgan qavat rangida). 1-qavat standarti `:where(:root)` da: aks holda keyingi `:root` qoidasi `[data-floor="3"]` ni bosib ketadi.
 
-| Qavat | Kalit | Hozir (`fill`, 500) | Yangi (PR 3, ADR 005) |
-| --- | --- | --- | --- |
-| 1 Navigator | `navigator` | `#19D3E6` | laym `#B8D02C` |
-| 2 Top Admission | `admission` | `#FFC21F` | to'q sariq `#FF5A0C` |
-| 3 SAT prep | `sat` | `#2F86FF` | o'zgarmaydi |
-| 4 IELTS prep | `ielts` | `#EF4841` | elektr ko'k `#2760DE` |
-| 5 EYUF prep | `eyuf` | `#3BD879` | zumrad `#10895F` |
+Qiymatlar 2026-11-18 dan (ADR 005, PR 3 `ds-qavat-ranglari`). 500, yorug' matn (700) va qorong'i matn (400) DS artifaktidan; shkalaning qolgan qadamlari OKLCH da shulardan hisoblangan. Eski ranglar: `#19D3E6`, `#FFC21F`, `#EF4841`, `#3BD879`.
+
+| Qavat | Kalit | `fill` (500) | `text` yorug' / qorong'i | `ui` yorug' / qorong'i | `--floor-on-fill` |
+| --- | --- | --- | --- | --- | --- |
+| 1 Navigator | `navigator` | laym `#B8D02C` | 700 `#5A6A0A` / 400 `#C8E04A` | 700 / 500 | qora |
+| 2 Top Admission | `admission` | to'q sariq `#FF5A0C` | 700 `#B83C00` / 400 `#FF9A4A` | 700 / 500 | qora |
+| 3 SAT prep | `sat` | ko'k `#2F86FF` (o'zgarmagan) | 700 `#0050B0` / 400 `#6FA9FF` | 600 / 500 | qora |
+| 4 IELTS prep | `ielts` | elektr ko'k `#2760DE` | 700 `#1846B8` / 400 `#8FB3FF` | 600 / **400** | oq |
+| 5 EYUF prep | `eyuf` | zumrad `#10895F` | 700 `#0A7350` / 400 `#5ED9A8` | 700 / **400** | oq |
+
+- `text` va `ui` ikkala mavzuda `--color-bg` va `--color-surface` ustida ≥ 4.7:1 (`--rang-asosiy` ko'p joyda matn rangi, shuning uchun `ui` ham AA). `--floor-ui-text` (yorug'da oq, qorong'ida neutral-950) `ui` ustida ≥ 5.1:1.
+- Qorong'ida 4 va 5-qavat `ui` = 400: 500 to'q fonda 3.5 / 4.4:1 bo'lib, matn uchun yetmaydi.
+- `fill` (500) faqat belgi: bino, nur, bezak. Yorug' fonda laym 1.6:1, to'q sariq 2.9:1, shuning uchun matn, havola, CTA va holat rangi emas.
+- `--floor-on-fill`: `fill` ustidagi matn (bino yorlig'i). Elektr ko'k ustida qora 3.5–3.9, oq 5.2+. Zumrad ustida ikkalasi ham chegarada (oq 4.3–4.7 yorliq balandligi bo'ylab): bino `aria-hidden` bezak, qavat raqami Lift va sahifa yorlig'ida matn bo'lib bor. Ochiq qoldi.
 
 3 va 4-qavat yangi ranglarda ikkalasi ko'k (1.57:1, muallif qarori 2026-11-18). Ular rang bilan emas, shrift, motiv va qavat raqami bilan ajraladi. Lift va binoda rang doim raqam bilan keladi.
 
@@ -64,7 +71,8 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 | --- | --- |
 | `--floor-fill` | Identifikatsiya rangi: bino, yonish, bezak. Matn uchun emas |
 | `--floor-text` | Qavat rangidagi matn (zich `--color-surface` / `--color-bg` ustida AA) |
-| `--floor-ui` | Urg'u: chip, son doirasi, progress, ikonka, chegara, faol qator (fon ustida ≥ 3:1) |
+| `--floor-ui` | Urg'u: chip, son doirasi, progress, ikonka, chegara, faol qator (fon ustida ≥ 4.5:1, chunki `--rang-asosiy` matn ham) |
+| `--floor-on-fill` | `--floor-fill` ustidagi matn (bino yorlig'i): 1–3-qavatda qora, 4–5-qavatda oq |
 | `--floor-ui-text` | `--floor-ui` ustidagi matn: yorug'da oq, qorong'ida neutral-950 |
 | `--floor-subtle` | Och fon (tanlangan javob, hover) |
 | `--floor-ui-toq` / `--floor-ui-chuqur` | `--floor-ui` ning neutral-950 bilan aralashmasi (80% / 60%): 3D pog'ona yuzlari, Hajm 3D sahnasi, urg'u hover. Sayt qo'shimchasi, muallif tasdiqlagan |
@@ -72,7 +80,7 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 Qoidalar:
 - **CTA tugmalar qavatdan qat'i nazar bir xil**. Hozir: `--btn-primary-*` (yorug'da brand-900, qorong'ida oq). Yangi: to'q kapsula `.t-tugma` (`btn-glass-*`), ostida qavat nuri. Qavat mini-DS'i bitta urg'u kapsula variantini o'z tokenidan berishi mumkin (`adm-accent`, `sat-blue-fill`, `ielts-accent`, `eyuf-accent`), sahifada bitta. `floor-*-500` CTA bo'lmaydi.
 - Qavat matn rangi karta va panel ustida matn sifatida ishlatilmaydi (yorug'da 4.5:1 ga yetmasligi mumkin). Karta ustida urg'u faqat `--floor-ui` doira, ikonka yoki chegarada; matn neytral (`--color-text-*`) yoki `--color-link`.
-- Matn ko'rinishidagi havola va ta'kid: `--color-link` (`--rang-havola`). Qavat 700 matn rangi studio foni pastida (`#D9DADE`) faqat 3.6:1.
+- Matn ko'rinishidagi havola va ta'kid: `--color-link` (`--rang-havola`). Qavat 700 matn rangi studio foni pastida (`#D9DADE`) 4.1–4.3:1 (SAT, IELTS 5.4+), AA ga yetmaydi.
 
 ### Neytral va holat ranglari
 
