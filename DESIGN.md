@@ -50,13 +50,20 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 
 `<html data-floor="1…5">` server tomonda qo'yiladi (`Asosiy`, `BolimQobiq`, `SatFokus`; `joriyQavat(Astro.url.pathname)`). Istalgan element `data-floor` olsa, uning ichida `--floor-*` shu qavatniki bo'ladi (Lift tugmasi, karta borilayotgan qavat rangida). 1-qavat standarti `:where(:root)` da: aks holda keyingi `:root` qoidasi `[data-floor="3"]` ni bosib ketadi.
 
-| Qavat | Kalit | Hozir (`fill`, 500) | Yangi (PR 3, ADR 005) |
-| --- | --- | --- | --- |
-| 1 Navigator | `navigator` | `#19D3E6` | laym `#B8D02C` |
-| 2 Top Admission | `admission` | `#FFC21F` | to'q sariq `#FF5A0C` |
-| 3 SAT prep | `sat` | `#2F86FF` | o'zgarmaydi |
-| 4 IELTS prep | `ielts` | `#EF4841` | elektr ko'k `#2760DE` |
-| 5 EYUF prep | `eyuf` | `#3BD879` | zumrad `#10895F` |
+Qiymatlar 2026-11-18 dan (ADR 005, PR 3 `ds-qavat-ranglari`). 500, yorug' matn (700) va qorong'i matn (400) DS artifaktidan; shkalaning qolgan qadamlari OKLCH da shulardan hisoblangan. Eski ranglar: `#19D3E6`, `#FFC21F`, `#EF4841`, `#3BD879`.
+
+| Qavat | Kalit | `fill` (500) | `text` yorug' / qorong'i | `ui` yorug' / qorong'i | `--floor-on-fill` |
+| --- | --- | --- | --- | --- | --- |
+| 1 Navigator | `navigator` | laym `#B8D02C` | 700 `#5A6A0A` / 400 `#C8E04A` | 700 / 500 | qora |
+| 2 Top Admission | `admission` | to'q sariq `#FF5A0C` | 700 `#B83C00` / 400 `#FF9A4A` | 700 / 500 | qora |
+| 3 SAT prep | `sat` | ko'k `#2F86FF` (o'zgarmagan) | 700 `#0050B0` / 400 `#6FA9FF` | 600 / 500 | qora |
+| 4 IELTS prep | `ielts` | elektr ko'k `#2760DE` | 700 `#1846B8` / 400 `#8FB3FF` | 600 / **400** | oq |
+| 5 EYUF prep | `eyuf` | zumrad `#10895F` | 700 `#0A7350` / 400 `#5ED9A8` | 700 / **400** | oq |
+
+- `text` va `ui` ikkala mavzuda `--color-bg` va `--color-surface` ustida ≥ 4.7:1 (`--rang-asosiy` ko'p joyda matn rangi, shuning uchun `ui` ham AA). `--floor-ui-text` (yorug'da oq, qorong'ida neutral-950) `ui` ustida ≥ 5.1:1.
+- Qorong'ida 4 va 5-qavat `ui` = 400: 500 to'q fonda 3.5 / 4.4:1 bo'lib, matn uchun yetmaydi.
+- `fill` (500) faqat belgi: bino, nur, bezak. Yorug' fonda laym 1.6:1, to'q sariq 2.9:1, shuning uchun matn, havola, CTA va holat rangi emas.
+- `--floor-on-fill`: `fill` ustidagi matn (bino yorlig'i). Elektr ko'k ustida qora 3.5–3.9, oq 5.2+. Zumrad ustida ikkalasi ham chegarada (oq 4.3–4.7 yorliq balandligi bo'ylab): bino `aria-hidden` bezak, qavat raqami Lift va sahifa yorlig'ida matn bo'lib bor. Ochiq qoldi.
 
 3 va 4-qavat yangi ranglarda ikkalasi ko'k (1.57:1, muallif qarori 2026-11-18). Ular rang bilan emas, shrift, motiv va qavat raqami bilan ajraladi. Lift va binoda rang doim raqam bilan keladi.
 
@@ -64,7 +71,8 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 | --- | --- |
 | `--floor-fill` | Identifikatsiya rangi: bino, yonish, bezak. Matn uchun emas |
 | `--floor-text` | Qavat rangidagi matn (zich `--color-surface` / `--color-bg` ustida AA) |
-| `--floor-ui` | Urg'u: chip, son doirasi, progress, ikonka, chegara, faol qator (fon ustida ≥ 3:1) |
+| `--floor-ui` | Urg'u: chip, son doirasi, progress, ikonka, chegara, faol qator (fon ustida ≥ 4.5:1, chunki `--rang-asosiy` matn ham) |
+| `--floor-on-fill` | `--floor-fill` ustidagi matn (bino yorlig'i): 1–3-qavatda qora, 4–5-qavatda oq |
 | `--floor-ui-text` | `--floor-ui` ustidagi matn: yorug'da oq, qorong'ida neutral-950 |
 | `--floor-subtle` | Och fon (tanlangan javob, hover) |
 | `--floor-ui-toq` / `--floor-ui-chuqur` | `--floor-ui` ning neutral-950 bilan aralashmasi (80% / 60%): 3D pog'ona yuzlari, Hajm 3D sahnasi, urg'u hover. Sayt qo'shimchasi, muallif tasdiqlagan |
@@ -72,7 +80,7 @@ Saytga moslash (DS qiymatlari o'zgarmagan):
 Qoidalar:
 - **CTA tugmalar qavatdan qat'i nazar bir xil**. Hozir: `--btn-primary-*` (yorug'da brand-900, qorong'ida oq). Yangi: to'q kapsula `.t-tugma` (`btn-glass-*`), ostida qavat nuri. Qavat mini-DS'i bitta urg'u kapsula variantini o'z tokenidan berishi mumkin (`adm-accent`, `sat-blue-fill`, `ielts-accent`, `eyuf-accent`), sahifada bitta. `floor-*-500` CTA bo'lmaydi.
 - Qavat matn rangi karta va panel ustida matn sifatida ishlatilmaydi (yorug'da 4.5:1 ga yetmasligi mumkin). Karta ustida urg'u faqat `--floor-ui` doira, ikonka yoki chegarada; matn neytral (`--color-text-*`) yoki `--color-link`.
-- Matn ko'rinishidagi havola va ta'kid: `--color-link` (`--rang-havola`). Qavat 700 matn rangi studio foni pastida (`#D9DADE`) faqat 3.6:1.
+- Matn ko'rinishidagi havola va ta'kid: `--color-link` (`--rang-havola`). Qavat 700 matn rangi studio foni pastida (`#D9DADE`) 4.1–4.3:1 (SAT, IELTS 5.4+), AA ga yetmaydi.
 
 ### Neytral va holat ranglari
 
@@ -117,15 +125,24 @@ Bitta oila: **Onest** (`@fontsource-variable/onest`, OFL-1.1, oila nomi `'Onest 
 
 `h1–h3` ga rollar `global.css` da beriladi. Qator uzunligi 60–75 belgi (`--size-measure` 68ch).
 
-**Yangi: qavat sarlavha shriftlari** (PR 4, `@fontsource` orqali saytning o'zidan; har qavat faqat o'z shriftini yuklaydi). Matn hamma qavatda Onest qoladi.
+**Qavat sarlavha shriftlari** (DS PR 4, 2026-11-18: fayllar va tokenlar tayyor, sahifalar qavat PR'larida 5–9 yoqadi). Matn hamma qavatda Onest qoladi.
 
-| Qavat | Sarlavha va raqam | `ʻ` / `ʼ` (2026-11-18, brauzerda tekshirildi) |
-| --- | --- | --- |
-| 1 Navigator | Barlow Condensed 700, yorliq JetBrains Mono | Barlow'da bor. JetBrains Mono'da `ʻ` yo'q, zaxira shriftdan chiqadi (muallif qabul qildi), mono yorliq qisqa |
-| 2 Top Admission | Onest 800 | bor |
-| 3 SAT prep | Sora 600 | yo'q: Sora faqat inglizcha matnda, SAT ichidagi o'zbekcha (`lang="uz"`) Onest'da |
-| 4 IELTS prep | Lexend 600 | bor |
-| 5 EYUF prep | Playfair Display 500/600, kursiv | bor |
+| Qavat | Token | Sarlavha va raqam (paket) | `ʻ` U+02BB / `ʼ` U+02BC |
+| --- | --- | --- | --- |
+| 1 Navigator | `--font-display`, `--font-mono` | Barlow Condensed 700 (`@fontsource/barlow-condensed`), yorliq JetBrains Mono 400/500 (`@fontsource/jetbrains-mono`) | Barlow: bor / bor. JetBrains Mono: `ʻ` yo'q, `ʼ` bor; `ʻ` zaxira shriftdan chiqadi (muallif qabul qildi), mono yorliq qisqa |
+| 2 Top Admission | `--font-family-sans` 800 | Onest (yangi fayl yo'q) | bor / bor |
+| 3 SAT prep | `--font-sat` | Sora 600 (`@fontsource/sora`) | yo'q / yo'q: Sora faqat inglizcha matnda, SAT ichidagi o'zbekcha (`lang="uz"`) Onest'da |
+| 4 IELTS prep | `--font-ielts` | Lexend 600 (`@fontsource/lexend`) | bor / bor |
+| 5 EYUF prep | `--font-eyuf` | Playfair Display 400–900 variable, oddiy va kursiv (`@fontsource-variable/playfair-display`) | bor / bor (kursivda ham) |
+
+Belgilar ikki yo'l bilan tekshirildi (2026-11-18): woff fayllarning `cmap` jadvali va brauzerda kenglik o'lchovi (`"Shrift", serif` va `"Shrift", monospace` bir xil kenglik bersa, glif shriftning o'zida). Saytdagi matnning ko'pi oddiy `'` bilan yozilgan, u hamma shriftda bor.
+
+Yuklash qoidalari:
+- `@font-face` faqat `src/components/QavatShrifti.astro` da (`BoshQism` ichida, `joriyQavat` bo'yicha). Har sahifa faqat o'z qavatining qoidalarini inline `<style>` da oladi; qo'shimcha CSS so'rovi yo'q. Boshqa qavat tokeni (masalan bosh sahifada `--font-sat`) zaxira oilaga tushadi.
+- Subset faqat latin va latin-ext, `unicode-range` bilan: odatda faqat latin fayli keladi (`ʻ` `ʼ` latin'da). Kirill olinmagan: saytdagi o'zbekcha lotin.
+- Vazn faqat DS ishlatgani. JetBrains Mono statik (400 va 500 alohida 21 KB), Playfair variable (500, 600 va kursiv uchun 2 fayl, statikdan kichik).
+- `font-display: swap`. Brauzer faylni faqat shu oila biror elementda chizilganda yuklaydi, shuning uchun token ishlatilmaguncha tarmoq yuki o'zgarmaydi. Preload yo'q; qavat PR'i hero sarlavhasini yoqqanda faqat o'sha sahifaga, faqat latin faylini preload qilish ko'rib chiqiladi. Barlow Condensed Onest'dan ancha tor: swap paytida qator siljishi (CLS) qavat PR'ida tekshiriladi.
+- `--font-family-mono` umumiy tizim mono (kod, taklif kodi) bo'lib qoladi va `--font-mono` ning zaxirasi; `--font-mono` faqat 1-qavat yorlig'i.
 
 Raqam ustunlarida `font-variant-numeric: tabular-nums` (Sora'da ishlaydi). Playfair'da `lining-nums` ham qo'shiladi.
 
@@ -164,11 +181,70 @@ Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichi
 - **Bino SVG.** Blursiz qoladi, SVG blur filtri qaytmaydi.
 - **Telefonda tezlik.** Past darajali Android'da sinalmagan. Har shisha PR'ida haqiqiy telefonda tekshiriladi.
 
+#### Kodda (PR 2, `ds-poydevor-shisha`)
+
+Tokenlar `src/styles/tokens.css` ("Poydevor · Liquid Glass" bloki), stillar `src/styles/shisha.css` (`global.css` import qiladi). Hech bir sahifa hali ishlatmaydi.
+
+| DS nomi (artifakt) | Repo tokeni | Yorug' | Qorong'i |
+| --- | --- | --- | --- |
+| `glass-bg` | `--color-glass-bg` | oq 52% | oq 7% |
+| `glass-bg-strong` | `--color-glass-bg-strong` | oq 82% | `#1C1C22` 82% |
+| `glass-border` | `--color-glass-border` | oq 90% | oq 14% |
+| `glass-highlight` | `--color-glass-highlight` | oq 95% | oq 22% |
+| `glass-shadow` | `--shadow-glass` | ichki oq chiziq + iliq soya | ichki oq 18% + qora soya |
+| `glass-blur` | `--size-glass-blur` (24px), filtr `--glass-backdrop` = `blur() saturate(1.6)` | | |
+| `btn-glass-bg` | `--color-btn-glass-bg` | `#121216` | `#1D1D24` |
+| `btn-glass-text` | `--color-btn-glass-text` | `#F5F5F7` | `#F5F5F7` |
+| `floor-<qavat>-glow` | `--color-floor-<qavat>-glow` (5 ta) | mavzuga bog'liq emas | |
+
+- `floor-*-glow` DS qiymatlarida. 1, 2, 4, 5-qavatning hozirgi `floor-*-500` rangi 3-PR (`ds-qavat-ranglari`) da shu tusga o'tadi, keyin glow `floor-*-500` dan `color-mix` bilan olinadi.
+- Qavat nuri `--nur`: `data-floor` bo'yicha (`shisha.css`, 1-qavat standarti `:where(:root)`). Tugma soyasi `--shadow-btn-glass` / `--shadow-btn-glass-hover` `.t-tugma` ning o'zida hisoblanadi, shunda qavat konteksti bergan nur olinadi.
+- Sinflar: `.t-fon` (nur dog'lari, `--fon-nur-*`), `.t-shisha`, `.t-shisha--zich`, `.t-tugma`, `.t-tugma--ikkinchi`, `.t-tugma--ikonka`.
+- Harakat sayt qoidasi bo'yicha: `:active` = `--bosilish`, transition faqat `transform`/`opacity` `--duration-fast`, hover (soya) faqat sichqoncha bilan va darhol. Artifaktdagi 150 / 250 / 400ms va `translateY(1px)` olinmadi.
+- Zaxira: blur yo'q brauzerda shisha `--color-glass-bg-strong`; `prefers-reduced-transparency: reduce` yoki `prefers-contrast: more` da `--color-surface` + `--color-border`, tugma `--color-action-primary-*`, ikkinchi tugma `--color-surface` + `--btn-secondary-border`.
+- Fokus: umumiy halqa (`global.css`, `a`/`button`).
+
+**Kontrast (node, 2026-11-18).** Eng yomon holat: `.t-fon` nur dog'i markazi (blursiz), ustida `saturate(1.6)`, so'ng shisha.
+
+| Holat | Yorug' | Qorong'i |
+| --- | --- | --- |
+| `btn-glass-text` / `btn-glass-bg` | 17.16 | 15.39 |
+| Zich shisha, `text-primary` | 16.28+ | 12.91+ |
+| Zich shisha, `text-secondary` | 5.71+ | 5.63+ |
+| Shaffof shisha, `text-primary` | 12.58+ | 3.78 (1-qavat), qolganlari 5.47+ |
+| Shaffof shisha, `text-secondary` | 4.41 (4-qavat), qolganlari 4.64+ | 1.65–3.20 |
+
+Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat zich shishada. 1-qavat qorong'i mavzusida shaffof shisha nur dog'i ustiga qo'yilmaydi (yoki matn zich shishada bo'ladi). Qavat o'z PR'ida o'z foni va shishasi bilan qayta hisoblaydi.
+
 ### Hozir: shishasiz (2026-11-13), qavat o'z PR'iga yetguncha
 
 - Ustki qatorlar (`Menyu`, `BolimYon` ustki qatori, `SatFokus` sarlavhasi) va Lift telefon paneli: zich `--color-surface` fon, 1px `--color-border` chiziq.
 - Kartalar: `--card-bg` (= `--color-surface`, yorug'da oq), 1px `--card-border` (`--card-line`: yorug'da neutral-900 8%, qorong'ida oq 9%), statik `--card-shadow` (`--shadow-1`).
 - Bino SVG: blursiz, glow va soya qatlamisiz.
+
+## Qavat mini-DS'lari
+
+### 3-qavat SAT (PR 5a `ds-sat-kirish`, 2026-11-18)
+
+Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". Hozircha faqat `/uz/sat/` kirishi yangi ko'rinishda; vositalar (5b), savol ekranlari (5c), tab bar (5d) keyingi PR'larda.
+
+- **Tokenlar** (`tokens.css`, "3-qavat SAT mini-DS"): `--color-sat-navy`, `-navy-raised`, `-navy-high`, `-mist`, `-on-navy`, `-on-navy-muted`, `-sky`, `-line-on-navy`, `-blue` (= `floor-sat-500`), `-blue-fill`, `-on-blue-fill`, `-glass-navy(-strong, -border)`; mavzuli `--color-sat-bg`, `-surface`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-blue-text`, `-line`, `-line-strong`. Soya `--shadow-sat-panel-navy`, `--shadow-sat-plitka-hover`, `--shadow-sat-plitka-joriy`. O'lcham `--size-sat-plitka` (64, ≥720px 72), `--size-sat-tabbar`. Tipografiya `--text-sat-hero-*` (36/40, ≥720px 56/60), `--text-sat-h2-*` (24/30), shrift `--font-sat` (Sora 600, faqat inglizcha).
+- **Stillar** `src/styles/sat.css` (faqat SAT sahifasi import qiladi): `.sat-sahna` (navy sahna, `.t-fon` bilan), `.sat-sarlavha`, `.sat-yorliq`, `.t-tugma.sat-tugma--kok`. Sahna poydevor tokenlarini (`--color-glass-*`, `--shadow-glass`, `--color-text-primary`, `--color-surface`, `--color-focus-ring`) navy qiymatga almashtiradi, shuning uchun ichida oddiy `.t-shisha`, `.t-shisha--zich`, `.t-tugma--ikkinchi` ishlatiladi (DS dagi `.sat-shisha` kerak emas). `overflow: clip`.
+- **`SatPlitka`** (`src/components/sat/SatPlitka.astro`): `<ul>` ichida `<a>` plitkalar, ikonka `.t-shisha` (navy shisha, `sat-sky`), ostida yorliq; joriy bo'lim `aria-current="page"` (ko'k fill). Hover (faqat sichqoncha): chet `sat-blue` va nur, darhol. Bosish: ikonka `--bosilish`, 150ms. Telefonda 3 ustun, ≥720px 6.
+- **Matn qoidasi.** Sahnada (nur dog'i ustida) matn faqat `sat-on-navy`; `on-navy-muted` va `sky` faqat zich shishada yoki 24px+ sarlavhada. Fokus sahnada `accent-400`, oraliq navy. Ko'k kapsula sahifada bitta.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: sahnadagi shisha tekis `sat-navy-raised` + `sat-line-on-navy` chet, ko'k kapsula tekis `sat-blue-fill` (hover'da ham).
+
+**Kontrast (node, 2026-11-18).** Eng yomon holat: `.t-fon` nur dog'i markazi (blursiz, `floor-sat-glow` × 0.9), shisha ostida `saturate(1.6)`.
+
+| Juftlik | Navy tekis | Nur markazi | Shaffof shisha / nur | Zich shisha / nur |
+| --- | --- | --- | --- | --- |
+| `sat-on-navy` | 15.72 | 6.69 | 9.43 | 13.28 |
+| `sat-on-navy-muted` | 8.29 | 3.53 | 4.98 | 7.00 |
+| `sat-sky` | 8.05 | 3.43 (faqat 24px+ sarlavha) | 4.83 | 6.80 |
+| Fokus `accent-500` / `accent-400` | 4.89 / 7.81 | 2.08 / 3.33 | 2.93 / 4.69 | 4.13 / 6.60 |
+| `sat-blue` (grafik, chet) | 4.89 | 2.08 (faqat hover bezagi) | 2.93 | 4.13 |
+
+`sat-on-blue-fill` / `sat-blue-fill` 5.12. Pastki bo'limlar (sahnadan tashqari): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
 
 ## Harakat
 
