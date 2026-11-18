@@ -1,6 +1,6 @@
 ---
 // Tayanch binosi: DS shisha bino (docs/ds/tayanch-ds-bino.txt, heroSVG), server tomonda, JS'siz.
-// Bezak: aria-hidden. Ikonkalar qavatlar.ts dan. Geometriya va CSS DS dan o'zgarishsiz.
+// Bezak: aria-hidden. Ikonkalar qavatlar.ts dan. Geometriya va CSS DS dan; yongan yorliq rangi --floor-on-fill (PR 3: 4, 5-qavatda oq).
 // Yonish: `aktiv` qavat yonib turadi. Sahifada [data-bino-yoq="N"] elementga hover yoki fokus
 // kelsa, o'sha qavat yonadi (CSS :has). Reduced-motion'da DS davomiylik tokenlari 0ms.
 import { qavatlar } from '../data/qavatlar';
@@ -51,7 +51,7 @@ const ON = (ichki: string) => [tinch, ...KALIT.map((_, i) => tanlov(i + 1))].map
 const yonishCss = `
 ${ON(' .edge')}{stroke:var(--floor-fill)}
 ${ON(' .on')}{opacity:var(--opacity-100);transition:opacity var(--floor-light-in-duration) var(--floor-light-in-ease) var(--floor-light-in-delay)}
-${ON(' .lab')}{color:var(--color-on-floor)}
+${ON(' .lab')}{color:var(--floor-on-fill)}
 ${ON(' .win')}{fill:var(--floor-indicator-window-on);stroke:var(--floor-indicator-window-on)}
 ${KALIT.map((k, i) => `:root:has([data-bino-yoq="${i + 1}"]:is(:hover, :focus-visible)) .fi-hero .tip{fill:var(--color-floor-${k}-fill)}`).join('\n')}
 `;
