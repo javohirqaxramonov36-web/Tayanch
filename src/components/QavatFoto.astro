@@ -1,7 +1,9 @@
 ---
-// Qavat kirish fotosi: bo'lim kirish sahifasining tepasida, matndan alohida (matn foto ustida emas).
+// Qavat foto foni (2026-11-19, muallif tanlovi "butun sahifa foni"): rasm butun ekranni qoplaydi va
+// joyida qotib turadi, kontent uning ustida zich shisha sirtda (DESIGN.md "Sirtlar").
+// Komponent sahifaning istalgan joyida turishi mumkin: position: fixed, oqimda joy olmaydi.
 // Fotolar: Higgsfield gpt_image_2_6 (og:image bilan bir to'plam, uslub: docs/og-rasmlar.md).
-// Bezak foto: ma'lumot tashimaydi, shuning uchun alt="" (ekran o'quvchi o'tkazib yuboradi).
+// Bezak foto: ma'lumot tashimaydi, shuning uchun alt="" va aria-hidden.
 // Fayllar public/qavat/<slug>-{720,800,1344}.webp (manba 1344×752, kattalashtirilmagan).
 import { yol } from '../lib/yol';
 
@@ -9,44 +11,81 @@ type FotoSlug = 'top-admission' | 'sat' | 'ielts' | 'eyuf';
 interface Props { bolim: FotoSlug; ilk?: boolean }
 const { bolim, ilk = true } = Astro.props;
 
-// Kompyuterda 3:1 kesim: har fotoda asosiy predmet ko'rinadigan vertikal nuqta.
+// Ekran nisbati rasmnikidan baland bo'lsa (telefon), yon tomonlar kesiladi: predmet ko'rinadigan nuqta.
 const fokus: Record<FotoSlug, string> = {
-  'top-admission': '50% 75%',
+  'top-admission': '50% 70%',
   sat: '50% 55%',
-  ielts: '50% 65%',
+  ielts: '50% 60%',
   eyuf: '50% 55%',
 };
 const asos = yol(`/qavat/${bolim}`);
-const sizes = bolim === 'eyuf'
-  ? 'min(calc(100vw - 40px), 1120px)'
-  : '(max-width: 1023px) min(calc(100vw - 32px), 928px), min(calc(100vw - 368px), 960px)';
 ---
-<img
-  class="qavat-foto"
-  src={`${asos}-1344.webp`}
-  srcset={`${asos}-720.webp 720w, ${asos}-800.webp 800w, ${asos}-1344.webp 1344w`}
-  sizes={sizes}
-  width="1344"
-  height="752"
-  alt=""
-  loading={ilk ? 'eager' : 'lazy'}
-  fetchpriority={ilk ? 'high' : undefined}
-  decoding="async"
-  style={`--foto-fokus: ${fokus[bolim]}`}
-/>
+<div class="qavat-fon" aria-hidden="true">
+  <img
+    src={`${asos}-1344.webp`}
+    srcset={`${asos}-720.webp 720w, ${asos}-800.webp 800w, ${asos}-1344.webp 1344w`}
+    sizes="100vw"
+    width="1344"
+    height="752"
+    alt=""
+    loading="eager"
+    fetchpriority={ilk ? 'high' : undefined}
+    decoding="async"
+    style={`--foto-fokus: ${fokus[bolim]}`}
+  />
+</div>
 
 <style>
-  .qavat-foto {
+  .qavat-fon {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background: var(--color-bg);
+  }
+  .qavat-fon img {
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 1;
+    height: 100%;
     object-fit: cover;
     object-position: var(--foto-fokus);
-    border-radius: var(--r-katta);
-    background: var(--sirt-ikkinchi);
   }
-  @media (max-width: 640px) {
-    .qavat-foto { aspect-ratio: 5 / 2; border-radius: var(--r-orta); }
+  .qavat-fon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--qavat-fon-parda);
+  }
+</style>
+
+<style is:global>
+  /* Foto ustidagi kontent: zich shisha (uzun matn bor). Ichidagi kartalar tekis qoladi (ichma-ich blur yo'q).
+     Shisha main::before da: main'ning o'zida backdrop-filter bo'lsa, u fixed fotoni o'z qutisiga qamaydi.
+     Qatlamlar (ildiz kontekstida): foto -2, shisha -1, kontent 0. Studio gradienti (body::before) bu sahifada kerak emas. */
+  body:has(.qavat-fon)::before { display: none; }
+  body:has(.qavat-fon) main {
+    position: relative;
+    margin: var(--space-3);
+  }
+  body:has(.qavat-fon) main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--qavat-fon-shisha);
+    -webkit-backdrop-filter: var(--qavat-fon-blur);
+    backdrop-filter: var(--qavat-fon-blur);
+    border: var(--border-width-1) solid var(--card-line);
+    border-radius: var(--radius-xl);
+  }
+  @media (min-width: 1024px) {
+    body:has(.qavat-fon) main { margin: var(--space-6); }
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    body:has(.qavat-fon) main::before { background: var(--color-surface); }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    body:has(.qavat-fon) main::before { background: var(--color-surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
   }
 </style>
