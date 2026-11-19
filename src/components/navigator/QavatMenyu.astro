@@ -1,6 +1,6 @@
 ---
 // Bosh sahifa ustki qatoridagi qavatlar menyusi (6-qavat AI Academy 2026-11-19 da qo'shilgan) (mega menyu). Faqat /uz/ da (muallif qarori, 2026-11-19).
-// Yon panel (BolimYon) va Lift o'zgarmaydi. Havolalar yon panel ma'lumotidan olinadi, qo'lda takrorlanmaydi.
+// Yon panel (BolimYon) o'zgarmaydi. Havolalar yon panel ma'lumotidan olinadi, qo'lda takrorlanmaydi.
 // Xatti-harakat: qavat tugmasi bosilsa (sichqonchada hover ham) uning paneli ochiladi, bir vaqtda bittasi.
 // Esc yopadi va fokusni tugmaga qaytaradi; ←/→ qavatlar orasida, ↓ panelni ochib birinchi havolaga o'tadi.
 // Tashqariga bosish, fokus chiqib ketishi yoki sichqoncha ketishi yopadi. Hech narsa saqlanmaydi.
@@ -128,7 +128,7 @@ const PANELLAR: Record<string, Panel> = {
       clearTimeout(kechikish);
       if (ochiq === t) return;
       yop();
-      // Yon panel yoki Lift ochiq bo'lsa, yopiladi: bir vaqtda bitta ochiq menyu
+      // Yon panel ochiq bo'lsa, yopiladi: bir vaqtda bitta ochiq menyu
       document.querySelectorAll<HTMLDetailsElement>('header details[open]').forEach((d) => { d.open = false; });
       t.setAttribute('aria-expanded', 'true');
       panelI(t).classList.add('ochiq');
@@ -181,7 +181,7 @@ const PANELLAR: Record<string, Panel> = {
     nav.addEventListener('click', (e) => {
       if (e.target instanceof Element && e.target.closest('.qm-panel a[href]')) yop();
     });
-    // Yon panel yoki Lift ochilsa, mega menyu yopiladi
+    // Yon panel ochilsa, mega menyu yopiladi
     document.querySelectorAll<HTMLDetailsElement>('header details').forEach((d) => {
       d.addEventListener('toggle', () => { if (d.open) yop(); });
     });
