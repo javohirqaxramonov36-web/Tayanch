@@ -29,8 +29,8 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
     "inPAY, Click va Payme to'lov ma'lumotini qancha va qayerda saqlashi: hali tasdiqlanmagan",
     "Ota-ona roziligi formadagi belgi va ism bilan olinishi Qonun 21-moddasidagi \"elektron hujjat tarzida\" talabiga yetarlimi: hali tasdiqlanmagan",
     "To'lov yozuvlarini hisob o'chirilgandan keyin qancha saqlash kerakligi (buxgalteriya va soliq qonunchiligi): hali aniqlanmagan",
-    "AI Tutor: Anthropic API so'rov va javoblarni qancha muddat saqlashi va ularni model o'qitishda ishlatmasligi hali tasdiqlanmagan",
-    "AI Tutor: xabarni AQShdagi Anthropic xizmatiga uzatish Qonun 15 va 27¹-moddalari (LX02) va VM 415-son qarori (LX04) bo'yicha ruxsat etilganmi: hali tasdiqlanmagan",
+    "AI Tutor va IELTS Writing baholash: Anthropic API so'rov va javoblarni qancha muddat saqlashi va ularni model o'qitishda ishlatmasligi hali tasdiqlanmagan",
+    "AI Tutor va IELTS Writing baholash: matnni AQShdagi Anthropic xizmatiga uzatish Qonun 15 va 27¹-moddalari (LX02) va VM 415-son qarori (LX04) bo'yicha ruxsat etilganmi: hali tasdiqlanmagan",
   ]}
 >
   <HuquqiyMatn til="uz" kalit="maxfiylik" sana="2026-11-11" kirish="Hisob ixtiyoriy: saytning bepul qismi hisobsiz ham ishlaydi.">
@@ -132,6 +132,16 @@ const { voyagaYetmaganTolov, tolovSaqlashYil } = huquqiyOchiq;
       <li><strong>Saqlash</strong>: tozalangan xabaringiz va AI javobi hisobingizda (Supabase, Frankfurt) suhbat tarixi sifatida saqlanadi. Xarajatni hisoblash uchun matnsiz yozuv ham saqlanadi: vaqt, token soni va narx. Bir xil xabar takror yuborilganini aniqlash uchun xabarning qaytarib bo'lmaydigan izi (xesh) ko'pi bilan 1 soat saqlanadi.</li>
       <li><strong>O'chirish</strong>: AI Tutor sahifasida har bir suhbatni yoki butun tarixni o'chirish mumkin. Hisobni o'chirsangiz, suhbatlar ham o'chadi; xarajat yozuvi hisobga bog'lanmagan holda qoladi.</li>
       <li>AI xato qilishi mumkin. U ball yoki natijani bashorat qilmaydi va kafolatlamaydi.</li>
+    </ul>
+
+    <h2 id="ielts-writing">IELTS Writing baholash (IELTS bo'limi)</h2>
+    <p>IELTS bo'limidagi Writing Task 2 baholash faqat hisob bilan ishlaydi (2026-yil 19-noyabrda qo'shildi):</p>
+    <ul>
+      <li><strong>Nima yuboriladi</strong>: tanlangan yoki o'zingiz yozgan savol va inshongiz. Ismingiz, emailingiz va hisob raqamingiz AI xizmatiga yuborilmaydi.</li>
+      <li><strong>Kim baholaydi</strong>: Anthropic kompaniyasining (AQSh) Claude modeli, Tayanch serveri (Supabase Edge Function) orqali. Baho taxminiy, rasmiy IELTS natijasi emas.</li>
+      <li><strong>Tozalash</strong>: yuborishdan oldin matndagi email, telefon, karta va pasport raqami, havola va "@" taxallus avtomatik olib tashlanadi. Filtr hammasini ushlay olmaydi: inshoga shaxsiy ma'lumot yozmang.</li>
+      <li><strong>Saqlash</strong>: tozalangan savol, insho va baho hisobingizda (Supabase, Frankfurt) saqlanadi. Bir xil inshoni 24 soat ichida qayta yuborsangiz, oldingi natija ko'rsatiladi. Xarajatni hisoblash uchun matnsiz yozuv ham saqlanadi: vaqt, token soni va narx. Yozilayotgan qoralama faqat brauzeringizda (<code>tayanch:ielts-writing-qoralama</code>).</li>
+      <li><strong>O'chirish</strong>: baholash sahifasida har bir natijani o'chirish mumkin. Hisobni o'chirsangiz, natijalar ham o'chadi.</li>
     </ul>
 
     <h2>Brauzeringizda saqlanadigan narsa</h2>

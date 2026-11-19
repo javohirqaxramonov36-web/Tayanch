@@ -18,7 +18,7 @@
     "lugat:import": "node scripts/lugat-import.mjs",
     "lugat:sinov": "node --test scripts/lugat/*.test.mjs",
     "check": "astro check",
-    "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
+    "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/ielts/writing/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
     "validate:tests": "node scripts/ielts-testlarni-tekshir.ts",
     "savol:tekshir": "node scripts/savol-tekshir.mjs",
     "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",

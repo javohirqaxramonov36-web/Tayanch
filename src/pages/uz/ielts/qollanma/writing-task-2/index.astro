@@ -7,6 +7,7 @@ import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import { IKONKA, KALIT_IELTS_WRITING_T2 } from '../../../../../data/ieltsSahifalar';
 import { manbalar } from '../../../../../data/manbalar';
+import { writingMavzular } from '../../../../../data/ielts/writingSavollar';
 import { yol } from '../../../../../lib/yol';
 
 const ie05 = manbalar.find((x) => x.id === 'IE05')!;
@@ -43,12 +44,8 @@ const tuzoqlar = [
   ["Juda uzun yozish.", "250 dan ko'p yozish jazolanmaydi, lekin oxirida tekshirishga vaqt qolmasligi va ba'zi fikrlar savoldan uzoqlashishi mumkin.", true],
   ["Savolning bir qismini unutish.", "\"Discuss both views and give your opinion\" kabi savolda ikkala qarash ham, o'z fikring ham bo'lishi kerak. Rejani shunga qarab tuz.", false],
 ] as const;
-// Namuna mavzular: Tayanch uchun yozilgan, rasmiy IELTS savoli emas.
-const mavzular = [
-  { id: 'univ', tur: 'Solishtirish', matn: 'Some people believe that university education should be free for every student, while others think that students should pay for their own studies. Discuss both views and give your own opinion.' },
-  { id: 'tirbandlik', tur: 'Muammoga yechim', matn: 'In many large cities, traffic congestion is becoming a serious problem. What are the main causes of this problem, and what measures could be taken to reduce it?' },
-  { id: 'tanaffus', tur: "Fikr bildirish va asoslash", matn: 'Some people think that young people should spend a year working or travelling before they start university. To what extent do you agree or disagree?' },
-];
+// Namuna mavzular (Tayanch uchun yozilgan): src/data/ielts/writingSavollar.ts. Qo'llanmada birinchi uchtasi.
+const mavzular = writingMavzular.slice(0, 3);
 // O'zini tekshirish savollari: IE05 dagi mezon ta'riflari asosida Tayanch tuzgan.
 const tekshiruv = [
   { mezon: 'Task response', savollar: [

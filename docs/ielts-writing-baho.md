@@ -1,6 +1,6 @@
 # IELTS Writing baholovchi: spetsifikatsiya (qoralama, 2026-11-19)
 
-Holat: muallif tasdiqlagan (2026-11-19). PR 1 (server) qurilgan, PR 2 (sahifa) qurilmagan.
+Holat: muallif tasdiqlagan (2026-11-19). PR 1 (server, #188) va PR 2 (sahifa) qurilgan.
 
 ## Maqsad
 Foydalanuvchi IELTS Writing Task 2 inshosini yozadi, AI uni 4 mezon bo'yicha baholaydi va har biriga bitta aniq maslahat beradi. Natija **taxminiy**, rasmiy IELTS bali emas.
@@ -72,3 +72,12 @@ Foydalanuvchi IELTS Writing Task 2 inshosini yozadi, AI uni 4 mezon bo'yicha bah
 1. `supabase db push --remote --dry-run`, so'ng migratsiya.
 2. `supabase functions deploy ielts-writing-baho --no-verify-jwt --use-api`.
 3. Haqiqiy model bilan 3–5 namuna inshoda sinov (prompt sifati).
+
+## PR 2: sahifa (qurilgan)
+- `/uz/ielts/mashq/writing/` (`src/pages/uz/ielts/mashq/writing/index.astro`), mashq sahifasidagi Writing kartasi ochildi.
+- Mavzular `src/data/ielts/writingSavollar.ts` (6 ta, "Namuna"); qo'llanma ham shu fayldan birinchi uchtasini oladi.
+- Mantiq `src/lib/ielts/writing/baho.ts` (so'z sanog'i server bilan bir xil, tekshiruv, xato matnlari, qoralama), API `api.ts` (RPC `ielts_writing_status`, jadval `ielts_writing_results`, funksiya `ielts-writing-baho`). Testlar `src/lib/ielts/writing/testlar/`.
+- Spetsifikatsiyadan farq: "Baholash" tugmasi o'chirib qo'yilmaydi, shartlar bosilganda tekshiriladi va xabar formada chiqadi (o'chiq tugma sababini aytmaydi).
+- Maxfiylik sahifasiga `#ielts-writing` bo'limi qo'shildi (muallif tekshiradi).
+- Dev mock: `npm run dev`, `?mock=ok | kesh | limit | yopiq | xato | kirmagan`.
+- Sinalgan (dev mock, ilova brauzeri): yozish, qoralama tiklanishi, natija, limit, xato, kirmagan, AI yopiq, mavzusiz yuborish; telefon 375px (gorizontal aylantirish yo'q), qorong'i va yorug' mavzu. Sinalmagan: haqiqiy hisob va server, axe, VoiceOver, haqiqiy telefon.
