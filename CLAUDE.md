@@ -87,3 +87,8 @@ Ishlatma (loyihaga mos emas yoki DESIGN.md bilan zid): `code-to-figma`, `figma-t
 - Tugma faqat `<button>` yoki `<a>`, ikonka emoji emas.
 - Uydirma raqam, sana, sharh yo'q. Savol-javob namunalari ekranda "Namuna" deb belgilanadi.
 - Bepul va ochiq resurslar afzal.
+
+<!-- admission-d: boshlanish -->
+## Admission D-seriya (vaqtinchalik)
+Agar foydalanuvchi "davom" deb yozsa: `admission-d` branchiga o't (worktree `.claude/worktrees/admission-d`), `docs/rejalar/admission-reja.md` faylini to'liq o'qi va uning 0-bo'limidagi BOSHQARUVCHI tartibiga amal qil. Repo qoidalari bilan moslashtirish: `docs/rejalar/admission-holat.md`.
+<!-- admission-d: tugash -->
