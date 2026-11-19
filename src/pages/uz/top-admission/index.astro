@@ -17,6 +17,7 @@ import { yol } from '../../../lib/yol';
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
 const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 const zinapoya = yol('/uz/top-admission/qollanma/ariza-zinapoyasi/');
+const platformalar = yol('/uz/top-admission/platformalar/');
 
 // Muddat chiptalari va ularning .ics fayllari bitta manbadan (taChiptalar.ts).
 const chiptalar = taChiptalar;
@@ -117,6 +118,7 @@ const tekshirilmagan = [
           </a>
           <span class="sust kichik">Qabul ehtimoli hisoblanmaydi</span>
           <a class="havola" href={zinapoya}>Ariza zinapoyasi: interaktiv dars</a>
+          <a class="havola" href={platformalar}>Platformalar xaritasi</a>
         </div>
       </div>
       <div class="sahna" aria-hidden="true">
