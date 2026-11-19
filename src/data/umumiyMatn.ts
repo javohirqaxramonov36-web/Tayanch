@@ -18,8 +18,8 @@ const uz = {
   qavatYoli: 'Qayerdaman',
   qavatOta: 'Yuqori sahifa',
   lift: { nomi: 'Qavatlar', ochiq: 'Ochiq', qoralama: 'Qoralama', tezOrada: 'tez orada' },
-  zina: { nomi: "Zina: qo'shni qavatlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
-  qavatlarAro: 'Boshqa qavatda',
+  zina: { nomi: "Qo'shni bo'limlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
+  qavatlarAro: "Boshqa bo'limlar",
   yon: {
     menyuOchish: 'Menyuni ochish',
     menyuYopish: 'Menyuni yopish',
@@ -119,8 +119,8 @@ const en: Matn = {
   qavatYoli: 'You are here',
   qavatOta: 'Parent page',
   lift: { nomi: 'Floors', ochiq: 'Open', qoralama: 'Draft', tezOrada: 'coming soon' },
-  zina: { nomi: 'Stairs: neighboring floors', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
-  qavatlarAro: 'On another floor',
+  zina: { nomi: 'Neighboring sections', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
+  qavatlarAro: 'Other sections',
   yon: {
     menyuOchish: 'Open menu',
     menyuYopish: 'Close menu',

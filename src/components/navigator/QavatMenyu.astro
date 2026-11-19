@@ -22,7 +22,7 @@ const ielts = (q?: string) => (q ? `/uz/ielts/${q}` : undefined);
 
 const PANELLAR: Record<string, Panel> = {
   navigator: {
-    til: 'uz', tavsif: "Qaysi qavatdan boshlashni bilmasangiz, yo'lingizni shu yerda tanlang.", otish: 'Bosh sahifa', tezOrada: 'Tez orada',
+    til: 'uz', tavsif: "Qaysi bo'limdan boshlashni bilmasangiz, yo'lingizni shu yerda tanlang.", otish: 'Bosh sahifa', tezOrada: 'Tez orada',
     ustunlar: [
       { nomi: 'Boshlash', bandlar: [{ nomi: "Yo'limni tanlash", href: '/uz/?boshlash=1' }, { nomi: "Yo'nalishlar", href: '/uz/#qavatlar' }] },
       { nomi: "Ma'lumot", bandlar: [{ nomi: 'Muddatlar', href: '/uz/deadline/' }, { nomi: 'Manbalar', href: '/uz/manbalar/' }, { nomi: 'Aloqa', href: '/uz/aloqa/' }] },
@@ -30,18 +30,18 @@ const PANELLAR: Record<string, Panel> = {
     ],
   },
   'top-admission': {
-    til: 'uz', tavsif: tavsifI('top-admission'), otish: "Top Admission qavatiga o'tish", tezOrada: 'Tez orada',
+    til: 'uz', tavsif: tavsifI('top-admission'), otish: "Top Admission'ga o'tish", tezOrada: 'Tez orada',
     ustunlar: taGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: b.href && `/uz/${b.href}` })) })),
   },
   sat: {
-    til: 'en', tavsif: 'Digital SAT: Reading and Writing, and Math.', otish: 'Open the SAT floor', tezOrada: 'Coming soon',
+    til: 'en', tavsif: 'Digital SAT: Reading and Writing, and Math.', otish: 'Open SAT prep', tezOrada: 'Coming soon',
     // Account guruhi panelda yo'q: u yon panelda, kirgandan keyin kerak bo'ladi.
     ustunlar: satYonGuruhlar
       .filter((g) => g.nomi !== 'Account')
       .flatMap((g) => g.qismlar.map((q) => ({ nomi: q.nomi ?? g.nomi, bandlar: q.sahifalar.map((s) => ({ nomi: s.nomi, href: `/uz/sat/${s.qism}` })) }))),
   },
   ielts: {
-    til: 'uz', tavsif: tavsifI('ielts'), otish: "IELTS qavatiga o'tish", tezOrada: 'Tez orada',
+    til: 'uz', tavsif: tavsifI('ielts'), otish: "IELTS'ga o'tish", tezOrada: 'Tez orada',
     ustunlar: [
       { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
       { nomi: 'Reading darslari', bandlar: darslar },
@@ -50,7 +50,7 @@ const PANELLAR: Record<string, Panel> = {
     ].map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: ielts(b.qism) })) })),
   },
   eyuf: {
-    til: 'uz', tavsif: tavsifI('eyuf'), otish: 'Qavat haqida', tezOrada: 'Tez orada',
+    til: 'uz', tavsif: tavsifI('eyuf'), otish: "Bo'lim haqida", tezOrada: 'Tez orada',
     ustunlar: [],
   },
   // Kurslar aiAcademy.ts dan: ochiq kurs havola, tez-oradagisi "Tez orada" belgisi bilan. "Barcha kurslar" = qavat kirish sahifasi.
@@ -60,7 +60,7 @@ const PANELLAR: Record<string, Panel> = {
   },
 };
 ---
-<nav class="qm" aria-label="Qavatlar" data-qm>
+<nav class="qm" aria-label="Bo'limlar" data-qm>
   <ul class="qm-tablar" role="list">
     {qavatlar.map((q) => (
       <li>
@@ -77,7 +77,6 @@ const PANELLAR: Record<string, Panel> = {
       <div class="qm-panel" id={`qm-panel-${q.slug}`} data-floor={q.raqam} lang={p.til === 'en' ? 'en' : undefined} data-qm-panel>
         <div class="qm-ichki ichki">
           <div class="qm-karta">
-            <span class="qm-raqam">{p.til === 'en' ? `Floor ${q.raqam}` : `${q.raqam}-qavat`}</span>
             <p class="qm-nom">{q.nomi}</p>
             <p class="qm-tavsif">{p.tavsif}</p>
             {q.holat === 'tez-orada' && <span class="yorliq">{p.tezOrada}</span>}
@@ -224,7 +223,6 @@ const PANELLAR: Record<string, Panel> = {
     padding: var(--space-5); border-radius: var(--radius-lg);
     background: var(--floor-subtle); border: var(--border-width-1) solid var(--card-line);
   }
-  .qm-raqam { font-size: var(--text-caption-size); font-weight: 700; color: var(--floor-text); text-transform: uppercase; letter-spacing: 0.06em; }
   .qm-nom { margin: 0; font-weight: 900; font-size: var(--matn-h3); }
   .qm-tavsif { margin: 0; color: var(--matn-ikkinchi); font-size: var(--text-small-size); line-height: 1.5; }
   .qm-otish { margin-block-start: auto; align-self: stretch; }

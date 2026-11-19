@@ -108,7 +108,7 @@ export const PLATFORMALAR: Platforma[] = [
       { matn: "O'zbekiston sahifasida talaba va ota-onalar uchun maslahat bepul deb yozilgan.", manbaId: 'ID04' },
       { matn: 'IDP IELTS imtihonining hammuallifi (co-owner).', manbaId: 'ID04' },
     ],
-    tayanch: { matn: 'IELTS qavati', href: '/uz/ielts/' },
+    tayanch: { matn: "IELTS bo'limi", href: '/uz/ielts/' },
   },
   {
     id: 'grantlar', nomi: 'Grantlar.uz', guruh: 'yordamchi', davlatlar: 'hamma', qayerga: "Ko'p davlatlar va onlayn",
