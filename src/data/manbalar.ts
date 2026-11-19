@@ -748,6 +748,52 @@ export const manbalar: Manba[] = [
     tekshirilganSana: '2026-11-13',
     izoh: "SPR: musbat uchun 5, manfiy uchun minus bilan 6 belgi. Bitta javob kiritiladi. Sig'magan kasr o'nlikka aylantiriladi, sig'magan o'nlik kesiladi yoki yaxlitlanadi. Aralash son kasr yoki o'nlikka aylantiriladi. Oxirgi nuqta, manfiy nol va aynan yarimdagi yaxlitlash qoidasi ko'rsatilmagan.",
   },
+  // Platformalar xaritasi (Top Admission, 2026-11-19): yordamchi saytlar.
+  {
+    id: 'CS01',
+    nomi: 'CSS Profile: International Students',
+    tashkilot: 'College Board',
+    havola: 'https://cssprofile.collegeboard.org/international-students',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-19',
+    izoh: "\"Many colleges provide institutional financial aid to international students\"; kollej xalqaro talabadan CSS Profile qabul qilishini ishtirokchi muassasalar ro'yxatida tekshirish kerak. Daromad o'z valyutasida kiritiladi. Xalqaro talaba uchun to'lov va fee waiver bu sahifada yozilmagan.",
+  },
+  {
+    id: 'BF01',
+    nomi: 'BigFuture',
+    tashkilot: 'College Board',
+    havola: 'https://bigfuture.collegeboard.org/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-19',
+    izoh: "College Search va Scholarship Search bo'limlari bor. Sayt to'liq bepulligi bu sahifada aniq yozilmagan.",
+  },
+  {
+    id: 'ID04',
+    nomi: 'IDP Uzbekistan: Study abroad',
+    tashkilot: 'IDP Education',
+    havola: 'https://www.idp.com/uzbekistan/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-19',
+    izoh: "Sahifada \"FREE counselling for students & parents\"; yo'nalishlar: Buyuk Britaniya, Avstraliya, Kanada, AQSH, Yangi Zelandiya, Irlandiya; IDP IELTS hammuallifi (co-owner); ariza va viza bo'yicha yordam. Universitetlar IDP'ga haq to'lashi bu sahifada yozilmagan.",
+  },
+  {
+    id: 'KI01',
+    nomi: 'Kaplan International Pathways',
+    tashkilot: 'Kaplan International Pathways',
+    havola: 'https://www.kaplanpathways.com/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-19',
+    izoh: "Degree preparation (pathway course) va degree admission xizmati; yo'nalishlar AQSH, Kanada, Buyuk Britaniya, Avstraliya va Yangi Zelandiya; bakalavriat, magistratura, ingliz tili va doktorantura tayyorlovi. Narx va xizmat bepulligi bu sahifada yozilmagan.",
+  },
+  {
+    id: 'GR01',
+    nomi: 'Grantlar.uz',
+    tashkilot: 'Grantlar.uz',
+    havola: 'https://grantlar.uz/',
+    tekshiruvDarajasi: 'rasmiy',
+    tekshirilganSana: '2026-11-19',
+    izoh: "O'zbekcha grant e'lonlari sayti (o'zi haqida: \"bepul ta'lim olish uchun grant topishda yordam beradi\"). Bakalavriat, magistratura, doktorantura grantlari, tanlovlar, davlat va soha filtri. E'lonlar kirmasdan ko'rinadi; pullik \"Premium obuna\" bor, tarkibi va narxi bosh sahifada yozilmagan. Mustaqil sayt: e'lonni grant beruvchining rasmiy sahifasida tekshirish kerak.",
+  },
 ];
 
 export function rasmiyManbalar(idlar: string[] = []): Manba[] {

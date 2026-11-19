@@ -1,0 +1,155 @@
+---
+// 2-qavat · Top Admission · qo'llanma: Platformalar xaritasi.
+// Qaysi davlatga qaysi platforma orqali topshiriladi va qaysi yordamchi saytlar kerak bo'ladi.
+// Ma'lumot: src/data/taPlatformalar.ts (ariza platformalari topshirishYoli.ts dan, yordamchilar CS01, BF01, ID04, KI01, GR01).
+// Davlat filtri: JS bo'lsa <button aria-pressed>, JS'siz hamma kartalar ko'rinadi.
+// Boshlang'ich tanlov Topshirish yo'li kalitidagi davlatdan (faqat o'qiladi, filtr hech narsa yozmaydi).
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import { PLATFORMALAR, DAVLATLAR, TEKSHIRILMAGAN, platformaManbalari } from '../../../../data/taPlatformalar';
+import { KALIT } from '../../../../data/topshirishYoli';
+import { manbalar } from '../../../../data/manbalar';
+import { yol } from '../../../../lib/yol';
+
+const sana = '2026-11-19';
+const keyingi = '2026-12-19';
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+const manbaNomi = (id: string) => manbalar.find((m) => m.id === id)!.tashkilot;
+
+const guruhlar = [
+  { id: 'ariza', nomi: 'Ariza platformalari', izoh: 'Arizaning o\'zi shu yerda topshiriladi.' },
+  { id: 'yordamchi', nomi: 'Yordamchi saytlar', izoh: 'Qidirish, moliyaviy yordam va maslahat uchun. Ariza ular orqali emas.' },
+] as const;
+---
+<BolimQobiq
+  title="Platformalar xaritasi · Top Admission"
+  description="Qaysi davlatga qaysi platforma orqali topshiriladi: Common App, Scoir, UCAS, Türkiye Bursları va yordamchi saytlar. Faqat rasmiy manbadan."
+  turi="qollanma"
+  bolim="top-admission"
+  holat="qoralama"
+  tekshirilgan={sana}
+  keyingiTekshiruv={keyingi}
+  manbalar={platformaManbalari}
+  tekshirilmagan={TEKSHIRILMAGAN}
+  yol={["Qo'llanmalar"]}
+>
+  <div class="ichki pl-sahifa">
+    <header class="pl-bosh">
+      <p class="ustki">Qo'llanma</p>
+      <h1>Platformalar xaritasi</h1>
+      <p class="matn">Har davlatga ariza boshqa platforma orqali topshiriladi. Davlatni tanlang: qaysi platformada ariza berasiz va qaysi saytlar yordam beradi, shu yerda ko'rinadi. Havolalar faqat ma'lumot uchun.</p>
+    </header>
+
+    <div class="filtr" hidden data-filtr>
+      <p class="ustki" id="filtr-sarlavha">Davlat</p>
+      <div class="chiplar" role="group" aria-labelledby="filtr-sarlavha">
+        <button type="button" class="chip" data-davlat="hammasi" aria-pressed="true">Hammasi</button>
+        {DAVLATLAR.map((d) => <button type="button" class="chip" data-davlat={d.id} aria-pressed="false">{d.nomi}</button>)}
+      </div>
+      <p class="sust kichik" aria-live="polite" data-soni></p>
+    </div>
+
+    {guruhlar.map((g) => (
+      <section class="guruh" aria-labelledby={`g-${g.id}`} data-guruh>
+        <div class="guruh-bosh">
+          <h2 id={`g-${g.id}`}>{g.nomi}</h2>
+          <p class="sust">{g.izoh}</p>
+        </div>
+        <ul class="kartalar">
+          {PLATFORMALAR.filter((p) => p.guruh === g.id).map((p) => (
+            <li class="karta" data-davlatlar={p.davlatlar === 'hamma' ? 'hamma' : p.davlatlar.join(' ')}>
+              <h3>{p.nomi}</h3>
+              <p class="qayerga"><span class="ustki">Qayerga</span> {p.qayerga}</p>
+              <p>{p.tavsif}</p>
+              {p.faktlar.length > 0 && (
+                <ul class="faktlar">
+                  {p.faktlar.map((f) => <li>{f.matn} <span class="manba">({manbaNomi(f.manbaId)}, {f.manbaId})</span></li>)}
+                </ul>
+              )}
+              {(p.sayt || p.tayanch) && (
+                <p class="havolalar">
+                  {p.sayt && <a class="havola" href={p.sayt.href} rel="noopener">{p.sayt.matn}<span class="sr"> (rasmiy sayt)</span></a>}
+                  {p.tayanch && <a class="havola" href={yol(p.tayanch.href)}>Tayanch: {p.tayanch.matn}</a>}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <p class="bosh-yol">Qaysi yo'l sizga mosligini bilmasangiz, <a class="havola-matn" href={vosita}>Topshirish yo'li</a> vositasida 3 ta savolga javob bering.</p>
+  </div>
+</BolimQobiq>
+
+<script define:vars={{ KALIT }}>
+  const filtr = document.querySelector('[data-filtr]');
+  if (filtr) {
+    const chiplar = [...filtr.querySelectorAll('button.chip')];
+    const kartalar = [...document.querySelectorAll('.karta[data-davlatlar]')];
+    const soni = filtr.querySelector('[data-soni]');
+    const qoy = (davlat) => {
+      chiplar.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.davlat === davlat)));
+      let n = 0;
+      kartalar.forEach((k) => {
+        const d = k.dataset.davlatlar;
+        const kor = davlat === 'hammasi' || d === 'hamma' || d.split(' ').includes(davlat);
+        k.hidden = !kor;
+        if (kor) n++;
+      });
+      document.querySelectorAll('[data-guruh]').forEach((g) => { g.hidden = !g.querySelector('.karta:not([hidden])'); });
+      soni.textContent = `${n} ta platforma`;
+    };
+    let boshi = 'hammasi';
+    try {
+      const s = JSON.parse(localStorage.getItem(KALIT) || 'null');
+      if (s && chiplar.some((b) => b.dataset.davlat === s.davlat)) boshi = s.davlat;
+    } catch { /* o'qilmadi */ }
+    chiplar.forEach((b) => b.addEventListener('click', () => qoy(b.dataset.davlat)));
+    filtr.hidden = false;
+    qoy(boshi);
+  }
+</script>
+
+<style>
+  .pl-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); }
+  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .matn { max-width: 62ch; }
+  .pl-bosh { display: grid; gap: var(--b-3); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .filtr { display: grid; gap: var(--b-2); }
+  .chiplar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .chip {
+    min-height: 44px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
+    border: 1.5px solid var(--chiziq-kuchli); background: var(--sirt); color: var(--matn);
+    font: inherit; font-size: var(--matn-kichik); font-weight: 700; cursor: pointer;
+    transition: transform var(--harakat-tez) var(--harakat-egri);
+  }
+  .chip:active { transform: scale(.97); }
+  .chip[aria-pressed="true"] { background: var(--matn); border-color: var(--matn); color: var(--fon); }
+  .chip:focus-visible { outline: 2px solid var(--rang-havola); outline-offset: 2px; }
+
+  .guruh { display: grid; gap: var(--b-4); }
+  .guruh[hidden], .karta[hidden] { display: none; }
+  .guruh-bosh { display: grid; gap: var(--b-1); }
+  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .karta {
+    display: flex; flex-direction: column; gap: var(--b-2);
+    padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt);
+  }
+  .karta h3 { margin: 0; }
+  .qayerga { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
+  .qayerga .ustki { margin-right: var(--b-1); }
+  .faktlar { margin: 0; padding-left: 1.2em; display: grid; gap: var(--b-1); font-size: var(--matn-kichik); }
+  .manba { color: var(--matn-sust); }
+  .havolalar { margin-top: auto; display: flex; flex-wrap: wrap; column-gap: var(--b-4); }
+  .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
+  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  .bosh-yol { max-width: 62ch; }
+
+  @media (max-width: 760px) {
+    .chiplar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: var(--b-1); }
+    .chip { flex: none; }
+    .kartalar { grid-template-columns: 1fr; }
+  }
+</style>
