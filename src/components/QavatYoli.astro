@@ -1,5 +1,6 @@
 ---
 // Qavat, eng yaqin ota sahifa va joriy sahifa. Tor ekranda ota sahifa "…" bilan ko'rsatiladi.
+// Qavat kirish sahifasida chiqmaydi: u yerda yo'l faqat sahifaning o'zini takrorlardi (2026-11-19).
 import { joriyQavat, qavatI } from '../data/qavatlar';
 import { yol } from '../lib/yol';
 import { matn, qavatHolatMatni, yolTili } from '../data/umumiyMatn';
@@ -46,6 +47,7 @@ const otaManzil = ota ?? Object.keys(import.meta.glob('/src/pages/uz/**/index.as
   .filter((manzil) => manzil !== pathname && pathname.startsWith(manzil))
   .sort((a, b) => b.length - a.length)[0] ?? qavatManzili;
 ---
+{!qavatKirishi && (
 <nav class="qavat-yoli" aria-label={M.qavatYoli}>
   <ol role="list">
     <li class="qavat">
@@ -74,6 +76,7 @@ const otaManzil = ota ?? Object.keys(import.meta.glob('/src/pages/uz/**/index.as
   </ol>
   {qoralama && <span class="holat">{qoralama}</span>}
 </nav>
+)}
 
 <style>
   .qavat-yoli {
