@@ -54,7 +54,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 - Integratsiya (2026-11-14). `codex/sat-a1-integratsiya` GitHub `main` `c71a3f7` asosida. `package.json`da 1e dagi yetti `kurs:*` skripti va GitHub `main`dagi `sinxron:tekshir` saqlandi. Umumiy `savol:sinov` bitta qator bo‘lib qoldi. `package-lock.json` o‘zgarmadi. Lokal build flag o‘chiq 76, yoqiq 86, preview 126 sahifa. Eski 75/85 dan farq `9b17445` orqali GitHub `main`da avvaldan bor IELTS Listening qo‘llanmasi. Flag aynan 10 kurs sahifasini qo‘shadi. `npm test` 269/269, `savol:sinov` 27/27, `sinxron:tekshir` 15/15, `kurs:sinov` 7/7, `repo:tekshir` o‘tdi. `astro check`da avvalgi olti diagnostika. Chrome 390/1280 px, yorug‘ va qorong‘i rejimda to‘rtta holatning har birida 9 sahifa, axe va kontrast o‘tdi. A1 ochiq, qolgan mavzular “Coming soon”. Integratsiya lokal saqlandi. Pages nashri va production flagi uchun muallif tasdig‘i kutilmoqda.
 - Pages nashri (2026-11-14). `deploy.yml` qo‘lda `pages_asset_sha` qabul qiladi. `main` checkout’idan xususiy paket bilan qurilgan statik `dist/` alohida `pages-a1-<main-to‘liq-SHA>` tarmog‘iga yoziladi. Workflow shu tarmoqdagi commitni berilgan to‘liq SHA bilan solishtiradi. A1 nashridan keyin `main`ga har qanday push 76 sahifali flagsiz build nashri bilan uni almashtiradi. Flagsiz holatga qaytarish `gh workflow run deploy.yml --repo javohirqaxramonov36-web/Tayanch --ref main` (`pages_asset_sha` berilmaydi).
 
-## 1. Sayt tuzilmasi: 5 qavatli bino
+## 1. Sayt tuzilmasi: 6 qavatli bino
 
 | Qavat | Nomi | Manzil | Holat (`bolimlar.ts`) | Nima bor |
 | --- | --- | --- | --- | --- |
@@ -63,6 +63,7 @@ Muhim: lokal papka nomi `Tayanch-SAT prep`, lekin unda **butun sayt** turibdi (5
 | 3 | SAT prep | `/uz/sat/` | ochiq | To'liq bo'lim |
 | 4 | IELTS prep | `/uz/ielts/` | ochiq | To'liq bo'lim |
 | 5 | EYUF prep | `/uz/eyuf/` | tez-orada | Faqat "qavat qurilmoqda" sahifasi |
+| 6 | AI Academy | `/uz/ai-academy/` | ochiq (kurs holati `src/data/aiAcademy.ts` da) | Kirish sahifasi (qoralama, noindex), Prompt Engineering "tez-orada"; darslar, tarif va hisob yo'q (PR #190) |
 
 ## 2. Nima qurilgan (hammasi `main`da va saytda)
 
