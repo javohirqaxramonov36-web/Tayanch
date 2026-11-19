@@ -41,6 +41,14 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
       </a>
     )}
 
+    {bolim === 'eyuf' && (
+      <a class="vosita-karta" href={yol('/uz/eyuf/kurslar/')}>
+        <span class="vk-yorliq">Kurslar</span>
+        <span class="vk-nom">Bepul kurslar</span>
+        <span class="vk-matn">Nega chet elda o'qish kerak va El-Yurt Umidi suhbatiga tayyorgarlik.</span>
+      </a>
+    )}
+
     <section class="muddatlar" aria-labelledby="m-h">
       <h2 id="m-h">Shu bo'limning muddatlari</h2>
       <DeadlineRoyxati bolim={bolim} faqatKelajak />
