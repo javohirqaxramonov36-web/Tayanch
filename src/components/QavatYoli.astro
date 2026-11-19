@@ -37,7 +37,7 @@ const qavatManzili = yol(q.manzil);
 const qavatKirishi = pathname === qavatManzili;
 const til = yolTili(pathname);
 const M = matn[til];
-const qavatNomi = `${M.qavat(n)} · ${q.nomi}`;
+const qavatNomi = q.nomi;
 const iz = bandlar.filter(Boolean).join(' › ');
 const qoralama = q.holat === 'qoralama' ? qavatHolatMatni(q.holat, til) : undefined;
 const otaManzil = ota ?? Object.keys(import.meta.glob('/src/pages/uz/**/index.astro', { query: '?raw', import: 'default' }))

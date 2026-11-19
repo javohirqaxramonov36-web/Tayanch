@@ -201,8 +201,7 @@ const ieltsGuruhlar = [
         {qavatlar.map((q) => (
           <li>
             <a href={yol(q.manzil)} aria-current={q.raqam === joriyRaqam ? 'location' : undefined}>
-              <span class="qavat-raqam" aria-hidden="true">{q.raqam}</span>
-              <span class="nofaol-nom"><span class="ekranda-yoq">{Q.qavat(q.raqam)} · </span>{q.nomi}</span>
+              <span class="nofaol-nom">{q.nomi}</span>
               {q.holat === 'tez-orada' && <span class="yorliq-tez">{Q.lift.tezOrada}</span>}
             </a>
           </li>
@@ -491,17 +490,9 @@ const ieltsGuruhlar = [
   .royxat a[aria-current='page'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-weight: 700; }
   .royxat a[aria-current='page'] .ikonka { color: var(--rang-asosiy-matn); }
 
-  /* Qavatlar ro'yxati: raqam doirasi qavat rangida, joriy qavat qalin va sust fonda (asosiy rang sahifaga qoladi) */
+  /* Bo'limlar ro'yxati: faqat nom (qavat raqami yozilmaydi, 2026-11-19); joriy bo'lim qalin va sust fonda (asosiy rang sahifaga qoladi) */
   .qavat-royxat a { font-weight: 500; }
-  .qavat-raqam {
-    flex: none; display: grid; place-items: center;
-    inline-size: var(--size-icon-lg); block-size: var(--size-icon-lg);
-    border-radius: var(--radius-full);
-    background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi);
-    font-size: var(--matn-mayda); font-weight: 700;
-  }
   .qavat-royxat a[aria-current='location'] { background: var(--fon-ikkinchi); font-weight: 700; }
-  .qavat-royxat a[aria-current='location'] .qavat-raqam { background: var(--matn); color: var(--fon); }
 
   .yon-past {
     flex: none;

@@ -26,13 +26,13 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'umumiy-manbalar', maqsad: 'umumiy', nomi: 'Rasmiy manbalar', izoh: "Qoida va talablarni asl manbada o'qing.", manzil: '/uz/manbalar/' },
 
   // 2-qavat: Top Admission
-  { id: 'ta-kirish', maqsad: 'top-admission', nomi: 'Top Admission qavatini ko\'ring', izoh: "Qavatda nima borligi va qayerdan boshlash.", manzil: '/uz/top-admission/' },
+  { id: 'ta-kirish', maqsad: 'top-admission', nomi: 'Top Admission bo\'limini ko\'ring', izoh: "Bo'limda nima borligi va qayerdan boshlash.", manzil: '/uz/top-admission/' },
   { id: 'ta-topshirish-yoli', maqsad: 'top-admission', nomi: "Topshirish yo'lingizni tuzing", izoh: "Davlat va dastur bo'yicha umumiy qadamlar.", manzil: '/uz/top-admission/vosita/topshirish-yoli/' },
   { id: 'ta-zinapoya', maqsad: 'top-admission', nomi: 'Ariza zinapoyasi darsi', izoh: 'Ariza bosqichlarini tartib bilan mashq qiling.', manzil: '/uz/top-admission/qollanma/ariza-zinapoyasi/' },
   { id: 'ta-turkiye', maqsad: 'top-admission', nomi: 'Türkiye Bursları', izoh: "Yo'nalish sahifasi: shartlar va hujjatlar.", manzil: '/uz/top-admission/turkiye-burslari/' },
 
   // 3-qavat: SAT
-  { id: 'sat-kirish', maqsad: 'sat', nomi: "SAT qavatini ko'ring", izoh: "Bo'limda nima borligi va qayerdan boshlash.", manzil: '/uz/sat/' },
+  { id: 'sat-kirish', maqsad: 'sat', nomi: "SAT bo'limini ko'ring", izoh: "Bo'limda nima borligi va qayerdan boshlash.", manzil: '/uz/sat/' },
   { id: 'sat-reja', maqsad: 'sat', nomi: 'SAT reja tuzgich', izoh: 'Imtihon sanasigacha haftalik reja.', manzil: '/uz/sat/vosita/reja/' },
   { id: 'sat-test', maqsad: 'sat', nomi: 'SAT mashq testi', izoh: 'Qisqa test: Reading & Writing va Math.', manzil: '/uz/sat/mashq/test/' },
   { id: 'sat-bank', maqsad: 'sat', nomi: 'SAT savol banki', izoh: "Mavzu bo'yicha savollar.", manzil: '/uz/sat/mashq/bank/' },
@@ -51,7 +51,7 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'sat-vaqt', maqsad: 'sat', nomi: 'Vaqt va qayta topshirish', izoh: "Vaqtni taqsimlash va retake rejasi.", manzil: '/uz/sat/qollanma/vaqt/' },
 
   // 4-qavat: IELTS (faqat havola; IELTS fayllari o'zgartirilmaydi)
-  { id: 'ielts-kirish', maqsad: 'ielts', nomi: "IELTS qavatini ko'ring", izoh: "Bo'limda nima borligi va qayerdan boshlash.", manzil: '/uz/ielts/' },
+  { id: 'ielts-kirish', maqsad: 'ielts', nomi: "IELTS bo'limini ko'ring", izoh: "Bo'limda nima borligi va qayerdan boshlash.", manzil: '/uz/ielts/' },
   { id: 'ielts-reja', maqsad: 'ielts', nomi: 'IELTS 30 kunlik reja', izoh: 'Uch savol asosida kunma-kun reja.', manzil: '/uz/ielts/vosita/reja/' },
   { id: 'ielts-reading', maqsad: 'ielts', nomi: "Reading qo'llanmasi", izoh: 'Skimming, scanning va savol turlari.', manzil: '/uz/ielts/qollanma/reading/' },
   { id: 'ielts-tfng', maqsad: 'ielts', nomi: 'Reading darsi: True / False / Not Given', izoh: 'Interaktiv dars va mashqlar.', manzil: '/uz/ielts/qollanma/reading/tfng/' },
@@ -61,7 +61,7 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'ielts-speaking', maqsad: 'ielts', nomi: "Speaking qo'llanmasi", izoh: "Uch qism va o'zingizni yozib eshitish.", manzil: '/uz/ielts/qollanma/speaking/' },
 
   // 5-qavat: EYUF
-  { id: 'eyuf-kirish', maqsad: 'eyuf', nomi: 'EYUF qavati', izoh: 'Tanlov bosqichlari xaritasi.', manzil: '/uz/eyuf/', qurilmoqda: true },
+  { id: 'eyuf-kirish', maqsad: 'eyuf', nomi: "EYUF bo'limi", izoh: 'Tanlov bosqichlari xaritasi.', manzil: '/uz/eyuf/', qurilmoqda: true },
 ];
 
 /** id -> sahifa */
