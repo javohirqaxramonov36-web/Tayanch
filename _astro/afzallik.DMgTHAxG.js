@@ -1,0 +1,1 @@
+var e=`tayanch:sat-afzallik`,t=[15,30,45,60],n={versiya:1,rejim:`practice`,kunlikDaqiqa:null};function r(e){if(!e||typeof e!=`object`||Array.isArray(e))return{...n};let r=e,i=r.rejim===`timed`?`timed`:`practice`,a=r.kunlikDaqiqa;return{versiya:1,rejim:i,kunlikDaqiqa:typeof a==`number`&&t.includes(a)?a:null}}export{r as n,e as t};
