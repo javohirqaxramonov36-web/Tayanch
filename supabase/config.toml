@@ -85,6 +85,10 @@ verify_jwt = false
 [functions.ai-tutor]
 verify_jwt = false
 
+# ielts-writing-baho: IELTS Writing Task 2 taxminiy bahosi. Foydalanuvchi kod ichida auth.getUser bilan; AI_API_KEY ai-tutor bilan umumiy.
+[functions.ielts-writing-baho]
+verify_jwt = false
+
 # hisob-malumot (P23): ma'lumot eksporti va hisobni o'chirish. Foydalanuvchi kod ichida auth.getUser bilan,
 # o'chirishda qayta autentifikatsiya JWT `amr` vaqti bilan tekshiriladi.
 [functions.hisob-malumot]
