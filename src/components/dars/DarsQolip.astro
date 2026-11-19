@@ -11,6 +11,8 @@ import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
 import { tinishmi } from '../../lib/belgilashGuruh';
 import { bolimTili, matn } from '../../data/umumiyMatn';
 import { yol } from '../../lib/yol';
+import TelegramTugma from '../TelegramTugma.astro';
+import { telegramKorinadi } from '../../data/telegram';
 
 interface Props {
   bolim: DarsBolim;
@@ -252,6 +254,15 @@ const qadamlar = [
         </nav>
       ) : keyingi && (
         <a class="katta asosiy keyingi-dars" href={keyingi.href}>{keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi)}</a>
+      )}
+      {telegramKorinadi('guruh') && (
+        <aside class="telegram-blok" aria-labelledby="telegram-h">
+          <div>
+            <h3 id="telegram-h">{M.telegramSavol}</h3>
+            <p class="kichik ikkinchi">{M.telegramIzoh}</p>
+          </div>
+          <TelegramTugma turi="guruh" matn={M.telegramTugma} yangiTab={matn[til].yon.yangiTab} />
+        </aside>
       )}
       <QavatlarAro kartalar={darsQavatlarAro[modul] ?? []} daraja="h3" />
     </section>
@@ -734,4 +745,7 @@ const qadamlar = [
     .dars .soz-bolaklar { font-size: 18px; }
     .dars .parcha { padding: var(--b-3); }
   }
+  .telegram-blok { align-self: stretch; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3) var(--b-5); padding: var(--b-5); border: 1px solid var(--chiziq); border-radius: var(--r-orta); background: var(--sirt); }
+  .telegram-blok h3 { margin: 0; }
+  .telegram-blok p { margin: 0; }
 </style>

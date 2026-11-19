@@ -11,6 +11,9 @@ import { yol } from '../../lib/yol';
 import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
+import TelegramTugma from '../../components/TelegramTugma.astro';
+import { telegram, telegramKorinadi } from '../../data/telegram';
+import { matn } from '../../data/umumiyMatn';
 
 const sochilgan = [
   { t: 'IELTS', x: 6, y: 8, r: -6 },
@@ -114,6 +117,15 @@ const sochilgan = [
     </div>
   </section>
 
+  <!-- 3b. Community: havola va haqiqiy son src/data/telegram.ts da (son bo'lmasa raqamsiz matn) -->
+  {telegramKorinadi('kanal') && (
+    <section class="ichki blok community" aria-labelledby="s-community">
+      <h2 id="s-community" class="kichik-h2">Community</h2>
+      <p class="lead">{telegram.azolar ? `${telegram.azolar.toLocaleString('uz')} talaba` : 'Talabalar'} bizning Telegram kanalimizda faol.</p>
+      <TelegramTugma turi="kanal" variant="asosiy" matn={matn.uz.yon.telegramKanal} yangiTab={matn.uz.yon.yangiTab} />
+    </section>
+  )}
+
   <!-- 4. Cho'qqi -->
   <MuallifYoli />
 
@@ -178,4 +190,5 @@ const sochilgan = [
 
   .muddatlar { padding-block: var(--b-6) var(--b-14); gap: var(--b-5); }
   .kichik-h2 { font-size: 1.75rem; }
+  .community { gap: var(--b-5); align-items: flex-start; }
 </style>
