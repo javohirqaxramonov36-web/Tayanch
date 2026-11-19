@@ -61,7 +61,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
   <SavolUslub />
   <div class="ichki takror" data-kurs={JSON.stringify(kursTavsiyaYollari())} id="takror" data-sessiya-url={yol('/uz/sat/mashq/sessiya/')} data-kirish-url={yol('/uz/hisob/kirish/')} data-sahifa-url={sahifaUrl}>
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <p class="pill-qator"><span class="ustki-kok">Tool</span></p>
       <h1>Mistake log: review</h1>
       <p class="lead">Questions you got wrong in the lessons and the question bank land here and come back at intervals: tomorrow, then after 3, 7 and 14 days. Solve one correctly and it moves to the next box; get it wrong and it goes back to the start. Note why you missed it, so you fix the cause, not just the answer.</p>
     </header>
@@ -155,7 +155,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
         <button type="button" class="matn-tugma" id="tasdiq-ha">Yes, delete</button>
         <button type="button" class="matn-tugma" id="tasdiq-yoq">Cancel</button>
       </span>
-      <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite">Review progress is saved only in this browser.</p>
+      <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite">Lesson review progress is saved only in this browser. Question bank mistakes are in your account.</p>
     </div>
 
     <ManbaBlok
@@ -239,7 +239,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
 
   const saqlashHolati = (ok: boolean) => {
     $('saqlash-holat').textContent = ok
-      ? 'Review progress is saved only in this browser.'
+      ? 'Lesson review progress is saved only in this browser. Question bank mistakes are in your account.'
       : 'The browser did not allow saving: review progress will be lost when the page is closed.';
   };
 

@@ -127,12 +127,13 @@
   .sk-natija {
     margin-top: var(--b-5);
     border-radius: var(--r-katta); padding: 24px 28px;
-    background: var(--qora); color: var(--rang-asosiy-matn);
+    /* Noto'g'ri javob: qora sirt + uning juft matni (avval --rang-asosiy-matn edi, qorong'i mavzuda ~1.1:1). */
+    background: var(--qora); color: var(--qora-matn);
     border: 1px solid var(--qora-chiziq);
     display: flex; flex-direction: column; gap: var(--b-2);
   }
   .sk-natija[hidden] { display: none; }
-  .sk-natija.sk-natija-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
+  .sk-natija.sk-natija-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
   .sk-natija-sarlavha { margin: 0; font-size: 18px; font-weight: 800; }
   .sk-natija-izoh { font-size: var(--matn-asosiy); }
   .sk-natija-izoh:empty { display: none; }

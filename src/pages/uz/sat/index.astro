@@ -144,7 +144,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
 
     {kutilmoqda.length > 0 && (
       <details>
-        <summary>Coming soon</summary>
+        <summary>Coming soon ({kutilmoqda.length} {kutilmoqda.length === 1 ? "page" : "pages"})</summary>
         <ul>{kutilmoqda.map((s) => <li>{s.nomi}</li>)}</ul>
       </details>
     )}

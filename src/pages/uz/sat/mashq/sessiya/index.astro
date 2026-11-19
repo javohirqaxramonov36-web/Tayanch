@@ -914,7 +914,9 @@ const IK = {
       if (izoh) d.append(el('dd', 'stat-izoh', izoh));
       statlar.append(d);
     };
-    stat('Score', `${h.foiz}%`, `${h.togri} of ${h.jami} correct`);
+    // Ball o'tkazib yuborilganlarni ham noto'g'ri hisoblaydi; My results esa faqat javob berilganlarni. Ikkalasini ko'rsatamiz.
+    const javobdanAniqlik = h.javobBerilgan && h.javobBerilgan < h.jami ? ` · ${Math.round((h.togri / h.javobBerilgan) * 100)}% of answered` : '';
+    stat('Score', `${h.foiz}%`, `${h.togri} of ${h.jami} correct${javobdanAniqlik}`);
     stat('Time', davomiylikMatni(S.elapsed_ms ?? h.vaqtMs), S.course ? 'From start to submission' : 'Spent on answered questions');
     stat('Answered', `${h.javobBerilgan} / ${h.jami}`, h.jami - h.javobBerilgan ? `${h.jami - h.javobBerilgan} skipped` : 'None skipped');
     const miniHolat = miniTest() ? (miniTestOtdimi(h.togri, h.jami) ? 'Passed' : 'Not yet passed') : null;

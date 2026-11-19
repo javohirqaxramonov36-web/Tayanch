@@ -102,9 +102,9 @@ export function keyingiVaqtMatni(nextAt: string, mintaqa?: string): string {
 
 /** Streak matni. Uzilgan streak haqida ayblov yo'q: faqat keyingi qadam. */
 export function streakMatni(s: KunStreak): string {
-  if (s.active_today) return s.current === 1 ? 'Day 1 of your streak. Nice start.' : `${s.current}-day streak.`;
-  if (s.current > 0) return `${s.current}-day streak. Answer today's question to keep it going.`;
-  return 'Answer today to start a streak.';
+  if (s.active_today) return s.current === 1 ? 'Question of the day: day 1 of your streak. Nice start.' : `Question of the day: ${s.current}-day streak.`;
+  if (s.current > 0) return `Question of the day: ${s.current}-day streak. Answer today's question to keep it going.`;
+  return 'Answer today to start a Question of the day streak.';
 }
 
 export type KunXato = 'eskirgan' | 'tarmoq';
