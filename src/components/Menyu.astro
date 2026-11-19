@@ -1,5 +1,6 @@
 ---
 // Hamma umumiy sahifalarda bir xil T menyusi. Qavat URL orqali aniqlanadi.
 import BolimYon from './BolimYon.astro';
+const { qm = false } = Astro.props as { qm?: boolean };
 ---
-<BolimYon />
+<BolimYon qm={qm}><slot name="markaz" slot="markaz" /></BolimYon>
