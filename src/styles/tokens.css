@@ -349,13 +349,14 @@
 /* Qavat foto foni (2026-11-19, muallif tanlovi): rasm butun sahifa orqasida, ustida parda,
    kontent zich shishada (DESIGN.md "Sirtlar": uzun matn faqat zich shishada). */
 :root {
+  /* Zichlik eng yomon holatdan (foto piksel qora/oq): --color-text-secondary >= 4.5:1 (2026-11-19 hisob). */
   --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 30%, transparent);
-  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 88%, transparent);
+  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 78%, transparent);
   --qavat-fon-blur:blur(var(--space-6)) saturate(1.4);
 }
 :root[data-mavzu='qorongi'] {
-  --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 45%, transparent);
-  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 90%, transparent);
+  --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 40%, transparent);
+  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 75%, transparent);
 }
 
 /* ==========================================================================

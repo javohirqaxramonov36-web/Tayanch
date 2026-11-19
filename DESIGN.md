@@ -167,7 +167,7 @@ Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichi
 ### Qavat foto foni (2026-11-19, muallif tanlovi)
 
 - Qavat kirish sahifalarida (Top Admission, SAT, IELTS, EYUF) `QavatFoto` rasmi butun ekranni qoplaydi va joyida qotib turadi (`position: fixed`, `object-fit: cover`), ustida `--qavat-fon-parda`.
-- Kontent (`main`) foto ustida zich shishada: `--qavat-fon-shisha` (yorug'da sirt 88%, qorong'ida 90%), `--qavat-fon-blur`. Shisha `main::before` da, chunki `main` ning o'zidagi `backdrop-filter` fixed fotoni o'z qutisiga qamaydi.
+- Kontent (`main`) foto ustida zich shishada: `--qavat-fon-shisha` (yorug'da sirt 78% + parda 30%, qorong'ida 75% + parda 40%; eng yomon holatda, ya'ni foto pikseli qora yoki oq bo'lsa, `--color-text-secondary` 4.5:1 dan past emas: yorug'da ~4.6:1, qorong'ida ~4.6:1), `--qavat-fon-blur`. Shisha `main::before` da, chunki `main` ning o'zidagi `backdrop-filter` fixed fotoni o'z qutisiga qamaydi.
 - Zaxira: `prefers-reduced-transparency` yoki `backdrop-filter` yo'q bo'lsa, zich `--color-surface`.
 
 ### Hozir: shishasiz (2026-11-13), qavat o'z PR'iga yetguncha
