@@ -10,7 +10,7 @@ import { qavatlar } from '../data/qavatlar';
 import { korinadiganDeadlinelar } from '../data/deadline';
 import { yol } from '../lib/yol';
 
-interface Props { bolim: BolimSlug }
+interface Props { bolim: Exclude<BolimSlug, 'ai-academy'> }
 const { bolim } = Astro.props;
 const b = bolimlar.find((x) => x.slug === bolim)!;
 const q = qavatlar.find((x) => x.slug === bolim)!;

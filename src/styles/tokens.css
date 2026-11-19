@@ -29,6 +29,8 @@
   --color-floor-sat-100:#F2F7FF; --color-floor-sat-200:#C9DFFF; --color-floor-sat-300:#9EC5FE; --color-floor-sat-400:#6FA9FF; --color-floor-sat-500:#2F86FF; --color-floor-sat-600:#156AD9; --color-floor-sat-700:#0050B0; --color-floor-sat-800:#003982; --color-floor-sat-900:#002357;
   --color-floor-ielts-100:#FEF4F3; --color-floor-ielts-200:#FFD1CB; --color-floor-ielts-300:#FEABA1; --color-floor-ielts-400:#FF7D71; --color-floor-ielts-500:#EF4841; --color-floor-ielts-600:#C92C2A; --color-floor-ielts-700:#A11618; --color-floor-ielts-800:#78040A; --color-floor-ielts-900:#500003;
   --color-floor-eyuf-100:#ECFBF0; --color-floor-eyuf-200:#C4F7D0; --color-floor-eyuf-300:#9BF0B2; --color-floor-eyuf-400:#6EE695; --color-floor-eyuf-500:#3BD879; --color-floor-eyuf-600:#07AC5E; --color-floor-eyuf-700:#007F47; --color-floor-eyuf-800:#015631; --color-floor-eyuf-900:#002F1A;
+  /* 6-qavat AI Academy (2026-11-19): binafsha urg'u. 500 = #7C3AED, oq fonda 5.70:1, #F5F3FF da 5.20:1 */
+  --color-floor-ai-100:#F5F3FF; --color-floor-ai-200:#DDD6FE; --color-floor-ai-300:#C4B5FD; --color-floor-ai-400:#A78BFA; --color-floor-ai-500:#7C3AED; --color-floor-ai-600:#6D28D9; --color-floor-ai-700:#5B21B6; --color-floor-ai-800:#4C1D95; --color-floor-ai-900:#2E1065;
   --color-success-100:#EEFAF3; --color-success-200:#BDE6CD; --color-success-300:#8BD0A8; --color-success-400:#57B784; --color-success-500:#02985F; --color-success-600:#047C4D; --color-success-700:#01613B; --color-success-800:#00482A; --color-success-900:#00301A;
   --color-warning-100:#FFF5EC; --color-warning-200:#FFDDC1; --color-warning-300:#FEC491; --color-warning-400:#FEA855; --color-warning-500:#EF8C0F; --color-warning-600:#C56E01; --color-warning-700:#9A5201; --color-warning-800:#713901; --color-warning-900:#4A2100;
   --color-error-100:#FEF4F4; --color-error-200:#FFC6CA; --color-error-300:#FF929D; --color-error-400:#ED5F75; --color-error-500:#CD1E4C; --color-error-600:#AF013B; --color-error-700:#8E002E; --color-error-800:#6D0021; --color-error-900:#4E0016;
@@ -132,6 +134,7 @@
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-700);             --color-floor-sat-ui:var(--color-floor-sat-600);             --color-floor-sat-subtle:var(--color-floor-sat-100);
   --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-700);         --color-floor-ielts-ui:var(--color-floor-ielts-600);         --color-floor-ielts-subtle:var(--color-floor-ielts-100);
   --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-700);           --color-floor-eyuf-ui:var(--color-floor-eyuf-700);           --color-floor-eyuf-subtle:var(--color-floor-eyuf-100);
+  --color-floor-ai-fill:var(--color-floor-ai-500);             --color-floor-ai-text:var(--color-floor-ai-500);             --color-floor-ai-ui:var(--color-floor-ai-500);             --color-floor-ai-subtle:var(--color-floor-ai-100);
 
   --color-indicator-off:var(--color-neutral-400);
   --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 82%, transparent);
@@ -177,6 +180,7 @@
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-400);             --color-floor-sat-ui:var(--color-floor-sat-500);             --color-floor-sat-subtle:color-mix(in srgb, var(--color-floor-sat-900) 60%, var(--color-neutral-900));
   --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-500);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
   --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-500);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
+  --color-floor-ai-fill:var(--color-floor-ai-500);             --color-floor-ai-text:var(--color-floor-ai-400);             --color-floor-ai-ui:var(--color-floor-ai-400);             --color-floor-ai-subtle:color-mix(in srgb, var(--color-floor-ai-900) 60%, var(--color-neutral-900));
 
   --color-indicator-off:var(--color-neutral-700);
   --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 12%, transparent);
@@ -224,6 +228,7 @@
 [data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); }
 [data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); }
 [data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); }
+[data-floor="6"]{ --floor-fill:var(--color-floor-ai-fill);        --floor-text:var(--color-floor-ai-text);        --floor-ui:var(--color-floor-ai-ui);        --floor-subtle:var(--color-floor-ai-subtle); }
 [data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
 
 /* desktop type roles (sayt: container query o'rniga media query) */

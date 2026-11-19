@@ -6,6 +6,7 @@ import MuallifYoli from '../../components/MuallifYoli.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
 import { bolimlar } from '../../data/bolimlar';
 import { qavatlar } from '../../data/qavatlar';
+import { aiKursOchiq } from '../../data/aiAcademy';
 import { qavatHolatMatni } from '../../data/umumiyMatn';
 import { yol } from '../../lib/yol';
 import Bino from '../../components/Bino.astro';
@@ -70,7 +71,8 @@ const sochilgan = [
     <ul class="kartalar">
       {bolimlar.map((b) => {
         // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
-        const ochiq = b.holat !== 'tez-orada';
+        // AI Academy: qavat ochiq, lekin tugma kurs holatidan (aiAcademy.ts)
+        const ochiq = b.slug === 'ai-academy' ? aiKursOchiq : b.holat !== 'tez-orada';
         const holat = qavatHolatMatni(b.holat, 'uz');
         const raqam = qavatlar.find((q) => q.slug === b.slug)?.raqam;
         const manzil = yol(`/uz/${b.slug}/`);
@@ -82,6 +84,7 @@ const sochilgan = [
                 {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
                 {b.ikonka === 'varaq' && <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h4" /></>}
                 {b.ikonka === 'medal' && <><circle cx="12" cy="9" r="5" /><path d="M9 13l-2 8 5-3 5 3-2-8" /></>}
+                {b.ikonka === 'kod' && <path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16" />}
               </svg>
               <h3 class="karta-nom" id={`karta-${b.slug}`}>
                 {b.nomi}
