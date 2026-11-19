@@ -164,6 +164,12 @@ Harf oralig'i: PR #74 dagi `--oraliq-hero`, `--oraliq-sarlavha`, `--oraliq-kichi
 - **Bino SVG.** Blursiz qoladi, SVG blur filtri qaytmaydi.
 - **Telefonda tezlik.** Past darajali Android'da sinalmagan. Har shisha PR'ida haqiqiy telefonda tekshiriladi.
 
+### Qavat foto foni (2026-11-19, muallif tanlovi)
+
+- Qavat kirish sahifalarida (Top Admission, SAT, IELTS, EYUF) `QavatFoto` rasmi butun ekranni qoplaydi va joyida qotib turadi (`position: fixed`, `object-fit: cover`), ustida `--qavat-fon-parda`.
+- Kontent (`main`) foto ustida zich shishada: `--qavat-fon-shisha` (yorug'da sirt 88%, qorong'ida 90%), `--qavat-fon-blur`. Shisha `main::before` da, chunki `main` ning o'zidagi `backdrop-filter` fixed fotoni o'z qutisiga qamaydi.
+- Zaxira: `prefers-reduced-transparency` yoki `backdrop-filter` yo'q bo'lsa, zich `--color-surface`.
+
 ### Hozir: shishasiz (2026-11-13), qavat o'z PR'iga yetguncha
 
 - Ustki qatorlar (`Menyu`, `BolimYon` ustki qatori, `SatFokus` sarlavhasi) va Lift telefon paneli: zich `--color-surface` fon, 1px `--color-border` chiziq.

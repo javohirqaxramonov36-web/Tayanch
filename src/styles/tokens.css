@@ -346,6 +346,18 @@
   --nav-glass-sheen:linear-gradient(160deg, color-mix(in srgb, var(--color-neutral-0) 4%, transparent), transparent 48%);
 }
 
+/* Qavat foto foni (2026-11-19, muallif tanlovi): rasm butun sahifa orqasida, ustida parda,
+   kontent zich shishada (DESIGN.md "Sirtlar": uzun matn faqat zich shishada). */
+:root {
+  --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 30%, transparent);
+  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 88%, transparent);
+  --qavat-fon-blur:blur(var(--space-6)) saturate(1.4);
+}
+:root[data-mavzu='qorongi'] {
+  --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 45%, transparent);
+  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 90%, transparent);
+}
+
 /* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
    ========================================================================== */
