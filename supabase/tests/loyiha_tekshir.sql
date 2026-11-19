@@ -19,6 +19,8 @@ jadvallar as (
 kutilgan_huquq (jadval, rol, huquqlar) as (values
   ('ai_conversations', 'anon', ''),
   ('ai_conversations', 'authenticated', 'DELETE,SELECT'),
+  ('ielts_writing_results', 'anon', ''),
+  ('ielts_writing_results', 'authenticated', 'DELETE,SELECT'),
   ('ai_messages', 'anon', ''),
   ('ai_messages', 'authenticated', 'DELETE,SELECT'),
   ('attempts', 'anon', ''),
@@ -144,6 +146,9 @@ kutilgan_rpc (imzo, anon, authenticated, service_role) as (values
   ('public.ai_recent_mistakes(integer)', false, true, true),
   ('public.ai_begin(uuid,text,integer,integer)', false, false, true),
   ('public.ai_finish(bigint,integer,integer,integer,boolean,text)', false, false, true),
+  ('public.ielts_writing_status()', false, true, true),
+  ('public.ielts_writing_begin(uuid,text,integer,integer)', false, false, true),
+  ('public.ielts_writing_finish(bigint,uuid,integer,integer,integer,boolean,text,text,text,integer,text,numeric,jsonb)', false, false, true),
   ('public.ai_reject(text)', false, false, true),
   ('public.ai_attempt_context(uuid,bigint)', false, false, true),
   ('public.ai_conversation_history(uuid,uuid,integer)', false, false, true),
