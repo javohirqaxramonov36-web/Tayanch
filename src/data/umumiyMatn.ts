@@ -14,10 +14,9 @@ export const yolTili = (pathname: string): Til => (/\/uz\/sat(\/|$)/.test(pathna
 
 const uz = {
   otish: "Asosiy matnga o'tish",
-  qavat: (n: number) => `${n}-qavat`,
   qavatYoli: 'Qayerdaman',
   qavatOta: 'Yuqori sahifa',
-  lift: { nomi: 'Qavatlar', ochiq: 'Ochiq', qoralama: 'Qoralama', tezOrada: 'tez orada' },
+  lift: { nomi: "Bo'limlar", ochiq: 'Ochiq', qoralama: 'Qoralama', tezOrada: 'tez orada' },
   zina: { nomi: "Qo'shni bo'limlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
   qavatlarAro: "Boshqa bo'limlar",
   yon: {
@@ -115,10 +114,9 @@ type Matn = typeof uz;
 
 const en: Matn = {
   otish: 'Skip to main content',
-  qavat: (n) => `Floor ${n}`,
   qavatYoli: 'You are here',
   qavatOta: 'Parent page',
-  lift: { nomi: 'Floors', ochiq: 'Open', qoralama: 'Draft', tezOrada: 'coming soon' },
+  lift: { nomi: 'Sections', ochiq: 'Open', qoralama: 'Draft', tezOrada: 'coming soon' },
   zina: { nomi: 'Neighboring sections', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
   qavatlarAro: 'Other sections',
   yon: {
