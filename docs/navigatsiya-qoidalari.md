@@ -10,14 +10,14 @@ Yangi sahifa yoki komponent qurishdan oldin shu hujjat o'qiladi.
 
 | Joy | Nima turadi |
 | --- | --- |
-| Ustki qator (yopishqoq) | Logo → bo'lim bosh sahifasi; Lift (qavatlar ro'yxati, joriy qavat yozuvi bilan); hamburger → bo'lim paneli |
-| Bo'lim paneli (hamburger) | Shu qavatning bo'limlari, hisob bandi, mavzu, tashqi havolalar |
-| Sahifa boshi | Qavat yo'li, sarlavha, bir qatorli tushuntirish, **bitta** asosiy tugma |
+| Ustki qator (yopishqoq) | Logo → bo'lim bosh sahifasi; hamburger → bo'lim paneli; mavzu tugmasi. Bosh sahifada (`/uz/`) o'rtada qavatlar menyusi (`QavatMenyu`) |
+| Bo'lim paneli (hamburger, o'ngdan ochiladi) | Shu qavatning bo'limlari, umumiy havolalar, "Qavatlar" ro'yxati (boshqa qavatga o'tish), hisob bandi, tashqi havolalar |
+| Sahifa boshi | Qavat yo'li (qavat kirish sahifasida yo'q), sarlavha, bir qatorli tushuntirish, **bitta** asosiy tugma |
 | Sahifa oxiri | Manbalar, eslatmalar (`SatEslatma`) |
 
 - Telefonda pastki panel yo'q (2026-11-15 dan). Pastki tab bar qaytarilsa, shu hujjat va `DESIGN.md` birga yangilanadi.
-- Boshqa qavatga o'tish faqat Lift orqali. Bo'lim paneliga boshqa qavat tugmalari qo'shilmaydi.
-- Lift va hamburger bitta guruhda: biri ochilsa ikkinchisi yopiladi.
+- Boshqa qavatga o'tish: bo'lim panelining "Qavatlar" ro'yxati, bosh sahifada yana qavatlar menyusi. Ustki qatorda alohida joriy qavat yozuvi (Lift) yo'q: muallif qarori 2026-11-19 ("ortiqcha"). Bo'limlar ro'yxatiga boshqa qavat tugmalari aralashtirilmaydi.
+- Mavzu tugmasi bitta, ustki qatorda (panel ichida takrorlanmaydi).
 
 ## 2. Bo'limlar tartibi (SAT)
 
