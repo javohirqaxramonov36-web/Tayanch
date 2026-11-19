@@ -3,7 +3,8 @@
 // alt: SAT inglizcha (3-qavat qoidasi), qolganlari o'zbekcha.
 import type { BolimSlug } from './bolimlar';
 
-export type OgSlug = 'navigator' | BolimSlug;
+// AI Academy'ning o'z rasmi hali yo'q: ogQavat uni 1-qavat (navigator) rasmiga tushiradi.
+export type OgSlug = 'navigator' | Exclude<BolimSlug, 'ai-academy'>;
 
 export const OG_KENGLIK = 1200;
 export const OG_BALANDLIK = 630;

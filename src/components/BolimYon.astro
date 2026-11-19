@@ -17,18 +17,18 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client'
 
 import type { BolimSlug } from '../data/bolimlar';
 
-// EYUF: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va Lift.
+// EYUF va AI Academy: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va Lift.
 interface Props { bolim?: BolimSlug; qm?: boolean }
 const joriy = Astro.url.pathname;
 // Bosh sahifadagi qavatlar menyusi (QavatMenyu) logo yonidagi ustunga tushadi
 const qmBor = Astro.props.qm === true;
 const { slug } = qavatI(joriyQavat(joriy));
 const bolim = Astro.props.bolim ?? (slug === 'navigator' ? undefined : slug);
-const NOMLAR: Record<BolimSlug, string> = { sat: 'SAT', ielts: 'IELTS', 'top-admission': 'Top Admission', eyuf: 'EYUF' };
+const NOMLAR: Record<BolimSlug, string> = { sat: 'SAT', ielts: 'IELTS', 'top-admission': 'Top Admission', eyuf: 'EYUF', 'ai-academy': 'AI Academy' };
 const NOM = bolim ? NOMLAR[bolim] : 'Tayanch';
 const M = matn[bolimTili(bolim ?? 'umumiy')].yon;
 // Ko'rinadigan logo nomi: SAT yonida ® (CB08, belgi har sahifada bir marta). aria-label'larda belgisiz.
-const LOGO_NOM = bolim === 'sat' ? 'SAT®' : bolim && bolim !== 'eyuf' ? NOM : '';
+const LOGO_NOM = bolim === 'sat' ? 'SAT®' : bolim && bolim !== 'eyuf' && bolim !== 'ai-academy' ? NOM : '';
 const b = (qism: string) => yol(bolim ? `/uz/${bolim}/${qism}` : '/uz/');
 const umumiy = [
   { path: '/uz/', uz: 'Bosh sahifa', en: 'Home' },
@@ -373,8 +373,8 @@ const ieltsGuruhlar = [
   #panel-ochish { background: var(--fon-ikkinchi); color: var(--matn); }
   @media (hover: hover) and (pointer: fine) { #panel-ochish:hover { background: var(--sirt-ikkinchi); } }
 
-  .ustki-qator:is(:not([data-bolim]), [data-bolim="eyuf"]) .logo-belgi { width: 36px; height: 36px; border-radius: 12px; font-size: 20px; }
-  .ustki-qator:is(:not([data-bolim]), [data-bolim="eyuf"]) .logo-nom { font-weight: 900; font-size: 22px; }
+  .ustki-qator:is(:not([data-bolim]), [data-bolim="eyuf"], [data-bolim="ai-academy"]) .logo-belgi { width: 36px; height: 36px; border-radius: 12px; font-size: 20px; }
+  .ustki-qator:is(:not([data-bolim]), [data-bolim="eyuf"], [data-bolim="ai-academy"]) .logo-nom { font-weight: 900; font-size: 22px; }
   .ustki-qator .logo { min-width: 0; }
   .ustki-qator > .logo .logo-nom { overflow: hidden; text-overflow: ellipsis; }
   .yon .logo-belgi { width: 36px; height: 36px; font-size: 18px; }
