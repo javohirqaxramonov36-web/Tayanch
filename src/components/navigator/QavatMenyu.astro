@@ -1,0 +1,249 @@
+---
+// Bosh sahifa ustki qatoridagi 5 qavat menyusi (mega menyu). Faqat /uz/ da (muallif qarori, 2026-11-19).
+// Yon panel (BolimYon) va Lift o'zgarmaydi. Havolalar yon panel ma'lumotidan olinadi, qo'lda takrorlanmaydi.
+// Xatti-harakat: qavat tugmasi bosilsa (sichqonchada hover ham) uning paneli ochiladi, bir vaqtda bittasi.
+// Esc yopadi va fokusni tugmaga qaytaradi; ←/→ qavatlar orasida, ↓ panelni ochib birinchi havolaga o'tadi.
+// Tashqariga bosish, fokus chiqib ketishi yoki sichqoncha ketishi yopadi. Hech narsa saqlanmaydi.
+// SAT paneli inglizcha (lang="en"), qolganlari o'zbekcha.
+import { qavatlar } from '../../data/qavatlar';
+import { bolimlar } from '../../data/bolimlar';
+import { satYonGuruhlar } from '../../data/satSahifalar';
+import { qollanmalar, asos, vositalar, mashqlar, darslar } from '../../data/ieltsSahifalar';
+import { taGuruhlar } from '../../data/topAdmissionSahifalar';
+import { yol } from '../../lib/yol';
+
+interface Band { nomi: string; href?: string }
+interface Ustun { nomi: string; bandlar: Band[] }
+interface Panel { tavsif: string; otish: string; tezOrada: string; ustunlar: Ustun[]; til: 'uz' | 'en' }
+
+const tavsifI = (slug: string) => bolimlar.find((b) => b.slug === slug)?.tavsif ?? '';
+const ielts = (q?: string) => (q ? `/uz/ielts/${q}` : undefined);
+
+const PANELLAR: Record<string, Panel> = {
+  navigator: {
+    til: 'uz', tavsif: "Qaysi qavatdan boshlashni bilmasangiz, yo'lingizni shu yerda tanlang.", otish: 'Bosh sahifa', tezOrada: 'Tez orada',
+    ustunlar: [
+      { nomi: 'Boshlash', bandlar: [{ nomi: "Yo'limni tanlash", href: '/uz/?boshlash=1' }, { nomi: "Yo'nalishlar", href: '/uz/#qavatlar' }] },
+      { nomi: "Ma'lumot", bandlar: [{ nomi: 'Muddatlar', href: '/uz/deadline/' }, { nomi: 'Manbalar', href: '/uz/manbalar/' }, { nomi: 'Aloqa', href: '/uz/aloqa/' }] },
+      { nomi: 'Hisob', bandlar: [{ nomi: 'Kirish', href: '/uz/hisob/kirish/' }, { nomi: "Ro'yxatdan o'tish", href: '/uz/hisob/royxat/' }] },
+    ],
+  },
+  'top-admission': {
+    til: 'uz', tavsif: tavsifI('top-admission'), otish: "Top Admission qavatiga o'tish", tezOrada: 'Tez orada',
+    ustunlar: taGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: b.href && `/uz/${b.href}` })) })),
+  },
+  sat: {
+    til: 'en', tavsif: 'Digital SAT: Reading and Writing, and Math.', otish: 'Open the SAT floor', tezOrada: 'Coming soon',
+    // Account guruhi panelda yo'q: u yon panelda, kirgandan keyin kerak bo'ladi.
+    ustunlar: satYonGuruhlar
+      .filter((g) => g.nomi !== 'Account')
+      .flatMap((g) => g.qismlar.map((q) => ({ nomi: q.nomi ?? g.nomi, bandlar: q.sahifalar.map((s) => ({ nomi: s.nomi, href: `/uz/sat/${s.qism}` })) }))),
+  },
+  ielts: {
+    til: 'uz', tavsif: tavsifI('ielts'), otish: "IELTS qavatiga o'tish", tezOrada: 'Tez orada',
+    ustunlar: [
+      { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
+      { nomi: 'Reading darslari', bandlar: darslar },
+      { nomi: 'Mashq', bandlar: mashqlar },
+      { nomi: 'Vositalar', bandlar: vositalar },
+    ].map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: ielts(b.qism) })) })),
+  },
+  eyuf: {
+    til: 'uz', tavsif: tavsifI('eyuf'), otish: 'Qavat haqida', tezOrada: 'Tez orada',
+    ustunlar: [],
+  },
+};
+---
+<nav class="qm" aria-label="Qavatlar" data-qm>
+  <ul class="qm-tablar" role="list">
+    {qavatlar.map((q) => (
+      <li>
+        <button type="button" class="qm-tab" data-floor={q.raqam} aria-expanded="false" aria-controls={`qm-panel-${q.slug}`} data-qm-tab>
+          {q.slug === 'sat' ? 'SAT' : q.slug === 'ielts' ? 'IELTS' : q.slug === 'eyuf' ? 'EYUF' : q.nomi}
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+      </li>
+    ))}
+  </ul>
+  {qavatlar.map((q) => {
+    const p = PANELLAR[q.slug];
+    return (
+      <div class="qm-panel" id={`qm-panel-${q.slug}`} data-floor={q.raqam} lang={p.til === 'en' ? 'en' : undefined} data-qm-panel>
+        <div class="qm-ichki ichki">
+          <div class="qm-karta">
+            <span class="qm-raqam">{p.til === 'en' ? `Floor ${q.raqam}` : `${q.raqam}-qavat`}</span>
+            <p class="qm-nom">{q.nomi}</p>
+            <p class="qm-tavsif">{p.tavsif}</p>
+            {q.holat === 'tez-orada' && <span class="yorliq">{p.tezOrada}</span>}
+            <a class="tugma tugma-asosiy qm-otish" href={yol(q.manzil)}>{p.otish}</a>
+          </div>
+          {p.ustunlar.length > 0 && (
+            <div class="qm-ustunlar">
+              {p.ustunlar.map((u, i) => (
+                <div class="qm-ustun">
+                  <h2 class="qm-ustun-nom" id={`qm-${q.slug}-${i}`}>{u.nomi}</h2>
+                  <ul class="qm-royxat" role="list" aria-labelledby={`qm-${q.slug}-${i}`}>
+                    {u.bandlar.map((b) => (
+                      <li>
+                        {b.href
+                          ? <a href={yol(b.href)}>{b.nomi}</a>
+                          : <span class="qm-tez">{b.nomi} <span class="qm-tez-belgi">{p.tezOrada}</span></span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  })}
+</nav>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-qm]');
+  if (nav) {
+    const tablar = [...nav.querySelectorAll<HTMLButtonElement>('[data-qm-tab]')];
+    const panelI = (t: HTMLButtonElement) => document.getElementById(t.getAttribute('aria-controls')!)!;
+    const sichqoncha = matchMedia('(hover: hover) and (pointer: fine)');
+    let ochiq: HTMLButtonElement | null = null;
+    let kechikish = 0;
+
+    const yop = (fokus = false) => {
+      if (!ochiq) return;
+      const t = ochiq;
+      t.setAttribute('aria-expanded', 'false');
+      panelI(t).classList.remove('ochiq');
+      ochiq = null;
+      if (fokus) t.focus({ preventScroll: true });
+    };
+    const och = (t: HTMLButtonElement) => {
+      clearTimeout(kechikish);
+      if (ochiq === t) return;
+      yop();
+      // Yon panel yoki Lift ochiq bo'lsa, yopiladi: bir vaqtda bitta ochiq menyu
+      document.querySelectorAll<HTMLDetailsElement>('header details[open]').forEach((d) => { d.open = false; });
+      t.setAttribute('aria-expanded', 'true');
+      panelI(t).classList.add('ochiq');
+      ochiq = t;
+    };
+
+    tablar.forEach((t, i) => {
+      // Hover bilan hozirgina ochilgan panelni keyingi bosish yopib qo'ymasin
+      let hoverVaqt = 0;
+      t.addEventListener('click', () => {
+        if (ochiq === t && performance.now() - hoverVaqt > 500) yop();
+        else och(t);
+      });
+      t.addEventListener('mouseenter', () => {
+        if (!sichqoncha.matches || ochiq === t) return;
+        hoverVaqt = performance.now();
+        och(t);
+      });
+      t.addEventListener('keydown', (e) => {
+        const qoshni = (n: number) => {
+          e.preventDefault();
+          const keyingi = tablar[(i + n + tablar.length) % tablar.length];
+          keyingi.focus();
+          if (ochiq) och(keyingi);
+        };
+        if (e.key === 'ArrowRight') qoshni(1);
+        else if (e.key === 'ArrowLeft') qoshni(-1);
+        else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          och(t);
+          panelI(t).querySelector<HTMLElement>('a[href]')?.focus();
+        }
+      });
+    });
+
+    nav.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && ochiq) { e.preventDefault(); yop(true); }
+    });
+    nav.addEventListener('mouseleave', () => {
+      if (!sichqoncha.matches) return;
+      kechikish = window.setTimeout(() => yop(), 200);
+    });
+    nav.addEventListener('mouseenter', () => clearTimeout(kechikish));
+    nav.addEventListener('focusout', (e) => {
+      if (e.relatedTarget instanceof Node && !nav.contains(e.relatedTarget)) yop();
+    });
+    document.addEventListener('click', (e) => {
+      if (ochiq && e.target instanceof Node && !nav.contains(e.target)) yop();
+    });
+    nav.addEventListener('click', (e) => {
+      if (e.target instanceof Element && e.target.closest('.qm-panel a[href]')) yop();
+    });
+    // Yon panel yoki Lift ochilsa, mega menyu yopiladi
+    document.querySelectorAll<HTMLDetailsElement>('header details').forEach((d) => {
+      d.addEventListener('toggle', () => { if (d.open) yop(); });
+    });
+  }
+</script>
+
+<style>
+  .qm { min-inline-size: 0; }
+  .qm-tablar { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-1); }
+  .qm-tab {
+    display: inline-flex; align-items: center; gap: var(--space-1);
+    min-block-size: 44px; padding-inline: var(--space-3);
+    border: 0; border-radius: var(--radius-full); background: transparent;
+    color: var(--matn-ikkinchi); font: inherit; font-weight: 600; font-size: var(--text-body-size);
+    white-space: nowrap; cursor: pointer;
+  }
+  .qm-tab svg { transition: transform var(--harakat-tez) var(--ease-state); }
+  .qm-tab[aria-expanded='true'] { color: var(--matn); background: var(--floor-subtle); }
+  .qm-tab[aria-expanded='true'] svg { transform: rotate(180deg); }
+  @media (hover: hover) and (pointer: fine) { .qm-tab:hover { color: var(--matn); } }
+
+  /* Panel: ustki qator (sticky) ostida, to'liq kenglikda */
+  .qm-panel {
+    position: absolute; inset-inline: 0; inset-block-start: 100%;
+    z-index: var(--z-dropdown);
+    /* Zich sirt: sarlavha shishasi ichida ikkinchi blur yo'q (ADR 005) */
+    background: var(--color-surface);
+    border-block-end: var(--border-width-1) solid var(--card-line);
+    box-shadow: var(--shadow-2);
+    max-block-size: calc(100dvh - var(--space-14)); overflow-y: auto;
+    visibility: hidden; opacity: 0; transform: translateY(calc(-1 * var(--space-1)));
+    transition: opacity var(--harakat-tez) var(--ease-state), transform var(--harakat-tez) var(--ease-state), visibility 0s linear var(--harakat-tez);
+  }
+  .qm-panel.ochiq { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+  @media (prefers-reduced-motion: reduce) { .qm-panel, .qm-tab svg { transition: none; } }
+
+  .qm-ichki { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: var(--space-8); padding-block: var(--space-8); }
+  .qm-karta {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-5); border-radius: var(--radius-lg);
+    background: var(--floor-subtle); border: var(--border-width-1) solid var(--card-line);
+  }
+  .qm-raqam { font-size: var(--text-caption-size); font-weight: 700; color: var(--floor-text); text-transform: uppercase; letter-spacing: 0.06em; }
+  .qm-nom { margin: 0; font-weight: 900; font-size: var(--matn-h3); }
+  .qm-tavsif { margin: 0; color: var(--matn-ikkinchi); font-size: var(--text-small-size); line-height: 1.5; }
+  .qm-otish { margin-block-start: auto; align-self: stretch; }
+
+  .qm-ustunlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--space-6) var(--space-8); align-content: start; }
+  .qm-ustun-nom {
+    margin: 0 0 var(--space-2); font-size: var(--text-caption-size); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--matn-sust);
+  }
+  .qm-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .qm-royxat a, .qm-tez {
+    display: flex; align-items: center; min-block-size: 40px;
+    color: var(--matn); font-weight: 600; text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) { .qm-royxat a:hover { color: var(--floor-text); text-decoration: underline; } }
+  .qm-tez { color: var(--matn-sust); font-weight: 500; flex-wrap: wrap; column-gap: var(--space-2); }
+  .qm-tez-belgi { font-size: var(--text-caption-size); white-space: nowrap; }
+
+  /* Telefon va planshet: qavatlar ustki qatorning ikkinchi qatorida, gorizontal aylantiriladi */
+  @media (width < 1024px) {
+    .qm { grid-column: 1 / -1; grid-row: 2; }
+    .qm-tablar { overflow-x: auto; scrollbar-width: none; padding-block-end: var(--space-1); }
+    .qm-tab { padding-inline: var(--space-3); }
+    .qm-panel { max-block-size: calc(100dvh - var(--space-14) * 2); }
+    .qm-ichki { grid-template-columns: 1fr; gap: var(--space-5); padding-block: var(--space-5); }
+    .qm-ustunlar { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-5); }
+  }
+</style>

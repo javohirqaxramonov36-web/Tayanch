@@ -18,8 +18,10 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client'
 import type { BolimSlug } from '../data/bolimlar';
 
 // EYUF: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va Lift.
-interface Props { bolim?: BolimSlug }
+interface Props { bolim?: BolimSlug; qm?: boolean }
 const joriy = Astro.url.pathname;
+// Bosh sahifadagi qavatlar menyusi (QavatMenyu) logo yonidagi ustunga tushadi
+const qmBor = Astro.props.qm === true;
 const { slug } = qavatI(joriyQavat(joriy));
 const bolim = Astro.props.bolim ?? (slug === 'navigator' ? undefined : slug);
 const NOMLAR: Record<BolimSlug, string> = { sat: 'SAT', ielts: 'IELTS', 'top-admission': 'Top Admission', eyuf: 'EYUF' };
@@ -82,11 +84,12 @@ const ieltsGuruhlar = [
   { nomi: 'Vositalar', bandlar: vositalar },
 ];
 ---
-<header class="ustki-qator nav-shisha" data-bolim={bolim}>
+<header class="ustki-qator nav-shisha" data-bolim={bolim} data-qm-bor={qmBor ? '' : undefined}>
   <a class="logo" href={b('')}>
     <span class="logo-belgi" aria-hidden="true">T</span>
     <span class="logo-nom">Tayanch {LOGO_NOM && <span class="logo-bolim">{LOGO_NOM}</span>}</span>
   </a>
+  <slot name="markaz" />
   <Lift />
   <details class="yon-orami" name="tayanch-navigatsiya">
     <summary class="belgi-tugma" id="panel-ochish" aria-controls="bolim-yon" aria-label={M.navigatsiya(NOM)}>
@@ -338,6 +341,10 @@ const ieltsGuruhlar = [
     padding: var(--space-1);
     border-bottom: var(--border-width-1) solid var(--card-line);
     flex: none;
+  }
+  .ustki-qator[data-qm-bor] { grid-template-columns: auto minmax(0, 1fr) auto auto auto; gap: var(--space-4); }
+  @media (width < 1024px) {
+    .ustki-qator[data-qm-bor] { grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 0; block-size: auto; }
   }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; min-height: 44px; color: var(--matn); }
   .logo-belgi {

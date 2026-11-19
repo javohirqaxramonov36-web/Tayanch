@@ -38,7 +38,7 @@ const {
   </head>
   <body>
     <a class="otish" href="#asosiy">Asosiy matnga o'tish</a>
-    <Menyu />
+    <Menyu qm={Astro.slots.has('menyu')}><slot name="menyu" slot="markaz" /></Menyu>
     <main id="asosiy">
       <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={title} /></div>
       <slot />
