@@ -11,7 +11,7 @@
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | tugadi | 2026-11-20 | 3 davlat fayli (8 qoralama, 13 topilmadi), `kurslar.json` CBU 2026-11-20 (14 valyuta). "Q6 natijasi" bo'limi |
 | Q7 | Kontent: 12 qisqa davlat kartasi | tugadi | 2026-11-20 | 12 davlat fayli (30 qoralama, 55 topilmadi). "Q7 natijasi" bo'limi |
 | Q8 | Kontent: davlat grantlari | tugadi | 2026-11-20 | 12 grant (14 qoralama, 13 topilmadi); Xitoy, Kanada, Singapur: rasmiy dastur topilmadi/ochilmadi. "Q8 natijasi" bo'limi |
-| Q9 | Kontent: 30 universitet | kutilmoqda | 2026-11-20 | Ro'yxat muallif tomonidan 2026-11-20 da tasdiqlandi (TASDIQLANDI). Taklif `docs/rejalar/universitetlar-royxati.md` (1-qator TASDIQLANMAGAN, 3 davlat × 10, slug va sabab bilan); universitet fayllari yaratilmagan, fakt yig'ilmagan |
+| Q9 | Kontent: 30 universitet | tugadi | 2026-11-20 | 30 universitet fayli (94 qoralama, 116 topilmadi), 10 universitet granti (19 qoralama, 3 topilmadi); Oxford, UCL, Hanyang, Korea Univ., Kyung Hee, Inha, Pusan: sayt ochilmadi. "Q9 natijasi" bo'limi |
 | Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
 
 ## Sozlamalar
@@ -179,6 +179,91 @@ XP qiymati sababi (10): SAT'da bitta savol birinchi urinishda to'g'ri = 2 + 3 = 
 
 Ma'lum cheklov (tasdiqdan oldin bilish kerak): zinapoyaning to'g'ri javobi statik JS'da (`zinapoyalar.ts`), server tartibni tekshira olmaydi. XP amalda "o'quvchi o'zi bajardim degan" qadam uchun; himoya faqat ruxsat ro'yxati, noyob kalit va kunlik chegara (umrbod 30 XP).
 
+## Q9 natijasi (2026-11-20)
+O'zgargan / yangi fayllar: `src/data/topAdmission/universitetlar/` ichida tasdiqlangan ro'yxatdagi 30 ta universitet (`.json`, slug'lar `universitetlar-royxati.md` bo'yicha); `src/data/topAdmission/grantlar/` ichida 10 ta yangi `turi: "universitet"` grant (`universitet` maydoni bilan bog'langan). `docs/tekshiruv/tasdiq-royxati.md` yangilandi (jami 165 qoralama; `.gitignore` sababli faqat lokal). Kod o'zgarmadi. Commitlar: `Q9: Harvard, MIT, ...` dan `Q9: Hanyang, Kyung Hee, Inha, Pusan National` gacha (7 ta oraliq commit).
+
+Qoida (hamma fakt `tekshirilgan_sana: 2026-11-20`, `turi: "muddatli"`): har `manba_iborasi` curl bilan yuklangan sahifa (yoki PDF, macOS PDFKit bilan matnga aylantirilgan) matnida `grep -F` bilan topildi. Jadval kataklaridagi iboralar qisqa (masalan "$92,760", "Jan. 15"): Cmd+F shu katakni topadi.
+
+Sanoq (universitet faktlari: imtihonlar, min_ielts, yillik_xarajat, ariza_tolovi, tolovdan_ozod_qilish, xalqaro_yordam_turi, deadline):
+| Universitet | qoralama | topilmadi | grant |
+|---|---|---|---|
+| `harvard` | 6 | 1 | `harvard-moliyaviy-yordam` |
+| `mit` | 7 | 0 | `mit-moliyaviy-yordam` |
+| `yale` | 5 | 2 | `yale-moliyaviy-yordam` |
+| `princeton` | 5 | 2 | `princeton-moliyaviy-yordam` |
+| `dartmouth` | 5 | 2 | `dartmouth-moliyaviy-yordam` |
+| `amherst` | 6 | 1 | `amherst-moliyaviy-yordam` |
+| `macalester` | 4 | 3 | — |
+| `grinnell` | 6 | 1 | `grinnell-moliyaviy-yordam` |
+| `berea` | 5 | 2 | `berea-xalqaro-stipendiya` (toliq_qoplaydi) |
+| `purdue` | 4 | 3 | — (yordam "yo'q") |
+| `oxford` | 0 | 7 | — |
+| `cambridge` | 4 | 3 | — |
+| `imperial` | 3 | 4 | — |
+| `ucl` | 0 | 7 | — |
+| `lse` | 4 | 3 | — |
+| `edinburgh` | 1 | 6 | — |
+| `manchester` | 1 | 6 | — |
+| `warwick` | 3 | 4 | — |
+| `leeds` | 2 | 5 | — |
+| `coventry` | 3 | 4 | — |
+| `snu` | 6 | 1 | — (GKS davlat granti, Q8 da bor) |
+| `kaist` | 5 | 2 | `kaist-stipendiya` (toliq_qoplaydi) |
+| `yonsei` | 4 | 3 | — |
+| `korea-university` | 0 | 7 | — |
+| `postech` | 1 | 6 | `postech-xalqaro-stipendiya` |
+| `skku` | 4 | 3 | — |
+| `hanyang` | 0 | 7 | — |
+| `kyung-hee` | 0 | 7 | — |
+| `inha` | 0 | 7 | — |
+| `pusan-national` | 0 | 7 | — |
+Jami universitet: 94 qoralama, 116 topilmadi. Universitet grantlari: 10 ta, 19 qoralama, 3 topilmadi (Harvard, Amherst, POSTECH grant deadline'i). `toliq_qoplaydi = true` faqat Berea ("cover 100% of tuition, housing, food, and fees") va KAIST ("full financial support, including tuition and living expenses").
+
+Kontent qarorlari (keyingi agent va muallif uchun):
+- `yillik_xarajat`: universitetning rasmiy jami cost of attendance (bir yil, USD). Oraliq bo'lsa pastki chegara (Harvard). Sahifada "Total" bo'lmasa, o'sha jadval qatorlari yig'indisi (Yale, Amherst; hisob pastda). Buyuk Britaniya va Koreyada yagona COA yo'q (kontrakt kursga qarab, yashash alohida) → hammasi "topilmadi". Shu sababli "Menga mos universitet" moslik hisobiga hozircha faqat AQSH universitetlari kira oladi.
+- `min_ielts`: faqat rasmiy "minimum" / "at least" / "normally a minimum" bo'lsa. "Recommended" (KAIST 6.5), "most competitive applicants" (Yale 7), "Generally ... 6.5" (Purdue), talab qilinmasa (Harvard) → "topilmadi". Kurs darajalari bo'lsa eng pasti (Imperial "Standard" 6.5, Warwick "Band A" 6.0).
+- `deadline`: yil bilan berilgan bo'lsa YYYY-MM-DD, yilsiz bo'lsa o'zbekcha matn ("Regular Decision: 1-yanvar; ..."). Koreya bahor 2027 qabullari muddati o'tgan (matnda "(o'tgan)").
+- `xalqaro_yordam_turi`: Purdue "yo'q" ("in general, international undergraduate students are not eligible for financial aid, including scholarships").
+- Grant faqat rasmiy sahifada xalqaro talabaga 100% ehtiyoj / to'liq yordam aniq yozilganda: Harvard, MIT, Yale, Princeton, Dartmouth, Amherst, Grinnell (need-aware, lekin 100% need), Berea, KAIST, POSTECH (to'liq kontrakt). Macalester ("competition ... extremely keen"), Cambridge ("Few full undergraduate scholarships"), LSE (£15,000–£25,000) uchun grant yaratilmadi.
+
+Universitet izohlari (hisob va nozik joylar):
+- harvard: yillik_xarajat = "Total billed and unbilled costs" oralig'ining pastki chegarasi (95 134–100 134 USD, 2026-27; sug'urta 4 954 USD alohida). min_ielts topilmadi: ingliz tili imtihoni talab qilinmaydi ("not required to take an English proficiency exam"). Grant deadline topilmadi (FA sahifasida sana yo'q).
+- mit: min_ielts 7 = sahifadagi "Competitive scores" ro'yxatidagi "Minimum: 7" (imtihon majburiy emas, qat'iy tavsiya). Xarajat 2026–2027 "Total" 92 760.
+- yale: yillik_xarajat 97 985 = finaid.yale.edu/coa dagi 2026-27 qatorlari yig'indisi (72 500 + 185 + 12 080 + 9 520 + 1 000 + 2 700; travel kirmagan; sahifada "Total" yo'q). Ariza to'lovi summasi rasmiy sahifalarda topilmadi. min_ielts topilmadi: faqat "most competitive applicants have IELTS scores of 7 or higher" (minimum emas).
+- princeton: xarajat iborasi sahifada "The estimated cost of attendance for 2028-28 is $98,698." (yil yozuvi sahifaning o'zida xato). Ariza to'lovi summasi topilmadi. Deadline/FA iboralari jadval qatorlari: "Jan. 1" va "Feb. 1" alohida katakda.
+- dartmouth: xarajat 2026-2027 "Total Budget" (3 term). Ariza to'lovi summasi topilmadi. Bir sahifada RD deadline 2-yanvar, jadvalda "January 1 Application Fee or Fee Waiver due"; 2-yanvar yozildi.
+- amherst: yillik_xarajat 98 160 = 2026-2027 qatorlari yig'indisi (75 330 + 10 980 + 9 340 + 710 + 1 800; travel "Varies"). Deadline sanasi yil bilan berilgan (Jan. 5, 2027). Grant deadline topilmadi.
+- macalester: xarajat "2026-2027 Comprehensive Fee" jami 92 154 (billed; federal COA alohida jadvalda, jami yo'q). Ariza to'lovi va undan ozod qilish sahifada topilmadi. Grant yaratilmadi: xalqaro talabalarga to'liq ehtiyoj qoplanishi aniq yozilmagan ("competition ... extremely keen").
+- grinnell: xarajat 2026–27 "Total Cost of Attendance" kampusda oddiy xona ustuni ($93,338+; transport $300+). Ariza to'lovi 0 ("We don't charge an application fee"). Need-aware, lekin qabul qilingan xalqaro talabaga 100% ehtiyoj: grant yaratildi.
+- berea: xarajat 68 522 = "Cost of Attendance for 2025-2026" (sahifa sarlavhasi 2025-2026; 2026-27 jadvali topilmadi), talabalar o'qish uchun to'lamaydi. toliq_qoplaydi = true ("cover 100% of tuition, housing, food, and fees"; shaxsiy xarajat va 2 200 USD depozit kirmaydi). Ariza to'lovi sahifada yo'q.
+- purdue: xarajat 2026-2027 "Fall/Spring – Flat Rate" jadvalining International ustuni "Total Tuition, Housing & Misc Exp" (52 698; CS/muhandislik dasturlari qimmatroq, alohida jadvalda). min_ielts topilmadi: faqat "Generally, applicants have a score of 6.5 or higher with a minimum score of 6.0 in each section" (umumiy minimum yo'q). Yordam "yo'q" ("in general, international undergraduate students are not eligible for financial aid"). Ariza to'lovi topilmadi.
+- oxford: www.ox.ac.uk Cloudflare tekshiruvi ("Just a moment...", 403) curl va brauzerda ham; CAPTCHA chetlab o'tilmadi. 7 fakt topilmadi.
+- cambridge: deadline 2027 qabuli uchun UCAS 15 October 2026 (o'tgan; My Cambridge Application 22 October 2026). yillik_xarajat topilmadi: xalqaro kontrakt kursga qarab, college fee alohida, yagona COA yo'q (yashash: "For 12 months, you should need around £15,960"). Ariza to'lovi universitet sahifasida yo'q (UCAS orqali).
+- imperial: min_ielts 6.5 = "Standard" daraja ("Higher" kurslarda 7.0). Deadline: UCAS equal consideration 13 January 2027 (tibbiyot 15 October 2026). Xalqaro bakalavr uchun Uzbekistan'ga mos stipendiya aniq topilmadi (Imperial Bursary faqat Home talabalarga).
+- ucl: www.ucl.ac.uk Cloudflare tekshiruvi (403 "Just a moment..."); 7 fakt topilmadi.
+- lse: yashash "at least £1,550 per month"; kontrakt "Table of Fees" da (kursga qarab), yagona COA yo'q. Grant yaratilmadi: Support Scheme qisman (£15,000–£25,000).
+- edinburgh: IELTS talabi har daraja sahifasida (degree finder), umumiy sahifada yo'q; UCAS deadline universitet sahifasida topilmadi. Faqat yordam turi qoralama.
+- manchester: IELTS, kontrakt va xalqaro stipendiya kurs/mamlakat sahifalarida; umumiy sahifalarda aniq ibora topilmadi (ingliz tili sahifasi 404, stipendiya qidiruvi xalqaro talabalarni o'z ichiga olmaydi). Faqat deadline qoralama.
+- warwick: min_ielts 6.0 = eng past "Band A" (Band B 6.5, Band C yuqoriroq; kursga qarab).
+- leeds: £5,000 regional stipendiyaga Uzbekistan kirishi sahifa matnida yo'q (TEKSHIRILMAGAN). IELTS sahifalari 404 (eski URL); kontrakt kursga qarab.
+- coventry: O'zbekiston bo'yicha talab mamlakatlar ro'yxatida ("Uzbekistan" bo'limi): shahodatnoma + foundation. To'g'ridan-to'g'ri ariza ham, UCAS ham; deadline va kontrakt umumiy sahifada topilmadi.
+- snu: manba "Admissions for Undergraduate, Spring 2027" PDF (matn macOS PDFKit bilan ajratildi). Kontrakt semestr uchun fakultetga qarab 2 442 000–3 653 000 KRW (2026), yashash yo'q: yillik_xarajat topilmadi. Kuz 2027 qabuli e'lon qilinmagan.
+- kaist: manba "Admissions Guide for 2027 admission" PDF. IELTS 6.5 jadvalda "Recommended Score" (minimum emas) → topilmadi. Grant: PDF "All international students receive full financial support, including tuition and living expenses." → toliq_qoplaydi true; stipendiya sahifasida yashash puli oyiga 350 000 KRW (muallif "to'liq" talqinini tekshirsin). Fee waiver faqat LDC (Uzbekistan ro'yxatda yo'q).
+- yonsei: manba "Spring 2027 International Admission - Application Guide" PDF (admission.yonsei.ac.kr). Umumiy min IELTS yo'q (til hujjati "Choose One"). Viza uchun bank qoldig'i "KRW 22,000,000 or more" (xarajat emas). Underwood (UIC) alohida qabul tekshirilmadi.
+- korea-university: xalqaro qabul sayti oia.korea.ac.kr curl va brauzerda ochilmadi ("sayt faollashtirilmagan" ogohlantirishi, about:blank'ga yo'naltiradi); korea.edu Admissions sahifasida faktlar yo'q. 7 fakt topilmadi.
+- postech: qabul qo'llanmasi (2027 Spring) yuklab olish havolasi ZIP (forms) berdi, PDF topilmadi; IELTS, to'lov, deadline topilmadi. Grant: kontrakt stipendiyasi (toliq_qoplaydi qo'yilmadi: faqat kontrakt).
+- skku: manba "Undergraduate Freshmen Admission Guide_2027 Spring" (EN) PDF. IELTS 6.5 qabul minimumi emas (2-kursga o'tishda ingliz yo'nalishi uchun) → min_ielts topilmadi. Global Leader Scholarship (Criteria A) davlatlar ro'yxatida Uzbekistan yo'q.
+- hanyang: www.hanyang.ac.kr Cloudflare tekshiruvi (403 "Just a moment..."); 7 fakt topilmadi.
+- kyung-hee: www.khu.ac.kr inglizcha sahifalari JS bilan chiziladi, curl bo'sh javob, brauzerda xato sahifa; iphak.khu.ac.kr bo'sh. 7 fakt topilmadi.
+- inha: internationalcenter.inha.ac.kr (yo'naltirish) asosan koreyscha e'lonlar, inglizcha qabul qo'llanmasi curl bilan topilmadi. 7 fakt topilmadi.
+- pusan-national: international.pusan.ac.kr JS (ajax domen tekshiruvi) bilan ochiladi, curl bo'sh. 7 fakt topilmadi.
+
+Manbalar (faqat universitetlarning o'z domenlari): college.harvard.edu; mitadmissions.org, sfs.mit.edu; admissions.yale.edu, finaid.yale.edu; admission.princeton.edu; admissions.dartmouth.edu, financialaid.dartmouth.edu; amherst.edu; macalester.edu; grinnell.edu; berea.edu; admissions.purdue.edu, purdue.edu (bursar); undergraduate.study.cam.ac.uk; imperial.ac.uk; lse.ac.uk; study.ed.ac.uk, registryservices.ed.ac.uk; manchester.ac.uk; warwick.ac.uk; leeds.ac.uk; coventry.ac.uk; en.snu.ac.kr (Spring 2027 PDF); admission.kaist.ac.kr (2027 guide PDF); admission.yonsei.ac.kr (Spring 2027 PDF); postech.ac.kr; admission-global.skku.edu (Spring 2027 PDF).
+
+Ochilmagan saytlar: ox.ac.uk, ucl.ac.uk, hanyang.ac.kr (Cloudflare "Just a moment...", 403; brauzerda ham, CAPTCHA chetlab o'tilmadi); oia.korea.ac.kr ("sayt faollashtirilmagan", about:blank); khu.ac.kr va iphak.khu.ac.kr (JS, bo'sh/xato sahifa); international.pusan.ac.kr (JS); internationalcenter.inha.ac.kr (koreyscha e'lonlar, inglizcha qo'llanma topilmadi); POSTECH qo'llanma havolasi ZIP (forms) berdi.
+
+Sinov: `npm run malumot:tasdiq` 165 qoralama; `npm run malumot:tekshir` 67 hujjat, 365 fakt, 0 eskirgan, 200 topilmadi, sxema xatosi yo'q; `npm test` 373/373; `npm run check` faqat 4 ta eski xato; `npm run build` o'tdi (88 sahifa; qoralama qiymatlar `dist/` da yo'q); `npm run repo:tekshir` muammo yo'q. Sinalmagan: sahifalar brauzerda ko'rilmadi (tasdiqlangan fakt yo'q, bo'sh holat o'zgarmagan).
+
 ## Q8 natijasi (2026-11-20)
 O'zgargan / yangi fayllar: `src/data/topAdmission/grantlar/` ichida 12 ta grant (`.json`, hammasi `turi: "davlat"`): `stipendium-hungaricum`, `turkiye-burslari`, `mext`, `global-korea-scholarship`, `chevening`, `fulbright`, `daad-study-scholarships`, `maeci`, `malaysia-international-scholarship`, `banach-nawa`, `study-in-saudi`, `research-training-program`. 12 ta davlat faylida `grant.davlat_grantlari` ga grant slug'i yozildi (`grant.izoh` qo'shilmadi). `docs/tekshiruv/tasdiq-royxati.md` yangilandi (jami 52 qoralama: Q6 8 + Q7 30 + Q8 14; `.gitignore` sababli faqat lokal). Kod o'zgarmadi.
 
@@ -317,6 +402,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q9 tugadi ("Q9 natijasi"). Keyingi: Q10 (yakuniy tekshiruv). 30 universitet fayli va 10 ta `turi: "universitet"` grant bor. Q10 havola tekshiruvida: ox.ac.uk, ucl.ac.uk, hanyang.ac.kr Cloudflare bilan 403 beradi (curl), bu universitet fayllarida `source_url` yo'q (hammasi topilmadi). PDF manbalar (SNU, KAIST, Yonsei, SKKU) uzun URL; SKKU va KAIST havolalari `download.php`/`files/view` orqali. PDF matni uchun `osascript -l JavaScript` + PDFKit ishlaydi (pdftotext yo'q).
 - Q9 (2026-11-20): faqat 1-band bajarildi. `docs/rejalar/universitetlar-royxati.md` yaratildi (1-qator `TASDIQLANMAGAN`; AQSH, Buyuk Britaniya, Janubiy Koreya, har biri 10 ta, taklif slug'i va bir qatorli umumiy sabab; raqam/reyting yo'q). Status "to'siq": muallif tasdiqlagach BOSHQARUVCHI 1-qatorni `TASDIQLANDI` ga almashtiradi, statusni "kutilmoqda" ga qaytaradi; keyingi Q9 agenti 2–6-bandlarni (universitet fayllari, `turi: "universitet"` grantlar, `malumot:tasdiq`) ro'yxatdagi slug'lar bilan bajaradi. Kod o'zgarmadi.
 - Q8 tugadi ("Q8 natijasi"). Keyingi: Q9 (30 universitet; avval ro'yxat muallif tasdig'iga). Grant slug'lari `src/data/topAdmission/grantlar/` da; Q9 universitet grantlari (`turi: "universitet"`) shu papkaga, `universitet` maydoni bilan. Curl: chevening.org va DAAD uchun `-A curl/...`; PDF matni uchun pdftotext yo'q, python bilan oqimlarni ajratish kerak.
 - **BOSHQARUVCHI, 2026-11-20 (chat almashdi):** Q0–Q7 tugadi. Q8 agenti boshlanishi bilan to'xtatildi (hech narsa yozilmagan) — Q8 boshidan boshlanadi. PR #198 (`admission-d` → `main`) ochiq, MERGE QILINMAYDI; har qismdan keyin `git push origin admission-d` bilan yangilanadi. Q9 da universitet ro'yxati muallifga ko'rsatiladi va tasdig'i kutiladi. Muallif savollari har qism natijasida; Q10 yakuniy hisobotda yig'iladi.
@@ -330,6 +416,13 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q9: Buyuk Britaniya va Koreya universitetlarida yagona yillik cost of attendance yo'q (kontrakt kursga qarab, yashash alohida), shuning uchun `yillik_xarajat` "topilmadi" va ular "Menga mos universitet" moslik hisobiga kirmaydi. Qoidani o'zgartiraylikmi: masalan "eng arzon xalqaro kontrakt + universitet e'lon qilgan yillik yashash summasi" (hisob holat fayliga yoziladi)?
+- Q9: Ingliz tili imtihoni talab qilinmaydigan (Harvard) yoki faqat "recommended"/"competitive" ball yozilgan (KAIST 6.5, Yale 7, Purdue "generally 6.5") universitetlarda `min_ielts` "topilmadi". Shular uchun boshqa qiymat (masalan, tavsiya etilgan ballni minimum sifatida) qo'yaylikmi?
+- Q9: KAIST va Berea grantlarida `toliq_qoplaydi = true` (rasmiy ibora: "full financial support, including tuition and living expenses"; "cover 100% of tuition, housing, food, and fees"). KAIST yashash puli oyiga 350 000 KRW. Shu talqin ma'qulmi?
+- Q9: Need-based grantlar (Harvard, MIT, Yale, Princeton, Dartmouth, Amherst, Grinnell) "to'liq ehtiyoj qoplanadi" deb yozildi, `toliq_qoplaydi` qo'yilmadi (oila hissasi bo'lishi mumkin). To'g'rimi?
+- Q9: Oxford, UCL, Hanyang (Cloudflare), Korea University, Kyung Hee, Inha, Pusan National (sayt ochilmadi / JS) uchun hamma fakt "topilmadi". O'zingiz brauzerda ochib havola va iboralarni berasizmi yoki ro'yxatdan boshqa universitet bilan almashtiramizmi?
+- Q9: Koreya universitetlarida faqat bahor 2027 qabuli e'lon qilingan va muddati o'tgan (SNU iyul, Yonsei sentabr, SKKU noyabr 2026). Kuz 2027 e'lon qilinguncha shunday qoldiraylikmi?
+- Q9: Leeds'ning £5,000 regional stipendiyasiga Uzbekistan kirishi sahifa matnida ko'rinmadi (tekshirilmagan). Coventry O'zbekiston uchun shahodatnoma + foundation talab qiladi (rasmiy). Bu ma'lumot davlat kartasidagi "diplom" mezoniga ham qo'shilsinmi?
 - Q8: Xitoy hukumati stipendiyasi (CSC) rasmiy sayti (campuschina.org) curl bilan ochilmadi (412), shuning uchun Xitoy granti yaratilmadi. O'zingiz brauzerda ochib havola bersangiz yoki qo'lda qo'shasizmi?
 - Q8: Stipendium Hungaricum va Banach deadline'lari 2026-yilniki (o'tgan, katalogda "Bu yilgi muddat o'tgan" belgisi bilan chiqadi). Shunday qoldiraylikmi yoki yangi sana e'lon qilinguncha "topilmadi" qilinsinmi?
 - Q8: Fulbright, DAAD, RTP, Study in Saudi grantlarida ikkala fakt "topilmadi" (fayl bor, kartada ko'rinmaydi). Shular qolsinmi yoki o'chirilsinmi? Italiya MAECI uchun Uzbekistan mos davlatlar ro'yxatida borligi tekshirilmagan.
