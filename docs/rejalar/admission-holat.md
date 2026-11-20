@@ -36,7 +36,7 @@ O'zgargan / yangi fayllar:
 - `src/data/topAdmission/kurslar.json`: bo'sh shablon (`kurslar`: valyuta kodi -> 1 birlik necha USD). Bo'sh bo'lsa `kurslarBormi` false, `usdga` null.
 - `src/components/topAdmission/Fakt.astro`: qiymat + "Manba" + tekshirilgan sana; eskirgan bo'lsa "qayta tekshirilmoqda" belgisi; ko'rinmasa "Ma'lumot tekshirilmoqda". Props: `fakt`, `birlik?`, `format?`.
 - `scripts/malumot/umumiy.ts`, `tekshir.ts`, `tasdiq.ts`; `package.json`: `malumot:tekshir`, `malumot:tasdiq`, `npm test` ga `src/lib/topAdmission/testlar/*.test.ts`.
-- `docs/tekshiruv/tasdiq-royxati.md` (avtomatik, hozir 0 ta).
+- `docs/tekshiruv/tasdiq-royxati.md` (avtomatik, hozir 0 ta). DIQQAT: `.gitignore:16` (`tekshiruv/`) bu papkani e'tiborsiz qoldiradi, fayl commit qilinmaydi, faqat lokal turadi (muallif o'z Mac'ida `npm run malumot:tasdiq` dan keyin ochadi). `.gitignore` o'zgartirilmadi.
 - Sinov: `src/lib/topAdmission/testlar/fakt.test.ts`, SOXTA fixture'lar `tests/fixtures/topAdmission/davlatlar/` (haqiqiy kolleksiyaga kirmaydi).
 
 Sxemaga rejadan tashqari qo'shilganlar (keyingi qismlar uchun): `grantlar.toliq_qoplaydi` (ixtiyoriy ha/yo'q fakt, Q3 "to'liq qoplaydi" filtri faqat shu tasdiqlangan bo'lsa); `kurslar.json` da `manba_nomi`, `izoh`. `valyuta` ISO kodi oddiy maydon (fakt emas). `daraja`, `turi`, `nom`, `rasmiy_havola` oddiy maydon. `deadline` matn fakt: qiymat YYYY-MM-DD bo'lsa saralanadi (Q3/Q4 shunga tayanadi).
@@ -69,6 +69,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Q1 tugadi. Keyingi: Q2. Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q1: `docs/tekshiruv/` `.gitignore` da (`tekshiruv/` qoidasi). Tasdiq ro'yxati lokal qolsinmi (hozirgi holat) yoki repoga kirishi uchun `.gitignore` ga istisno qo'shilsinmi?
 - Q1: "barqaror" faktlar uchun 180 kun tasdiqlanadimi? (Bitta joyda: `ESKIRISH_KUNLARI`, `src/lib/topAdmission/fakt.ts`.)
 - Q0: `ielts_writing_results` ni hisob eksportiga va `docs/maxfiylik-jadvali.md` ga qo'shish kerakmi? (Admission seriyasidan tashqari ish, alohida branch.)
 - Q0: AI matnlari (AI Tutor, IELTS Writing) uchun saqlash muddati (masalan, N oydan keyin avtomatik o'chirish) kerakmi yoki "hisob ochiq turguncha" qoladimi? Huquqchi bilan maslahatda ko'riladi.
