@@ -7,7 +7,7 @@
 | Q2 | Davlatlarni taqqoslash sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/davlatlar/`; filtr, saralash, taqqoslash; SOXTA fixture bilan brauzerda sinaldi |
 | Q3 | Grantlar katalogi sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/grantlar/`; filtr, deadline saralash, Türkiye Bursları havolasi; SOXTA fixture bilan brauzerda sinaldi |
 | Q4 | "Menga mos universitet" filtri | tugadi | 2026-11-20 | `/uz/top-admission/universitetlar/`; filtr, moslik, shortlist (`user_state` orqali, server o'zgarishsiz); SOXTA fixture bilan brauzerda sinaldi; jonli login sinalmagan |
-| Q5 | Ariza zinapoyasi → XP | kutilmoqda | | |
+| Q5 | Ariza zinapoyasi → XP | to'siq | 2026-11-20 | Mavjud mexanizm Admission XP'sini yoza olmaydi (`xp_events.kind` CHECK faqat SAT turlari, mijoz uchun XP RPC yo'q). Kerakli o'zgarish "Q5 natijasi" bo'limida; kod o'zgarmadi |
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | kutilmoqda | | |
 | Q7 | Kontent: 12 qisqa davlat kartasi | kutilmoqda | | |
 | Q8 | Kontent: davlat grantlari | kutilmoqda | | |
@@ -124,6 +124,32 @@ Sinov:
 - Vaqtincha SOXTA fixture (3 davlat `aqsh`/`buyuk-britaniya`/`janubiy-koreya`, 4 universitet: USD hammasi tasdiqlangan; GBP + `yordam "yo'q"`; KRW + qoralama `min_ielts`; USD + `topilmadi` yordam; `kurslar.json` da SOXTA GBP kursi; commit qilinmagan, build'dan keyin o'chirildi va `kurslar.json` tiklandi) bilan build va brauzer (lokal statik server, Claude Browser paneli): qoralama `min_ielts` ko'rinmadi va universitet "tekshirilmoqda" guruhiga tushdi; IELTS 6.0 + byudjet 45 000 da "Talab: 6.5 · Sizda: 6.0", "Xarajat: ≈ 37 500 USD · Byudjet: 45 000 USD", "Talabga yetmaydi"; "Faqat talabga mos" ularni yashirdi; "yordam" belgisi `yo'q` ni yashirdi va `topilmadi` yordamni tekshirilmoqda guruhiga o'tkazdi; davlat filtri; URL tiklash (`?yordam=1`); noto'g'ri byudjet (`abc`) `aria-invalid` va izoh; shortlist qo'shish/olib tashlash, localStorage, sahifa yangilangandan keyin saqlanishi, olib tashlashdan keyin fokus keyingi tugmaga. 1280px (qorong'i va yorug'), 375px (yorug'), ~408px (qorong'i) ko'rildi, gorizontal scroll yo'q. Bo'sh holat 375px yorug'da ko'rildi.
 - Sinalmagan: haqiqiy hisob bilan kirib sinxron (jonli Supabase `user_state` upsert/RLS; parol kiritish taqiqlangani uchun), "Hisobga saqlash" tugmasi brauzerda (faqat unit test), boshqa tabdan `storage` hodisasi, axe/VoiceOver, haqiqiy telefon, JS'siz ko'rinish brauzerda (kod bo'yicha: kartalar build tartibida, filtr va shortlist yashirin), `prefers-reduced-motion`. Kontrast alohida o'lchanmadi (faqat mavjud DS tokenlari).
 
+## Q5 natijasi (2026-11-20): TO'SIQ
+Kod, migratsiya va RPC o'zgarmadi. Faqat shu fayl yangilandi.
+
+Topilganlar:
+- Ariza zinapoyasi bor: `src/pages/uz/top-admission/qollanma/ariza-zinapoyasi/index.astro` (PR #25), `DarsQolip` darsi: Misol / Qoida / Sinab ko'r. "Sinab ko'r" da 3 ta zinapoya (`turkiye`, `commonapp`, `ucas`, `src/data/topAdmissionDarslar/zinapoyalar.ts`), har birida 4 pog'ona; "Tekshirish" hammasi to'g'ri bo'lsa `Hammasi to'g'ri: … zinapoyasi tayyor.` (qator ~268). Hozir Supabase'ga hech narsa yubormaydi, faqat `tayanch-topshirish-yoli` ni o'qiydi. Belgilanadigan (checkbox) "qadam" yo'q: qadam = bitta zinapoyani to'g'ri terish.
+- XP faqat server trigger'i orqali yoziladi: `public.attempts` ga qator tushganda `attempts_award_xp` → `private.award_xp_apply` → `private.xp_add(user, kind, ref, xp, day)` (`supabase/migrations/20261112184613_reyting.sql:173-271`). `attempts` ga faqat SAT `submit_answer` yozadi. Mijoz `xp_events` ga yoza olmaydi (`revoke all … from anon, authenticated`, faqat `select`, qator 59-60); `private.xp_add` mijozga yopiq (qator 486).
+- `xp_events.kind` CHECK: faqat `'answer', 'correct', 'review', 'daily', 'daily_correct'` (qator 46). Admission turi (masalan `admission_step`) yozilsa CHECK rad etadi.
+- Bir martalik kafolati mexanizmda bor: `unique (user_id, kind, ref)` va `on conflict … do nothing` (qator 52, 187-189). Lekin unga mijozdan kirish yo'li yo'q.
+- `20261116124750_musobaqa.sql` XP'ga tegmaydi (musobaqa javobi XP bermaydi). `origin/main` (25fc70a) da boshqa XP yozadigan migratsiya yoki Edge Function yo'q (`git grep xp_events|xp_add|award_xp`).
+- Xulosa: Admission qadamini migratsiyasiz va mavjud RPC'larni o'zgartirmasdan XP'ga aylantirib bo'lmaydi (reja 4-bo'lim Q5 6-band, 2-bo'lim 3-qoida). Q5 shu yerda to'xtadi. Bir martalikni unit test bilan ko'rsatish ham mumkin bo'lmadi: chaqiriladigan RPC yo'q.
+
+Kerakli o'zgarish (muallif tasdiqlasa, ALOHIDA branch'da yangi migratsiya; bu yerda yozilmagan):
+1. `xp_events.kind` CHECK ga `'admission_step'` qo'shish (constraint'ni `drop … if exists` + `add` bilan qayta yaratish).
+2. `private.xp_rule` ga `when 'admission_step' then 10` (`create or replace`, qolgan qiymatlar o'zgarmaydi). Ikki joy birga: `src/data/satReyting.ts` emas, Admission uchun alohida konstanta (masalan `src/data/topAdmissionXp.ts`); `docs/xp-qoidasi.md` ga "Admission" qatori.
+3. Yangi RPC `public.admission_step_done(p_step text) returns integer`, `security definer`, `set search_path = ''`:
+   - `auth.uid()` null bo'lsa `raise exception 'not_authenticated'`.
+   - `p_step` ruxsat ro'yxatida bo'lishi shart: `'zinapoya:turkiye'`, `'zinapoya:commonapp'`, `'zinapoya:ucas'` (boshqasi `raise exception 'bad_step' using errcode = '22023'`). Ro'yxat serverda, shuning uchun umrbod maksimum 3 × 10 = 30 XP.
+   - `pg_advisory_xact_lock(hashtextextended('xp:' || uid, 0))` (SAT bilan bir xil qulf), so'ng `return private.xp_add(uid, 'admission_step', p_step, private.xp_rule('admission_step'), private.today_tashkent())`. `unique (user_id, kind, ref)` tufayli ikkinchi chaqiruv 0 qaytaradi (belgini olib qayta qo'yish XP bermaydi).
+   - `revoke all … from public, anon; grant execute … to authenticated`.
+4. Sinov: `supabase/tests/` ga (masalan `admission_xp_test.sql`, rollback bilan): birinchi chaqiruv 10, ikkinchisi 0, `xp_events` da bitta qator; noto'g'ri `p_step` xato; anon chaqira olmaydi; kunlik 300 chegarasi.
+5. Mijoz (migratsiya jonli bazaga qo'llangandan keyin, Q5 ni qayta ishga tushirish): zinapoya `Hammasi to'g'ri` bo'lganda, faqat hisob bilan kirgan bo'lsa, `rpc('admission_step_done', { p_step: 'zinapoya:' + joriy.id })`; xato jim yutiladi (loginsiz chaqirilmaydi, xato chiqmaydi). Qaytgan XP > 0 bo'lsa `aria-live` holatda "+10 XP" yozuvi. O'z progressi: `leaderboard_me()` (faqat o'z XP'si; reyting/boshqalar ko'rsatilmaydi). Bir martalik bayroq brauzerda saqlanmaydi: manba server kaliti.
+
+XP qiymati sababi (10): SAT'da bitta savol birinchi urinishda to'g'ri = 2 + 3 = 5 XP, kun savoli to'g'ri = 5 + 5 = 10 XP. Bitta zinapoya 4 pog'onani to'g'ri tartiblash, ya'ni bir nechta savolga teng mehnat, lekin umrida bir marta; kun savoli bilan teng (10) mutanosib. Jami 30 XP, SAT'dagi kunlik 300 chegaradan ancha kichik, reytingni buzmaydi. Muallif tasdig'i kerak.
+
+Ma'lum cheklov (tasdiqdan oldin bilish kerak): zinapoyaning to'g'ri javobi statik JS'da (`zinapoyalar.ts`), server tartibni tekshira olmaydi. XP amalda "o'quvchi o'zi bajardim degan" qadam uchun; himoya faqat ruxsat ro'yxati, noyob kalit va kunlik chegara (umrbod 30 XP).
+
 ## Topilmalar (Q0)
 Audit 2026-11-19, `admission-d` (asos 8b803c5), faqat repo kodi o'qildi. Jonli Supabase (deploy qilingan versiya, sozlamalar, haqiqiy bucket'lar) va tashqi provayderlar shartlari tekshirilmagan. Qisqartmalar: `F` = `supabase/functions/`, `M` = `supabase/migrations/`.
 
@@ -141,6 +167,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q5 TO'SIQ ("Q5 natijasi"). Muallif migratsiyani tasdiqlab, alohida branch'da yozdirib, jonli bazaga qo'llamaguncha Q5 qayta boshlanmaydi. Q6–Q10 Q5 ga bog'liq emas: BOSHQARUVCHI muallif qaroridan keyin davom ettirishi mumkin. Q5 qayta boshlansa: faqat 5-band (mijoz) qoladi, ref formati `zinapoya:<id>`.
 - Q4 tugadi ("Q4 natijasi" bo'limi). Keyingi: Q5 (Ariza zinapoyasi → XP). Q6/Q9 uchun: davlat slug'lari `aqsh`, `buyuk-britaniya`, `janubiy-koreya`; `xalqaro_yordam_turi` yordam yo'q bo'lsa aynan `"yo'q"`; GBP va KRW kurslari `kurslar.json` da bo'lmasa UK/Koreya universitetlari moslikka kirmaydi.
 - Q3 tugadi ("Q3 natijasi" bo'limi). Keyingi: Q4. Uslub `grantlar/index.astro` (`gk-*`) va `davlatlar/index.astro` (`dt-*`); URL holati namunasi `grantKatalog.ts`; yon panelga "Menga mos universitet" bandini `src/data/topAdmissionSahifalar.ts` ga qo'sh. Deadline saralash/muddat uchun `deadlineSanasi`, `muddatHolati` (`grantKatalog.ts`) qayta ishlatilishi mumkin.
 - Q0 tugadi (faqat `docs/rejalar/admission-holat.md` o'zgardi).
@@ -148,6 +175,10 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q5 (TO'SIQ): Admission XP uchun yangi migratsiya kerak ("Q5 natijasi", "Kerakli o'zgarish" 1–4). Reja "Supabase'ga migratsiya/RPC qo'shilmaydi" deydi. Shu bitta istisnoga (CHECK ga `admission_step`, `xp_rule` ga qiymat, yangi `admission_step_done` RPC, jadval yo'q) ruxsat berasizmi yoki Q5 bekor qilinadimi?
+- Q5: XP qiymati: bitta zinapoya uchun 10 XP (umrida bir marta, jami 30). Ma'qulmi?
+- Q5: `leaderboard()` hamma `xp_events` ni yig'adi, ya'ni Admission XP'si SAT reytingidagi jami ballga ham qo'shiladi. Shu ma'qulmi yoki SAT reytingi faqat SAT turlarini (`kind`) hisoblasinmi? (Ikkinchisi `leaderboard` RPC'sini ham o'zgartirishni talab qiladi.)
+- Q5: Rejada "belgini olib qayta qo'yish" deyilgan, lekin zinapoyada belgi (checkbox) yo'q, qadam = zinapoyani to'g'ri terish. Shu talqin to'g'rimi yoki zinapoyaga haqiqiy ariza qadamlari uchun checklist (masalan, "Common App akkaunt ochdim") qo'shilishi kerakmi? (Bu yangi interaktiv funksiya, alohida spetsifikatsiya kerak.)
 - Q4: Shortlistni hisobga ulash umumiy rozilik bilan ishlaydi: SAT dialogidagi "Import" yoki Top Admission sahifasidagi "Hisobga saqlash" bosilsa, shu brauzerdagi SAT progressi ham, shortlist ham hisobga ko'chadi. Shu ma'qulmi yoki Top Admission uchun alohida rozilik kerakmi? (Alohida rozilik `holat.ts` ni bo'limlarga ajratishni talab qiladi.)
 - Q4: SAT dialogi (inglizcha) sanog'ida endi "saved university (Top Admission)" qatori chiqishi mumkin va "Clear local copy" shortlistni ham brauzerdan o'chiradi. Dialog matnida ("SAT progress") buni alohida aytish kerakmi?
 - Q4: IELTS bali va byudjet hech qayerga saqlanmaydi (sahifa yangilansa tozalanadi). Ularni brauzerda (localStorage) eslab qolish kerakmi?
