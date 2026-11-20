@@ -1,5 +1,29 @@
 ---
-// Qavat qurilmoqda. Bo'lim dizayni tayyor bo'lganda almashtiriladi.
-import QavatQurilmoqda from '../../../components/QavatQurilmoqda.astro';
+import BolimQobiq from '../../../layouts/BolimQobiq.astro';
+import QavatFoto from '../../../components/QavatFoto.astro';
+import { yol } from '../../../lib/yol';
 ---
-<QavatQurilmoqda bolim="eyuf" />
+<BolimQobiq title="El-Yurt Umidi" description="El-Yurt Umidi tayyorgarligi. IQ test mashqlari va kurslar." turi="bolim-kirishi" bolim="eyuf" holat="chop-etilgan">
+  <section class="ichki eyuf-kirish" aria-labelledby="eyuf-h">
+    <p class="eyuf-yorliq">Mustaqil tayyorgarlik</p>
+    <h1 id="eyuf-h">El-Yurt Umidi</h1>
+    <p>Test bosqichiga mashq qiling va tayyorgarlik kurslarini ko‘rib chiqing.</p>
+    <a class="eyuf-iq-karta" href={yol('/uz/eyuf/iq/')}>
+      <span class="eyuf-yorliq">Test bosqichi</span>
+      <h2>IQ test</h2>
+      <span>Besh test to‘plami va aralash 20 savol. Taymer, natija va xatolarni qayta yechish.</span>
+      <span class="eyuf-havola">Mashqni boshlash ↗</span>
+    </a>
+    <p><a href={yol('/uz/eyuf/kurslar/')}>Tayyorgarlik kurslari →</a></p>
+    <p class="eyuf-yorliq">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+  </section>
+  <QavatFoto bolim="eyuf" />
+</BolimQobiq>
+
+<style>
+  .eyuf-kirish { display: grid; gap: var(--space-5); padding-top: var(--space-6); }
+  .eyuf-kirish > p { max-width: 60ch; }
+  .eyuf-yorliq { color: var(--color-text-secondary); font-size: var(--text-small-size); }
+  .eyuf-iq-karta { display: grid; gap: var(--space-3); padding: var(--space-6); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); text-decoration: none; }
+  .eyuf-havola { color: var(--floor-text); font-weight: var(--font-weight-semibold); }
+</style>
