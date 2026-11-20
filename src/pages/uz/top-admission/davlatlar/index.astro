@@ -9,12 +9,13 @@
 // 760px dan torda ketma-ket kartalar). Holat URL query'da (?f=&s=&t=), brauzerda hech narsa saqlanmaydi.
 import { getCollection } from 'astro:content';
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import GrantYoqIzoh from '../../../../components/topAdmission/GrantYoqIzoh.astro';
 import Fakt from '../../../../components/topAdmission/Fakt.astro';
 import kurslarJson from '../../../../data/topAdmission/kurslar.json';
 import { kurslarSxema } from '../../../../lib/topAdmission/sxema';
 import { faktQiymatMatni, kurslarBormi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
 import {
-  FILTRLAR, MAKS_TAQQOS, davlatXulosasi, grantKorinadimi, saralash, tasdiqlanganSoni,
+  FILTRLAR, MAKS_TAQQOS, davlatXulosasi, grantKorinadimi, grantYoqIzohi, saralash, tasdiqlanganSoni,
   type DavlatKirish, type GrantKirish,
 } from '../../../../lib/topAdmission/davlatTaqqos';
 import { yol } from '../../../../lib/yol';
@@ -31,7 +32,7 @@ const grantKirish: Map<string, GrantKirish> = grantlar;
 const davlatYozuvlari = await getCollection('davlatlar');
 const davlatlar = davlatYozuvlari.map((e) => {
   const d = e.data;
-  const kirish = { ...d, grant: { davlat_grantlari: (d.grant.davlat_grantlari as { id: string }[]).map((r) => r.id) } } as unknown as DavlatKirish;
+  const kirish = { ...d, grant: { ...d.grant, davlat_grantlari: (d.grant.davlat_grantlari as { id: string }[]).map((r) => r.id) } } as unknown as DavlatKirish;
   const xulosa = davlatXulosasi(kirish, grantKirish, kurslar);
   const korGrantlar = kirish.grant.davlat_grantlari.map((s) => grantlar.get(s)).filter((g): g is GrantKorinish & GrantKirish => grantKorinadimi(g));
   const chuqurHavola = d.chuqur_qollanma_havola
@@ -173,7 +174,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                       <ul class="dt-grantlar">
                         {gr.map((g) => <li><a class="dt-havola" href={katalogHavola(d.slug)}>{g.nom}<span class="dt-sr"> (Grantlar katalogida)</span></a></li>)}
                       </ul>
-                    ) : <span class="dt-yoq">Ma'lumot tekshirilmoqda</span>}
+                    ) : <GrantYoqIzoh fakt={grantYoqIzohi(d)} />}
                   </dd>
                 </div>
                 <div>
@@ -229,7 +230,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                           : s.tur === 'usd' ? (x.xulosa.usd === null ? <span class="dt-yoq">Ma'lumot tekshirilmoqda</span> : <span>{usdMatn(x.xulosa.usd)}<br /><span class="dt-kichik dt-sust">{kursIzoh}</span></span>)
                           : x.grantlar.length > 0 ? (
                             <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
-                          ) : <span class="dt-yoq">Ma'lumot tekshirilmoqda</span>}
+                          ) : <GrantYoqIzoh fakt={grantYoqIzohi(x.d)} />}
                       </td>
                     ))}
                   </tr>
@@ -250,7 +251,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                           : s.tur === 'usd' ? (x.xulosa.usd === null ? <span class="dt-yoq">Ma'lumot tekshirilmoqda</span> : <span>{usdMatn(x.xulosa.usd)} <span class="dt-kichik dt-sust">({kursIzoh})</span></span>)
                           : x.grantlar.length > 0 ? (
                             <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
-                          ) : <span class="dt-yoq">Ma'lumot tekshirilmoqda</span>}
+                          ) : <GrantYoqIzoh fakt={grantYoqIzohi(x.d)} />}
                       </dd>
                     </div>
                   ))}

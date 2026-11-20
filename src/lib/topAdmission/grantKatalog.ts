@@ -38,9 +38,17 @@ export interface GrantKirish {
   nimani_qoplaydi: Fakt;
   toliq_qoplaydi?: Fakt;
   deadline: Fakt;
+  /** To'liq ehtiyojga asoslangan yordam: kartada oila hissasi izohi (universitetMoslik.ts EHTIYOJ_IZOHI). */
+  toliq_ehtiyoj?: boolean;
 }
 
 export type MuddatHolati = 'kelajak' | 'nomalum' | 'otgan';
+
+/**
+ * Tasdiqlangan deadline o'tgan bo'lsa kartadagi belgi (grant va universitet; muallif qarori 2026-11-20).
+ * Keyingi sana rasmiy e'lon qilinsa, kontent agenti deadline faktini yangi sana bilan yangilaydi va belgi o'zi yo'qoladi.
+ */
+export const MUDDAT_OTGAN_MATNI = "Bu yilgi muddat o'tgan, keyingisi hali e'lon qilinmagan";
 
 export interface GrantXulosa {
   slug: string;

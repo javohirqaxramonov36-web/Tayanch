@@ -29,6 +29,10 @@ export const ESKIRISH_KUNLARI: Readonly<Record<FaktTuri, number>> = Object.freez
 export const FAKT_HOLATLARI: readonly FaktHolati[] = ['qoralama', 'tasdiqlangan', 'topilmadi'];
 export const FAKT_TURLARI: readonly FaktTuri[] = ['muddatli', 'barqaror'];
 
+/** Universitetning IELTS talabi turi (E1, muallif qarori 2026-11-20). */
+export type IeltsHolati = 'minimum' | 'tavsiya' | 'talab_qilinmaydi' | 'topilmadi';
+export const IELTS_HOLATLARI: readonly IeltsHolati[] = ['minimum', 'tavsiya', 'talab_qilinmaydi', 'topilmadi'];
+
 /** Saytda faqat "tasdiqlangan" fakt ko'rinadi. Qolgani o'rniga "Ma'lumot tekshirilmoqda". */
 export function faktKorinadimi(fakt: Fakt | null | undefined): boolean {
   return !!fakt && fakt.holat === 'tasdiqlangan';

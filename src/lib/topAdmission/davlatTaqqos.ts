@@ -23,7 +23,8 @@ export interface DavlatKirish {
   slug: string;
   nom_uz: string;
   narx: { kontrakt_yillik: Fakt; viza_yashash_summasi: Fakt; valyuta: string };
-  grant: { davlat_grantlari: string[] };
+  /** izoh (E1): ixtiyoriy Fakt, davlat granti topilmagani (grantYoqIzohi). */
+  grant: { davlat_grantlari: string[]; izoh?: Fakt | string };
   til: { ingliz_tilida_dastur_bor: Fakt; odatiy_ielts: Fakt };
   ishlash: { oqish_paytida: Fakt; bitirgandan_keyin: Fakt };
   diplom: { togridan_togri: Fakt; tayyorlov_nomi?: Fakt };
@@ -88,13 +89,25 @@ export function davlatXulosasi(d: DavlatKirish, grantlar: Map<string, GrantKiris
   return { slug: d.slug, nom: d.nom_uz, belgilar, usd: taxminiyUsd(d, kurslar) };
 }
 
+/** Davlat kartasidagi qat'iy matn (muallif qarori, 2026-11-20); yonida tekshirilgan sana va manba havolasi. */
+export const GRANT_TOPILMADI_MATNI = "Rasmiy manbalarda o'zbek fuqarosi uchun davlat granti topilmadi";
+
+/**
+ * "Davlat granti topilmadi" izohi ko'rsatiladimi: `davlat_grantlari` bo'sh va `grant.izoh` fakti tasdiqlangan.
+ * Qaytaradi: shu fakt (sana va manba uchun) yoki null (u holda karta "Ma'lumot tekshirilmoqda" ko'rsatadi).
+ */
+export function grantYoqIzohi(d: Pick<DavlatKirish, 'grant'>): Fakt | null {
+  const f = d.grant.izoh;
+  return d.grant.davlat_grantlari.length === 0 && f && typeof f === 'object' && faktKorinadimi(f) ? f : null;
+}
+
 /** Davlatdagi tasdiqlangan faktlar soni (bo'sh holatni aniqlash uchun). */
 export function tasdiqlanganSoni(d: DavlatKirish): number {
   const f = [
     d.narx.kontrakt_yillik, d.narx.viza_yashash_summasi, d.til.ingliz_tilida_dastur_bor, d.til.odatiy_ielts,
     d.ishlash.oqish_paytida, d.ishlash.bitirgandan_keyin, d.diplom.togridan_togri, d.diplom.tayyorlov_nomi,
   ];
-  return f.filter((x) => faktKorinadimi(x)).length;
+  return f.filter((x) => faktKorinadimi(x)).length + (grantYoqIzohi(d) ? 1 : 0);
 }
 
 export function filtrdanOtadimi(x: Pick<DavlatXulosa, 'belgilar'>, filtrlar: readonly FiltrId[]): boolean {

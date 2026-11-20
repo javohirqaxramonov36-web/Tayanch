@@ -4,6 +4,7 @@
 // Mantiq: src/lib/topAdmission/universitetMoslik.ts. Taqqoslash faqat "tasdiqlangan" faktlardan; har fakt Fakt.astro orqali.
 // Kiritish maydonlari (IELTS, byudjet) filtr boshqaruvlari: forma yuborilmaydi, hech qayerga saqlanmaydi.
 // URL'da faqat davlat va belgilar (?d=&yordam=&mos=). JS'siz: kartalar ko'rinadi, filtr va shortlist yashirin.
+// E1: UK va Koreya xarajati "kamida" (kontrakt_eng_past + davlat viza yashash summasi); IELTS faqat "minimum" bo'yicha saralanadi.
 // Shortlist: `tayanch:admission-shortlist` (holat.ts orqali; hisob bilan va rozilikdan keyin user_state ga ham).
 import { getCollection } from 'astro:content';
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
@@ -12,28 +13,38 @@ import kurslarJson from '../../../../data/topAdmission/kurslar.json';
 import { kurslarSxema } from '../../../../lib/topAdmission/sxema';
 import { faktKorinadimi, kurslarBormi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
 import {
-  BOSH_HOLAT, IELTS_BALLARI, MOS_DAVLATLAR, alifbo, ieltsMatni, moslik, uniXulosasi, type UniKirish,
+  BOSH_HOLAT, IELTS_BALLARI, MOS_DAVLATLAR, alifbo, ieltsMatni, moslik, uniXulosasi, type DavlatYashash, type UniKirish,
 } from '../../../../lib/topAdmission/universitetMoslik';
+import { deadlineSanasi, muddatHolati } from '../../../../lib/topAdmission/grantKatalog';
+import { toshkentBugun } from '../../../../lib/muddat';
 import { yol } from '../../../../lib/yol';
 
 const kurslar = kurslarSxema.parse(kurslarJson);
 const kursBor = kurslarBormi(kurslar);
 const refId = (r: unknown) => (r && typeof r === 'object' && 'id' in r ? String((r as { id: string }).id) : String(r ?? ''));
 
-const davlatNomlari = new Map((await getCollection('davlatlar')).map((e) => [e.id, e.data.nom_uz]));
+const davlatYozuvlari = await getCollection('davlatlar');
+const davlatNomlari = new Map(davlatYozuvlari.map((e) => [e.id, e.data.nom_uz]));
+// "Kamida" xarajat uchun davlat kartasidagi viza yashash summasi (E1).
+const davlatYashash = new Map<string, DavlatYashash>(davlatYozuvlari.map((e) => [e.id, { viza_yashash_summasi: e.data.narx.viza_yashash_summasi as FaktT, valyuta: e.data.narx.valyuta }]));
+const bugun = toshkentBugun();
 const MOS_NOM = new Map(MOS_DAVLATLAR.map((d) => [d.slug, d.nom]));
 
 const FAKT_MAYDONLAR = ['imtihonlar', 'min_ielts', 'yillik_xarajat', 'ariza_tolovi', 'tolovdan_ozod_qilish', 'xalqaro_yordam_turi', 'deadline'] as const;
+const QOSHIMCHA_FAKTLAR = ['kontrakt_eng_past', 'ielts_tavsiya', 'foundation_kerak'] as const;
 
 const universitetlar = alifbo(
   (await getCollection('universitetlar')).map((e) => {
     const d = e.data;
     const kirish = { ...d, davlat: refId(d.davlat) } as unknown as UniKirish & Record<(typeof FAKT_MAYDONLAR)[number], FaktT>;
-    const xulosa = uniXulosasi(kirish, kurslar);
+    const yashash = davlatYashash.get(kirish.davlat) ?? null;
+    const xulosa = uniXulosasi(kirish, kurslar, yashash);
+    const deadlineSana = deadlineSanasi(kirish.deadline);
     return {
-      u: kirish, xulosa, nom: d.nom,
+      u: kirish, xulosa, nom: d.nom, yashash, deadlineSana,
+      otgan: muddatHolati(deadlineSana, bugun) === 'otgan',
       davlatNom: MOS_NOM.get(kirish.davlat) ?? davlatNomlari.get(kirish.davlat) ?? kirish.davlat,
-      biror: FAKT_MAYDONLAR.some((m) => faktKorinadimi(kirish[m])),
+      biror: FAKT_MAYDONLAR.some((m) => faktKorinadimi(kirish[m])) || QOSHIMCHA_FAKTLAR.some((m) => faktKorinadimi(kirish[m])),
       guruh: moslik(xulosa, BOSH_HOLAT).guruh,
     };
   }),
@@ -103,7 +114,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
                 <option value="">Kiritilmagan</option>
                 {IELTS_BALLARI.map((b) => <option value={String(b)}>{ieltsMatni(b)}</option>)}
               </select>
-              <p class="um-kichik um-sust" id="um-ielts-izoh">Umumiy (overall) ball.</p>
+              <p class="um-kichik um-sust" id="um-ielts-izoh">Umumiy (overall) ball. Faqat rasmiy minimal ball bilan solishtiriladi.</p>
             </div>
             <div class="um-maydon">
               <label for="um-byudjet">Yillik byudjet, USD</label>
@@ -153,7 +164,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
 
         <section class="um-tekshir" aria-labelledby="um-tekshir-sarlavha" data-tekshir-bolim hidden={tekshirilmoqda.length === 0}>
           <h2 id="um-tekshir-sarlavha" class="um-h2">Ma'lumot tekshirilmoqda (<span data-tekshir-soni>{tekshirilmoqda.length}</span> ta)</h2>
-          <p class="um-kichik um-sust">Bu universitetlarning kerakli fakti (min IELTS, yillik xarajat USD'da yoki yordam turi) hali tasdiqlanmagan, shuning uchun moslik hisoblanmaydi.</p>
+          <p class="um-kichik um-sust">Bu universitetlarning kerakli fakti (IELTS talabi, yillik xarajat yoki uning "kamida" hisobidagi qismlari, yordam turi) hali tasdiqlanmagan, shuning uchun moslik hisoblanmaydi.</p>
           <ul class="um-kartalar" data-royxat-tekshir aria-label="Ma'lumoti tekshirilayotgan universitetlar">
             {tekshirilmoqda.map((x) => <UniKarta {...x} />)}
           </ul>
@@ -171,6 +182,8 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
     MOS_DAVLATLAR, SHORTLIST_KALIT, byudjetniOqi, holatniOqi, holatniYoz, ieltsMatni, ieltsniOqi, moslik,
     shortlistAlmashtir, shortlistTozala, sonMatni, type MoslikHolati, type ShortlistYozuv, type UniXulosa,
   } from '../../../../lib/topAdmission/universitetMoslik';
+  import { muddatHolati } from '../../../../lib/topAdmission/grantKatalog';
+  import { toshkentBugun } from '../../../../lib/muddat';
   import { holatOqi, holatYoz, importQil, sinxronHolati, sinxronSoroviniKut } from '../../../../lib/holat';
   import { hisobniUla } from '../../../../lib/holatHisob';
 
@@ -196,8 +209,10 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
         ielts: el.dataset.ielts ? Number(el.dataset.ielts) : null,
         xarajatUsd: el.dataset.xarajatUsd ? Number(el.dataset.xarajatUsd) : null,
         yordam: el.dataset.yordam === '' ? null : el.dataset.yordam === '1',
+        ...(el.dataset.ieltsYoq === '1' ? { ieltsYoq: true as const } : {}),
       } satisfies UniXulosa,
       valyuta: el.dataset.valyuta!,
+      kamida: el.dataset.kamida === '1',
       yetmaydi: $<HTMLElement>('[data-yetmaydi]', el),
       solishIelts: $<HTMLElement>('[data-solish-ielts]', el),
       solishByudjet: $<HTMLElement>('[data-solish-byudjet]', el),
@@ -214,6 +229,13 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
     const mosTugma = $<HTMLButtonElement>('[data-faqat-mos]');
     const davlatTartib = MOS_DAVLATLAR.map((d) => d.slug);
 
+    // "Bu yilgi muddat o'tgan..." belgisini bugungi sana (Toshkent) bilan qayta hisoblash (build'dan keyin vaqt o'tgan bo'lishi mumkin).
+    const bugun = toshkentBugun();
+    for (const el of kartalar.values()) {
+      const b = el.querySelector<HTMLElement>('[data-otgan]');
+      if (b) b.hidden = muddatHolati(el.dataset.deadlineSana || null, bugun) !== 'otgan';
+    }
+
     let h: MoslikHolati = holatniOqi(location.search);
 
     const chiz = () => {
@@ -229,7 +251,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
         k.yetmaydi.hidden = m.guruh !== 'yetmaydi';
         const taqqos = m.guruh === 'mos' || m.guruh === 'yetmaydi';
         // IELTS: "Talab: 6.5 · Sizda: 6.0"
-        k.solishIelts.hidden = !taqqos;
+        k.solishIelts.hidden = !taqqos || k.x.ielts === null; // rasmiy minimum yo'q: solishtirilmaydi
         if (taqqos && k.x.ielts !== null) {
           k.solishIelts.textContent = `Talab: ${ieltsMatni(k.x.ielts)} · Sizda: ${h.ielts === null ? 'kiritilmagan' : ieltsMatni(h.ielts)}`;
           k.solishIelts.classList.toggle('um-solish-yoq', m.ieltsPast);
@@ -237,7 +259,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
         // Xarajat va byudjet yonma-yon (USD)
         k.solishByudjet.hidden = !taqqos;
         if (taqqos && k.x.xarajatUsd !== null) {
-          const taxmin = k.valyuta === 'USD' ? '' : '≈ ';
+          const taxmin = (k.kamida ? 'kamida ' : '') + (k.valyuta === 'USD' ? '' : '≈ ');
           k.solishByudjet.textContent = `Xarajat: ${taxmin}${sonMatni(k.x.xarajatUsd)} USD · Byudjet: ${h.byudjet === null ? 'kiritilmagan' : `${sonMatni(h.byudjet)} USD`}`;
           k.solishByudjet.classList.toggle('um-solish-yoq', m.qimmat);
         }

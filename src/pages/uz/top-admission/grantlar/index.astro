@@ -4,7 +4,8 @@
 // Mantiq: src/lib/topAdmission/grantKatalog.ts.
 // Qoida: grant katalogda faqat "nimani qoplaydi" fakti tasdiqlangan bo'lsa ko'rinadi; har fakt Fakt.astro orqali.
 // "To'liq qoplaydi" filtri faqat `toliq_qoplaydi` fakti tasdiqlangan va true bo'lsa.
-// Tartib: eng yaqin deadline birinchi, keyin sanasi noma'lum, oxirida "Bu yilgi muddat o'tgan".
+// Tartib: eng yaqin deadline birinchi, keyin sanasi noma'lum, oxirida "Bu yilgi muddat o'tgan, keyingisi hali e'lon qilinmagan".
+// To'liq ehtiyojga asoslangan yordam (toliq_ehtiyoj): "Nimani qoplaydi" ostida oila hissasi izohi (E1).
 // "Muddat o'tgan" build paytida hisoblanadi va brauzerda bugungi sana (Toshkent) bilan qayta hisoblanadi.
 // JS'siz: hamma kartalar build tartibida, filtr yashirin. JS bilan: filtr chiplari <button aria-pressed>,
 // holat URL query'da (?tur=&d=&dr=&toliq=), brauzerda hech narsa saqlanmaydi.
@@ -13,9 +14,10 @@ import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import Fakt from '../../../../components/topAdmission/Fakt.astro';
 import { sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
 import {
-  DARAJALAR, DARAJA_MATNI, TURLAR, TUR_MATNI, grantKorinadimi, grantXulosasi, ichkiSahifa, muddatHolati, saralash,
+  DARAJALAR, DARAJA_MATNI, MUDDAT_OTGAN_MATNI, TURLAR, TUR_MATNI, grantKorinadimi, grantXulosasi, ichkiSahifa, muddatHolati, saralash,
   type GrantKirish,
 } from '../../../../lib/topAdmission/grantKatalog';
+import { EHTIYOJ_IZOHI } from '../../../../lib/topAdmission/universitetMoslik';
 import { toshkentBugun } from '../../../../lib/muddat';
 import { yol } from '../../../../lib/yol';
 
@@ -139,7 +141,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
               data-turi={g.turi} data-davlat={g.davlat} data-daraja={g.daraja} data-toliq={xulosa.toliq ? '1' : ''}>
               <div class="gk-karta-bosh">
                 <h2 class="gk-karta-nom">{xulosa.nom}</h2>
-                <span class="gk-belgi gk-belgi-otgan" data-otgan hidden={!otgan}>Bu yilgi muddat o'tgan</span>
+                <span class="gk-belgi gk-belgi-otgan" data-otgan hidden={!otgan}>{MUDDAT_OTGAN_MATNI}</span>
               </div>
               <p class="gk-yorliqlar">
                 <span class="yorliq">{TUR_MATNI[g.turi]}</span>
@@ -153,7 +155,10 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
                 </div>
                 <div>
                   <dt>Nimani qoplaydi</dt>
-                  <dd><Fakt fakt={g.nimani_qoplaydi} /></dd>
+                  <dd>
+                    <Fakt fakt={g.nimani_qoplaydi} />
+                    {g.toliq_ehtiyoj && <span class="gk-izoh">{EHTIYOJ_IZOHI}</span>}
+                  </dd>
                 </div>
                 {xulosa.toliq && g.toliq_qoplaydi && (
                   <div>
@@ -320,12 +325,13 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
     display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
     border-radius: var(--badge-radius); font-size: var(--text-caption-size); font-weight: 600;
   }
-  .gk-belgi-otgan { background: var(--color-warning-subtle); color: var(--color-warning-text); }
+  .gk-belgi-otgan { background: var(--color-warning-subtle); color: var(--color-warning-text); max-width: 100%; padding-block: var(--space-1); }
   .gk-belgi-toliq { background: var(--floor-subtle); color: var(--color-text-primary); border: 1px solid var(--floor-ui); }
   .gk-maydonlar { margin: 0; display: grid; gap: var(--space-3); }
   .gk-maydonlar > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
   .gk-maydonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
-  .gk-maydonlar dd { margin: 0; min-width: 0; }
+  .gk-maydonlar dd { margin: 0; min-width: 0; display: grid; gap: var(--space-1); }
+  .gk-izoh { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
   .gk-havolalar { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding-top: var(--space-2); }
   .gk-havolalar .gk-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
   .gk-ichki {

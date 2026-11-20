@@ -5,7 +5,7 @@
 // Xato bo'lsa Astro build to'xtaydi va xabarda kolleksiya, fayl (entry) va maydon yo'li ko'rinadi.
 import { z } from 'astro/zod';
 import { sanaTogri } from '../muddat.ts';
-import { FAKT_HOLATLARI, FAKT_TURLARI } from './fakt.ts';
+import { FAKT_HOLATLARI, FAKT_TURLARI, IELTS_HOLATLARI } from './fakt.ts';
 
 type Ref = (kolleksiya: 'davlatlar' | 'grantlar' | 'universitetlar') => z.ZodType;
 
@@ -60,7 +60,12 @@ export function davlatSxema(ref: Ref) {
     }),
     grant: z.strictObject({
       davlat_grantlari: z.array(ref('grantlar')),
-      izoh: z.string().optional(),
+      /**
+       * Ixtiyoriy Fakt (E1). `davlat_grantlari` bo'sh bo'lsa: rasmiy manbalarda o'zbek fuqarosi uchun davlat granti
+       * topilmagani (source_url = tekshirilgan rasmiy sahifa). Kartada qat'iy matn + sana + manba chiqadi (davlatTaqqos.ts).
+       * Eski oddiy matn ham o'tadi (mavjud fayllar buzilmasin), lekin saytda ko'rsatilmaydi.
+       */
+      izoh: z.union([z.string(), matnFakt]).optional(),
     }),
     til: z.strictObject({
       ingliz_tilida_dastur_bor: haYoqFakt,
@@ -91,6 +96,15 @@ export function grantSxema(ref: Ref) {
     /** qiymat YYYY-MM-DD bo'lsa saralanadi; boshqa matn (masalan "yil davomida") ro'yxat oxirida. */
     deadline: matnFakt,
     rasmiy_havola: z.string().regex(HTTPS, "https:// bilan boshlanishi kerak"),
+    /**
+     * Ixtiyoriy (E1): yordam to'liq ehtiyojga asoslangan (full need-based). Kartada oila hissasi izohi chiqadi;
+     * bunday grantga "to'liq qoplaydi" (toliq_qoplaydi: true) QO'YILMAYDI (muallif qarori, 2026-11-20).
+     */
+    toliq_ehtiyoj: z.boolean().optional(),
+  }).superRefine((g, ctx) => {
+    if (g.toliq_ehtiyoj && g.toliq_qoplaydi?.qiymat === true) {
+      ctx.addIssue({ code: 'custom', path: ['toliq_qoplaydi'], message: "to'liq ehtiyojga asoslangan yordamga \"to'liq qoplaydi\" qo'yilmaydi" });
+    }
   });
 }
 
@@ -108,6 +122,22 @@ export function universitetSxema(ref: Ref) {
     xalqaro_yordam_turi: matnFakt,
     /** qiymat YYYY-MM-DD bo'lsa saralanadi. */
     deadline: matnFakt,
+    // ---- E1 (ixtiyoriy maydonlar; mavjud fayllar buzilmaydi) ----
+    /**
+     * Rasmiy eng past xalqaro bakalavr kontrakti, yillik, `valyuta` da. Buyuk Britaniya va Janubiy Koreyada bo'lsa,
+     * filtr xarajati "kamida" = shu + davlat kartasidagi viza yashash summasi (universitetMoslik.ts, KAMIDA_DAVLATLAR).
+     */
+    kontrakt_eng_past: sonFakt.optional(),
+    /**
+     * IELTS talabining turi. Yo'q bo'lsa "minimum" deb olinadi (min_ielts). "tavsiya": ielts_tavsiya fakti;
+     * "talab_qilinmaydi": dalil `imtihonlar` faktida; "topilmadi": filtrda "Ma'lumot tekshirilmoqda".
+     */
+    ielts_holati: z.enum(IELTS_HOLATLARI as [string, ...string[]]).optional(),
+    /** Rasmiy tavsiya etilgan (recommended / competitive) IELTS bali. Saralashga ta'sir qilmaydi. */
+    ielts_tavsiya: faktSxema(z.number().min(0).max(9)).optional(),
+    foundation_kerak: faktSxema(z.enum(['ha', "yo'q", 'dasturga_qarab'])).optional(),
+    /** Yordam to'liq ehtiyojga asoslangan: kartada oila hissasi izohi (grantSxema'dagi bilan bir xil). */
+    toliq_ehtiyoj: z.boolean().optional(),
   });
 }
 
