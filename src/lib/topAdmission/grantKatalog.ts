@@ -53,9 +53,12 @@ export interface GrantXulosa {
   sana: string | null;
 }
 
-/** Grant katalogda ko'rinadimi: "nimani qoplaydi" fakti tasdiqlangan (Q2 dagi qoida bilan bir xil). */
-export function grantKorinadimi(g: Pick<GrantKirish, 'nimani_qoplaydi'> | undefined): boolean {
-  return !!g && faktKorinadimi(g.nimani_qoplaydi);
+/**
+ * Grant katalogda ko'rinadimi: "nimani qoplaydi" VA "deadline" faktlari ikkalasi ham tasdiqlangan
+ * (muallif qarori, 2026-11-20). Deadline matnli bo'lishi mumkin (masalan "yil davomida"), u ham tasdiqlangan bo'lsa yetarli.
+ */
+export function grantKorinadimi(g: Pick<GrantKirish, 'nimani_qoplaydi' | 'deadline'> | undefined): boolean {
+  return !!g && faktKorinadimi(g.nimani_qoplaydi) && faktKorinadimi(g.deadline);
 }
 
 /** "To'liq qoplaydi": faqat `toliq_qoplaydi` fakti tasdiqlangan va qiymati aynan true bo'lsa. */

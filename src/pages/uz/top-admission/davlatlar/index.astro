@@ -23,8 +23,8 @@ const kurslar = kurslarSxema.parse(kurslarJson);
 const narxMumkin = kurslarBormi(kurslar);
 
 const grantYozuvlari = await getCollection('grantlar');
-// Ekranga chiqadigan grant: nom, rasmiy havola va "nimani qoplaydi" fakti.
-interface GrantKorinish { nom: string; rasmiy_havola: string; nimani_qoplaydi: FaktT }
+// Ekranga chiqadigan grant: nom va "nimani qoplaydi" fakti (havola Grantlar katalogiga).
+interface GrantKorinish { nom: string; nimani_qoplaydi: FaktT }
 const grantlar = new Map<string, GrantKorinish & GrantKirish>(grantYozuvlari.map((g) => [g.id, g.data as unknown as GrantKorinish & GrantKirish]));
 const grantKirish: Map<string, GrantKirish> = grantlar;
 
@@ -64,6 +64,8 @@ const kursIzoh = narxMumkin ? `taxminiy, kurs sanasi: ${sanaMatni(kurslar.sana)}
 
 const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 const platformalar = yol('/uz/top-admission/platformalar/');
+// Grant nomi Grantlar katalogiga shu davlat filtri bilan olib boradi (katalog `?d=<davlat-slug>` ni o'qiydi; muallif qarori, 2026-11-20).
+const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d=${encodeURIComponent(slug)}`;
 ---
 <BolimQobiq
   title="Davlatlarni taqqoslash · Top Admission"
@@ -169,7 +171,7 @@ const platformalar = yol('/uz/top-admission/platformalar/');
                   <dd>
                     {gr.length > 0 ? (
                       <ul class="dt-grantlar">
-                        {gr.map((g) => <li><a class="dt-havola" href={g.rasmiy_havola} rel="noopener">{g.nom}<span class="dt-sr"> (rasmiy sahifa)</span></a></li>)}
+                        {gr.map((g) => <li><a class="dt-havola" href={katalogHavola(d.slug)}>{g.nom}<span class="dt-sr"> (Grantlar katalogida)</span></a></li>)}
                       </ul>
                     ) : <span class="dt-yoq">Ma'lumot tekshirilmoqda</span>}
                   </dd>
@@ -226,7 +228,7 @@ const platformalar = yol('/uz/top-admission/platformalar/');
                         {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} />
                           : s.tur === 'usd' ? (x.xulosa.usd === null ? <span class="dt-yoq">Ma'lumot tekshirilmoqda</span> : <span>{usdMatn(x.xulosa.usd)}<br /><span class="dt-kichik dt-sust">{kursIzoh}</span></span>)
                           : x.grantlar.length > 0 ? (
-                            <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={g.rasmiy_havola} rel="noopener">{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
+                            <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
                           ) : <span class="dt-yoq">Ma'lumot tekshirilmoqda</span>}
                       </td>
                     ))}
@@ -247,7 +249,7 @@ const platformalar = yol('/uz/top-admission/platformalar/');
                         {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} />
                           : s.tur === 'usd' ? (x.xulosa.usd === null ? <span class="dt-yoq">Ma'lumot tekshirilmoqda</span> : <span>{usdMatn(x.xulosa.usd)} <span class="dt-kichik dt-sust">({kursIzoh})</span></span>)
                           : x.grantlar.length > 0 ? (
-                            <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={g.rasmiy_havola} rel="noopener">{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
+                            <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
                           ) : <span class="dt-yoq">Ma'lumot tekshirilmoqda</span>}
                       </dd>
                     </div>

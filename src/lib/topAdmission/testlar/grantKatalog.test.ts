@@ -15,7 +15,7 @@ const yoq: Fakt = { turi: 'muddatli', holat: 'topilmadi' };
 
 const grant = (slug: string, o: Partial<GrantKirish> = {}): GrantKirish => ({
   slug, nom: o.nom ?? slug.toUpperCase(), turi: 'davlat', davlat: 'sinoviya', daraja: 'bakalavr',
-  nimani_qoplaydi: t("o'qish"), deadline: yoq, ...o,
+  nimani_qoplaydi: t("o'qish"), deadline: t('2027-02-01'), ...o,
 });
 const BUGUN = '2026-11-20';
 
@@ -23,6 +23,9 @@ test("ko'rinish va 'to'liq qoplaydi' faqat tasdiqlangan faktdan", () => {
   assert.equal(grantKorinadimi(grant('a')), true);
   assert.equal(grantKorinadimi(grant('b', { nimani_qoplaydi: q("o'qish") })), false);
   assert.equal(grantKorinadimi(grant('c', { nimani_qoplaydi: yoq })), false);
+  assert.equal(grantKorinadimi(grant('c2', { deadline: q('2027-02-01') })), false, 'deadline qoralama: karta chiqmaydi');
+  assert.equal(grantKorinadimi(grant('c3', { deadline: yoq })), false, 'deadline topilmadi: karta chiqmaydi');
+  assert.equal(grantKorinadimi(grant('c4', { deadline: t('yil davomida') })), true, 'matnli, lekin tasdiqlangan deadline');
   assert.equal(toliqQoplaydimi(grant('d', { toliq_qoplaydi: t(true) })), true);
   assert.equal(toliqQoplaydimi(grant('e', { toliq_qoplaydi: q(true) })), false);
   assert.equal(toliqQoplaydimi(grant('f', { toliq_qoplaydi: t(false) })), false);
