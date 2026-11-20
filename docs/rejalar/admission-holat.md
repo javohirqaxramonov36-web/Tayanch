@@ -11,7 +11,7 @@
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | tugadi | 2026-11-20 | 3 davlat fayli (8 qoralama, 13 topilmadi), `kurslar.json` CBU 2026-11-20 (14 valyuta). "Q6 natijasi" bo'limi |
 | Q7 | Kontent: 12 qisqa davlat kartasi | tugadi | 2026-11-20 | 12 davlat fayli (30 qoralama, 55 topilmadi). "Q7 natijasi" bo'limi |
 | Q8 | Kontent: davlat grantlari | tugadi | 2026-11-20 | 12 grant (14 qoralama, 13 topilmadi); Xitoy, Kanada, Singapur: rasmiy dastur topilmadi/ochilmadi. "Q8 natijasi" bo'limi |
-| Q9 | Kontent: 30 universitet | to'siq: muallif ro'yxatni tasdiqlashi kerak | 2026-11-20 | Taklif `docs/rejalar/universitetlar-royxati.md` (1-qator TASDIQLANMAGAN, 3 davlat × 10, slug va sabab bilan); universitet fayllari yaratilmagan, fakt yig'ilmagan |
+| Q9 | Kontent: 30 universitet | kutilmoqda | 2026-11-20 | Ro'yxat muallif tomonidan 2026-11-20 da tasdiqlandi (TASDIQLANDI). Taklif `docs/rejalar/universitetlar-royxati.md` (1-qator TASDIQLANMAGAN, 3 davlat × 10, slug va sabab bilan); universitet fayllari yaratilmagan, fakt yig'ilmagan |
 | Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
 
 ## Sozlamalar

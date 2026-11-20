@@ -1,4 +1,4 @@
-TASDIQLANMAGAN
+TASDIQLANDI
 
 # Q9: universitetlar ro'yxati (taklif, 2026-11-20)
 
