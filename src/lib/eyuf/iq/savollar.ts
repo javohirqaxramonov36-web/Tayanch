@@ -217,7 +217,7 @@ export const savollar: readonly IqSavol[] = [
     ],
     "kitobJavobi": "D",
     "tekshirilgan": false,
-    "yechim": "Qalqonlardagi aylanalarning ichma-ichligi va kesishishlarini solishtirdim. D kalitini yagona talqin bilan mustaqil tasdiqlay olmadim. Javob tekshirilmoqda."
+    "yechim": "Namuna qalqonda ikkita aylana ichma-ich, uchburchak esa kvadrat bilan kesishgan. D da uchburchak aylana ichida va ikki aylana kesishgan. Shakllarning bu munosabatlari mos emas. Qaysi o‘xshashlik ustuvorligi berilmagan, D kaliti mustaqil tasdiqlanmadi. Javob tekshirilmoqda."
   },
   {
     "id": "iq-1-10",
@@ -372,8 +372,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "C",
-    "tekshirilgan": false,
-    "yechim": "Qator va ustunlar bo‘yicha yig‘indi hamda ketma-ketliklarni tekshirdim. C — 7,6,8,5,8 kalitini yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Dastlabki uch qator keyingi uch qatorda teskari yozilgan. 38291 → 19283 va 57645 → 54675. Shuning uchun 85867 → 76858. C — 7,6,8,5,8."
   },
   {
     "id": "iq-1-17",
@@ -634,7 +634,7 @@ export const savollar: readonly IqSavol[] = [
     ],
     "kitobJavobi": "D",
     "tekshirilgan": false,
-    "yechim": "Ingliz alifbosida farqlar 3,3,4,5 bo‘lib chiqadi. Keyingi +6 bilan V chiqadi, lekin dastlabki ikki bir xil farq izchil umumiy qoidani noaniq qiladi. D kaliti tekshirilmoqda."
+    "yechim": "A,D,G,K,P harflarining ingliz alifbosidagi o‘rinlari 1,4,7,11,16. Farqlar +3,+3,+4,+5. +6 ni davom ettirish V ni beradi, ammo boshdagi takroriy +3 uchun yagona qoida aniqlanmadi. D — V kaliti tekshirilmoqda."
   },
   {
     "id": "iq-2-08",
@@ -763,8 +763,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "D",
-    "tekshirilgan": false,
-    "yechim": "Beshburchaklar ichidagi qora va oq nuqtalarni yuqoriga o‘tkazish qoidasini tekshirdim. D kalitini barcha qatorda yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Qo‘shni ikki beshburchak ustma-ust qo‘yiladi. Ikkalasida ham nuqta bor o‘rinlar rangidan qat’i nazar olib tashlanadi. Faqat bittasida bor nuqtalar o‘z rangi bilan qoladi. Bu qoida pastdan yuqoriga barcha juftliklarda ishlaydi. Eng yuqorida chap oq nuqtalar bekor bo‘ladi, markaz va o‘ngda qora, pastki chapda oq qoladi. D."
   },
   {
     "id": "iq-2-13",
@@ -785,8 +785,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "C",
-    "tekshirilgan": false,
-    "yechim": "Yetishmagan bo‘lakdagi diagonal va qisqa gorizontal chiziqni qo‘shni kataklar bilan solishtirdim. C ning to‘liq yagona qoidasini tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Har satrda dastlabki ikki katakdagi chiziqlar ustma-ust qo‘yiladi. Ustma-ust tushgan kesmalar bekor qilinadi. Uchinchi satrda yuqori o‘ng diagonal yarmi va yuqori vertikal kesma bekor bo‘ladi. To‘liq yuqori chap–pastki o‘ng diagonal va chap yarim gorizontal kesma qoladi. C. Shu qoida dastlabki ikki satrga ham mos."
   },
   {
     "id": "iq-2-14",
@@ -852,8 +852,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "D",
-    "tekshirilgan": false,
-    "yechim": "Nuqta joylashgan sohaning chiziq va tashqi chetga tutashuvlarini solishtirdim. D kalitini mustaqil qat’iy tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Namuna nuqtasi uchburchak sohada. A dagi nuqta besh tomonli, B dagisi to‘rt tomonli, C dagisi besh tomonli sohada. Faqat D dagi nuqta ham uch kesma bilan chegaralangan uchburchak ichida. Eng o‘xshash shakl D."
   },
   {
     "id": "iq-2-17",
@@ -1194,8 +1194,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "C",
-    "tekshirilgan": false,
-    "yechim": "Yoyilmadagi qarama-qarshi yuzlar H/C, E/S, N/L. Harflarning burilishini ham hisobga olib C ni mustaqil to‘liq tasdiqlash yakunlanmadi. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Qarama-qarshi yuzlar H/C, E/S, N/L. B va D da uch yuzning o‘zaro tartibi yoyilmaning aks tasvirini talab qiladi. A da yuqoridagi H ning uzun chiziqlari E bilan umumiy qirraga tik, yoyilmada esa ular shu qirraga parallel. C da L yuqorida, teskari C oldinda va teskari E o‘ngda joylashadi. E ning ochiq tomoni C ga qaragan, L ning qisqa chizig‘i E tomonida. C."
   },
   {
     "id": "iq-3-12",
@@ -1239,7 +1239,7 @@ export const savollar: readonly IqSavol[] = [
     ],
     "kitobJavobi": "B",
     "tekshirilgan": false,
-    "yechim": "Tarozida katak markazlarini yelka sifatida hisoblash natijasi 6 ga aniq teng kelmayapti. Tayanch chizig‘i va yuk markazlari joyi qayta tekshirilmoqda. Kitob kaliti B — 6."
+    "yechim": "Yuk markazlari va tayanch orasidagi masofalar skanerda taxminan 4,5; 2,5; 1,5; 5,5 katak. Momentlar tenglamasi 3×4,5+9×2,5=?×1,5+5×5,5 dan ?=17/3 chiqadi. Bu kitobdagi B — 6 ga teng emas. Tayanch yoki yuk joyi noaniq, javob tekshirilmoqda."
   },
   {
     "id": "iq-3-14",
@@ -1260,8 +1260,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "D",
-    "tekshirilgan": false,
-    "yechim": "Chegaradagi sonlarning ketma-ketligi, tomon yig‘indilari va qarama-qarshi juftlarni tekshirdim. D — 5 uchun yagona qoida tasdiqlanmadi. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Har bir tomon bo‘ylab yozilgan raqamlarni birlashtirganda 1 dan 9 gacha raqamlarning har biri bir martadan keladi. Yuqori tomon 491358627, chap tomon 482796351. Pastki tomon 16378492? va o‘ng tomon 79246318? da faqat 5 yetishmaydi. D — 5."
   },
   {
     "id": "iq-3-15",
@@ -1398,8 +1398,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "A",
-    "tekshirilgan": false,
-    "yechim": "Qarama-qarshi yuzlar ikki chiziq/E, X/doira, qora nuqta/Z. Belgilar burilishlari bilan A ni mustaqil to‘liq tasdiqlash yakunlanmadi. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Qarama-qarshi yuzlar ikki chiziq/E, X/doira, qora nuqta/Z. C da yuzlar tartibi akslangan. B da ikki chiziq qora nuqtali yuz bilan umumiy qirraga tik chizilgan, yoyilmada esa ular parallel. D da ham ikki chiziqning doirali yuzga nisbatan yo‘nalishi mos emas. A da E yuqorida, doira oldinda, qora nuqta o‘ngda. E ning ochiq tomoni doira tomoniga qaraydi. A."
   },
   {
     "id": "iq-4-01",
@@ -1768,8 +1768,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "C",
-    "tekshirilgan": false,
-    "yechim": "Qatorlar va ustunlardagi shakl takrorlarini tekshirdim. C dagi uch katakni yagona qoida bilan mustaqil tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Yuqoridagi ikki qator pastda ikki ustunga siklik siljib takrorlanadi. Birinchi qatorning 3–4-kataklari uchinchi qatorning 1–2-kataklariga, 1–2-kataklari esa 3–4-kataklariga o‘tadi. Ikkinchi va to‘rtinchi qatorlar ham shunday. Yetishmagan joylarda oddiy uchburchak, chiziqli doira va qora markazli doira kerak. C."
   },
   {
     "id": "iq-4-17",
@@ -1814,8 +1814,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "A",
-    "tekshirilgan": false,
-    "yechim": "Uch doirada bir xil arifmetik bog‘lanishni izladim. A — 4 kalitini barcha namunalarga mos qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "O‘rtadagi doiraning har bir soni chap va o‘ng doiralardagi mos sektor sonlari ko‘paytmasi. Yuqorida 3×2=6, chap pastda 7×3=21. O‘ng pastda 4×?=16, demak ?=4. A."
   },
   {
     "id": "iq-4-19",
@@ -1882,8 +1882,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "A",
-    "tekshirilgan": false,
-    "yechim": "Aylanalarni o‘lcham bo‘yicha guruhlab tekshirdim. Skanerdagi yaqin radiuslarni aniq ajratish sabab A — 6 tur kaliti hozircha mustaqil tasdiqlanmadi. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Aylanalar oltita diametr guruhiga ajraladi. Eng katta ikkita aylana bir o‘lchamda, pastki chapdagi katta aylana ulardan kichikroq. Qolganlari taxminan 68, 48, 32 va 20 piksel diametrli to‘rt guruh. Skaner kesimida katta guruhlar taxminan 244 va 205 piksel. Jami 6 tur. A."
   },
   {
     "id": "iq-5-02",
@@ -1950,7 +1950,7 @@ export const savollar: readonly IqSavol[] = [
     ],
     "kitobJavobi": "D",
     "tekshirilgan": false,
-    "yechim": "To‘rtburchaklarning ustma-ust siljishlarini tekshirdim. D kalitini yagona ketma-ketlik qoidasi bilan mustaqil tasdiqlay olmadim. Javob tekshirilmoqda."
+    "yechim": "Eng baland to‘rtburchak qo‘shnilarining ustidan o‘tib o‘ngga siljishi D tartibini berishi mumkin. Lekin skanerdagi ustma-ust joylar va qadam uzunliklari bilan yagona siljish qoidasi qat’iy tasdiqlanmadi. D kaliti tekshirilmoqda."
   },
   {
     "id": "iq-5-05",
@@ -1971,8 +1971,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "D",
-    "tekshirilgan": false,
-    "yechim": "Chiziqlarning soni va joyini satr hamda ustun bo‘yicha solishtirdim. D bo‘lagini yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Har satrda dastlabki ikki katak chiziqlari ustma-ust qo‘yiladi va umumiy kesmalar bekor qilinadi. Dastlabki ikki satr shu qoidaga mos. Pastki satrda yuqori gorizontal chiziqlar va o‘ngdagi vertikal chiziqlar bekor bo‘ladi. Chap va o‘rtadagi ikkita vertikal chiziq qoladi. D."
   },
   {
     "id": "iq-5-06",
@@ -2131,8 +2131,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "C",
-    "tekshirilgan": false,
-    "yechim": "Yoyilmadagi yuzlar va diagonal yo‘nalishlarini buklab tekshirdim. C dagi yuz yo‘nalishini mustaqil to‘liq tasdiqlash yakunlanmadi. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Yoyilmada / diagonal qora nuqtali yuzga, \\ diagonal X yuzga, oddiy doira chiziqli doiraga qarama-qarshi. A va B qarama-qarshi yuzlarni yonma-yon qo‘yadi. D da old yuz diagonali yuqori-o‘ng burchakka boradi, buklanganda shu uchda oddiy doira turishi kerak, chiziqli doira emas. C da X yuqorida, oddiy doira oldinda va qora nuqta o‘ngda joylashishi mumkin. C."
   },
   {
     "id": "iq-5-13",
@@ -2175,8 +2175,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "C",
-    "tekshirilgan": false,
-    "yechim": "Tashqi doiralardagi chiziqlar va qora-oq nuqtalar o‘zgarishini solishtirdim. C kaliti uchun yagona qoida mustaqil tasdiqlanmadi. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Har bir belgi, uning joyi va chiziq yo‘nalishi alohida sanaladi. Tashqi to‘rtta doiraning aynan ikkitasida uchragan belgilar markazda qoladi. Birinchi ikki namuna ham shu qoidaga mos. Oxirgisida / diagonal va yuqoridagi oq nuqta ikki martadan, gorizontal chiziq va pastki qora nuqta uch martadan, vertikal chiziq bir marta uchraydi. Faqat diagonal va yuqori oq nuqta qoladi. C."
   },
   {
     "id": "iq-5-15",
@@ -2197,8 +2197,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "B",
-    "tekshirilgan": false,
-    "yechim": "Qora-oq nuqtalarning aylanishi va tashqi shakl o‘zgarishini tekshirdim. C kalitini mustaqil qat’iy tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Har safar bitta sektor olib tashlanib, tomonlar soni 7→6→5→4 kamayadi. Olib tashlash dastlabki shaklda pastki o‘ngdagi qora-oq juftlikdan boshlanib, soat yo‘nalishida davom etadi. Keyin pastdagi bitta qora nuqta, undan keyin pastki chapdagi ikkita oq nuqta olib tashlanadi. Qolgan sektorlar soat yo‘nalishida bitta oq, oq-qora, ikkita qora, oq-qora. B. Avvalgi auditdagi C harfi xato edi, saqlangan kitob kaliti B to‘g‘ri."
   },
   {
     "id": "iq-5-16",
@@ -2293,8 +2293,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "A",
-    "tekshirilgan": false,
-    "yechim": "Kataklardagi qora va oq doiralarni ustma-ust solishtirdim. A kalitini barcha satr va ustunlarga mos yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Har satrda dastlabki ikki katakning ikkalasida ham nuqta bor o‘rinlar olinadi va rangi teskarilanadi. Boshqa o‘rinlar bo‘sh qoladi. Bu qoida ustunlarda ham ishlaydi. Oxirgi satr va oxirgi ustunda faqat pastki chapdagi oq nuqta umumiy. U qora nuqtaga aylanadi. A."
   },
   {
     "id": "iq-5-20",
