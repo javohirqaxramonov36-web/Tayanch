@@ -12,7 +12,7 @@
 | Q7 | Kontent: 12 qisqa davlat kartasi | tugadi | 2026-11-20 | 12 davlat fayli (30 qoralama, 55 topilmadi). "Q7 natijasi" bo'limi |
 | Q8 | Kontent: davlat grantlari | tugadi | 2026-11-20 | 12 grant (14 qoralama, 13 topilmadi); Xitoy, Kanada, Singapur: rasmiy dastur topilmadi/ochilmadi. "Q8 natijasi" bo'limi |
 | Q9 | Kontent: 30 universitet | tugadi | 2026-11-20 | 30 universitet fayli (94 qoralama, 116 topilmadi), 10 universitet granti (19 qoralama, 3 topilmadi); Oxford, UCL, Hanyang, Korea Univ., Kyung Hee, Inha, Pusan: sayt ochilmadi. "Q9 natijasi" bo'limi |
-| Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
+| Q10 | Yakuniy tekshiruv va hisobot | tugadi | 2026-11-20 | `docs/rejalar/admission-yakun.md`; 365 fakt (0 tasdiqlangan, 165 qoralama, 200 topilmadi); 110 `source_url`, ishlamaydigan 0; taqiqlangan ibora tuzatish kerak emas; CLAUDE.md bloki olib tashlandi. "Q10 natijasi" bo'limi |
 
 ## Sozlamalar
 - Eskirish muddati: "muddatli" faktlar 60 kun, "barqaror" faktlar 180 kun. (180 kun muallif tomonidan 2026-11-20 da tasdiqlangan.)
@@ -178,6 +178,16 @@ Kerakli o'zgarish (muallif tasdiqlasa, ALOHIDA branch'da yangi migratsiya; bu ye
 XP qiymati sababi (10): SAT'da bitta savol birinchi urinishda to'g'ri = 2 + 3 = 5 XP, kun savoli to'g'ri = 5 + 5 = 10 XP. Bitta zinapoya 4 pog'onani to'g'ri tartiblash, ya'ni bir nechta savolga teng mehnat, lekin umrida bir marta; kun savoli bilan teng (10) mutanosib. Jami 30 XP, SAT'dagi kunlik 300 chegaradan ancha kichik, reytingni buzmaydi. Muallif tasdig'i kerak.
 
 Ma'lum cheklov (tasdiqdan oldin bilish kerak): zinapoyaning to'g'ri javobi statik JS'da (`zinapoyalar.ts`), server tartibni tekshira olmaydi. XP amalda "o'quvchi o'zi bajardim degan" qadam uchun; himoya faqat ruxsat ro'yxati, noyob kalit va kunlik chegara (umrbod 30 XP).
+
+## Q10 natijasi (2026-11-20)
+Hisobot: `docs/rejalar/admission-yakun.md`. O'zgargan fayllar: `docs/rejalar/admission-yakun.md` (yangi), `CLAUDE.md` (`<!-- admission-d: boshlanish -->` … `<!-- admission-d: tugash -->` bloki va undan oldingi bo'sh qator o'chirildi; fayl `origin/main` bilan bir xil), shu fayl. Kod va ma'lumot o'zgarmadi.
+- Tekshiruvlar: `npm run build` o'tdi (88 sahifa); `npm test` 373/373; `npm run check` faqat 4 eski xato; `npm run repo:tekshir` muammo yo'q; `npm run malumot:tekshir` 67 hujjat, 365 fakt, 0 eskirgan, 200 topilmadi, sxema xatosi yo'q; `npm run malumot:tasdiq` 165 qoralama (`docs/tekshiruv/tasdiq-royxati.md`, lokal). `npm run db:tekshir` ishga tushirilmadi (eski `contests:SELECT` xatosi, Q5).
+- Faktlar: davlatlar 15 fayl (38 qoralama, 68 topilmadi), grantlar 22 (33 / 16), universitetlar 30 (94 / 116); tasdiqlangan 0.
+- Havolalar (curl `-L`): 110 noyob `source_url`, ishlamaydigan 0. canada.ca (3) va chevening.org/scholarships faqat `curl` UA bilan 200 (brauzer UA timeout, bot filtri). Qo'shimcha `rasmiy_havola`/`manba_url` 8 ta: DAAD (`www2.daad.de/...21148...`, `daad-study-scholarships.json`) curl bilan ochilmadi (timeout), qolgani 200.
+- Taqiqlangan iboralar: "ehtimol"/"kafolat" faqat inkor ogohlantirishlarda ("qabul ehtimoli emas", "Natija kafolatlanmaydi"), reyting komponenti yo'q, kalkulyator yo'q; "100%" faqat CSS va 7 ta rasmiy `manba_iborasi` (Grinnell, MIT, Berea, Yale; o'zgartirilmadi). Tuzatish kerak bo'lmadi.
+- Brauzer (lokal `dist/` statik server, Claude Browser, qorong'i mavzu): davlatlar, grantlar, universitetlar, ariza-zinapoyasi 375px va 1280px'da gorizontal scroll yo'q, bo'sh holat chiqadi, konsolda xato yo'q. Sinalmagan: yorug' mavzu (Q10 da), haqiqiy telefon, to'ldirilgan holat haqiqiy ma'lumot bilan (tasdiqlangan fakt yo'q), hisob bilan sinxron va XP.
+- PR #198: OPEN, MERGEABLE; `origin/main` 4 commit oldinda (EYUF, materiallar), `git merge-tree` konflikt yo'q, yangi migratsiya yo'q. Q10 commit'i push qilinmagan.
+- `00-ai/band.md` dagi qator BOSHQARUVCHI tomonidan "Tugagan" ga ko'chiriladi (Q10 tegmadi).
 
 ## Q9 natijasi (2026-11-20)
 O'zgargan / yangi fayllar: `src/data/topAdmission/universitetlar/` ichida tasdiqlangan ro'yxatdagi 30 ta universitet (`.json`, slug'lar `universitetlar-royxati.md` bo'yicha); `src/data/topAdmission/grantlar/` ichida 10 ta yangi `turi: "universitet"` grant (`universitet` maydoni bilan bog'langan). `docs/tekshiruv/tasdiq-royxati.md` yangilandi (jami 165 qoralama; `.gitignore` sababli faqat lokal). Kod o'zgarmadi. Commitlar: `Q9: Harvard, MIT, ...` dan `Q9: Hanyang, Kyung Hee, Inha, Pusan National` gacha (7 ta oraliq commit).
@@ -402,6 +412,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q10 tugadi ("Q10 natijasi", `docs/rejalar/admission-yakun.md`). Hamma qism "tugadi". Qolgani muallifda: faktlarni tasdiqlash, Q5 migratsiyasi, inPAY sinovi, huquqchi, PR #198 merge. BOSHQARUVCHI: `git push origin admission-d`, `band.md` qatorini "Tugagan" ga ko'chirish.
 - Q9 tugadi ("Q9 natijasi"). Keyingi: Q10 (yakuniy tekshiruv). 30 universitet fayli va 10 ta `turi: "universitet"` grant bor. Q10 havola tekshiruvida: ox.ac.uk, ucl.ac.uk, hanyang.ac.kr Cloudflare bilan 403 beradi (curl), bu universitet fayllarida `source_url` yo'q (hammasi topilmadi). PDF manbalar (SNU, KAIST, Yonsei, SKKU) uzun URL; SKKU va KAIST havolalari `download.php`/`files/view` orqali. PDF matni uchun `osascript -l JavaScript` + PDFKit ishlaydi (pdftotext yo'q).
 - Q9 (2026-11-20): faqat 1-band bajarildi. `docs/rejalar/universitetlar-royxati.md` yaratildi (1-qator `TASDIQLANMAGAN`; AQSH, Buyuk Britaniya, Janubiy Koreya, har biri 10 ta, taklif slug'i va bir qatorli umumiy sabab; raqam/reyting yo'q). Status "to'siq": muallif tasdiqlagach BOSHQARUVCHI 1-qatorni `TASDIQLANDI` ga almashtiradi, statusni "kutilmoqda" ga qaytaradi; keyingi Q9 agenti 2–6-bandlarni (universitet fayllari, `turi: "universitet"` grantlar, `malumot:tasdiq`) ro'yxatdagi slug'lar bilan bajaradi. Kod o'zgarmadi.
 - Q8 tugadi ("Q8 natijasi"). Keyingi: Q9 (30 universitet; avval ro'yxat muallif tasdig'iga). Grant slug'lari `src/data/topAdmission/grantlar/` da; Q9 universitet grantlari (`turi: "universitet"`) shu papkaga, `universitet` maydoni bilan. Curl: chevening.org va DAAD uchun `-A curl/...`; PDF matni uchun pdftotext yo'q, python bilan oqimlarni ajratish kerak.
