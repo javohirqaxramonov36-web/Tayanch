@@ -5,6 +5,7 @@
 // Qoida: grant katalogda faqat "nimani qoplaydi" fakti tasdiqlangan bo'lsa ko'rinadi; har fakt Fakt.astro orqali.
 // "To'liq qoplaydi" filtri faqat `toliq_qoplaydi` fakti tasdiqlangan va true bo'lsa.
 // Tartib: eng yaqin deadline birinchi, keyin sanasi noma'lum, oxirida "Bu yilgi muddat o'tgan, keyingisi hali e'lon qilinmagan".
+// "To'liq qo'llanma" tugmasi: grantda `qollanma` bo'lsa /uz/top-admission/grantlar/<slug>/ ga (E4); Türkiye Bursları o'z sahifasiga.
 // To'liq ehtiyojga asoslangan yordam (toliq_ehtiyoj): "Nimani qoplaydi" ostida oila hissasi izohi (E1).
 // "Muddat o'tgan" build paytida hisoblanadi va brauzerda bugungi sana (Toshkent) bilan qayta hisoblanadi.
 // JS'siz: hamma kartalar build tartibida, filtr yashirin. JS bilan: filtr chiplari <button aria-pressed>,
@@ -173,7 +174,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
               </dl>
               <div class="gk-havolalar">
                 <a class="gk-havola" href={g.rasmiy_havola} rel="noopener">Rasmiy sahifa<span class="gk-sr">: {xulosa.nom}</span></a>
-                {ichki && <a class="gk-ichki" href={ichki.href}>{ichki.nomi}</a>}
+                {ichki && <a class="gk-ichki" href={ichki.href}>{ichki.nomi}<span class="gk-sr">: {xulosa.nom}</span></a>}
               </div>
             </li>
           ))}

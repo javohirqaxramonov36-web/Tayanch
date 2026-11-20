@@ -82,6 +82,29 @@ export function davlatSxema(ref: Ref) {
   });
 }
 
+/**
+ * Grantning to'liq qo'llanmasi (E4, ixtiyoriy). Bo'lsa, `/uz/top-admission/grantlar/<slug>/` sahifasi yaratiladi.
+ * Ro'yxatlar Fakt'lardan iborat: saytda faqat "tasdiqlangan" bandlar chiqadi, qolganlari soni "tekshirilmoqda" bilan.
+ * Matnli kontent faqat Fakt ichida (rasmiy ibora bilan). Oddiy matn maydonlari: bosqich `nom` (qisqa nom),
+ * FAQ `savol` (rasmiy FAQ'dagi savol) va havola `nom`. Konventsiya: docs/rejalar/admission-e-holat.md (E4).
+ */
+export const qollanmaSxema = z.strictObject({
+  kim_topshira_oladi: z.array(matnFakt),
+  nimani_qoplaydi_batafsil: z.array(matnFakt),
+  hujjatlar: z.array(matnFakt),
+  bosqichlar: z.array(z.strictObject({
+    nom: z.string().min(1),
+    tavsif: matnFakt.optional(),
+    sana: matnFakt,
+  })),
+  ariza_yoli: matnFakt,
+  rasmiy_faq: z.array(z.strictObject({ savol: z.string().min(1), javob: matnFakt })).optional(),
+  rasmiy_havolalar: z.array(z.strictObject({
+    nom: z.string().min(1),
+    url: z.string().regex(HTTPS, "https:// bilan boshlanishi kerak"),
+  })),
+});
+
 export function grantSxema(ref: Ref) {
   return z.strictObject({
     slug,
@@ -101,6 +124,8 @@ export function grantSxema(ref: Ref) {
      * bunday grantga "to'liq qoplaydi" (toliq_qoplaydi: true) QO'YILMAYDI (muallif qarori, 2026-11-20).
      */
     toliq_ehtiyoj: z.boolean().optional(),
+    /** Ixtiyoriy (E4): to'liq qo'llanma bo'limi. */
+    qollanma: qollanmaSxema.optional(),
   }).superRefine((g, ctx) => {
     if (g.toliq_ehtiyoj && g.toliq_qoplaydi?.qiymat === true) {
       ctx.addIssue({ code: 'custom', path: ['toliq_qoplaydi'], message: "to'liq ehtiyojga asoslangan yordamga \"to'liq qoplaydi\" qo'yilmaydi" });

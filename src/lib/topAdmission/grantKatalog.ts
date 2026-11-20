@@ -40,6 +40,8 @@ export interface GrantKirish {
   deadline: Fakt;
   /** To'liq ehtiyojga asoslangan yordam: kartada oila hissasi izohi (universitetMoslik.ts EHTIYOJ_IZOHI). */
   toliq_ehtiyoj?: boolean;
+  /** Qo'llanma bo'limi (E4); bo'lsa kartada "To'liq qo'llanma" tugmasi (ichkiSahifa). */
+  qollanma?: unknown;
 }
 
 export type MuddatHolati = 'kelajak' | 'nomalum' | 'otgan';
@@ -93,9 +95,19 @@ export function muddatHolati(sana: string | null, bugun: string): MuddatHolati {
 
 const DARAJA_MOS: Record<Daraja, readonly DarajaFiltr[]> = { bakalavr: ['bakalavr'], magistr: ['magistr'], ikkalasi: ['bakalavr', 'magistr'] };
 
-/** Ichki yo'nalish sahifasi (bo'lsa). */
-export function ichkiSahifa(g: Pick<GrantKirish, 'slug' | 'turi' | 'davlat'>) {
-  return ICHKI_SAHIFALAR.find((s) => s.grant === g.slug || (g.turi === 'davlat' && s.davlat === g.davlat));
+/** Grant qo'llanmasi sahifasining yo'li (E4): `src/pages/uz/top-admission/grantlar/[slug].astro`. */
+export const qollanmaYoli = (slug: string) => `/uz/top-admission/grantlar/${slug}/`;
+export const QOLLANMA_TUGMA = "To'liq qo'llanma";
+
+/**
+ * Ichki sahifa (bo'lsa). Tartib: (1) grant slug'iga bog'langan mavjud sahifa (Türkiye Bursları);
+ * (2) grantda `qollanma` bo'limi bo'lsa, umumiy qo'llanma sahifasi (E4); (3) davlat grantlari uchun davlatning ichki sahifasi.
+ */
+export function ichkiSahifa(g: Pick<GrantKirish, 'slug' | 'turi' | 'davlat'> & { qollanma?: unknown }) {
+  const aniq = ICHKI_SAHIFALAR.find((s) => s.grant === g.slug);
+  if (aniq) return aniq;
+  if (g.qollanma) return { grant: g.slug, yol: qollanmaYoli(g.slug), nomi: QOLLANMA_TUGMA };
+  return ICHKI_SAHIFALAR.find((s) => g.turi === 'davlat' && s.davlat === g.davlat);
 }
 
 // ---------- Filtr holati (URL query'da; shaxsiy ma'lumot yo'q) ----------

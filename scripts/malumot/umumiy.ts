@@ -82,12 +82,14 @@ export function malumotniYig(ildiz: string = STANDART_ILDIZ): { yozuvlar: Yozuv[
 const faktmi = (v: unknown): v is Fakt =>
   !!v && typeof v === 'object' && !Array.isArray(v) && 'holat' in v && 'turi' in v;
 
-/** Hujjat ichidagi hamma faktlarni maydon yo'li bilan qaytaradi (masalan narx.kontrakt_yillik). */
+/** Hujjat ichidagi hamma faktlarni maydon yo'li bilan qaytaradi (masalan narx.kontrakt_yillik, qollanma.bosqichlar.2.sana). */
 export function faktlarniYig(yozuvlar: Yozuv[]): FaktQator[] {
   const natija: FaktQator[] = [];
   const yur = (v: unknown, yol: string[], fayl: string) => {
     if (faktmi(v)) { natija.push({ fayl, maydon: yol.join('.'), fakt: v }); return; }
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
+    // Ro'yxatlar (masalan qollanma.hujjatlar, E4): maydon yo'lida JSON indeksi, 0 dan (sxema xatolari bilan bir xil).
+    if (Array.isArray(v)) { v.forEach((ich, i) => yur(ich, [...yol, String(i)], fayl)); return; }
+    if (v && typeof v === 'object') {
       for (const [k, ich] of Object.entries(v)) yur(ich, [...yol, k], fayl);
     }
   };
