@@ -11,7 +11,7 @@
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | tugadi | 2026-11-20 | 3 davlat fayli (8 qoralama, 13 topilmadi), `kurslar.json` CBU 2026-11-20 (14 valyuta). "Q6 natijasi" bo'limi |
 | Q7 | Kontent: 12 qisqa davlat kartasi | tugadi | 2026-11-20 | 12 davlat fayli (30 qoralama, 55 topilmadi). "Q7 natijasi" bo'limi |
 | Q8 | Kontent: davlat grantlari | tugadi | 2026-11-20 | 12 grant (14 qoralama, 13 topilmadi); Xitoy, Kanada, Singapur: rasmiy dastur topilmadi/ochilmadi. "Q8 natijasi" bo'limi |
-| Q9 | Kontent: 30 universitet | kutilmoqda | | |
+| Q9 | Kontent: 30 universitet | to'siq: muallif ro'yxatni tasdiqlashi kerak | 2026-11-20 | Taklif `docs/rejalar/universitetlar-royxati.md` (1-qator TASDIQLANMAGAN, 3 davlat × 10, slug va sabab bilan); universitet fayllari yaratilmagan, fakt yig'ilmagan |
 | Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
 
 ## Sozlamalar
@@ -317,6 +317,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q9 (2026-11-20): faqat 1-band bajarildi. `docs/rejalar/universitetlar-royxati.md` yaratildi (1-qator `TASDIQLANMAGAN`; AQSH, Buyuk Britaniya, Janubiy Koreya, har biri 10 ta, taklif slug'i va bir qatorli umumiy sabab; raqam/reyting yo'q). Status "to'siq": muallif tasdiqlagach BOSHQARUVCHI 1-qatorni `TASDIQLANDI` ga almashtiradi, statusni "kutilmoqda" ga qaytaradi; keyingi Q9 agenti 2–6-bandlarni (universitet fayllari, `turi: "universitet"` grantlar, `malumot:tasdiq`) ro'yxatdagi slug'lar bilan bajaradi. Kod o'zgarmadi.
 - Q8 tugadi ("Q8 natijasi"). Keyingi: Q9 (30 universitet; avval ro'yxat muallif tasdig'iga). Grant slug'lari `src/data/topAdmission/grantlar/` da; Q9 universitet grantlari (`turi: "universitet"`) shu papkaga, `universitet` maydoni bilan. Curl: chevening.org va DAAD uchun `-A curl/...`; PDF matni uchun pdftotext yo'q, python bilan oqimlarni ajratish kerak.
 - **BOSHQARUVCHI, 2026-11-20 (chat almashdi):** Q0–Q7 tugadi. Q8 agenti boshlanishi bilan to'xtatildi (hech narsa yozilmagan) — Q8 boshidan boshlanadi. PR #198 (`admission-d` → `main`) ochiq, MERGE QILINMAYDI; har qismdan keyin `git push origin admission-d` bilan yangilanadi. Q9 da universitet ro'yxati muallifga ko'rsatiladi va tasdig'i kutiladi. Muallif savollari har qism natijasida; Q10 yakuniy hisobotda yig'iladi.
 - Q7 tugadi ("Q7 natijasi"). Keyingi: Q8 (davlat grantlari). 15 davlat fayli bor, slug'lar: `aqsh`, `buyuk-britaniya`, `janubiy-koreya`, `germaniya`, `italiya`, `vengriya`, `turkiya`, `xitoy`, `yaponiya`, `kanada`, `avstraliya`, `malayziya`, `polsha`, `saudiya-arabistoni`, `singapur`. Curl maslahati: canada.ca uchun `-A curl/...` (brauzer UA'si bilan javob yo'q), `--http1.1` foydali; daad.de, make-it-in-germany.com, campuschina.org, studyinsaudi.moe.gov.sa curl bilan ochilmadi; oif.gov.hu ~2026-11-23 gacha ishlamaydi. Q8 uchun stipendiumhungaricum.hu "about" sahifasida qoplash ro'yxati bor (WP REST `/wp-json/wp/v2/pages` sahifa ro'yxatini beradi).
