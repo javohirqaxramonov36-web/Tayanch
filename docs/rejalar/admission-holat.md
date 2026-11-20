@@ -8,7 +8,7 @@
 | Q3 | Grantlar katalogi sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/grantlar/`; filtr, deadline saralash, Türkiye Bursları havolasi; SOXTA fixture bilan brauzerda sinaldi |
 | Q4 | "Menga mos universitet" filtri | tugadi | 2026-11-20 | `/uz/top-admission/universitetlar/`; filtr, moslik, shortlist (`user_state` orqali, server o'zgarishsiz); SOXTA fixture bilan brauzerda sinaldi; jonli login sinalmagan |
 | Q5 | Ariza zinapoyasi → XP | tugadi | 2026-11-20 | Migratsiya `20261120120000_admission_xp.sql` faqat branch'da (jonli bazaga QO'LLANMAGAN), RPC `admission_step_done`, mijoz `zinapoyaXp.ts`; lokal Postgres'da AX00–AX07 o'tdi. "Q5 natijasi (2-agent)" bo'limi |
-| Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | kutilmoqda | | |
+| Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | tugadi | 2026-11-20 | 3 davlat fayli (8 qoralama, 13 topilmadi), `kurslar.json` CBU 2026-11-20 (14 valyuta). "Q6 natijasi" bo'limi |
 | Q7 | Kontent: 12 qisqa davlat kartasi | kutilmoqda | | |
 | Q8 | Kontent: davlat grantlari | kutilmoqda | | |
 | Q9 | Kontent: 30 universitet | kutilmoqda | | |
@@ -179,6 +179,42 @@ XP qiymati sababi (10): SAT'da bitta savol birinchi urinishda to'g'ri = 2 + 3 = 
 
 Ma'lum cheklov (tasdiqdan oldin bilish kerak): zinapoyaning to'g'ri javobi statik JS'da (`zinapoyalar.ts`), server tartibni tekshira olmaydi. XP amalda "o'quvchi o'zi bajardim degan" qadam uchun; himoya faqat ruxsat ro'yxati, noyob kalit va kunlik chegara (umrbod 30 XP).
 
+## Q6 natijasi (2026-11-20)
+O'zgargan / yangi fayllar:
+- `src/data/topAdmission/davlatlar/aqsh.json`, `buyuk-britaniya.json`, `janubiy-koreya.json` (slug'lar Q4 konventsiyasi bo'yicha; `chuqur_qollanma: true`).
+- `src/data/topAdmission/kurslar.json`: O'zbekiston Markaziy banki rasmiy kurslari, 2026-11-20 (`https://cbu.uz/uz/arkhiv-kursov-valyut/json/`, CBU rasmiy JSON). 1 birlik necha USD = (valyuta so'm kursi) / (USD so'm kursi 11971.64), 6 muhim raqam: EUR, GBP, KRW, JPY, CNY, CAD, AUD, MYR, PLN, SAR, SGD, TRY, HUF, CHF (Q7 davlatlari uchun ham). So'm kurslari `izoh` maydonida.
+- `src/lib/topAdmission/testlar/fakt.test.ts`: kurslar sinovi haqiqiy fayl bo'sh deb faraz qilardi; endi haqiqiy fayl sxemadan o'tishi, bo'sh holat esa alohida obyekt bilan sinaladi.
+- `docs/tekshiruv/tasdiq-royxati.md` yangilandi (8 ta qoralama; `.gitignore` sababli faqat lokal).
+
+Sanoq (hammasi `tekshirilgan_sana: 2026-11-20`; manba iborasi har biri curl bilan sahifa matnida aynan topilishi tekshirildi):
+| Davlat | qoralama | topilmadi |
+|---|---|---|
+| AQSH | 2 (o'qish paytida ishlash, OPT) | 5 (kontrakt, viza yashash summasi, ingliz tilida dastur, odatiy IELTS, diplom) |
+| Buyuk Britaniya | 3 (viza yashash summasi, o'qish paytida ishlash, Graduate visa) | 4 (kontrakt, ingliz tilida dastur, odatiy IELTS, diplom) |
+| Janubiy Koreya | 3 (ingliz tilida dastur, o'qish paytida ishlash, D-10-1) | 4 (kontrakt, viza yashash summasi, odatiy IELTS, diplom) |
+
+Oylik → yillik hisob ("Sozlamalar" qoidasi):
+- Buyuk Britaniya `viza_yashash_summasi` = 1 171 GBP/oy × 12 = 14 052 GBP (London tashqarisi). Iboraning o'zida "for up to 9 months" bor: viza uchun rasmiy talab 9 oy × 1 171 = 10 539 GBP; qoida bo'yicha ×12 yozildi. London uchun: 1 529 GBP/oy (×12 = 18 348 GBP), faylga yozilmadi (sxemada bitta qiymat).
+
+Manbalar (faqat rasmiy):
+- gov.uk/student-visa/money (yashash summasi); gov.uk/guidance/immigration-rules/immigration-rules-appendix-student (ST 26.1, "20 hours per week during term-time"); gov.uk/graduate-visa ("18 months if you apply on or after 1 January 2027"; 2026-12-31 gacha 2 yil); gov.uk/student-visa/knowledge-of-english (faqat o'qildi: daraja bo'yicha CEFR B2, IELTS raqami yo'q).
+- studyinthestates.dhs.gov/students/work/working-in-the-united-states (kampus ichida 20 soat); uscis.gov OPT sahifasi (12 oy). travel.state.gov va educationusa.state.gov 403 qaytardi (ochilmadi).
+- studyinkorea.go.kr: `/fr/work/aboutForeignerEmploymentSystem.do` (30 soat; sahifa yo'li /fr/ bo'lsa ham matn inglizcha), `/ko/life/residenceAndStayInfo.do` (D-10-1), `/eng/plan/examAndKoreanStudy.do` ("English-taught programs").
+- cbu.uz rasmiy JSON (kurslar).
+
+"topilmadi" sabablari:
+- Kontrakt (3 davlat): davlat darajasidagi rasmiy raqam yo'q, universitetga qarab (Q9 universitet fayllarida).
+- AQSH viza yashash summasi: davlat belgilagan summa yo'q, I-20 dagi summani universitet belgilaydi.
+- Koreya viza yashash summasi: KIS/hikorea rasmiy sahifasida topilmadi; elchixonalar sahifalarida turlicha (masalan London elchixonasi 15 000/13 000 USD), Toshkent elchixonasi (overseas.mofa.go.kr/uz-ru) viza bo'limi JS menyu orqali, curl/WebFetch bilan ochilmadi.
+- Odatiy IELTS (3 davlat): davlat darajasida IELTS raqami yo'q (UK: CEFR B2; AQSH/Koreya: universitetga qarab).
+- Ingliz tilida dastur bor (AQSH, UK): rasmiy hukumat sahifasida "ingliz tilida dastur" degan aniq ibora topilmadi (UK sahifasi faqat ingliz tili talabini aytadi). Muallif savoli pastda.
+- Diplom to'g'ridan-to'g'ri (3 davlat): o'zbek 11 yillik diplomi bo'yicha hukumat sahifasida ibora yo'q; universitetga qarab. `tayyorlov_nomi` qo'yilmadi.
+- `davlat_grantlari` bo'sh (Q8). `chuqur_qollanma_havola` qo'yilmadi: repo'da davlat qo'llanma sahifasi yo'q (`src/pages/uz/top-admission/qollanma/` da faqat `ariza-zinapoyasi`); sahifada "chuqur qo'llanma tez orada" yorlig'i chiqadi.
+
+`oqish_paytida`/`bitirgandan_keyin` qiymati qisqa o'zbekcha matn (Q2 konventsiyasi: matn = ishlash mumkin), chunki `Fakt.astro` songa birlik qo'shmaydi.
+
+Sinov: `npm run malumot:tasdiq` 8 qoralama; `npm run malumot:tekshir` 3 hujjat, 21 fakt, 0 eskirgan, 13 topilmadi, sxema xatosi yo'q; `npm test` 373/373; `npm run build` o'tdi (qoralama qiymatlar `dist/uz/top-admission/davlatlar/` HTML'da yo'q, faqat davlat nomlari); `npm run repo:tekshir` muammo yo'q. Sinalmagan: sahifa brauzerda ko'rilmadi (bo'sh holat o'zgarmagan, chunki tasdiqlangan fakt yo'q).
+
 ## Topilmalar (Q0)
 Audit 2026-11-19, `admission-d` (asos 8b803c5), faqat repo kodi o'qildi. Jonli Supabase (deploy qilingan versiya, sozlamalar, haqiqiy bucket'lar) va tashqi provayderlar shartlari tekshirilmagan. Qisqartmalar: `F` = `supabase/functions/`, `M` = `supabase/migrations/`.
 
@@ -196,6 +232,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q6 tugadi ("Q6 natijasi"). Keyingi: Q7. `kurslar.json` da Q7 valyutalari (EUR, HUF, TRY, CNY, JPY, CAD, AUD, MYR, PLN, SAR, SGD) bor, qayta olish shart emas (kerak bo'lsa `https://cbu.uz/uz/arkhiv-kursov-valyut/json/`). Manba iborasini sahifa matnida curl bilan tekshirish foydali (WebFetch iborani qisqartirishi mumkin). `fakt.test.ts` endi haqiqiy `kurslar.json` ni bo'sh deb farazlamaydi.
 - Q5 tugadi ("Q5 natijasi (2-agent)"). Migratsiya `20261120120000_admission_xp.sql` faqat branch'da; jonli bazaga muallif qo'llaydi (qadamlar o'sha bo'limda). Keyingi: Q6. Q10 uchun: `npm run db:tekshir` `xavfsizlik_test` dagi eski `contests:SELECT` xatosida to'xtaydi (main'da ham), Q5 sababli emas.
 - Q4 tugadi ("Q4 natijasi" bo'limi). Keyingi: Q5 (Ariza zinapoyasi → XP). Q6/Q9 uchun: davlat slug'lari `aqsh`, `buyuk-britaniya`, `janubiy-koreya`; `xalqaro_yordam_turi` yordam yo'q bo'lsa aynan `"yo'q"`; GBP va KRW kurslari `kurslar.json` da bo'lmasa UK/Koreya universitetlari moslikka kirmaydi.
 - Q3 tugadi ("Q3 natijasi" bo'limi). Keyingi: Q4. Uslub `grantlar/index.astro` (`gk-*`) va `davlatlar/index.astro` (`dt-*`); URL holati namunasi `grantKatalog.ts`; yon panelga "Menga mos universitet" bandini `src/data/topAdmissionSahifalar.ts` ga qo'sh. Deadline saralash/muddat uchun `deadlineSanasi`, `muddatHolati` (`grantKatalog.ts`) qayta ishlatilishi mumkin.
@@ -204,6 +241,9 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q6: UK viza yashash summasi London tashqarisi bo'yicha (1 171 GBP × 12 = 14 052) yozildi. London (1 529 GBP/oy) asos bo'lsinmi? Va rasmiy talab 9 oy uchun bo'lsa ham ×12 qoidasi qolaveradimi?
+- Q6: AQSH va UK uchun "ingliz tilida dastur bor" hukumat sahifasida aniq ibora bilan topilmadi ("topilmadi"), shu sababli "Ingliz tilida dastur bor" filtri ularni ko'rsatmaydi. Boshqa rasmiy manbani (masalan, UCAS yoki EducationUSA, oxirgisi 403 berdi) ishlatishga ruxsat berasizmi yoki o'zingiz qo'shasizmi?
+- Q6: Koreya viza yashash summasi elchixonaga qarab farq qiladi; Toshkentdagi Koreya elchixonasining D-2 sahifasi havolasini bera olasizmi?
 - Q5: Migratsiyani jonli bazaga qachon qo'llaysiz: merge'dan oldin (tavsiya, aks holda saytdagi zinapoya XP bermaydi, lekin buzilmaydi) yoki merge bilan birga? Qadamlar "Q5 natijasi (2-agent)" da.
 - Q5: `npm run db:tekshir` `main` da ham `xavfsizlik_test` X1 (`contests` jadvaliga anon SELECT) bilan yiqiladi. Bu Admission seriyasidan tashqari; alohida branch'da tekshirilsinmi (test eskirganmi yoki huquq ortiqchami)?
 - HAL QILINDI (2026-11-20, "Sozlamalar" → "Q5 istisnosi" standarti): Q5 (TO'SIQ): Admission XP uchun yangi migratsiya kerak ("Q5 natijasi", "Kerakli o'zgarish" 1–4). Reja "Supabase'ga migratsiya/RPC qo'shilmaydi" deydi. Shu bitta istisnoga (CHECK ga `admission_step`, `xp_rule` ga qiymat, yangi `admission_step_done` RPC, jadval yo'q) ruxsat berasizmi yoki Q5 bekor qilinadimi?

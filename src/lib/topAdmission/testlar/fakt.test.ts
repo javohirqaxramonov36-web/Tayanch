@@ -74,7 +74,10 @@ test("faktQiymatMatni", () => {
 });
 
 test("kurslar: bo'sh fayl to'g'ri, lekin ishlatilmaydi; kurs bo'lsa USD ga o'giradi", () => {
-  const bosh = JSON.parse(readFileSync(join(REPO, 'src/data/topAdmission/kurslar.json'), 'utf8'));
+  // Haqiqiy fayl (Q6 dan to'ldirilgan) sxemadan o'tishi kerak; bo'sh holat alohida obyekt bilan sinaladi.
+  const haqiqiy = JSON.parse(readFileSync(join(REPO, 'src/data/topAdmission/kurslar.json'), 'utf8'));
+  assert.equal(kurslarSxema.safeParse(haqiqiy).success, true);
+  const bosh = { manba_url: '', sana: '', kurslar: {} };
   assert.equal(kurslarSxema.safeParse(bosh).success, true);
   assert.equal(kurslarBormi(bosh), false);
   assert.equal(usdga(100, 'GBP', bosh), null);
