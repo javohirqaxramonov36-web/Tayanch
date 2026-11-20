@@ -24,9 +24,11 @@ const davlat = (slug: string, nom: string, o: Partial<{ k: Fakt; v: Fakt; val: s
 
 const kurs: Kurslar = { manba_url: 'https://example.org/kurs', sana: '2026-11-01', kurslar: { EUR: 1.1 } };
 const grantlar = new Map<string, GrantKirish>([
-  ['tasdiq', { slug: 'tasdiq', turi: 'davlat', nimani_qoplaydi: t("o'qish") }],
-  ['qoralama', { slug: 'qoralama', turi: 'davlat', nimani_qoplaydi: q("o'qish") }],
-  ['univ', { slug: 'univ', turi: 'universitet', nimani_qoplaydi: t("o'qish") }],
+  ['tasdiq', { slug: 'tasdiq', turi: 'davlat', nimani_qoplaydi: t("o'qish"), deadline: t('2027-02-01') }],
+  ['qoralama', { slug: 'qoralama', turi: 'davlat', nimani_qoplaydi: q("o'qish"), deadline: t('2027-02-01') }],
+  ['univ', { slug: 'univ', turi: 'universitet', nimani_qoplaydi: t("o'qish"), deadline: t('2027-02-01') }],
+  ['deadline-qoralama', { slug: 'deadline-qoralama', turi: 'davlat', nimani_qoplaydi: t("o'qish"), deadline: q('2027-02-01') }],
+  ['deadline-yoq', { slug: 'deadline-yoq', turi: 'davlat', nimani_qoplaydi: t("o'qish"), deadline: yoq }],
 ]);
 
 test("belgilar faqat tasdiqlangan faktlardan: qoralama filtrga ta'sir qilmaydi", () => {
@@ -36,6 +38,8 @@ test("belgilar faqat tasdiqlangan faktlardan: qoralama filtrga ta'sir qilmaydi",
   assert.deepEqual(b.belgilar, []);
   const c = davlatXulosasi(davlat('c', 'C', { dip: t('dasturga_qarab'), ing: t(false) }), grantlar, kurs);
   assert.deepEqual(c.belgilar, []);
+  const d = davlatXulosasi(davlat('d', 'D', { grantlar: ['deadline-qoralama', 'deadline-yoq'] }), grantlar, kurs);
+  assert.deepEqual(d.belgilar, [], "deadline tasdiqlanmagan grant 'Davlat granti bor' ga ta'sir qilmaydi (katalog qoidasi)");
 });
 
 test("ishlash: false / 0 / \"yo'q\" = mumkin emas; son yoki matn = mumkin", () => {

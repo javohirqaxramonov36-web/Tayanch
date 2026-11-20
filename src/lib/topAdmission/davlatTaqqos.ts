@@ -2,6 +2,7 @@
 // Build paytida (sahifa) va brauzerda (sahifa skripti) bir xil ishlaydi; node --test bilan sinaladi.
 // Qoida: filtr, saralash va taxminiy narx FAQAT "tasdiqlangan" faktlardan (faktKorinadimi). Qoralama hech narsaga ta'sir qilmaydi.
 import { faktKorinadimi, usdga, kurslarBormi, type Fakt, type Kurslar } from './fakt.ts';
+import { grantKorinadimi as katalogdaKorinadimi } from './grantKatalog.ts';
 
 export const FILTRLAR = [
   { id: 'diplom', nomi: "Diplom to'g'ridan-to'g'ri qabul qilinadi" },
@@ -32,6 +33,7 @@ export interface GrantKirish {
   slug: string;
   turi: 'davlat' | 'universitet';
   nimani_qoplaydi: Fakt;
+  deadline: Fakt;
 }
 
 /** Davlatning filtr va saralash uchun xulosasi. */
@@ -43,9 +45,12 @@ export interface DavlatXulosa {
   usd: number | null;
 }
 
-/** Grant davlat kartasida ko'rinadimi: turi "davlat" va "nimani qoplaydi" fakti tasdiqlangan. */
+/**
+ * Grant davlat kartasida ko'rinadimi: turi "davlat" va Grantlar katalogidagi qoida
+ * (`grantKatalog.ts` `grantKorinadimi`: "nimani qoplaydi" va "deadline" tasdiqlangan). "Davlat granti bor" filtri ham shunga tayanadi.
+ */
 export function grantKorinadimi(g: GrantKirish | undefined): g is GrantKirish {
-  return !!g && g.turi === 'davlat' && faktKorinadimi(g.nimani_qoplaydi);
+  return !!g && g.turi === 'davlat' && katalogdaKorinadimi(g);
 }
 
 /**
