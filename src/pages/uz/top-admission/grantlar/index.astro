@@ -1,0 +1,362 @@
+---
+// 2-qavat · Top Admission · vosita: Grantlar katalogi (Admission D-seriya, Q3). Uslub Q2 (davlatlar/) bilan bir xil.
+// Ma'lumot: content collection `grantlar` (+ `davlatlar`, `universitetlar` nomlari uchun), sxema src/lib/topAdmission/sxema.ts.
+// Mantiq: src/lib/topAdmission/grantKatalog.ts.
+// Qoida: grant katalogda faqat "nimani qoplaydi" fakti tasdiqlangan bo'lsa ko'rinadi; har fakt Fakt.astro orqali.
+// "To'liq qoplaydi" filtri faqat `toliq_qoplaydi` fakti tasdiqlangan va true bo'lsa.
+// Tartib: eng yaqin deadline birinchi, keyin sanasi noma'lum, oxirida "Bu yilgi muddat o'tgan".
+// "Muddat o'tgan" build paytida hisoblanadi va brauzerda bugungi sana (Toshkent) bilan qayta hisoblanadi.
+// JS'siz: hamma kartalar build tartibida, filtr yashirin. JS bilan: filtr chiplari <button aria-pressed>,
+// holat URL query'da (?tur=&d=&dr=&toliq=), brauzerda hech narsa saqlanmaydi.
+import { getCollection } from 'astro:content';
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import Fakt from '../../../../components/topAdmission/Fakt.astro';
+import { sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
+import {
+  DARAJALAR, DARAJA_MATNI, TURLAR, TUR_MATNI, grantKorinadimi, grantXulosasi, ichkiSahifa, muddatHolati, saralash,
+  type GrantKirish,
+} from '../../../../lib/topAdmission/grantKatalog';
+import { toshkentBugun } from '../../../../lib/muddat';
+import { yol } from '../../../../lib/yol';
+
+const bugun = toshkentBugun();
+const refId = (r: unknown) => (r && typeof r === 'object' && 'id' in r ? String((r as { id: string }).id) : undefined);
+
+const davlatNomlari = new Map((await getCollection('davlatlar')).map((e) => [e.id, e.data.nom_uz]));
+const univNomlari = new Map((await getCollection('universitetlar')).map((e) => [e.id, e.data.nom]));
+
+const grantlar = (await getCollection('grantlar'))
+  .map((e) => {
+    const d = e.data;
+    const kirish = { ...d, davlat: refId(d.davlat)!, universitet: refId(d.universitet) } as unknown as GrantKirish & { universitet?: string; rasmiy_havola: string };
+    return kirish;
+  })
+  .filter((g) => grantKorinadimi(g))
+  .map((g) => {
+    const xulosa = grantXulosasi(g);
+    const ichki = ichkiSahifa(g);
+    return {
+      g, xulosa,
+      davlatNom: davlatNomlari.get(g.davlat) ?? g.davlat,
+      univNom: g.universitet ? univNomlari.get(g.universitet) : undefined,
+      ichki: ichki ? { href: yol(ichki.yol), nomi: ichki.nomi } : undefined,
+      otgan: muddatHolati(xulosa.sana, bugun) === 'otgan',
+    };
+  });
+const tartibli = saralash(grantlar.map((x) => ({ ...x, nom: x.xulosa.nom, sana: x.xulosa.sana })), bugun);
+const boshHolat = tartibli.length === 0;
+
+// Filtrdagi davlatlar: faqat ko'rinadigan granti bor davlatlar, alifbo tartibida.
+const filtrDavlatlar = [...new Map(tartibli.map((x) => [x.g.davlat, x.davlatNom])).entries()]
+  .map(([slug, nom]) => ({ slug, nom }))
+  .sort((a, b) => a.nom.localeCompare(b.nom, 'uz'));
+const toliqBor = tartibli.some((x) => x.xulosa.toliq);
+
+const deadlineFormat = (q: FaktT['qiymat']) => (typeof q === 'string' ? sanaMatni(q) : String(q ?? ''));
+
+const turkiye = yol('/uz/top-admission/turkiye-burslari/');
+const davlatlarSahifa = yol('/uz/top-admission/davlatlar/');
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+---
+<BolimQobiq
+  title="Grantlar katalogi · Top Admission"
+  description="Davlat va universitet grantlari: nimani qoplaydi, deadline, rasmiy havola. Faqat rasmiy manbada tekshirilgan faktlar, manba va sana bilan."
+  turi="vosita"
+  bolim="top-admission"
+  holat="qoralama"
+  yol={['Vositalar']}
+>
+  <div class="ichki gk-sahifa" data-grant-katalog>
+    <header class="gk-bosh">
+      <p class="gk-ustki">Vosita</p>
+      <h1>Grantlar katalogi</h1>
+      <p class="gk-matn">Davlat grantlari va universitetlarning xalqaro talabalarga beradigan yordami bir joyda. Turi, davlat va daraja bo'yicha filtrlang. Ro'yxat deadline bo'yicha: eng yaqini birinchi.</p>
+      <p class="gk-ogoh" role="note">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l9.5 17h-19z" /><path d="M12 10v4" /><path d="M12 17.5v.01" />
+        </svg>
+        <span>Grant shartlari har yili o'zgaradi. Topshirishdan oldin rasmiy sahifani tekshiring.</span>
+      </p>
+      <p class="gk-matn gk-sust">Faqat rasmiy manbada tekshirilgan fakt ko'rsatiladi, yonida manba va tekshirilgan sana. Qolganlari o'rniga "Ma'lumot tekshirilmoqda" yoziladi.</p>
+    </header>
+
+    {boshHolat ? (
+      <section class="gk-bosh-holat" aria-labelledby="gk-bosh-sarlavha">
+        <svg class="gk-bosh-ikonka" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 10L12 5 2 10l10 5 10-5z" /><path d="M6 12v5c3 2 9 2 12 0v-5" />
+        </svg>
+        <h2 id="gk-bosh-sarlavha">Grantlar rasmiy manbada tekshirilmoqda</h2>
+        <p class="gk-matn">Har bir grant dasturning yoki universitetning rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan grant yo'q, shuning uchun filtr ochilmagan.</p>
+        <p class="gk-bosh-yol">Hozircha shulardan boshlang:</p>
+        <div class="gk-tugmalar">
+          <a class="tugma tugma-ikkinchi" href={turkiye}>Türkiye Bursları</a>
+          <a class="tugma tugma-ikkinchi" href={davlatlarSahifa}>Davlatlarni taqqoslash</a>
+          <a class="tugma tugma-ikkinchi" href={vosita}>Topshirish yo'li</a>
+        </div>
+      </section>
+    ) : (
+      <>
+        <div class="gk-asboblar" hidden data-asboblar>
+          <div class="gk-guruh">
+            <p class="gk-ustki" id="gk-tur-sarlavha">Turi</p>
+            <div class="gk-chiplar" role="group" aria-labelledby="gk-tur-sarlavha">
+              {TURLAR.map((t) => <button type="button" class="gk-chip" data-tur={t.id} aria-pressed="false">{t.nomi}</button>)}
+            </div>
+          </div>
+          {filtrDavlatlar.length > 1 && (
+            <div class="gk-guruh">
+              <p class="gk-ustki" id="gk-davlat-sarlavha">Davlat</p>
+              <div class="gk-chiplar" role="group" aria-labelledby="gk-davlat-sarlavha">
+                {filtrDavlatlar.map((d) => <button type="button" class="gk-chip" data-davlat={d.slug} aria-pressed="false">{d.nom}</button>)}
+              </div>
+            </div>
+          )}
+          <div class="gk-guruh">
+            <p class="gk-ustki" id="gk-daraja-sarlavha">Daraja</p>
+            <div class="gk-chiplar" role="group" aria-labelledby="gk-daraja-sarlavha">
+              {DARAJALAR.map((d) => <button type="button" class="gk-chip" data-daraja={d.id} aria-pressed="false">{d.nomi}</button>)}
+            </div>
+          </div>
+          <div class="gk-guruh">
+            <p class="gk-ustki" id="gk-qoplash-sarlavha">Qoplash</p>
+            {toliqBor && (
+              <div class="gk-chiplar" role="group" aria-labelledby="gk-qoplash-sarlavha">
+                <button type="button" class="gk-chip" data-toliq aria-pressed="false">To'liq qoplaydi</button>
+              </div>
+            )}
+            <p class="gk-kichik gk-sust">
+              {toliqBor
+                ? "\"To'liq qoplaydi\" faqat rasmiy sahifada aniq yozilgan va tekshirilgan grantlarda."
+                : "\"To'liq qoplaydi\" filtri rasmiy sahifada aniq yozilgan va tekshirilgan grant paydo bo'lganda ochiladi."}
+            </p>
+          </div>
+          <p class="gk-kichik" aria-live="polite" data-soni></p>
+        </div>
+
+        <ul class="gk-kartalar" data-royxat aria-label="Grantlar">
+          {tartibli.map(({ g, xulosa, davlatNom, univNom, ichki, otgan }) => (
+            <li class="gk-karta" data-slug={g.slug} data-nom={xulosa.nom} data-sana={xulosa.sana ?? ''}
+              data-turi={g.turi} data-davlat={g.davlat} data-daraja={g.daraja} data-toliq={xulosa.toliq ? '1' : ''}>
+              <div class="gk-karta-bosh">
+                <h2 class="gk-karta-nom">{xulosa.nom}</h2>
+                <span class="gk-belgi gk-belgi-otgan" data-otgan hidden={!otgan}>Bu yilgi muddat o'tgan</span>
+              </div>
+              <p class="gk-yorliqlar">
+                <span class="yorliq">{TUR_MATNI[g.turi]}</span>
+                <span class="yorliq">{DARAJA_MATNI[g.daraja]}</span>
+                {xulosa.toliq && <span class="gk-belgi gk-belgi-toliq">To'liq qoplaydi</span>}
+              </p>
+              <dl class="gk-maydonlar">
+                <div>
+                  <dt>Davlat</dt>
+                  <dd>{davlatNom}{univNom && <><br /><span class="gk-sust">{univNom}</span></>}</dd>
+                </div>
+                <div>
+                  <dt>Nimani qoplaydi</dt>
+                  <dd><Fakt fakt={g.nimani_qoplaydi} /></dd>
+                </div>
+                {xulosa.toliq && g.toliq_qoplaydi && (
+                  <div>
+                    <dt>To'liq qoplaydi</dt>
+                    <dd><Fakt fakt={g.toliq_qoplaydi} /></dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Deadline</dt>
+                  <dd><Fakt fakt={g.deadline} format={deadlineFormat} /></dd>
+                </div>
+              </dl>
+              <div class="gk-havolalar">
+                <a class="gk-havola" href={g.rasmiy_havola} rel="noopener">Rasmiy sahifa<span class="gk-sr">: {xulosa.nom}</span></a>
+                {ichki && <a class="gk-ichki" href={ichki.href}>{ichki.nomi}</a>}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div class="gk-bosh-filtr" hidden data-bosh-filtr>
+          <p>Bu filtrlarga mos grant yo'q. Ko'p grantlar hali tekshirilmoqda, shuning uchun ro'yxat to'liq emas.</p>
+          <button type="button" class="tugma tugma-ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
+        </div>
+      </>
+    )}
+
+    <p class="gk-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="gk-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida 5 mezon bo'yicha solishtiring.</p>
+  </div>
+</BolimQobiq>
+
+<script>
+  import {
+    DARAJALAR, TURLAR, almashtir, filtrBormi, filtrdanOtadimi, holatniOqi, holatniYoz, muddatHolati, saralash,
+    type Daraja, type DarajaFiltr, type GrantTuri, type KatalogHolati,
+  } from '../../../../lib/topAdmission/grantKatalog';
+  import { toshkentBugun } from '../../../../lib/muddat';
+
+  const ildiz = document.querySelector<HTMLElement>('[data-grant-katalog]');
+  const royxat = ildiz?.querySelector<HTMLUListElement>('[data-royxat]');
+  const asboblar = ildiz?.querySelector<HTMLElement>('[data-asboblar]');
+  if (ildiz && royxat && asboblar) {
+    const bugun = toshkentBugun();
+    const xlar = [...royxat.querySelectorAll<HTMLLIElement>('li[data-slug]')].map((el) => ({
+      el,
+      slug: el.dataset.slug!,
+      nom: el.dataset.nom!,
+      sana: el.dataset.sana || null,
+      turi: el.dataset.turi as GrantTuri,
+      davlat: el.dataset.davlat!,
+      daraja: el.dataset.daraja as Daraja,
+      toliq: el.dataset.toliq === '1',
+      otganBelgi: el.querySelector<HTMLElement>('[data-otgan]')!,
+    }));
+    const turTugmalar = [...asboblar.querySelectorAll<HTMLButtonElement>('[data-tur]')];
+    const davlatTugmalar = [...asboblar.querySelectorAll<HTMLButtonElement>('[data-davlat]')];
+    const darajaTugmalar = [...asboblar.querySelectorAll<HTMLButtonElement>('[data-daraja]')];
+    const toliqTugma = asboblar.querySelector<HTMLButtonElement>('[data-toliq]');
+    const soni = asboblar.querySelector<HTMLElement>('[data-soni]')!;
+    const boshFiltr = ildiz.querySelector<HTMLElement>('[data-bosh-filtr]')!;
+    const davlatSluglar = davlatTugmalar.map((b) => b.dataset.davlat!);
+    const turTartib = TURLAR.map((t) => t.id);
+    const darajaTartib = DARAJALAR.map((d) => d.id);
+
+    let h: KatalogHolati = holatniOqi(location.search, davlatSluglar);
+    if (!toliqTugma) h = { ...h, toliq: false };
+
+    // Muddat o'tganini bugungi sana bilan qayta hisoblash (sayt build'idan keyin vaqt o'tgan bo'lishi mumkin).
+    for (const x of xlar) x.otganBelgi.hidden = muddatHolati(x.sana, bugun) !== 'otgan';
+
+    const chiz = () => {
+      turTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(h.turlar.includes(b.dataset.tur as GrantTuri))));
+      davlatTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(h.davlatlar.includes(b.dataset.davlat!))));
+      darajaTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(h.darajalar.includes(b.dataset.daraja as DarajaFiltr))));
+      toliqTugma?.setAttribute('aria-pressed', String(h.toliq));
+
+      let n = 0;
+      for (const x of saralash(xlar, bugun)) {
+        royxat.append(x.el);
+        const kor = filtrdanOtadimi(x, h);
+        x.el.hidden = !kor;
+        if (kor) n++;
+      }
+      soni.textContent = filtrBormi(h) ? `${xlar.length} tadan ${n} ta grant` : `${n} ta grant`;
+      royxat.hidden = n === 0;
+      boshFiltr.hidden = n !== 0;
+
+      const q = holatniYoz(h, location.search);
+      history.replaceState(history.state, '', location.pathname + q + location.hash);
+    };
+
+    turTugmalar.forEach((b) => b.addEventListener('click', () => {
+      h = { ...h, turlar: almashtir(h.turlar, b.dataset.tur as GrantTuri, turTartib) };
+      chiz();
+    }));
+    davlatTugmalar.forEach((b) => b.addEventListener('click', () => {
+      h = { ...h, davlatlar: almashtir(h.davlatlar, b.dataset.davlat!, davlatSluglar) };
+      chiz();
+    }));
+    darajaTugmalar.forEach((b) => b.addEventListener('click', () => {
+      h = { ...h, darajalar: almashtir(h.darajalar, b.dataset.daraja as DarajaFiltr, darajaTartib) };
+      chiz();
+    }));
+    toliqTugma?.addEventListener('click', () => {
+      h = { ...h, toliq: !h.toliq };
+      chiz();
+    });
+    ildiz.querySelector('[data-filtr-tozala]')?.addEventListener('click', () => {
+      h = { turlar: [], davlatlar: [], darajalar: [], toliq: false };
+      chiz();
+      turTugmalar[0]?.focus();
+    });
+
+    asboblar.hidden = false;
+    chiz();
+  }
+</script>
+
+<style>
+  .gk-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
+  .gk-bosh { display: grid; gap: var(--space-3); }
+  .gk-ustki {
+    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .gk-matn { max-width: 62ch; margin: 0; }
+  .gk-sust { color: var(--color-text-secondary); }
+  .gk-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .gk-havola { color: var(--color-link); font-weight: 700; }
+  .gk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  [hidden] { display: none !important; }
+
+  .gk-ogoh {
+    max-width: 62ch; margin: 0; display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3) var(--space-4); border-radius: var(--card-radius);
+    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 600;
+  }
+  .gk-ogoh svg { flex: none; margin-top: 2px; }
+
+  /* Asboblar: filtrlar */
+  .gk-asboblar { display: grid; gap: var(--space-5); }
+  .gk-guruh { display: grid; gap: var(--space-2); }
+  .gk-chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .gk-chip {
+    min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
+    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .gk-chip:active { transform: var(--bosilish); }
+  .gk-chip[aria-pressed="true"] { background: var(--color-text-primary); border-color: var(--color-text-primary); color: var(--color-surface); }
+
+  /* Grant kartalari */
+  .gk-kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .gk-karta {
+    display: flex; flex-direction: column; gap: var(--space-3); min-width: 0;
+    padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--card-radius); box-shadow: var(--card-shadow);
+  }
+  .gk-karta-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .gk-karta-nom { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); overflow-wrap: anywhere; }
+  .gk-yorliqlar { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .gk-belgi {
+    display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
+    border-radius: var(--badge-radius); font-size: var(--text-caption-size); font-weight: 600;
+  }
+  .gk-belgi-otgan { background: var(--color-warning-subtle); color: var(--color-warning-text); }
+  .gk-belgi-toliq { background: var(--floor-subtle); color: var(--color-text-primary); border: 1px solid var(--floor-ui); }
+  .gk-maydonlar { margin: 0; display: grid; gap: var(--space-3); }
+  .gk-maydonlar > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+  .gk-maydonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .gk-maydonlar dd { margin: 0; min-width: 0; }
+  .gk-havolalar { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding-top: var(--space-2); }
+  .gk-havolalar .gk-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
+  .gk-ichki {
+    display: inline-flex; align-items: center; min-height: var(--size-touch-min); padding: 0 var(--space-3);
+    border: 1.5px solid var(--floor-ui); border-radius: var(--radius-full);
+    color: var(--color-text-primary); font-size: var(--text-small-size); font-weight: 700; text-decoration: none;
+  }
+
+  .gk-bosh-filtr { display: grid; gap: var(--space-3); justify-items: start; padding: var(--card-pad); border: 1px dashed var(--color-border-strong); border-radius: var(--card-radius); }
+  .gk-bosh-filtr p { margin: 0; max-width: 62ch; }
+
+  /* Bo'sh holat */
+  .gk-bosh-holat {
+    display: grid; gap: var(--space-3); justify-items: start; padding: var(--space-8) var(--card-pad);
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); box-shadow: var(--card-shadow);
+  }
+  .gk-bosh-holat h2 { margin: 0; }
+  .gk-bosh-ikonka { color: var(--floor-ui); }
+  .gk-bosh-yol { margin: var(--space-3) 0 0; }
+  .gk-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .gk-chip:hover { border-color: var(--color-text-primary); }
+    .gk-ichki:hover { background: var(--floor-subtle); }
+  }
+  @media (max-width: 760px) {
+    .gk-chiplar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: var(--space-1); }
+    .gk-chip { flex: none; }
+    .gk-kartalar { grid-template-columns: 1fr; }
+    .gk-maydonlar > div { grid-template-columns: 1fr; gap: var(--space-1); }
+    .gk-tugmalar { display: grid; width: 100%; }
+    .gk-tugmalar .tugma { width: 100%; }
+  }
+</style>

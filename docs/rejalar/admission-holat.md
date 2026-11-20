@@ -5,7 +5,7 @@
 | Q0 | Maxfiylik auditi (faqat o'qish) | tugadi | 2026-11-19 | Topilmalar pastda; kod o'zgarmadi |
 | Q1 | Ma'lumot sxemasi va validator | tugadi | 2026-11-20 | Sxema, 2 skript, `Fakt.astro`, 10 sinov; haqiqiy fakt yo'q |
 | Q2 | Davlatlarni taqqoslash sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/davlatlar/`; filtr, saralash, taqqoslash; SOXTA fixture bilan brauzerda sinaldi |
-| Q3 | Grantlar katalogi sahifasi | kutilmoqda | | |
+| Q3 | Grantlar katalogi sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/grantlar/`; filtr, deadline saralash, Türkiye Bursları havolasi; SOXTA fixture bilan brauzerda sinaldi |
 | Q4 | "Menga mos universitet" filtri | kutilmoqda | | |
 | Q5 | Ariza zinapoyasi → XP | kutilmoqda | | |
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | kutilmoqda | | |
@@ -74,6 +74,28 @@ Sinov:
 - Vaqtincha SOXTA fixture (4 davlat "Sinoviya A–D", 2 grant, kurs EUR; scratchpad'da, commit qilinmagan, build'dan keyin o'chirildi) bilan build va brauzer (lokal statik server, Claude Browser paneli): filtr ("Ingliz tilida dastur bor" -> 4 tadan 2), narx saralashi (B 12 100, A 35 000, narxsizlar oxirida), 4-davlatni qo'shishda xabar va `aria-disabled`, URL'dan holatni tiklash (`?t=...&s=narx`), jadval (1280px, qorong'i mavzu) va telefon kartalari (375px, yorug' mavzu, gorizontal scroll yo'q), eskirgan fakt yonida "qayta tekshirilmoqda", bo'sh holat (375px) ko'rildi.
 - Sinalmagan: axe/VoiceOver, haqiqiy telefon, JS'siz ko'rinish brauzerda (kod bo'yicha: kartalar ko'rinadi, filtr va taqqoslash yashirin), bo'sh holat 1280px va qorong'ida, `prefers-reduced-motion`. Kontrast alohida o'lchanmadi (faqat mavjud DS tokenlari ishlatilgan).
 
+## Q3 natijasi (2026-11-20)
+Sahifa: `/uz/top-admission/grantlar/` (`src/pages/uz/top-admission/grantlar/index.astro`, `BolimQobiq`, turi "vosita", holat "qoralama"), Q2 uslubida (`gk-*` klasslar).
+
+O'zgargan / yangi fayllar:
+- `src/pages/uz/top-admission/grantlar/index.astro`: grant kartalari (nom, turi, daraja, davlat [+ universitet nomi bo'lsa], nimani qoplaydi, to'liq qoplaydi, deadline: har fakt `Fakt.astro` orqali; "Rasmiy sahifa" havolasi), filtr chiplari (Turi, Davlat, Daraja, Qoplash), deadline saralash, "Bu yilgi muddat o'tgan" belgisi, doimiy ogohlantirish "Grant shartlari har yili o'zgaradi. Topshirishdan oldin rasmiy sahifani tekshiring.", bo'sh holat.
+- `src/lib/topAdmission/grantKatalog.ts`: sof mantiq (ko'rinish, to'liq qoplash, deadline sanasi, muddat holati, saralash, filtr, URL `?tur=&d=&dr=&toliq=`, ichki sahifalar).
+- `src/lib/topAdmission/testlar/grantKatalog.test.ts`: 7 sinov (SOXTA ma'lumot).
+- `src/data/topAdmissionSahifalar.ts`: yon panel "Vositalar" guruhiga "Grantlar" bandi.
+
+Qarorlar (keyingi qismlar uchun):
+- Grant katalogda ko'rinadi, agar `nimani_qoplaydi` fakti tasdiqlangan bo'lsa (Q2 qoidasi bilan bir xil, ikkala tur uchun). Qolganlari umuman chiqmaydi. `nom`, `rasmiy_havola`, `turi`, `daraja` oddiy maydon sifatida ko'rinadi.
+- "To'liq qoplaydi" filtri va belgisi faqat `toliq_qoplaydi` tasdiqlangan va `qiymat: true` bo'lsa. Bunday grant bo'lmasa chip chiqmaydi (izoh matni turadi). Kontent agentlari (Q8, Q9): `toliq_qoplaydi` ni faqat rasmiy sahifada aniq yozilgan bo'lsa qo'ying.
+- Filtr: guruh ichida "yoki", guruhlar orasida "va". Daraja `ikkalasi` ham Bakalavr, ham Magistr filtriga mos. Davlat chiplari faqat ko'rinadigan granti bor davlatlardan (1 ta bo'lsa guruh chiqmaydi), nom `davlatlar.nom_uz` dan.
+- Tartib: tasdiqlangan YYYY-MM-DD deadline bo'yicha eng yaqini birinchi (bugun ham "o'tmagan"); keyin sanasi noma'lum yoki matnli/tasdiqlanmagan deadline (alifbo); oxirida muddati o'tganlar (eng yaqinda o'tgani birinchi) "Bu yilgi muddat o'tgan" belgisi bilan. Muddat build paytida hisoblanadi va brauzerda `toshkentBugun()` bilan qayta hisoblanadi.
+- Türkiye Bursları: sahifa `main` da bor (`src/pages/uz/top-admission/turkiye-burslari/index.astro`, `origin/main` da tekshirildi). Grant slug'i `turkiye-burslari` yoki turi "davlat" va `davlat: "turkiya"` bo'lgan grant kartasida "Türkiye Bursları bo'yicha qo'llanma" havolasi (`ICHKI_SAHIFALAR`, `grantKatalog.ts`). Kontent agentlari (Q7, Q8): Turkiya davlat slug'i `turkiya`, Türkiye Bursları grant slug'i `turkiye-burslari` bo'lsin. Bo'sh holatda ham Türkiye Bursları tugmasi bor.
+- Brauzerda hech narsa saqlanmaydi; holat faqat URL'da.
+
+Sinov:
+- `npm test` 356/356 (yangi 7 ta). `npm run check`: faqat 4 ta eski xato. `npm run build` o'tdi. `npm run repo:tekshir`: muammo yo'q.
+- Vaqtincha SOXTA fixture (2 davlat, 6 grant: yaqin, uzoq + to'liq, matnli deadline, o'tgan, qoralama `nimani_qoplaydi`, qoralama `toliq_qoplaydi`; commit qilinmagan, build'dan keyin o'chirildi) bilan build va brauzer (lokal statik server, Claude Browser paneli): tartib yaqin → uzoq → noma'lum → o'tgan; qoralama grant HTML'da yo'q; qoralama `toliq_qoplaydi` to'liq deb hisoblanmadi; "To'liq qoplaydi" filtri 1 ta; Magistr + Universitet filtri; mos grant yo'q holati va "Filtrlarni tozalash"; URL'dan holatni tiklash (`?tur=davlat&dr=bakalavr`); Türkiye Bursları havolasi; yon panel bandi. 1280px yorug' va 375px qorong'i mavzu ko'rildi, gorizontal scroll yo'q. Bo'sh holat 375px qorong'ida ko'rildi.
+- Sinalmagan: axe/VoiceOver, haqiqiy telefon, JS'siz ko'rinish brauzerda (kod bo'yicha: kartalar build tartibida, filtr yashirin), bo'sh holat 1280px, `prefers-reduced-motion`. Kontrast alohida o'lchanmadi (faqat mavjud DS tokenlari).
+
 ## Topilmalar (Q0)
 Audit 2026-11-19, `admission-d` (asos 8b803c5), faqat repo kodi o'qildi. Jonli Supabase (deploy qilingan versiya, sozlamalar, haqiqiy bucket'lar) va tashqi provayderlar shartlari tekshirilmagan. Qisqartmalar: `F` = `supabase/functions/`, `M` = `supabase/migrations/`.
 
@@ -91,11 +113,14 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q3 tugadi ("Q3 natijasi" bo'limi). Keyingi: Q4. Uslub `grantlar/index.astro` (`gk-*`) va `davlatlar/index.astro` (`dt-*`); URL holati namunasi `grantKatalog.ts`; yon panelga "Menga mos universitet" bandini `src/data/topAdmissionSahifalar.ts` ga qo'sh. Deadline saralash/muddat uchun `deadlineSanasi`, `muddatHolati` (`grantKatalog.ts`) qayta ishlatilishi mumkin.
 - Q0 tugadi (faqat `docs/rejalar/admission-holat.md` o'zgardi).
 - Q2 tugadi ("Q2 natijasi" bo'limi). Keyingi: Q3. Grantlar sahifasi Q2 uslubida: `davlatlar/index.astro` dagi `dt-*` klasslar va `davlatTaqqos.ts` dagi URL holati namunasi; yon panel bandi `src/data/topAdmissionSahifalar.ts`.
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q3: Grant kartasi faqat `nimani_qoplaydi` tasdiqlangan bo'lsa chiqadi (deadline tekshirilmagan bo'lsa ham karta chiqadi, deadline o'rnida "Ma'lumot tekshirilmoqda"). Shu qoida ma'qulmi yoki deadline ham tasdiqlangan bo'lishi shartmi?
+- Q3: Davlatlarni taqqoslash sahifasidagi grant nomi hozir rasmiy sahifaga olib boradi. Uni Grantlar katalogiga (filtr bilan, `?d=<davlat>`) yo'naltirish kerakmi? (Q2 fayli, Q3 doirasidan tashqari, tegilmadi.)
 - Q2: `viza_yashash_summasi` yillik summa deb qabul qilindi (taxminiy xarajat = kontrakt + shu summa). Rasmiy sahifada oylik yoki boshqa davr uchun yozilgan bo'lsa (masalan, 9 oylik), kontent agenti qanday yozsin: aynan rasmiy qiymat (davr izohi bilan, saralashdan chiqariladi) yoki yillikka hisoblanadimi?
 - Q2: Header menyusi bo'limda yo'q, shuning uchun "Davlatlarni taqqoslash" Top Admission yon paneliga ("Vositalar") qo'shildi. Bosh sahifadagi `QavatMenyu` ga ham qo'shilsinmi?
 - Q1: `docs/tekshiruv/` `.gitignore` da (`tekshiruv/` qoidasi). Tasdiq ro'yxati lokal qolsinmi (hozirgi holat) yoki repoga kirishi uchun `.gitignore` ga istisno qo'shilsinmi?
