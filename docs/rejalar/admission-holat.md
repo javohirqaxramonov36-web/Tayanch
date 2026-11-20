@@ -10,7 +10,7 @@
 | Q5 | Ariza zinapoyasi → XP | tugadi | 2026-11-20 | Migratsiya `20261120120000_admission_xp.sql` faqat branch'da (jonli bazaga QO'LLANMAGAN), RPC `admission_step_done`, mijoz `zinapoyaXp.ts`; lokal Postgres'da AX00–AX07 o'tdi. "Q5 natijasi (2-agent)" bo'limi |
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | tugadi | 2026-11-20 | 3 davlat fayli (8 qoralama, 13 topilmadi), `kurslar.json` CBU 2026-11-20 (14 valyuta). "Q6 natijasi" bo'limi |
 | Q7 | Kontent: 12 qisqa davlat kartasi | tugadi | 2026-11-20 | 12 davlat fayli (30 qoralama, 55 topilmadi). "Q7 natijasi" bo'limi |
-| Q8 | Kontent: davlat grantlari | kutilmoqda | | |
+| Q8 | Kontent: davlat grantlari | tugadi | 2026-11-20 | 12 grant (14 qoralama, 13 topilmadi); Xitoy, Kanada, Singapur: rasmiy dastur topilmadi/ochilmadi. "Q8 natijasi" bo'limi |
 | Q9 | Kontent: 30 universitet | kutilmoqda | | |
 | Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
 
@@ -179,6 +179,42 @@ XP qiymati sababi (10): SAT'da bitta savol birinchi urinishda to'g'ri = 2 + 3 = 
 
 Ma'lum cheklov (tasdiqdan oldin bilish kerak): zinapoyaning to'g'ri javobi statik JS'da (`zinapoyalar.ts`), server tartibni tekshira olmaydi. XP amalda "o'quvchi o'zi bajardim degan" qadam uchun; himoya faqat ruxsat ro'yxati, noyob kalit va kunlik chegara (umrbod 30 XP).
 
+## Q8 natijasi (2026-11-20)
+O'zgargan / yangi fayllar: `src/data/topAdmission/grantlar/` ichida 12 ta grant (`.json`, hammasi `turi: "davlat"`): `stipendium-hungaricum`, `turkiye-burslari`, `mext`, `global-korea-scholarship`, `chevening`, `fulbright`, `daad-study-scholarships`, `maeci`, `malaysia-international-scholarship`, `banach-nawa`, `study-in-saudi`, `research-training-program`. 12 ta davlat faylida `grant.davlat_grantlari` ga grant slug'i yozildi (`grant.izoh` qo'shilmadi). `docs/tekshiruv/tasdiq-royxati.md` yangilandi (jami 52 qoralama: Q6 8 + Q7 30 + Q8 14; `.gitignore` sababli faqat lokal). Kod o'zgarmadi.
+
+Sanoq (hamma fakt `tekshirilgan_sana: 2026-11-20`, `turi: "muddatli"`; har `manba_iborasi` curl bilan yuklangan sahifa matnida `grep -F` bilan topildi; PDF'lar python bilan oqimlardan ajratildi):
+| Davlat | Grant | qoralama | topilmadi | Izoh |
+|---|---|---|---|---|
+| AQSH | `fulbright` (magistr) | 0 | 2 | Fulbright sahifasi Uzbekistan'ni ro'yxatda ko'rsatadi; qoplash va deadline sahifa matnida yo'q (Toshkentdagi AQSH elchixonasi sayti 403/404) |
+| Buyuk Britaniya | `chevening` (magistr) | 2 | 1 | nimani_qoplaydi, toliq_qoplaydi = true ("fully-funded"); deadline: 2027–2028 qabuli yopilgan, aniq sana sahifada yo'q (timeline: "October 2026 Applications close") |
+| Janubiy Koreya | `global-korea-scholarship` (ikkalasi) | 1 | 1 | deadline studyinkorea.go.kr da yo'q |
+| Germaniya | `daad-study-scholarships` (magistr) | 0 | 2 | DAAD bazasi JS bilan chiziladi; Uzbekistan (origin 79) dastur ro'yxatida bor, lekin tafsilot sahifasi curl bilan ochilmadi (404) |
+| Italiya | `maeci` (magistr) | 1 | 1 | 2025–2026 chaqiruvi yopilgan, 2026–2027 sanasi topilmadi; Uzbekistan ro'yxatda borligi TEKSHIRILMAGAN (chaqiruv PDF havolasi 404) |
+| Vengriya | `stipendium-hungaricum` (ikkalasi) | 3 | 0 | toliq_qoplaydi = false (sahifada aniq: "does not fully cover all the costs of living"); deadline 2026-01-15 (2026 qabuli, o'tgan; keyingi sana hali yo'q); Uzbekistan hamkorlar ro'yxatida bor (`/partners/` sahifa ma'lumotida) |
+| Turkiya | `turkiye-burslari` (ikkalasi) | 3 | 0 | toliq_qoplaydi = true ("fully funded"); deadline matnli "Har yili 10-yanvar – 20-fevral" (rasmiy "every year") |
+| Xitoy | — | — | — | Rasmiy dastur sahifasi ochilmadi: campuschina.org va csc.edu.cn 412; Xitoyning Toshkentdagi elchixonasi saytida stipendiya sahifasi topilmadi. Grant yaratilmadi |
+| Yaponiya | `mext` (ikkalasi) | 1 | 1 | deadline elchixona orqali; uz.emb-japan.go.jp 403 |
+| Kanada | — | — | — | Rasmiy dastur topilmadi: EduCanada ro'yxatida faqat qisqa muddatli almashinuv va boshqa mintaqalar uchun dasturlar, o'zbek fuqarosi uchun darajali (bakalavr/magistr) davlat granti yo'q. Grant yaratilmadi |
+| Avstraliya | `research-training-program` (magistr) | 0 | 2 | studyaustralia.gov.au: RTP xalqaro talabalarga "research masters" uchun; qoplash va deadline yo'q (universitet orqali). Australia Awards: dfat.gov.au ochilmadi, Uzbekistan ro'yxatda borligi tekshirilmadi, grant yaratilmadi |
+| Malayziya | `malaysia-international-scholarship` (magistr) | 1 | 1 | Uzbekistan "Recipient countries of MIS 2026" da; 2026/2027 qabuli yopilgan, sana yo'q |
+| Polsha | `banach-nawa` (magistr) | 2 | 0 | Uzbekistan chaqiruvda bor; deadline 2026-05-08 (o'tgan) |
+| Saudiya Arabistoni | `study-in-saudi` (ikkalasi) | 0 | 2 | Profil PDF'da "Full Scholarship / Partial Scholarship" turlari bor, qoplash tafsiloti va deadline yo'q; studyinsaudi.moe.gov.sa ochilmadi |
+| Singapur | — | — | — | Rasmiy dastur topilmadi: moe.gov.sg stipendiyalar sahifasi JS bilan chiziladi; o'zbek fuqarolari uchun davlat granti topilmadi (ASEAN Scholarship faqat ASEAN fuqarolari uchun, sahifa 404). Grant yaratilmadi |
+Jami: 12 grant, 14 qoralama, 13 topilmadi. Bakalavr uchun ham ochiq (daraja "ikkalasi"): Stipendium Hungaricum, Türkiye Bursları, MEXT, GKS, Study in Saudi. Qolganlari faqat magistr.
+
+Manbalar (faqat rasmiy hukumat yoki dastur sahifalari): stipendiumhungaricum.hu (`/about/`, `/apply/`, `/partners/`); turkiyeburslari.gov.tr (`/fulltimeprograms`, `/whyturkiyescholarships`, 2026 e'loni); studyinjapan.go.jp (JASSO, MEXT sahifasi); studyinkorea.go.kr (`/en/plan/scholarship.do`); chevening.org (`/scholarships/`, `/scholarship/uzbekistan/`, timeline); foreign.fulbrightonline.org; www2.daad.de stipendiya bazasi; studyinitaly.esteri.it (FAQ, ListaBandi); biasiswa.mohe.gov.my/INTER (MIS 2026 qo'llanma PDF); nawa.gov.pl (Banach "about" va 16/2026 chaqiruv PDF); object.moe.gov.sa Study in Saudi profil PDF; studyaustralia.gov.au (scholarships).
+
+Ochilmagan saytlar: campuschina.org, csc.edu.cn (412); uz.emb-japan.go.jp (403); uz.usembassy.gov (403/404); dfat.gov.au (ulanish yo'q); studyinsaudi.moe.gov.sa (ulanish yo'q); esteri.it MAECI chaqiruv sahifasi (404); DAAD tafsilot sahifalari (404, JS). chevening.org brauzer User-Agent bilan javob bermaydi, `-A curl/...` bilan ochiladi.
+
+Kontent eslatmalari:
+- PDF iboralari: MIS "RM 1,500.00 per month" bitta bo'lak bo'lib topildi; Banach deadline "until May 8, 2026" PDF bo'laklarini qator uzilishisiz birlashtirgandagina topildi (PDF ko'ruvchida Cmd+F odatda topadi; topmasa "May 8" ni qidiring). Rasmiy matn: deadline Varshava vaqti bilan 15:00 yoki guruh bo'yicha 300/200 ariza to'lguncha.
+- Stipendium Hungaricum deadline iborasi faqat "2026-01-15" (sahifadagi "Application timeline" jadvali, qatori "Submitting application: to TPF and to Sendiong partner").
+- `nimani_qoplaydi` qiymati rasmiy ro'yxatning o'zbekcha qisqa mazmuni; `manba_iborasi` ro'yxatdagi bitta band. Qo'shimcha bandlar o'sha sahifada: SH "monthly amount of HUF 43,700", "HUF 40,000/month"; TB "6.500 TL at Associate’s and Bachelor’s levels, 9.500 TL at Master's level"; Banach "monthly scholarship of PLN 2,500", "travel allowance (PLN 2,500)"; MEXT jadvalida "Tuition" → "Exempted".
+- `toliq_qoplaydi` faqat Chevening va Türkiye Bursları da true (rasmiy "fully-funded" / "fully funded"); SH da aniq false; boshqalarida qo'yilmadi.
+- Q3 qoidasi bo'yicha katalogda grant faqat `nimani_qoplaydi` VA `deadline` tasdiqlangan bo'lsa chiqadi: hozir muallif tasdiqlasa ko'rinadiganlari SH, Türkiye Bursları, Banach (qolganlarida deadline "topilmadi").
+
+Sinov: `npm run malumot:tasdiq` 52 qoralama; `npm run malumot:tekshir` 27 hujjat, 133 fakt, 0 eskirgan, 81 topilmadi, sxema xatosi yo'q; `npm test` 373/373; `npm run check` faqat 4 ta eski xato; `npm run build` o'tdi (88 sahifa; qoralama qiymatlar `dist/` da yo'q); `npm run repo:tekshir` muammo yo'q. Sinalmagan: sahifa brauzerda ko'rilmadi (tasdiqlangan fakt yo'q, bo'sh holat o'zgarmagan).
+
 ## Q7 natijasi (2026-11-20)
 O'zgargan / yangi fayllar: `src/data/topAdmission/davlatlar/` ichida `germaniya`, `italiya`, `vengriya`, `turkiya`, `xitoy`, `yaponiya`, `kanada`, `avstraliya`, `malayziya`, `polsha`, `saudiya-arabistoni`, `singapur` (`.json`; `chuqur_qollanma: false`, `davlat_grantlari: []`). `docs/tekshiruv/tasdiq-royxati.md` yangilandi (jami 38 qoralama: Q6 8 + Q7 30; `.gitignore` sababli faqat lokal). Kod o'zgarmadi.
 
@@ -281,6 +317,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q8 tugadi ("Q8 natijasi"). Keyingi: Q9 (30 universitet; avval ro'yxat muallif tasdig'iga). Grant slug'lari `src/data/topAdmission/grantlar/` da; Q9 universitet grantlari (`turi: "universitet"`) shu papkaga, `universitet` maydoni bilan. Curl: chevening.org va DAAD uchun `-A curl/...`; PDF matni uchun pdftotext yo'q, python bilan oqimlarni ajratish kerak.
 - **BOSHQARUVCHI, 2026-11-20 (chat almashdi):** Q0–Q7 tugadi. Q8 agenti boshlanishi bilan to'xtatildi (hech narsa yozilmagan) — Q8 boshidan boshlanadi. PR #198 (`admission-d` → `main`) ochiq, MERGE QILINMAYDI; har qismdan keyin `git push origin admission-d` bilan yangilanadi. Q9 da universitet ro'yxati muallifga ko'rsatiladi va tasdig'i kutiladi. Muallif savollari har qism natijasida; Q10 yakuniy hisobotda yig'iladi.
 - Q7 tugadi ("Q7 natijasi"). Keyingi: Q8 (davlat grantlari). 15 davlat fayli bor, slug'lar: `aqsh`, `buyuk-britaniya`, `janubiy-koreya`, `germaniya`, `italiya`, `vengriya`, `turkiya`, `xitoy`, `yaponiya`, `kanada`, `avstraliya`, `malayziya`, `polsha`, `saudiya-arabistoni`, `singapur`. Curl maslahati: canada.ca uchun `-A curl/...` (brauzer UA'si bilan javob yo'q), `--http1.1` foydali; daad.de, make-it-in-germany.com, campuschina.org, studyinsaudi.moe.gov.sa curl bilan ochilmadi; oif.gov.hu ~2026-11-23 gacha ishlamaydi. Q8 uchun stipendiumhungaricum.hu "about" sahifasida qoplash ro'yxati bor (WP REST `/wp-json/wp/v2/pages` sahifa ro'yxatini beradi).
 - Q6 tugadi ("Q6 natijasi"). Keyingi: Q7. `kurslar.json` da Q7 valyutalari (EUR, HUF, TRY, CNY, JPY, CAD, AUD, MYR, PLN, SAR, SGD) bor, qayta olish shart emas (kerak bo'lsa `https://cbu.uz/uz/arkhiv-kursov-valyut/json/`). Manba iborasini sahifa matnida curl bilan tekshirish foydali (WebFetch iborani qisqartirishi mumkin). `fakt.test.ts` endi haqiqiy `kurslar.json` ni bo'sh deb farazlamaydi.
@@ -292,6 +329,10 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q8: Xitoy hukumati stipendiyasi (CSC) rasmiy sayti (campuschina.org) curl bilan ochilmadi (412), shuning uchun Xitoy granti yaratilmadi. O'zingiz brauzerda ochib havola bersangiz yoki qo'lda qo'shasizmi?
+- Q8: Stipendium Hungaricum va Banach deadline'lari 2026-yilniki (o'tgan, katalogda "Bu yilgi muddat o'tgan" belgisi bilan chiqadi). Shunday qoldiraylikmi yoki yangi sana e'lon qilinguncha "topilmadi" qilinsinmi?
+- Q8: Fulbright, DAAD, RTP, Study in Saudi grantlarida ikkala fakt "topilmadi" (fayl bor, kartada ko'rinmaydi). Shular qolsinmi yoki o'chirilsinmi? Italiya MAECI uchun Uzbekistan mos davlatlar ro'yxatida borligi tekshirilmagan.
+- Q8: Australia Awards (dfat.gov.au ochilmadi) va Kanada/Singapur uchun o'zbek fuqarosiga mos davlat granti topilmadi. Bilgan rasmiy dasturingiz bo'lsa havolasini bering.
 - Q7: Yaponiya `kontrakt_yillik` milliy universitetning 1-yil jami xarajati (kirish to'lovi bilan, 820 000 JPY) bilan yozildi. Shu qoladimi yoki faqat yillik kontrakt (kirish to'lovisiz) kerakmi (unda "topilmadi")?
 - Q7: Yaponiya diplomi "yo'q" (12 yil talabi, o'zbek maktabi 11 yil) deb yozildi. 11 yil + akademik litsey/kollej bitirganlar uchun farq bormi; shu talqin ma'qulmi?
 - Q7: Polsha yashash summasi uy-joy xarajatidan tashqari (1 010 PLN/oy × 12). Taqqoslash sahifasida bu boshqa davlatlardan past ko'rinadi; izoh kerakmi yoki faktni "topilmadi" qilamizmi?
