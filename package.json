@@ -18,7 +18,7 @@
     "lugat:import": "node scripts/lugat-import.mjs",
     "lugat:sinov": "node --test scripts/lugat/*.test.mjs",
     "check": "astro check",
-    "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/ielts/writing/testlar/*.test.ts' 'src/lib/testlar/*.test.ts'",
+    "test": "node --test 'src/lib/navigator/testlar/*.test.ts' 'src/lib/ielts/reading/testlar/*.test.ts' 'src/lib/ielts/writing/testlar/*.test.ts' 'src/lib/testlar/*.test.ts' 'src/lib/topAdmission/testlar/*.test.ts'",
     "validate:tests": "node scripts/ielts-testlarni-tekshir.ts",
     "savol:tekshir": "node scripts/savol-tekshir.mjs",
     "savol:korib-chiq": "node scripts/savol-korib-chiq.mjs",
@@ -32,7 +32,9 @@
     "kurs:korib-chiq": "node scripts/kurs/koribChiq.mjs",
     "kurs:sinov": "node --test scripts/kurs/kurs.test.mjs",
     "savol:sinov": "node --test scripts/savol/savol.test.mjs",
-    "sinxron:tekshir": "node scripts/sinxron-test.ts"
+    "sinxron:tekshir": "node scripts/sinxron-test.ts",
+    "malumot:tekshir": "node scripts/malumot/tekshir.ts",
+    "malumot:tasdiq": "node scripts/malumot/tasdiq.ts"
   },
   "dependencies": {
     "@fontsource-variable/onest": "^5.3.1",

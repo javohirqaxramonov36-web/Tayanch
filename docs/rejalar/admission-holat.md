@@ -3,7 +3,7 @@
 | Qism | Nomi | Status | Sana | Izoh |
 |---|---|---|---|---|
 | Q0 | Maxfiylik auditi (faqat o'qish) | tugadi | 2026-11-19 | Topilmalar pastda; kod o'zgarmadi |
-| Q1 | Ma'lumot sxemasi va validator | kutilmoqda | | |
+| Q1 | Ma'lumot sxemasi va validator | tugadi | 2026-11-20 | Sxema, 2 skript, `Fakt.astro`, 10 sinov; haqiqiy fakt yo'q |
 | Q2 | Davlatlarni taqqoslash sahifasi | kutilmoqda | | |
 | Q3 | Grantlar katalogi sahifasi | kutilmoqda | | |
 | Q4 | "Menga mos universitet" filtri | kutilmoqda | | |
@@ -26,6 +26,28 @@ Reja matni o'zgartirilmagan. Quyidagi joylarda reja repo'ning amaldagi qoidalari
 - **Faktlar:** `src/data/manbalar.ts` mavjud manba konventsiyasi; Q1 sxemasi u bilan to'qnashmasligi kerak.
 - **band.md:** `~/Tayanch/00-ai/band.md` da qator bor; seriya tugaganda "Tugagan" ga ko'chiriladi.
 
+## Q1 natijasi (2026-11-20)
+Astro 7.4.5 content layer (node_modules'dan tekshirildi): config `src/content.config.ts`, loader `glob` (`astro/loaders`), zod v4 (`astro/zod`), havola `reference` (`astro:content`). Glob loader `slug` maydonini entry id sifatida oladi.
+
+O'zgargan / yangi fayllar:
+- `src/content.config.ts`: kolleksiyalar `davlatlar`, `grantlar`, `universitetlar` (`src/data/topAdmission/<kolleksiya>/<slug>.json`, hozir bo'sh, `.gitkeep`).
+- `src/lib/topAdmission/sxema.ts`: `faktSxema`, `davlatSxema`, `grantSxema`, `universitetSxema`, `kurslarSxema` (strict: noma'lum maydon ham xato). Sxema build'da (`reference`) va node'da (`oddiyRef`) bir xil.
+- `src/lib/topAdmission/fakt.ts`: `ESKIRISH_KUNLARI` (yagona konstanta: muddatli 60, barqaror 180), `faktKorinadimi`, `faktEskirganmi` (chegara: 60/180-kun hali eskirmagan, 61/181-kundan eskirgan; bugun Toshkent bo'yicha), `faktQiymatMatni`, `sanaMatni`, `kurslarBormi`, `usdga`.
+- `src/data/topAdmission/kurslar.json`: bo'sh shablon (`kurslar`: valyuta kodi -> 1 birlik necha USD). Bo'sh bo'lsa `kurslarBormi` false, `usdga` null.
+- `src/components/topAdmission/Fakt.astro`: qiymat + "Manba" + tekshirilgan sana; eskirgan bo'lsa "qayta tekshirilmoqda" belgisi; ko'rinmasa "Ma'lumot tekshirilmoqda". Props: `fakt`, `birlik?`, `format?`.
+- `scripts/malumot/umumiy.ts`, `tekshir.ts`, `tasdiq.ts`; `package.json`: `malumot:tekshir`, `malumot:tasdiq`, `npm test` ga `src/lib/topAdmission/testlar/*.test.ts`.
+- `docs/tekshiruv/tasdiq-royxati.md` (avtomatik, hozir 0 ta).
+- Sinov: `src/lib/topAdmission/testlar/fakt.test.ts`, SOXTA fixture'lar `tests/fixtures/topAdmission/davlatlar/` (haqiqiy kolleksiyaga kirmaydi).
+
+Sxemaga rejadan tashqari qo'shilganlar (keyingi qismlar uchun): `grantlar.toliq_qoplaydi` (ixtiyoriy ha/yo'q fakt, Q3 "to'liq qoplaydi" filtri faqat shu tasdiqlangan bo'lsa); `kurslar.json` da `manba_nomi`, `izoh`. `valyuta` ISO kodi oddiy maydon (fakt emas). `daraja`, `turi`, `nom`, `rasmiy_havola` oddiy maydon. `deadline` matn fakt: qiymat YYYY-MM-DD bo'lsa saralanadi (Q3/Q4 shunga tayanadi).
+
+Sinov natijasi:
+- `node --test src/lib/topAdmission/testlar/*.test.ts`: 10/10 o'tdi. Fixture 1 (to'g'ri) o'tadi; fixture 2 (source_url'siz qoralama) bitta xato beradi `narx.kontrakt_yillik.source_url`; fixture 3 ("topilmadi") o'tadi.
+- Build xatosi qo'lda sinaldi (fixture 2 vaqtincha `src/data/topAdmission/davlatlar/` ga qo'yildi, keyin o'chirildi): build exit 1, xabar `[InvalidContentEntryDataError] davlatlar → sinoviya-manbasiz ... narx.kontrakt_yillik.source_url: holat "qoralama" bo'lsa majburiy` va fayl yo'li bilan.
+- `npm run malumot:tekshir -- --papka tests/fixtures/topAdmission`: 1 sxema xatosi, 3 eskirgan, 1 "topilmadi" (fayl | maydon | sana | kun); haqiqiy papkada 0 hujjat, exit 0. Sxema xatosi bo'lsa exit 1, eskirgan/"topilmadi" exit 0; build'ga ulanmagan.
+- `npm run build` o'tdi (bo'sh kolleksiya uchun 3 ta glob-loader ogohlantirishi kutilgan). `npm test` 341/341. `npm run check`: faqat 4 ta eski xato. `npm run repo:tekshir`: muammo yo'q.
+- Sinalmagan: `Fakt.astro` hali hech bir sahifada ishlatilmagan (Q2 da birinchi marta ko'rinadi; brauzer, 375/1280, qorong'i mavzu, kontrast o'sha yerda tekshiriladi). Eskirish build paytida hisoblanadi (statik sayt), sayt qayta qurilmasa belgi yangilanmaydi.
+
 ## Topilmalar (Q0)
 Audit 2026-11-19, `admission-d` (asos 8b803c5), faqat repo kodi o'qildi. Jonli Supabase (deploy qilingan versiya, sozlamalar, haqiqiy bucket'lar) va tashqi provayderlar shartlari tekshirilmagan. Qisqartmalar: `F` = `supabase/functions/`, `M` = `supabase/migrations/`.
 
@@ -43,9 +65,11 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
-- Q0 tugadi (faqat `docs/rejalar/admission-holat.md` o'zgardi). Keyingi: Q1.
+- Q0 tugadi (faqat `docs/rejalar/admission-holat.md` o'zgardi).
+- Q1 tugadi. Keyingi: Q2. Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q1: "barqaror" faktlar uchun 180 kun tasdiqlanadimi? (Bitta joyda: `ESKIRISH_KUNLARI`, `src/lib/topAdmission/fakt.ts`.)
 - Q0: `ielts_writing_results` ni hisob eksportiga va `docs/maxfiylik-jadvali.md` ga qo'shish kerakmi? (Admission seriyasidan tashqari ish, alohida branch.)
 - Q0: AI matnlari (AI Tutor, IELTS Writing) uchun saqlash muddati (masalan, N oydan keyin avtomatik o'chirish) kerakmi yoki "hisob ochiq turguncha" qoladimi? Huquqchi bilan maslahatda ko'riladi.
 - Q0: Suhbatdosh boshqa foydalanuvchilarga ochilishidan oldin Gemini (bepul kalit) shartlari va Maxfiylik sahifasi matni tekshiriladimi?
