@@ -22,14 +22,48 @@ test('Natija, takroriy XP va tekshirilayotgan javob', () => {
   h.sessiya=yangiSessiya('1',bank,30);
   for(const s of bank) h.sessiya.javoblar[s.id]=s.kitobJavobi;
   const n=natijaniHisobla(h.sessiya,savollar);
-  assert.equal(n.ball,90);
-  assert.equal(n.tekshirilmoqda.length,2);
+  assert.equal(n.ball,95);
+  assert.equal(n.tekshirilmoqda.length,1);
   const bir=mukofotHisobla(h,savollar);
-  assert.equal(bir.sessiya!.olinganXp,90);
+  assert.equal(bir.sessiya!.olinganXp,95);
   assert.deepEqual(mukofotHisobla(bir,savollar),bir);
   bir.sessiya=yangiSessiya('1',bank,30);
   for(const s of bank) bir.sessiya.javoblar[s.id]=s.kitobJavobi;
   assert.equal(mukofotHisobla(bir,savollar).sessiya!.olinganXp,0);
+});
+test('Yangi tasdiq eski natijani yangilaydi, avvalgi XP qayta berilmaydi', () => {
+  const bank = savollar.filter(s => s.test === 1);
+  const eskiBank = bank.map(s => s.raqam === 16 ? { ...s, tekshirilgan: false } : s);
+  const holat = boshHolat();
+  holat.sessiya = yangiSessiya('1', bank, 30);
+  for (const savol of bank) holat.sessiya.javoblar[savol.id] = savol.kitobJavobi;
+
+  const avvalgiNatija = mukofotHisobla(holat, eskiBank);
+  assert.equal(avvalgiNatija.sessiya!.olinganXp, 90);
+  const tiklangan = holatniOqi(JSON.stringify(avvalgiNatija), savollar);
+  assert.equal(natijaniHisobla(tiklangan.sessiya!, savollar).ball, 95);
+  assert.deepEqual(tiklangan, avvalgiNatija);
+  assert.deepEqual(mukofotHisobla(tiklangan, savollar), tiklangan);
+
+  tiklangan.sessiya = yangiSessiya('1', bank, 30);
+  for (const savol of bank) tiklangan.sessiya.javoblar[savol.id] = savol.kitobJavobi;
+  const qayta = mukofotHisobla(tiklangan, savollar);
+  assert.equal(qayta.sessiya!.olinganXp, 5);
+  assert.equal(qayta.mukofotlar.length, 19);
+  assert.equal(mukofotHisobla(holat, savollar).sessiya!.olinganXp, 95);
+});
+test('Yangi tasdiqlar ham kunlik 300 XP chegarasiga amal qiladi', () => {
+  const hozir = Date.now();
+  const kun = new Date(hozir).toLocaleDateString('en-CA', { timeZone: 'Asia/Tashkent' });
+  const tasdiqlangan = savollar.filter(s => s.tekshirilgan);
+  const holat = boshHolat();
+  holat.mukofotlar = tasdiqlangan.slice(0, 59).map(s => ({ id: s.id, kun }));
+  const bank = tasdiqlangan.slice(59, 79);
+  holat.sessiya = yangiSessiya('aralash', bank, 30, hozir);
+  for (const savol of bank) holat.sessiya.javoblar[savol.id] = savol.kitobJavobi;
+  const natija = mukofotHisobla(holat, savollar, hozir);
+  assert.equal(natija.sessiya!.olinganXp, 5);
+  assert.equal(natija.mukofotlar.length, 60);
 });
 test('Buzilgan va eski localStorage xavfsiz tashlanadi', () => {
   for(const x of ['{','null','[]','{"versiya":0}']) assert.deepEqual(holatniOqi(x,savollar),boshHolat());

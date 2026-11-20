@@ -1,8 +1,10 @@
 # IQ javoblari tekshiruvi
 
-2026-11-20. 100 savol saqlangan. 73 javob mustaqil tasdiqlandi. 27 javob tekshirilmoqda.
+2026-11-20. 100 savol saqlangan. 88 javob mustaqil tasdiqlandi. 12 javob tekshirilmoqda.
 
 Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mumkin bo‘lgan yuqori ball chegarasi alohida ko‘rsatiladi.
+
+Davomiy tekshiruvda 27 ochiq savol qayta ko‘rildi. 15 tasi yechim bilan tasdiqlandi. 5-test 15-savolning avvalgi izohidagi C harfi B ga tuzatildi, kitob kaliti o‘zgarmadi.
 
 ## 1-test
 
@@ -14,14 +16,14 @@ Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mum
 - 6-savol. Tasdiqlandi. A, B, C va E shakllarni aylantirib bir-biriga moslashtirish mumkin. D dagi qora chekka va egri chiziqning o‘zaro joylashuvi akslangan.
 - 7-savol. Tasdiqlandi. Har to‘plamda ikki ustunning yig‘indisi teng. Oxirgi to‘plamda 8+13+9=30. 7+?+6=30 dan ?=17. B.
 - 8-savol. Tasdiqlandi. Ayirmalar 0,5, 1, 1,5, 2, 2,5, 3 bo‘lib ortadi. Keyingi ayirma 3,5. 89,5−3,5=86. B.
-- 9-savol. Tekshirilmoqda. Qalqonlardagi aylanalarning ichma-ichligi va kesishishlarini solishtirdim. D kalitini yagona talqin bilan mustaqil tasdiqlay olmadim. Javob tekshirilmoqda.
+- 9-savol. Tekshirilmoqda. Namuna qalqonda ikkita aylana ichma-ich, uchburchak esa kvadrat bilan kesishgan. D da uchburchak aylana ichida va ikki aylana kesishgan. Shakllarning bu munosabatlari mos emas. Qaysi o‘xshashlik ustuvorligi berilmagan, D kaliti mustaqil tasdiqlanmadi. Javob tekshirilmoqda.
 - 10-savol. Tasdiqlandi. C dagi nuqtaning diagonallar hosil qilgan sohaga nisbatan joyi qolgan shakllarning aylantirilgan holatiga mos kelmaydi.
 - 11-savol. Tasdiqlandi. Chap son pastki chap sonning o‘ng sondagi ko‘paytmasi. Pastki o‘ng son yuqoridagi va o‘ngdagi sonlar yig‘indisi. Chap 24, yuqori 27, o‘ng 8 bo‘lsa 24÷8=3 va 27+8=35. D.
 - 12-savol. Tasdiqlandi. Har ikkala besh xonali sonda o‘rinlar 2,5,4,3,1 tartibiga o‘tadi. 38297 dan 87923 olinadi. D.
 - 13-savol. Tasdiqlandi. Amallar navbat bilan ×2+1, ×3+2, ×4+3. Keyingisi 47×5+4=239. D.
 - 14-savol. Tasdiqlandi. Ayirmalar −2,75, −5,5, −8,25. Keyingisi −11, shuning uchun 83,5−11=72,5. D.
 - 15-savol. Tasdiqlandi. B shaklning markaz atrofidagi qora va oq qismlari qolganlarning aylantirilgan holatiga mos kelmaydi. B aks tasvir.
-- 16-savol. Tekshirilmoqda. Qator va ustunlar bo‘yicha yig‘indi hamda ketma-ketliklarni tekshirdim. C — 7,6,8,5,8 kalitini yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
+- 16-savol. Tasdiqlandi. Dastlabki uch qator keyingi uch qatorda teskari yozilgan. 38291 → 19283 va 57645 → 54675. Shuning uchun 85867 → 76858. C — 7,6,8,5,8.
 - 17-savol. Tasdiqlandi. Har ustunda 1-qator+3-qator=2-qator+4-qator. Oxirgi ustunda 4+6=8+?, shuning uchun ?=2. A.
 - 18-savol. Tasdiqlandi. Markazdagi son pastki chap sonni yuqoridagi songa bo‘lib, pastki o‘ng songa ko‘paytirishdan hosil bo‘ladi. 32÷8×9=36. B.
 - 19-savol. Tasdiqlandi. B dagi qora soha uchala shaklning umumiy kesishmasiga mos kelmaydi. Qolganlarda bo‘yalgan qism uch shaklning umumiy sohasi.
@@ -35,16 +37,16 @@ Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mum
 - 4-savol. Tekshirilmoqda. Nuqtaning aylana va chiziqlarga nisbatan sohasini variantlarda tekshirdim. Skanerdagi ingichka chiziqlar sabab D ni mustaqil aniq tasdiqlay olmadim. Javob tekshirilmoqda.
 - 5-savol. Tasdiqlandi. Namuna to‘rtta belgini 2,3 / 4,1 tartibiga joylaydi. Ikkinchi to‘plamda ham shu tartib C ni beradi.
 - 6-savol. Tasdiqlandi. Qatorlarda qadamlar mos ravishda +2, +4, +6, +8. Yetishmagan sonlar yuqoridan 12, 13, 26. C.
-- 7-savol. Tekshirilmoqda. Ingliz alifbosida farqlar 3,3,4,5 bo‘lib chiqadi. Keyingi +6 bilan V chiqadi, lekin dastlabki ikki bir xil farq izchil umumiy qoidani noaniq qiladi. D kaliti tekshirilmoqda.
+- 7-savol. Tekshirilmoqda. A,D,G,K,P harflarining ingliz alifbosidagi o‘rinlari 1,4,7,11,16. Farqlar +3,+3,+4,+5. +6 ni davom ettirish V ni beradi, ammo boshdagi takroriy +3 uchun yagona qoida aniqlanmadi. D — V kaliti tekshirilmoqda.
 - 8-savol. Tekshirilmoqda. Bo‘laklarni aylantirib kvadrat hosil qilishni tekshirdim. C — DAB variantining to‘liq yig‘ilishini hozircha aniq tasdiqlay olmadim. Javob tekshirilmoqda.
 - 9-savol. Tasdiqlandi. Yetti xonali sonning dastlabki uch raqami teskari, so‘nggi to‘rt raqami ham teskari yoziladi. 7469851 → 6471589. D.
 - 10-savol. Tasdiqlandi. Namuna doira ichida uchburchak, kvadrat ichida doira va alohida uchburchak ichida qora nuqtadan iborat. Shu munosabatlarning hammasi A da saqlanadi.
 - 11-savol. Tasdiqlandi. Qolgan sonlar bir xil raqamli juftlarga ajraladi. 9416/9614, 5278/5872, 6231/6132, 7895/7598. 6394 juftsiz. A.
-- 12-savol. Tekshirilmoqda. Beshburchaklar ichidagi qora va oq nuqtalarni yuqoriga o‘tkazish qoidasini tekshirdim. D kalitini barcha qatorda yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
-- 13-savol. Tekshirilmoqda. Yetishmagan bo‘lakdagi diagonal va qisqa gorizontal chiziqni qo‘shni kataklar bilan solishtirdim. C ning to‘liq yagona qoidasini tasdiqlay olmadim. Javob tekshirilmoqda.
+- 12-savol. Tasdiqlandi. Qo‘shni ikki beshburchak ustma-ust qo‘yiladi. Ikkalasida ham nuqta bor o‘rinlar rangidan qat’i nazar olib tashlanadi. Faqat bittasida bor nuqtalar o‘z rangi bilan qoladi. Bu qoida pastdan yuqoriga barcha juftliklarda ishlaydi. Eng yuqorida chap oq nuqtalar bekor bo‘ladi, markaz va o‘ngda qora, pastki chapda oq qoladi. D.
+- 13-savol. Tasdiqlandi. Har satrda dastlabki ikki katakdagi chiziqlar ustma-ust qo‘yiladi. Ustma-ust tushgan kesmalar bekor qilinadi. Uchinchi satrda yuqori o‘ng diagonal yarmi va yuqori vertikal kesma bekor bo‘ladi. To‘liq yuqori chap–pastki o‘ng diagonal va chap yarim gorizontal kesma qoladi. C. Shu qoida dastlabki ikki satrga ham mos.
 - 14-savol. Tasdiqlandi. Yoyilmada chiziqsiz doira bilan uning tepasidagi gorizontal chiziqli yuz qarama-qarshi. B ularni yonma-yon ko‘rsatadi, shuning uchun hosil bo‘lmaydi.
 - 15-savol. Tasdiqlandi. Toq o‘rinlardagi sonlar 9,13,17,21,25 bo‘lib +4 ga ortadi. Juft o‘rinlarda 16,13,10,7 bo‘lib −3 ga kamayadi. D — 25.
-- 16-savol. Tekshirilmoqda. Nuqta joylashgan sohaning chiziq va tashqi chetga tutashuvlarini solishtirdim. D kalitini mustaqil qat’iy tasdiqlay olmadim. Javob tekshirilmoqda.
+- 16-savol. Tasdiqlandi. Namuna nuqtasi uchburchak sohada. A dagi nuqta besh tomonli, B dagisi to‘rt tomonli, C dagisi besh tomonli sohada. Faqat D dagi nuqta ham uch kesma bilan chegaralangan uchburchak ichida. Eng o‘xshash shakl D.
 - 17-savol. Tasdiqlandi. Ayirmalar +3,+6,+9,+12,+15,+18. 31+15=46. C.
 - 18-savol. Tasdiqlandi. Har doirada uch son yig‘indisi 100. 100−16−71=13. D.
 - 19-savol. Tekshirilmoqda. Oltiburchaklardagi yig‘indi, ko‘paytma va qarama-qarshi sonlar munosabatlarini tekshirdim. B — 2 ni yagona izchil qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
@@ -62,16 +64,16 @@ Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mum
 - 8-savol. Tasdiqlandi. Nuqta doira va rombning umumiy qismida, yulduzdan tashqarida turishi kerak. Shu soha D da mavjud.
 - 9-savol. Tasdiqlandi. Qo‘shni beshburchaklarda bir xil chiziqlar bekor qilinadi, yakka nuqta qoladi. Yetishmagan shakl faqat qora nuqtali C.
 - 10-savol. Tasdiqlandi. Shakllar nisbiy joylashuvi soat yo‘nalishida almashadi, qora qism esa kesishma va tashqi qism o‘rtasida navbatlashadi. Navbatdagi holat D.
-- 11-savol. Tekshirilmoqda. Yoyilmadagi qarama-qarshi yuzlar H/C, E/S, N/L. Harflarning burilishini ham hisobga olib C ni mustaqil to‘liq tasdiqlash yakunlanmadi. Javob tekshirilmoqda.
+- 11-savol. Tasdiqlandi. Qarama-qarshi yuzlar H/C, E/S, N/L. B va D da uch yuzning o‘zaro tartibi yoyilmaning aks tasvirini talab qiladi. A da yuqoridagi H ning uzun chiziqlari E bilan umumiy qirraga tik, yoyilmada esa ular shu qirraga parallel. C da L yuqorida, teskari C oldinda va teskari E o‘ngda joylashadi. E ning ochiq tomoni C ga qaragan, L ning qisqa chizig‘i E tomonida. C.
 - 12-savol. Tasdiqlandi. Har bir qatordagi sonlar yig‘indisi 18. ?+4+3+7=18 dan ?=4. B.
-- 13-savol. Tekshirilmoqda. Tarozida katak markazlarini yelka sifatida hisoblash natijasi 6 ga aniq teng kelmayapti. Tayanch chizig‘i va yuk markazlari joyi qayta tekshirilmoqda. Kitob kaliti B — 6.
-- 14-savol. Tekshirilmoqda. Chegaradagi sonlarning ketma-ketligi, tomon yig‘indilari va qarama-qarshi juftlarni tekshirdim. D — 5 uchun yagona qoida tasdiqlanmadi. Javob tekshirilmoqda.
+- 13-savol. Tekshirilmoqda. Yuk markazlari va tayanch orasidagi masofalar skanerda taxminan 4,5; 2,5; 1,5; 5,5 katak. Momentlar tenglamasi 3×4,5+9×2,5=?×1,5+5×5,5 dan ?=17/3 chiqadi. Bu kitobdagi B — 6 ga teng emas. Tayanch yoki yuk joyi noaniq, javob tekshirilmoqda.
+- 14-savol. Tasdiqlandi. Har bir tomon bo‘ylab yozilgan raqamlarni birlashtirganda 1 dan 9 gacha raqamlarning har biri bir martadan keladi. Yuqori tomon 491358627, chap tomon 482796351. Pastki tomon 16378492? va o‘ng tomon 79246318? da faqat 5 yetishmaydi. D — 5.
 - 15-savol. Tekshirilmoqda. Qator va ustunlardagi o‘sishlarni tekshirdim. C — 95,97,88,93 kalitini barcha oldingi qatorlarga mos yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
 - 16-savol. Tasdiqlandi. Farqlar +1,+2,+3 tartibida takrorlanadi. 18 dan keyin 19,21,24 keladi. D.
 - 17-savol. Tasdiqlandi. Har qatorda harf o‘rinlari +2 va +3 ga ortadi. E,G,J va J,L,O hosil bo‘ladi. Yetishmagan G va O — B.
 - 18-savol. Tasdiqlandi. Yuqoridagi sonlar 83,64,45,26 bo‘lib −19. Pastdagilar 96,65,34,03 bo‘lib −31. D.
 - 19-savol. Tasdiqlandi. Tik ustunlar yig‘indilari 20,30,20,30,20,30 bo‘lib navbatlashadi. Oxirgi ustunda 30−3−9−7−5=6. C.
-- 20-savol. Tekshirilmoqda. Qarama-qarshi yuzlar ikki chiziq/E, X/doira, qora nuqta/Z. Belgilar burilishlari bilan A ni mustaqil to‘liq tasdiqlash yakunlanmadi. Javob tekshirilmoqda.
+- 20-savol. Tasdiqlandi. Qarama-qarshi yuzlar ikki chiziq/E, X/doira, qora nuqta/Z. C da yuzlar tartibi akslangan. B da ikki chiziq qora nuqtali yuz bilan umumiy qirraga tik chizilgan, yoyilmada esa ular parallel. D da ham ikki chiziqning doirali yuzga nisbatan yo‘nalishi mos emas. A da E yuqorida, doira oldinda, qora nuqta o‘ngda. E ning ochiq tomoni doira tomoniga qaraydi. A.
 
 ## 4-test
 
@@ -90,31 +92,31 @@ Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mum
 - 13-savol. Tasdiqlandi. Kichik tarozida A ning yelkasi 1, B niki 3 birlik. A=6 va B=2 muvozanat beradi. Asosiy tarozida (6+2)×7=3×4+4×11=56. D.
 - 14-savol. Tasdiqlandi. Satr va ustunlarda ustma-ust tushgan bir xil belgilar bekor qilinishi kerak. 7-katak shu qoidani buzadi. 7 raqami D variantida.
 - 15-savol. Tasdiqlandi. 7-katakda qo‘shni kataklarni solishtirganda chapda oq, o‘rtada qora, o‘ngda oq va pastki o‘ngda oq nuqta qolishi kerak. B shu tuzatishni beradi.
-- 16-savol. Tekshirilmoqda. Qatorlar va ustunlardagi shakl takrorlarini tekshirdim. C dagi uch katakni yagona qoida bilan mustaqil tasdiqlay olmadim. Javob tekshirilmoqda.
+- 16-savol. Tasdiqlandi. Yuqoridagi ikki qator pastda ikki ustunga siklik siljib takrorlanadi. Birinchi qatorning 3–4-kataklari uchinchi qatorning 1–2-kataklariga, 1–2-kataklari esa 3–4-kataklariga o‘tadi. Ikkinchi va to‘rtinchi qatorlar ham shunday. Yetishmagan joylarda oddiy uchburchak, chiziqli doira va qora markazli doira kerak. C.
 - 17-savol. Tasdiqlandi. Toq o‘rinlar har safar 1¼ ga kamayadi. Juft o‘rinlar 1¼ ga ortadi. 3 13/16 + 1¼ = 5 1/16. C.
-- 18-savol. Tekshirilmoqda. Uch doirada bir xil arifmetik bog‘lanishni izladim. A — 4 kalitini barcha namunalarga mos qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
+- 18-savol. Tasdiqlandi. O‘rtadagi doiraning har bir soni chap va o‘ng doiralardagi mos sektor sonlari ko‘paytmasi. Yuqorida 3×2=6, chap pastda 7×3=21. O‘ng pastda 4×?=16, demak ?=4. A.
 - 19-savol. Tasdiqlandi. Har satr va ustunda uch konsentrik sohaning har biri jami bir marta bo‘yaladi. Oxirgi satrda markaz va ikki tashqi soha allaqachon bo‘yalgan, demak bo‘sh uch halqa kerak. B.
 - 20-savol. Tasdiqlandi. C da qora tugun yo‘q, qolgan to‘rtta shaklda bittadan qora tugun bor. C ortiqcha.
 
 ## 5-test
 
-- 1-savol. Tekshirilmoqda. Aylanalarni o‘lcham bo‘yicha guruhlab tekshirdim. Skanerdagi yaqin radiuslarni aniq ajratish sabab A — 6 tur kaliti hozircha mustaqil tasdiqlanmadi. Javob tekshirilmoqda.
+- 1-savol. Tasdiqlandi. Aylanalar oltita diametr guruhiga ajraladi. Eng katta ikkita aylana bir o‘lchamda, pastki chapdagi katta aylana ulardan kichikroq. Qolganlari taxminan 68, 48, 32 va 20 piksel diametrli to‘rt guruh. Skaner kesimida katta guruhlar taxminan 244 va 205 piksel. Jami 6 tur. A.
 - 2-savol. Tasdiqlandi. Markaz = yuqori + pastki chap − pastki o‘ng. 6+8−9=5. D.
 - 3-savol. Tasdiqlandi. Yonlardagi sonlarning mos raqamlari qo‘shilib, yig‘indilar yonma-yon yoziladi. 8+3=11, 1+5=6, 9+6=15. 11615 — D.
-- 4-savol. Tekshirilmoqda. To‘rtburchaklarning ustma-ust siljishlarini tekshirdim. D kalitini yagona ketma-ketlik qoidasi bilan mustaqil tasdiqlay olmadim. Javob tekshirilmoqda.
-- 5-savol. Tekshirilmoqda. Chiziqlarning soni va joyini satr hamda ustun bo‘yicha solishtirdim. D bo‘lagini yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
+- 4-savol. Tekshirilmoqda. Eng baland to‘rtburchak qo‘shnilarining ustidan o‘tib o‘ngga siljishi D tartibini berishi mumkin. Lekin skanerdagi ustma-ust joylar va qadam uzunliklari bilan yagona siljish qoidasi qat’iy tasdiqlanmadi. D kaliti tekshirilmoqda.
+- 5-savol. Tasdiqlandi. Har satrda dastlabki ikki katak chiziqlari ustma-ust qo‘yiladi va umumiy kesmalar bekor qilinadi. Dastlabki ikki satr shu qoidaga mos. Pastki satrda yuqori gorizontal chiziqlar va o‘ngdagi vertikal chiziqlar bekor bo‘ladi. Chap va o‘rtadagi ikkita vertikal chiziq qoladi. D.
 - 6-savol. Tekshirilmoqda. Bo‘laklarni burib kvadrat yig‘ilishini tekshirdim. A — BCD variantining to‘liq yig‘ilishi mustaqil tasdiqlanmadi. Javob tekshirilmoqda.
 - 7-savol. Tasdiqlandi. Har satrning uchinchi katagida dastlabki ikki katakdagi umumiy nurlar qoladi. Pastki juftlikda umumiy nur yo‘q. D — nursiz doira.
 - 8-savol. Tasdiqlandi. Namunalarda doira ichida bitta qora va uchta oq doiracha bor. A shu tarkibni saqlaydi. B da bittasi yetishmaydi, C va D da ikkita qora doiracha bor.
 - 9-savol. Tasdiqlandi. Namuna ikki kesishuvchi doira, kvadrat va uchburchakka ega. Uchburchakning kvadrat va doiralar bilan kesishish munosabatini C saqlaydi.
 - 10-savol. Tasdiqlandi. Har qator va ustunda to‘rtta turdagi belgi bittadan bo‘lishi kerak. Kichik va katta belgilar navbatlashishini ham saqlagan bo‘lak B.
 - 11-savol. Tasdiqlandi. Birinchi ikki qator yetti xonali son sifatida qo‘shiladi. 5749827+3864759=9614586. Oxirgi raqam 6 — B.
-- 12-savol. Tekshirilmoqda. Yoyilmadagi yuzlar va diagonal yo‘nalishlarini buklab tekshirdim. C dagi yuz yo‘nalishini mustaqil to‘liq tasdiqlash yakunlanmadi. Javob tekshirilmoqda.
+- 12-savol. Tasdiqlandi. Yoyilmada / diagonal qora nuqtali yuzga, \ diagonal X yuzga, oddiy doira chiziqli doiraga qarama-qarshi. A va B qarama-qarshi yuzlarni yonma-yon qo‘yadi. D da old yuz diagonali yuqori-o‘ng burchakka boradi, buklanganda shu uchda oddiy doira turishi kerak, chiziqli doira emas. C da X yuqorida, oddiy doira oldinda va qora nuqta o‘ngda joylashishi mumkin. C.
 - 13-savol. Tasdiqlandi. Har qatorda chap son × o‘rta son = o‘ng son ×6. 12×2÷6=4. A.
-- 14-savol. Tekshirilmoqda. Tashqi doiralardagi chiziqlar va qora-oq nuqtalar o‘zgarishini solishtirdim. C kaliti uchun yagona qoida mustaqil tasdiqlanmadi. Javob tekshirilmoqda.
-- 15-savol. Tekshirilmoqda. Qora-oq nuqtalarning aylanishi va tashqi shakl o‘zgarishini tekshirdim. C kalitini mustaqil qat’iy tasdiqlay olmadim. Javob tekshirilmoqda.
+- 14-savol. Tasdiqlandi. Har bir belgi, uning joyi va chiziq yo‘nalishi alohida sanaladi. Tashqi to‘rtta doiraning aynan ikkitasida uchragan belgilar markazda qoladi. Birinchi ikki namuna ham shu qoidaga mos. Oxirgisida / diagonal va yuqoridagi oq nuqta ikki martadan, gorizontal chiziq va pastki qora nuqta uch martadan, vertikal chiziq bir marta uchraydi. Faqat diagonal va yuqori oq nuqta qoladi. C.
+- 15-savol. Tasdiqlandi. Har safar bitta sektor olib tashlanib, tomonlar soni 7→6→5→4 kamayadi. Olib tashlash dastlabki shaklda pastki o‘ngdagi qora-oq juftlikdan boshlanib, soat yo‘nalishida davom etadi. Keyin pastdagi bitta qora nuqta, undan keyin pastki chapdagi ikkita oq nuqta olib tashlanadi. Qolgan sektorlar soat yo‘nalishida bitta oq, oq-qora, ikkita qora, oq-qora. B. Avvalgi auditdagi C harfi xato edi, saqlangan kitob kaliti B to‘g‘ri.
 - 16-savol. Tasdiqlandi. Harflarga +3,−3,+3 qo‘llanadi. J→M, R→O, M→P. B — MOP.
 - 17-savol. Tekshirilmoqda. Sonlar orasidagi bog‘lanish tekshirildi, D — 7 uchun yagona qoida tasdiqlanmadi. PDF da uchinchi variant ham D deb noto‘g‘ri bosilgan. Ilovadagi uchinchi tugma C — 6 ga, to‘rtinchisi D — 7 ga mos. Javob tekshirilmoqda.
 - 18-savol. Tasdiqlandi. Har ustunda yuqoridagi ikki son ko‘paytmasidan uchinchi son ayriladi. 16×4−32=32. D.
-- 19-savol. Tekshirilmoqda. Kataklardagi qora va oq doiralarni ustma-ust solishtirdim. A kalitini barcha satr va ustunlarga mos yagona qoida bilan tasdiqlay olmadim. Javob tekshirilmoqda.
+- 19-savol. Tasdiqlandi. Har satrda dastlabki ikki katakning ikkalasida ham nuqta bor o‘rinlar olinadi va rangi teskarilanadi. Boshqa o‘rinlar bo‘sh qoladi. Bu qoida ustunlarda ham ishlaydi. Oxirgi satr va oxirgi ustunda faqat pastki chapdagi oq nuqta umumiy. U qora nuqtaga aylanadi. A.
 - 20-savol. Tekshirilmoqda. Pog‘onali jadvalni yig‘indi, ayirma va ko‘paytma munosabatlari orqali tekshirdim. B — 2 uchun yagona qoida mustaqil tasdiqlanmadi. Javob tekshirilmoqda.
