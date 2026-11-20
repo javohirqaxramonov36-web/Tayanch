@@ -18,6 +18,16 @@ XP ni faqat server yozadi. `public.attempts` ga yangi qator tushganda trigger (`
 
 Kun Toshkent vaqti bo'yicha (`private.today_tashkent()`, kun savoli bilan bir xil).
 
+### Top Admission (Admission D-seriya Q5, 2026-11-20, migratsiya faqat `admission-d` branch'ida)
+
+| Hodisa | XP | Kalit (`kind`, `ref`) | Shart |
+| --- | --- | --- | --- |
+| Ariza zinapoyasini birinchi marta to'g'ri terish | 10 | `admission_step`, `zinapoya:turkiye` / `zinapoya:commonapp` / `zinapoya:ucas` | har zinapoya umrida bir marta (jami 30); kunlik 300 chegarasi umumiy |
+
+- Yozuvchi: `public.admission_step_done(p_step)` RPC (`security definer`, faqat `authenticated`, ruxsat ro'yxati serverda), `private.xp_add` orqali. Migratsiya `supabase/migrations/20261120120000_admission_xp.sql`, sinov `supabase/tests/admission_xp_test.sql` (AX00–AX07). Qiymat ikki joyda: `private.xp_rule('admission_step')` va `src/data/topAdmissionXp.ts`.
+- Cheklov: zinapoya tartibi brauzerda tekshiriladi, server tasdiqlay olmaydi. Himoya: 3 ta qadamli ruxsat ro'yxati, noyob kalit, kunlik chegara.
+- `leaderboard()` o'zgarmagan, ya'ni Admission XP'si SAT reytingidagi jami XP'ga ham qo'shiladi (muallif standarti, keyin o'zgartirilishi mumkin). Top Admission sahifalarida reyting ko'rsatilmaydi, faqat "+10 XP olindi" yozuvi.
+
 ## Aldovdan himoya
 
 - **Takror yuborish**: `(user_id, kind, ref)` noyob. Bir savolni yangi sessiyada qayta yechish yangi XP bermaydi. `submit_answer` o'zi ham bir sessiyada bir savolga bitta urinish yozadi.
