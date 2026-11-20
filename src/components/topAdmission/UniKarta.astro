@@ -1,0 +1,99 @@
+---
+// Top Admission: "Menga mos universitet" sahifasidagi bitta universitet kartasi (Admission D-seriya, Q4).
+// Har fakt Fakt.astro orqali (faqat "tasdiqlangan" qiymat, manba va sana). Taqqoslash qatorlari ("Talab: 6.5 · Sizda: 6.0",
+// xarajat va byudjet) hamda "Ro'yxatga saqlash" tugmasi sahifa skripti bilan to'ldiriladi (JS'siz yashirin).
+// data-* maydonlarida faqat tasdiqlangan qiymatlar (UniXulosa), skript moslikni shulardan hisoblaydi.
+import Fakt from './Fakt.astro';
+import { sanaMatni, type Fakt as FaktT } from '../../lib/topAdmission/fakt';
+import { ieltsMatni, type UniKirish, type UniXulosa } from '../../lib/topAdmission/universitetMoslik';
+
+interface Props {
+  u: UniKirish & {
+    imtihonlar: FaktT; ariza_tolovi: FaktT; tolovdan_ozod_qilish: FaktT; deadline: FaktT;
+  };
+  xulosa: UniXulosa;
+  nom: string;
+  davlatNom: string;
+}
+const { u, xulosa, nom, davlatNom } = Astro.props;
+const deadlineFormat = (q: FaktT['qiymat']) => (typeof q === 'string' ? sanaMatni(q) : String(q ?? ''));
+const ieltsFormat = (q: FaktT['qiymat']) => (typeof q === 'number' ? ieltsMatni(q) : String(q ?? ''));
+---
+<li class="um-karta" id={`uni-${u.slug}`} data-uni-karta data-slug={u.slug} data-nom={nom} data-davlat={u.davlat}
+  data-ielts={xulosa.ielts ?? ''} data-xarajat-usd={xulosa.xarajatUsd ?? ''}
+  data-yordam={xulosa.yordam === null ? '' : xulosa.yordam ? '1' : '0'} data-valyuta={u.valyuta}>
+  <div class="um-karta-bosh">
+    <h3 class="um-karta-nom">{nom}</h3>
+    <span class="um-belgi um-belgi-yetmaydi" data-yetmaydi hidden>Talabga yetmaydi</span>
+  </div>
+  <p class="um-yorliqlar"><span class="yorliq">{davlatNom}</span></p>
+  <dl class="um-maydonlar">
+    <div>
+      <dt>Min IELTS</dt>
+      <dd>
+        <Fakt fakt={u.min_ielts} format={ieltsFormat} />
+        <span class="um-solish" data-solish-ielts hidden></span>
+      </dd>
+    </div>
+    <div>
+      <dt>Yillik xarajat</dt>
+      <dd>
+        <Fakt fakt={u.yillik_xarajat} birlik={u.valyuta} />
+        <span class="um-solish" data-solish-byudjet hidden></span>
+      </dd>
+    </div>
+    <div><dt>Imtihonlar</dt><dd><Fakt fakt={u.imtihonlar} /></dd></div>
+    <div><dt>Ariza to'lovi</dt><dd><Fakt fakt={u.ariza_tolovi} birlik={u.valyuta} /></dd></div>
+    <div><dt>To'lovdan ozod qilish</dt><dd><Fakt fakt={u.tolovdan_ozod_qilish} /></dd></div>
+    <div><dt>Yordam turi</dt><dd><Fakt fakt={u.xalqaro_yordam_turi} /></dd></div>
+    <div><dt>Deadline</dt><dd><Fakt fakt={u.deadline} format={deadlineFormat} /></dd></div>
+  </dl>
+  <div class="um-karta-amal" hidden data-saqlash-joy>
+    <button type="button" class="um-saqlash" data-saqlash aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 3h12v18l-6-4-6 4z" />
+      </svg>
+      <span data-saqlash-matn>Ro'yxatga saqlash</span><span class="um-sr">: {nom}</span>
+    </button>
+  </div>
+</li>
+
+<style>
+  [hidden] { display: none !important; }
+  .um-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .um-karta {
+    display: flex; flex-direction: column; gap: var(--space-3); min-width: 0;
+    padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--card-radius); box-shadow: var(--card-shadow);
+  }
+  .um-karta-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .um-karta-nom { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); overflow-wrap: anywhere; }
+  .um-yorliqlar { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .um-belgi {
+    display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
+    border-radius: var(--badge-radius); font-size: var(--text-caption-size); font-weight: 600;
+  }
+  .um-belgi-yetmaydi { background: var(--color-warning-subtle); color: var(--color-warning-text); }
+  .um-maydonlar { margin: 0; display: grid; gap: var(--space-3); }
+  .um-maydonlar > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+  .um-maydonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .um-maydonlar dd { margin: 0; min-width: 0; display: grid; gap: var(--space-1); }
+  .um-solish { font-size: var(--text-small-size); font-weight: 600; }
+  .um-solish.um-solish-yoq { color: var(--color-warning-text); }
+  .um-karta-amal { margin-top: auto; padding-top: var(--space-2); }
+  .um-saqlash {
+    display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-touch-min); padding: 0 var(--space-4);
+    border: 1.5px solid var(--floor-ui); border-radius: var(--radius-full); background: var(--color-surface);
+    color: var(--color-text-primary); font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer;
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .um-saqlash:active { transform: var(--bosilish); }
+  .um-saqlash[aria-pressed="true"] { background: var(--floor-subtle); }
+  .um-saqlash[aria-pressed="true"] svg { fill: currentColor; }
+  @media (hover: hover) and (pointer: fine) {
+    .um-saqlash:hover { background: var(--floor-subtle); }
+  }
+  @media (max-width: 760px) {
+    .um-maydonlar > div { grid-template-columns: 1fr; gap: var(--space-1); }
+  }
+</style>

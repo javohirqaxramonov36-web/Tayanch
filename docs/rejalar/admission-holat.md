@@ -6,7 +6,7 @@
 | Q1 | Ma'lumot sxemasi va validator | tugadi | 2026-11-20 | Sxema, 2 skript, `Fakt.astro`, 10 sinov; haqiqiy fakt yo'q |
 | Q2 | Davlatlarni taqqoslash sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/davlatlar/`; filtr, saralash, taqqoslash; SOXTA fixture bilan brauzerda sinaldi |
 | Q3 | Grantlar katalogi sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/grantlar/`; filtr, deadline saralash, Türkiye Bursları havolasi; SOXTA fixture bilan brauzerda sinaldi |
-| Q4 | "Menga mos universitet" filtri | kutilmoqda | | |
+| Q4 | "Menga mos universitet" filtri | tugadi | 2026-11-20 | `/uz/top-admission/universitetlar/`; filtr, moslik, shortlist (`user_state` orqali, server o'zgarishsiz); SOXTA fixture bilan brauzerda sinaldi; jonli login sinalmagan |
 | Q5 | Ariza zinapoyasi → XP | kutilmoqda | | |
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | kutilmoqda | | |
 | Q7 | Kontent: 12 qisqa davlat kartasi | kutilmoqda | | |
@@ -99,6 +99,31 @@ Sinov:
 - Vaqtincha SOXTA fixture (2 davlat, 6 grant: yaqin, uzoq + to'liq, matnli deadline, o'tgan, qoralama `nimani_qoplaydi`, qoralama `toliq_qoplaydi`; commit qilinmagan, build'dan keyin o'chirildi) bilan build va brauzer (lokal statik server, Claude Browser paneli): tartib yaqin → uzoq → noma'lum → o'tgan; qoralama grant HTML'da yo'q; qoralama `toliq_qoplaydi` to'liq deb hisoblanmadi; "To'liq qoplaydi" filtri 1 ta; Magistr + Universitet filtri; mos grant yo'q holati va "Filtrlarni tozalash"; URL'dan holatni tiklash (`?tur=davlat&dr=bakalavr`); Türkiye Bursları havolasi; yon panel bandi. 1280px yorug' va 375px qorong'i mavzu ko'rildi, gorizontal scroll yo'q. Bo'sh holat 375px qorong'ida ko'rildi.
 - Sinalmagan: axe/VoiceOver, haqiqiy telefon, JS'siz ko'rinish brauzerda (kod bo'yicha: kartalar build tartibida, filtr yashirin), bo'sh holat 1280px, `prefers-reduced-motion`. Kontrast alohida o'lchanmadi (faqat mavjud DS tokenlari).
 
+## Q4 natijasi (2026-11-20)
+Sahifa: `/uz/top-admission/universitetlar/` (`src/pages/uz/top-admission/universitetlar/index.astro`, `BolimQobiq`, turi "vosita", holat "qoralama"), Q2/Q3 uslubida (`um-*` klasslar).
+
+O'zgargan / yangi fayllar:
+- `src/pages/uz/top-admission/universitetlar/index.astro`: davlat chiplari (AQSH, Buyuk Britaniya, Janubiy Koreya; bir nechtasi), IELTS tanlovi (`<select>`, 4.0–9.0), yillik byudjet (USD, matn maydoni `inputmode="numeric"`), "Faqat xalqaro talabaga moliyaviy yordam beradiganlar" va "Faqat talabga mos keladiganlar" belgilari (`<button aria-pressed>`). `<form>` yo'q, yuborish yo'q: har o'zgarishda ro'yxat darhol yangilanadi. Doimiy ogohlantirish natija tepasida: "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas." (bo'sh holatda ham). "Mening ro'yxatim" (shortlist) bloki, "Ma'lumot tekshirilmoqda (N ta)" guruhi, bo'sh holat.
+- `src/components/topAdmission/UniKarta.astro`: karta (min IELTS, yillik xarajat, imtihonlar, ariza to'lovi, to'lovdan ozod qilish, yordam turi, deadline: har biri `Fakt.astro`), taqqoslash qatorlari "Talab: 6.5 · Sizda: 6.0" va "Xarajat: ≈ N USD · Byudjet: M USD", "Talabga yetmaydi" belgisi, "Ro'yxatga saqlash" tugmasi.
+- `src/lib/topAdmission/universitetMoslik.ts`: sof mantiq (`MOS_DAVLATLAR`, `uniXulosasi`, `moslik`, kiritishni o'qish, URL, shortlist `shortlistTozala`/`shortlistAlmashtir`, kalit `SHORTLIST_KALIT`).
+- `src/lib/topAdmission/testlar/universitetMoslik.test.ts`: 8 sinov (SOXTA ma'lumot).
+- Sinxron (mavjud mexanizm, server o'zgarishsiz): `src/lib/holatBirlashtir.ts` (`SINXRON_KALITLAR` ga `tayanch:admission-shortlist`, shakl `royxat(200)`), `src/lib/holat.ts` (yangi `sinxronHolati()`; sarlavha izohi), `src/components/SatSinxron.astro` (dialog sanog'ida "saved university (Top Admission)" nomi), `scripts/sinxron-test.ts` (sanoqqa yangi kalit + "Shortlist" sinovi), `docs/sinxron-qoidalari.md` ("Top Admission shortlisti" bo'limi).
+- `src/data/topAdmissionSahifalar.ts`: yon panel "Vositalar" guruhiga "Menga mos universitet".
+
+Qarorlar (keyingi qismlar uchun):
+- Davlat slug'lari (Q6, Q9 kontent agentlari shularni ishlatsin): `aqsh`, `buyuk-britaniya`, `janubiy-koreya` (`MOS_DAVLATLAR`). Universitet `davlat` maydoni shu slug'ga havola.
+- Kerakli faktlar (moslik uchun): `min_ielts` va `yillik_xarajat` tasdiqlangan, xarajat USD'ga o'giriladigan (USD yoki `kurslar.json` da kursi bor valyuta). "Yordam" belgisi yoqilganda `xalqaro_yordam_turi` ham. Biri bo'lmasa universitet "Ma'lumot tekshirilmoqda (N ta)" guruhida, moslik hisoblanmaydi (taqqoslash qatori va belgi chiqmaydi). `kurslar.json` bo'sh bo'lsa GBP/KRW universitetlari shu guruhga tushadi, sahifada "Valyuta kursi ma'lumoti yo'q" izohi.
+- `xalqaro_yordam_turi` konventsiyasi (Q9): rasmiy sahifada xalqaro talabaga yordam yo'qligi aniq yozilgan bo'lsa qiymat aynan `"yo'q"` (`YORDAM_YOQ`); "yordam" belgisi bunday universitetni yashiradi. Boshqa har qanday tasdiqlangan matn = yordam beradi.
+- Moslik: IELTS bali talabga teng yoki yuqori bo'lsa mos; xarajat (USD, butun songa yaxlitlangan) byudjetga teng yoki kam bo'lsa mos. Kiritilmagan qiymat tekshirilmaydi ("Sizda: kiritilmagan"). "Faqat talabga mos" o'chiq bo'lsa yetmaydiganlar "Talabga yetmaydi" belgisi bilan mos keladiganlardan keyin chiqadi; har guruh ichida alifbo (reyting yo'q). SAT bo'yicha solishtirish yo'q.
+- URL'da faqat `?d=&yordam=&mos=`. IELTS bali va byudjet URL'ga ham, brauzerga ham yozilmaydi (shaxsiy ma'lumot), sahifa yangilansa tozalanadi.
+- Shortlist: kalit `tayanch:admission-shortlist`, qiymat `[{ id: slug }]`, 200 tagacha, `holatOqi`/`holatYoz` orqali. Hisobsiz: faqat localStorage. Hisob bilan: sahifa `hisobniUla()` ni chaqiradi; sinxron faqat rozilikdan keyin (SAT dialogidagi "Import" yoki shu sahifadagi "Hisobga saqlash" tugmasi, ikkalasi `importQil`, ya'ni SAT progressi ham ko'chadi: tugma yonidagi matn buni aytadi). Avtomatik popup yo'q. `user_state` serverida kalit ruxsat ro'yxati yo'q (faqat `^tayanch:[a-z0-9:_-]{1,92}$` regex, `20261108000005_foydalanuvchi.sql:74`), shuning uchun jadval/migratsiya/RPC o'zgarmadi va "to'siq" yo'q.
+- Kolleksiyada yo'q slug shortlistda saqlanadi, lekin ko'rsatilmaydi. Bo'sh holatda (birorta tasdiqlangan universitet fakti yo'q) filtr ham, shortlist bloki ham chiqmaydi.
+
+Sinov:
+- `npm test` 364/364 (yangi 8 ta). `npm run sinxron:tekshir` 16/16 (yangi "Shortlist" sinovi: hisobsiz faqat brauzer, rozilikgacha serverga hech narsa, `importQil` dan keyin `user_state`, qo'shish debounce navbati bilan, olib tashlash tombstone bilan boshqa qurilmada ham o'chadi). `npm run check`: faqat 4 ta eski xato. `npm run build` o'tdi. `npm run repo:tekshir`: muammo yo'q.
+- Vaqtincha SOXTA fixture (3 davlat `aqsh`/`buyuk-britaniya`/`janubiy-koreya`, 4 universitet: USD hammasi tasdiqlangan; GBP + `yordam "yo'q"`; KRW + qoralama `min_ielts`; USD + `topilmadi` yordam; `kurslar.json` da SOXTA GBP kursi; commit qilinmagan, build'dan keyin o'chirildi va `kurslar.json` tiklandi) bilan build va brauzer (lokal statik server, Claude Browser paneli): qoralama `min_ielts` ko'rinmadi va universitet "tekshirilmoqda" guruhiga tushdi; IELTS 6.0 + byudjet 45 000 da "Talab: 6.5 · Sizda: 6.0", "Xarajat: ≈ 37 500 USD · Byudjet: 45 000 USD", "Talabga yetmaydi"; "Faqat talabga mos" ularni yashirdi; "yordam" belgisi `yo'q` ni yashirdi va `topilmadi` yordamni tekshirilmoqda guruhiga o'tkazdi; davlat filtri; URL tiklash (`?yordam=1`); noto'g'ri byudjet (`abc`) `aria-invalid` va izoh; shortlist qo'shish/olib tashlash, localStorage, sahifa yangilangandan keyin saqlanishi, olib tashlashdan keyin fokus keyingi tugmaga. 1280px (qorong'i va yorug'), 375px (yorug'), ~408px (qorong'i) ko'rildi, gorizontal scroll yo'q. Bo'sh holat 375px yorug'da ko'rildi.
+- Sinalmagan: haqiqiy hisob bilan kirib sinxron (jonli Supabase `user_state` upsert/RLS; parol kiritish taqiqlangani uchun), "Hisobga saqlash" tugmasi brauzerda (faqat unit test), boshqa tabdan `storage` hodisasi, axe/VoiceOver, haqiqiy telefon, JS'siz ko'rinish brauzerda (kod bo'yicha: kartalar build tartibida, filtr va shortlist yashirin), `prefers-reduced-motion`. Kontrast alohida o'lchanmadi (faqat mavjud DS tokenlari).
+
 ## Topilmalar (Q0)
 Audit 2026-11-19, `admission-d` (asos 8b803c5), faqat repo kodi o'qildi. Jonli Supabase (deploy qilingan versiya, sozlamalar, haqiqiy bucket'lar) va tashqi provayderlar shartlari tekshirilmagan. Qisqartmalar: `F` = `supabase/functions/`, `M` = `supabase/migrations/`.
 
@@ -116,12 +141,16 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q4 tugadi ("Q4 natijasi" bo'limi). Keyingi: Q5 (Ariza zinapoyasi → XP). Q6/Q9 uchun: davlat slug'lari `aqsh`, `buyuk-britaniya`, `janubiy-koreya`; `xalqaro_yordam_turi` yordam yo'q bo'lsa aynan `"yo'q"`; GBP va KRW kurslari `kurslar.json` da bo'lmasa UK/Koreya universitetlari moslikka kirmaydi.
 - Q3 tugadi ("Q3 natijasi" bo'limi). Keyingi: Q4. Uslub `grantlar/index.astro` (`gk-*`) va `davlatlar/index.astro` (`dt-*`); URL holati namunasi `grantKatalog.ts`; yon panelga "Menga mos universitet" bandini `src/data/topAdmissionSahifalar.ts` ga qo'sh. Deadline saralash/muddat uchun `deadlineSanasi`, `muddatHolati` (`grantKatalog.ts`) qayta ishlatilishi mumkin.
 - Q0 tugadi (faqat `docs/rejalar/admission-holat.md` o'zgardi).
 - Q2 tugadi ("Q2 natijasi" bo'limi). Keyingi: Q3. Grantlar sahifasi Q2 uslubida: `davlatlar/index.astro` dagi `dt-*` klasslar va `davlatTaqqos.ts` dagi URL holati namunasi; yon panel bandi `src/data/topAdmissionSahifalar.ts`.
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q4: Shortlistni hisobga ulash umumiy rozilik bilan ishlaydi: SAT dialogidagi "Import" yoki Top Admission sahifasidagi "Hisobga saqlash" bosilsa, shu brauzerdagi SAT progressi ham, shortlist ham hisobga ko'chadi. Shu ma'qulmi yoki Top Admission uchun alohida rozilik kerakmi? (Alohida rozilik `holat.ts` ni bo'limlarga ajratishni talab qiladi.)
+- Q4: SAT dialogi (inglizcha) sanog'ida endi "saved university (Top Admission)" qatori chiqishi mumkin va "Clear local copy" shortlistni ham brauzerdan o'chiradi. Dialog matnida ("SAT progress") buni alohida aytish kerakmi?
+- Q4: IELTS bali va byudjet hech qayerga saqlanmaydi (sahifa yangilansa tozalanadi). Ularni brauzerda (localStorage) eslab qolish kerakmi?
 - Q3: Grant kartasi faqat `nimani_qoplaydi` tasdiqlangan bo'lsa chiqadi (deadline tekshirilmagan bo'lsa ham karta chiqadi, deadline o'rnida "Ma'lumot tekshirilmoqda"). Shu qoida ma'qulmi yoki deadline ham tasdiqlangan bo'lishi shartmi?
 - Q3: Davlatlarni taqqoslash sahifasidagi grant nomi hozir rasmiy sahifaga olib boradi. Uni Grantlar katalogiga (filtr bilan, `?d=<davlat>`) yo'naltirish kerakmi? (Q2 fayli, Q3 doirasidan tashqari, tegilmadi.)
 - Q2: `viza_yashash_summasi` yillik summa deb qabul qilindi (taxminiy xarajat = kontrakt + shu summa). Rasmiy sahifada oylik yoki boshqa davr uchun yozilgan bo'lsa (masalan, 9 oylik), kontent agenti qanday yozsin: aynan rasmiy qiymat (davr izohi bilan, saralashdan chiqariladi) yoki yillikka hisoblanadimi?

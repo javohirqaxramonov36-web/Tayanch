@@ -1,0 +1,497 @@
+---
+// 2-qavat · Top Admission · vosita: "Menga mos universitet" (Admission D-seriya, Q4). Uslub Q2/Q3 bilan bir xil.
+// Ma'lumot: content collection `universitetlar` (+ `davlatlar` nomlari), kurslar src/data/topAdmission/kurslar.json.
+// Mantiq: src/lib/topAdmission/universitetMoslik.ts. Taqqoslash faqat "tasdiqlangan" faktlardan; har fakt Fakt.astro orqali.
+// Kiritish maydonlari (IELTS, byudjet) filtr boshqaruvlari: forma yuborilmaydi, hech qayerga saqlanmaydi.
+// URL'da faqat davlat va belgilar (?d=&yordam=&mos=). JS'siz: kartalar ko'rinadi, filtr va shortlist yashirin.
+// Shortlist: `tayanch:admission-shortlist` (holat.ts orqali; hisob bilan va rozilikdan keyin user_state ga ham).
+import { getCollection } from 'astro:content';
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import UniKarta from '../../../../components/topAdmission/UniKarta.astro';
+import kurslarJson from '../../../../data/topAdmission/kurslar.json';
+import { kurslarSxema } from '../../../../lib/topAdmission/sxema';
+import { faktKorinadimi, kurslarBormi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
+import {
+  BOSH_HOLAT, IELTS_BALLARI, MOS_DAVLATLAR, alifbo, ieltsMatni, moslik, uniXulosasi, type UniKirish,
+} from '../../../../lib/topAdmission/universitetMoslik';
+import { yol } from '../../../../lib/yol';
+
+const kurslar = kurslarSxema.parse(kurslarJson);
+const kursBor = kurslarBormi(kurslar);
+const refId = (r: unknown) => (r && typeof r === 'object' && 'id' in r ? String((r as { id: string }).id) : String(r ?? ''));
+
+const davlatNomlari = new Map((await getCollection('davlatlar')).map((e) => [e.id, e.data.nom_uz]));
+const MOS_NOM = new Map(MOS_DAVLATLAR.map((d) => [d.slug, d.nom]));
+
+const FAKT_MAYDONLAR = ['imtihonlar', 'min_ielts', 'yillik_xarajat', 'ariza_tolovi', 'tolovdan_ozod_qilish', 'xalqaro_yordam_turi', 'deadline'] as const;
+
+const universitetlar = alifbo(
+  (await getCollection('universitetlar')).map((e) => {
+    const d = e.data;
+    const kirish = { ...d, davlat: refId(d.davlat) } as unknown as UniKirish & Record<(typeof FAKT_MAYDONLAR)[number], FaktT>;
+    const xulosa = uniXulosasi(kirish, kurslar);
+    return {
+      u: kirish, xulosa, nom: d.nom,
+      davlatNom: MOS_NOM.get(kirish.davlat) ?? davlatNomlari.get(kirish.davlat) ?? kirish.davlat,
+      biror: FAKT_MAYDONLAR.some((m) => faktKorinadimi(kirish[m])),
+      guruh: moslik(xulosa, BOSH_HOLAT).guruh,
+    };
+  }),
+);
+// Bo'sh holat: birorta universitetda tasdiqlangan fakt yo'q (hozirgi sayt).
+const boshHolat = !universitetlar.some((x) => x.biror);
+const asosiy = universitetlar.filter((x) => x.guruh !== 'tekshirilmoqda');
+const tekshirilmoqda = universitetlar.filter((x) => x.guruh === 'tekshirilmoqda');
+
+
+const grantlarSahifa = yol('/uz/top-admission/grantlar/');
+const davlatlarSahifa = yol('/uz/top-admission/davlatlar/');
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.";
+---
+<BolimQobiq
+  title="Menga mos universitet · Top Admission"
+  description="AQSH, Buyuk Britaniya va Janubiy Koreya universitetlarini IELTS bali, yillik byudjet va moliyaviy yordam bo'yicha rasmiy talablar asosida saralash."
+  turi="vosita"
+  bolim="top-admission"
+  holat="qoralama"
+  yol={['Vositalar']}
+>
+  <div class="ichki um-sahifa" data-uni-moslik>
+    <header class="um-bosh">
+      <p class="um-ustki">Vosita</p>
+      <h1>Menga mos universitet</h1>
+      <p class="um-matn">Davlatni tanlang, IELTS balingiz va yillik byudjetingizni kiriting. Ro'yxat universitetning rasmiy talabi va rasmiy xarajatini siz kiritgan qiymat bilan yonma-yon ko'rsatadi.</p>
+      <p class="um-matn um-sust">Faqat rasmiy manbada tekshirilgan fakt ishlatiladi, yonida manba va tekshirilgan sana. SAT bo'yicha solishtirilmaydi: universitetlar rasmiy minimal ballni odatda e'lon qilmaydi.</p>
+    </header>
+
+    <p class="um-ogoh" role="note">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9.5" /><path d="M12 11v6" /><path d="M12 7.5v.01" />
+      </svg>
+      <span>{OGOH}</span>
+    </p>
+
+    {boshHolat ? (
+      <section class="um-bosh-holat" aria-labelledby="um-bosh-sarlavha">
+        <svg class="um-bosh-ikonka" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 21h18" /><path d="M5 21V10l7-5 7 5v11" /><path d="M9 21v-6h6v6" />
+        </svg>
+        <h2 id="um-bosh-sarlavha">Universitetlar rasmiy manbada tekshirilmoqda</h2>
+        <p class="um-matn">Har bir talab va xarajat universitetning o'z rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan ma'lumot yo'q, shuning uchun filtr ochilmagan.</p>
+        <p class="um-bosh-yol">Hozircha shulardan boshlang:</p>
+        <div class="um-tugmalar">
+          <a class="tugma tugma-ikkinchi" href={davlatlarSahifa}>Davlatlarni taqqoslash</a>
+          <a class="tugma tugma-ikkinchi" href={grantlarSahifa}>Grantlar</a>
+          <a class="tugma tugma-ikkinchi" href={vosita}>Topshirish yo'li</a>
+        </div>
+      </section>
+    ) : (
+      <>
+        <div class="um-asboblar" hidden data-asboblar>
+          <div class="um-guruh">
+            <p class="um-ustki" id="um-davlat-sarlavha">Davlat</p>
+            <div class="um-chiplar" role="group" aria-labelledby="um-davlat-sarlavha">
+              {MOS_DAVLATLAR.map((d) => <button type="button" class="um-chip" data-davlat={d.slug} aria-pressed="false">{d.nom}</button>)}
+            </div>
+            <p class="um-kichik um-sust">Hech biri tanlanmasa, uchala davlat ko'rsatiladi.</p>
+          </div>
+          <div class="um-maydonlar-qator">
+            <div class="um-maydon">
+              <label for="um-ielts">IELTS balingiz</label>
+              <select id="um-ielts" data-ielts aria-describedby="um-ielts-izoh">
+                <option value="">Kiritilmagan</option>
+                {IELTS_BALLARI.map((b) => <option value={String(b)}>{ieltsMatni(b)}</option>)}
+              </select>
+              <p class="um-kichik um-sust" id="um-ielts-izoh">Umumiy (overall) ball.</p>
+            </div>
+            <div class="um-maydon">
+              <label for="um-byudjet">Yillik byudjet, USD</label>
+              <input id="um-byudjet" data-byudjet type="text" inputmode="numeric" autocomplete="off" spellcheck="false"
+                placeholder="masalan, 20000" aria-describedby="um-byudjet-izoh" />
+              <p class="um-kichik um-sust" id="um-byudjet-izoh" data-byudjet-izoh>O'qish va yashash uchun bir yilda sarflay oladigan summa. Hech qayerga saqlanmaydi.</p>
+            </div>
+          </div>
+          <div class="um-guruh">
+            <p class="um-ustki" id="um-belgi-sarlavha">Ko'rsatish</p>
+            <div class="um-chiplar um-chiplar-uzun" role="group" aria-labelledby="um-belgi-sarlavha">
+              <button type="button" class="um-chip" data-yordam aria-pressed="false">Faqat xalqaro talabaga moliyaviy yordam beradiganlar</button>
+              <button type="button" class="um-chip" data-faqat-mos aria-pressed="false">Faqat talabga mos keladiganlar</button>
+            </div>
+          </div>
+          {!kursBor && (
+            <p class="um-kichik um-sust">Valyuta kursi ma'lumoti yo'q: USD'dan boshqa valyutadagi xarajat byudjet bilan solishtirilmaydi, bunday universitetlar "Ma'lumot tekshirilmoqda" guruhida.</p>
+          )}
+          {kursBor && (
+            <p class="um-kichik um-sust">Boshqa valyutadagi xarajat USD'ga taxminan o'girilgan, kurs sanasi: {sanaMatni(kurslar.sana)}.</p>
+          )}
+        </div>
+
+        <section class="um-shortlist" hidden data-shortlist aria-labelledby="um-shortlist-sarlavha">
+          <h2 id="um-shortlist-sarlavha" class="um-h2" tabindex="-1">Mening ro'yxatim <span data-shortlist-soni></span></h2>
+          <p class="um-kichik um-sust" data-shortlist-bosh>Hali universitet saqlanmagan. Kartadagi "Ro'yxatga saqlash" tugmasini bosing.</p>
+          <ul class="um-shortlist-royxat" data-shortlist-royxat></ul>
+          <div class="um-sinxron">
+            <p class="um-kichik" data-sinxron-matn role="status">Ro'yxat shu brauzerda saqlanadi.</p>
+            <button type="button" class="tugma tugma-ikkinchi" data-sinxron-tugma hidden>Hisobga saqlash</button>
+          </div>
+        </section>
+
+        <section class="um-natija" aria-labelledby="um-natija-sarlavha">
+          <div class="um-natija-bosh">
+            <h2 id="um-natija-sarlavha" class="um-h2">Universitetlar</h2>
+            <p class="um-kichik" aria-live="polite" data-soni></p>
+          </div>
+          <ul class="um-kartalar" data-royxat-asosiy aria-label="Universitetlar">
+            {asosiy.map((x) => <UniKarta {...x} />)}
+          </ul>
+          <div class="um-bosh-filtr" hidden data-bosh-filtr>
+            <p>Bu filtrlarga mos universitet yo'q. Ko'p universitetlar hali tekshirilmoqda, shuning uchun ro'yxat to'liq emas.</p>
+            <button type="button" class="tugma tugma-ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
+          </div>
+        </section>
+
+        <section class="um-tekshir" aria-labelledby="um-tekshir-sarlavha" data-tekshir-bolim hidden={tekshirilmoqda.length === 0}>
+          <h2 id="um-tekshir-sarlavha" class="um-h2">Ma'lumot tekshirilmoqda (<span data-tekshir-soni>{tekshirilmoqda.length}</span> ta)</h2>
+          <p class="um-kichik um-sust">Bu universitetlarning kerakli fakti (min IELTS, yillik xarajat USD'da yoki yordam turi) hali tasdiqlanmagan, shuning uchun moslik hisoblanmaydi.</p>
+          <ul class="um-kartalar" data-royxat-tekshir aria-label="Ma'lumoti tekshirilayotgan universitetlar">
+            {tekshirilmoqda.map((x) => <UniKarta {...x} />)}
+          </ul>
+        </section>
+
+      </>
+    )}
+
+    <p class="um-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="um-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida 5 mezon bo'yicha solishtiring. Grantlar <a class="um-havola" href={grantlarSahifa}>Grantlar katalogi</a>da.</p>
+  </div>
+</BolimQobiq>
+
+<script>
+  import {
+    MOS_DAVLATLAR, SHORTLIST_KALIT, byudjetniOqi, holatniOqi, holatniYoz, ieltsMatni, ieltsniOqi, moslik,
+    shortlistAlmashtir, shortlistTozala, sonMatni, type MoslikHolati, type ShortlistYozuv, type UniXulosa,
+  } from '../../../../lib/topAdmission/universitetMoslik';
+  import { holatOqi, holatYoz, importQil, sinxronHolati, sinxronSoroviniKut } from '../../../../lib/holat';
+  import { hisobniUla } from '../../../../lib/holatHisob';
+
+  const ildiz = document.querySelector<HTMLElement>('[data-uni-moslik]');
+  const asboblar = ildiz?.querySelector<HTMLElement>('[data-asboblar]');
+  if (ildiz && asboblar) {
+    const $ = <T extends HTMLElement>(s: string, el: ParentNode = ildiz) => el.querySelector<T>(s)!;
+    const asosiyRoyxat = $<HTMLUListElement>('[data-royxat-asosiy]');
+    const tekshirRoyxat = $<HTMLUListElement>('[data-royxat-tekshir]');
+    const tekshirBolim = $<HTMLElement>('[data-tekshir-bolim]');
+    const tekshirSoni = $<HTMLElement>('[data-tekshir-soni]');
+    const soni = $<HTMLElement>('[data-soni]');
+    const boshFiltr = $<HTMLElement>('[data-bosh-filtr]');
+
+    // Kartalar build'da ikkala ro'yxatga joylashgan (JS'siz ham ko'rinadi); skript ularni guruhlar orasida ko'chiradi.
+    const kartalar = new Map<string, HTMLLIElement>();
+    for (const el of ildiz.querySelectorAll<HTMLLIElement>('li[data-uni-karta]')) kartalar.set(el.dataset.slug!, el);
+
+    const xlar = [...kartalar.values()].map((el) => ({
+      el,
+      x: {
+        slug: el.dataset.slug!, nom: el.dataset.nom!, davlat: el.dataset.davlat!,
+        ielts: el.dataset.ielts ? Number(el.dataset.ielts) : null,
+        xarajatUsd: el.dataset.xarajatUsd ? Number(el.dataset.xarajatUsd) : null,
+        yordam: el.dataset.yordam === '' ? null : el.dataset.yordam === '1',
+      } satisfies UniXulosa,
+      valyuta: el.dataset.valyuta!,
+      yetmaydi: $<HTMLElement>('[data-yetmaydi]', el),
+      solishIelts: $<HTMLElement>('[data-solish-ielts]', el),
+      solishByudjet: $<HTMLElement>('[data-solish-byudjet]', el),
+      saqlash: $<HTMLButtonElement>('[data-saqlash]', el),
+      saqlashMatn: $<HTMLElement>('[data-saqlash-matn]', el),
+    })).sort((a, b) => a.x.nom.localeCompare(b.x.nom, 'uz')); // alifbo, build bilan bir xil
+
+    const davlatTugmalar = [...asboblar.querySelectorAll<HTMLButtonElement>('[data-davlat]')];
+    const ieltsTanlov = $<HTMLSelectElement>('[data-ielts]');
+    const byudjetMaydon = $<HTMLInputElement>('[data-byudjet]');
+    const byudjetIzoh = $<HTMLElement>('[data-byudjet-izoh]');
+    const byudjetIzohMatn = byudjetIzoh.textContent ?? '';
+    const yordamTugma = $<HTMLButtonElement>('[data-yordam]');
+    const mosTugma = $<HTMLButtonElement>('[data-faqat-mos]');
+    const davlatTartib = MOS_DAVLATLAR.map((d) => d.slug);
+
+    let h: MoslikHolati = holatniOqi(location.search);
+
+    const chiz = () => {
+      davlatTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(h.davlatlar.includes(b.dataset.davlat!))));
+      yordamTugma.setAttribute('aria-pressed', String(h.yordam));
+      mosTugma.setAttribute('aria-pressed', String(h.faqatMos));
+
+      const mos: typeof xlar = [];
+      const yetmaydi: typeof xlar = [];
+      const tekshir: typeof xlar = [];
+      for (const k of xlar) {
+        const m = moslik(k.x, h);
+        k.yetmaydi.hidden = m.guruh !== 'yetmaydi';
+        const taqqos = m.guruh === 'mos' || m.guruh === 'yetmaydi';
+        // IELTS: "Talab: 6.5 · Sizda: 6.0"
+        k.solishIelts.hidden = !taqqos;
+        if (taqqos && k.x.ielts !== null) {
+          k.solishIelts.textContent = `Talab: ${ieltsMatni(k.x.ielts)} · Sizda: ${h.ielts === null ? 'kiritilmagan' : ieltsMatni(h.ielts)}`;
+          k.solishIelts.classList.toggle('um-solish-yoq', m.ieltsPast);
+        }
+        // Xarajat va byudjet yonma-yon (USD)
+        k.solishByudjet.hidden = !taqqos;
+        if (taqqos && k.x.xarajatUsd !== null) {
+          const taxmin = k.valyuta === 'USD' ? '' : '≈ ';
+          k.solishByudjet.textContent = `Xarajat: ${taxmin}${sonMatni(k.x.xarajatUsd)} USD · Byudjet: ${h.byudjet === null ? 'kiritilmagan' : `${sonMatni(h.byudjet)} USD`}`;
+          k.solishByudjet.classList.toggle('um-solish-yoq', m.qimmat);
+        }
+        if (m.guruh === 'mos') mos.push(k);
+        else if (m.guruh === 'yetmaydi') yetmaydi.push(k);
+        else if (m.guruh === 'tekshirilmoqda') tekshir.push(k);
+        else k.el.remove();
+      }
+      // Tartib: avval mos, keyin "talabga yetmaydi"; har birida alifbo (build tartibi)
+      asosiyRoyxat.replaceChildren(...[...mos, ...yetmaydi].map((k) => k.el));
+      tekshirRoyxat.replaceChildren(...tekshir.map((k) => k.el));
+      const n = mos.length + yetmaydi.length;
+      soni.textContent = yetmaydi.length ? `${n} ta universitet, ${mos.length} tasi talabga mos` : `${n} ta universitet`;
+      asosiyRoyxat.hidden = n === 0;
+      boshFiltr.hidden = n !== 0;
+      tekshirSoni.textContent = String(tekshir.length);
+      tekshirBolim.hidden = tekshir.length === 0;
+
+      const q = holatniYoz(h, location.search);
+      history.replaceState(history.state, '', location.pathname + q + location.hash);
+    };
+
+    davlatTugmalar.forEach((b) => b.addEventListener('click', () => {
+      const s = b.dataset.davlat!;
+      const yangi = h.davlatlar.includes(s) ? h.davlatlar.filter((x) => x !== s) : [...h.davlatlar, s];
+      h = { ...h, davlatlar: davlatTartib.filter((x) => yangi.includes(x)) };
+      chiz();
+    }));
+    ieltsTanlov.addEventListener('change', () => { h = { ...h, ielts: ieltsniOqi(ieltsTanlov.value) }; chiz(); });
+    byudjetMaydon.addEventListener('input', () => {
+      const v = byudjetMaydon.value.trim();
+      const b = byudjetniOqi(v);
+      const xato = v !== '' && b === null;
+      byudjetMaydon.setAttribute('aria-invalid', String(xato));
+      byudjetIzoh.textContent = xato ? 'Faqat raqam kiriting, masalan 20000.' : byudjetIzohMatn;
+      byudjetIzoh.classList.toggle('um-izoh-xato', xato);
+      h = { ...h, byudjet: b };
+      chiz();
+    });
+    // Enter forma yubormaydi (forma yo'q); maydon filtr boshqaruvi
+    yordamTugma.addEventListener('click', () => { h = { ...h, yordam: !h.yordam }; chiz(); });
+    mosTugma.addEventListener('click', () => { h = { ...h, faqatMos: !h.faqatMos }; chiz(); });
+    $<HTMLButtonElement>('[data-filtr-tozala]').addEventListener('click', () => {
+      h = { davlatlar: [], ielts: null, byudjet: null, yordam: false, faqatMos: false };
+      ieltsTanlov.value = '';
+      byudjetMaydon.value = '';
+      byudjetMaydon.setAttribute('aria-invalid', 'false');
+      byudjetIzoh.textContent = byudjetIzohMatn;
+      byudjetIzoh.classList.remove('um-izoh-xato');
+      chiz();
+      davlatTugmalar[0]?.focus();
+    });
+
+    // ---------- Shortlist ----------
+    const shortlist = $<HTMLElement>('[data-shortlist]');
+    const slRoyxat = $<HTMLUListElement>('[data-shortlist-royxat]');
+    const slBosh = $<HTMLElement>('[data-shortlist-bosh]');
+    const slSoni = $<HTMLElement>('[data-shortlist-soni]');
+    const sinxronMatn = $<HTMLElement>('[data-sinxron-matn]');
+    const sinxronTugma = $<HTMLButtonElement>('[data-sinxron-tugma]');
+
+    const slOqi = (): ShortlistYozuv[] => shortlistTozala(holatOqi<unknown>(SHORTLIST_KALIT, []));
+    let sl = slOqi();
+    let slXabar = '';
+
+    const slChiz = () => {
+      const saqlangan = new Set(sl.map((y) => y.id));
+      for (const k of xlar) {
+        const bor = saqlangan.has(k.x.slug);
+        k.saqlash.setAttribute('aria-pressed', String(bor));
+        k.saqlashMatn.textContent = bor ? 'Saqlangan' : "Ro'yxatga saqlash";
+      }
+      // Faqat sahifada bor universitetlar ko'rsatiladi (boshqasi saqlovda qoladi)
+      const korinadi = sl.filter((y) => kartalar.has(y.id));
+      slRoyxat.replaceChildren(...korinadi.map((y) => {
+        const li = document.createElement('li');
+        const nom = document.createElement('span');
+        nom.className = 'um-shortlist-nom';
+        nom.textContent = kartalar.get(y.id)!.dataset.nom!;
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'um-olib';
+        b.dataset.olib = y.id;
+        b.textContent = 'Olib tashlash';
+        const sr = document.createElement('span');
+        sr.className = 'um-sr';
+        sr.textContent = `: ${nom.textContent}`;
+        b.append(sr);
+        li.append(nom, b);
+        return li;
+      }));
+      slSoni.textContent = korinadi.length ? `(${korinadi.length})` : '';
+      slBosh.hidden = korinadi.length > 0;
+    };
+
+    const slAlmashtir = (slug: string) => {
+      sl = shortlistAlmashtir(slOqi(), slug);
+      if (!holatYoz(SHORTLIST_KALIT, sl)) {
+        slXabar = "Brauzer saqlashga ruxsat bermadi (masalan, maxfiy oyna). Ro'yxat sahifa yopilganda yo'qoladi.";
+      }
+      slChiz();
+      sinxronChiz();
+    };
+    for (const k of xlar) {
+      k.saqlash.addEventListener('click', () => slAlmashtir(k.x.slug));
+      $<HTMLElement>('[data-saqlash-joy]', k.el).hidden = false;
+    }
+    slRoyxat.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-olib]');
+      if (!b) return;
+      // Ro'yxat qayta chiziladi: fokus shu o'rindagi (yoki oxirgi) "Olib tashlash" ga, bo'sh bo'lsa sarlavhaga
+      const i = [...slRoyxat.querySelectorAll('[data-olib]')].indexOf(b);
+      slAlmashtir(b.dataset.olib!);
+      const tugmalar = slRoyxat.querySelectorAll<HTMLButtonElement>('[data-olib]');
+      (tugmalar[Math.min(i, tugmalar.length - 1)] ?? $<HTMLElement>('#um-shortlist-sarlavha')).focus();
+    });
+
+    // Sinxron holati: hisobsiz faqat brauzer; hisob bilan rozilikdan keyin user_state.
+    const sinxronChiz = () => {
+      const s = sinxronHolati();
+      sinxronTugma.hidden = !(s === 'sorov' || s === 'keyin');
+      sinxronMatn.textContent = slXabar || ({
+        hisobsiz: "Ro'yxat shu brauzerda saqlanadi. Hisobga kirsangiz, keyin boshqa qurilmalarda ham ko'rishingiz mumkin.",
+        faol: "Ro'yxat hisobingizga ham saqlanadi va qurilmalar orasida sinxronlanadi.",
+        sorov: "Ro'yxat hozircha faqat shu brauzerda. \"Hisobga saqlash\" bosilsa, shu brauzerdagi Tayanch ma'lumotlari (shu ro'yxat va SAT progressi, agar bo'lsa) hisobingizga ko'chiriladi.",
+        keyin: "Ro'yxat hozircha faqat shu brauzerda. \"Hisobga saqlash\" bosilsa, shu brauzerdagi Tayanch ma'lumotlari (shu ro'yxat va SAT progressi, agar bo'lsa) hisobingizga ko'chiriladi.",
+        mahalliy: "Bu qurilmada hisob bilan sinxron o'chirilgan: ro'yxat faqat shu brauzerda.",
+      } as const)[s];
+    };
+    sinxronTugma.addEventListener('click', async () => {
+      sinxronTugma.disabled = true;
+      try {
+        await importQil();
+        slXabar = '';
+      } catch {
+        slXabar = "Hisobga saqlab bo'lmadi. Internetni tekshirib, keyinroq qayta urinib ko'ring.";
+      }
+      sinxronTugma.disabled = false;
+      sl = slOqi();
+      slChiz();
+      sinxronChiz();
+      sinxronMatn.focus();
+    });
+    sinxronSoroviniKut(() => sinxronChiz());
+    window.addEventListener('tayanch:holat-yangilandi', () => { sl = slOqi(); slChiz(); });
+    window.addEventListener('storage', (e) => { if (e.key === SHORTLIST_KALIT) { sl = slOqi(); slChiz(); } });
+    window.addEventListener('pageshow', () => { sl = slOqi(); slChiz(); });
+
+    shortlist.hidden = false;
+    asboblar.hidden = false;
+    slChiz();
+    sinxronChiz();
+    chiz();
+    void hisobniUla().then(sinxronChiz, sinxronChiz);
+  }
+</script>
+
+<style>
+  .um-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
+  .um-bosh { display: grid; gap: var(--space-3); }
+  .um-ustki {
+    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .um-h2 { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .um-h2:focus { outline: none; }
+  .um-matn { max-width: 62ch; margin: 0; }
+  .um-sust { color: var(--color-text-secondary); }
+  .um-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .um-havola { color: var(--color-link); font-weight: 700; }
+  .um-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  [hidden] { display: none !important; }
+
+  .um-ogoh {
+    max-width: 62ch; margin: 0; display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3) var(--space-4); border-radius: var(--card-radius);
+    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 600;
+  }
+  .um-ogoh svg { flex: none; margin-top: 2px; }
+
+  /* Asboblar: filtrlar va kiritish maydonlari */
+  .um-asboblar { display: grid; gap: var(--space-5); }
+  .um-guruh { display: grid; gap: var(--space-2); }
+  .um-chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .um-chip {
+    min-height: var(--size-touch-min); padding: var(--space-2) var(--space-4); border-radius: var(--radius-full);
+    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .um-chip:active { transform: var(--bosilish); }
+  .um-chip[aria-pressed="true"] { background: var(--color-text-primary); border-color: var(--color-text-primary); color: var(--color-surface); }
+  .um-maydonlar-qator { display: grid; grid-template-columns: repeat(2, minmax(0, 16rem)); gap: var(--space-4); }
+  .um-maydon { display: grid; gap: var(--space-1); align-content: start; }
+  .um-maydon label { font-size: var(--text-small-size); font-weight: 700; }
+  .um-maydon select, .um-maydon input {
+    min-height: 48px; width: 100%; padding: 0 var(--space-3); font: inherit;
+    background: var(--sirt); color: var(--color-text-primary);
+    border: 2px solid var(--chiziq-maydon); border-radius: var(--radius-md);
+  }
+  .um-maydon select:focus-visible, .um-maydon input:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  .um-maydon input[aria-invalid="true"] { border-color: var(--input-error-border); }
+  .um-maydon input::placeholder { color: var(--input-placeholder); }
+  .um-izoh-xato { color: var(--color-warning-text); background: var(--color-warning-subtle); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); }
+
+  /* Shortlist */
+  .um-shortlist {
+    display: grid; gap: var(--space-3); padding: var(--card-pad);
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius);
+  }
+  .um-shortlist-royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  /* Ro'yxat qatorlari skript bilan yaratiladi: scoped atributi yo'q, shuning uchun :global (faqat shu ro'yxat ichida) */
+  .um-shortlist-royxat :global(li) {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2);
+    padding-top: var(--space-2); border-top: 1px solid var(--color-border);
+  }
+  .um-shortlist-royxat :global(.um-shortlist-nom) { font-weight: 700; overflow-wrap: anywhere; }
+  .um-shortlist-royxat :global(.um-olib) {
+    min-height: var(--size-touch-min); padding: 0 var(--space-3); border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: var(--text-small-size); font-weight: 700; color: var(--color-link); text-decoration: underline;
+  }
+  .um-shortlist-royxat :global(.um-sr) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .um-sinxron { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
+  .um-sinxron p { flex: 1 1 20rem; max-width: 62ch; }
+  .um-sinxron p:focus { outline: none; }
+
+  /* Natija */
+  .um-natija, .um-tekshir { display: grid; gap: var(--space-4); }
+  .um-natija-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+  .um-kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .um-bosh-filtr { display: grid; gap: var(--space-3); justify-items: start; padding: var(--card-pad); border: 1px dashed var(--color-border-strong); border-radius: var(--card-radius); }
+  .um-bosh-filtr p { margin: 0; max-width: 62ch; }
+
+  /* Bo'sh holat */
+  .um-bosh-holat {
+    display: grid; gap: var(--space-3); justify-items: start; padding: var(--space-8) var(--card-pad);
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); box-shadow: var(--card-shadow);
+  }
+  .um-bosh-holat h2 { margin: 0; }
+  .um-bosh-ikonka { color: var(--floor-ui); }
+  .um-bosh-yol { margin: var(--space-3) 0 0; }
+  .um-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .um-chip:hover { border-color: var(--color-text-primary); }
+    .um-maydon select:hover, .um-maydon input:hover { border-color: var(--input-border-hover); }
+  }
+  @media (max-width: 760px) {
+    .um-chiplar:not(.um-chiplar-uzun) { flex-wrap: nowrap; overflow-x: auto; padding-bottom: var(--space-1); }
+    .um-chiplar:not(.um-chiplar-uzun) .um-chip { flex: none; }
+    .um-chiplar-uzun { display: grid; }
+    .um-maydonlar-qator { grid-template-columns: 1fr; }
+    .um-kartalar { grid-template-columns: 1fr; }
+    .um-tugmalar { display: grid; width: 100%; }
+    .um-tugmalar .tugma { width: 100%; }
+  }
+</style>
