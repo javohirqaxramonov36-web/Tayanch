@@ -2,6 +2,7 @@
 // Dizayn: Claude Design "Tayanch Top Admission maketi", "LiftSidebar" artboard'i
 // (https://claude.ai/artifact/1zP2rnjMp46RgY9WpD84GF). Bandlar ikonkasiz (maket bo'yicha).
 // "Qo'llanmalar" guruhi maketdan keyin qo'shildi (Ariza zinapoyasi darsi, PR #25).
+// "Davlatlarni taqqoslash" Admission D-seriya Q2 da qo'shildi (rejadagi "header ochiladigan ro'yxati" o'rniga: bo'limda header menyusi yo'q).
 // href bo'lmasa band havola emas: "tez orada" yorlig'i bilan matn (Tab bilan o'tilmaydi).
 
 export interface TaBand {
@@ -35,6 +36,7 @@ export const taGuruhlar: TaGuruh[] = [
     nomi: 'Vositalar',
     bandlar: [
       { nomi: "Topshirish yo'li", href: 'top-admission/vosita/topshirish-yoli/' },
+      { nomi: 'Davlatlarni taqqoslash', href: 'top-admission/davlatlar/' },
       { nomi: 'Muddatlar', href: 'deadline/' },
     ],
   },

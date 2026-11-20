@@ -4,7 +4,7 @@
 |---|---|---|---|---|
 | Q0 | Maxfiylik auditi (faqat o'qish) | tugadi | 2026-11-19 | Topilmalar pastda; kod o'zgarmadi |
 | Q1 | Ma'lumot sxemasi va validator | tugadi | 2026-11-20 | Sxema, 2 skript, `Fakt.astro`, 10 sinov; haqiqiy fakt yo'q |
-| Q2 | Davlatlarni taqqoslash sahifasi | kutilmoqda | | |
+| Q2 | Davlatlarni taqqoslash sahifasi | tugadi | 2026-11-20 | `/uz/top-admission/davlatlar/`; filtr, saralash, taqqoslash; SOXTA fixture bilan brauzerda sinaldi |
 | Q3 | Grantlar katalogi sahifasi | kutilmoqda | | |
 | Q4 | "Menga mos universitet" filtri | kutilmoqda | | |
 | Q5 | Ariza zinapoyasi → XP | kutilmoqda | | |
@@ -48,6 +48,32 @@ Sinov natijasi:
 - `npm run build` o'tdi (bo'sh kolleksiya uchun 3 ta glob-loader ogohlantirishi kutilgan). `npm test` 341/341. `npm run check`: faqat 4 ta eski xato. `npm run repo:tekshir`: muammo yo'q.
 - Sinalmagan: `Fakt.astro` hali hech bir sahifada ishlatilmagan (Q2 da birinchi marta ko'rinadi; brauzer, 375/1280, qorong'i mavzu, kontrast o'sha yerda tekshiriladi). Eskirish build paytida hisoblanadi (statik sayt), sayt qayta qurilmasa belgi yangilanmaydi.
 
+## Q2 natijasi (2026-11-20)
+Sahifa: `/uz/top-admission/davlatlar/` (`src/pages/uz/top-admission/davlatlar/index.astro`, `BolimQobiq`, turi "vosita", holat "qoralama").
+
+O'zgargan / yangi fayllar:
+- `src/pages/uz/top-admission/davlatlar/index.astro`: kartalar (5 mezon, har fakt `Fakt.astro` orqali), filtr chiplari (4 ta), saralash (nomi / taxminiy yillik xarajat), taqqoslash (2–3 davlat; >760px jadval, <=760px ketma-ket kartalar), bo'sh holat, URL holati.
+- `src/lib/topAdmission/davlatTaqqos.ts`: sof mantiq (filtr belgilari, taxminiy USD, saralash, taqqoslash tanlovi, URL `?f=&s=&t=` o'qish/yozish). Sahifa build'da ham, brauzer skriptida ham shuni ishlatadi.
+- `src/lib/topAdmission/testlar/davlatTaqqos.test.ts`: 8 sinov (SOXTA ma'lumot), `npm test` ga glob orqali kiradi.
+- `src/data/topAdmissionSahifalar.ts`: yon panel "Vositalar" guruhiga "Davlatlarni taqqoslash" bandi.
+
+Qarorlar (keyingi qismlar uchun):
+- "Header ochiladigan ro'yxati": bo'limda header menyusi yo'q (`QavatMenyu` faqat `/uz/` da). Havola Top Admission yon paneliga (`taGuruhlar`, "Vositalar") qo'shildi. Q3 ("Grantlar") va Q4 ("Menga mos universitet") ham shu faylga qo'shsin.
+- Yo'l: `/uz/top-admission/davlatlar/` (rejadagi misol bo'yicha, `vosita/` ostida emas). Q3 uchun tavsiya: `/uz/top-admission/grantlar/`, Q4: `/uz/top-admission/universitetlar/`.
+- Filtr, saralash va taxminiy narx FAQAT tasdiqlangan faktdan. Qoralama fakt hech qayerda ko'rinmaydi va filtrga ta'sir qilmaydi (SOXTA fixture bilan tekshirildi: qoralama qiymatlar va qoralama grant HTML'da yo'q).
+- "Davlat granti bor": davlatning `davlat_grantlari` ichida `turi: "davlat"` va `nimani_qoplaydi` fakti tasdiqlangan grant bo'lsa. Kartada grant nomi `rasmiy_havola` ga havola (Q3 sahifasi bo'lgach, unga havola qo'shish mumkin).
+- `grant.izoh` (oddiy matn, fakt emas) sahifada KO'RSATILMAYDI: manbasiz matn chiqmasin.
+- "O'qish paytida ishlash mumkin" konventsiyasi (Q6/Q7 kontent agentlari uchun): `ishlash.oqish_paytida.qiymat` mumkin emas bo'lsa `false` (yoki 0 / "yo'q"); mumkin bo'lsa `true`, son (haftasiga soat) yoki qisqa matn.
+- Taxminiy yillik xarajat = `kontrakt_yillik` + `viza_yashash_summasi` (ikkalasi tasdiqlangan, bir xil `valyuta`), `usdga` bilan, butun songa yaxlitlanadi. `kurslar.json` bo'sh bo'lsa narx saralash tugmasi chiqmaydi va "kurs ma'lumoti yo'q" yoziladi; narxi yo'q davlat oxirida va "ma'lumot tekshirilmoqda" belgisi bilan.
+- Standart tartib alifbo (reyting yo'q). `chuqur_qollanma_havola` `/` bilan boshlansa `yol()` orqali, `https://` bo'lsa o'zicha; bo'lmasa "chuqur qo'llanma tez orada" yorlig'i.
+- Bo'sh holat: kolleksiyada birorta tasdiqlangan fakt (yoki ko'rinadigan grant) bo'lmasa filtr/taqqoslash o'rniga "Ma'lumotlar rasmiy manbada tekshirilmoqda" kartasi, davlat nomlari ro'yxati (bo'lsa) va Topshirish yo'li / Platformalar havolalari. Hozirgi saytda shu holat.
+- Brauzerda hech narsa saqlanmaydi (localStorage yo'q); holat faqat URL'da.
+
+Sinov:
+- `npm test` 349/349 (yangi 8 ta). `npm run check`: faqat 4 ta eski xato. `npm run build` o'tdi. `npm run repo:tekshir`: muammo yo'q.
+- Vaqtincha SOXTA fixture (4 davlat "Sinoviya A–D", 2 grant, kurs EUR; scratchpad'da, commit qilinmagan, build'dan keyin o'chirildi) bilan build va brauzer (lokal statik server, Claude Browser paneli): filtr ("Ingliz tilida dastur bor" -> 4 tadan 2), narx saralashi (B 12 100, A 35 000, narxsizlar oxirida), 4-davlatni qo'shishda xabar va `aria-disabled`, URL'dan holatni tiklash (`?t=...&s=narx`), jadval (1280px, qorong'i mavzu) va telefon kartalari (375px, yorug' mavzu, gorizontal scroll yo'q), eskirgan fakt yonida "qayta tekshirilmoqda", bo'sh holat (375px) ko'rildi.
+- Sinalmagan: axe/VoiceOver, haqiqiy telefon, JS'siz ko'rinish brauzerda (kod bo'yicha: kartalar ko'rinadi, filtr va taqqoslash yashirin), bo'sh holat 1280px va qorong'ida, `prefers-reduced-motion`. Kontrast alohida o'lchanmadi (faqat mavjud DS tokenlari ishlatilgan).
+
 ## Topilmalar (Q0)
 Audit 2026-11-19, `admission-d` (asos 8b803c5), faqat repo kodi o'qildi. Jonli Supabase (deploy qilingan versiya, sozlamalar, haqiqiy bucket'lar) va tashqi provayderlar shartlari tekshirilmagan. Qisqartmalar: `F` = `supabase/functions/`, `M` = `supabase/migrations/`.
 
@@ -66,9 +92,12 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 
 ## Keyingi chat uchun eslatma
 - Q0 tugadi (faqat `docs/rejalar/admission-holat.md` o'zgardi).
-- Q1 tugadi. Keyingi: Q2. Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
+- Q2 tugadi ("Q2 natijasi" bo'limi). Keyingi: Q3. Grantlar sahifasi Q2 uslubida: `davlatlar/index.astro` dagi `dt-*` klasslar va `davlatTaqqos.ts` dagi URL holati namunasi; yon panel bandi `src/data/topAdmissionSahifalar.ts`.
+- Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q2: `viza_yashash_summasi` yillik summa deb qabul qilindi (taxminiy xarajat = kontrakt + shu summa). Rasmiy sahifada oylik yoki boshqa davr uchun yozilgan bo'lsa (masalan, 9 oylik), kontent agenti qanday yozsin: aynan rasmiy qiymat (davr izohi bilan, saralashdan chiqariladi) yoki yillikka hisoblanadimi?
+- Q2: Header menyusi bo'limda yo'q, shuning uchun "Davlatlarni taqqoslash" Top Admission yon paneliga ("Vositalar") qo'shildi. Bosh sahifadagi `QavatMenyu` ga ham qo'shilsinmi?
 - Q1: `docs/tekshiruv/` `.gitignore` da (`tekshiruv/` qoidasi). Tasdiq ro'yxati lokal qolsinmi (hozirgi holat) yoki repoga kirishi uchun `.gitignore` ga istisno qo'shilsinmi?
 - Q1: "barqaror" faktlar uchun 180 kun tasdiqlanadimi? (Bitta joyda: `ESKIRISH_KUNLARI`, `src/lib/topAdmission/fakt.ts`.)
 - Q0: `ielts_writing_results` ni hisob eksportiga va `docs/maxfiylik-jadvali.md` ga qo'shish kerakmi? (Admission seriyasidan tashqari ish, alohida branch.)
