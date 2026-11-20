@@ -15,7 +15,8 @@
 | Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
 
 ## Sozlamalar
-- Eskirish muddati: "muddatli" faktlar 60 kun, "barqaror" faktlar 180 kun. (180 kun muallif tomonidan HALI TASDIQLANMAGAN.)
+- Eskirish muddati: "muddatli" faktlar 60 kun, "barqaror" faktlar 180 kun. (180 kun muallif tomonidan 2026-11-20 da tasdiqlangan.)
+- Viza yashash summasi (`narx.viza_yashash_summasi`): rasmiy sahifada oylik (yoki boshqa davr uchun) yozilgan bo'lsa, `qiymat` yillikka aylantiriladi (oylik × 12). `manba_iborasi` rasmiy iboraning o'zi (oylik summa bilan) qoladi, hisob (masalan "1 334 GBP/oy × 12") holat faylidagi kontent eslatmasiga yoziladi. Muallif qarori, 2026-11-20.
 
 ## Repo qoidalari bilan moslashtirish (BOSHQARUVCHI, 2026-11-19)
 Reja matni o'zgartirilmagan. Quyidagi joylarda reja repo'ning amaldagi qoidalari (`CLAUDE.md`, `DESIGN.md`) bilan farq qiladi; qism agentlari repo qoidasiga amal qiladi:
