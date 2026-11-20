@@ -9,7 +9,7 @@
 | Q4 | "Menga mos universitet" filtri | tugadi | 2026-11-20 | `/uz/top-admission/universitetlar/`; filtr, moslik, shortlist (`user_state` orqali, server o'zgarishsiz); SOXTA fixture bilan brauzerda sinaldi; jonli login sinalmagan |
 | Q5 | Ariza zinapoyasi → XP | tugadi | 2026-11-20 | Migratsiya `20261120120000_admission_xp.sql` faqat branch'da (jonli bazaga QO'LLANMAGAN), RPC `admission_step_done`, mijoz `zinapoyaXp.ts`; lokal Postgres'da AX00–AX07 o'tdi. "Q5 natijasi (2-agent)" bo'limi |
 | Q6 | Kontent: 3 chuqur davlat + valyuta kurslari | tugadi | 2026-11-20 | 3 davlat fayli (8 qoralama, 13 topilmadi), `kurslar.json` CBU 2026-11-20 (14 valyuta). "Q6 natijasi" bo'limi |
-| Q7 | Kontent: 12 qisqa davlat kartasi | kutilmoqda | | |
+| Q7 | Kontent: 12 qisqa davlat kartasi | tugadi | 2026-11-20 | 12 davlat fayli (30 qoralama, 55 topilmadi). "Q7 natijasi" bo'limi |
 | Q8 | Kontent: davlat grantlari | kutilmoqda | | |
 | Q9 | Kontent: 30 universitet | kutilmoqda | | |
 | Q10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
@@ -179,6 +179,55 @@ XP qiymati sababi (10): SAT'da bitta savol birinchi urinishda to'g'ri = 2 + 3 = 
 
 Ma'lum cheklov (tasdiqdan oldin bilish kerak): zinapoyaning to'g'ri javobi statik JS'da (`zinapoyalar.ts`), server tartibni tekshira olmaydi. XP amalda "o'quvchi o'zi bajardim degan" qadam uchun; himoya faqat ruxsat ro'yxati, noyob kalit va kunlik chegara (umrbod 30 XP).
 
+## Q7 natijasi (2026-11-20)
+O'zgargan / yangi fayllar: `src/data/topAdmission/davlatlar/` ichida `germaniya`, `italiya`, `vengriya`, `turkiya`, `xitoy`, `yaponiya`, `kanada`, `avstraliya`, `malayziya`, `polsha`, `saudiya-arabistoni`, `singapur` (`.json`; `chuqur_qollanma: false`, `davlat_grantlari: []`). `docs/tekshiruv/tasdiq-royxati.md` yangilandi (jami 38 qoralama: Q6 8 + Q7 30; `.gitignore` sababli faqat lokal). Kod o'zgarmadi.
+
+Sanoq (hammasi `tekshirilgan_sana: 2026-11-20`, `holat: "qoralama"` yoki `"topilmadi"`; har `manba_iborasi` curl bilan yuklangan sahifa matnida `grep -F` orqali aynan topildi; Saudiya PDF matni python bilan PDF oqimlaridan ajratib tekshirildi):
+| Davlat | qoralama | topilmadi | Qoralama faktlar |
+|---|---|---|---|
+| Germaniya | 3 | 4 | viza yashash summasi, o'qish paytida ishlash (140 kun), bitirgandan keyin (18 oy) |
+| Italiya | 3 | 4 | viza yashash summasi, ingliz tilida dastur, o'qish paytida ishlash (20 soat / 1 040 soat) |
+| Vengriya | 1 | 6 | ingliz tilida dastur |
+| Turkiya | 2 | 5 | ingliz tilida dastur, o'qish paytida ishlash (1-kursdan keyin) |
+| Xitoy | 1 | 6 | ingliz tilida dastur |
+| Yaponiya | 6 | 2 | kontrakt (milliy univ. 1-yil), ingliz tilida dastur, ishlash (28 soat), bitirgandan keyin (1 yil), diplom ("yo'q") + `tayyorlov_nomi` |
+| Kanada | 3 | 4 | viza yashash summasi, ishlash (24 soat), PGWP (3 yil) |
+| Avstraliya | 2 | 5 | ishlash (2 haftada 48 soat), 485 viza |
+| Malayziya | 3 | 4 | ingliz tilida dastur, ishlash (faqat ta'tilda 20 soat), Graduate Pass (12 oy) |
+| Polsha | 3 | 4 | viza yashash summasi, ishlash (ruxsatnomasiz), bitirgandan keyin (9 oy) |
+| Saudiya Arabistoni | 1 | 6 | ingliz tilida dastur |
+| Singapur | 2 | 5 | ishlash (16 soat), LTVP (IHL bitiruvchisi) |
+"topilmadi" soni 7 asosiy faktdan (`tayyorlov_nomi` hisobga kirmaydi).
+
+Oylik → yillik hisoblar ("Sozlamalar" qoidasi):
+- Germaniya: 992 EUR/oy × 12 = 11 904 EUR (sahifaning o'zida ham "11.904 Euro für das gesamte erste Jahr"). Manba: Germaniyaning Toshkentdagi elchixonasi.
+- Polsha: 1 010 PLN/oy × 12 = 12 120 PLN. Diqqat: rasmiy summa "after deducting actual housing costs", ya'ni uy-joy xarajatidan TASHQARI.
+- Italiya: sahifada yillik summa bor (848,32 EUR/oy, "equivalent to €10,179.85 per year"), shuning uchun rasmiy yillik 10 179,85 EUR yozildi (848,32 × 12 = 10 179,84; 1 sent farq rasmiy yaxlitlash). Manba Italiyaning Hanoydagi elchixonasi (2026/27); Toshkent elchixonasi sahifasi topilmadi.
+- Kanada: sahifada yillik summa (1 kishi, Kvebekdan tashqari, 2026-09-01 dan keyin ariza): 23 448 CAD. Jadval katakchasida bo'lgani uchun ibora faqat "$23,448" (Cmd+F shu bilan topadi; qatori "If you apply on or after September 1, 2026", 1 oila a'zosi).
+
+Manbalar (faqat rasmiy):
+- Germaniya: taschkent.diplo.de (talaba vizasi), gesetze-im-internet.de Residence Act inglizcha tarjimasi (§16b(3) 140 kun, §20(2) 18 oy; tarjima 2024-05-08 o'zgarishigacha). make-it-in-germany.com (Radware bot himoyasi), daad.de va study-in-germany.de (ulanish rad etildi) ochilmadi.
+- Italiya: ambhanoi.esteri.it (summa, ingliz tili dasturlari), esteri.it FAQ "Study in Italy" (ishlash).
+- Vengriya: stipendiumhungaricum.hu bosh sahifa. oif.gov.hu "Temporary Service Interruption" (2026-11-19 dan, taxminan 2026-11-23 gacha), studyinhungary.hu texnik ishlarda: ishlash, yashash summasi, bitirgandan keyin shu sababli "topilmadi"; sayt tiklangach qayta urinish kerak.
+- Turkiya: studyinturkiye.gov.tr (YÖK) bosh sahifa va FAQ.
+- Xitoy: en.moe.gov.cn "List for English-taught Programmes..." (sahifa sanasi 2009, eski). campuschina.org (412), nia.gov.cn (404) ochilmadi; Pekin shahar hukumati sahifasi milliy qoida emas, ishlatilmadi.
+- Yaponiya: studyinjapan.go.jp (JASSO): universities, english-programs, part-time-jobs, employment.
+- Kanada: canada.ca IRCC (financial-support, work-off-campus, after-graduation/about). Eslatma: canada.ca brauzer User-Agent bilan javob bermaydi, oddiy curl bilan ochiladi.
+- Avstraliya: studyaustralia.gov.au (subclass 500 va 485 sahifalari). immi.homeaffairs.gov.au JS bilan chiziladi; joriy yashash summasi rasmiy sahifa matnida topilmadi (faqat 2023 dagi eski AU$24,505 yangiligi bor, ishlatilmadi).
+- Malayziya: educationmalaysia.gov.my (EMGS, Oliy ta'lim vazirligi qarashli) FAQ va bosh sahifa.
+- Polsha: mos.cudzoziemcy.gov.pl (Ichki ishlar vazirligi MOS portali): o'qish ruxsatnomasi va bitiruvchi ruxsatnomasi sahifalari. udsc.gov.pl ochilmadi; NAWA sahifalarida ingliz tilida dastur haqida ibora topilmadi.
+- Saudiya: object.moe.gov.sa "Study in Saudi" profil PDF. studyinsaudi.moe.gov.sa ochilmadi.
+- Singapur: mom.gov.sg (talabalar uchun ish ruxsatnomasidan ozod qilish), ica.gov.sg (LTVP).
+
+Kontent eslatmalari:
+- Yaponiya `kontrakt_yillik` = 820 000 JPY: rasmiy ibora milliy universitetning BIRINCHI yili (kirish to'lovi + kontrakt) jami xarajati; davlat/xususiy universitetlar uchun 930 000 / 1 100 000 JPY. Yaponiya `diplom.togridan_togri` = "yo'q": rasmiy shart "12 years of formal school education"; o'zbek 11 yillik maktabi (reja 1-bo'lim, 5-mezon) 12 yildan kam, shuning uchun "designated university preparatory course" `tayyorlov_nomi` ga yozildi.
+- Saudiya ibora qisqa ("English for Practical"): PDF'da "Language of Study ... English for Practical-Based Majors"; defis atrofidagi bo'shliq PDF ko'ruvchida turlicha bo'lishi mumkin, shuning uchun ibora defisdan oldin kesildi.
+- Kanada, Polsha va Singapur'dagi ba'zi iboralar jadval katakchalaridan (masalan "Period for which granted 9 months", "Graduate from an Institute of Higher Learning (IHL) Seeking employment in Singapore"); brauzerda Cmd+F katakchalar orasida topmasligi mumkin, unda qismini qidiring.
+- Hamma davlatda `kontrakt_yillik` (Yaponiyadan tashqari), `odatiy_ielts` va (Yaponiyadan tashqari) `diplom` "topilmadi": davlat darajasida rasmiy ibora yo'q yoki sahifa ochilmadi, universitetga qarab.
+- `davlat_grantlari` bo'sh (Q8). `chuqur_qollanma_havola` yo'q.
+
+Sinov: `npm run malumot:tasdiq` 38 qoralama; `npm run malumot:tekshir` 15 hujjat, 106 fakt, 0 eskirgan, 68 topilmadi, sxema xatosi yo'q; `npm test` 373/373; `npm run build` o'tdi (qoralama qiymatlar `dist/uz/top-admission/` da yo'q); `npm run repo:tekshir` muammo yo'q. Sinalmagan: sahifa brauzerda ko'rilmadi (tasdiqlangan fakt yo'q, bo'sh holat o'zgarmagan).
+
 ## Q6 natijasi (2026-11-20)
 O'zgargan / yangi fayllar:
 - `src/data/topAdmission/davlatlar/aqsh.json`, `buyuk-britaniya.json`, `janubiy-koreya.json` (slug'lar Q4 konventsiyasi bo'yicha; `chuqur_qollanma: true`).
@@ -232,6 +281,7 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Anthropic va Google'ning so'rovlarni saqlash muddati va model o'qitishda ishlatishi, hamda chet elga uzatish (LX02, LX04) `docs/maxfiylik-jadvali.md:32-33` da "hali tasdiqlanmagan" deb turibdi.
 
 ## Keyingi chat uchun eslatma
+- Q7 tugadi ("Q7 natijasi"). Keyingi: Q8 (davlat grantlari). 15 davlat fayli bor, slug'lar: `aqsh`, `buyuk-britaniya`, `janubiy-koreya`, `germaniya`, `italiya`, `vengriya`, `turkiya`, `xitoy`, `yaponiya`, `kanada`, `avstraliya`, `malayziya`, `polsha`, `saudiya-arabistoni`, `singapur`. Curl maslahati: canada.ca uchun `-A curl/...` (brauzer UA'si bilan javob yo'q), `--http1.1` foydali; daad.de, make-it-in-germany.com, campuschina.org, studyinsaudi.moe.gov.sa curl bilan ochilmadi; oif.gov.hu ~2026-11-23 gacha ishlamaydi. Q8 uchun stipendiumhungaricum.hu "about" sahifasida qoplash ro'yxati bor (WP REST `/wp-json/wp/v2/pages` sahifa ro'yxatini beradi).
 - Q6 tugadi ("Q6 natijasi"). Keyingi: Q7. `kurslar.json` da Q7 valyutalari (EUR, HUF, TRY, CNY, JPY, CAD, AUD, MYR, PLN, SAR, SGD) bor, qayta olish shart emas (kerak bo'lsa `https://cbu.uz/uz/arkhiv-kursov-valyut/json/`). Manba iborasini sahifa matnida curl bilan tekshirish foydali (WebFetch iborani qisqartirishi mumkin). `fakt.test.ts` endi haqiqiy `kurslar.json` ni bo'sh deb farazlamaydi.
 - Q5 tugadi ("Q5 natijasi (2-agent)"). Migratsiya `20261120120000_admission_xp.sql` faqat branch'da; jonli bazaga muallif qo'llaydi (qadamlar o'sha bo'limda). Keyingi: Q6. Q10 uchun: `npm run db:tekshir` `xavfsizlik_test` dagi eski `contests:SELECT` xatosida to'xtaydi (main'da ham), Q5 sababli emas.
 - Q4 tugadi ("Q4 natijasi" bo'limi). Keyingi: Q5 (Ariza zinapoyasi → XP). Q6/Q9 uchun: davlat slug'lari `aqsh`, `buyuk-britaniya`, `janubiy-koreya`; `xalqaro_yordam_turi` yordam yo'q bo'lsa aynan `"yo'q"`; GBP va KRW kurslari `kurslar.json` da bo'lmasa UK/Koreya universitetlari moslikka kirmaydi.
@@ -241,6 +291,11 @@ Qo'shimcha kuzatuvlar (tuzatilmagan, qaror muallifda):
 - Q1 tugadi. Q2 uchun eslatma: Faktni `src/components/topAdmission/Fakt.astro` bilan ko'rsat; ma'lumotni `getCollection('davlatlar')` bilan ol; narx saralashda `usdga` + `kurslarBormi` (kurs bo'lmasa saralash o'chadi); kurs fayli `src/data/topAdmission/kurslar.json` ni `kurslarSxema.parse` bilan o'qi. Bo'sh kolleksiya hozir normal holat.
 
 ## Muallif uchun savollar
+- Q7: Yaponiya `kontrakt_yillik` milliy universitetning 1-yil jami xarajati (kirish to'lovi bilan, 820 000 JPY) bilan yozildi. Shu qoladimi yoki faqat yillik kontrakt (kirish to'lovisiz) kerakmi (unda "topilmadi")?
+- Q7: Yaponiya diplomi "yo'q" (12 yil talabi, o'zbek maktabi 11 yil) deb yozildi. 11 yil + akademik litsey/kollej bitirganlar uchun farq bormi; shu talqin ma'qulmi?
+- Q7: Polsha yashash summasi uy-joy xarajatidan tashqari (1 010 PLN/oy × 12). Taqqoslash sahifasida bu boshqa davlatlardan past ko'rinadi; izoh kerakmi yoki faktni "topilmadi" qilamizmi?
+- Q7: Italiya summasi Hanoy elchixonasidan (Toshkent sahifasi topilmadi); boshqa elchixonalar 783,06 EUR/oy ham yozgan. Toshkentdagi Italiya elchixonasining talaba vizasi sahifasi havolasini bera olasizmi?
+- Q7: Vengriya immigratsiya sayti (oif.gov.hu) 2026-11-23 gacha ishlamaydi; Vengriyaning 6 fakti "topilmadi". Q10 dan oldin qayta urinilsinmi?
 - Q6: UK viza yashash summasi London tashqarisi bo'yicha (1 171 GBP × 12 = 14 052) yozildi. London (1 529 GBP/oy) asos bo'lsinmi? Va rasmiy talab 9 oy uchun bo'lsa ham ×12 qoidasi qolaveradimi?
 - Q6: AQSH va UK uchun "ingliz tilida dastur bor" hukumat sahifasida aniq ibora bilan topilmadi ("topilmadi"), shu sababli "Ingliz tilida dastur bor" filtri ularni ko'rsatmaydi. Boshqa rasmiy manbani (masalan, UCAS yoki EducationUSA, oxirgisi 403 berdi) ishlatishga ruxsat berasizmi yoki o'zingiz qo'shasizmi?
 - Q6: Koreya viza yashash summasi elchixonaga qarab farq qiladi; Toshkentdagi Koreya elchixonasining D-2 sahifasi havolasini bera olasizmi?
