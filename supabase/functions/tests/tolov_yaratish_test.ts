@@ -19,7 +19,7 @@ function bogliqlik(o: {
   inpay?: YaratishNatijasi;
   setInvoice?: RpcNatija;
   yetishmaydi?: string[];
-  ochiq?: { payment_id: string; checkout_url: string } | null;
+  ochiq?: { payment_id: string; checkout_url: string; bolim: string } | null;
 } = {}): { d: YaratishBogliqlik; h: Holat } {
   const h: Holat = { rpc: [], inpay: [], jurnal: [] };
   const d: YaratishBogliqlik = {
@@ -137,11 +137,11 @@ Deno.test('davr: oylik (standart) qabul qilinadi, boshqasi 409 period_not_availa
 });
 
 Deno.test('ochiq pending to\'lov bor: yangisi yaratilmaydi, o\'sha havola qaytadi', async () => {
-  const ochiq = { payment_id: PID, checkout_url: 'https://inpay.uz/checkout/eski' };
+  const ochiq = { payment_id: PID, checkout_url: 'https://inpay.uz/checkout/eski', bolim: 'sat' };
   const { d, h } = bogliqlik({ ochiq });
   const r = await tolovYaratish(sorov(), d);
   assert.equal(r.status, 200);
-  assert.deepEqual(await r.json(), { ...ochiq, reused: true });
+  assert.deepEqual(await r.json(), { payment_id: PID, checkout_url: ochiq.checkout_url, reused: true });
   assert.equal(h.rpc.length, 0);
   assert.equal(h.inpay.length, 0);
 });
@@ -194,4 +194,77 @@ Deno.test('set_invoice yozilmasa: 500, checkout_url berilmaydi', async () => {
   const r = await tolovYaratish(sorov(), d);
   assert.equal(r.status, 500);
   assert.deepEqual(await r.json(), { error: 'server_error' });
+});
+
+Deno.test('qavat so\'rov tanasidan olinmaydi: SAT tarifining server javobi ishlatiladi', async () => {
+  const { d, h } = bogliqlik();
+  const r = await tolovYaratish(sorov({ tana: { plan_code: 'pro', bolim: 'ielts' } }), d);
+  assert.equal(r.status, 200);
+  assert.deepEqual(h.rpc[0].args, { p_user: USER, p_plan_code: 'pro' });
+  assert.equal(h.inpay[0].description, 'Tayanch SAT Pro, 30 days');
+  assert.equal(h.inpay[0].returnUrl, `${SAYT}/uz/sat/hisob/tolov-natija/?tolov=${PID}`);
+});
+
+Deno.test('RPC qavati qo\'llanmasa: inPAY chaqirilmaydi, yangi to\'lov failed uchun yopiladi', async () => {
+  for (const bolim of ['ielts', 'ai-academy', 'noma_lum', '__proto__', 'constructor']) {
+    const { d, h } = bogliqlik({
+      yaratish: {
+        data: { payment_id: PID, amount_uzs: 1000, period_days: 30, plan_code: 'pro', plan_name: 'Pro', bolim },
+        error: null,
+      },
+      setInvoice: { data: 'failed', error: null },
+    });
+    const r = await tolovYaratish(sorov({ tana: { plan_code: 'pro', bolim: 'sat' } }), d);
+    assert.equal(r.status, 409);
+    assert.deepEqual(await r.json(), { error: 'bolim_not_supported' });
+    assert.equal(h.inpay.length, 0);
+    assert.deepEqual(h.rpc[1], {
+      nomi: 'payment_set_invoice',
+      args: { p_payment_id: PID, p_provider_order_id: null, p_response: { code: 'bolim_not_supported' } },
+    });
+    assert.equal(h.rpc.length, 2);
+  }
+});
+
+Deno.test('qo\'llanmaydigan qavat yozuvini yopish xatosi: 500, inPAY chaqirilmaydi', async () => {
+  const { d, h } = bogliqlik({
+    yaratish: {
+      data: { payment_id: PID, amount_uzs: 1000, period_days: 30, plan_code: 'pro', plan_name: 'Pro', bolim: 'eyuf' },
+      error: null,
+    },
+    setInvoice: { data: null, error: { message: 'db_error', code: 'XX000' } },
+  });
+  const r = await tolovYaratish(sorov(), d);
+  assert.equal(r.status, 500);
+  assert.deepEqual(await r.json(), { error: 'server_error' });
+  assert.equal(h.inpay.length, 0);
+  assert.ok(h.jurnal.some((x) => x.includes('yopilmadi')));
+});
+
+Deno.test('RPC qavati yo\'q yoki yaroqsiz: 500, inPAY chaqirilmaydi', async () => {
+  for (const bolim of [undefined, null, 5, {}]) {
+    const { d, h } = bogliqlik({
+      yaratish: {
+        data: { payment_id: PID, amount_uzs: 1000, period_days: 30, plan_code: 'pro', plan_name: 'Pro', bolim },
+        error: null,
+      },
+    });
+    const r = await tolovYaratish(sorov(), d);
+    assert.equal(r.status, 500);
+    assert.deepEqual(await r.json(), { error: 'server_error' });
+    assert.equal(h.inpay.length, 0);
+  }
+});
+
+Deno.test('pending to\'lov qavati qo\'llanmasa: 409, havola berilmaydi va yozuv saqlanadi', async () => {
+  for (const bolim of ['ielts', 'ai-academy', 'noma_lum', '__proto__', 'constructor']) {
+    const { d, h } = bogliqlik({
+      ochiq: { payment_id: PID, checkout_url: 'https://inpay.uz/checkout/eski', bolim },
+    });
+    const r = await tolovYaratish(sorov({ tana: { plan_code: 'pro', bolim: 'sat' } }), d);
+    assert.equal(r.status, 409);
+    assert.deepEqual(await r.json(), { error: 'bolim_not_supported' });
+    assert.equal(h.rpc.length, 0);
+    assert.equal(h.inpay.length, 0);
+  }
 });
