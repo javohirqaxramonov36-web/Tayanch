@@ -33,6 +33,8 @@ const { title, description, holat, bolim = 'sat', yol: bandlar = [] } = Astro.pr
 // Til bo'limdan: SAT inglizcha (CLAUDE.md), qolganlari o'zbekcha.
 const til = Astro.props.til ?? bolimTili(bolim);
 const sahifaNomi = title.split(' · ')[0];
+// "Beta — in development" yozuvi Top Admission'da ko'rsatilmaydi (muallif qarori, 2026-11-21).
+const beta = bolim !== 'top-admission';
 ---
 <!doctype html>
 <html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
@@ -47,7 +49,7 @@ const sahifaNomi = title.split(' · ')[0];
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
         <slot />
         {telegramKorinadi('kanal') && <div class="ichki telegram-qator"><TelegramTugma turi="kanal" matn={matn[til].yon.telegramKanal} yangiTab={matn[til].yon.yangiTab} /></div>}
-        <p class="ichki beta-holat" lang="en">Beta — in development</p>
+        {beta && <p class="ichki beta-holat" lang="en">Beta — in development</p>}
       </main>
       {bolim === 'sat' && <SatEslatma />}
       {bolim === 'sat' && <SatSinxron />}
