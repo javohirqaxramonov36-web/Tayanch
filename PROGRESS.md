@@ -50,3 +50,12 @@ Branch `homepage-redesign`, asos `origin/main`, 2026-11-21. Faqat lokal commitla
 - Kirish hozircha mavjud login yo'liga ishlaydi. 4-qism dialog bilan bog'laydi.
 - IELTS Writing kunlik standart limit migratsiyada 2 (`20261119120000_ielts_writing_baho.sql`), amaldagi qiymat server sozlamasida. AI Pro afzalligi qilib ko'rsatilmaydi.
 - UI brauzer tekshiruvi 5-qismda.
+
+## 3-qism — tugadi
+
+- Homepage `src/pages/uz/index.astro` ixcham hero, beshta to'liq havola-karta, yordamchi havola, o'zgarmagan DeadlineRoyxati va ikki tarif bilan qayta qurildi. Footer saqlandi.
+- Kartalar bitta manbada `src/data/boshSahifa.ts`. EYUF faqat mavjud `/uz/eyuf/iq/` ga boradi. AI Academy bepul belgisisiz.
+- `src/pages/uz/yol-tanlash/index.astro` mavjud Navigator komponentlarini ishlatadi. Progress kaliti va sinxron mantiq o'zgarmadi. Bosh sahifa popup/roadmap va bino importlari olib tashlandi.
+- `BoshTariflar.astro` narx/davr/afzallikni faol SAT Pro `plans` qatoridan oladi. Kengaytirilgan analitika faqat server bayrog'i bo'lsa ko'rsatiladi. Yillik/kunlik chegirma yoki AI va'dasi yo'q. Kunlik ekvivalent haqiqiy narx/davrdan yaxlitlanadi.
+- Ommaviy Supabase sozlamasi yo'q yoki so'rov ishlamasa `[TO'LDIRING: Pro narxi va davri]`, `[TO'LDIRING: Pro imkoniyatlari]` ko'rinadi va to'lov o'chiq. Mavjud server checkout ishlatiladi. 4-qism login hodisasini ulaydi.
+- Font talabi bo'yicha mavjud Onest saqlandi, Manrope repoda yo'q. Maket qiymatlari yetishmagan tokenlar sifatida `tokens.css` ga qo'shildi.

@@ -487,3 +487,28 @@
   --flag-green: #1EB53A;
   --flag-red: #CE1126;
 }
+
+:root {
+  --home-title: 52px;
+  --home-title-mobile: 28px;
+  --home-title-lh: 1.14;
+  --home-hero-width: 900px;
+  --home-copy-width: 760px;
+  --home-card-min: 220px;
+  --home-card-height: 290px;
+  --home-row-height: 80px;
+  --home-badge-mobile: 10px;
+  --home-button-radius: 14px;
+  --home-admission: #F5C542;
+  --home-sat: #4F7CFF;
+  --home-ielts: #EF5B4C;
+  --home-eyuf: #4CC38A;
+  --home-ai: #8B5CF6;
+  --home-icon-ink: #0A0A0C;
+  --home-free-bg: var(--color-success-100);
+  --home-free-ink: var(--color-success-800);
+}
+:root[data-mavzu='qorongi'] {
+  --home-free-bg: #17291F;
+  --home-free-ink: #7EE2A8;
+}
