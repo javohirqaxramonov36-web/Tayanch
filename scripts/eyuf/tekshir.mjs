@@ -31,7 +31,7 @@ const lessonIds = new Set(data.lessons.items.map(row => row.id));
 assert.equal(lessonIds.size, 252);
 assert.equal(data.tracks.items.length, 20);
 assert.equal(data.regions.items.length, 14);
-assert.equal(data['questions-interview'].items.length, 111);
+assert.equal(data['questions-interview'].items.length, 171);
 const specialties = data.tracks.items.flatMap(track => track.specialties);
 assert.equal(specialties.length, 570);
 assert.equal(new Set(specialties.map(item => item.id)).size, 570);
@@ -50,7 +50,7 @@ for (const level of ['bachelor', 'master']) {
   assert.equal(tracks.length, level === 'bachelor' ? 15 : 20);
 }
 const bank = data['questions-iq'];
-assert.equal(bank.items.length, 20);
+assert.equal(bank.items.length, 250);
 for (const question of bank.items) {
   assert(question.options.some(option => option.id === question.book_answer));
   assert.equal(question.answer, question.verified ? question.book_answer : null);
@@ -61,7 +61,7 @@ for (const question of bank.items) {
   }
 }
 const settings = data.settings;
-assert.equal(savollarniSarala(bank, { ...settings, book_content_enabled: false }, { level: 'bachelor' }).length, 0);
+assert.equal(savollarniSarala(bank, { ...settings, book_content_enabled: false }, { level: 'bachelor' }).length, 20);
 const practice = savollarniSarala(bank, { ...settings, book_content_enabled: true }, { level: 'bachelor' });
 const mock = savollarniSarala(bank, { ...settings, book_content_enabled: true }, { level: 'bachelor', mock: true });
 const original = { ...bank.items[0], id: 'test-original', contentSource: 'original' };
@@ -69,14 +69,14 @@ assert.equal(savollarniSarala({ items: [original] }, { ...settings, book_content
 assert.equal(savollarniSarala(bank, { ...settings, book_content_enabled: true }, { level: 'doctoral' }).length, 0);
 assert.equal(treklarniSarala(data.tracks, data.quotas, 'bachelor')[0].id, 'muhandislik');
 assert.equal(treklarniSarala(data.tracks, data.quotas, 'master')[0].id, 'sogliq');
-assert.equal(practice.length, 20);
-assert.equal(mock.length, 19);
+assert.equal(practice.length, 230);
+assert.equal(mock.length, 134);
 assert(mock.every(question => question.id !== 'iq-1-09'));
 // Buzilgan yozuvlar sxemadan o‘tmasligini ham tekshiramiz.
 const validateQuestion = ajv.compile((await read('schemas/questions-iq.schema.json')).properties.items.items);
 for (const bad of [{ ...bank.items[0], difficulty: 4 }, { ...bank.items[0], level: ['doctoral'] }, { ...bank.items[0], source: null }, { ...bank.items[0], answer: null }, { ...bank.items[0], verified: false }]) {
   assert.equal(validateQuestion(bad), false);
 }
-console.log(`EYUF: 10 JSON sxemasi, 252 dars, 20 trek, 14 hudud, 111 suhbat yozuvi, 20 IQ savoli tekshirildi.`);
-console.log('Kvota yig‘indilari, manbalar, rasm yo‘llari, book o‘chirgichi va mock filtri OK. Mockka mos namuna 19/20.');
+console.log(`EYUF: 10 JSON sxemasi, 252 dars, 20 trek, 14 hudud, 171 suhbat yozuvi, ${bank.items.length} test savoli tekshirildi.`);
+console.log('Kvota yig‘indilari, manbalar, rasm yo‘llari, book o‘chirgichi va mock filtri OK. Mock saralashi tekshirildi.');
 console.log(`Root: ${fileURLToPath(root)}`);

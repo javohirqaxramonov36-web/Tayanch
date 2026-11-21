@@ -1,0 +1,19 @@
+---
+import news from '../../../data/eyuf/news.json';
+import sources from '../../../data/eyuf/sources.json';
+const registry = new Map(sources.items.map(s => [s.id, s]));
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tashkent' }).format(new Date());
+const current = news.items.filter(item => item.status === 'current' && (!item.archive_on || item.archive_on > today));
+const archived = news.items.filter(item => !current.includes(item));
+---
+<section class="eyuf-panel" aria-labelledby="yangilik-h">
+ <h2 id="yangilik-h">Sanali islohotlar va yangiliklar</h2>
+ <p>Har xabar e’lon qilingan sanasiga bog‘langan. Loyiha, rejalashtirilgan chora va olingan natijani ajrating. Karta ro‘yxati har nashrda tekshiriladi.</p>
+ {current.length === 0 && <p>Joriy kartalar uchun yangi manba ko‘rigi kutilmoqda. Oldingi xabarlar quyida tarixiy misol sifatida saqlangan.</p>}
+ {current.map(item => <article><h3>{item.title}</h3><p><time datetime={item.published_on}>{item.published_on}</time> · Manba ko‘rilgan {item.as_of}</p><p>{item.body}</p><ul>{item.sources.map(ref => <li><a href={registry.get(ref.id)?.url ?? undefined} target="_blank" rel="noopener noreferrer">{ref.id} · {ref.locator} (yangi oynada)</a></li>)}</ul></article>)}
+ <details><summary>Tarixiy xabarlar arxivi</summary>{archived.map(item => <article><h3>{item.title}</h3><p><time datetime={item.published_on}>{item.published_on}</time> · Arxiv</p><p>{item.body}</p><ul>{item.sources.map(ref => <li><a href={registry.get(ref.id)?.url ?? undefined} target="_blank" rel="noopener noreferrer">{ref.id} · {ref.locator} (yangi oynada)</a></li>)}</ul></article>)}</details>
+</section>
+<style>
+article { border-top: var(--border-width-1) solid var(--color-border); padding-block: var(--space-4); }
+article h3 { margin-bottom: var(--space-3); }
+</style>

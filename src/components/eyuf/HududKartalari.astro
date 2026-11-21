@@ -1,0 +1,23 @@
+---
+import regions from '../../../data/eyuf/regions.json';
+import sources from '../../../data/eyuf/sources.json';
+const registry = new Map(sources.items.map(s => [s.id, s]));
+---
+<section class="eyuf-panel" aria-labelledby="hudud-h">
+ <h2 id="hudud-h">Hududingiz haqida</h2>
+ <p>Tarixiy meros, hudud bilan bog‘liq shaxslar va iqtisodiy yo‘nalishlar. Hozirgi ma’muriy hudud bilan tarixiy o‘lka chegaralari har doim bir xil bo‘lmaydi. Keltirilgan yo‘nalishlar ish o‘rni mavjudligi haqidagi va’da emas.</p>
+ {regions.items.map(region => <details class="eyuf-region" id={`hudud-${region.id}`}>
+  <summary>{region.title}</summary>
+  <h3>Tarixiy tayanch</h3><p>{region.history ?? 'Manba kutilmoqda.'}</p>
+  <h3>Shaxslar va hudud bilan aloqasi</h3><ul>{region.people.map(person => <li>{person}</li>)}</ul>
+  <h3>Iqtisodiy yo‘nalishlar</h3><ul>{region.industry.map(item => <li>{item}</li>)}</ul>
+  <p class="eyuf-small">Manba ko‘rilgan sana {region.as_of}. Ushbu karta tanlangan dalillarni qamraydi.</p>
+  <ul>{region.sources.map(ref => <li><a href={registry.get(ref.id)?.url ?? undefined} target="_blank" rel="noopener noreferrer">{ref.id} · {ref.locator} (yangi oynada)</a></li>)}</ul>
+  <p>Mashq. Ushbu hududdagi bitta muammo, sizning sohangizga aloqasi va qaytgach bajarishingiz mumkin bo‘lgan mahsulotni yozing. Dinamik raqamni yangi birlamchi manba bilan tekshiring.</p>
+ </details>)}
+</section>
+<style>
+.eyuf-region { padding-block: var(--space-4); border-top: var(--border-width-1) solid var(--color-border); }
+.eyuf-region summary { cursor: pointer; min-height: var(--size-touch-min); }
+.eyuf-region h3 { margin-top: var(--space-4); }
+</style>
