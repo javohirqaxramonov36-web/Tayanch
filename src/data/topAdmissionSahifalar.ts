@@ -31,6 +31,8 @@ export const taGuruhlar: TaGuruh[] = [
     bandlar: [
       { nomi: 'Ariza zinapoyasi', href: 'top-admission/qollanma/ariza-zinapoyasi/' },
       { nomi: 'Platformalar xaritasi', href: 'top-admission/platformalar/' },
+      { nomi: "Arzonroq o'qish yo'llari", href: 'top-admission/arzon-yollar/' },
+      { nomi: 'Ochiq manbalar', href: 'top-admission/manbalar/' },
     ],
   },
   {
