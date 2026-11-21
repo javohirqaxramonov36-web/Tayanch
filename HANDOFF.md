@@ -169,6 +169,8 @@ Top Admission maketi (Claude Design): https://claude.ai/artifact/1zP2rnjMp46RgY9
 
 ## 4. Qabul qilingan qarorlar
 
+- **Qavat obunalari (ADR 006, 2026-11-21, muallif qarori)**. `docs/qarorlar/006-qavat-obunalari.md` ADR 001 ni to'ldiradi. Har qavat obunasi alohida, umumiy boshqaruv `/uz/hisob/obunalar/` da rejalashtirilgan, to'lov usullari inPAY sahifasida tanlanadi. 1-bosqich hujjatlari qo'shildi, 2-bosqich kod va sxema tekshiruvi navbatda.
+
 - **Bitta sayt, 5 qavat.** Qavatlar `src/data/qavatlar.ts` da; 2–5 holati `bolimlar.ts` dan olinadi, qo'lda takrorlanmaydi.
 - **Navigatsiya**: bo'limlar orasida faqat Lift; menyuda "Muddatlar" va "Manbalar" qoladi. "Tez orada" qavatga kirsa bo'ladi ("qavat qurilmoqda" sahifasi).
 - **Dizayn manbasi**: har bo'lim uchun Claude Design maketi. Maket ko'rinish uchun, prototip yoki prompt mantiq va matn uchun. Ziddiyat bo'lsa to'xtab muallifdan so'raladi.
