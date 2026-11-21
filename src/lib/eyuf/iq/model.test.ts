@@ -72,3 +72,10 @@ test('Buzilgan va eski localStorage xavfsiz tashlanadi', () => {
   h.sessiya.savollar[0]='mavjud-emas';
   assert.equal(holatniOqi(JSON.stringify(h),savollar).sessiya,null);
 });
+test('Yangi bank mukofotlari eski IQ sessiyasida ham saqlanadi', () => {
+  const state = boshHolat();
+  state.mukofotlar = [{ id: 'prep2-09-c01', kun: '2026-11-21' }];
+  state.sessiya = yangiSessiya('1', savollar.slice(0, 20), 30);
+  const restored = holatniOqi(JSON.stringify(state), savollar);
+  assert.deepEqual(restored, state);
+});

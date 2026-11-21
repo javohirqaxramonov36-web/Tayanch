@@ -2,7 +2,7 @@ import { yol } from '../../yol';
 import { savollar } from './savollar';
 import {
   SAQLASH_KALITI, TOGRI_XP, aralashtir, boshHolat, chegaraMatni, daqiqaTogrimi,
-  holatniOqi, mukofotHisobla, natijaniHisobla, rejimNomi, ulashishMatni, yangiSessiya,
+  iqQulf, holatniOqi, mukofotHisobla, natijaniHisobla, rejimNomi, ulashishMatni, yangiSessiya,
   type Holat, type IqSavol, type Rejim, type Variant,
 } from './model';
 
@@ -207,6 +207,10 @@ export function ishgaTushir() {
   }
 
   function yakunla() {
+    void iqQulf(yakunlaQulfda);
+  }
+
+  function yakunlaQulfda() {
     if (!holat.sessiya || holat.sessiya.yakunlangan !== null) return;
     // Boshqa oynada berilgan XP qayta qo‘shilmasin.
     try {

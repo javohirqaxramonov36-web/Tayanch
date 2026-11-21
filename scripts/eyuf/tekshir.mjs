@@ -50,9 +50,9 @@ for (const level of ['bachelor', 'master']) {
   assert.equal(tracks.length, level === 'bachelor' ? 15 : 20);
 }
 const bank = data['questions-iq'];
-assert.equal(bank.items.length, 250);
+assert(bank.items.length >= 250, 'Avvalgi bank yozuvlari saqlanishi kerak');
 for (const question of bank.items) {
-  assert(question.options.some(option => option.id === question.book_answer));
+  assert(question.book_answer === null || question.options.some(option => option.id === question.book_answer));
   assert.equal(question.answer, question.verified ? question.book_answer : null);
   assert.equal(new Set(question.options.map(option => option.id)).size, question.options.length);
   for (const image of question.image) {
@@ -69,12 +69,13 @@ assert.equal(savollarniSarala({ items: [original] }, { ...settings, book_content
 assert.equal(savollarniSarala(bank, { ...settings, book_content_enabled: true }, { level: 'doctoral' }).length, 0);
 assert.equal(treklarniSarala(data.tracks, data.quotas, 'bachelor')[0].id, 'muhandislik');
 assert.equal(treklarniSarala(data.tracks, data.quotas, 'master')[0].id, 'sogliq');
-assert.equal(practice.length, 230);
-assert.equal(mock.length, 134);
+assert.equal(practice.length, bank.items.filter(q => q.level.includes('bachelor')).length);
+assert.equal(mock.length, bank.items.filter(q => q.level.includes('bachelor') && q.verified && q.answer !== null).length);
+assert(mock.length >= 134, 'Tasdiqlangan bank kamaymasligi kerak');
 assert(mock.every(question => question.id !== 'iq-1-09'));
 // Buzilgan yozuvlar sxemadan o‘tmasligini ham tekshiramiz.
 const validateQuestion = ajv.compile((await read('schemas/questions-iq.schema.json')).properties.items.items);
-for (const bad of [{ ...bank.items[0], difficulty: 4 }, { ...bank.items[0], level: ['doctoral'] }, { ...bank.items[0], source: null }, { ...bank.items[0], answer: null }, { ...bank.items[0], verified: false }]) {
+for (const bad of [{ ...bank.items[0], difficulty: 4 }, { ...bank.items[0], level: ['doctoral'] }, { ...bank.items[0], source: null }, { ...bank.items[0], answer: null }, { ...bank.items[0], verified: false }, { ...bank.items[0], book_answer: null }]) {
   assert.equal(validateQuestion(bad), false);
 }
 console.log(`EYUF: 10 JSON sxemasi, 252 dars, 20 trek, 14 hudud, 171 suhbat yozuvi, ${bank.items.length} test savoli tekshirildi.`);

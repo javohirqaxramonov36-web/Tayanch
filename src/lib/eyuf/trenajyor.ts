@@ -85,6 +85,32 @@ export function mahorat(p: IqProgress, type: string) {
       : 0,
   };
 }
+
+interface QiyinlikSavoli {
+  id: string;
+  type: string;
+  verified: boolean;
+  difficulty: number;
+  difficulty_verified: boolean;
+}
+
+/** Metodik qiyinlik. Faqat javobi va qiyinligi tekshirilgan savollar saralanadi. */
+export function mosSavolniTanla<T extends QiyinlikSavoli>(
+  questions: T[],
+  progress: IqProgress,
+): T | undefined {
+  const calibrated = questions.filter(q => q.verified && q.difficulty_verified);
+  return calibrated.toSorted((a, b) => {
+    const distance = (q: T) => {
+      const skill = mahorat(progress, q.type);
+      let target = 2;
+      if (skill.count >= 5 && skill.percent < 50) target = 1;
+      if (skill.count >= 5 && skill.percent >= 80) target = 3;
+      return Math.abs(q.difficulty - target);
+    };
+    return distance(a) - distance(b);
+  })[0] ?? questions[0];
+}
 export function streak(p: IqProgress, at = Date.now()) {
   const set = new Set(p.days);
   const today = toshkentKuni(at);

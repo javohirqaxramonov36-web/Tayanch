@@ -53,3 +53,21 @@ test('Parallel progressdagi javoblar yo‘qolmaydi', async () => {
   assert(merged.reviews.a);
   assert.equal(progressniBirlashtir(merged, merged).history.length, 2);
 });
+test('Adaptiv tanlov faqat tekshirilgan qiyinlikdan foydalanadi', async () => {
+  const { mosSavolniTanla } = await import('./trenajyor.ts');
+  const questions = [1, 2, 3].map(difficulty => ({
+    id: String(difficulty), type: 'test', verified: true,
+    difficulty, difficulty_verified: true,
+  }));
+  assert.equal(mosSavolniTanla(questions, boshProgress())?.difficulty, 2);
+  let weak = boshProgress();
+  let strong = boshProgress();
+  for (let i = 0; i < 5; i++) {
+    weak = javobniYoz(weak, String(i), 'test', false, i);
+    strong = javobniYoz(strong, String(i), 'test', true, i);
+  }
+  assert.equal(mosSavolniTanla(questions, weak)?.difficulty, 1);
+  assert.equal(mosSavolniTanla(questions, strong)?.difficulty, 3);
+  questions[2].difficulty_verified = false;
+  assert.equal(mosSavolniTanla(questions, strong)?.difficulty, 2);
+});

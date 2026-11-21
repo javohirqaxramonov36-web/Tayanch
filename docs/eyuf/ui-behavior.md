@@ -24,3 +24,16 @@ Taklif etilgan lokal saqlash, pedagogik interval/mahorat/badge parametrlari va r
 ## 2026-11-21 davomiy amalga oshirish
 
 Muallif keyingi bosqichlar va qolgan ishlarni davom ettirishni tasdiqladi. Endi 40 savolli ikki blokli mock va 10 savolli diagnostika yetarli tasdiqlangan bank bilan faol. Kalit `tayanch:eyuf-mock:v1`, natija takror ochilganda progress ikki marta yozilmaydi. PREP_2 variantlari A–G oralig‘ida. Difficulty tasdiqlanmagani sababli adaptiv tanlov ochiq qoladi. Qolgan joriy chegara va sinovlar `yakunlash-holati.md`da.
+
+## Davomiy tasdiqlangan topshiriq doirasidagi moslashuv va XP
+
+Muallif barcha qolgan ishni yakunlashni topshirdi, davomiy amalga oshirish uchun qayta tasdiq talab qilinmaydi.
+
+1. Qiyinlik 1–3 qiymati yechimning metodik ko‘rigi bilan alohida qayd etiladi. Bu o‘quvchi statistikasi asosidagi empirik kalibratsiyadan alohida.
+2. Mashq va combo keyingi savolni hali berilmagan, javobi va metodik qiyinligi tekshirilgan yozuvlardan tanlaydi. Qolgan yozuvlar navbat oxirida ko‘rik uchun qoladi.
+3. Har tur bo‘yicha kamida beshta baholangan javob bo‘lsa, oxirgi 20 javobdagi 50%dan past natija 1, 80% va yuqori 3, oraliq natija 2-darajani tanlaydi. Boshlanishda 2-daraja olinadi. Bu Tayanch metodik parametrlari.
+4. Mock tarkibi, daily va review tartibi o‘z qoidalari bo‘yicha yuradi. Qiyinlik tasdig‘i yo‘q yozuv adaptiv mezon sifatida olinmaydi.
+5. Yangi tasdiqlangan savollarning birinchi to‘g‘ri javobi mavjud `tayanch:eyuf-iq:v1` mukofotlar ro‘yxatiga yoziladi. Mavjud 5 XP va Toshkent kuniga 300 XP chegarasi ishlaydi.
+6. Eski IQ sahifa yangi mukofot IDlarini saqlaydi. Bir savolning ikki manba nusxasi umumiy ID bilan hisoblanadi. Parallel tablarda Web Locks mavjud bo‘lsa umumiy qulf bilan o‘qish va yozish bajariladi.
+7. Saqlash ishlamasa XP yozilmaganligi ko‘rsatiladi, mashq tabda davom etadi. Klaviatura va mobil variant tanlashning mavjud holatlari saqlanadi.
+8. Eski sessiya/reload, birinchi/takroriy javob, kunlik chegara, yangi ID, pending savol, parallel tab va storage xatosi uchun regressiya tekshiriladi.
