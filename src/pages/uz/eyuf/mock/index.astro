@@ -30,7 +30,12 @@ import {
 } from '../../../../lib/eyuf/mock';
 import { lokalOqi, lokalYoz, matnElement } from '../../../../lib/eyuf/holat';
 import { yol } from '../../../../lib/yol';
-import { boshProgress, progressTogrimi, javobniYoz, progressniBirlashtir } from '../../../../lib/eyuf/trenajyor';
+import {
+  boshProgress,
+  progressTogrimi,
+  javobniYoz,
+  progressniBirlashtir,
+} from '../../../../lib/eyuf/trenajyor';
 const root = document.querySelector<HTMLElement>('#eyuf-mock')!;
 const el = <T extends HTMLElement = HTMLElement>(s: string) =>
   root.querySelector<T>(s)!;
@@ -58,6 +63,32 @@ zoom.addEventListener('cancel', (e) => {
 function save() {
   lokalYoz(MOCK_KALITI, state, message);
 }
+function appendImages(
+  container: HTMLElement,
+  questionImages: (typeof bank.items)[number]['image'],
+) {
+  for (const r of questionImages) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'eyuf-mock-image';
+    button.setAttribute('aria-label', 'Savol rasmini kattalashtirish');
+    const img = document.createElement('img');
+    img.src = yol(r.path);
+    img.alt = r.alt;
+    img.width = r.width;
+    img.height = r.height;
+    button.append(img);
+    button.addEventListener('click', () => {
+      origin = button;
+      const full = el<HTMLImageElement>('[data-zoom-image]');
+      full.src = img.src;
+      full.alt = img.alt;
+      zoom.showModal();
+      el('[data-close]').focus();
+    });
+    container.append(button);
+  }
+}
 function result() {
   if (!state) return;
   if (clock) clearInterval(clock);
@@ -65,14 +96,32 @@ function result() {
   state = mockYakun(state);
   if (!state.progressApplied) {
     const progressKey = 'tayanch:eyuf-iq-progress:v1';
-    let progress = lokalOqi(progressKey, progressTogrimi, boshProgress(), message);
+    let progress = lokalOqi(
+      progressKey,
+      progressTogrimi,
+      boshProgress(),
+      message,
+    );
     for (const id of state.ids) {
-      const question = bank.items.find(q => q.id === id)!;
-      if (!progress.history.some(event => event.id === id && event.at === state!.finishedAt)) {
-        progress = javobniYoz(progress, id, question.type, state.answers[id] === question.answer, state.finishedAt!);
+      const question = bank.items.find((q) => q.id === id)!;
+      if (
+        !progress.history.some(
+          (event) => event.id === id && event.at === state!.finishedAt,
+        )
+      ) {
+        progress = javobniYoz(
+          progress,
+          id,
+          question.type,
+          state.answers[id] === question.answer,
+          state.finishedAt!,
+        );
       }
     }
-    progress = progressniBirlashtir(progress, lokalOqi(progressKey, progressTogrimi, boshProgress(), message));
+    progress = progressniBirlashtir(
+      progress,
+      lokalOqi(progressKey, progressTogrimi, boshProgress(), message),
+    );
     if (lokalYoz(progressKey, progress, message)) state.progressApplied = true;
   }
   save();
@@ -97,7 +146,18 @@ function result() {
         'p',
         `Sizning javobingiz ${state.answers[id] ?? 'yo‘q'}. To‘g‘ri javob ${q.answer}.`,
       ),
+    );
+    appendImages(details, q.image);
+    const variants = document.createElement('ul');
+    for (const option of q.options)
+      variants.append(matnElement('li', `${option.id}. ${option.text}`));
+    details.append(variants);
+    const steps = document.createElement('ol');
+    for (const step of q.explanation.steps)
+      steps.append(matnElement('li', step));
+    details.append(
       matnElement('p', q.explanation.rule),
+      steps,
       matnElement('p', `Tuzoq. ${q.explanation.trap}`),
       matnElement(
         'p',
@@ -126,7 +186,9 @@ function choose(answer: string) {
   state = mockJavob(state, q.id, answer);
   save();
   show(false);
-    el('[data-options]').querySelector<HTMLButtonElement>('[aria-pressed="true"]')?.focus({ preventScroll: true });
+  el('[data-options]')
+    .querySelector<HTMLButtonElement>('[aria-pressed="true"]')
+    ?.focus({ preventScroll: true });
 }
 function show(focus = true) {
   if (!state) return;
@@ -144,27 +206,7 @@ function show(focus = true) {
   el('[data-stem]').textContent = q.stem;
   const images = el('[data-images]');
   images.replaceChildren();
-  for (const r of q.image) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'eyuf-mock-image';
-    button.setAttribute('aria-label', 'Savol rasmini kattalashtirish');
-    const img = document.createElement('img');
-    img.src = yol(r.path);
-    img.alt = r.alt;
-    img.width = r.width;
-    img.height = r.height;
-    button.append(img);
-    button.addEventListener('click', () => {
-      origin = button;
-      const full = el<HTMLImageElement>('[data-zoom-image]');
-      full.src = img.src;
-      full.alt = img.alt;
-      zoom.showModal();
-      el('[data-close]').focus();
-    });
-    images.append(button);
-  }
+  appendImages(images, q.image);
   const options = el('[data-options]');
   options.replaceChildren();
   for (const option of q.options) {

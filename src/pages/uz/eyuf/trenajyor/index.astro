@@ -123,7 +123,7 @@ if (root) {
     el('[data-question]').hidden = true;
     el('[data-result]').hidden = false;
     el('[data-summary]').textContent =
-      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. XP kitobdagi tasdiqlangan savolning birinchi to‘g‘ri javobiga beriladi. Bu mashq natijasi.`;
+      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. XP PREP_1dagi tasdiqlangan savolning birinchi to‘g‘ri javobiga beriladi. Bu mashq natijasi.`;
     if (mode === 'daily' && i >= pool.length) {
       const day = toshkentKuni();
       p.days = [...new Set([...p.days, day])];
@@ -160,8 +160,12 @@ if (root) {
       combo = 0;
       feedback.append(matnElement('h3', 'Javob tekshirilmoqda'));
     }
+    const steps = document.createElement('ol');
+    for (const step of q.explanation.steps)
+      steps.append(matnElement('li', step));
     feedback.append(
       matnElement('p', q.explanation.rule),
+      steps,
       matnElement('p', 'Tuzoq. ' + q.explanation.trap),
     );
     feedback.hidden = false;

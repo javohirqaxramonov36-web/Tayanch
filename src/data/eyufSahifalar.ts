@@ -16,6 +16,7 @@ export const eyufGuruhlar: TaGuruh[] = [
     bandlar: [
       { nomi: 'IQ test', href: 'eyuf/iq/' },
       { nomi: 'IQ trenajyor', href: 'eyuf/trenajyor/' },
+      { nomi: 'Test simulyatsiyasi', href: 'eyuf/mock/' },
     ],
   },
   {
@@ -23,6 +24,7 @@ export const eyufGuruhlar: TaGuruh[] = [
     bandlar: [
       { nomi: 'Suhbatga tayyorgarlik', href: 'eyuf/suhbat/' },
       { nomi: 'Soha treklari', href: 'eyuf/soha/' },
+      { nomi: 'Hududlar', href: 'eyuf/hududlar/' },
     ],
   },
   {

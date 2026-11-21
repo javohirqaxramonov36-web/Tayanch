@@ -35,3 +35,16 @@ Dastlabki CDP screenshot ayrim bloklarni takrorlab ko‘rsatdi. Androidning nati
 - VoiceOver va iPhone sinovi bajarilmagan. Android mikrofon hamda sensor sinovi ularning o‘rnini bosmaydi.
 
 Ushbu hujjat to‘liq topshiriq tugallanganini bildirmaydi. Natijalar bosqichlar bo‘yicha yangilanadi.
+
+## 2026-11-21 yakuniy regressiya
+
+- Bank 250 yozuv, 154 mustaqil tasdiqlangan va 96 ochiq javob. Har darajada 230 mavjud yozuv, shundan 134 mockka mos. To‘liq mock 20 IQ va 20 darajaga mos ikkinchi blokdan olinadi.
+- 23/23 EYUF unit testi, JSON/sxema/manba/asset tekshiruvi va repo siyosati o‘tdi.
+- Joriy main bilan build 146 sahifa. `astro check`da EYUF xatosi yo‘q, boshqa bo‘limlarda avvaldan mavjud to‘rtta xato qolgan.
+- 360/1280px va yorug‘/qorong‘i mavzudagi mock, hududlar, trenajyor, suhbat uchun 16 holat axe WCAG A/AA xatosiz, gorizontal overflow va JS xatosisiz o‘tdi. Mock/hududlar Lighthouse accessibility 100.
+- To‘liq 40 javob, 100 ball, reload/tiklash, yakun va progress idempotentligi hamda `progressApplied` yozilmay qolgan retry holati tekshirildi. Yakuniy ko‘rikda rasm, variantlar, qoida va qadamlar bor, zoom ishlaydi.
+- Suhbatning soha/inglizcha filtri, esse da’volari, HTMLni matn sifatida ko‘rsatish, tasdiq bilan tozalash va localStorage yozish taqiqlangan holatda mockning davom etishi sinaldi.
+- Yangilik kartasi Toshkent sanasi bilan archive_on kunida qurilmada ham arxivga ko‘chadi. Qurilma vaqti foydalanuvchi sozlamasiga bog‘liq. JSsiz holat oxirgi build sanasiga mos.
+- Eng so‘nggi qayta tekshiruvda Android USB orqali ulanmagan. Oldingi haqiqiy qurilma tekshiruvi qayta bajarildi deb hisoblanmaydi.
+
+Nashr doirasi ushbu tekshirilgan UI va belgilangan qoralama kontentdir. Yuqoridagi ochiq kontent va qurilma bandlari alohida qoladi. Zarur rollback shu PRni revert qilib deploy qilish, so‘ng HANDOFFdagi A1 statik nashrini tiklash orqali bajariladi.

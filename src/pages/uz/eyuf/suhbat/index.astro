@@ -114,7 +114,9 @@ async function show(q: (typeof bank.items)[number]) {
   el('[data-question]').textContent = q.stem;
   el('[data-english]').textContent = q.stem_en;
   el('[data-source]').textContent =
-    q.source.book === 'T01' ? 'Tayanch soha mashqi. Norasmiy savol.' : `${q.source.book}, PDF ${q.source.page.join(', ')}-bet, ${q.source.number}-savol. Transkripsiya ko‘rigi kutilmoqda.`;
+    q.source.book === 'T01'
+      ? 'Tayanch soha mashqi. Norasmiy savol.'
+      : `${q.source.book}, PDF ${q.source.page.join(', ')}-bet, ${q.source.number}-savol. Transkripsiya ko‘rigi kutilmoqda.`;
   el('[data-warning]').textContent =
     q.id === 'interview-s09-1-37'
       ? 'Bu savoldagi ishlash muddati manbaning asl matni. Amaldagi darajaviy majburiyatni shartnomangiz bilan tekshiring.'
@@ -151,9 +153,16 @@ el('[data-random]').addEventListener('click', async () => {
   const pool = bank.items.filter(
     (q) =>
       q.level.includes(level) &&
-      (track === 'all' || !q.track_ids.length || q.track_ids.includes(track)) &&
+      (track === 'all' ||
+        !q.track_ids.length ||
+        q.track_ids.some((id) => id === track)) &&
       (room === 'all' ||
-        (room === 'specialty' && (q.track_ids.length > 0 || (q.source.book === 'S09' && q.room === 1 && q.number >= 19 && q.number <= 34))) ||
+        (room === 'specialty' &&
+          (q.track_ids.length > 0 ||
+            (q.source.book === 'S09' &&
+              q.room === 1 &&
+              q.number >= 19 &&
+              q.number <= 34))) ||
         String(q.room) === room),
   );
   if (!pool.length) {
@@ -174,9 +183,14 @@ el('[data-mock]').addEventListener('click', async () => {
     (q) => q.level.includes(level) && q.source.book === 'S09',
   );
   const track = el<HTMLSelectElement>('[data-track]').value;
-  const specialty = bank.items.filter(q => q.track_ids.includes(track) && q.level.includes(level));
+  const specialty = bank.items.filter(
+    (q) => q.track_ids.some((id) => id === track) && q.level.includes(level),
+  );
   queue = [
-    ...aralashtir(pool.filter((q) => q.room === 1)).slice(0, specialty.length ? 2 : 4),
+    ...aralashtir(pool.filter((q) => q.room === 1)).slice(
+      0,
+      specialty.length ? 2 : 4,
+    ),
     ...aralashtir(specialty).slice(0, 2),
     ...aralashtir(pool.filter((q) => q.room === 2)).slice(0, 4),
   ];
