@@ -512,3 +512,12 @@
   --home-free-bg: #17291F;
   --home-free-ink: #7EE2A8;
 }
+
+:root {
+  --login-width: 460px;
+  --login-radius: 24px;
+  --login-button-height: 54px;
+  --login-backdrop: rgba(0, 0, 0, 0.6);
+  /* #2AABEE with white text is below 4.5:1. Darker Telegram blue preserves accessible copy. */
+  --telegram-login-bg: #086BA4;
+}

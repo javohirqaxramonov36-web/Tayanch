@@ -59,3 +59,27 @@ Branch `homepage-redesign`, asos `origin/main`, 2026-11-21. Faqat lokal commitla
 - `BoshTariflar.astro` narx/davr/afzallikni faol SAT Pro `plans` qatoridan oladi. Kengaytirilgan analitika faqat server bayrog'i bo'lsa ko'rsatiladi. Yillik/kunlik chegirma yoki AI va'dasi yo'q. Kunlik ekvivalent haqiqiy narx/davrdan yaxlitlanadi.
 - Ommaviy Supabase sozlamasi yo'q yoki so'rov ishlamasa `[TO'LDIRING: Pro narxi va davri]`, `[TO'LDIRING: Pro imkoniyatlari]` ko'rinadi va to'lov o'chiq. Mavjud server checkout ishlatiladi. 4-qism login hodisasini ulaydi.
 - Font talabi bo'yicha mavjud Onest saqlandi, Manrope repoda yo'q. Maket qiymatlari yetishmagan tokenlar sifatida `tokens.css` ga qo'shildi.
+
+## 4-qism — tugadi
+
+- `hisob/KirishDialog.astro`, `src/lib/kirishDialog.ts`, `telegramLogin.ts`, `hisob.ts`, `hisobHolat.ts`: native dialog, fokus/Escape, mavjud Google PKCE, Telegram callback → Edge Function → verifyOtp. Email/parol uchun mavjud sahifa ham ochiq.
+- `supabase/functions/telegram-auth/{verify,handler,index}.ts`, `20261121180000_telegram_login.sql`, `supabase/config.toml`: HMAC-SHA256, 600 soniya, 30 soniyadan ortiq kelajakni rad etish, cheklangan so'rov hajmi, CORS, generic xatolar. Log faqat bosqich kodi.
+- `telegram_id` nullable/unique, yangi auth foydalanuvchi triggerida server app_metadata'dan atomik yoziladi. Bir paytdagi yangi kirishlar va takroriy urinishlar profil claimini qayta tekshiradi. Email kolliziyasidagi boshqa hisob olinmaydi. Har login oldidan app_metadata mosligi tekshiriladi.
+- Mavjud own-profile SELECT/UPDATE RLS va ustun grantlari saqlandi. Telegram identifikatori mijoz tomonidan o'zgartirilmaydi. Ism/username/photo serverda yoziladi. Oddiy mavjud profil tahriri ishlaydi.
+- generateLink magiclink xat yubormaydi, faqat hashed_token javobi. Brauzer verifyOtp bilan bir xil Supabase sessiya kalitini ishlatadi. Yosh va rozilik darvozasi chetlab o'tilmaydi.
+- IP bo'yicha avvaldan umumiy rate-limit naqshi topilmadi. IP cheklovi qo'shilmadi. Jonli yoqishdan oldin gateway himoyasini ko'rib chiqish kerak.
+- Bot username va ochiq raqamli bot ID berilmagan. `src/data/telegramLogin.ts` da bo'sh. Token so'ralmadi/o'qilmadi. Telegram tugmasi sozlanmaguncha o'chiq va placeholder ko'rinadi.
+- `src/pages/uz/maxfiylik/index.astro` da Telegram ma'lumotlari haqidagi `[TEKSHIRING]` qoralama qo'shildi.
+- Promptdagi Telegram #2AABEE ustida oq matn 4.5:1 bermaydi. Kontrast talabi uchun DS tokenida quyuqroq #086BA4 tanlandi.
+- Rasmiy JS widgetning `Telegram.Login.auth` callback API'si ishlatiladi. Custom matnli tugmadan popupni sinxron ochadi, redirect yoki botga xabar yuborish ruxsati so'ramaydi. Birinchi marta Telegramning o'zi tasdiq so'rashi mumkin.
+- Native Telegram Supabase provider ro'yxatida yo'q. Custom OIDC bor, lekin bu tayyor Telegram provider emas. Topshiriqdagi widget/HMAC fallback tanlandi. Telegramning yangi Login hujjati legacy widget sahifasiga arxiv havolasi beradi.
+
+### Rasmiy manbalar, tekshirilgan 2026-11-21
+
+- Telegram widget, callback va imzo https://core.telegram.org/widgets/login-legacy
+- Rasmiy widget JS callback API https://telegram.org/js/telegram-widget.js?22
+- Supabase provider ro'yxati https://supabase.com/docs/guides/auth/social-sign-in
+- Supabase generateLink https://supabase.com/docs/reference/javascript/auth-admin-generatelink
+- Supabase verifyOtp https://supabase.com/docs/reference/javascript/auth-verifyotp
+
+Boshlang'ich tekshiruv 147 sahifali build, mavjud 399/399 test va Telegram HMAC/HTTP 4/4 test. Qo'shimcha account/race testlari va to'liq brauzer sinovi 5-qismda.

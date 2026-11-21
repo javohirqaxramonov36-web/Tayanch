@@ -11,6 +11,7 @@ import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import { eyufGuruhlar } from '../data/eyufSahifalar';
 import { bolimlar } from '../data/bolimlar';
 import QavatMenyu from './navigator/QavatMenyu.astro';
+import KirishDialog from './hisob/KirishDialog.astro';
 import HeaderAmallar from './HeaderAmallar.astro';
 import Suhbatdosh from './Suhbatdosh.astro';
 import TayanchLogo from './TayanchLogo.astro';
@@ -276,6 +277,7 @@ const ieltsGuruhlar = [
     </span>
   </button>
 </header>
+<KirishDialog />
 
 <script>
   const KALIT_PREFIKS = 'tayanch:';
@@ -314,9 +316,11 @@ const ieltsGuruhlar = [
 
   const ochiqPanel = () => d.querySelector<HTMLDetailsElement>('.ustki-qator details[open]');
   const yopish = document.getElementById('panel-yopish') as HTMLButtonElement;
+  let desktopOchuvchi: HTMLButtonElement | null = null;
   const panelniYop = (panel: HTMLDetailsElement) => {
     panel.open = false;
-    panel.querySelector('summary')?.focus({ preventScroll: true });
+    if (desktop.matches) desktopOchuvchi?.focus({ preventScroll: true });
+    else panel.querySelector('summary')?.focus({ preventScroll: true });
   };
 
   yopish.hidden = false;
@@ -325,6 +329,10 @@ const ieltsGuruhlar = [
     if (panel) panelniYop(panel);
   });
   const menyuDetails = document.querySelector<HTMLDetailsElement>('.yon-orami')!;
+  document.addEventListener('tayanch:joriy-menyu', (event) => {
+    desktopOchuvchi = (event as CustomEvent<{ fokus: HTMLButtonElement }>).detail.fokus;
+    setTimeout(() => { menyuDetails.open = true; menyuDetails.querySelector<HTMLElement>('a[href]')?.focus(); }, 0);
+  });
   menyuDetails.addEventListener('toggle', () => { document.getElementById('panel-ochish')?.setAttribute('aria-expanded', String(menyuDetails.open)); });
   const ustki = document.querySelector<HTMLElement>('header.ustki-qator')!;
   ustki.addEventListener('keydown', (event) => {
@@ -583,7 +591,7 @@ const ieltsGuruhlar = [
   .desktop-nav { margin-inline: auto; min-width: 0; }
   .mobile-nav { display: none; }
   .yon-orami > summary { display: none; }
-  @media (width >= 1024px) { .yon-orami { display: none; } }
+  @media (width >= 1024px) { .yon-orami { position: absolute; inset: 100% var(--space-8) auto auto; width: var(--header-menu-width); } .yon-orami .yon { position: static; width: 100%; } }
   @media (width < 1024px) {
     .ustki-qator { padding-inline: var(--space-4); gap: var(--space-2); }
     .ustki-qator > .logo { margin-right: auto; width: var(--header-logo-mobile); }
