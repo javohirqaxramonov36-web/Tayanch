@@ -31,7 +31,9 @@ const univNomlari = new Map((await getCollection('universitetlar')).map((e) => [
 const grantlar = (await getCollection('grantlar'))
   .map((e) => {
     const d = e.data;
-    const kirish = { ...d, davlat: refId(d.davlat)!, universitet: refId(d.universitet) } as unknown as GrantKirish & { universitet?: string; rasmiy_havola: string };
+    const kirish = { ...d, davlat: refId(d.davlat)!, universitet: refId(d.universitet) } as unknown as GrantKirish & {
+      universitet?: string; rasmiy_havola: string; tadqiqot?: { talablar: FaktT; qoladigan_xarajat: FaktT; majburiyat: FaktT };
+    };
     return kirish;
   })
   .filter((g) => grantKorinadimi(g))
@@ -172,6 +174,25 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
                   <dd><Fakt fakt={g.deadline} format={deadlineFormat} /></dd>
                 </div>
               </dl>
+              {g.tadqiqot && (
+                <details class="gk-batafsil">
+                  <summary>Talablar va qoladigan xarajat<span class="gk-sr">: {xulosa.nom}</span></summary>
+                  <dl class="gk-maydonlar">
+                    <div>
+                      <dt>Asosiy talablar</dt>
+                      <dd><Fakt fakt={g.tadqiqot.talablar} /></dd>
+                    </div>
+                    <div>
+                      <dt>O'zingiz hisoblang</dt>
+                      <dd><Fakt fakt={g.tadqiqot.qoladigan_xarajat} /></dd>
+                    </div>
+                    <div>
+                      <dt>Shartlar</dt>
+                      <dd><Fakt fakt={g.tadqiqot.majburiyat} /></dd>
+                    </div>
+                  </dl>
+                </details>
+              )}
               <div class="gk-havolalar">
                 <a class="gk-havola" href={g.rasmiy_havola} rel="noopener">Rasmiy sahifa<span class="gk-sr">: {xulosa.nom}</span></a>
                 {ichki && <a class="gk-ichki" href={ichki.href}>{ichki.nomi}<span class="gk-sr">: {xulosa.nom}</span></a>}
@@ -187,7 +208,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
       </>
     )}
 
-    <p class="gk-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="gk-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida 5 mezon bo'yicha solishtiring.</p>
+    <p class="gk-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="gk-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida xavfsizlik, narx va boshqa mezonlar bo'yicha solishtiring.</p>
   </div>
 </BolimQobiq>
 
@@ -333,6 +354,13 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-maydonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
   .gk-maydonlar dd { margin: 0; min-width: 0; display: grid; gap: var(--space-1); }
   .gk-izoh { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
+  .gk-batafsil { border-top: 1px solid var(--color-border); padding-top: var(--space-2); }
+  .gk-batafsil > summary {
+    min-height: var(--size-touch-min); display: flex; align-items: center; cursor: pointer;
+    font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-primary);
+  }
+  .gk-batafsil > summary:focus-visible { outline: 2px solid var(--floor-ui); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .gk-batafsil[open] > .gk-maydonlar { margin-top: var(--space-2); }
   .gk-havolalar { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding-top: var(--space-2); }
   .gk-havolalar .gk-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
   .gk-ichki {

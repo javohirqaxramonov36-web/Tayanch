@@ -28,6 +28,9 @@ export interface DavlatKirish {
   til: { ingliz_tilida_dastur_bor: Fakt; odatiy_ielts: Fakt };
   ishlash: { oqish_paytida: Fakt; bitirgandan_keyin: Fakt };
   diplom: { togridan_togri: Fakt; tayyorlov_nomi?: Fakt };
+  /** Admission F (tadqiqot to'plami): xavfsizlik va STEM tanlovi. */
+  xavfsizlik?: { ogohlantirish: Fakt; siyosiy_barqarorlik: Fakt };
+  tanlov?: { universitet_misollari: string[]; izoh: Fakt; portal?: string };
 }
 
 export interface GrantKirish {

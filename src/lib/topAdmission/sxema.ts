@@ -14,7 +14,10 @@ export const oddiyRef: Ref = () => z.string().min(1);
 
 const HTTPS = /^https:\/\//;
 
-/** Umumiy "Fakt": qiymat + manba. Holat "qoralama"/"tasdiqlangan" bo'lsa qiymat, source_url, manba_iborasi, tekshirilgan_sana majburiy. */
+/**
+ * Umumiy "Fakt": qiymat + manba. Holat "qoralama"/"tasdiqlangan" bo'lsa qiymat, source_url, manba_iborasi, tekshirilgan_sana majburiy.
+ * "muallif" bo'lsa manba_iborasi shart emas (tadqiqot to'plamidan, muallif tasdig'i bilan; Admission F).
+ */
 export function faktSxema<T extends z.ZodType>(qiymat: T) {
   return z
     .strictObject({
@@ -35,7 +38,7 @@ export function faktSxema<T extends z.ZodType>(qiymat: T) {
       const bosh = (v: unknown) => v === undefined || v === null || (typeof v === 'string' && v.trim() === '');
       if (bosh(f.qiymat)) xato('qiymat', `holat "${f.holat}" bo'lsa majburiy`);
       if (bosh(f.source_url)) xato('source_url', `holat "${f.holat}" bo'lsa majburiy`);
-      if (bosh(f.manba_iborasi)) xato('manba_iborasi', `holat "${f.holat}" bo'lsa majburiy (rasmiy sahifadagi aynan ibora)`);
+      if (f.holat !== 'muallif' && bosh(f.manba_iborasi)) xato('manba_iborasi', `holat "${f.holat}" bo'lsa majburiy (rasmiy sahifadagi aynan ibora)`);
       if (bosh(f.tekshirilgan_sana)) xato('tekshirilgan_sana', `holat "${f.holat}" bo'lsa majburiy`);
     });
 }
@@ -79,6 +82,21 @@ export function davlatSxema(ref: Ref) {
       togridan_togri: faktSxema(z.enum(['ha', "yo'q", 'dasturga_qarab'])),
       tayyorlov_nomi: matnFakt.optional(),
     }),
+    /** Ixtiyoriy (Admission F): bir nechta davlatdagi dastur (masalan Erasmus Mundus). Taqqoslash sahifasida ko'rsatilmaydi. */
+    kop_davlatli: z.boolean().optional(),
+    /** Ixtiyoriy (Admission F, tadqiqot to'plami 2026-11-20): xavfsizlik va siyosiy barqarorlik. */
+    xavfsizlik: z.strictObject({
+      ogohlantirish: matnFakt,
+      siyosiy_barqarorlik: matnFakt,
+    }).optional(),
+    /** Ixtiyoriy (Admission F): STEM uchun universitet misollari, tanlov izohi va rasmiy ta'lim portali. */
+    tanlov: z.strictObject({
+      universitet_misollari: z.array(z.string().min(1)),
+      izoh: matnFakt,
+      portal: z.string().regex(HTTPS, "https:// bilan boshlanishi kerak").optional(),
+    }).optional(),
+    /** Tadqiqot to'plamidagi davlat kodi (masalan "DE"); yillik yangilashda moslash uchun. */
+    tadqiqot_id: z.string().optional(),
   });
 }
 
@@ -126,6 +144,17 @@ export function grantSxema(ref: Ref) {
     toliq_ehtiyoj: z.boolean().optional(),
     /** Ixtiyoriy (E4): to'liq qo'llanma bo'limi. */
     qollanma: qollanmaSxema.optional(),
+    /**
+     * Ixtiyoriy (Admission F): tadqiqot to'plamidan (03-tadqiqot/top-admission-tadqiqot) qo'shimcha ma'lumot.
+     * Kartada "Batafsil" ichida chiqadi. `idlar`: to'plamdagi yozuv ID'lari (masalan "JP01"), `qabul_yili`: tegishli qabul yili.
+     */
+    tadqiqot: z.strictObject({
+      idlar: z.array(z.string().min(1)).min(1),
+      qabul_yili: z.number().int().nullable(),
+      talablar: matnFakt,
+      qoladigan_xarajat: matnFakt,
+      majburiyat: matnFakt,
+    }).optional(),
   }).superRefine((g, ctx) => {
     if (g.toliq_ehtiyoj && g.toliq_qoplaydi?.qiymat === true) {
       ctx.addIssue({ code: 'custom', path: ['toliq_qoplaydi'], message: "to'liq ehtiyojga asoslangan yordamga \"to'liq qoplaydi\" qo'yilmaydi" });
