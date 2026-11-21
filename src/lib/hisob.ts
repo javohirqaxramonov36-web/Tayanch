@@ -181,7 +181,7 @@ export function hisobQorovul(): Promise<Session | null> {
     if (!c) return null;
     const { data } = await c.auth.getSession();
     if (!data.session) {
-      if (document.querySelector('[data-kirish-dialog]')) {
+      if (document.querySelector('[data-kirish-dialog]') && !document.querySelector('[data-qorovul-yonaltir]')) {
         const kirdi = new Promise<void>((resolve) => document.addEventListener('tayanch:hisob-kirdi', () => resolve(), { once: true }));
         document.dispatchEvent(new CustomEvent('tayanch:kirish-och', { detail: { keyin: location.pathname + location.search } }));
         await kirdi;
