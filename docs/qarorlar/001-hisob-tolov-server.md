@@ -1,5 +1,7 @@
 # 001. Hisob, to'lov va server
 
+To'ldiruvchi: [006](006-qavat-obunalari.md).
+
 - **Holat**: qabul qilingan (muallif, 2026-11-08). Hisob (email + parol) kodi P03 da yozildi (2026-11-09, PR #58, #61). Kod: sxema (PR #38, #57), inPAY to'lovi Edge Function'lari (PR #62, 2026-11-09); to'lov sahifalari hali yo'q.
 - **Almashtiradi**: "Formalar, to'lov, hisob yo'q" va "Foydalanuvchi ma'lumoti faqat brauzerda" qoidalari (CLAUDE.md, HANDOFF §4).
 
