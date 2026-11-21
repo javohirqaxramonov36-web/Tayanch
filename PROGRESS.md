@@ -136,3 +136,14 @@ Boshlang'ich tekshiruv 147 sahifali build, mavjud 399/399 test va Telegram HMAC/
 - IP rate-limit, bir martalik Telegram payload replay himoyasini kuchaytirish alohida ish. Hozir imzo va 600 soniya amal qiladi.
 - Jonli Telegram/Google/inPAY, migratsiyaning haqiqiy bazaga tatbiqi, haqiqiy telefon va VoiceOver sinalmagan. Tarmoq sekinligida font yuklanishi alohida emulyatsiya qilinmagan.
 - Ko'rib chiqish skrinshotlari va test loglari vaqtinchalik `/private/tmp/homepage-*` fayllarida. Asosiy saqlanadigan hisobot ushbu fayl.
+
+## Yo'nalish o'zgarishi — 2026-11-21
+
+Muallif Telegram login fikridan qaytdi va telefon raqami + SMS-kod bilan kirishni taklif qildi. Telegram sozlash/nashr ishlari shu qaror bilan bekor bo'ldi. Supabase'da yozuvli amal, migratsiya yoki Edge deploy bajarilmadi. Read-only ulanish tekshiruvi transport/DNS xatosi bilan tugadi, secret mavjudligi tasdiqlanmadi. Muallif token hali kiritilmaganini bildirdi.
+
+Telefon OTP Supabase Auth'da mavjud. SMS provayderi kerak. Rasmiy `Send SMS Hook` orqali boshqa provayder ham ulanishi mumkin. Keyingi bosqichda SMS xizmati tanlovi va login xatti-harakati kelishiladi, undan so'ng Telegram UI/backend qoralamasi telefon OTP bilan almashtiriladi. Hozir branchdagi Telegram kodi avvalgi qoralama holatida, jonli yoqilmagan.
+
+Manbalar, tekshirilgan 2026-11-21
+
+- https://supabase.com/docs/guides/auth/phone-login
+- https://supabase.com/docs/guides/auth/auth-hooks/send-sms-hook
