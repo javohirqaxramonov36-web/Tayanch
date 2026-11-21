@@ -59,7 +59,7 @@ const tekshirilmagan = [
   description="Chet el universitetiga ariza yo'lini rasmiy manbalar bilan ko'rsatadi. Natija kafolatlanmaydi."
   turi="bolim-kirishi"
   bolim="top-admission"
-  holat="qoralama"
+  holat="chop-etilgan"
   tekshirilgan="2026-11-05"
   keyingiTekshiruv="2026-12-05"
   manbalar={['EY01', 'TB01', 'SH01']}
@@ -70,10 +70,10 @@ const tekshirilmagan = [
 
     <section class="kirish" aria-labelledby="ta-sarlavha">
       <div class="kirish-matn-blok">
-      <p class="ustki-qator"><span class="yorliq">Qoralama</span> <span class="sust kichik">Bo'lim kirishi</span></p>
+      <p class="ustki-qator"><span class="sust kichik">Bo'lim kirishi</span></p>
       <h1 id="ta-sarlavha">Top Admission</h1>
       <p class="kirish-matn">Chet el universitetiga ariza yo'lini rasmiy manbalar bilan ko'rsatamiz. Natija kafolatlanmaydi.</p>
-      <p class="qisman sust kichik">Bo'lim qisman tayyor: Topshirish yo'li vositasi va Ariza zinapoyasi darsi ishlaydi, Türkiye Bursları yo'nalish sahifasi bor, qolgan yo'nalishlar tez orada.</p>
+      <p class="qisman sust kichik">Bo'limda: <a href={yol('/uz/top-admission/grantlar/')}>grantlar katalogi</a>, <a href={yol('/uz/top-admission/davlatlar/')}>davlatlarni taqqoslash</a>, <a href={yol('/uz/top-admission/universitetlar/')}>universitet tanlash</a>, <a href={yol('/uz/top-admission/kurs/')}>16 darslik kurs</a> va <a href={yol('/uz/top-admission/manbalar/')}>ochiq manbalar</a>.</p>
       </div>
       <svg class="yol-xarita" aria-hidden="true" viewBox="0 0 360 240" width="360" height="240" focusable="false">
         <defs>
@@ -341,6 +341,7 @@ const tekshirilmagan = [
   h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; }
   .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .qisman a { color: var(--rang-havola); font-weight: 700; }
   .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
   a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 

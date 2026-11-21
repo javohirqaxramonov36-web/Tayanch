@@ -15,7 +15,7 @@ export interface Bolim {
 }
 
 export const bolimlar: Bolim[] = [
-  { slug: 'top-admission', nomi: 'Top Admission', tavsif: "Universitet tanlashdan qabul xatigacha.", holat: 'qoralama', ikonka: 'qalpoq',
+  { slug: 'top-admission', nomi: 'Top Admission', tavsif: "Universitet tanlashdan qabul xatigacha.", holat: 'ochiq', ikonka: 'qalpoq',
     xususiyatlar: ["Topshirish yo'li vositasi", 'Ariza zinapoyasi', "Türkiye Bursları qo'llanmasi"] },
   { slug: 'sat', nomi: 'SAT', tavsif: 'Digital SAT: Reading & Writing va Math.', holat: 'ochiq', ikonka: 'varaq',
     xususiyatlar: ['Math va Reading & Writing interaktiv darslari', 'Xato daftari va takrorlash', "Lug'at kartalari va natijalar tahlili"] },
