@@ -83,3 +83,56 @@ Branch `homepage-redesign`, asos `origin/main`, 2026-11-21. Faqat lokal commitla
 - Supabase verifyOtp https://supabase.com/docs/reference/javascript/auth-verifyotp
 
 Boshlang'ich tekshiruv 147 sahifali build, mavjud 399/399 test va Telegram HMAC/HTTP 4/4 test. Qo'shimcha account/race testlari va to'liq brauzer sinovi 5-qismda.
+
+## 5-qism — tugadi
+
+### Yakuniy tekshiruvlar
+
+- `PATH=/opt/homebrew/bin:$PATH npm run build` muvaffaqiyatli, **147 sahifa**, 2026-11-21 yakuniy tekshiruv. Eski katta chunk va `/uz/sat/hisob/profil` dublikat marshrut ogohlantirishlari qoladi.
+- `npm test` **399/399**. `npm run funksiyalar:tekshir` **115/115**, shu jumladan Telegram **8/8**. Deno barcha funksiyalarni va yangi `telegram-auth/index.ts` ni tekshirdi.
+- `npm run check` **4 eski xato**, o'zgartirilgan fayllarda yangi xato yo'q. Xato fayllari origin/main bilan bir xil ekanligi git orqali tekshirildi — `src/data/satDarslar/tekshiruv.ts:61`, `src/lib/savolBankiMock.ts:62`, `src/lib/navigator/boshqaruv.ts:83`, `src/pages/uz/sat/vosita/takrorlash/index.astro:409`.
+- `npm run repo:tekshir` muammosiz. `git diff --check` muammosiz.
+- Izolyatsiyalangan headless Chrome. 390×844 va 1440×900, yorug'/qorong'i. Beshta karta birinchi ekranda ko'rinadi. 1024px header ham toshmaydi. Telefon ko'rinishida oxirgi kartaning pastki cheti 676px, desktopda kartalar bir qatorda.
+- Bosh sahifa axe WCAG 2 A/AA va 2.1 AA tekshiruvi har ikki asosiy o'lcham/mavzuda **0 buzilish**. Oltita bo'lim headeri × 2 o'lcham × 2 mavzu, **24 holat, 0 buzilish**. Login dialog va ochiq mobil menyu **0 buzilish**. Matn kontrasti axe orqali tekshirildi.
+- Dastlab mavzu tugmasi JS orqali headerga ko'chgani va font swap sabab kichik siljish topildi. Mavzu tugmasi server HTML'iga joylandi, mavjud Onest latin/symbols fontlari homepage'da preload qilindi. Yakuniy bosh sahifa yuklanish sinovida to'rtta o'lcham/mavzu kombinatsiyasida **CLS 0**. Tarmoq tezligi sun'iy sekinlashtirilmagan.
+- Dropdown ArrowDown, Escape, tashqi bosish mantiqi, til variantlari, mobil bo'lim kengayishi, theme saqlashi, dialog Tab/Shift+Tab qamrovi, yopilganda fokus qaytishi tekshirildi. Mavjud yo'l tanlash vositasi alohida sahifada ochildi.
+- Karta, barcha ochiq asosiy nav subhavolalari va footer ichidagi **77 noyob ichki URL**, hammasi HTTP 200. Ildiz logo mavjud `/` redirectiga olib boradi.
+- Brauzer `pageerror` hodisasi **0**.
+- Alohida vaqtinchalik build va soxta Telegram/Supabase/inPAY javoblari bilan 59000/30 narx, kuniga 1967, Pro bayrog'i, login bekor qilishda to'lov yaratilmasligi, Telegram callback → verifyOtp → aynan bitta checkout, generic xatodan qayta urinish, hisob sarlavhasi yangilanishi va query/hash saqlanishi tekshirildi. Hech qanday haqiqiy to'lov yoki hisob yaratilmagan. Fixture bot/URL/key repoga kiritilmagan.
+- Telegram server testlari buzilgan imzo, eskirgan/kelajakdagi auth_date, noto'g'ri ID, optional maydonlar, CORS, katta/yaroqsiz tana, mavjud/yangi foydalanuvchi, parallel yaratish retry, begona email kolliziyasi, app_metadata nomuvofiqligi va qisman xatoda sessiya berilmasligini tekshiradi. Database concurrency sinovi mock asosida, PostgreSQL'da bajarilmagan.
+- Kuzatilayotgan manba va dist matnlarida Telegram bot tokeni formatiga mos satr topilmadi. `TELEGRAM_BOT_TOKEN` ning bajariladigan koddagi yagona ishlatilishi `supabase/functions/telegram-auth/index.ts`. Haqiqiy token o'qilmagan va berilmaganligi uchun uning aniq qiymati bo'yicha qidiruv qilinmadi.
+
+### Yakuniy o'zgarishlar
+
+- Tekshiruvda topilgan query/hash yo'qolishi va yopilgan dialogdan kechikkan callback davom etishi tuzatildi. Bloklangan Telegram popupi uchun vaqt tugashi va qayta urinish mavjud.
+- Joriy bo'limning mavjud yon paneli desktop dropdownidagi “Joriy bo'lim menyusi” orqali ochiladi. Shu bilan hisob, upgrade va Suhbatdosh kirishlari saqlanadi. Desktopda hamburger ko'rsatilmaydi.
+- Font va Telegram rang qarorlari yuqorida qayd etildi. Mavjud Onest saqlandi. Oq Telegram matni uchun kontrastga mos quyuq ko'k ishlatildi.
+- Ish `homepage-redesign` branchida beshta lokal commitga bo'lindi. Push, merge, sayt/Edge Function nashri va jonli migratsiya bajarilmadi.
+
+### Barcha placeholderlar
+
+1. `src/data/telegramLogin.ts` — `username: ''`, `botId: null`. Dialogda `[TO'LDIRING: Telegram bot username va ID]`, `src/components/hisob/KirishDialog.astro`.
+2. `src/components/BoshTariflar.astro` — `[TO'LDIRING: Pro narxi va davri]`, `[TO'LDIRING: Pro imkoniyatlari]`. Faol `plans` javobi kelganda haqiqiy qiymatlarga almashadi. Xato/sozlanmagan holatda qoladi, checkout o'chiq.
+3. `src/pages/uz/maxfiylik/index.astro` — Telegram ma'lumotlari paragrafi `[TEKSHIRING]…[/TEKSHIRING]` bilan belgilangan.
+
+### Javohir uchun qo'lda bajariladigan qadamlar
+
+1. Mavjud Tayanch botini login uchun ishlatish yoki @BotFather'da alohida bot yaratish. Bot nomi/logo Tayanch bilan mosligini tekshirish.
+2. @BotFather'da `/setdomain` orqali `tayanchedu.uz` ni belgilash. Legacy widget rejimini tekshirish. Yangi OIDC rejimi bu implementatsiya bilan ishlatilmaydi.
+3. Ochiq username va raqamli bot ID ni `src/data/telegramLogin.ts` ga kiritish. Bot tokenini ushbu faylga yozmaslik.
+4. Supabase Secrets'da `TELEGRAM_BOT_TOKEN` ni qo'yish. Mavjud server service-role sozlamasi ishlashini tekshirish. Kalitlarni repo yoki brauzerga kiritmaslik.
+5. Jonli migratsiyalar ro'yxatini solishtirib, dry-run va sinov bazasidan keyin `supabase/migrations/20261121180000_telegram_login.sql` ni qo'llash. Google/email yangi foydalanuvchi triggeri, o'z profiliga RLS va Telegram ID ning mijozdan o'zgarmasligini haqiqiy bazada tekshirish.
+6. `telegram-auth` Edge Function'ini `verify_jwt=false` sozlamasi bilan nashr qilish. CORS origin `https://tayanchedu.uz`. IP bo'yicha gateway rate-limit bu versiyada yo'q, ommaviy yoqishdan oldin sozlashni kelishish.
+7. `[TEKSHIRING]` maxfiylik paragrafini va yangi UX matnlarini ko'rib chiqish. SAT Pro butun sayt obunasi emasligi, faqat SAT uchunligi matnda ko'rsatilgan.
+8. Ishni review qilib, so'ng `homepage-redesign` ni `main` ga birlashtirish. Mavjud CI ochiq Supabase URL/key bilan build qiladi. Yangi bot konfiguratsiyasi ham buildga kirishi kerak. Main push saytda A1 kursini flagsiz o'chirishi haqidagi mavjud HANDOFF tartibini hisobga olish.
+9. Jonli saytda Telegram birinchi/qayta login, Google, email/parol, yangi hisob rozilik/yosh bosqichi, saqlangan progress, Pro checkout/obuna holatini haqiqiy hisob bilan tekshirish. Haqiqiy checkoutni muallif tasdig'i bilan bajarish.
+
+### Keyingi ishlar va sinalmaganlar
+
+- Google va Telegram hisoblarini bog'lash ushbu versiyadan tashqarida, avtomatik birlashtirish yo'q.
+- English va Русский tillari hozircha o'chiq. Keyin `HeaderAmallar.astro` dagi til ma'lumotlari kengaytiriladi.
+- Uch savolli chooser qurilgan mavjud vositadan qayta ishlatildi, alohida yangi quiz kerak emas.
+- AI Academy ochiq dars chiqarganda kartadagi free qiymatini qayta tekshirish. Hozir false.
+- IP rate-limit, bir martalik Telegram payload replay himoyasini kuchaytirish alohida ish. Hozir imzo va 600 soniya amal qiladi.
+- Jonli Telegram/Google/inPAY, migratsiyaning haqiqiy bazaga tatbiqi, haqiqiy telefon va VoiceOver sinalmagan. Tarmoq sekinligida font yuklanishi alohida emulyatsiya qilinmagan.
+- Ko'rib chiqish skrinshotlari va test loglari vaqtinchalik `/private/tmp/homepage-*` fayllarida. Asosiy saqlanadigan hisobot ushbu fayl.

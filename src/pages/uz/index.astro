@@ -1,4 +1,6 @@
 ---
+import onestLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
+import onestSymbols from '@fontsource-variable/onest/files/onest-symbols-wght-normal.woff2?url';
 import Asosiy from '../../layouts/Asosiy.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
 import BoshTariflar from '../../components/BoshTariflar.astro';
@@ -7,6 +9,7 @@ import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
 ---
 <Asosiy title="Tayanch" description="Chet elda o'qish yo'lingiz — bitta joyda." turi="bosh-sahifa" bolim="umumiy" holat="chop-etilgan" sahifaOxiri={false}>
+  <Fragment slot="bosh"><link rel="preload" href={onestLatin} as="font" type="font/woff2" crossorigin /><link rel="preload" href={onestSymbols} as="font" type="font/woff2" crossorigin /></Fragment>
   <div class="home">
     <section class="home-hero" aria-labelledby="home-h1">
       <h1 id="home-h1">Chet elda o'qish yo'lingiz — <span>bitta joyda.</span></h1>

@@ -4,6 +4,7 @@ const kirish = `${yol('/uz/hisob/kirish/')}?keyin=${encodeURIComponent(Astro.url
 const tillar = [{ kod: 'uz', nomi: "O'zbekcha", faol: true }, { kod: 'en', nomi: 'English', faol: false }, { kod: 'ru', nomi: 'Русский', faol: false }];
 ---
 <div class="header-amallar" data-header-amallar>
+  <slot />
   <div class="til-orami">
     <button type="button" class="til-tugma" aria-expanded="false" aria-controls="til-panel" data-til-tugma><svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18"><defs><clipPath id="flag-circle"><circle cx="9" cy="9" r="9" /></clipPath></defs><g clip-path="url(#flag-circle)"><path fill="var(--flag-blue)" d="M0 0h18v6H0z"/><path fill="var(--color-neutral-0)" d="M0 6h18v6H0z"/><path fill="var(--flag-green)" d="M0 12h18v6H0z"/><path stroke="var(--flag-red)" d="M0 6h18M0 12h18"/><path fill="var(--color-neutral-0)" d="M5 1a2 2 0 1 0 0 4 2.4 2.4 0 0 1 0-4"/></g></svg> UZ <span aria-hidden="true">⌄</span></button>
     <div class="til-panel" id="til-panel" hidden>

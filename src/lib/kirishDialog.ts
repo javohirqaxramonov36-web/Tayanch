@@ -48,6 +48,7 @@ export function kirishDialogniUla() {
     ochuvchi?.focus({ preventScroll: true });
   }
   function och(yangiKeyin: string, fokus?: HTMLElement | null) {
+    urinish++;
     keyin = xavfsizKeyin(yangiKeyin, location.pathname + location.search + location.hash);
     ochuvchi = fokus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     xato.hidden = true;
@@ -76,7 +77,9 @@ export function kirishDialogniUla() {
     const manzil = new URL(a.href, location.href);
     if (manzil.origin !== location.origin || manzil.pathname !== yol('/uz/hisob/kirish/')) return;
     e.preventDefault();
-    och(manzil.searchParams.get('keyin') ?? location.pathname + location.search + location.hash, a);
+    const talab = manzil.searchParams.get('keyin');
+    const qaytish = !talab || talab === location.pathname ? location.pathname + location.search + location.hash : talab;
+    och(qaytish, a);
   });
   document.addEventListener('tayanch:kirish-och', (e) => {
     const detail = (e as CustomEvent<{ keyin?: string; ochuvchi?: HTMLElement }>).detail;
@@ -103,27 +106,38 @@ export function kirishDialogniUla() {
     const joriyUrinish = ++urinish;
     bandQoy(true);
     // Official widget JS callback API. No redirect and no message permission requested.
-    window.Telegram.Login.auth({ bot_id: telegramLogin.botId, lang: 'uz' }, (user) => {
+    const kutish = window.setTimeout(() => {
       if (joriyUrinish !== urinish || !dialog.open) return;
-      if (!user) { bandQoy(false); return; }
-      void (async () => {
-        try {
-          const c = hisobMijoz();
-          if (!c || !PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) throw new Error('Config');
-          const res = await fetch(`${PUBLIC_SUPABASE_URL}/functions/v1/telegram-auth`, {
-            method: 'POST', headers: { apikey: PUBLIC_SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify(user), signal: AbortSignal.timeout(20000),
-          });
-          const body = await res.json();
-          if (!res.ok || typeof body.hashed_token !== 'string') throw new Error('Auth');
-          if (joriyUrinish !== urinish || !dialog.open) return;
-          const { error } = await c.auth.verifyOtp({ token_hash: body.hashed_token, type: 'magiclink' });
-          if (error) throw error;
-          await yakunla();
-        } catch { if (dialog.open && joriyUrinish === urinish) xabar(); }
-        finally { if (joriyUrinish === urinish) bandQoy(false); }
-      })();
-    });
+      urinish++;
+      xabar();
+      bandQoy(false);
+    }, 120000);
+    try {
+      window.Telegram.Login.auth({ bot_id: telegramLogin.botId, lang: 'uz' }, (user) => {
+        clearTimeout(kutish);
+        if (joriyUrinish !== urinish || !dialog.open) return;
+        if (!user) { bandQoy(false); return; }
+        void (async () => {
+          try {
+            const c = hisobMijoz();
+            if (!c || !PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) throw new Error('Config');
+            const res = await fetch(`${PUBLIC_SUPABASE_URL}/functions/v1/telegram-auth`, {
+              method: 'POST', headers: { apikey: PUBLIC_SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+              body: JSON.stringify(user), signal: AbortSignal.timeout(20000),
+            });
+            const body = await res.json();
+            if (!res.ok || typeof body.hashed_token !== 'string') throw new Error('Auth');
+            if (joriyUrinish !== urinish || !dialog.open) return;
+            const { error } = await c.auth.verifyOtp({ token_hash: body.hashed_token, type: 'magiclink' });
+            if (error) throw error;
+            hisobHavolalari();
+            if (joriyUrinish !== urinish || !dialog.open) return;
+            await yakunla();
+          } catch { if (dialog.open && joriyUrinish === urinish) xabar(); }
+          finally { if (joriyUrinish === urinish) bandQoy(false); }
+        })();
+      });
+    } catch { clearTimeout(kutish); xabar(); bandQoy(false); }
   });
   window.addEventListener('pageshow', () => bandQoy(false));
 }
