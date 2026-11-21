@@ -1,5 +1,16 @@
 # Homepage redesign
 
+## Amaldagi qaror — Google va email/parol
+
+Muallif mablag' yo'qligini bildirib, Google va mavjud email/parol bilan davom etishni tasdiqladi (2026-11-21). Telegram va SMS login bekor qilindi. Quyidagi oldingi Telegram/telefon bosqichlari tarixiy qayd, ularning sozlash va nashr qadamlari endi bajarilmaydi.
+
+- Login dialog Google tugmasi va mavjud email/parol sahifasi havolasiga soddalashtirildi. Qaytish manzili, query/hash va to'lov davomiyligi saqlanadi.
+- Telegram widget callback kodi, bot konfiguratsiyasi, Edge Function, migratsiya, testlar, config bloki, rang tokeni va Telegram maxfiylik qoralamasi olib tashlandi.
+- Telegram migratsiyasi jonli bazaga qo'llanmagan va funksiya nashr qilinmagan. Ushbu o'zgarish uchun yangi xizmat, SMS provayderi yoki secret kerak emas.
+- Maxfiylik siyosatidagi Telegram `[TEKSHIRING]` paragrafi olib tashlandi. Faqat narx yuklanmay qolish holatidagi Pro placeholderlari mavjud.
+- Yakuniy tekshiruv natijalari fayl oxiriga yoziladi.
+
+
 Branch `homepage-redesign`, asos `origin/main`, 2026-11-21. Faqat lokal commitlar. Muallifning besh qismni to'xtamasdan bajarish topshirig'i interaktiv spetsifikatsiyaga ham ruxsat sifatida qabul qilindi.
 
 ## 1-qism — tugadi
@@ -147,3 +158,17 @@ Manbalar, tekshirilgan 2026-11-21
 
 - https://supabase.com/docs/guides/auth/phone-login
 - https://supabase.com/docs/guides/auth/auth-hooks/send-sms-hook
+
+## Google va email/parol bilan yakun — 2026-11-21
+
+Muallif yangi xizmatlar uchun mablag' yo'qligini bildirdi va faqat Google hamda email/parol loginini tasdiqladi. Telegram/SMS bo'yicha oldingi takliflar va qo'lda sozlash ro'yxatlari bekor qilingan.
+
+- `KirishDialog.astro` — Google asosiy tugma, email/parol mavjud formaga aniq havola. Parolsiz kirish haqidagi umumiy jumla shu ikki usulga moslandi.
+- `kirishDialog.ts` — faqat mavjud Google PKCE, modal hodisalari, xavfsiz qaytish manzili va fokus qamrovi. Telegram widget yoki yangi tashqi skript yuklanmaydi.
+- Telegram uchun `src/data/telegramLogin.ts`, `supabase/functions/telegram-auth/`, alohida test, `20261121180000_telegram_login.sql`, config bloki, ortiqcha rang tokeni va maxfiylik qoralamasi olib tashlandi. Jonli bazada rollback talab qilinmaydi, bu qoralama migratsiya/nashr avval bajarilmagan.
+- Mavjud Google, email/parol, ro'yxatdan o'tish, parolni tiklash va rozilik/yosh darvozasi foydalaniladi. Yangi SMS provayderi yoki bot secretlari talab qilinmaydi.
+- Build **147 sahifa**, `npm test` **399/399**, Edge Function testlari **107/107**, Deno check muvaffaqiyatli. Telegramning olib tashlangan 8 testi umumiy Edge sonidan kamaydi.
+- `npm run check` **4 eski xato**, yangi tur xatosi yo'q. Xato fayllari origin/main bilan bir xil. `repo:tekshir` va `git diff --check` muammosiz.
+- 390×844/1440×900 va ikkala mavzuda 24 header holati axe **0**, bosh sahifa CLS **0**. Dialog va ochiq mobil menyu axe **0**. Fokus Tab/Shift+Tab, Escape, til/bo'lim menyulari, mavzu almashishi, 77 ichki havola HTTP200 qayta tekshirildi.
+- Izolyatsiyalangan vaqtinchalik buildda soxta javoblar bilan Google PKCE/code_challenge, query/hash saqlanishi, email/parol → avvalgi Pro tanlovi → aynan bitta checkout tekshirildi. Brauzer pageerror **0**. Haqiqiy Google/email akkaunt va haqiqiy to'lov sinalmagan.
+- Jonli sayt, baza va tashqi xizmatlarda o'zgartirish bajarilmadi. Bu qaror uchun migratsiya yoki Edge deploy kerak emas. Homepage va login o'zgarishlari review uchun lokal branchda.

@@ -97,7 +97,3 @@ verify_jwt = false
 # JWT Supabase Auth orqali funksiya ichida tekshiriladi.
 [functions.suhbatdosh]
 verify_jwt = false
-
-# Telegram signature is checked in the function. Login callers have no JWT yet.
-[functions.telegram-auth]
-verify_jwt = false
