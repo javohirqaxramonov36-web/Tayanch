@@ -1,0 +1,1 @@
+var e={javobBerilgan:!1,tanlangan:null,sprQiymat:``,belgilangan:!1,ochirilgan:[],natija:null};export{e as t};
