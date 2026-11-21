@@ -1,5 +1,5 @@
 ---
-// Bosh sahifa ustki qatoridagi qavatlar menyusi (6-qavat AI Academy 2026-11-19 da qo'shilgan) (mega menyu). Faqat /uz/ da (muallif qarori, 2026-11-19).
+// Umumiy headerdagi qavatlar menyusi (6-qavat AI Academy 2026-11-19 da qo'shilgan) (mega menyu). Faqat /uz/ da (muallif qarori, 2026-11-19).
 // Yon panel (BolimYon) o'zgarmaydi. Havolalar yon panel ma'lumotidan olinadi, qo'lda takrorlanmaydi.
 // Xatti-harakat: qavat tugmasi bosilsa (sichqonchada hover ham) uning paneli ochiladi, bir vaqtda bittasi.
 // Esc yopadi va fokusni tugmaga qaytaradi; ←/→ qavatlar orasida, ↓ panelni ochib birinchi havolaga o'tadi.
@@ -18,6 +18,10 @@ interface Band { nomi: string; href?: string }
 interface Ustun { nomi: string; bandlar: Band[] }
 interface Panel { tavsif: string; otish: string; tezOrada: string; ustunlar: Ustun[]; til: 'uz' | 'en' }
 
+const { mobil = false } = Astro.props as { mobil?: boolean };
+const prefiks = mobil ? 'mobil' : 'ustki';
+const aktiv = Astro.url.pathname;
+const nom = (slug: string, nomi: string) => slug === 'navigator' ? 'Bosh sahifa' : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
 const tavsifI = (slug: string) => bolimlar.find((b) => b.slug === slug)?.tavsif ?? '';
 const ielts = (q?: string) => (q ? `/uz/ielts/${q}` : undefined);
 
@@ -25,7 +29,7 @@ const PANELLAR: Record<string, Panel> = {
   navigator: {
     til: 'uz', tavsif: "Qaysi bo'limdan boshlashni bilmasangiz, yo'lingizni shu yerda tanlang.", otish: 'Bosh sahifa', tezOrada: 'Tez orada',
     ustunlar: [
-      { nomi: 'Boshlash', bandlar: [{ nomi: "Yo'limni tanlash", href: '/uz/?boshlash=1' }, { nomi: "Yo'nalishlar", href: '/uz/#qavatlar' }] },
+      { nomi: 'Boshlash', bandlar: [{ nomi: "Yo'limni tanlash", href: '/uz/yol-tanlash/?boshlash=1' }, { nomi: "Yo'nalishlar", href: '/uz/#qavatlar' }] },
       { nomi: "Ma'lumot", bandlar: [{ nomi: 'Muddatlar', href: '/uz/deadline/' }, { nomi: 'Manbalar', href: '/uz/manbalar/' }, { nomi: 'Aloqa', href: '/uz/aloqa/' }] },
       { nomi: 'Hisob', bandlar: [{ nomi: 'Kirish', href: '/uz/hisob/kirish/' }, { nomi: "Ro'yxatdan o'tish", href: '/uz/hisob/royxat/' }] },
     ],
@@ -38,7 +42,7 @@ const PANELLAR: Record<string, Panel> = {
     til: 'en', tavsif: 'Digital SAT: Reading and Writing, and Math.', otish: 'Open SAT prep', tezOrada: 'Coming soon',
     // Account guruhi panelda yo'q: u yon panelda, kirgandan keyin kerak bo'ladi.
     ustunlar: satYonGuruhlar
-      .filter((g) => g.nomi !== 'Account')
+      
       .flatMap((g) => g.qismlar.map((q) => ({ nomi: q.nomi ?? g.nomi, bandlar: q.sahifalar.map((s) => ({ nomi: s.nomi, href: `/uz/sat/${s.qism}` })) }))),
   },
   ielts: {
@@ -61,55 +65,37 @@ const PANELLAR: Record<string, Panel> = {
   },
 };
 ---
-<nav class="qm" aria-label="Bo'limlar" data-qm>
+<nav class:list={['qm', { mobil }]} aria-label="Bo'limlar" data-qm lang="uz">
   <ul class="qm-tablar" role="list">
     {qavatlar.map((q) => (
       <li>
-        <button type="button" class="qm-tab" data-floor={q.raqam} aria-expanded="false" aria-controls={`qm-panel-${q.slug}`} data-qm-tab>
-          {q.slug === 'sat' ? 'SAT' : q.slug === 'ielts' ? 'IELTS' : q.slug === 'eyuf' ? 'EYUF' : q.nomi}
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
-        </button>
+        {q.slug === 'navigator' ? <a class="qm-tab" href={yol('/uz/')} aria-current={aktiv === yol('/uz/') ? 'page' : undefined}>Bosh sahifa</a> : <>
+          <button type="button" class:list={['qm-tab', { faol: aktiv.startsWith(yol(q.manzil)) }]} aria-expanded="false" aria-controls={`${prefiks}-${q.slug}`} data-qm-tab>
+            {nom(q.slug, q.nomi)}
+            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+          <div class="qm-panel" id={`${prefiks}-${q.slug}`} data-qm-panel>
+            <div class="qm-ichki">
+              <a class="qm-otish" href={yol(q.manzil)}>{PANELLAR[q.slug].otish} →</a>
+              {aktiv.startsWith(yol(q.manzil)) && <button type="button" class="qm-tab" data-joriy-menyu>Joriy bo'lim menyusi</button>}
+              <div class="qm-ustunlar" lang={PANELLAR[q.slug].til}>
+                {PANELLAR[q.slug].ustunlar.map((u) => <div>
+                  <p class="qm-ustun-nom">{u.nomi}</p>
+                  <ul class="qm-royxat" role="list">
+                    {u.bandlar.map((b) => <li>{b.href ? <a href={yol(b.href)}>{b.nomi}</a> : <span class="qm-tez">{b.nomi} · {PANELLAR[q.slug].tezOrada}</span>}</li>)}
+                  </ul>
+                </div>)}
+              </div>
+            </div>
+          </div>
+        </>}
       </li>
     ))}
   </ul>
-  {qavatlar.map((q) => {
-    const p = PANELLAR[q.slug];
-    return (
-      <div class="qm-panel" id={`qm-panel-${q.slug}`} data-floor={q.raqam} lang={p.til === 'en' ? 'en' : undefined} data-qm-panel>
-        <div class="qm-ichki ichki">
-          <div class="qm-karta">
-            <p class="qm-nom">{q.nomi}</p>
-            <p class="qm-tavsif">{p.tavsif}</p>
-            {q.holat === 'tez-orada' && <span class="yorliq">{p.tezOrada}</span>}
-            <a class="tugma tugma-asosiy qm-otish" href={yol(q.manzil)}>{p.otish}</a>
-          </div>
-          {p.ustunlar.length > 0 && (
-            <div class="qm-ustunlar">
-              {p.ustunlar.map((u, i) => (
-                <div class="qm-ustun">
-                  <h2 class="qm-ustun-nom" id={`qm-${q.slug}-${i}`}>{u.nomi}</h2>
-                  <ul class="qm-royxat" role="list" aria-labelledby={`qm-${q.slug}-${i}`}>
-                    {u.bandlar.map((b) => (
-                      <li>
-                        {b.href
-                          ? <a href={yol(b.href)}>{b.nomi}</a>
-                          : <span class="qm-tez">{b.nomi} <span class="qm-tez-belgi">{p.tezOrada}</span></span>}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  })}
 </nav>
 
 <script>
-  const nav = document.querySelector<HTMLElement>('[data-qm]');
-  if (nav) {
+  document.querySelectorAll<HTMLElement>('[data-qm]').forEach((nav) => {
     const tablar = [...nav.querySelectorAll<HTMLButtonElement>('[data-qm-tab]')];
     const panelI = (t: HTMLButtonElement) => document.getElementById(t.getAttribute('aria-controls')!)!;
     const sichqoncha = matchMedia('(hover: hover) and (pointer: fine)');
@@ -129,7 +115,7 @@ const PANELLAR: Record<string, Panel> = {
       if (ochiq === t) return;
       yop();
       // Yon panel ochiq bo'lsa, yopiladi: bir vaqtda bitta ochiq menyu
-      document.querySelectorAll<HTMLDetailsElement>('header details[open]').forEach((d) => { d.open = false; });
+
       t.setAttribute('aria-expanded', 'true');
       panelI(t).classList.add('ochiq');
       ochiq = t;
@@ -143,7 +129,7 @@ const PANELLAR: Record<string, Panel> = {
         else och(t);
       });
       t.addEventListener('mouseenter', () => {
-        if (!sichqoncha.matches || ochiq === t) return;
+        if (nav.classList.contains('mobil') || !sichqoncha.matches || ochiq === t) return;
         hoverVaqt = performance.now();
         och(t);
       });
@@ -168,7 +154,7 @@ const PANELLAR: Record<string, Panel> = {
       if (e.key === 'Escape' && ochiq) { e.preventDefault(); yop(true); }
     });
     nav.addEventListener('mouseleave', () => {
-      if (!sichqoncha.matches) return;
+      if (nav.classList.contains('mobil') || !sichqoncha.matches) return;
       kechikish = window.setTimeout(() => yop(), 200);
     });
     nav.addEventListener('mouseenter', () => clearTimeout(kechikish));
@@ -179,76 +165,41 @@ const PANELLAR: Record<string, Panel> = {
       if (ochiq && e.target instanceof Node && !nav.contains(e.target)) yop();
     });
     nav.addEventListener('click', (e) => {
+      if (e.target instanceof Element && e.target.closest('[data-joriy-menyu]')) {
+        const fokus = ochiq;
+        yop();
+        document.dispatchEvent(new CustomEvent('tayanch:joriy-menyu', { detail: { fokus } }));
+      }
       if (e.target instanceof Element && e.target.closest('.qm-panel a[href]')) yop();
     });
     // Yon panel ochilsa, mega menyu yopiladi
     document.querySelectorAll<HTMLDetailsElement>('header details').forEach((d) => {
       d.addEventListener('toggle', () => { if (d.open) yop(); });
     });
-  }
+  });
 </script>
 
 <style>
-  .qm { min-inline-size: 0; }
-  .qm-tablar { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-1); }
-  .qm-tab {
-    display: inline-flex; align-items: center; gap: var(--space-1);
-    min-block-size: 44px; padding-inline: var(--space-3);
-    border: 0; border-radius: var(--radius-full); background: transparent;
-    color: var(--matn-ikkinchi); font: inherit; font-weight: 600; font-size: var(--text-body-size);
-    white-space: nowrap; cursor: pointer;
-  }
-  .qm-tab svg { transition: transform var(--harakat-tez) var(--ease-state); }
-  .qm-tab[aria-expanded='true'] { color: var(--matn); background: var(--floor-subtle); }
-  .qm-tab[aria-expanded='true'] svg { transform: rotate(180deg); }
-  @media (hover: hover) and (pointer: fine) { .qm-tab:hover { color: var(--matn); } }
-
-  /* Panel: ustki qator (sticky) ostida, to'liq kenglikda */
-  .qm-panel {
-    position: absolute; inset-inline: 0; inset-block-start: 100%;
-    z-index: var(--z-dropdown);
-    /* Zich sirt: sarlavha shishasi ichida ikkinchi blur yo'q (ADR 005) */
-    background: var(--color-surface);
-    border-block-end: var(--border-width-1) solid var(--card-line);
-    box-shadow: var(--shadow-2);
-    max-block-size: calc(100dvh - var(--space-14)); overflow-y: auto;
-    visibility: hidden; opacity: 0; transform: translateY(calc(-1 * var(--space-1)));
-    transition: opacity var(--harakat-tez) var(--ease-state), transform var(--harakat-tez) var(--ease-state), visibility 0s linear var(--harakat-tez);
-  }
-  .qm-panel.ochiq { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
-  @media (prefers-reduced-motion: reduce) { .qm-panel, .qm-tab svg { transition: none; } }
-
-  .qm-ichki { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: var(--space-8); padding-block: var(--space-8); }
-  .qm-karta {
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2);
-    padding: var(--space-5); border-radius: var(--radius-lg);
-    background: var(--floor-subtle); border: var(--border-width-1) solid var(--card-line);
-  }
-  .qm-nom { margin: 0; font-weight: 900; font-size: var(--matn-h3); }
-  .qm-tavsif { margin: 0; color: var(--matn-ikkinchi); font-size: var(--text-small-size); line-height: 1.5; }
-  .qm-otish { margin-block-start: auto; align-self: stretch; }
-
-  .qm-ustunlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--space-6) var(--space-8); align-content: start; }
-  .qm-ustun-nom {
-    margin: 0 0 var(--space-2); font-size: var(--text-caption-size); font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.06em; color: var(--matn-sust);
-  }
-  .qm-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-  .qm-royxat a, .qm-tez {
-    display: flex; align-items: center; min-block-size: 40px;
-    color: var(--matn); font-weight: 600; text-decoration: none;
-  }
-  @media (hover: hover) and (pointer: fine) { .qm-royxat a:hover { color: var(--floor-text); text-decoration: underline; } }
-  .qm-tez { color: var(--matn-sust); font-weight: 500; flex-wrap: wrap; column-gap: var(--space-2); }
-  .qm-tez-belgi { font-size: var(--text-caption-size); white-space: nowrap; }
-
-  /* Telefon va planshet: qavatlar ustki qatorning ikkinchi qatorida, gorizontal aylantiriladi */
-  @media (width < 1024px) {
-    .qm { grid-column: 1 / -1; grid-row: 2; }
-    .qm-tablar { overflow-x: auto; scrollbar-width: none; padding-block-end: var(--space-1); }
-    .qm-tab { padding-inline: var(--space-3); }
-    .qm-panel { max-block-size: calc(100dvh - var(--space-14) * 2); }
-    .qm-ichki { grid-template-columns: 1fr; gap: var(--space-5); padding-block: var(--space-5); }
-    .qm-ustunlar { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-5); }
-  }
+  .qm { min-width: 0; }
+  .qm-tablar { display: flex; list-style: none; margin: 0; padding: var(--header-pill-pad); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-full); background: var(--color-surface); }
+  .qm-tab { display: flex; align-items: center; justify-content: center; gap: var(--space-1); min-height: var(--size-touch-min); padding: 0 var(--space-3); font: inherit; font-size: var(--text-small-size); font-weight: 600; white-space: nowrap; border: 0; border-radius: var(--radius-full); color: var(--color-text-secondary); background: transparent; text-decoration: none; cursor: pointer; }
+  .qm-tab.faol, .qm-tab[aria-current='page'] { background: var(--header-accent); color: var(--color-neutral-0); }
+  .qm-tab[aria-expanded='true'] { outline: var(--border-width-2) solid var(--color-link); outline-offset: calc(-1 * var(--border-width-2)); }
+  .qm-panel { display: none; position: absolute; inset: 100% var(--space-8) auto; max-height: calc(100dvh - var(--space-16) * 2); overflow: auto; background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); }
+  .qm-panel.ochiq { display: block; }
+  .qm-ichki { padding: var(--space-6); }
+  .qm-otish { display: inline-flex; min-height: var(--size-touch-min); align-items: center; font-weight: 700; color: var(--color-link); }
+  .qm-ustunlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--header-column-min), 1fr)); gap: var(--space-6); }
+  .qm-ustun-nom { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .qm-royxat { list-style: none; padding: 0; margin: 0; }
+  .qm-royxat a, .qm-tez { display: flex; align-items: center; min-height: var(--size-touch-min); font-size: var(--text-small-size); }
+  .qm-royxat a { color: var(--color-text-primary); text-decoration: none; }
+  .qm-royxat a:hover { text-decoration: underline; }
+  .qm-tez { color: var(--color-text-secondary); }
+  .mobil .qm-tablar { flex-direction: column; border: 0; border-radius: 0; padding: 0; }
+  .mobil .qm-tab { justify-content: space-between; width: 100%; padding-inline: var(--space-4); }
+  .mobil .qm-panel { position: static; border: 0; box-shadow: none; max-height: none; }
+  .mobil .qm-ichki { padding: var(--space-2) var(--space-4); }
+  .mobil .qm-ustunlar { grid-template-columns: 1fr; gap: var(--space-2); }
+  @media (1024px <= width < 1280px) { .qm-tab { padding-inline: var(--space-2); font-size: var(--text-caption-size); } }
 </style>
