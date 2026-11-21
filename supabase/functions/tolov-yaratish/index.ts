@@ -30,7 +30,7 @@ Deno.serve((req) =>
       const chegara = new Date(Date.now() - OCHIQ_TOLOV_DAQIQA * 60_000).toISOString();
       const { data, error } = await admin
         .from('payments')
-        .select('id, raw')
+        .select('id, bolim, raw')
         .eq('user_id', userId)
         .eq('plan_code', planCode)
         .eq('status', 'pending')
@@ -44,7 +44,7 @@ Deno.serve((req) =>
       if (typeof inpay?.checkout_url !== 'string' || !inpay.checkout_url.startsWith('https://') || inpay.livemode !== jonli) {
         return null;
       }
-      return { payment_id: String(data[0].id), checkout_url: inpay.checkout_url };
+      return { payment_id: String(data[0].id), checkout_url: inpay.checkout_url, bolim: data[0].bolim };
     },
     inpayYarat: (sorov) => inpayTolovYarat(sorov, { secretKey: s.inpaySecretKey ?? '' }),
     jurnal: log,
