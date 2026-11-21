@@ -29,7 +29,7 @@ interface GrantKorinish { nom: string; nimani_qoplaydi: FaktT }
 const grantlar = new Map<string, GrantKorinish & GrantKirish>(grantYozuvlari.map((g) => [g.id, g.data as unknown as GrantKorinish & GrantKirish]));
 const grantKirish: Map<string, GrantKirish> = grantlar;
 
-const davlatYozuvlari = await getCollection('davlatlar');
+const davlatYozuvlari = (await getCollection('davlatlar')).filter((e) => !e.data.kop_davlatli);
 const davlatlar = davlatYozuvlari.map((e) => {
   const d = e.data;
   const kirish = { ...d, grant: { ...d.grant, davlat_grantlari: (d.grant.davlat_grantlari as { id: string }[]).map((r) => r.id) } } as unknown as DavlatKirish;
@@ -49,6 +49,8 @@ type Satr =
   | { id: string; nom: string; tur: 'usd' | 'grant' };
 // Taqqoslash jadvali satrlari (5 mezon bo'yicha).
 const satrlar: Satr[] = [
+  { id: 'ogoh', nom: 'Safar ogohlantirishi', tur: 'fakt', fakt: (d) => d.xavfsizlik?.ogohlantirish },
+  { id: 'barqaror', nom: 'Siyosiy barqarorlik', tur: 'fakt', fakt: (d) => d.xavfsizlik?.siyosiy_barqarorlik },
   { id: 'kontrakt', nom: 'Kontrakt (yillik)', tur: 'fakt', fakt: (d) => d.narx.kontrakt_yillik, birlik: (d) => d.narx.valyuta },
   { id: 'yashash', nom: 'Viza uchun yashash summasi', tur: 'fakt', fakt: (d) => d.narx.viza_yashash_summasi, birlik: (d) => d.narx.valyuta },
   ...(narxMumkin ? [{ id: 'usd', nom: 'Taxminiy yillik xarajat', tur: 'usd' } as Satr] : []),
@@ -70,7 +72,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
 ---
 <BolimQobiq
   title="Davlatlarni taqqoslash · Top Admission"
-  description="15 davlatni 5 mezon bo'yicha taqqoslang: narx, grant, til talabi, ishlash huquqi va diplom. Faqat rasmiy manbada tekshirilgan faktlar, manba va sana bilan."
+  description={`${davlatYozuvlari.length} davlatni taqqoslang: xavfsizlik, narx, grant, til talabi, ishlash huquqi va diplom. Faqat rasmiy manbada tekshirilgan faktlar, manba va sana bilan.`}
   turi="vosita"
   bolim="top-admission"
   holat="qoralama"
@@ -80,7 +82,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
     <header class="dt-bosh">
       <p class="dt-ustki">Vosita</p>
       <h1>Davlatlarni taqqoslash</h1>
-      <p class="dt-matn">O'zingizga muhim mezonni tanlang: narx, grant, til talabi, o'qish paytida ishlash yoki diplom. Sayt reyting bermaydi, davlatlarni faqat rasmiy faktlar bo'yicha saralaydi.</p>
+      <p class="dt-matn">O'zingizga muhim mezonni tanlang: xavfsizlik, narx, grant, til talabi, o'qish paytida ishlash yoki diplom. Sayt reyting bermaydi, davlatlarni faqat rasmiy faktlar bo'yicha saralaydi.</p>
       <p class="dt-matn dt-sust">Faqat rasmiy manbada tekshirilgan fakt ko'rsatiladi, yonida manba va tekshirilgan sana. Qolganlari o'rniga "Ma'lumot tekshirilmoqda" yoziladi. Topshirishdan oldin rasmiy sahifani tekshiring.</p>
     </header>
 
@@ -155,6 +157,30 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                   : <span class="yorliq">chuqur qo'llanma tez orada</span>)}
               </div>
               <dl class="dt-mezonlar">
+                {d.xavfsizlik && (
+                  <div>
+                    <dt>Xavfsizlik</dt>
+                    <dd>
+                      <span class="dt-ichki-nom">Safar ogohlantirishi</span>
+                      <Fakt fakt={d.xavfsizlik.ogohlantirish} />
+                      <span class="dt-ichki-nom">Siyosiy barqarorlik</span>
+                      <Fakt fakt={d.xavfsizlik.siyosiy_barqarorlik} />
+                    </dd>
+                  </div>
+                )}
+                {d.tanlov && (
+                  <div>
+                    <dt>STEM</dt>
+                    <dd>
+                      {d.tanlov.universitet_misollari.length > 0 && (
+                        <><span class="dt-ichki-nom">Universitet misollari</span><span>{d.tanlov.universitet_misollari.join(', ')}</span></>
+                      )}
+                      <span class="dt-ichki-nom">Tanlashda</span>
+                      <Fakt fakt={d.tanlov.izoh} />
+                      {d.tanlov.portal && <a class="dt-havola" href={d.tanlov.portal} rel="noopener">Rasmiy ta'lim portali<span class="dt-sr">: {xulosa.nom}</span></a>}
+                    </dd>
+                  </div>
+                )}
                 <div>
                   <dt>Narx</dt>
                   <dd>
@@ -213,7 +239,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
           <p class="dt-sust" data-taqqos-izoh></p>
           <div class="dt-jadval-orami" data-jadval>
             <table class="dt-jadval">
-              <caption class="dt-sr">Tanlangan davlatlar 5 mezon bo'yicha</caption>
+              <caption class="dt-sr">Tanlangan davlatlar mezonlar bo'yicha</caption>
               <thead>
                 <tr>
                   <th scope="col">Mezon</th>
