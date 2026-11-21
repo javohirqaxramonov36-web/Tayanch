@@ -1,0 +1,34 @@
+---
+// Top Admission: davlat kartasida "davlat granti topilmadi" izohi (Admission E-seriya, E1).
+// Faqat `grant.izoh` fakti tasdiqlangan va davlat_grantlari bo'sh bo'lsa (grantYoqIzohi); aks holda "Ma'lumot tekshirilmoqda".
+// Matn qat'iy (GRANT_TOPILMADI_MATNI), sana = faktning tekshirilgan sanasi, havola = tekshirilgan rasmiy sahifa.
+import { faktEskirganmi, sanaMatni, type Fakt } from '../../lib/topAdmission/fakt';
+import { GRANT_TOPILMADI_MATNI } from '../../lib/topAdmission/davlatTaqqos';
+
+interface Props { fakt: Fakt | null }
+const { fakt } = Astro.props;
+const eskirgan = !!fakt && faktEskirganmi(fakt);
+---
+{fakt ? (
+  <span class="gy">
+    <span class="gy-matn">{GRANT_TOPILMADI_MATNI} (tekshirildi: <time datetime={fakt.tekshirilgan_sana}>{sanaMatni(fakt.tekshirilgan_sana)}</time>)</span>
+    <span class="gy-meta">
+      <a href={fakt.source_url} rel="noopener">Tekshirilgan rasmiy sahifa</a>
+      {eskirgan && <span class="gy-belgi">qayta tekshirilmoqda</span>}
+    </span>
+  </span>
+) : (
+  <span class="gy gy-yoq">Ma'lumot tekshirilmoqda</span>
+)}
+
+<style>
+  .gy { display: inline-flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
+  .gy-matn { font-weight: 600; overflow-wrap: anywhere; }
+  .gy-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-1) var(--b-2); font-size: var(--matn-mayda); color: var(--matn-ikkinchi); }
+  .gy-meta a { color: var(--rang-havola); }
+  .gy-belgi {
+    display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
+    border-radius: var(--badge-radius); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 600;
+  }
+  .gy-yoq { color: var(--matn-sust); font-style: italic; }
+</style>
