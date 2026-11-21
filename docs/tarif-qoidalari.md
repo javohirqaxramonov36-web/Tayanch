@@ -85,3 +85,51 @@ Keyin shu jadval yangilanadi. Kod o'zgarmaydi; `UsageBar` va Savol banki yangi l
 
 `BolimYon` (faqat SAT, Subscription sahifasining o'zida yo'q): "Upgrade to <tavsiya tarif nomi>" va izoh. Faqat kirgan va amaldagi tarifi `free` bo'lgan foydalanuvchiga ko'rinadi; pullik, noma'lum yoki xato holatda yashirin. Izoh `upgradeIzohi`: tavsiya tarif Free'dan farq qiladigan jadval qatorlari nomi (ko'pi bilan 2 ta), farq bo'lmasa "Compare plans". Raqam yozilmaydi. supabase-js yuklanmaydi: `tayanch:auth` dagi token bilan REST (`rpc/usage_status`, `plans`), natija sessionStorage `tayanch:sat-tarif-kesh` da 10 daqiqa (foydalanuvchi id bilan); Subscription sahifasi va muvaffaqiyatli to'lov keshni tozalaydi. Mantiq `src/lib/sat/upgradeBand.ts` (testlar), brauzer qismi `upgradeBandUlash.ts`. Dev: istalgan SAT sahifasida `?upgrade=sinov`.
 
+## ADR 006 uchun tekshiruv (2-bosqich, 2026-11-21)
+
+Asos `origin/main`, commit `fc4fb4f922aebd27a6e63fc21562231726cc7ff9`. Quyidagi xulosalar repo kodi va migratsiyalaridan olindi. Jonli bazaning sxemasi va joylangan Edge Function versiyalari tekshirilmagan. Qaror alohida PR #214 da, ushbu tekshiruv vaqtida ochiq. [ADR 006 PR #214](https://github.com/javohirqaxramonov36-web/Tayanch/pull/214)
+
+### 1. `plans.bolim` mavjud
+
+- `supabase/migrations/20261108000006_tolov.sql` 5–18-qatorlarda `public.plans` ni yaratadi. `bolim text not null default 'sat'` 8-qatorda bor.
+- `plans.bolim` check qiymatlari `top-admission`, `sat`, `ielts`, `eyuf`. `payments.bolim` (33-qator) va `subscriptions.bolim` (54-qator) ham shu qiymatlarga cheklangan.
+- `src/data/bolimlar.ts` dagi identifikator maydoni `slug`. Unda yuqoridagi to'rtta qiymatga qo'shimcha `ai-academy` bor. Uch jadvalning check cheklovi shu ro'yxatdan ortda qolgan.
+- Dastlabki `free`, `pro`, `elite` qatorlari `sat` bilan yaratilgan (24–28-qatorlar). `20261111200000_tarif_max.sql` `elite` ni `max` ga o'tkazadi. Keyingi migratsiyalarda ushbu uch jadvalning `bolim` check qiymatlarini kengaytirish yoki `plans.bolim` ni qayta yaratish topilmadi. Jonli qatorlarning qiymati tekshirish kerak.
+- `plans.code` yagona primary key. Bir xil `pro` kodini ikki qavatga berib bo'lmaydi. Keyingi pullik qavat uchun alohida kod kerak, ko'rinadigan `name` bir xil bo'lishi mumkin. Mavjud kod tekshiruvi defisni qabul qilmaydi (`20261108000006_tolov.sql`, 6-qator).
+
+### 2. `tolov-yaratish/handler.ts` dagi SAT bog'lanishlari
+
+| Joy | Hozirgi qiymat yoki holat | 3-bosqichga ta'siri |
+| --- | --- | --- |
+| 1-qator, izoh | Funksiya SAT tarifi uchun deb yozilgan | Qavatga mos tavsif bilan yangilash |
+| 120-qator, `description` | `Tayanch SAT ${p.plan_name}, ${p.period_days} days` | SAT'da shu matnni saqlab, tavsifni serverdan kelgan qavatga moslash |
+| 121-qator, `returnUrl` | `${d.saytUrl}/uz/sat/hisob/tolov-natija/?tolov=...` | Ruxsat etilgan qavat yo'llari xaritasi kerak, hozir faqat SAT yo'li bor |
+| 46–58-qatorlar, `YaratilganTolov` va `yaratilganmi` | RPC qaytargan `bolim` interfeysga olinmagan va tekshirilmaydi | RPC javobidagi `bolim` ni tekshirish va xarita uchun ishlatish |
+
+Handler'da boshqa SAT literal topilmadi. `payment_create` ga faqat `p_user` va `p_plan_code` yuboriladi (103-qator). `plan_code` yoki eski `plan` qabul qilinadi, `bolim` tanadan olinmaydi (88-qator). `webhookUrl` umumiy `/functions/v1/inpay-webhook` manziliga boradi (122-qator).
+
+`supabase/functions/tolov-yaratish/index.ts` pending to'lovni `user_id` va `plan_code` orqali qayta topadi. Hozir `plans.code` global yagona bo'lgani uchun kod qavatni ham aniqlaydi. `supabase/functions/tests/tolov_yaratish_test.ts` 168–169-qatorlarda SAT tavsifi va qaytish manzilining aynan shu qiymatlarini tekshiradi.
+
+### 3. Webhook obuna uchun `bolim` ni to'lovdan oladi
+
+1. `payment_create` `plans` qatorini `code` orqali oladi (`20261109000010_tolov_inpay.sql`, 34-qator).
+2. `payments.bolim` ga `v_plan.bolim` yozadi va RPC javobida ham `bolim` qaytaradi (56–66-qatorlar).
+3. `inpay-webhook/handler.ts` imzoni tekshiradi, so'ng `payment_apply_event` ni chaqiradi (45–64-qatorlar).
+4. `payment_apply_event` `provider_order_id` orqali `payments` qatorini qulf bilan oladi (182–184-qatorlar). Uzaytirish qavat bo'yicha cheklanadi (215-qator), yangi obunaga `v_pay.bolim` yoziladi (220–222-qatorlar).
+
+Demak, qavatning mavjud server zanjiri `plans.bolim → payments.bolim → subscriptions.bolim`. Obuna yaratishda tarif jadvali qayta o'qilmaydi, to'lov yaratilgandagi qavat ishlatiladi. `payment_create` va `payment_apply_event` faqat `service_role` uchun ochiq (264–270-qatorlar). `inpay-holat` va muvofiqlashtirish ham shu umumiy qo'llash oqimidan foydalanadi (`supabase/README.md`, 10-bo'lim).
+
+### 4. inPAY API v2 da usulni oldindan tanlash parametri topilmadi
+
+2026-11-21 kuni IP03 rasmiy sahifasi HTTP 200 bilan o'qildi. `POST /payments/` jadvali va so'rov misollarida Click yoki Payme'ni oldindan tanlash parametri **topilmadi**. Jadval maydonlari `amount`, `currency`, `description`, `return_url`, `webhook_url`, `metadata`, `customer`, `sub_merchant`, `application_fee`. Hujjat xaridorni `checkout_url` orqali inPAY sahifasiga yuborishni ko'rsatadi. [inPAY API v2, to'lov yaratish](https://inpay.uz/api/v2/#payment-create)
+
+Sahifadagi boshqa `payment_method` parametrlari tasdiqlangan saqlangan karta identifikatorini (`pm_…`) oladi. `payme_app` avtomatik obuna yaratish bo'limida berilgan. Ularni bir martalik `/payments/` so'rovi uchun Click/Payme tanlash parametri sifatida qo'llash hujjatlashtirilmagan. inPAY kabinetida aynan qaysi usullar yoqilgani tekshirish kerak. [inPAY API v2](https://inpay.uz/api/v2/)
+
+### Keyingi bosqichlar uchun xulosalar
+
+- **3-bosqich.** `bolim` ustunini qo'shish talab qilinmaydi. Migratsiya uch jadvalning `bolim` check ro'yxatiga `ai-academy` qo'shishi kerak. Tarifdan to'lovga va to'lovdan obunaga mavjud qavat zanjiri saqlanadi. Handler RPC javobidagi qavatni tekshirishi, faqat SAT qaytish manzilini qo'llashi, qo'llab-quvvatlanmagan qavatni inPAY'ga so'rov yuborishdan oldin xato bilan rad etishi kerak. Yangi va qayta ishlatiladigan pending to'lov yo'llari testda qamraladi.
+- **Kelajakdagi pullik qavatlar.** `private.current_plan` obunasiz foydalanuvchiga global `free` qatorini qaytaradi (`20261108000008_rpc.sql`, 18–39-qatorlar). Boshqa qavatning pullik tarifi ochilishidan oldin qavatga mos bepul tarif va kvota mantiqi tekshirish kerak.
+- **4-bosqich.** `payments.raw` brauzerga yopiq, alohida `livemode` ustuni yo'q (`20261108000006_tolov.sql`, 115–120-qatorlar). Mavjud `payment_history(p_bolim)` faqat `test` belgisini qaytaradi va `livemode` yo'qligini ham `test=false` qiladi (`20261112000000_obuna_holati.sql`, 51–75-qatorlar). `test=false` filtri qat'iy `livemode=true` talabini bajarmaydi. Umumiy tarix uchun faqat jonli to'lovlarni serverda ajratadigan, egasini tekshiradigan RPC yoki cheklangan xavfsiz maydon kerak. Bu server ishi 4-bosqich PR'ining bog'liqligi sifatida ko'rsatiladi.
+- **5-bosqich.** Alohida usul tugmalari uchun v2 parametri topilmadi. Ko'rinadigan usullar ro'yxatini muallif kabinetdan tasdiqlaydi. Tasdiq bo'lmasa `Secure payment via inPAY` matni qo'llanadi.
+
+Migratsiya qo'shiladigan 3-bosqich PR'ida **qo'llash kerak** deb yoziladi. Push oldidan raqam to'qnashuvi `supabase migration list --remote` bilan, qo'llanadigan fayllar `supabase db push --remote --dry-run` bilan tekshiriladi. Ushbu 2-bosqichda baza buyruqlari va haqiqiy to'lov sinovlari bajarilmagan.
