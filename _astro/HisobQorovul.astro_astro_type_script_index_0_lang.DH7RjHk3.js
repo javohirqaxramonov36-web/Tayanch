@@ -1,0 +1,1 @@
+import{_ as e,f as t,l as n,x as r}from"./hisob.Cee_O9eO.js";var i=document.querySelector(`[data-qorovul-kutish]`),a=document.querySelector(`[data-qorovul-ichi]`);t()?i&&(i.hidden=!0):n().then(e=>{e&&(i&&(i.hidden=!0),a&&(a.hidden=!1))}).catch(()=>{i&&(i.hidden=!0),r(document.querySelector(`[data-qorovul-xato]`),e)});
