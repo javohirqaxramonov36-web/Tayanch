@@ -7,6 +7,7 @@
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import { DARSLAR, KURS_NOMI, MODULLAR, YOLLAR, type KursDars } from '../../../../data/topAdmission/kurs';
 import { KURS_KALIT } from '../../../../lib/topAdmission/kursProgress';
+import shablonData from '../../../../data/topAdmission/shablonlar.json';
 import { yol } from '../../../../lib/yol';
 
 export function getStaticPaths() {
@@ -22,6 +23,7 @@ const darsHref = (x: KursDars) => yol(`/uz/top-admission/kurs/${x.slug}/`);
 const kursHref = yol('/uz/top-admission/kurs/');
 const yolNomlari = YOLLAR.filter((y) => (y.darslar as readonly number[]).includes(d.raqam)).map((y) => y.nom).join(', ');
 const mezonIdlari = d.mezonlar!.map((m) => m.id);
+const shablonlar = shablonData.shablonlar.filter((s) => s.darslar.includes(d.raqam));
 ---
 <BolimQobiq
   title={`${d.raqam}-dars. ${d.nom} · ${KURS_NOMI}`}
@@ -77,6 +79,9 @@ const mezonIdlari = d.mezonlar!.map((m) => m.id);
     <section aria-labelledby="kd-keyingi">
       <h2 id="kd-keyingi">Keyingi qadam</h2>
       <p class="matn">{d.keyingi}</p>
+      {shablonlar.length > 0 && (
+        <p class="matn">Shu dars uchun shablon: {shablonlar.map((s, i) => <>{i > 0 && ', '}<a class="havola-matn" href={`${yol('/uz/top-admission/kurs/shablonlar/')}#${s.id}`}>{s.nom}</a></>)}.</p>
+      )}
       <nav class="kd-nav" aria-label="Darslar">
         {oldingiDars ? <a class="tugma tugma-ikkinchi" href={darsHref(oldingiDars)}>{oldingiDars.raqam}-dars</a> : <span />}
         {keyingiDars

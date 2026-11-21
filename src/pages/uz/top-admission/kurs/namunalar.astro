@@ -1,0 +1,101 @@
+---
+// 2-qavat · Top Admission · kurs: original yozuv namunalari (Admission J; spetsifikatsiya 7-band, muallif tasdig'i 2026-11-21).
+// Ma'lumot: src/data/topAdmission/namunalar.json (Codex to'plami templates/02-original-writing-examples.md dan).
+// Har namuna "Namuna" yorlig'i bilan; inglizcha matn asosiy (lang="en"), o'zbekchasi <details> ichida. JS yo'q.
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import { KURS_NOMI } from '../../../../data/topAdmission/kurs';
+import data from '../../../../data/topAdmission/namunalar.json';
+import { yol } from '../../../../lib/yol';
+
+interface Matnli { id: string; nom: string; en: string[]; uz: string[]; tahlil: string | null }
+interface Juftli { id: string; nom: string; juftlar: { en: string; uz: string }[] }
+interface Mashq { id: string; nom: string; qoralama: string; qoralama_en: string; topshiriq: string; tekshiruv: string }
+const n = data.namunalar as unknown as (Matnli | Juftli | Mashq)[];
+const matnlilar = n.filter((x): x is Matnli => 'en' in x);
+const juftli = n.find((x): x is Juftli => 'juftlar' in x);
+const mashq = n.find((x): x is Mashq => 'qoralama' in x);
+---
+<BolimQobiq
+  title={`Yozuv namunalari · ${KURS_NOMI}`}
+  description="Original o'quv namunalari: personal essay, academic fit, Statement of Purpose, activities va CV bulletlari, tahrir mashqi. Inglizcha va o'zbekcha."
+  turi="qollanma"
+  bolim="top-admission"
+  holat="qoralama"
+  yol={["Qo'llanmalar", KURS_NOMI]}
+>
+  <div class="ichki nm-sahifa">
+    <header class="nm-bosh">
+      <p class="ustki">Kurs</p>
+      <h1>Yozuv namunalari</h1>
+      <p class="matn">{data.kirish}</p>
+      <p class="sust">Namunani nusxalab topshirmang: tuzilishini o'rganing va o'z tajribangiz bilan yangi matn yozing. <a class="havola-matn" href={yol('/uz/top-admission/kurs/shablonlar/')}>Ish shablonlari</a> · <a class="havola-matn" href={yol('/uz/top-admission/kurs/')}>Barcha darslar</a></p>
+    </header>
+
+    {matnlilar.map((x) => (
+      <section class="nm-namuna" aria-labelledby={`nm-${x.id}`}>
+        <div class="nm-sarlavha">
+          <h2 id={`nm-${x.id}`}>{x.nom}</h2>
+          <span class="yorliq">Namuna</span>
+        </div>
+        <div class="nm-matn" lang="en">{x.en.map((p) => <p>{p}</p>)}</div>
+        <details class="nm-tarjima">
+          <summary>O'zbekcha</summary>
+          <div class="nm-matn">{x.uz.map((p) => <p>{p}</p>)}</div>
+        </details>
+        {x.tahlil && <p class="nm-tahlil"><strong>Tahlil.</strong> {x.tahlil}</p>}
+      </section>
+    ))}
+
+    {juftli && (
+      <section class="nm-namuna" aria-labelledby="nm-d">
+        <div class="nm-sarlavha">
+          <h2 id="nm-d">{juftli.nom}</h2>
+          <span class="yorliq">Namuna</span>
+        </div>
+        <ul class="nm-juftlar">
+          {juftli.juftlar.map((j) => (
+            <li>
+              <p class="nm-en" lang="en">{j.en}</p>
+              <p class="sust">{j.uz}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {mashq && (
+      <section class="nm-namuna" aria-labelledby="nm-e">
+        <div class="nm-sarlavha">
+          <h2 id="nm-e">{mashq.nom}</h2>
+        </div>
+        <p class="sust">Qoralama:</p>
+        <blockquote class="nm-qoralama"><span lang="en">“{mashq.qoralama_en}”</span><br />“{mashq.qoralama}”</blockquote>
+        <p class="matn"><strong>Topshiriq.</strong> {mashq.topshiriq}</p>
+        <p class="matn"><strong>Tekshiruv.</strong> {mashq.tekshiruv}</p>
+      </section>
+    )}
+  </div>
+</BolimQobiq>
+
+<style>
+  .nm-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); max-width: 72ch; }
+  .nm-bosh { display: grid; gap: var(--b-3); }
+  .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .matn { margin: 0; }
+  .sust { margin: 0; color: var(--matn-ikkinchi); }
+  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  .nm-namuna { display: grid; gap: var(--b-3); padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt); }
+  .nm-sarlavha { display: flex; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
+  .nm-sarlavha h2 { margin: 0; }
+  .nm-matn { display: grid; gap: var(--b-3); }
+  .nm-matn p { margin: 0; }
+  .nm-tarjima > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 700; color: var(--rang-havola); }
+  .nm-tarjima > summary:focus-visible { outline: 2px solid var(--rang-havola); outline-offset: 2px; border-radius: var(--r-kichik); }
+  .nm-tarjima[open] > .nm-matn { margin-top: var(--b-2); }
+  .nm-tahlil { margin: 0; padding-top: var(--b-3); border-top: 1px solid var(--chiziq); color: var(--matn-ikkinchi); }
+  .nm-juftlar { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--b-3); }
+  .nm-juftlar li { display: grid; gap: var(--b-1); padding-top: var(--b-3); border-top: 1px solid var(--chiziq); }
+  .nm-juftlar p { margin: 0; }
+  .nm-en { font-weight: 600; }
+  .nm-qoralama { margin: 0; padding-left: var(--b-4); border-left: 3px solid var(--chiziq-kuchli); font-weight: 600; }
+</style>

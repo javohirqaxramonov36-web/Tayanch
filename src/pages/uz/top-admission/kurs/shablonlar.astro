@@ -1,0 +1,131 @@
+---
+// 2-qavat · Top Admission · kurs: 12 ish shabloni (Admission J; spetsifikatsiya 6-band, muallif tasdig'i 2026-11-21).
+// Ma'lumot: src/data/topAdmission/shablonlar.json (Codex to'plami templates/01-working-templates.md dan bir martalik o'girilgan).
+// Har shablon <details> ichida; o'zbekcha va inglizcha bloklar, har biriga "Nusxa olish" (clipboard).
+// Clipboard ishlamasa matn belgilanadi va qo'lda nusxa olish aytiladi. URL hash (#s05) shu shablonni ochadi.
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import { DARSLAR, KURS_NOMI } from '../../../../data/topAdmission/kurs';
+import data from '../../../../data/topAdmission/shablonlar.json';
+import { yol } from '../../../../lib/yol';
+
+const darsHref = (raqam: number) => {
+  const d = DARSLAR.find((x) => x.raqam === raqam)!;
+  return { href: yol(`/uz/top-admission/kurs/${d.slug}/`), nom: `${d.raqam}-dars` };
+};
+const TIL = { uz: "O'zbekcha", en: 'English' } as const;
+---
+<BolimQobiq
+  title={`Ish shablonlari · ${KURS_NOMI}`}
+  description="12 ish shabloni: dastur kartasi, dalillar inventari, esse rejasi, activities, Academic CV, SOP, research proposal, professorga xat va boshqalar. O'zbekcha va inglizcha."
+  turi="qollanma"
+  bolim="top-admission"
+  holat="qoralama"
+  yol={["Qo'llanmalar", KURS_NOMI]}
+>
+  <div class="ichki sh-sahifa" data-shablonlar>
+    <header class="sh-bosh">
+      <p class="ustki">Kurs</p>
+      <h1>Ish shablonlari</h1>
+      <p class="matn">{data.izoh}</p>
+      <p class="sust">Har shablonni oching va nusxa oling. Inglizcha variant arizaning o'zi uchun, o'zbekchasi tushunish va qoralama uchun. <a class="havola-matn" href={yol('/uz/top-admission/kurs/namunalar/')}>Yozuv namunalari</a> · <a class="havola-matn" href={yol('/uz/top-admission/kurs/')}>Barcha darslar</a></p>
+    </header>
+
+    <ul class="sh-royxat">
+      {data.shablonlar.map((s) => (
+        <li>
+          <details class="sh-shablon" id={s.id}>
+            <summary>
+              <span class="sh-raqam" aria-hidden="true">{s.raqam}</span>
+              <span class="sh-nom">{s.nom}</span>
+            </summary>
+            <div class="sh-ichi">
+              <p class="sust">Darslar: {s.darslar.map((r, i) => { const d = darsHref(r); return <>{i > 0 && ', '}<a class="havola-matn" href={d.href}>{d.nom}</a></>; })}</p>
+              {s.izoh.map((z) => <p class="matn">{z}</p>)}
+              {s.bloklar.map((b) => (
+                <div class="sh-blok">
+                  <div class="sh-blok-bosh">
+                    <span class="yorliq">{TIL[b.til as 'uz' | 'en']}</span>
+                    <button type="button" class="tugma tugma-ikkinchi sh-nusxa" data-nusxa hidden>
+                      Nusxa olish<span class="sr"> ({s.nom}, {TIL[b.til as 'uz' | 'en']})</span>
+                    </button>
+                  </div>
+                  <pre class="sh-matn" lang={b.til} tabindex="0">{b.matn}</pre>
+                  <p class="sh-xabar" aria-live="polite" data-xabar></p>
+                </div>
+              ))}
+            </div>
+          </details>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BolimQobiq>
+
+<script>
+  const ildiz = document.querySelector<HTMLElement>('[data-shablonlar]');
+  if (ildiz) {
+    const och = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const el = id ? ildiz.querySelector<HTMLDetailsElement>(`details#${CSS.escape(id)}`) : null;
+      if (el) { el.open = true; el.scrollIntoView({ block: 'start' }); el.querySelector('summary')?.focus(); }
+    };
+    och();
+    addEventListener('hashchange', och);
+
+    ildiz.querySelectorAll<HTMLButtonElement>('[data-nusxa]').forEach((tugma) => {
+      tugma.hidden = false;
+      const blok = tugma.closest('.sh-blok')!;
+      const pre = blok.querySelector<HTMLElement>('pre')!;
+      const xabar = blok.querySelector<HTMLElement>('[data-xabar]')!;
+      let taymer = 0;
+      tugma.addEventListener('click', async () => {
+        clearTimeout(taymer);
+        try {
+          await navigator.clipboard.writeText(pre.textContent ?? '');
+          xabar.textContent = 'Nusxa olindi';
+        } catch {
+          const r = document.createRange();
+          r.selectNodeContents(pre);
+          const sel = getSelection();
+          sel?.removeAllRanges();
+          sel?.addRange(r);
+          xabar.textContent = "Avtomatik nusxa olib bo'lmadi: matn belgilandi, Cmd+C yoki Ctrl+C bosing.";
+        }
+        taymer = window.setTimeout(() => { xabar.textContent = ''; }, 4000);
+      });
+    });
+  }
+</script>
+
+<style>
+  .sh-sahifa { display: grid; gap: var(--b-6); padding-bottom: var(--b-6); }
+  .sh-bosh { display: grid; gap: var(--b-3); }
+  .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .matn { max-width: 62ch; margin: 0; }
+  .sust { max-width: 62ch; margin: 0; color: var(--matn-ikkinchi); }
+  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .sh-royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-2); }
+  .sh-shablon { border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt); scroll-margin-top: var(--b-8); }
+  .sh-shablon > summary {
+    display: flex; align-items: center; gap: var(--b-3); min-height: 56px; padding: var(--b-2) var(--b-4);
+    cursor: pointer; font-weight: 700; list-style: none;
+  }
+  .sh-shablon > summary::-webkit-details-marker { display: none; }
+  .sh-shablon > summary::after { content: '+'; margin-left: auto; font-size: 1.4em; line-height: 1; color: var(--matn-ikkinchi); }
+  .sh-shablon[open] > summary::after { content: '−'; }
+  .sh-shablon > summary:focus-visible { outline: 2px solid var(--rang-havola); outline-offset: 2px; border-radius: var(--r-katta); }
+  .sh-raqam {
+    flex: none; width: 32px; height: 32px; display: inline-grid; place-items: center; border-radius: var(--r-toliq);
+    border: 1.5px solid var(--chiziq-kuchli); font-size: var(--matn-kichik);
+  }
+  .sh-ichi { display: grid; gap: var(--b-4); padding: 0 var(--b-4) var(--b-4); }
+  .sh-blok { display: grid; gap: var(--b-2); min-width: 0; }
+  .sh-blok-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
+  .sh-matn {
+    margin: 0; padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon); border: 1px solid var(--chiziq);
+    font-family: inherit; font-size: var(--matn-kichik); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .sh-matn:focus-visible { outline: 2px solid var(--rang-havola); outline-offset: 2px; }
+  .sh-xabar { margin: 0; min-height: 1.4em; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+</style>

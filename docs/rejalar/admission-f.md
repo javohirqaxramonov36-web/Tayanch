@@ -25,7 +25,8 @@ Manba: `~/Tayanch/03-tadqiqot/top-admission-tadqiqot/2026-11-20/` (repodan tashq
 - Ma'lumot `src/data/topAdmission/kurs.ts` (16 dars, 4 modul, bakalavr va magistratura yo'llari). To'plamda yo'q misol, mezon va keyingi qadam original yozilgan, `qoshilgan` maydonida belgilangan (muallif ko'rigi uchun).
 - Sahifalar `/uz/top-admission/kurs/` va `/uz/top-admission/kurs/<slug>/` (hozir 1–8). Mezonlar checkbox, progress `tayanch:top-admission-kurs-progress` (`src/lib/topAdmission/kursProgress.ts`, testlar `kurs.test.ts`).
 - 2-qism (Admission I): 9–16-darslar `kurs.ts` ga qo'shildi; 16-darsda to'plamdagi "Mustaqil baholash" rubrikasi. Hamma 16 dars sahifasi bor.
-- Keyingi: 3-qism shablonlar va namunalar.
+- 3-qism (Admission J): `/uz/top-admission/kurs/shablonlar/` (12 shablon, `<details>`, o'zbekcha va inglizcha blok, "Nusxa olish") va `/kurs/namunalar/` (A–C matnlar, D bulletlar, E tahrir mashqi; "Namuna"). Ma'lumot `shablonlar.json`, `namunalar.json` (to'plam markdown'idan bir martalik o'girilgan, endi manba shu JSON). Dars sahifasida "Shu dars uchun shablon" havolasi (`#sNN` shablonni ochadi).
+- Codex to'plami to'liq saytga ko'chirildi.
 
 ## Ochiq
 - Yangi 13 davlatda narx, til, ishlash va diplom faktlari yo'q ("Ma'lumot tekshirilmoqda").

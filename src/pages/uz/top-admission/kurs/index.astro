@@ -25,6 +25,7 @@ const darslarJson = JSON.stringify(tayyor.map((d) => ({ slug: d.slug, mezonlar: 
       <h1>{KURS_NOMI}</h1>
       <p class="matn">{KURS_TAVSIF}</p>
       <p class="sust">Mashqlar, namunalar va tekshiruv mezonlari Tayanch uchun yozilgan original o'quv materiallari. Belgilar faqat shu brauzerda saqlanadi.</p>
+      <p class="kk-qoshimcha"><a class="tugma tugma-ikkinchi" href={yol('/uz/top-admission/kurs/shablonlar/')}>Ish shablonlari</a> <a class="tugma tugma-ikkinchi" href={yol('/uz/top-admission/kurs/namunalar/')}>Yozuv namunalari</a></p>
       <div class="kk-progress" data-progress hidden>
         <p class="kk-soni" aria-live="polite" tabindex="-1" data-soni></p>
         <div class="kk-tozala">
@@ -111,6 +112,7 @@ const darslarJson = JSON.stringify(tayyor.map((d) => ({ slug: d.slug, mezonlar: 
   .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
   .matn { max-width: 62ch; margin: 0; }
   .sust { max-width: 62ch; margin: 0; color: var(--matn-ikkinchi); }
+  .kk-qoshimcha { margin: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-3); }
   .kk-progress { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-5); }
   .kk-soni { margin: 0; font-weight: 700; }
   .kk-tasdiq { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-3); }
