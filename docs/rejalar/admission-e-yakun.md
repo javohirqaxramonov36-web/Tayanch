@@ -109,3 +109,8 @@ Merge faqat siz qilasiz. 2026-11-21 holatida PR `OPEN`, `MERGEABLE`, branch `ori
 2. Kamida bir nechta faktni tasdiqlab, shu branch'ga commit qiling: hozir merge qilinsa, sahifalar saytda bo'sh holatda ("Ma'lumot tekshirilmoqda") chiqadi. Bu xavfsiz, lekin foydasiz.
 3. PR #198 ni GitHub'da ko'rib chiqib merge qiling.
 4. Merge'dan keyin: A1 kursni qayta chiqarish (CLAUDE.md "Joriy holat": har `main` push uni o'chiradi), deploy tugagach saytda sahifalarni ochib ko'rish, `00-ai/band.md` dagi qatorni "Tugagan" ga ko'chirish.
+
+## 10. Muallif tasdig'i (2026-11-21)
+- Muallif "tasdiqlayman" dedi va skript bilan tekshirib tasdiqlashni tanladi. Har bir "qoralama" faktning `manba_iborasi` `source_url` sahifasida (HTML, JSON yoki PDF matni; teglar, bo'shliq va tirnoq turlari normallashtirilib) qayta qidirildi: 394 dan 394 tasi topildi va `holat: "tasdiqlangan"` qilindi. Faqat `holat` maydoni o'zgardi. Iboraning talqini (`qiymat`) qo'lda qayta ko'rilmagan.
+- Natija: 616 fakt: 394 tasdiqlangan, 0 qoralama, 222 topilmadi.
+- 7-bo'limdagi 24 savol bo'yicha: hozirgi talqinlar o'z holicha qoladi (muallif umumiy tasdig'i). Muallif keyin istalganini o'zgartirishi mumkin; brauzerda tekshirish so'ralgan saytlar (campuschina.org, uz.emb-japan.go.jp, Australia Awards, qo'shimcha 6 nomzod) ochiq qoladi.
