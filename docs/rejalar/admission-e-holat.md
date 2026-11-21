@@ -11,7 +11,7 @@
 | E6 | Qo'llanma: GKS | tugadi | 2026-11-20 | `qollanma` 53 qoralama fakt (11 shart, 9 qoplash, 15 hujjat, 7 bosqich, ariza yo'li, 6 rasmiy FAQ) + 3 rasmiy havola; manba asosan 2027 GKS-U rasmiy qo'llanma PDF (NIIED); sahifa `/uz/top-admission/grantlar/global-korea-scholarship/` build'da bor; asosiy faktlar o'zgarmadi |
 | E7 | Qo'llanma: Xitoy hukumati granti (CSC) | tugadi | 2026-11-20 | `qollanma` 32 qoralama + 4 topilmadi fakt (7 shart, 7 qoplash, 12 hujjat, 4 bosqich, ariza yo'li, 1 rasmiy FAQ) + 5 rasmiy havola; campuschina/csc 412; manba Xitoyning Indoneziya va AQShdagi elchixonalari (2027/2028) va Pekin hukumati (2020); sahifa `/uz/top-admission/grantlar/chinese-government-scholarship/` build'da bor |
 | E8 | Qo'llanma: MEXT | tugadi | 2026-11-20 | `qollanma` 38 qoralama + 5 topilmadi fakt (9 shart, 8 qoplash, 9 hujjat, 8 bosqich, ariza yo'li; rasmiy FAQ yo'q) + 4 rasmiy havola; manba MEXT 2027 bakalavr (elchixona yo'li) inglizcha qo'llanma PDF; uz.emb-japan.go.jp 403; sahifa `/uz/top-admission/grantlar/mext/` build'da bor; asosiy faktlar o'zgarmadi |
-| E9 | Boshqa bakalavr full ride grantlarini izlash | kutilmoqda | | |
+| E9 | Boshqa bakalavr full ride grantlarini izlash | tugadi | 2026-11-21 | 15 davlatdan faqat Saudiya mos keldi: mavjud `study-in-saudi` kartasiga `qollanma` (32 qoralama + 3 topilmadi sana), `toliq_qoplaydi` qoralama (MoE: "free scholarships in which the student gets full benefits"); qolgan 14 davlatda yangi grant topilmadi (sabablari eslatmada); 15 davlatdan tashqarida tasdiqlangan grant 0, 6 nomzod `qoshimcha-grantlar.md` da |
 | E10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
 
 ## Keyingi agent uchun eslatma
@@ -89,6 +89,26 @@
   - Grant kartasi asosiy faktlari o'zgarmadi: `nimani_qoplaydi` (studyinjapan, qoralama) rasmiy PDF bilan mos, `daraja: ikkalasi` to'g'ri (studyinjapan jadvalida research va undergraduate bor), `toliq_qoplaydi` qo'yilmadi (rasmiy matnda "full/fully funded" yo'q; yotoqxona stipendiat hisobidan).
   - Ishlatilmagan: universitet yo'li (University recommendation, faqat studyinjapan'da umumiy tavsif), kosen va senshu gakko qo'llanmalari, research students. Rasmiy FAQ sahifasi topilmadi, `rasmiy_faq` qo'yilmadi.
 
+- E9 (2026-11-21). O'zgargan fayllar: `src/data/topAdmission/grantlar/study-in-saudi.json` (asosiy faktlar va `qollanma`), yangi `docs/rejalar/qoshimcha-grantlar.md`. Kod o'zgarmadi. `docs/tekshiruv/tasdiq-royxati.md` yangilandi (394 qoralama, lokal). Tekshiruv: build o'tdi (93 sahifa, yangi `/uz/top-admission/grantlar/study-in-saudi/`, noindex; hozir 8 joyda "Ma'lumot tekshirilmoqda"), `malumot:tekshir` 68 hujjat / 616 fakt / sxema xatosi yo'q. Hamma 32 ibora curl bilan yuklangan sahifa/PDF matnida `grep -F` bilan topildi (PDF: macOS PDFKit, bitta satr ichida). WebFetch orqali olingan ibora YO'Q. WebSearch faqat rasmiy URL topish uchun.
+  - Saudiya: `moe.gov.sa` (www'siz) 400 beradi, `https://www.moe.gov.sa/en/education/admission-and-registration/publicuniversitiesscholarships` Safari UA bilan 200. Shu sahifa asosiy manba (turlar A to'liq / B qisman / C pullik, talablar, "Advantages of external scholarships"); Profil PDF (`object.moe.gov.sa/studyinsaudi/Profile_en-US.pdf`): "Full Scholarship" turi, 17–25 yosh, til, 5%/85% joylar, Study in Saudi portali. `rasmiy_havola` vazirlik sahifasiga almashtirildi. `deadline` matnli ("universitetlar o'quv yili talablariga qarab"). studyinsaudi.moe.gov.sa DNS yo'q (curl va WebFetch). Stipendiya summasi rasmiy vazirlik matnida yo'q; King Saud University 2024 flyer PDF'ida (faculty.ksu.edu.sa, "Fully Funded", oylik stipendiya, yotoqxona, aviachipta, 2024 ariza 18/8–18/9) bor, lekin u bitta universitet va 2024 yilniki: ishlatilmadi.
+  - 15 davlat natijasi (yangi karta faqat mos kelganda):
+    - AQSH: topilmadi. Fulbright faqat magistr (E3); Global UGRAD darajasiz almashinuv, exchanges.state.gov 403.
+    - Buyuk Britaniya: topilmadi. Chevening magistr; Commonwealth stipendiyalari faqat Commonwealth davlatlari uchun va Master/PhD (cscuk.fcdo.gov.uk/scholarships, "Commonwealth Master’s Scholarships are for candidates from eligible lower and upper middle income Commonwealth countries"), O'zbekiston Commonwealth a'zosi emas.
+    - Janubiy Koreya: mavjud GKS kartasi (E6). Yangi davlat granti topilmadi.
+    - Germaniya: topilmadi. DAAD saytlari ulanmadi (E3: curl 000, WebFetch ECONNREFUSED); bakalavr uchun davlat granti tasdiqlanmadi.
+    - Italiya: topilmadi. MAECI magistr; FAQ bo'yicha bakalavr faqat "Costruiamo il futuro" davomchilari uchun (E3).
+    - Vengriya: mavjud SH kartasi (E5); SH rasmiy matnda to'liq qoplamaydi deyilgan ("does not fully cover all the costs of living", Q8). Yangi grant topilmadi.
+    - Turkiya: mavjud Türkiye Bursları kartasi ("fully funded"). Yangi davlat granti topilmadi.
+    - Xitoy: mavjud CSC kartasi (E7). Qo'shimcha nomzod: CLEC "International Chinese Language Teachers Scholarship" (4 yillik bakalavr, Xitoy Ta'lim vazirligi qoshidagi CLEC). ECNU sahifasida qoplash bor (o'qish to'lovi, yotoqxona, 2 500 CNY, sug'urta), lekin "full/fully funded" iborasi yo'q; chinese.cn JS ilova, tavsiya qiluvchi tashkilotlar ro'yxati (O'zbekiston) ko'rilmadi. Shart to'liq bajarilmagani uchun karta yaratilmadi (muallif savoli).
+    - Yaponiya: mavjud MEXT kartasi (E8). Yangi grant topilmadi.
+    - Kanada: topilmadi (E3, EduCanada: faqat qisqa muddatli almashinuv).
+    - Avstraliya: topilmadi. RTP faqat tadqiqot darajalari; Australia Awards dfat.gov.au ochilmadi (curl 000).
+    - Malayziya: topilmadi. MIS faqat Master/PhD (Guidelines MIS 2026 PDF: "(Master’s/PhD) in Malaysia").
+    - Polsha: topilmadi. NAWA: Banach magistr, Poland My First Choice "second-cycle studies", gen. Anders bakalavr dasturi faqat Polsha diasporasi uchun ("programie dla Polonii", polyak tilida).
+    - Saudiya Arabistoni: TOPILDI (yuqorida), mavjud karta yangilandi.
+    - Singapur: topilmadi (E3: ASEAN Scholarship faqat ASEAN; Tuition Grant 3 yillik majburiyat bilan, grant emas).
+  - 15 davlatdan tashqarida: tasdiqlangan grant 0. Nomzodlar (Bruney, Indoneziya KNB, Rossiya kvotasi, Tayvan, Ruminiya, Chexiya) saytlari ochilmadi yoki JS; `docs/rejalar/qoshimcha-grantlar.md` da.
+
 ## Muallif uchun savollar
 - E2: Warwick "Band 0" (English Literature BA, Sociology and Criminology BA) 2027-28 ustunida £21,950, 2026-27 da £27,870. Kamaygan narx haqiqatmi yoki jadval xatosi? `kontrakt_eng_past` 21 950 GBP qoralama; mos kelmasa Band 1 (£29,260) qo'yamizmi?
 - E2: LSE (shahodatnoma "isn't acceptable") va Manchester (School of Social Sciences sahifasi) `foundation_kerak: "ha"` deb yozildi. Cambridge va UCL'da Uzbekistan shahodatnomasi tilga olinmagan ("topilmadi"). Shunday talqin ma'qulmi?
@@ -111,3 +131,7 @@
 - E8: MEXT bakalavr sharti "12 yillik maktab ta'limi" yoki "Yaponiya yuqori o'rta maktabiga teng maktab". O'zbekistonning 11 yillik maktabini tugatgan o'quvchi qaysi shartga tushishi rasmiy matnda yozilmagan. Qo'llanmada ikkala shart alohida fakt sifatida berildi, talqin qilinmadi. Elchixonadan aniqlab bera olasizmi?
 - E8: Yaponiyaning O'zbekistondagi elchixonasi sayti (uz.emb-japan.go.jp) bizdan 403 bilan ochilmaydi. Brauzeringizda 2027 (yoki 2028) MEXT bakalavr ariza muddati, imtihon va intervyu sanalarini topib bera olasizmi? Topilsa `deadline` va bosqich sanalari to'ldiriladi.
 - E8: Qo'llanma 2027 qabulniki (MEXT 2026-04-20 da e'lon qilgan; Yaponiyaga kelish 2027-yil aprel). Sanalar shu siklga tegishli; 2028 qo'llanmasi odatda keyingi bahorda chiqadi. Shunday qoldiramizmi?
+- E9: Study in Saudi kartasiga `toliq_qoplaydi: true` (qoralama) qo'yildi: vazirlik "free scholarships in which the student gets full benefits", profil PDF "Full Scholarship". Lekin dastur ichida qisman va pullik turlar ham bor, to'liq tur universitet qaroriga bog'liq. Belgi qolsinmi?
+- E9: Saudiya shartlarida "mahram" talabi bor (rasmiy matn). Qo'llanmada aynan shunday berildi. Ma'qulmi?
+- E9: 15 ta davlatdan tashqarida rasmiy manbada tasdiqlangan bakalavr full ride grant topilmadi (0 ta); 6 ta nomzod saytlari ochilmadi (qoshimcha-grantlar.md). Ular brauzerda tekshirilib, yangi davlat kartasi va qo'llanma qilinsinmi?
+- E9: Xitoy CLEC "International Chinese Language Teachers Scholarship" (4 yillik bakalavr) rasmiy matnda "full" deb yozilmagan va O'zbekiston tavsiya qiluvchi tashkiloti tasdiqlanmagan. Alohida karta kerakmi?
