@@ -1,0 +1,11 @@
+---
+import Asosiy from '../../../layouts/Asosiy.astro';
+import YolBelgisi from '../../../components/navigator/YolBelgisi.astro';
+import YolXaritasi from '../../../components/navigator/YolXaritasi.astro';
+---
+<Asosiy title="Yo'l tanlash" description="Uch savolga javob berib, o'z yo'lingizni tanlang." turi="vosita" bolim="umumiy" holat="chop-etilgan" sahifaOxiri={false}>
+  <YolBelgisi slot="bosh" />
+  <section class="ichki tanlash"><h1>Yo'lingizni tanlang</h1><button type="button" class="tugma tugma-asosiy" data-boshlash="hero" aria-haspopup="dialog">3 savolga javob bering →</button></section>
+  <YolXaritasi />
+</Asosiy>
+<style>.tanlash { display: grid; gap: var(--space-5); padding-block: var(--space-8); justify-items: start; }</style>

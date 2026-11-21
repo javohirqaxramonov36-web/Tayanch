@@ -471,3 +471,51 @@
    Sayt palitrasidan istisno (DESIGN.md, "Google tugmasi"). hover: holat qatlami, Google qiymati emas. */
 :root{ --google-fon:#ffffff; --google-chiziq:#747775; --google-matn:#1f1f1f; --google-hover:rgba(31, 31, 31, 0.08); }
 :root[data-mavzu='qorongi']{ --google-fon:#131314; --google-chiziq:#8e918f; --google-matn:#e3e3e3; --google-hover:rgba(227, 227, 227, 0.08); }
+
+/* Homepage/header brief, 2026-11-21. Existing semantic surfaces follow both themes. */
+:root {
+  --header-height: 76px;
+  --header-max: 1376px;
+  --header-logo: 116px;
+  --header-logo-mobile: 108px;
+  --header-pill-pad: 6px;
+  --header-column-min: 170px;
+  --header-menu-width: 420px;
+  --header-language-width: 240px;
+  --header-accent: #315BDD;
+  --flag-blue: #0099B5;
+  --flag-green: #1EB53A;
+  --flag-red: #CE1126;
+}
+
+:root {
+  --home-title: 52px;
+  --home-title-mobile: 28px;
+  --home-title-lh: 1.14;
+  --home-hero-width: 900px;
+  --home-copy-width: 760px;
+  --home-card-min: 220px;
+  --home-card-height: 290px;
+  --home-row-height: 80px;
+  --home-badge-mobile: 10px;
+  --home-button-radius: 14px;
+  --home-admission: #F5C542;
+  --home-sat: #4F7CFF;
+  --home-ielts: #EF5B4C;
+  --home-eyuf: #4CC38A;
+  --home-ai: #8B5CF6;
+  --home-icon-ink: #0A0A0C;
+  --home-free-bg: var(--color-success-100);
+  --home-free-ink: var(--color-success-800);
+}
+:root[data-mavzu='qorongi'] {
+  --home-free-bg: #17291F;
+  --home-free-ink: #7EE2A8;
+}
+
+:root {
+  --login-width: 460px;
+  --login-radius: 24px;
+  --login-button-height: 54px;
+  --login-backdrop: rgba(0, 0, 0, 0.6);
+}
