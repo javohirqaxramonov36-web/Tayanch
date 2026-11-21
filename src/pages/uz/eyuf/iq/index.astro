@@ -3,6 +3,7 @@ import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import QavatFoto from '../../../../components/QavatFoto.astro';
 import IqTest from '../../../../components/eyuf/IqTest.astro';
 import { yol } from '../../../../lib/yol';
+import settings from '../../../../../data/eyuf/settings.json';
 ---
 <BolimQobiq title="IQ test · El-Yurt Umidi" description="El-Yurt Umidi test bosqichiga mustaqil tayyorgarlik. Besh to‘plam, aralash savollar, taymer va xatolar tahlili." turi="mashq" bolim="eyuf" holat="chop-etilgan">
   <div class="ichki eyuf-iq-sahifa">
@@ -17,7 +18,7 @@ import { yol } from '../../../../lib/yol';
       <p>Rasmiy testda keyingi bosqichga o‘tish chegarasi — 61/100. Ushbu mashqda 20 savol teng ulushda baholanadi, standart vaqt 30 daqiqa.</p>
       <p><a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">PF-77, 3-ilova, 24-band (yangi oynada)</a> · Tekshirilgan sana 20.11.2026.</p>
     </details>
-    <IqTest />
+    {settings.book_content_enabled ? <IqTest /> : <p class="eyuf-iq-eslatma">Kitob kontenti ushbu qoralama paket sozlamasida o‘chirilgan. Mashqni ochish muallif ko‘rigidan keyin kontent sozlamasi orqali boshqariladi.</p>}
     <p class="eyuf-iq-manba">Mashq manbasi — muallif taqdim etgan «IQ &amp; Tahliliy fikrlash PREP 1» to‘plami. Javob tekshirilayotgan savollar alohida belgilanadi.</p>
   </div>
   <QavatFoto bolim="eyuf" />

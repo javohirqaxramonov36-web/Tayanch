@@ -1,0 +1,190 @@
+---
+import all from '../../../data/eyuf/lessons.json';
+import sources from '../../../data/eyuf/sources.json';
+interface Props { course?: string; module?: string }
+const lessons=all.items.filter(l=>Astro.props.module ? l.module===Astro.props.module : l.course===Astro.props.course);
+const defaultLevel = lessons.every(lesson => !lesson.level.includes('bachelor')) ? 'master' : 'bachelor';
+const links = new Map(sources.items.map(s=>[s.id,s]));
+---
+<div data-kurs>
+ <div class="eyuf-panel"><label>Ta’lim darajasi<select data-daraja><option value="bachelor" selected={defaultLevel==='bachelor'}>Bakalavr</option><option value="master" selected={defaultLevel==='master'}>Magistr</option></select></label><p data-progress role="status"></p><p data-storage hidden role="status"></p><p class="eyuf-small">Materiallar muallif ko‘rigi uchun qoralama. Manbasi yetishmagan bloklarda tayyorlanmoqda belgisi turadi.</p></div>
+ <div class="eyuf-lessons">
+ {lessons.map(l=><details class="eyuf-panel" data-dars={l.id} data-level={l.level.join(' ')} data-esse={l.module==='esse'}>
+  <summary>{l.title}</summary>
+  <p><strong>Maqsad.</strong> {l.goal}</p><p class="eyuf-small">Taxminan {l.duration_min} daqiqa · Qoralama · Qayd sanasi {l.as_of}</p>
+  {l.content_blocks.map(b=>b.type==='outline'?<p class="eyuf-error">Kontent tayyorlanmoqda. Rejadagi blok — {b.text}</p>:<p>{b.text}</p>)}
+  <p><strong>Mashq.</strong> {l.activity}</p><p><strong>Natija.</strong> {l.output}</p>
+  <label>Ish varag‘ingiz<textarea data-note maxlength="30000" placeholder="O‘z dalillaringiz, rejangiz yoki qoralamangiz" /></label>
+  {l.module==='hujjat' && <label class="eyuf-check"><input type="checkbox" data-check />Hujjatlarimni manbadagi ro‘yxat bilan solishtirdim</label>}
+  {l.module==='esse' && <><label class="eyuf-check"><input type="checkbox" data-save-essay />Ushbu esse qoralamasini shu brauzerda saqlash</label><button class="tugma tugma-ikkinchi" data-save-note>Qoralamani saqlash</button><p data-draft-status role="status"></p></>}
+  <div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-note-download>Qoralamani yuklab olish</button><button class="tugma tugma-ikkinchi" data-note-clear>Qoralamani o‘chirish</button><button class="tugma tugma-asosiy" data-complete>Natijani bajardim</button></div>
+  <details><summary>Manbalar va tekshiruv</summary><ul class="eyuf-list">{l.sources.map(s=><li>{links.get(s.id)?.url?<a href={links.get(s.id)!.url!} target="_blank" rel="noopener noreferrer">{s.id} · {s.locator} (yangi oynada)</a>:<span>{s.id} · {s.locator} · rasmiy kelib chiqishi yoki mazmun ko‘rigi kutilmoqda</span>}</li>)}</ul></details>
+ </details>)}
+ </div>
+ <button class="tugma tugma-ikkinchi" data-reset-progress>Ushbu kurs progressini tozalash</button>
+</div>
+<style>
+.eyuf-lessons {
+  display: grid;
+  gap: var(--space-4);
+  margin-block: var(--space-5);
+}
+details.eyuf-panel > details {
+  border-top: var(--border-width-1) solid var(--color-border);
+}
+</style>
+<script>
+import { lokalOqi, lokalYoz, matnYukla } from '../../lib/eyuf/holat';
+const root = document.querySelector<HTMLElement>('[data-kurs]');
+if (root) {
+  const key = 'tayanch:eyuf-kurs-progress:v1',
+    essayKey = 'tayanch:eyuf-esse:v1';
+  const message = root.querySelector<HTMLElement>('[data-storage]')!;
+  const isProgress = (
+    v: unknown,
+  ): v is { version: 1; done: string[]; checks: string[] } =>
+    !!v &&
+    typeof v === 'object' &&
+    'version' in v &&
+    v.version === 1 &&
+    'done' in v &&
+    Array.isArray(v.done) &&
+    v.done.every((x) => typeof x === 'string') &&
+    'checks' in v &&
+    Array.isArray(v.checks) &&
+    v.checks.every((x) => typeof x === 'string');
+  let state = lokalOqi(
+    key,
+    isProgress,
+    { version: 1, done: [], checks: [] },
+    message,
+  );
+  const isDraft = (
+    v: unknown,
+  ): v is { version: 1; notes: Record<string, string> } =>
+    !!v &&
+    typeof v === 'object' &&
+    'version' in v &&
+    v.version === 1 &&
+    'notes' in v &&
+    v.notes !== null &&
+    typeof v.notes === 'object' &&
+    !Array.isArray(v.notes) &&
+    Object.values(v.notes).every(
+      (x) => typeof x === 'string' && x.length <= 30000,
+    );
+  let drafts = lokalOqi(essayKey, isDraft, { version: 1, notes: {} }, message);
+  let conflict = false;
+  const lessons = [...root.querySelectorAll<HTMLDetailsElement>('[data-dars]')];
+  const select = root.querySelector<HTMLSelectElement>('[data-daraja]')!;
+  function render() {
+    let total = 0,
+      done = 0;
+    for (const lesson of lessons) {
+      lesson.hidden = !lesson.dataset.level!.split(' ').includes(select.value);
+      if (!lesson.hidden) {
+        total++;
+        if (state.done.includes(lesson.dataset.dars!)) done++;
+      }
+      (
+        lesson.querySelector('[data-complete]') as HTMLButtonElement
+      ).textContent = state.done.includes(lesson.dataset.dars!)
+        ? 'Natija bajarilgan'
+        : 'Natijani bajardim';
+      const check = lesson.querySelector<HTMLInputElement>('[data-check]');
+      if (check) check.checked = state.checks.includes(lesson.dataset.dars!);
+    }
+    root!.querySelector('[data-progress]')!.textContent =
+      `${done} / ${total} darsda natija bajardim deb belgilangan.`;
+  }
+  function persist() {
+    const old = lokalOqi(key, isProgress, { version: 1, done: [], checks: [] });
+    state.done = [...new Set([...old.done, ...state.done])];
+    lokalYoz(key, state, message);
+    render();
+  }
+  const requestedLevel = new URLSearchParams(location.search).get('daraja');
+  if (requestedLevel === 'bachelor' || requestedLevel === 'master')
+    select.value = requestedLevel;
+  select.addEventListener('change', render);
+  for (const lesson of lessons) {
+    const id = lesson.dataset.dars!;
+    const note = lesson.querySelector<HTMLTextAreaElement>('[data-note]')!;
+    const save = lesson.querySelector<HTMLInputElement>('[data-save-essay]');
+    if (save && drafts.notes[id]) {
+      note.value = drafts.notes[id];
+      save.checked = true;
+    }
+    lesson.querySelector('[data-complete]')!.addEventListener('click', () => {
+      state.done = [...new Set([...state.done, id])];
+      persist();
+    });
+    lesson.querySelector('[data-check]')?.addEventListener('change', (e) => {
+      state.checks = state.checks.filter((x) => x !== id);
+      if ((e.target as HTMLInputElement).checked) state.checks.push(id);
+      persist();
+    });
+    lesson
+      .querySelector('[data-note-download]')!
+      .addEventListener('click', () => matnYukla(note.value, `${id}.txt`));
+    lesson.querySelector('[data-note-clear]')!.addEventListener('click', () => {
+      if (!confirm('Ushbu ish varag‘idagi qoralama o‘chirilsinmi?')) return;
+      note.value = '';
+      const latest = lokalOqi(essayKey, isDraft, { version: 1, notes: {} });
+      delete latest.notes[id];
+      drafts = latest;
+      lokalYoz(essayKey, drafts, message);
+      if (save) save.checked = false;
+    });
+    lesson.querySelector('[data-save-note]')?.addEventListener('click', () => {
+      if (!save?.checked) {
+        lesson.querySelector('[data-draft-status]')!.textContent =
+          'Saqlash uchun rozilik belgisini qo‘ying. Qoralama hozir tab xotirasida.';
+        return;
+      }
+      if (
+        conflict &&
+        !confirm(
+          'Boshqa tab qoralamani yangilagan. Ushbu tabdagi matn bilan almashtirilsinmi?',
+        )
+      )
+        return;
+      drafts = lokalOqi(essayKey, isDraft, { version: 1, notes: {} });
+      drafts.notes[id] = note.value;
+      const ok = lokalYoz(essayKey, drafts, message);
+      conflict = false;
+      lesson.querySelector('[data-draft-status]')!.textContent = ok
+        ? 'Qoralama shu brauzerda saqlandi.'
+        : 'Qoralama saqlanmadi.';
+    });
+  }
+  window.addEventListener('storage', (e) => {
+    if (e.key === key) {
+      const incoming = lokalOqi(key, isProgress, state, message);
+      state = {
+        version: 1,
+        done: [...new Set([...state.done, ...incoming.done])],
+        checks: incoming.checks,
+      };
+      render();
+    }
+    if (e.key === essayKey) {
+      conflict = true;
+      message.hidden = false;
+      message.textContent =
+        'Boshqa tabda qoralama o‘zgardi. Saqlashdan oldin ushbu tab matnini tekshiring.';
+    }
+  });
+  root.querySelector('[data-reset-progress]')!.addEventListener('click', () => {
+    if (confirm('Faqat ushbu sahifadagi kurs progressi tozalansinmi?')) {
+      const ids = new Set(lessons.map((l) => l.dataset.dars));
+      state = lokalOqi(key, isProgress, state);
+      state.done = state.done.filter((x) => !ids.has(x));
+      state.checks = state.checks.filter((x) => !ids.has(x));
+      lokalYoz(key, state, message);
+      render();
+    }
+  });
+  render();
+}
+</script>

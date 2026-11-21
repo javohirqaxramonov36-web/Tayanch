@@ -1,0 +1,23 @@
+---
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
+import { yol } from '../../../../lib/yol';
+---
+<EyufSahifa title="Natija va keyingi qadamlar" description="To‘rtinchi kurs. Natijangizdan keyingi hujjatlar, majburiyatlar va B rejangizni tayyorlang.">
+  <section class="eyuf-panel" aria-labelledby="natija-yol-h">
+    <h2 id="natija-yol-h">O‘z holatingizdan boshlang</h2>
+    <ul class="eyuf-list">
+      <li>Natija chiqqan bo‘lsa, rasmiy e’lon va shaxsiy natija sanasini qayd eting.</li>
+      <li>G‘olib bo‘lsangiz, kafolat, shartnoma va majburiyatlar varag‘ini to‘ldiring.</li>
+      <li>Keyingi urinish uchun tayyorlansangiz, B reja darsida yaxshilaydigan ishlarni ajrating.</li>
+    </ul>
+    <p>Qoidalar PF-77ning 3-ilovasidan tekshirildi. Quyidagi dars matnlari muallif ko‘rigi uchun qoralama. Shaxsiy shartnoma va joriy rasmiy e’lonni ularga solishtiring.</p>
+    <a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">PF-77, 3-ilova, 17, 28–36-bandlar (yangi oynada)</a>
+  </section>
+  <KursDarslar course="c4" />
+  <section class="eyuf-panel" aria-labelledby="b-reja-h">
+    <h2 id="b-reja-h">Boshqa grant yo‘lini ham ko‘rib chiqing</h2>
+    <p>B rejangizni yozib bo‘lgach, boshqa dastur talablarini uning rasmiy manbasidan tekshiring.</p>
+    <a href={yol('/uz/top-admission/')}>Top Admission bo‘limiga o‘tish</a>
+  </section>
+</EyufSahifa>

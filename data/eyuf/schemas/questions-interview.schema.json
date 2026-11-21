@@ -1,0 +1,139 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "as_of": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "room": {
+            "anyOf": [
+              {
+                "enum": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "stem": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "bachelor",
+                "master"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "track_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "official": {
+            "type": "boolean"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "as_of": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "enum": [
+                  "S09",
+                  "S10",
+                  "S11",
+                  "S12"
+                ]
+              },
+              "test": {
+                "type": "string",
+                "minLength": 1
+              },
+              "page": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "number": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "book",
+              "test",
+              "page",
+              "number"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "room",
+          "number",
+          "stem",
+          "level",
+          "track_ids",
+          "official",
+          "verified",
+          "as_of",
+          "source"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "notice": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "as_of",
+    "items",
+    "notice"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

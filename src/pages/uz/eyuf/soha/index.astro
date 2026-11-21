@@ -1,0 +1,77 @@
+---
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import tracks from '../../../../../data/eyuf/tracks.json';
+import { yol } from '../../../../lib/yol';
+---
+<EyufSahifa title="Soha treklari" description="Darajangiz va mutaxassisligingiz bo‘yicha suhbatga tayyorlaning.">
+  <section class="eyuf-panel" data-track-catalog aria-labelledby="treklar-h">
+    <h2 id="treklar-h">Trekni toping</h2>
+    <div class="eyuf-grid">
+      <label>Ta’lim darajasi<select data-track-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label>
+      <label>Soha yoki mutaxassislik<input type="search" data-track-search maxlength="200" placeholder="Lotincha yoki kirillcha nom" /></label>
+    </div>
+    <p>2026-2 ochiq kvotalar snapshoti bo‘yicha tartiblanadi. AI qo‘shimcha o‘rinlari AKTning asosiy qatoriga qayta qo‘shilmaydi.</p>
+    <p role="status" data-track-count></p>
+    <ol class="eyuf-list" data-track-list>
+      {tracks.items.map(track => (
+        <li data-track={track.id}>
+          <a data-track-link href={yol(`/uz/eyuf/soha/${track.id}/`)}>{track.title}</a>
+          <p class="eyuf-small" data-quota></p>
+          <p class="eyuf-small">{track.specialties.length} mutaxassislik yozuvi · Lotincha transkripsiya ko‘rikda</p>
+        </li>
+      ))}
+    </ol>
+    <p><a href="https://api.el-yurt.uz/storage/quota-documents/992ee8d2-a625-47f9-9fbb-2fdf8bad0954-1793432390.pdf" target="_blank" rel="noopener noreferrer">S03 — rasmiy kvota jadvali (yangi oynada)</a></p>
+    <noscript><p>Daraja filtri va qidiruv uchun JavaScript’ni yoqing. Yuqorida barcha treklar berilgan.</p></noscript>
+  </section>
+</EyufSahifa>
+<script>
+import tracks from '../../../../../data/eyuf/tracks.json';
+import quotas from '../../../../../data/eyuf/quotas.json';
+import { treklarniSarala } from '../../../../../data/eyuf/saralash.mjs';
+import { qidiruvMatni } from '../../../../lib/eyuf/soha';
+const root = document.querySelector<HTMLElement>('[data-track-catalog]')!;
+const level = root.querySelector<HTMLSelectElement>('[data-track-level]')!;
+const search = root.querySelector<HTMLInputElement>('[data-track-search]')!;
+const list = root.querySelector<HTMLOListElement>('[data-track-list]')!;
+const items = new Map(
+  [...list.querySelectorAll<HTMLElement>('[data-track]')].map((item) => [
+    item.dataset.track!,
+    item,
+  ]),
+);
+function render() {
+  const selected = treklarniSarala(tracks, quotas, level.value);
+  const query = qidiruvMatni(search.value);
+  for (const item of items.values()) item.hidden = true;
+  let count = 0;
+  for (const track of selected) {
+    const item = items.get(track.id)!;
+    const text = qidiruvMatni(
+      [
+        track.title,
+        ...track.specialties.map(
+          (s: (typeof tracks.items)[number]['specialties'][number]) =>
+            `${s.title} ${s.title_original}`,
+        ),
+      ].join(' '),
+    );
+    item.hidden = !text.includes(query);
+    if (!item.hidden) count++;
+    const quota = quotas.items.find((row) => row.track_id === track.id)!;
+    item.querySelector('[data-quota]')!.textContent =
+      `2026-2 ochiq kvota — ${quota.open[level.value as 'bachelor' | 'master']}.`;
+    const link = item.querySelector<HTMLAnchorElement>('[data-track-link]')!;
+    const url = new URL(link.href);
+    url.searchParams.set('daraja', level.value);
+    link.href = url.href;
+    list.append(item);
+  }
+  root.querySelector('[data-track-count]')!.textContent = count
+    ? `${count} trek topildi`
+    : 'Mos trek topilmadi. Qidiruv yoki darajani o‘zgartiring.';
+}
+level.addEventListener('change', render);
+search.addEventListener('input', render);
+render();
+</script>
