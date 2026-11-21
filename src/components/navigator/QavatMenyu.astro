@@ -10,6 +10,7 @@ import { bolimlar } from '../../data/bolimlar';
 import { satYonGuruhlar } from '../../data/satSahifalar';
 import { qollanmalar, asos, vositalar, mashqlar, darslar } from '../../data/ieltsSahifalar';
 import { taGuruhlar } from '../../data/topAdmissionSahifalar';
+import { eyufGuruhlar } from '../../data/eyufSahifalar';
 import { aiKurslar, aiKursManzili } from '../../data/aiAcademy';
 import { yol } from '../../lib/yol';
 
@@ -50,8 +51,8 @@ const PANELLAR: Record<string, Panel> = {
     ].map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: ielts(b.qism) })) })),
   },
   eyuf: {
-    til: 'uz', tavsif: tavsifI('eyuf'), otish: "Bo'lim haqida", tezOrada: 'Tez orada',
-    ustunlar: [],
+    til: 'uz', tavsif: tavsifI('eyuf'), otish: "El-Yurt Umidi'ga o'tish", tezOrada: 'Tez orada',
+    ustunlar: eyufGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: b.href && `/uz/${b.href}` })) })),
   },
   // Kurslar aiAcademy.ts dan: ochiq kurs havola, tez-oradagisi "Tez orada" belgisi bilan. "Barcha kurslar" = qavat kirish sahifasi.
   'ai-academy': {

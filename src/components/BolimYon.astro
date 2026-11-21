@@ -94,7 +94,7 @@ const ieltsGuruhlar = [
 ];
 ---
 <header class="ustki-qator nav-shisha" data-bolim={bolim} data-qm-bor={qmBor ? '' : undefined} data-menyu-bor={qmBor ? undefined : ''}>
-  <a class="logo" href={b('')}>
+  <a class="logo" href={yol('/uz/')}>
     <span class="logo-belgi" aria-hidden="true">T</span>
     <span class="logo-nom">Tayanch {LOGO_NOM && <span class="logo-bolim">{LOGO_NOM}</span>}</span>
   </a>
@@ -114,7 +114,7 @@ const ieltsGuruhlar = [
     </summary>
     <div class="yon nav-shisha" id="bolim-yon" data-bolim={bolim}>
       <div class="yon-bosh">
-  <a class="logo" href={b('')}>
+  <a class="logo" href={yol('/uz/')}>
     <span class="logo-belgi" aria-hidden="true">T</span>
     <span class="logo-nom">Tayanch {LOGO_NOM && <span class="logo-bolim">{LOGO_NOM}</span>}</span>
   </a>
@@ -435,7 +435,13 @@ const ieltsGuruhlar = [
     .mavzu-tugma { inline-size: var(--space-12); }
   }
 
-  /* Panel */
+  /* Panel: header (.nav-shisha) ichida, ichma-ich blur ishlamaydi va orqadagi matn ko'rinib qoladi.
+     DESIGN.md "Sirtlar": ichma-ich blur yo'q, shuning uchun panel zich sirtda. */
+  .yon.nav-shisha {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
   .yon {
     position: absolute;
     inset-block-start: 100%;

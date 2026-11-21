@@ -311,6 +311,8 @@ const tekshirilmagan = [
     matn.textContent = qolgan.join(' ');
     korishok.classList.toggle('son', /^\d+$/.test(birinchi));
     korishok.classList.toggle('otgan', holat === 'Tugadi');
+    // "Yaqin muddatlar": o'tgan muddat birinchi turmasin, ro'yxat oxiriga tushadi.
+    if (holat === 'Tugadi') ch.parentElement?.append(ch);
   });
 
   // 2) Mening yo'lim: Topshirish yo'li javoblari, faqat o'qiladi (spetsifikatsiya 3-band).
