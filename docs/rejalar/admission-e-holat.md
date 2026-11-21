@@ -12,7 +12,7 @@
 | E7 | Qo'llanma: Xitoy hukumati granti (CSC) | tugadi | 2026-11-20 | `qollanma` 32 qoralama + 4 topilmadi fakt (7 shart, 7 qoplash, 12 hujjat, 4 bosqich, ariza yo'li, 1 rasmiy FAQ) + 5 rasmiy havola; campuschina/csc 412; manba Xitoyning Indoneziya va AQShdagi elchixonalari (2027/2028) va Pekin hukumati (2020); sahifa `/uz/top-admission/grantlar/chinese-government-scholarship/` build'da bor |
 | E8 | Qo'llanma: MEXT | tugadi | 2026-11-20 | `qollanma` 38 qoralama + 5 topilmadi fakt (9 shart, 8 qoplash, 9 hujjat, 8 bosqich, ariza yo'li; rasmiy FAQ yo'q) + 4 rasmiy havola; manba MEXT 2027 bakalavr (elchixona yo'li) inglizcha qo'llanma PDF; uz.emb-japan.go.jp 403; sahifa `/uz/top-admission/grantlar/mext/` build'da bor; asosiy faktlar o'zgarmadi |
 | E9 | Boshqa bakalavr full ride grantlarini izlash | tugadi | 2026-11-21 | 15 davlatdan faqat Saudiya mos keldi: mavjud `study-in-saudi` kartasiga `qollanma` (32 qoralama + 3 topilmadi sana), `toliq_qoplaydi` qoralama (MoE: "free scholarships in which the student gets full benefits"); qolgan 14 davlatda yangi grant topilmadi (sabablari eslatmada); 15 davlatdan tashqarida tasdiqlangan grant 0, 6 nomzod `qoshimcha-grantlar.md` da |
-| E10 | Yakuniy tekshiruv va hisobot | kutilmoqda | | |
+| E10 | Yakuniy tekshiruv va hisobot | tugadi | 2026-11-21 | `admission-e-yakun.md`; 68 hujjat, 616 fakt (0 tasdiqlangan, 394 qoralama, 222 topilmadi); yangi source_url 30 tadan 29 tasi ochiladi (UCL ELR 403); taqiqlangan ibora topilmadi; CLAUDE.md bloki olib tashlandi |
 
 ## Keyingi agent uchun eslatma
 - BOSHQARUVCHI (E0, 2026-11-20): ish papkasi worktree `Tayanch-SAT prep/.claude/worktrees/admission-d` (branch `admission-d`). Asosiy checkout'ga `cd` qilma, branch almashtirma. Build: `PATH=/opt/homebrew/bin:$PATH npm run build`.
@@ -108,6 +108,8 @@
     - Saudiya Arabistoni: TOPILDI (yuqorida), mavjud karta yangilandi.
     - Singapur: topilmadi (E3: ASEAN Scholarship faqat ASEAN; Tuition Grant 3 yillik majburiyat bilan, grant emas).
   - 15 davlatdan tashqarida: tasdiqlangan grant 0. Nomzodlar (Bruney, Indoneziya KNB, Rossiya kvotasi, Tayvan, Ruminiya, Chexiya) saytlari ochilmadi yoki JS; `docs/rejalar/qoshimcha-grantlar.md` da.
+
+- E10 (2026-11-21). O'zgargan fayllar: `CLAUDE.md` (`admission-e` bloki olib tashlandi, `git diff origin/main -- CLAUDE.md` bo'sh), yangi `docs/rejalar/admission-e-yakun.md`, shu fayl. Ma'lumot va faktlar o'zgartirilmadi. Tekshiruv: build o'tdi (93 sahifa), `npm test` 392/392, `npm run check` faqat eski 4 xato, `malumot:tekshir` 68 hujjat / 616 fakt / 0 eskirgan / 222 topilmadi, `malumot:tasdiq` 394 qoralama, `repo:tekshir` muammo yo'q. Havolalar: yangi `source_url` 30 ta, 29 tasi 200; UCL english-language-requirements hamma UA bilan 403. Qo'shimcha 23 havoladan campuschina.org (412), uz.emb-japan.go.jp (403), overseas.mofa.go.kr/uz-uz (307 sikli) ochilmadi. E-seriya tugadi; keyingi qadam muallifda (tasdiq, PR #198).
 
 ## Muallif uchun savollar
 - E2: Warwick "Band 0" (English Literature BA, Sociology and Criminology BA) 2027-28 ustunida £21,950, 2026-27 da £27,870. Kamaygan narx haqiqatmi yoki jadval xatosi? `kontrakt_eng_past` 21 950 GBP qoralama; mos kelmasa Band 1 (£29,260) qo'yamizmi?
