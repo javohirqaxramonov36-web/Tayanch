@@ -1,8 +1,8 @@
 ---
 import all from '../../../data/eyuf/lessons.json';
 import sources from '../../../data/eyuf/sources.json';
-interface Props { course?: string; module?: string }
-const lessons=all.items.filter(l=>Astro.props.module ? l.module===Astro.props.module : l.course===Astro.props.course);
+interface Props { course?: string; module?: string; modules?: string[] }
+const lessons=all.items.filter(l=>Astro.props.modules ? Astro.props.modules.includes(l.module) : Astro.props.module ? l.module===Astro.props.module : l.course===Astro.props.course);
 const defaultLevel = lessons.every(lesson => !lesson.level.includes('bachelor')) ? 'master' : 'bachelor';
 const links = new Map(sources.items.map(s=>[s.id,s]));
 ---

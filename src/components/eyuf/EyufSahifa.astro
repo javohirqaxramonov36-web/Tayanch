@@ -5,7 +5,7 @@ import { yol } from '../../lib/yol';
 import sourceRegistry from '../../../data/eyuf/sources.json';
 interface Props { title: string; description: string }
 const { title, description } = Astro.props;
-const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/'], ['IQ mashq', '/uz/eyuf/trenajyor/'], ['Suhbat', '/uz/eyuf/suhbat/'], ['Sohalar', '/uz/eyuf/soha/'], ['Natija', '/uz/eyuf/natija/']];
+const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/'], ['IQ mashq', '/uz/eyuf/trenajyor/'], ['Mock', '/uz/eyuf/mock/'], ['Suhbat', '/uz/eyuf/suhbat/'], ['Sohalar', '/uz/eyuf/soha/'], ['Natija', '/uz/eyuf/natija/']];
 ---
 <BolimQobiq title={`${title} · EYUF`} description={description} turi="vosita" bolim="eyuf" holat="qoralama">
   <div class="ichki eyuf-ui">
@@ -200,6 +200,7 @@ button?.addEventListener('click', () => {
       'tayanch:eyuf-suhbat-progress:v1',
       'tayanch:eyuf-iq-progress:v1',
       'tayanch:eyuf-iq:v1',
+      'tayanch:eyuf-mock:v1',
     ])
       localStorage.removeItem(key);
     window.location.reload();

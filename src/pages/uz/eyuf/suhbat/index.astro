@@ -1,19 +1,24 @@
 ---
+import EsseHimoya from '../../../../components/eyuf/EsseHimoya.astro';
+import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
 import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import tracks from '../../../../../data/eyuf/tracks.json';
 import { yol } from '../../../../lib/yol';
 ---
 <EyufSahifa title="Suhbatga tayyorgarlik" description="Savol kartalari, lokal ovoz yozuvi va mezonlar bo‘yicha o‘z bahongiz.">
  <p class="eyuf-panel">Savollar norasmiy tayyorgarlik materiallaridan olingan. Xona bo‘linishi qo‘llanmadagi mashq tuzilishi. Rasmiy Nizom suhbat davlat tilida bo‘lishini belgilaydi. <a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">PF-77, 3-ilova, 25-band (yangi oynada)</a></p>
- <p><a href={yol('/uz/eyuf/soha/')}>20 soha trekidan o‘zingiznikini toping</a></p>
+ <p><a href={yol('/uz/eyuf/soha/')}>20 soha trekidan o‘zingiznikini toping</a> · <a href={yol('/uz/eyuf/hududlar/')}>Hududlar va sanali islohotlar</a></p>
  <div id="eyuf-suhbat">
   <p data-storage role="status" hidden></p>
-  <section class="eyuf-panel"><h2>Mashqni tanlang</h2><div class="eyuf-grid"><label>Xona<select data-room><option value="all">Barcha savollar</option><option value="1">1-xona</option><option value="2">2-xona</option><option value="specialty">Soha savollari</option></select></label><label>Daraja<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Mock davomiyligi<select data-minutes><option value="15">15 daqiqa</option><option value="20">20 daqiqa</option></select></label></div><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-random>Tasodifiy savol</button><button class="tugma tugma-ikkinchi" data-mock>Mock suhbat</button></div><p data-queue role="status"></p><p>“Suhbatdosh” AI — keyingi bosqich.</p></section>
-  <section class="eyuf-panel" data-card hidden><div class="eyuf-actions"><h2 data-question tabindex="-1">Savol</h2><output data-timer aria-label="Mashq vaqti"></output></div><p class="eyuf-small" data-source></p><p data-warning></p><label>Yozma javobingiz<textarea data-answer maxlength="15000" /></label><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-record>Ovoz yozishni boshlash</button><button class="tugma tugma-ikkinchi" data-stop disabled>Yozishni to‘xtatish</button></div><p data-record-state role="status">Ovoz tab xotirasida qoladi. Tabni yopishdan oldin yozuvni yuklab oling.</p><audio data-audio controls hidden></audio><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-audio-download disabled>Ovozni yuklab olish</button><button class="tugma tugma-ikkinchi" data-audio-clear disabled>Ovozni o‘chirish</button><button class="tugma tugma-asosiy" data-next>Keyingi savol</button><button class="tugma tugma-ikkinchi" data-finish>O‘z bahomga o‘tish</button></div></section>
+  <section class="eyuf-panel"><h2>Mashqni tanlang</h2><div class="eyuf-grid"><label>Xona<select data-room><option value="all">Barcha savollar</option><option value="1">1-xona</option><option value="2">2-xona</option><option value="specialty">Soha savollari</option></select></label><label>Daraja<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Soha<select data-track><option value="all">Barcha sohalar</option>{tracks.items.map(track=><option value={track.id}>{track.title}</option>)}</select></label><label>Mock davomiyligi<select data-minutes><option value="15">15 daqiqa</option><option value="20">20 daqiqa</option></select></label></div><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-random>Tasodifiy savol</button><button class="tugma tugma-ikkinchi" data-mock>Mock suhbat</button></div><p data-queue role="status"></p><p>“Suhbatdosh” AI — keyingi bosqich.</p></section>
+  <section class="eyuf-panel" data-card hidden><div class="eyuf-actions"><h2 data-question tabindex="-1">Savol</h2><output data-timer aria-label="Mashq vaqti"></output></div><details><summary>Qo‘shimcha inglizcha mashq</summary><p lang="en" data-english></p><p>Norasmiy savolning Tayanch o‘quv tarjimasi. Rasmiy Nizom suhbat davlat tilida bo‘lishini belgilaydi.</p></details><p class="eyuf-small" data-source></p><p data-warning></p><label>Yozma javobingiz<textarea data-answer maxlength="15000" /></label><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-record>Ovoz yozishni boshlash</button><button class="tugma tugma-ikkinchi" data-stop disabled>Yozishni to‘xtatish</button></div><p data-record-state role="status">Ovoz tab xotirasida qoladi. Tabni yopishdan oldin yozuvni yuklab oling.</p><audio data-audio controls hidden></audio><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-audio-download disabled>Ovozni yuklab olish</button><button class="tugma tugma-ikkinchi" data-audio-clear disabled>Ovozni o‘chirish</button><button class="tugma tugma-asosiy" data-next>Keyingi savol</button><button class="tugma tugma-ikkinchi" data-finish>O‘z bahomga o‘tish</button></div></section>
   <section class="eyuf-panel" aria-labelledby="rubrika-h"><h2 id="rubrika-h" tabindex="-1">O‘z-o‘zini baholash</h2><p>Tarixiy 2025-2 uslubiyoti asosidagi mashq. Joriy tanlovga tatbiqi tasdiqlanmagan. Ushbu baho rasmiy natija emas.</p><p><a href="https://api.el-yurt.uz/storage/competition-documents/67ec55a7-f608-4303-b7a7-799e020d0408-1763475015.pdf" target="_blank" rel="noopener noreferrer">2025-2 baholash uslubiyoti, 3–5-betlar (yangi oynada)</a></p>
    <form data-rubric><div class="eyuf-grid">{[['Qadriyat, sadoqat va dunyoqarash',30],['Esse, maqsad va bilimni qo‘llash',30],['Mutaxassislik bilimi va amaliyot',40]].map(([name,max],i)=><fieldset><legend>{name}</legend><label>O‘z bahom, 0–{max}<input data-score={i} name={`score-${i}`} type="number" min="0" max={max} step="1" required /></label><label>Javobimdan asoslovchi misol<textarea name={`evidence-${i}`} maxlength="4000" required /></label></fieldset>)}</div><label class="eyuf-check"><input name="save" type="checkbox" />Faqat ball, savol IDsi va mashq sanasini shu brauzerda saqlash</label><button class="tugma tugma-asosiy" type="submit">O‘z bahomni ko‘rish</button></form>
    <section data-result hidden aria-labelledby="suhbat-natija-h"><h3 id="suhbat-natija-h" tabindex="-1">Mezonlar bo‘yicha natija</h3><p data-total></p><div data-chart></div><table><caption>O‘z bahomning matnli jadvali</caption><thead><tr><th scope="col">Mezon</th><th scope="col">Ball</th></tr></thead><tbody data-table></tbody></table><label>Keyingi mashq vazifangiz<textarea data-task maxlength="4000" /></label><button class="tugma tugma-ikkinchi" data-download>Natijani yuklab olish</button></section><p data-history></p><button class="tugma tugma-ikkinchi" data-clear>Saqlangan suhbat progressini o‘chirish</button>
   </section>
  </div>
+<EsseHimoya />
+<h2>Tayyorlanish darslari</h2><KursDarslar modules={['yadro', 'simulyatsiya']} />
 </EyufSahifa>
 <script>
 import bank from '../../../../../data/eyuf/questions-interview.json';
@@ -107,8 +112,11 @@ async function show(q: (typeof bank.items)[number]) {
   current = q;
   el('[data-card]').hidden = false;
   el('[data-question]').textContent = q.stem;
+  el('[data-english]').textContent = q.stem_en;
   el('[data-source]').textContent =
-    `${q.source.book}, PDF ${q.source.page.join(', ')}-bet, ${q.source.number}-savol. Transkripsiya ko‘rigi kutilmoqda.`;
+    q.source.book === 'T01'
+      ? 'Tayanch soha mashqi. Norasmiy savol.'
+      : `${q.source.book}, PDF ${q.source.page.join(', ')}-bet, ${q.source.number}-savol. Transkripsiya ko‘rigi kutilmoqda.`;
   el('[data-warning]').textContent =
     q.id === 'interview-s09-1-37'
       ? 'Bu savoldagi ishlash muddati manbaning asl matni. Amaldagi darajaviy majburiyatni shartnomangiz bilan tekshiring.'
@@ -141,15 +149,20 @@ async function finish() {
 el('[data-random]').addEventListener('click', async () => {
   const room = el<HTMLSelectElement>('[data-room]').value;
   const level = el<HTMLSelectElement>('[data-level]').value;
+  const track = el<HTMLSelectElement>('[data-track]').value;
   const pool = bank.items.filter(
     (q) =>
       q.level.includes(level) &&
+      (track === 'all' ||
+        !q.track_ids.length ||
+        q.track_ids.some((id) => id === track)) &&
       (room === 'all' ||
         (room === 'specialty' &&
-          q.source.book === 'S09' &&
-          q.room === 1 &&
-          q.number >= 19 &&
-          q.number <= 34) ||
+          (q.track_ids.length > 0 ||
+            (q.source.book === 'S09' &&
+              q.room === 1 &&
+              q.number >= 19 &&
+              q.number <= 34))) ||
         String(q.room) === room),
   );
   if (!pool.length) {
@@ -169,8 +182,16 @@ el('[data-mock]').addEventListener('click', async () => {
   const pool = bank.items.filter(
     (q) => q.level.includes(level) && q.source.book === 'S09',
   );
+  const track = el<HTMLSelectElement>('[data-track]').value;
+  const specialty = bank.items.filter(
+    (q) => q.track_ids.some((id) => id === track) && q.level.includes(level),
+  );
   queue = [
-    ...aralashtir(pool.filter((q) => q.room === 1)).slice(0, 4),
+    ...aralashtir(pool.filter((q) => q.room === 1)).slice(
+      0,
+      specialty.length ? 2 : 4,
+    ),
+    ...aralashtir(specialty).slice(0, 2),
     ...aralashtir(pool.filter((q) => q.room === 2)).slice(0, 4),
   ];
   index = 0;
@@ -181,7 +202,7 @@ el('[data-mock]').addEventListener('click', async () => {
   await show(queue[0]);
   setClock();
   el('[data-queue]').textContent =
-    'Tayanch mock — 1-xona va 2-xonadan jami 8 mashq savoli.';
+    'Tayanch mock — ikki xona va tanlangan sohadan jami 8 mashq savoli.';
 });
 el('[data-next]').addEventListener('click', async () => {
   index++;

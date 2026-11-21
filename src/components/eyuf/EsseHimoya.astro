@@ -1,0 +1,41 @@
+<section class="eyuf-panel" data-esse-himoya aria-labelledby="himoya-h">
+ <h2 id="himoya-h">Essedagi da’volarni himoya qilish</h2>
+ <p>Esse matnini kiriting. Har jumla uchun dalil, shaxsiy hissa va natijani tekshiruvchi Tayanch savollari yaratiladi. Bu mahalliy shablonli mashq. Matn tashqi xizmatga yuborilmaydi va bu maydonda saqlanmaydi.</p>
+ <label>Esse yoki uning bir parchasi<textarea data-claim-text maxlength="30000" /></label>
+ <div class="eyuf-actions"><button type="button" class="tugma tugma-asosiy" data-claim-build>Savollarni tuzish</button><button type="button" class="tugma tugma-ikkinchi" data-claim-clear>Matn va savollarni tozalash</button></div>
+ <p role="status" data-claim-status></p><div data-claim-list></div>
+</section>
+<script>
+import { esseDavolari, himoyaSavollari } from '../../lib/eyuf/esseHimoya';
+import { matnElement } from '../../lib/eyuf/holat';
+const root = document.querySelector<HTMLElement>('[data-esse-himoya]')!;
+const text = root.querySelector<HTMLTextAreaElement>('[data-claim-text]')!;
+const list = root.querySelector<HTMLElement>('[data-claim-list]')!;
+const status = root.querySelector<HTMLElement>('[data-claim-status]')!;
+root.querySelector('[data-claim-build]')!.addEventListener('click', () => {
+  const claims = esseDavolari(text.value);
+  list.replaceChildren();
+  status.textContent = claims.length
+    ? `${claims.length} da’vo uchun savollar tuzildi. Bir urinishda dastlabki 30 jumla olinadi.`
+    : 'Kamida bitta mazmunli jumla kiriting.';
+  for (const [index, claim] of claims.entries()) {
+    const details = document.createElement('details');
+    details.append(matnElement('summary', `${index + 1}. ${claim}`));
+    const questions = document.createElement('ol');
+    for (const question of himoyaSavollari(claim))
+      questions.append(matnElement('li', question));
+    details.append(questions);
+    list.append(details);
+  }
+});
+root.querySelector('[data-claim-clear]')!.addEventListener('click', () => {
+  if (
+    !confirm('Ushbu maydondagi esse va hosil qilingan savollar tozalansinmi?')
+  )
+    return;
+  text.value = '';
+  list.replaceChildren();
+  status.textContent = 'Matn va savollar tozalandi.';
+  text.focus();
+});
+</script>

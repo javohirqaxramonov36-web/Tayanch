@@ -1,20 +1,22 @@
 ---
+import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
 import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
 import settings from '../../../../../data/eyuf/settings.json';
 import bank from '../../../../../data/eyuf/questions-iq.json';
 import { yol } from '../../../../lib/yol';
 ---
 <EyufSahifa title="IQ trenajyor" description="Tur bo‘yicha mashq, sprint va xatolarni oraliq takrorlash.">
- <p class="eyuf-panel">Birinchi to‘plam namunasi. 20 savol, 19 tasdiqlangan javob. Tur tasnifi va qiyinlik ko‘rigi davom etmoqda. <a href={yol('/uz/eyuf/iq/')}>Besh to‘plamli IQ mashqi</a></p>
+ <p class="eyuf-panel">PREP_1ning 100 savoli, 88 tasdiqlangan javob. Qo‘shimcha 40 Tayanch so‘z-mantiq va tadqiqot mashqi hamda PREP_2ning 110 savoli mavjud, shundan 26 javob mustaqil tekshirilgan. Qolgan yozuvlar baholanmaydigan ko‘rik nusxalari. Kitob savollarining tur tasnifi va qiyinlik ko‘rigi davom etmoqda. <a href={yol('/uz/eyuf/iq/')}>Besh to‘plamli IQ mashqi</a></p>
  {!settings.book_content_enabled && <p class="eyuf-panel">Kitob kontenti ushbu qoralama paketda o‘chirilgan. Mashqni ochish uchun kontent sozlamasi muallif ko‘rigidan o‘tkaziladi.</p>}
  {settings.book_content_enabled && <div id="eyuf-trenajyor">
   <p data-storage role="status" hidden></p>
-  <section class="eyuf-panel" data-start><h2>Mashqni tanlang</h2><label>Ta’lim darajasi<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Savol turi<select data-type><option value="all">Barcha turlar</option>{[...new Set(bank.items.map(q=>q.type))].map(t=><option value={t}>{t.replaceAll('-',' ')}</option>)}</select></label><label>Rejim<select data-mode><option value="practice">Mashq — izoh darhol</option><option value="sprint">Sprint — 60 soniya</option><option value="combo">Combo zanjiri</option><option value="daily">Kunlik 10 savol</option><option value="review">Xatolarni takrorlash</option></select></label><button class="tugma tugma-asosiy" data-begin>Boshlash</button><p data-empty role="status"></p><p>To‘liq mock tayyorlanmoqda. Hozir yetarli darajaviy bloklar mavjud emas.</p></section>
-  <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1">Savol</h2><output data-timer aria-label="Qolgan vaqt"></output></div><p data-stem></p><p data-pending hidden>Javob tekshirilmoqda. Ushbu savol ball va XP bermaydi.</p><div data-images></div><div class="eyuf-grid" data-options role="group" aria-label="Javob variantlari"></div><p class="eyuf-small">A–F klavishlari bilan variantni tanlang. Matn maydonida bu klavishlar javob bermaydi.</p><section data-feedback hidden aria-live="polite"></section><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-next hidden>Keyingi</button><button class="tugma tugma-ikkinchi" data-finish>Yakunlash</button></div></section>
+  <section class="eyuf-panel" data-start><h2>Mashqni tanlang</h2><label>Ta’lim darajasi<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Savol turi<select data-type><option value="all">Barcha turlar</option>{[...new Set(bank.items.map(q=>q.type))].map(t=><option value={t}>{t.replaceAll('-',' ')}</option>)}</select></label><label>Rejim<select data-mode><option value="practice">Mashq — izoh darhol</option><option value="sprint">Sprint — 60 soniya</option><option value="combo">Combo zanjiri</option><option value="daily">Kunlik 10 savol</option><option value="review">Xatolarni takrorlash</option></select></label><button class="tugma tugma-asosiy" data-begin>Boshlash</button><p data-empty role="status"></p><p><a href={yol('/uz/eyuf/mock/')}>40 savollik simulyatsiya yoki qisqa diagnostika</a></p></section>
+  <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1">Savol</h2><output data-timer aria-label="Qolgan vaqt"></output></div><p data-stem></p><p data-pending hidden>Javob tekshirilmoqda. Ushbu savol ball va XP bermaydi.</p><div data-images></div><div class="eyuf-grid" data-options role="group" aria-label="Javob variantlari"></div><p class="eyuf-small">A–G klavishlari bilan variantni tanlang. Matn maydonida bu klavishlar javob bermaydi.</p><section data-feedback hidden aria-live="polite"></section><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-next hidden>Keyingi</button><button class="tugma tugma-ikkinchi" data-finish>Yakunlash</button></div></section>
   <section class="eyuf-panel" data-result hidden><h2 tabindex="-1" data-result-h>Mashq natijasi</h2><p data-summary></p><button class="tugma tugma-asosiy" data-again>Rejim tanlash</button></section>
   <section class="eyuf-panel"><h2>Mahorat va progress</h2><p data-streak></p><ul class="eyuf-list" data-mastery></ul><ul class="eyuf-list" data-badges></ul><button class="tugma tugma-ikkinchi" data-clear>Trenajyor progressini tozalash</button></section>
   <dialog data-zoom aria-label="Savol rasmi"><button class="tugma tugma-ikkinchi" data-close>Rasmni yopish</button><img data-zoom-image alt="" /></dialog>
  </div>}
+<h2>Tayyorlanish darslari</h2><KursDarslar course="c2" />
 </EyufSahifa>
 <script>
 import bank from '../../../../../data/eyuf/questions-iq.json';
@@ -101,8 +103,9 @@ if (root) {
   }
   function reward(id: string, answer: string) {
     try {
+      const q = savollar.find((x) => x.id === id);
+      if (!q) return 0;
       const old = holatniOqi(localStorage.getItem(SAQLASH_KALITI), savollar);
-      const q = savollar.find((x) => x.id === id)!;
       const session = yangiSessiya('aralash', [q], 30);
       session.javoblar[id] = answer as typeof q.kitobJavobi;
       const updated = mukofotHisobla({ ...old, sessiya: session }, savollar);
@@ -120,7 +123,7 @@ if (root) {
     el('[data-question]').hidden = true;
     el('[data-result]').hidden = false;
     el('[data-summary]').textContent =
-      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. Bu mashq natijasi.`;
+      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. XP PREP_1dagi tasdiqlangan savolning birinchi to‘g‘ri javobiga beriladi. Bu mashq natijasi.`;
     if (mode === 'daily' && i >= pool.length) {
       const day = toshkentKuni();
       p.days = [...new Set([...p.days, day])];
@@ -157,8 +160,12 @@ if (root) {
       combo = 0;
       feedback.append(matnElement('h3', 'Javob tekshirilmoqda'));
     }
+    const steps = document.createElement('ol');
+    for (const step of q.explanation.steps)
+      steps.append(matnElement('li', step));
     feedback.append(
       matnElement('p', q.explanation.rule),
+      steps,
       matnElement('p', 'Tuzoq. ' + q.explanation.trap),
     );
     feedback.hidden = false;
@@ -286,7 +293,7 @@ if (root) {
       return;
     const letter = e.key.toUpperCase();
     if (
-      /^[A-F]$/.test(letter) &&
+      /^[A-G]$/.test(letter) &&
       pool[i]?.options.some((o) => o.id === letter)
     ) {
       e.preventDefault();

@@ -20,3 +20,7 @@ Har bosqich bitta sahifa yoki komponent doirasida bajariladi. Avval diagnostika 
 ## Tasdiq chegarasi
 
 Taklif etilgan lokal saqlash, pedagogik interval/mahorat/badge parametrlari va rubrikaning tarixiy maqomi shu spetsifikatsiya tarkibida tasdiqlanadi. UI qurishga o‘tishdan oldin muallif tasdig‘i kutilmoqda. Muallif topshirig‘idagi har fazadan keyin to‘xtash qoidasi saqlanadi. Nashr qarori alohida ko‘riladi.
+
+## 2026-11-21 davomiy amalga oshirish
+
+Muallif keyingi bosqichlar va qolgan ishlarni davom ettirishni tasdiqladi. Endi 40 savolli ikki blokli mock va 10 savolli diagnostika yetarli tasdiqlangan bank bilan faol. Kalit `tayanch:eyuf-mock:v1`, natija takror ochilganda progress ikki marta yozilmaydi. PREP_2 variantlari A–G oralig‘ida. Difficulty tasdiqlanmagani sababli adaptiv tanlov ochiq qoladi. Qolgan joriy chegara va sinovlar `yakunlash-holati.md`da.

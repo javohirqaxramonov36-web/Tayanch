@@ -76,7 +76,8 @@
                   "S09",
                   "S10",
                   "S11",
-                  "S12"
+                  "S12",
+                  "T01"
                 ]
               },
               "test": {
@@ -104,6 +105,10 @@
               "number"
             ],
             "additionalProperties": false
+          },
+          "stem_en": {
+            "type": "string",
+            "minLength": 1
           }
         },
         "required": [
@@ -116,7 +121,8 @@
           "official",
           "verified",
           "as_of",
-          "source"
+          "source",
+          "stem_en"
         ],
         "additionalProperties": false
       },

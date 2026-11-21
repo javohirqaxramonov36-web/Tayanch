@@ -1,0 +1,366 @@
+---
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import settings from '../../../../../data/eyuf/settings.json';
+import rules from '../../../../../data/eyuf/rules.json';
+import { yol } from '../../../../lib/yol';
+---
+<EyufSahifa title="Test simulyatsiyasi" description="Darajangizga mos ikki blok, taymer va yakundagi xatolar tahlili.">
+ <p class="eyuf-panel">Tayanch mashq simulyatsiyasi. Rasmiy spetsifikatsiyadagi {rules.test_questions} savol va {rules.test_minutes} daqiqa formati asosida. Savollar rasmiy imtihon bankidan olinmagan. Bakalavrda IQ va so‘z-mantiq, magistrda IQ va ilmiy-tadqiqot mashqlari mavjud. Natija tayyorgarlik ko‘rsatkichi. <a href="https://api.el-yurt.uz/storage/competition-documents/b23391a7-e612-48be-a65b-5f43b079c7c2-1775741766.pdf" target="_blank" rel="noopener noreferrer">S05 — ko‘rilgan spetsifikatsiya (yangi oynada)</a></p>
+ <div id="eyuf-mock">
+  <p data-storage role="status" hidden></p>
+  <section class="eyuf-panel" data-start><h2>Simulyatsiyani tanlang</h2><label>Daraja<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Mashq<select data-kind><option value="full">40 savol, 60 daqiqa</option><option value="diagnostic">Diagnostika — 10 savol, 15 daqiqa</option></select></label><p>Har blokning yarmi olinadi. Javobni muddat tugaguncha o‘zgartirish mumkin, yechimlar yakunda ko‘rinadi. Sessiya shu brauzerda saqlanadi. Tab yopilganda ham vaqt o‘tadi. Bitta sessiyani bitta tabda ishlating.</p>{!settings.book_content_enabled && <p>Kitob kontenti o‘chirilgan. Yetarli IQ bloki bo‘lmaganda simulyatsiya ochilmaydi.</p>}<div class="eyuf-actions"><button class="tugma tugma-asosiy" data-begin>Boshlash</button><button class="tugma tugma-ikkinchi" data-resume hidden>Saqlangan sessiyani davom ettirish</button></div><p data-empty role="status"></p></section>
+  <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1"></h2><output data-time aria-label="Qolgan vaqt"></output></div><p data-stem></p><div data-images></div><div data-options class="eyuf-grid" role="group" aria-label="Variantlar"></div><p data-answer-state role="status"></p><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-prev>Oldingi</button><button class="tugma tugma-asosiy" data-next>Keyingi</button><button class="tugma tugma-ikkinchi" data-finish>Yakunlash</button></div><p>Javob uchun A–G. Variantlar orasida Tab bilan yuring. Bo‘sh javob bilan keyingisiga o‘tishingiz mumkin.</p></section>
+  <section class="eyuf-panel" data-result hidden><h2 data-result-h tabindex="-1">Mashq natijasi</h2><p data-total></p><p>61 ball bilan taqqoslash o‘quv maqsadida. Ushbu mashqdagi ball rasmiy natija yoki uni oldindan aytuvchi baho hisoblanmaydi.</p><div data-review></div><button class="tugma tugma-asosiy" data-again>Yangi mashq</button></section>
+  <dialog data-zoom aria-label="Savol rasmi"><button class="tugma tugma-ikkinchi" data-close>Yopish</button><img data-zoom-image alt="" /></dialog>
+ </div>
+ <p><a href={yol('/uz/eyuf/trenajyor/')}>Tur bo‘yicha trenajyorga qaytish</a></p>
+</EyufSahifa>
+<script>
+import bank from '../../../../../data/eyuf/questions-iq.json';
+import settings from '../../../../../data/eyuf/settings.json';
+import rules from '../../../../../data/eyuf/rules.json';
+import {
+  MOCK_KALITI,
+  mockBoshlash,
+  mockTogrimi,
+  mockJavob,
+  mockYakun,
+  mockNatija,
+  type MockHolat,
+} from '../../../../lib/eyuf/mock';
+import { lokalOqi, lokalYoz, matnElement } from '../../../../lib/eyuf/holat';
+import { yol } from '../../../../lib/yol';
+import {
+  boshProgress,
+  progressTogrimi,
+  javobniYoz,
+  progressniBirlashtir,
+} from '../../../../lib/eyuf/trenajyor';
+const root = document.querySelector<HTMLElement>('#eyuf-mock')!;
+const el = <T extends HTMLElement = HTMLElement>(s: string) =>
+  root.querySelector<T>(s)!;
+const message = el('[data-storage]');
+const valid = (v: unknown): v is MockHolat =>
+  mockTogrimi(v, bank.items, settings.book_content_enabled);
+let state: MockHolat | null = lokalOqi(
+  MOCK_KALITI,
+  (v): v is MockHolat | null => v === null || valid(v),
+  null,
+  message,
+);
+let clock: ReturnType<typeof setInterval> | null = null;
+const zoom = el<HTMLDialogElement>('[data-zoom]');
+let origin: HTMLElement | null = null;
+function closeZoom() {
+  zoom.close();
+  origin?.focus();
+}
+el('[data-close]').addEventListener('click', closeZoom);
+zoom.addEventListener('cancel', (e) => {
+  e.preventDefault();
+  closeZoom();
+});
+function save() {
+  lokalYoz(MOCK_KALITI, state, message);
+}
+function appendImages(
+  container: HTMLElement,
+  questionImages: (typeof bank.items)[number]['image'],
+) {
+  for (const r of questionImages) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'eyuf-mock-image';
+    button.setAttribute('aria-label', 'Savol rasmini kattalashtirish');
+    const img = document.createElement('img');
+    img.src = yol(r.path);
+    img.alt = r.alt;
+    img.width = r.width;
+    img.height = r.height;
+    button.append(img);
+    button.addEventListener('click', () => {
+      origin = button;
+      const full = el<HTMLImageElement>('[data-zoom-image]');
+      full.src = img.src;
+      full.alt = img.alt;
+      zoom.showModal();
+      el('[data-close]').focus();
+    });
+    container.append(button);
+  }
+}
+function result() {
+  if (!state) return;
+  if (clock) clearInterval(clock);
+  clock = null;
+  state = mockYakun(state);
+  if (!state.progressApplied) {
+    const progressKey = 'tayanch:eyuf-iq-progress:v1';
+    let progress = lokalOqi(
+      progressKey,
+      progressTogrimi,
+      boshProgress(),
+      message,
+    );
+    for (const id of state.ids) {
+      const question = bank.items.find((q) => q.id === id)!;
+      if (
+        !progress.history.some(
+          (event) => event.id === id && event.at === state!.finishedAt,
+        )
+      ) {
+        progress = javobniYoz(
+          progress,
+          id,
+          question.type,
+          state.answers[id] === question.answer,
+          state.finishedAt!,
+        );
+      }
+    }
+    progress = progressniBirlashtir(
+      progress,
+      lokalOqi(progressKey, progressTogrimi, boshProgress(), message),
+    );
+    if (lokalYoz(progressKey, progress, message)) state.progressApplied = true;
+  }
+  save();
+  el('[data-start]').hidden = true;
+  el('[data-question]').hidden = true;
+  el('[data-result]').hidden = false;
+  const score = mockNatija(state, bank.items);
+  el('[data-total]').textContent =
+    `${score.correct}/${score.total} to‘g‘ri, ${score.score.toLocaleString('uz-UZ')} ball. ${score.unanswered} javobsiz. Mashq ko‘rsatkichi 61 balldan ${score.score >= rules.test_pass_score ? 'yuqori yoki teng' : 'past'}.`;
+  const review = el('[data-review]');
+  review.replaceChildren();
+  for (const [index, id] of state.ids.entries()) {
+    const q = bank.items.find((q) => q.id === id)!;
+    const details = document.createElement('details');
+    details.append(
+      matnElement(
+        'summary',
+        `${index + 1}. ${q.answer === state.answers[id] ? 'To‘g‘ri' : state.answers[id] ? 'Xato' : 'Javobsiz'} — ${q.type.replaceAll('-', ' ')}`,
+      ),
+      matnElement('p', q.stem),
+      matnElement(
+        'p',
+        `Sizning javobingiz ${state.answers[id] ?? 'yo‘q'}. To‘g‘ri javob ${q.answer}.`,
+      ),
+    );
+    appendImages(details, q.image);
+    const variants = document.createElement('ul');
+    for (const option of q.options)
+      variants.append(matnElement('li', `${option.id}. ${option.text}`));
+    details.append(variants);
+    const steps = document.createElement('ol');
+    for (const step of q.explanation.steps)
+      steps.append(matnElement('li', step));
+    details.append(
+      matnElement('p', q.explanation.rule),
+      steps,
+      matnElement('p', `Tuzoq. ${q.explanation.trap}`),
+      matnElement(
+        'p',
+        `Manba ${q.source.book}, to‘plam ${q.source.test}, savol ${q.source.number}.`,
+      ),
+    );
+    review.append(details);
+  }
+  el('[data-result-h]').focus();
+}
+function time() {
+  if (!state || state.finishedAt !== null) return;
+  const left = Math.max(0, Math.ceil((state.deadline - Date.now()) / 1000));
+  el('[data-time]').textContent =
+    `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+  if (left === 0) result();
+}
+function choose(answer: string) {
+  if (!state) return;
+  if (Date.now() >= state.deadline) {
+    result();
+    return;
+  }
+  const q = bank.items.find((q) => q.id === state!.ids[state!.current])!;
+  if (!q.options.some((o) => o.id === answer)) return;
+  state = mockJavob(state, q.id, answer);
+  save();
+  show(false);
+  el('[data-options]')
+    .querySelector<HTMLButtonElement>('[aria-pressed="true"]')
+    ?.focus({ preventScroll: true });
+}
+function show(focus = true) {
+  if (!state) return;
+  if (state.finishedAt !== null || Date.now() >= state.deadline) {
+    result();
+    return;
+  }
+  el('[data-start]').hidden = true;
+  el('[data-result]').hidden = true;
+  el('[data-question]').hidden = false;
+  const q = bank.items.find((q) => q.id === state!.ids[state!.current])!;
+  const half = state.ids.length / 2;
+  el('[data-heading]').textContent =
+    `${state.current + 1}/${state.ids.length} — ${state.current < half ? 'IQ bloki' : state.level === 'bachelor' ? 'So‘z-mantiq bloki' : 'Ilmiy-tadqiqot bloki'}`;
+  el('[data-stem]').textContent = q.stem;
+  const images = el('[data-images]');
+  images.replaceChildren();
+  appendImages(images, q.image);
+  const options = el('[data-options]');
+  options.replaceChildren();
+  for (const option of q.options) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tugma tugma-ikkinchi';
+    button.textContent = `${option.id}. ${option.text}`;
+    button.setAttribute(
+      'aria-pressed',
+      String(state.answers[q.id] === option.id),
+    );
+    button.addEventListener('click', () => choose(option.id));
+    options.append(button);
+  }
+  el('[data-answer-state]').textContent = state.answers[q.id]
+    ? `${state.answers[q.id]} tanlandi. Yakungacha o‘zgartirish mumkin.`
+    : 'Javob tanlanmagan.';
+  el<HTMLButtonElement>('[data-prev]').disabled = state.current === 0;
+  el<HTMLButtonElement>('[data-next]').disabled =
+    state.current === state.ids.length - 1;
+  time();
+  if (focus) el('[data-heading]').focus();
+}
+function run() {
+  show();
+  if (clock) clearInterval(clock);
+  if (state?.finishedAt === null) clock = setInterval(time, 250);
+}
+el('[data-resume]').hidden = state === null;
+el('[data-resume]').addEventListener('click', run);
+el('[data-begin]').addEventListener('click', () => {
+  if (
+    state &&
+    state.finishedAt === null &&
+    !confirm('Saqlangan sessiyani yangi mashq bilan almashtirasizmi?')
+  )
+    return;
+  const full = el<HTMLSelectElement>('[data-kind]').value === 'full';
+  try {
+    state = mockBoshlash(
+      bank.items,
+      el<HTMLSelectElement>('[data-level]').value as MockHolat['level'],
+      settings.book_content_enabled,
+      full ? rules.test_questions : 10,
+      full ? rules.test_minutes : 15,
+    );
+    save();
+    run();
+  } catch {
+    el('[data-empty]').textContent =
+      'Darajaga mos tasdiqlangan bloklar yetarli emas. Trenajyorda mavjud savollarni mashq qiling.';
+  }
+});
+for (const [selector, direction] of [
+  ['[data-prev]', -1],
+  ['[data-next]', 1],
+] as const)
+  el(selector).addEventListener('click', () => {
+    if (!state) return;
+    state.current = Math.max(
+      0,
+      Math.min(state.ids.length - 1, state.current + direction),
+    );
+    save();
+    show();
+  });
+el('[data-finish]').addEventListener('click', () => {
+  if (confirm('Mashq yakunlansinmi? Javobsiz savollar ham natijaga kiradi.'))
+    result();
+});
+el('[data-again]').addEventListener('click', () => {
+  el('[data-result]').hidden = true;
+  el('[data-start]').hidden = false;
+  el('[data-resume]').hidden = state === null;
+  el<HTMLSelectElement>('[data-level]').focus();
+});
+root.addEventListener('keydown', (event) => {
+  if (
+    zoom.open ||
+    el('[data-question]').hidden ||
+    (event.target as HTMLElement).matches('input,textarea,select') ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey
+  )
+    return;
+  if (/^[A-G]$/i.test(event.key)) {
+    event.preventDefault();
+    choose(event.key.toUpperCase());
+  }
+});
+window.addEventListener('storage', (event) => {
+  if (event.key !== MOCK_KALITI) return;
+  try {
+    const remote = JSON.parse(event.newValue ?? 'null');
+    if (remote === null || valid(remote)) {
+      state = remote;
+      if (clock) clearInterval(clock);
+      clock = null;
+      el('[data-question]').hidden = true;
+      el('[data-result]').hidden = true;
+      el('[data-start]').hidden = false;
+      el('[data-resume]').hidden = state === null;
+      message.hidden = false;
+      message.textContent =
+        'Sessiya boshqa tabda yangilandi. Davom ettirishdan oldin holatni tekshiring.';
+    }
+  } catch {
+    /* Buzilgan tashqi yozuv joriy sessiyani almashtirmaydi. */
+  }
+});
+window.addEventListener('pagehide', () => {
+  if (clock) clearInterval(clock);
+});
+</script>
+<style is:global>
+#eyuf-mock,
+#eyuf-mock .eyuf-panel,
+#eyuf-mock [data-images] {
+  min-width: 0;
+}
+#eyuf-mock .eyuf-mock-image {
+  display: block;
+  border: var(--border-width-1) solid var(--color-border);
+  background: white;
+  max-width: 100%;
+  width: 100%;
+  cursor: zoom-in;
+}
+#eyuf-mock .eyuf-mock-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+#eyuf-mock [aria-pressed="true"] {
+  outline: var(--border-width-2) solid var(--color-link);
+  outline-offset: 2px;
+}
+#eyuf-mock dialog {
+  max-width: 95vw;
+  max-height: 95dvh;
+  overflow: auto;
+}
+#eyuf-mock dialog img {
+  display: block;
+  max-width: none;
+  width: auto;
+}
+#eyuf-mock dialog button {
+  position: sticky;
+  top: 0;
+}
+#eyuf-mock [data-review] {
+  display: grid;
+  gap: var(--space-4);
+}
+</style>
