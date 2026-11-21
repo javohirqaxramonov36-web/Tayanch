@@ -11,8 +11,10 @@ interface Props {
   birlik?: string;
   /** Qiymatni boshqacha chiqarish (masalan sana yoki ro'yxat). */
   format?: (qiymat: Fakt['qiymat']) => string;
+  /** Jadval uchun: fakt yo'q bo'lsa uzun matn o'rniga "—" (ekran o'quvchiga "ma'lumot tekshirilmoqda"). */
+  qisqa?: boolean;
 }
-const { fakt, birlik, format } = Astro.props;
+const { fakt, birlik, format, qisqa } = Astro.props;
 const korinadi = faktKorinadimi(fakt);
 const eskirgan = korinadi && faktEskirganmi(fakt);
 const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatni(fakt.qiymat)) : '';
@@ -26,6 +28,8 @@ const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatn
       {eskirgan && <span class="fakt-belgi">qayta tekshirilmoqda</span>}
     </span>
   </span>
+) : qisqa ? (
+  <span class="fakt fakt-yoq fakt-qisqa"><span aria-hidden="true">—</span><span class="fakt-sr">Ma'lumot tekshirilmoqda</span></span>
 ) : (
   <span class="fakt fakt-yoq">Ma'lumot tekshirilmoqda</span>
 )}
@@ -40,4 +44,6 @@ const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatn
     border-radius: var(--badge-radius); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 600;
   }
   .fakt-yoq { color: var(--matn-sust); font-style: italic; }
+  .fakt-qisqa { font-style: normal; }
+  .fakt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
