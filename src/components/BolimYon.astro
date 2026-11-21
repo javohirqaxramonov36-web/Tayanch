@@ -8,6 +8,8 @@ import { kursHavola, kursOchiq } from '../lib/sat/kursKatalog';
 import { satYonGuruhlar } from '../data/satSahifalar';
 import { qollanmalar, asos, vositalar, mashqlar as ieltsMashqlar, darslar as ieltsDarslar } from '../data/ieltsSahifalar';
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
+import { eyufGuruhlar } from '../data/eyufSahifalar';
+import { bolimlar } from '../data/bolimlar';
 import Suhbatdosh from './Suhbatdosh.astro';
 import { yol } from '../lib/yol';
 import { joriyQavat, qavatI, qavatlar } from '../data/qavatlar';
@@ -18,7 +20,8 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client'
 import type { BolimSlug } from '../data/bolimlar';
 
 // EYUF va AI Academy: yon paneli hali qurilmagan, shuning uchun faqat logo, "bo'limi haqida" va qavatlar ro'yxati.
-// Qavatlar ro'yxati (boshqa qavatga o'tish) panel oxirida; ustki qatorda alohida Lift yo'q (2026-11-19, muallif qarori).
+// 2026-11-21 (muallif qarori): yon panelda faqat joriy bo'lim sahifalari. Boshqa bo'limlar ustki qatordagi
+// "bolim-menyu" da (bosh sahifada uning o'rnida QavatMenyu). Umumiy havolalar (Muddatlar, Manbalar...) faqat 1-qavat panelida.
 interface Props { bolim?: BolimSlug; qm?: boolean }
 const joriy = Astro.url.pathname;
 // Bosh sahifadagi qavatlar menyusi (QavatMenyu) logo yonidagi ustunga tushadi
@@ -81,6 +84,8 @@ const hisobBand = Boolean(PUBLIC_SUPABASE_URL && PUBLIC_SUPABASE_ANON_KEY);
 const hisobKirish = `${yol('/uz/hisob/kirish/')}?keyin=${encodeURIComponent(joriy)}`;
 const hisobProfil = yol('/uz/hisob/profil/');
 const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/, '');
+const bolimNomi = (slug: string) => bolimlar.find((x) => x.slug === slug)?.nomi ?? slug;
+const bolimMenyu = qavatlar.filter((q) => q.slug !== 'navigator');
 const ieltsGuruhlar = [
   { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
   { nomi: 'Reading darslari', bandlar: ieltsDarslar },
@@ -88,12 +93,21 @@ const ieltsGuruhlar = [
   { nomi: 'Vositalar', bandlar: vositalar },
 ];
 ---
-<header class="ustki-qator nav-shisha" data-bolim={bolim} data-qm-bor={qmBor ? '' : undefined}>
+<header class="ustki-qator nav-shisha" data-bolim={bolim} data-qm-bor={qmBor ? '' : undefined} data-menyu-bor={qmBor ? undefined : ''}>
   <a class="logo" href={b('')}>
     <span class="logo-belgi" aria-hidden="true">T</span>
     <span class="logo-nom">Tayanch {LOGO_NOM && <span class="logo-bolim">{LOGO_NOM}</span>}</span>
   </a>
   <slot name="markaz" />
+  {!qmBor && (
+    <nav class="bolim-menyu" aria-label={Q.lift.nomi}>
+      <ul>
+        {bolimMenyu.map((q) => (
+          <li><a href={yol(q.manzil)} aria-current={q.raqam === joriyRaqam ? 'location' : undefined}>{bolimNomi(q.slug)}</a></li>
+        ))}
+      </ul>
+    </nav>
+  )}
   <details class="yon-orami" name="tayanch-navigatsiya">
     <summary class="belgi-tugma" id="panel-ochish" aria-controls="bolim-yon" aria-label={M.navigatsiya(NOM)}>
     <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
@@ -171,7 +185,7 @@ const ieltsGuruhlar = [
         </ul>
       </div>
     ))}
-    {bolim === 'top-admission' && taGuruhlar.map((g, i) => (
+    {(bolim === 'top-admission' ? taGuruhlar : bolim === 'eyuf' ? eyufGuruhlar : []).map((g, i) => (
       <div class="guruh">
         <h2 class="guruh-nom" id={`yon-guruh-${i}`}>{g.nomi}</h2>
         <ul class="royxat" aria-labelledby={`yon-guruh-${i}`}>
@@ -190,25 +204,14 @@ const ieltsGuruhlar = [
         </ul>
       </div>
     ))}
-    <ul class="royxat">
-      {umumiy.map(({ path, uz, en }) => <li>
-        <a href={yol(path)} aria-current={joriymi(yol(path)) ? 'page' : undefined}>{bolim === 'sat' ? en : uz}</a>
+    {!bolim && <ul class="royxat">
+      {umumiy.map(({ path, uz }) => <li>
+        <a href={yol(path)} aria-current={joriymi(yol(path)) ? 'page' : undefined}>{uz}</a>
       </li>)}
+    </ul>}
+    <ul class="royxat">
+      <Suhbatdosh qavat={joriyRaqam} inglizcha={TIL === 'en'} variant="qavatlar" />
     </ul>
-    <div class="guruh">
-      <h2 class="guruh-nom" id="yon-qavatlar">{Q.lift.nomi}</h2>
-      <ul class="royxat qavat-royxat" aria-labelledby="yon-qavatlar">
-        {qavatlar.map((q) => (
-          <li>
-            <a href={yol(q.manzil)} aria-current={q.raqam === joriyRaqam ? 'location' : undefined}>
-              <span class="nofaol-nom">{q.nomi}</span>
-              {q.holat === 'tez-orada' && <span class="yorliq-tez">{Q.lift.tezOrada}</span>}
-            </a>
-          </li>
-        ))}
-        <Suhbatdosh qavat={joriyRaqam} inglizcha={TIL === 'en'} variant="qavatlar" />
-      </ul>
-    </div>
   </nav>
 
   <div class="yon-past">
@@ -490,9 +493,32 @@ const ieltsGuruhlar = [
   .royxat a[aria-current='page'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-weight: 700; }
   .royxat a[aria-current='page'] .ikonka { color: var(--rang-asosiy-matn); }
 
-  /* Bo'limlar ro'yxati: faqat nom (qavat raqami yozilmaydi, 2026-11-19); joriy bo'lim qalin va sust fonda (asosiy rang sahifaga qoladi) */
-  .qavat-royxat a { font-weight: 500; }
-  .qavat-royxat a[aria-current='location'] { background: var(--fon-ikkinchi); font-weight: 700; }
+  /* Ustki bo'limlar menyusi (2026-11-21): logo yonida; < 768px da sarlavha ostida suriladigan qator. */
+  .ustki-qator[data-menyu-bor] { grid-template-columns: auto minmax(0, 1fr) auto auto; gap: var(--space-4); }
+  .bolim-menyu { min-width: 0; justify-self: center; }
+  .bolim-menyu ul { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-1); }
+  .bolim-menyu a {
+    display: flex; align-items: center;
+    min-height: var(--size-touch-min);
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-full);
+    color: var(--matn-ikkinchi);
+    font-weight: 600; font-size: 15px; white-space: nowrap;
+    text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) { .bolim-menyu a:hover { background: var(--fon-ikkinchi); color: var(--matn); } }
+  .bolim-menyu a[aria-current='location'] { background: var(--fon-ikkinchi); color: var(--matn); font-weight: 700; }
+  @media (width < 900px) {
+    .ustki-qator[data-menyu-bor] { grid-template-columns: minmax(0, 1fr) auto auto; gap: 0; block-size: auto; }
+    .bolim-menyu {
+      grid-row: 2; grid-column: 1 / -1; justify-self: stretch;
+      overflow-x: auto; scrollbar-width: none;
+      margin-inline: calc(var(--space-1) * -1);
+      padding-inline: var(--space-1);
+    }
+    .bolim-menyu::-webkit-scrollbar { display: none; }
+    .bolim-menyu a { font-size: 14px; }
+  }
 
   .yon-past {
     flex: none;
