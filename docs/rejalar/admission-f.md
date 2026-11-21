@@ -16,7 +16,11 @@ Manba: `~/Tayanch/03-tadqiqot/top-admission-tadqiqot/2026-11-20/` (repodan tashq
 - Deadline: faqat to'plamda tasdiqlangan 7 sana YYYY-MM-DD; qolganlari holat matni (countdown va kalendar yo'q). AT01 bekor, UK05 yopiq, US12 tarixiy, US19 mahalliy e'lon holatlari matnda saqlangan.
 - Grant turi: hukumat, hudud va konsorsium dasturlari `davlat` (`DAVLAT_GRANTI` ro'yxati skriptda), qolgani `universitet`. "To'liq qoplaydi" belgisi qo'yilmadi (to'plamda aniq fakt yo'q).
 
+## Admission G (2-bosqich)
+- `src/data/topAdmission/arzonYollar.json` (6 yo'l, faktlar `muallif`, sarlavhalar o'zbekcha skriptdagi `YOL_NOMI` dan) va `ochiqManbalar.json` (24 manba, guruh `RESURS_GURUH` dan). Ikkalasi ham shu import skripti bilan yoziladi.
+- Sahifalar statik, JS yo'q: `/uz/top-admission/arzon-yollar/`, `/uz/top-admission/manbalar/`. Yon panel "Qo'llanmalar" guruhida.
+
 ## Ochiq
 - Yangi 13 davlatda narx, til, ishlash va diplom faktlari yo'q ("Ma'lumot tekshirilmoqda").
 - DAAD (barcha yo'nalishlar), Malaysia, POSTECH, CSC grantlari to'plamda yo'q, katalogda avvalgidek yashirin.
-- Keyingi bosqichlar: xarajat yo'llari (6) va ochiq manbalar kutubxonasi (24), so'ng kurs (16 dars) va shablonlar (spetsifikatsiya bilan).
+- Keyingi bosqich: kurs (16 dars) va shablonlar (12, original namunalar "Namuna" belgisi bilan); interaktiv bo'lsa avval spetsifikatsiya.

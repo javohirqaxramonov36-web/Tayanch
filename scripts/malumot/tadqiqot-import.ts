@@ -225,4 +225,35 @@ for (const d of [...davlatlar, { code: 'EU' } as Davlat]) {
   yoz(fayl, obj);
 }
 
-console.log(JSON.stringify(hisob));
+// ---------- Arzonroq yo'llar va ochiq manbalar (Admission G) ----------
+interface Yol { id: string; country_code: string; title: string; summary: Ikki; conditions: Ikki; source_id: string; url: string; checked_on: string }
+interface Resurs { id: string; levels: string[]; title: string; url: string; use: Ikki; access: string; source_id: string; checked_on: string }
+const RESURS_GURUH: Record<string, string> = {
+  R01: 'ariza', R02: 'ariza', R03: 'ariza', R04: 'ariza', R05: 'ariza', R06: 'ariza', R12: 'ariza', R24: 'ariza',
+  R07: 'magistr', R08: 'magistr', R09: 'magistr', R10: 'magistr', R11: 'magistr', R14: 'magistr',
+  R13: 'qidiruv', R15: 'qidiruv', R16: 'qidiruv', R17: 'qidiruv', R20: 'qidiruv',
+  R18: 'stem', R19: 'stem',
+  R21: 'xavfsizlik', R22: 'xavfsizlik', R23: 'xavfsizlik',
+};
+/** Yo'l sarlavhalari o'zbekcha (2-qavat matni o'zbekcha; to'plamda faqat inglizcha sarlavha bor). */
+const YOL_NOMI: Record<string, string> = {
+  A01: 'Davlat universitetlarida kontraktsiz o\'qish',
+  A02: 'Davlat universitetlarida past kontrakt',
+  A03: 'Davlat kontrakti va undan ozod qilish',
+  A04: 'Hududiy ehtiyojga asoslangan yordam',
+  A05: 'Chex tilidagi bepul dasturlar',
+  A06: 'Yevropadan tashqari talabalar uchun kontrakt',
+};
+const yollar = oqi<Yol>('affordable-routes.json').map((y) => ({
+  id: y.id, davlat: DAVLAT_SLUG[y.country_code], nom: YOL_NOMI[y.id] ?? y.title,
+  qisqacha: muallif(y.summary.uz, y.url, y.checked_on), shartlar: muallif(y.conditions.uz, y.url, y.checked_on),
+}));
+const resurslar = oqi<Resurs>('resources.json').map((r) => {
+  const guruh = RESURS_GURUH[r.id];
+  if (!guruh) throw new Error(`resurs guruhi yo'q: ${r.id}`);
+  return { id: r.id, guruh, daraja: daraja(r.levels), nom: r.title, url: r.url, nima_uchun: r.use.uz, bepul: r.access === 'free_to_read_at_check_date', tekshirilgan_sana: r.checked_on };
+});
+yoz(join(ILDIZ, 'arzonYollar.json'), yollar);
+yoz(join(ILDIZ, 'ochiqManbalar.json'), resurslar);
+
+console.log(JSON.stringify({ ...hisob, yollar: yollar.length, resurslar: resurslar.length }));
