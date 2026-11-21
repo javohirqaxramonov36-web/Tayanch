@@ -20,6 +20,12 @@ Manba: `~/Tayanch/03-tadqiqot/top-admission-tadqiqot/2026-11-20/` (repodan tashq
 - `src/data/topAdmission/arzonYollar.json` (6 yo'l, faktlar `muallif`, sarlavhalar o'zbekcha skriptdagi `YOL_NOMI` dan) va `ochiqManbalar.json` (24 manba, guruh `RESURS_GURUH` dan). Ikkalasi ham shu import skripti bilan yoziladi.
 - Sahifalar statik, JS yo'q: `/uz/top-admission/arzon-yollar/`, `/uz/top-admission/manbalar/`. Yon panel "Qo'llanmalar" guruhida.
 
+## Admission H (3-bosqich, 1-qism: kurs va 1–8-darslar)
+- Spetsifikatsiya muallif tomonidan tasdiqlangan (2026-11-21): DarsQolip (test darslari) o'rniga yozish ustaxonasi formati.
+- Ma'lumot `src/data/topAdmission/kurs.ts` (16 dars, 4 modul, bakalavr va magistratura yo'llari). To'plamda yo'q misol, mezon va keyingi qadam original yozilgan, `qoshilgan` maydonida belgilangan (muallif ko'rigi uchun).
+- Sahifalar `/uz/top-admission/kurs/` va `/uz/top-admission/kurs/<slug>/` (hozir 1–8). Mezonlar checkbox, progress `tayanch:top-admission-kurs-progress` (`src/lib/topAdmission/kursProgress.ts`, testlar `kurs.test.ts`).
+- Keyingi: 2-qism 9–16-darslar, 3-qism shablonlar va namunalar.
+
 ## Ochiq
 - Yangi 13 davlatda narx, til, ishlash va diplom faktlari yo'q ("Ma'lumot tekshirilmoqda").
 - DAAD (barcha yo'nalishlar), Malaysia, POSTECH, CSC grantlari to'plamda yo'q, katalogda avvalgidek yashirin.
