@@ -172,3 +172,7 @@ Muallif yangi xizmatlar uchun mablag' yo'qligini bildirdi va faqat Google hamda 
 - 390×844/1440×900 va ikkala mavzuda 24 header holati axe **0**, bosh sahifa CLS **0**. Dialog va ochiq mobil menyu axe **0**. Fokus Tab/Shift+Tab, Escape, til/bo'lim menyulari, mavzu almashishi, 77 ichki havola HTTP200 qayta tekshirildi.
 - Izolyatsiyalangan vaqtinchalik buildda soxta javoblar bilan Google PKCE/code_challenge, query/hash saqlanishi, email/parol → avvalgi Pro tanlovi → aynan bitta checkout tekshirildi. Brauzer pageerror **0**. Haqiqiy Google/email akkaunt va haqiqiy to'lov sinalmagan.
 - Jonli sayt, baza va tashqi xizmatlarda o'zgartirish bajarilmadi. Bu qaror uchun migratsiya yoki Edge deploy kerak emas. Homepage va login o'zgarishlari review uchun lokal branchda.
+
+## Nashr ruxsati — 2026-11-21
+
+Muallif “nashr qilda, merge ham esdan chiqmasin” deb push, PR, main merge va production deployni tasdiqladi. Oldingi lokalda to‘xtash cheklovi shu ko‘rsatma bilan yangilandi. Nashr oldi production build mavjud ochiq Supabase sozlamalari va A1 bayrog‘i bilan **157 sahifa** qurdi. Yakuniy jonli natija PR va umumiy xotirada qayd etiladi.
