@@ -13,7 +13,7 @@ import GrantYoqIzoh from '../../../../components/topAdmission/GrantYoqIzoh.astro
 import Fakt from '../../../../components/topAdmission/Fakt.astro';
 import kurslarJson from '../../../../data/topAdmission/kurslar.json';
 import { kurslarSxema } from '../../../../lib/topAdmission/sxema';
-import { faktQiymatMatni, kurslarBormi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
+import { faktKorinadimi, faktQiymatMatni, kurslarBormi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
 import {
   FILTRLAR, MAKS_TAQQOS, davlatXulosasi, grantKorinadimi, grantYoqIzohi, saralash, tasdiqlanganSoni,
   type DavlatKirish, type GrantKirish,
@@ -62,6 +62,15 @@ const satrlar: Satr[] = [
   { id: 'diplom', nom: "11 yillik maktab diplomi to'g'ridan-to'g'ri", tur: 'fakt', fakt: (d) => d.diplom.togridan_togri },
   { id: 'tayyorlov', nom: 'Tayyorlov dasturi (foundation va h.k.)', tur: 'fakt', fakt: (d) => d.diplom.tayyorlov_nomi },
 ];
+/** Kartada faqat tekshirilgan fakt ko'rsatiladi; yo'qlari pastda bitta qatorda sanaladi. */
+const kor = (...f: (FaktT | undefined)[]) => f.some((x) => faktKorinadimi(x));
+const yoqlar = (d: DavlatKirish, grantBor: boolean) => [
+  !kor(d.narx.kontrakt_yillik, d.narx.viza_yashash_summasi) && 'narx',
+  !grantBor && !grantYoqIzohi(d) && 'davlat granti',
+  !kor(d.til.ingliz_tilida_dastur_bor) && 'til',
+  !kor(d.ishlash.oqish_paytida) && 'ishlash huquqi',
+  !kor(d.diplom.togridan_togri) && 'diplom',
+].filter((x): x is string => !!x);
 const usdMatn = (usd: number | null) => (usd === null ? null : `≈ ${faktQiymatMatni(usd)} USD`);
 const kursIzoh = narxMumkin ? `taxminiy, kurs sanasi: ${sanaMatni(kurslar.sana)}` : '';
 
@@ -157,14 +166,12 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                   : <span class="yorliq">chuqur qo'llanma tez orada</span>)}
               </div>
               <dl class="dt-mezonlar">
-                {d.xavfsizlik && (
+                {d.xavfsizlik && kor(d.xavfsizlik.ogohlantirish, d.xavfsizlik.siyosiy_barqarorlik) && (
                   <div>
                     <dt>Xavfsizlik</dt>
                     <dd>
-                      <span class="dt-ichki-nom">Safar ogohlantirishi</span>
-                      <Fakt fakt={d.xavfsizlik.ogohlantirish} />
-                      <span class="dt-ichki-nom">Siyosiy barqarorlik</span>
-                      <Fakt fakt={d.xavfsizlik.siyosiy_barqarorlik} />
+                      {kor(d.xavfsizlik.ogohlantirish) && <><span class="dt-ichki-nom">Safar ogohlantirishi</span><Fakt fakt={d.xavfsizlik.ogohlantirish} /></>}
+                      {kor(d.xavfsizlik.siyosiy_barqarorlik) && <><span class="dt-ichki-nom">Siyosiy barqarorlik</span><Fakt fakt={d.xavfsizlik.siyosiy_barqarorlik} /></>}
                     </dd>
                   </div>
                 )}
@@ -175,47 +182,53 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                       {d.tanlov.universitet_misollari.length > 0 && (
                         <><span class="dt-ichki-nom">Universitet misollari</span><span>{d.tanlov.universitet_misollari.join(', ')}</span></>
                       )}
-                      <span class="dt-ichki-nom">Tanlashda</span>
-                      <Fakt fakt={d.tanlov.izoh} />
+                      {kor(d.tanlov.izoh) && <><span class="dt-ichki-nom">Tanlashda</span><Fakt fakt={d.tanlov.izoh} /></>}
                       {d.tanlov.portal && <a class="dt-havola" href={d.tanlov.portal} rel="noopener">Rasmiy ta'lim portali<span class="dt-sr">: {xulosa.nom}</span></a>}
                     </dd>
                   </div>
                 )}
-                <div>
-                  <dt>Narx</dt>
-                  <dd>
-                    <span class="dt-ichki-nom">Kontrakt (yillik)</span>
-                    <Fakt fakt={d.narx.kontrakt_yillik} birlik={d.narx.valyuta} />
-                    <span class="dt-ichki-nom">Viza uchun yashash summasi</span>
-                    <Fakt fakt={d.narx.viza_yashash_summasi} birlik={d.narx.valyuta} />
-                    {narxMumkin && (xulosa.usd === null
-                      ? <span class="dt-belgi">Taxminiy xarajat: ma'lumot tekshirilmoqda</span>
-                      : <span class="dt-taxmin">Taxminiy yillik xarajat: <strong>{usdMatn(xulosa.usd)}</strong> <span class="dt-sust">({kursIzoh})</span></span>)}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Grant</dt>
-                  <dd>
-                    {gr.length > 0 ? (
-                      <ul class="dt-grantlar">
-                        {gr.map((g) => <li><a class="dt-havola" href={katalogHavola(d.slug)}>{g.nom}<span class="dt-sr"> (Grantlar katalogida)</span></a></li>)}
-                      </ul>
-                    ) : <GrantYoqIzoh fakt={grantYoqIzohi(d)} />}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Til</dt>
-                  <dd><span class="dt-ichki-nom">Ingliz tilida dastur</span><Fakt fakt={d.til.ingliz_tilida_dastur_bor} /></dd>
-                </div>
-                <div>
-                  <dt>Ishlash</dt>
-                  <dd><span class="dt-ichki-nom">O'qish paytida</span><Fakt fakt={d.ishlash.oqish_paytida} /></dd>
-                </div>
-                <div>
-                  <dt>Diplom</dt>
-                  <dd><span class="dt-ichki-nom">To'g'ridan-to'g'ri qabul</span><Fakt fakt={d.diplom.togridan_togri} /></dd>
-                </div>
+                {kor(d.narx.kontrakt_yillik, d.narx.viza_yashash_summasi) && (
+                  <div>
+                    <dt>Narx</dt>
+                    <dd>
+                      {kor(d.narx.kontrakt_yillik) && <><span class="dt-ichki-nom">Kontrakt (yillik)</span><Fakt fakt={d.narx.kontrakt_yillik} birlik={d.narx.valyuta} /></>}
+                      {kor(d.narx.viza_yashash_summasi) && <><span class="dt-ichki-nom">Viza uchun yashash summasi</span><Fakt fakt={d.narx.viza_yashash_summasi} birlik={d.narx.valyuta} /></>}
+                      {narxMumkin && xulosa.usd !== null && <span class="dt-taxmin">Taxminiy yillik xarajat: <strong>{usdMatn(xulosa.usd)}</strong> <span class="dt-sust">({kursIzoh})</span></span>}
+                    </dd>
+                  </div>
+                )}
+                {(gr.length > 0 || grantYoqIzohi(d)) && (
+                  <div>
+                    <dt>Grant</dt>
+                    <dd>
+                      {gr.length > 0 ? (
+                        <ul class="dt-grantlar">
+                          {gr.map((g) => <li><a class="dt-havola" href={katalogHavola(d.slug)}>{g.nom}<span class="dt-sr"> (Grantlar katalogida)</span></a></li>)}
+                        </ul>
+                      ) : <GrantYoqIzoh fakt={grantYoqIzohi(d)} />}
+                    </dd>
+                  </div>
+                )}
+                {kor(d.til.ingliz_tilida_dastur_bor) && (
+                  <div>
+                    <dt>Til</dt>
+                    <dd><span class="dt-ichki-nom">Ingliz tilida dastur</span><Fakt fakt={d.til.ingliz_tilida_dastur_bor} /></dd>
+                  </div>
+                )}
+                {kor(d.ishlash.oqish_paytida) && (
+                  <div>
+                    <dt>Ishlash</dt>
+                    <dd><span class="dt-ichki-nom">O'qish paytida</span><Fakt fakt={d.ishlash.oqish_paytida} /></dd>
+                  </div>
+                )}
+                {kor(d.diplom.togridan_togri) && (
+                  <div>
+                    <dt>Diplom</dt>
+                    <dd><span class="dt-ichki-nom">To'g'ridan-to'g'ri qabul</span><Fakt fakt={d.diplom.togridan_togri} /></dd>
+                  </div>
+                )}
               </dl>
+              {yoqlar(d, gr.length > 0).length > 0 && <p class="dt-kichik dt-sust dt-yoqlar">Hali tekshirilmoqda: {yoqlar(d, gr.length > 0).join(', ')}.</p>}
               <button type="button" class="dt-taqqos-tugma" data-taqqos={d.slug} aria-pressed="false" hidden>
                 <svg class="dt-belgi-ikonka" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <rect x="4" y="4" width="16" height="16" rx="3" /><path class="dt-belgi-chiziq" d="M8 12l3 3 5-6" />
@@ -252,8 +265,8 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                     <th scope="row">{s.nom}</th>
                     {tartibli.map((x) => (
                       <td data-ustun={x.d.slug} hidden>
-                        {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} />
-                          : s.tur === 'usd' ? (x.xulosa.usd === null ? <span class="dt-yoq">Ma'lumot tekshirilmoqda</span> : <span>{usdMatn(x.xulosa.usd)}<br /><span class="dt-kichik dt-sust">{kursIzoh}</span></span>)
+                        {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} qisqa />
+                          : s.tur === 'usd' ? (x.xulosa.usd === null ? <Fakt fakt={null} qisqa /> : <span>{usdMatn(x.xulosa.usd)}<br /><span class="dt-kichik dt-sust">{kursIzoh}</span></span>)
                           : x.grantlar.length > 0 ? (
                             <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
                           ) : <GrantYoqIzoh fakt={grantYoqIzohi(x.d)} />}
@@ -273,8 +286,8 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
                     <div>
                       <dt>{s.nom}</dt>
                       <dd>
-                        {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} />
-                          : s.tur === 'usd' ? (x.xulosa.usd === null ? <span class="dt-yoq">Ma'lumot tekshirilmoqda</span> : <span>{usdMatn(x.xulosa.usd)} <span class="dt-kichik dt-sust">({kursIzoh})</span></span>)
+                        {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} qisqa />
+                          : s.tur === 'usd' ? (x.xulosa.usd === null ? <Fakt fakt={null} qisqa /> : <span>{usdMatn(x.xulosa.usd)} <span class="dt-kichik dt-sust">({kursIzoh})</span></span>)
                           : x.grantlar.length > 0 ? (
                             <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
                           ) : <GrantYoqIzoh fakt={grantYoqIzohi(x.d)} />}
