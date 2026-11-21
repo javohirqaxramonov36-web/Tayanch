@@ -22,15 +22,19 @@ export const taGuruhlar: TaGuruh[] = [
     nomi: "Yo'nalishlar",
     bandlar: [
       { nomi: 'Türkiye Bursları', href: 'top-admission/turkiye-burslari/' },
-      { nomi: 'Stipendium Hungaricum' },
-      { nomi: 'AQSH' },
+      { nomi: 'Stipendium Hungaricum', href: 'top-admission/grantlar/stipendium-hungaricum/' },
+      { nomi: 'Global Korea Scholarship', href: 'top-admission/grantlar/global-korea-scholarship/' },
+      { nomi: 'MEXT (Yaponiya)', href: 'top-admission/grantlar/mext/' },
     ],
   },
   {
     nomi: "Qo'llanmalar",
     bandlar: [
       { nomi: 'Ariza zinapoyasi', href: 'top-admission/qollanma/ariza-zinapoyasi/' },
+      { nomi: 'Kurs: STEM profildan arizaga', href: 'top-admission/kurs/' },
       { nomi: 'Platformalar xaritasi', href: 'top-admission/platformalar/' },
+      { nomi: "Arzonroq o'qish yo'llari", href: 'top-admission/arzon-yollar/' },
+      { nomi: 'Ochiq manbalar', href: 'top-admission/manbalar/' },
     ],
   },
   {

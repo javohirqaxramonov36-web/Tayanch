@@ -4,10 +4,15 @@
 import { kunFarqi, toshkentBugun } from '../muddat.ts';
 
 export type FaktTuri = 'muddatli' | 'barqaror';
-export type FaktHolati = 'qoralama' | 'tasdiqlangan' | 'topilmadi';
+/**
+ * "muallif" (Admission F, 2026-11-21): Codex tadqiqot to'plamidan ko'chirilgan va muallif tekshirgan deb tasdiqlagan fakt.
+ * Qiymat, source_url va tekshirilgan_sana majburiy; rasmiy sahifadagi aynan ibora (manba_iborasi) shart emas.
+ * Saytda "tasdiqlangan" kabi ko'rinadi.
+ */
+export type FaktHolati = 'qoralama' | 'tasdiqlangan' | 'muallif' | 'topilmadi';
 export type FaktQiymat = string | number | boolean;
 
-/** Bitta qattiq fakt. "qoralama" va "tasdiqlangan" da manba maydonlari majburiy (sxema tekshiradi). */
+/** Bitta qattiq fakt. "qoralama", "tasdiqlangan" va "muallif" da manba maydonlari majburiy (sxema tekshiradi). */
 export interface Fakt<Q extends FaktQiymat = FaktQiymat> {
   qiymat?: Q | null;
   source_url?: string;
@@ -26,16 +31,16 @@ export const ESKIRISH_KUNLARI: Readonly<Record<FaktTuri, number>> = Object.freez
   barqaror: 180,
 });
 
-export const FAKT_HOLATLARI: readonly FaktHolati[] = ['qoralama', 'tasdiqlangan', 'topilmadi'];
+export const FAKT_HOLATLARI: readonly FaktHolati[] = ['qoralama', 'tasdiqlangan', 'muallif', 'topilmadi'];
 export const FAKT_TURLARI: readonly FaktTuri[] = ['muddatli', 'barqaror'];
 
 /** Universitetning IELTS talabi turi (E1, muallif qarori 2026-11-20). */
 export type IeltsHolati = 'minimum' | 'tavsiya' | 'talab_qilinmaydi' | 'topilmadi';
 export const IELTS_HOLATLARI: readonly IeltsHolati[] = ['minimum', 'tavsiya', 'talab_qilinmaydi', 'topilmadi'];
 
-/** Saytda faqat "tasdiqlangan" fakt ko'rinadi. Qolgani o'rniga "Ma'lumot tekshirilmoqda". */
+/** Saytda faqat "tasdiqlangan" va "muallif" fakt ko'rinadi. Qolgani o'rniga "Ma'lumot tekshirilmoqda". */
 export function faktKorinadimi(fakt: Fakt | null | undefined): boolean {
-  return !!fakt && fakt.holat === 'tasdiqlangan';
+  return !!fakt && (fakt.holat === 'tasdiqlangan' || fakt.holat === 'muallif');
 }
 
 /** Tekshirilgan sanadan beri o'tgan kun (bugun Toshkent bo'yicha). Sana yo'q bo'lsa null. */

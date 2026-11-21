@@ -1,0 +1,164 @@
+---
+// 2-qavat · Top Admission · kurs darsi (Admission H; spetsifikatsiya muallif tasdig'i bilan, 2026-11-21).
+// Tartib: Tushuntirish → Ishlangan misol ("Namuna") → Mashq → Tekshiruv mezonlari → Keyingi qadam → Rasmiy havolalar.
+// Mezonlar <input type="checkbox">: hammasi belgilansa dars "bajarildi". Ball/XP yo'q.
+// Saqlash: localStorage `tayanch:top-admission-kurs-progress` (kursProgress.ts), try/catch; saqlab bo'lmasa sahifa aytadi.
+// JS'siz: belgilash ishlaydi, faqat eslab qolinmaydi.
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import { DARSLAR, KURS_NOMI, MODULLAR, YOLLAR, type KursDars } from '../../../../data/topAdmission/kurs';
+import { KURS_KALIT } from '../../../../lib/topAdmission/kursProgress';
+import shablonData from '../../../../data/topAdmission/shablonlar.json';
+import { yol } from '../../../../lib/yol';
+
+export function getStaticPaths() {
+  return DARSLAR.filter((d) => d.tushuntirish).map((d) => ({ params: { dars: d.slug }, props: { d } }));
+}
+
+const { d } = Astro.props as { d: KursDars };
+const modul = MODULLAR.find((m) => m.raqam === d.modul)!;
+const tayyor = DARSLAR.filter((x) => x.tushuntirish);
+const keyingiDars = tayyor.find((x) => x.raqam === d.raqam + 1);
+const oldingiDars = [...tayyor].reverse().find((x) => x.raqam < d.raqam);
+const darsHref = (x: KursDars) => yol(`/uz/top-admission/kurs/${x.slug}/`);
+const kursHref = yol('/uz/top-admission/kurs/');
+const yolNomlari = YOLLAR.filter((y) => (y.darslar as readonly number[]).includes(d.raqam)).map((y) => y.nom).join(', ');
+const mezonIdlari = d.mezonlar!.map((m) => m.id);
+const shablonlar = shablonData.shablonlar.filter((s) => s.darslar.includes(d.raqam));
+---
+<BolimQobiq
+  title={`${d.raqam}-dars. ${d.nom} · ${KURS_NOMI}`}
+  description={`Top Admission kursi, ${d.raqam}-dars: ${d.nom}. Tushuntirish, namuna, mashq va tekshiruv mezonlari.`}
+  turi="qollanma"
+  bolim="top-admission"
+  holat="qoralama"
+  yol={["Qo'llanmalar", KURS_NOMI]}
+>
+  <article class="ichki kd-sahifa" data-kurs-dars={d.slug} data-mezonlar={mezonIdlari.join(' ')} data-kalit={KURS_KALIT}>
+    <header class="kd-bosh">
+      <p class="ustki">{modul.raqam}-modul · {modul.nom} · {d.raqam}-dars</p>
+      <h1>{d.nom}</h1>
+      <p class="sust">Yo'l: {yolNomlari}. <a class="havola-matn" href={kursHref}>Barcha darslar</a></p>
+      <p class="kd-holat" data-holat aria-live="polite"></p>
+    </header>
+
+    <section aria-labelledby="kd-tush">
+      <h2 id="kd-tush">Tushuntirish</h2>
+      {d.tushuntirish!.map((p) => <p class="matn">{p}</p>)}
+    </section>
+
+    <section class="kd-misol" aria-labelledby="kd-misol">
+      <div class="kd-misol-bosh">
+        <h2 id="kd-misol">Ishlangan misol</h2>
+        <span class="yorliq">Namuna</span>
+      </div>
+      <blockquote class="kd-iqtibos" lang={d.misol!.til}>{d.misol!.matn}</blockquote>
+      {d.misol!.izoh && <p class="sust">{d.misol!.izoh}</p>}
+    </section>
+
+    <section aria-labelledby="kd-mashq">
+      <h2 id="kd-mashq">Mashq</h2>
+      <p class="matn kd-mashq">{d.mashq}</p>
+    </section>
+
+    <section class="kd-mezonlar" aria-labelledby="kd-mezon">
+      <h2 id="kd-mezon">Tekshiruv mezonlari</h2>
+      <p class="sust">Mashqni bajarib, mos bandlarni belgilang. Hammasi belgilansa, dars bajarilgan hisoblanadi.</p>
+      <ul class="kd-royxat">
+        {d.mezonlar!.map((m) => (
+          <li>
+            <label class="kd-band">
+              <input type="checkbox" data-mezon={m.id} />
+              <span>{m.matn}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
+      <p class="sust kd-saqlanmaydi" data-saqlanmaydi hidden>Belgilar saqlanmaydi: brauzer saqlashga ruxsat bermadi. Sahifa baribir ishlaydi.</p>
+    </section>
+
+    <section aria-labelledby="kd-keyingi">
+      <h2 id="kd-keyingi">Keyingi qadam</h2>
+      <p class="matn">{d.keyingi}</p>
+      {shablonlar.length > 0 && (
+        <p class="matn">Shu dars uchun shablon: {shablonlar.map((s, i) => <>{i > 0 && ', '}<a class="havola-matn" href={`${yol('/uz/top-admission/kurs/shablonlar/')}#${s.id}`}>{s.nom}</a></>)}.</p>
+      )}
+      <nav class="kd-nav" aria-label="Darslar">
+        {oldingiDars ? <a class="tugma tugma-ikkinchi" href={darsHref(oldingiDars)}>{oldingiDars.raqam}-dars</a> : <span />}
+        {keyingiDars
+          ? <a class="tugma tugma-asosiy" href={darsHref(keyingiDars)}>{keyingiDars.raqam}-dars: {keyingiDars.nom}</a>
+          : <a class="tugma tugma-asosiy" href={kursHref}>Barcha darslar</a>}
+      </nav>
+    </section>
+
+    {d.havolalar && d.havolalar.length > 0 && (
+      <section aria-labelledby="kd-havola">
+        <h2 id="kd-havola">Rasmiy manbalar</h2>
+        <ul class="kd-havolalar">
+          {d.havolalar.map((h) => (
+            <li>{h.ichki
+              ? <a class="havola-matn" href={yol(h.url)}>{h.nom}</a>
+              : <a class="havola-matn" href={h.url} rel="noopener" lang="en">{h.nom}</a>}</li>
+          ))}
+        </ul>
+        <p class="sust">Talab va limitlarni har qabul yili uchun rasmiy sahifada qayta tekshiring.</p>
+      </section>
+    )}
+  </article>
+</BolimQobiq>
+
+<script>
+  import { holatOqi, holatYoz } from '../../../../lib/holat';
+  import { darsBajarildimi, mezonniAlmashtir, progressniTozala } from '../../../../lib/topAdmission/kursProgress';
+
+  const ildiz = document.querySelector<HTMLElement>('[data-kurs-dars]');
+  if (ildiz) {
+    const dars = ildiz.dataset.kursDars!;
+    const kalit = ildiz.dataset.kalit!;
+    const idlar = (ildiz.dataset.mezonlar ?? '').split(' ').filter(Boolean);
+    const qutilar = [...ildiz.querySelectorAll<HTMLInputElement>('input[data-mezon]')];
+    const holat = ildiz.querySelector<HTMLElement>('[data-holat]')!;
+    const saqlanmaydi = ildiz.querySelector<HTMLElement>('[data-saqlanmaydi]')!;
+    let p = progressniTozala(holatOqi<unknown>(kalit, {}));
+    const belgilangan = new Set(p[dars] ?? []);
+    qutilar.forEach((q) => { q.checked = belgilangan.has(q.dataset.mezon!); });
+
+    const chiz = () => {
+      const n = qutilar.filter((q) => q.checked).length;
+      const tayyor = darsBajarildimi(p, dars, idlar);
+      holat.textContent = tayyor ? 'Dars bajarildi' : n > 0 ? `${idlar.length} tadan ${n} ta mezon belgilangan` : '';
+      holat.dataset.tayyor = tayyor ? '1' : '';
+    };
+    qutilar.forEach((q) => q.addEventListener('change', () => {
+      p = mezonniAlmashtir(p, dars, q.dataset.mezon!, q.checked);
+      saqlanmaydi.hidden = holatYoz(kalit, p);
+      chiz();
+    }));
+    chiz();
+  }
+</script>
+
+<style>
+  .kd-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); max-width: 72ch; }
+  .kd-sahifa section { display: grid; gap: var(--b-3); }
+  .kd-sahifa h2 { margin: 0; }
+  .kd-bosh { display: grid; gap: var(--b-2); }
+  .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .matn { margin: 0; }
+  .sust { margin: 0; color: var(--matn-ikkinchi); }
+  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  .kd-holat { margin: 0; font-weight: 700; min-height: 1.5em; }
+  .kd-holat[data-tayyor="1"] { color: var(--rang-asosiy-matn); }
+  .kd-misol { padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt); }
+  .kd-misol-bosh { display: flex; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
+  .kd-iqtibos { margin: 0; padding-left: var(--b-4); border-left: 3px solid var(--chiziq-kuchli); font-weight: 600; }
+  .kd-mashq { font-weight: 600; }
+  .kd-royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-2); }
+  .kd-band {
+    display: flex; gap: var(--b-3); align-items: flex-start; min-height: 44px; padding: var(--b-3) var(--b-4);
+    border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); background: var(--sirt); cursor: pointer;
+  }
+  .kd-band input { flex: none; width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--rang-havola); }
+  .kd-band:has(input:focus-visible) { outline: 2px solid var(--rang-havola); outline-offset: 2px; }
+  .kd-nav { display: flex; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
+  .kd-havolalar { margin: 0; padding-left: 1.2em; display: grid; gap: var(--b-2); }
+</style>
