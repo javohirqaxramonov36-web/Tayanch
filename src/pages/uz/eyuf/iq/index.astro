@@ -1,0 +1,37 @@
+---
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import QavatFoto from '../../../../components/QavatFoto.astro';
+import IqTest from '../../../../components/eyuf/IqTest.astro';
+import { yol } from '../../../../lib/yol';
+import settings from '../../../../../data/eyuf/settings.json';
+---
+<BolimQobiq title="IQ test · El-Yurt Umidi" description="El-Yurt Umidi test bosqichiga mustaqil tayyorgarlik. Besh to‘plam, aralash savollar, taymer va xatolar tahlili." turi="mashq" bolim="eyuf" holat="chop-etilgan">
+  <div class="ichki eyuf-iq-sahifa">
+    <header class="eyuf-iq-bosh">
+      <a href={yol('/uz/eyuf/')}>← El-Yurt Umidi</a>
+      <h1>IQ test</h1>
+      <p>Tanlang, yeching, xatolaringizni tahlil qiling.</p>
+    </header>
+    <details class="eyuf-iq-eslatma" open>
+      <summary>Tayyorgarlik mashqi haqida</summary>
+      <p>Bu tayyorgarlik mashqi. Rasmiy test intellektual, tahliliy, ijodiy qobiliyat va psixologik barqarorlikni o‘lchaydi. Amaldagi SAT 1300+, GMAT Verbal/Quantitative bo‘yicha kamida 75-persentil, GRE’ning har bir Verbal, Quantitative va Writing bo‘limida kamida 75-persentil yoki A-Level fanlari bo‘yicha kamida A sertifikati taqdim etilsa, testdan ozod qilish nazarda tutilgan. Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+      <p>Rasmiy testda keyingi bosqichga o‘tish chegarasi — 61/100. Ushbu mashqda 20 savol teng ulushda baholanadi, standart vaqt 30 daqiqa.</p>
+      <p><a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">PF-77, 3-ilova, 24-band (yangi oynada)</a> · Tekshirilgan sana 20.11.2026.</p>
+    </details>
+    {settings.book_content_enabled ? <IqTest /> : <p class="eyuf-iq-eslatma">Kitob kontenti ushbu qoralama paket sozlamasida o‘chirilgan. Mashqni ochish muallif ko‘rigidan keyin kontent sozlamasi orqali boshqariladi.</p>}
+    <p class="eyuf-iq-manba">Mashq manbasi — muallif taqdim etgan «IQ &amp; Tahliliy fikrlash PREP 1» to‘plami. Javob tekshirilayotgan savollar alohida belgilanadi.</p>
+  </div>
+  <QavatFoto bolim="eyuf" />
+</BolimQobiq>
+
+<style>
+  .eyuf-iq-sahifa { display: grid; gap: var(--space-6); padding-top: var(--space-4); }
+  .eyuf-iq-bosh { display: grid; gap: var(--space-3); }
+  .eyuf-iq-bosh > a { color: var(--color-link); font-size: var(--text-small-size); }
+  .eyuf-iq-bosh > p, .eyuf-iq-manba { color: var(--color-text-secondary); }
+  .eyuf-iq-eslatma { padding: var(--space-4); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); font-size: var(--text-small-size); }
+  .eyuf-iq-eslatma summary { min-height: var(--size-touch-min); cursor: pointer; font-weight: var(--font-weight-semibold); }
+  .eyuf-iq-eslatma p + p { margin-top: var(--space-3); }
+  .eyuf-iq-eslatma a { color: var(--color-link); }
+  .eyuf-iq-manba { font-size: var(--text-small-size); }
+</style>
