@@ -208,6 +208,8 @@ const namunalar = [
               </li>
             ))}
           </ul>
+          {tezQollanmalar > 0 && (
+            <Fragment>
           <button type="button" class="tez-tugma" aria-expanded="true" aria-controls="ielts-qollanma-royxat">
             <span>Yana {tezQollanmalar} ta qo'llanma tez orada</span>
             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
@@ -227,6 +229,8 @@ const namunalar = [
               blok.setAttribute('data-yigma', '');
             })();
           </script>
+            </Fragment>
+          )}
         </div>
         <div class="kul-blok">
           <h3 class="ustki-yorliq">Asos</h3>
