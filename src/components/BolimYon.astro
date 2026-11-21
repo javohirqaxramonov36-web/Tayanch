@@ -10,6 +10,8 @@ import { qollanmalar, asos, vositalar, mashqlar as ieltsMashqlar, darslar as iel
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import { eyufGuruhlar } from '../data/eyufSahifalar';
 import { bolimlar } from '../data/bolimlar';
+import QavatMenyu from './navigator/QavatMenyu.astro';
+import HeaderAmallar from './HeaderAmallar.astro';
 import Suhbatdosh from './Suhbatdosh.astro';
 import TayanchLogo from './TayanchLogo.astro';
 import { yol } from '../lib/yol';
@@ -94,23 +96,15 @@ const ieltsGuruhlar = [
   { nomi: 'Vositalar', bandlar: vositalar },
 ];
 ---
-<header class="ustki-qator nav-shisha" data-bolim={bolim} data-qm-bor={qmBor ? '' : undefined} data-menyu-bor={qmBor ? undefined : ''}>
-  <a class="logo" href={yol('/uz/')}>
+<header class="ustki-qator nav-shisha" data-bolim={bolim} lang="uz">
+  <a class="logo" href={yol('/')}>
     <TayanchLogo />
-    {LOGO_NOM && <span class="logo-bolim">{LOGO_NOM}</span>}
+
   </a>
-  <slot name="markaz" />
-  {!qmBor && (
-    <nav class="bolim-menyu" aria-label={Q.lift.nomi}>
-      <ul>
-        {bolimMenyu.map((q) => (
-          <li><a href={yol(q.manzil)} aria-current={q.raqam === joriyRaqam ? 'location' : undefined}>{bolimNomi(q.slug)}</a></li>
-        ))}
-      </ul>
-    </nav>
-  )}
+  <div class="desktop-nav"><QavatMenyu /></div>
+  <HeaderAmallar />
   <details class="yon-orami" name="tayanch-navigatsiya">
-    <summary class="belgi-tugma" id="panel-ochish" aria-controls="bolim-yon" aria-label={M.navigatsiya(NOM)}>
+    <summary class="belgi-tugma" id="panel-ochish" role="button" aria-expanded="false" aria-controls="bolim-yon" aria-label={M.navigatsiya(NOM)}>
     <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
     </summary>
     <div class="yon nav-shisha" id="bolim-yon" data-bolim={bolim}>
@@ -123,6 +117,7 @@ const ieltsGuruhlar = [
       <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
       </div>
+  <div class="mobile-nav"><QavatMenyu mobil /></div>
   <nav class="yon-nav yon-matn" id="bolim-yon-nav" aria-label={M.navigatsiya(NOM)}>
     {bolim && <ul class="royxat">
       <li>
@@ -291,6 +286,15 @@ const ieltsGuruhlar = [
 
   // --- Mavzu ---
   const mavzuTugma = document.getElementById('mavzu-tugma') as HTMLButtonElement;
+  const temaVieta = document.createComment('mavzu');
+  mavzuTugma.before(temaVieta);
+  const desktop = matchMedia('(min-width: 1024px)');
+  const mavzuJoyla = () => {
+    const joy = desktop.matches ? document.querySelector('[data-header-amallar]') : document.querySelector('.yon-past');
+    joy?.prepend(mavzuTugma);
+  };
+  mavzuJoyla();
+  desktop.addEventListener('change', mavzuJoyla);
   const tizimQorongi = window.matchMedia('(prefers-color-scheme: dark)');
   const mavzuQoy = (m: 'yorug' | 'qorongi') => {
     d.setAttribute('data-mavzu', m);
@@ -320,6 +324,8 @@ const ieltsGuruhlar = [
     const panel = yopish.closest('details');
     if (panel) panelniYop(panel);
   });
+  const menyuDetails = document.querySelector<HTMLDetailsElement>('.yon-orami')!;
+  menyuDetails.addEventListener('toggle', () => { document.getElementById('panel-ochish')?.setAttribute('aria-expanded', String(menyuDetails.open)); });
   const ustki = document.querySelector<HTMLElement>('header.ustki-qator')!;
   ustki.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || event.defaultPrevented) return;
@@ -571,6 +577,23 @@ const ieltsGuruhlar = [
 
   .hisob-band .tashqi-izoh { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px; }
 
+
+  .ustki-qator { display: flex; min-height: var(--header-height); height: auto; gap: var(--space-3); padding: var(--space-2) max(var(--space-8), calc((100% - var(--header-max)) / 2)); background: var(--color-surface); }
+  .ustki-qator > .logo { width: var(--header-logo); flex-shrink: 0; }
+  .desktop-nav { margin-inline: auto; min-width: 0; }
+  .mobile-nav { display: none; }
+  .yon-orami > summary { display: none; }
+  @media (width >= 1024px) { .yon-orami { display: none; } }
+  @media (width < 1024px) {
+    .ustki-qator { padding-inline: var(--space-4); gap: var(--space-2); }
+    .ustki-qator > .logo { margin-right: auto; width: var(--header-logo-mobile); }
+    .desktop-nav { display: none; }
+    .yon-orami > summary { display: inline-flex; }
+    .mobile-nav { display: block; padding: var(--space-3); }
+    .yon { overflow-y: auto; width: min(var(--header-menu-width), calc(100% - var(--space-4))); }
+    .yon-nav { flex: none; overflow: visible; border-top: var(--border-width-1) solid var(--color-border); }
+    .yon-bosh { display: none; }
+  }
 </style>
 
 <script>

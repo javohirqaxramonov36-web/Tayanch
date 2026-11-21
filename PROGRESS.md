@@ -41,3 +41,12 @@ Branch `homepage-redesign`, asos `origin/main`, 2026-11-21. Faqat lokal commitla
 6. Google mavjud PKCE orqali, Telegram serverda tekshirilib Supabase sessiyasiga aylanadi. Rozilik/yosh darvozasi saqlanadi.
 7. Pro login talab qilsa dialog, keyin mavjud server checkout. Bekor qilish to'lov yaratmaydi.
 8. Yangi parol/token saqlash yo'q. Mavjud `tayanch:auth`, `tayanch:mavzu`, `tayanch:sat-tolov` va qaytish kaliti ishlatiladi.
+
+## 2-qism — tugadi
+
+- `BolimYon.astro`, `navigator/QavatMenyu.astro`, yangi `HeaderAmallar.astro`, `tokens.css` va homepage eski nav sloti yangilandi.
+- Hamma umumiy qoliplarda oltita bandli pill nav, route holati, til dropdown va hisob havolasi. Mavjud subhavolalar qayta ishlatildi. SAT subhavolalari inglizcha qoladi, yangi header matni o'zbekcha.
+- Desktop hamburger yashirildi. Mobil menyuda oltita bo'lim va joriy sahifaning mavjud navigatsiya/hisob/Suhbatdosh qismlari saqlandi. Mavzu bitta DOM tugma bilan menyuga ko'chadi, kalit o'zgarmaydi.
+- Kirish hozircha mavjud login yo'liga ishlaydi. 4-qism dialog bilan bog'laydi.
+- IELTS Writing kunlik standart limit migratsiyada 2 (`20261119120000_ielts_writing_baho.sql`), amaldagi qiymat server sozlamasida. AI Pro afzalligi qilib ko'rsatilmaydi.
+- UI brauzer tekshiruvi 5-qismda.

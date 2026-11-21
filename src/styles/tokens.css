@@ -471,3 +471,19 @@
    Sayt palitrasidan istisno (DESIGN.md, "Google tugmasi"). hover: holat qatlami, Google qiymati emas. */
 :root{ --google-fon:#ffffff; --google-chiziq:#747775; --google-matn:#1f1f1f; --google-hover:rgba(31, 31, 31, 0.08); }
 :root[data-mavzu='qorongi']{ --google-fon:#131314; --google-chiziq:#8e918f; --google-matn:#e3e3e3; --google-hover:rgba(227, 227, 227, 0.08); }
+
+/* Homepage/header brief, 2026-11-21. Existing semantic surfaces follow both themes. */
+:root {
+  --header-height: 76px;
+  --header-max: 1376px;
+  --header-logo: 116px;
+  --header-logo-mobile: 108px;
+  --header-pill-pad: 6px;
+  --header-column-min: 170px;
+  --header-menu-width: 420px;
+  --header-language-width: 240px;
+  --header-accent: #315BDD;
+  --flag-blue: #0099B5;
+  --flag-green: #1EB53A;
+  --flag-red: #CE1126;
+}

@@ -12,7 +12,6 @@ import { yol } from '../../lib/yol';
 import Bino from '../../components/Bino.astro';
 import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
-import QavatMenyu from '../../components/navigator/QavatMenyu.astro';
 import TelegramTugma from '../../components/TelegramTugma.astro';
 import { telegram, telegramKorinadi } from '../../data/telegram';
 import { matn } from '../../data/umumiyMatn';
@@ -38,7 +37,6 @@ const sochilgan = [
   keyingiTekshiruv="2026-12-04"
 >
   <YolBelgisi slot="bosh" />
-  <QavatMenyu slot="menyu" />
 
   <!-- 0. Shaxsiy yo'l xaritasi (Navigator onboarding): faqat saqlangan profil bo'lsa ko'rinadi -->
   <YolXaritasi />
