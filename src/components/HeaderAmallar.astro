@@ -33,5 +33,6 @@ const tillar = [{ kod: 'uz', nomi: "O'zbekcha", faol: true }, { kod: 'en', nomi:
   .til-panel button { display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: var(--size-touch-min); padding: var(--space-2); border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-text-secondary); font: inherit; font-size: var(--text-small-size); }
   .til-panel button[aria-current] { background: var(--header-accent); color: var(--color-neutral-0); }
   .til-panel button span { font-size: var(--text-caption-size); background: var(--color-surface-sunken); padding-inline: var(--space-2); border-radius: var(--radius-full); }
+  @media (768px <= width < 1024px) { .til-tugma, .kirish-tugma { padding-inline: var(--space-2); } }
   @media (width < 1024px) { .til-tugma > svg { display: none; } .kirish-tugma { background: var(--header-accent); color: var(--color-neutral-0); } .kirish-oq { display: none; } }
 </style>

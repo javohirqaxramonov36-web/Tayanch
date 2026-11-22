@@ -1,8 +1,8 @@
 ---
 import { kursHavola, kursOchiq } from '../lib/sat/kursKatalog';
 // Bo'lim yon paneli (sidebar): SAT, IELTS yoki Top Admission (maket "LiftSidebar").
-// >= 1024px: chapda doimiy panel, yig'ish tugmasi bilan (holat localStorage "tayanch:sidebar").
-// < 1024px: ustki qatordagi hamburger tugmasi panelni o'ng tomondan (tugma tagidan) chiqaradi.
+// >= 768px: bo‘limlar ustki qatorda, joriy bo‘lim menyusi o‘ngda ochiladi.
+// < 768px: bo‘limlar va joriy bo‘lim sahifalari hamburger menyusida.
 //   Esc yopadi, fokus panel ichida aylanadi, qolgan sahifa inert bo'ladi, aria-expanded yangilanadi.
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satYonGuruhlar } from '../data/satSahifalar';
@@ -284,13 +284,14 @@ const ieltsGuruhlar = [
 
   // --- Mavzu ---
   const mavzuTugma = document.getElementById('mavzu-tugma') as HTMLButtonElement;
-  const desktop = matchMedia('(min-width: 1024px)');
+  const desktop = matchMedia('(min-width: 768px)');
+  const kengHeader = matchMedia('(min-width: 1024px)');
   const mavzuJoyla = () => {
-    const joy = desktop.matches ? document.querySelector('[data-header-amallar]') : document.querySelector('.yon-past');
+    const joy = kengHeader.matches ? document.querySelector('[data-header-amallar]') : document.querySelector('.yon-past');
     joy?.prepend(mavzuTugma);
   };
   mavzuJoyla();
-  desktop.addEventListener('change', mavzuJoyla);
+  kengHeader.addEventListener('change', mavzuJoyla);
   const tizimQorongi = window.matchMedia('(prefers-color-scheme: dark)');
   const mavzuQoy = (m: 'yorug' | 'qorongi') => {
     d.setAttribute('data-mavzu', m);
@@ -585,13 +586,16 @@ const ieltsGuruhlar = [
   .desktop-nav { margin-inline: auto; min-width: 0; }
   .mobile-nav { display: none; }
   .yon-orami > summary { display: none; }
-  @media (width >= 1024px) { .yon-orami { position: absolute; inset: 100% var(--space-8) auto auto; width: var(--header-menu-width); } .yon-orami .yon { position: static; width: 100%; } }
+  @media (width >= 768px) { .yon-orami { position: absolute; inset: 100% var(--space-8) auto auto; width: var(--header-menu-width); } .yon-orami .yon { position: static; width: 100%; } }
   @media (width < 1024px) {
     .ustki-qator { padding-inline: var(--space-4); gap: var(--space-2); }
-    .ustki-qator > .logo { margin-right: auto; width: var(--header-logo-mobile); }
-    .desktop-nav { display: none; }
+    .ustki-qator > .logo { width: calc(var(--space-10) * 2); }
     .mavzu-tugma { display: none; }
     .yon-past .mavzu-tugma { display: flex; }
+  }
+  @media (width < 768px) {
+    .ustki-qator > .logo { margin-right: auto; width: var(--header-logo-mobile); }
+    .desktop-nav { display: none; }
     .yon-orami > summary { display: inline-flex; }
     .mobile-nav { display: block; padding: var(--space-3); }
     .yon { overflow-y: auto; width: min(var(--header-menu-width), calc(100% - var(--space-4))); }
