@@ -329,3 +329,17 @@ test('only imported mocks may explicitly omit unverified source evidence', () =>
   const result = baholash(t, TOGRI);
   assert.equal(result.raw, 5);
 });
+
+
+test('imported completion may allow a number in addition to two words', () => {
+  const t = nusxa();
+  const q = t.passages[0].groups.find((g) => g.type === 'gap-fill')!.questions[0];
+  q.answer = '12 million years';
+  q.wordLimit = 2;
+  q.allowNumber = true;
+  assert.equal(boshliqTogri('12 million years', q), true);
+  assert.deepEqual(tekshirTest(t, { jamiSavol: 5 }), []);
+  q.allowNumber = false;
+  assert.equal(boshliqTogri('12 million years', q), false);
+  assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((e) => e.includes('longer than wordLimit')));
+});

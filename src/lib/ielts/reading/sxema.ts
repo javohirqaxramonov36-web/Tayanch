@@ -36,6 +36,8 @@ export interface Savol extends Mualliflik {
   choose?: 1 | 2;
   /** gap-fill only: maximum number of words */
   wordLimit?: number;
+  /** The source allows one numeric token in addition to the word limit. */
+  allowNumber?: boolean;
   /** tfng: "TRUE" | "FALSE" | "NOT GIVEN"; mcq: option id or [id, id]; matching: heading id; gap-fill: text */
   answer: string | string[];
   /** gap-fill only: other spellings that are also correct */
@@ -99,6 +101,12 @@ export function savolKaliti(s: Savol): string {
 export function sozSoni(s: string): number {
   const t = s.trim();
   return t === '' ? 0 : t.split(/\s+/).length;
+}
+
+export function javobSozSoni(s: string, allowNumber = false): number {
+  const count = sozSoni(s);
+  const numberPresent = /(?:^|\s)[+-]?(?:\d[\d,.]*)(?:%|[a-z]{2})?(?=\s|$)/i.test(s);
+  return allowNumber && numberPresent ? Math.max(0, count - 1) : count;
 }
 
 export interface TekshiruvSozlama {
@@ -261,6 +269,7 @@ export function tekshirTest(test: unknown, sozlama: TekshiruvSozlama = {}): stri
           } else ishlatilgan.add(s.answer);
         } else {
           const limit = s.wordLimit;
+          if (s.allowNumber !== undefined && typeof s.allowNumber !== 'boolean') xato.push(`${nom}: allowNumber must be boolean`);
           if (!Number.isInteger(limit) || (limit as number) < 1) xato.push(`${nom}: wordLimit must be a positive integer`);
           if (!matn(s.answer)) xato.push(`${nom}: answer is required`);
           if (s.acceptedAnswers !== undefined && (!Array.isArray(s.acceptedAnswers) || !s.acceptedAnswers.every(matn))) {
@@ -268,7 +277,7 @@ export function tekshirTest(test: unknown, sozlama: TekshiruvSozlama = {}): stri
           } else if (Number.isInteger(limit) && matn(s.answer)) {
             const hammasi = [s.answer, ...((s.acceptedAnswers as string[] | undefined) ?? [])];
             hammasi.forEach((j) => {
-              if (sozSoni(j) > (limit as number)) xato.push(`${nom}: accepted answer "${j}" is longer than wordLimit ${limit}`);
+              if (javobSozSoni(j, s.allowNumber === true) > (limit as number)) xato.push(`${nom}: accepted answer "${j}" is longer than wordLimit ${limit}`);
             });
           }
         }

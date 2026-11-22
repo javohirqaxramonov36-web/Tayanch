@@ -176,3 +176,12 @@ sinxroni (Supabase) qo'shilguncha `null`. Davom etayotgan urinish alohida kalitd
 Import qilingan testda `source.kind=uploaded`, `source.file`, `source.rights=user-authorized` va `source.answerKeyReviewed=false` saqlanadi. Bu muallifning foydalanish ruxsati haqidagi tasdig‘ini qayd qiladi, ochiq litsenziya da’vosi emas. Savol matni va javob kaliti manbadan saqlanadi. Matching Information/Features paragraf yoki manba variantli MCQ, Note/Summary Completion gap-fill ko‘rinishida ishlaydi. Manbadagi qayta ishlatiladigan javoblar cheklanmaydi.
 
 Aniq dalil iqtibosi matnda topilmasa import qilingan savolda `evidence=null` beriladi. Natijada tekshirilmagan dalil deb ko‘rsatiladi, matnni belgilash tugmasi chiqmaydi. Qolgan testlarda evidence majburiyligicha qoladi. Javob kaliti va izohlarning mustaqil muallif ko‘rigi kutilmoqda. Katalogdagi AI va tasodifiy tanlov yorliqlari muallif so‘rovi bilan olib tashlandi, oldingi testlarning metadata va saqlangan urinishlari o‘qiladi.
+
+
+### Reading to‘plami kengaytmasi
+
+2026-11-22 kuni yuklangan Reading katalogi7mock/280savolga yetdi.21matn, kalitlar manba bilan dasturiy solishtirilgan. Har biri brauzerda40/40gacha yechildi. Ikki javobli savollar `numbers` va `choose=2` bilan bitta guruhda saqlanadi, ikkita savol sifatida ballanadi. YNNG va qayta ishlatish mumkin bo‘lgan moslashtirishlar manba variantlarini saqlagan MCQ sifatida beriladi.
+
+Gap-fill savolda `allowNumber: true` bo‘lsa, `wordLimit`ga qo‘shimcha bitta raqamli token ruxsat etiladi. Manbadagi “NO MORE THAN TWO WORDS AND/OR A NUMBER” cheklovi ikki so‘z va bitta raqam sifatida tekshiriladi. Maydon berilmagan eski savollarda oldingi token sanash qoidasi qoladi.
+
+Sakkizinchi strukturaviyReading mockining Diagram Label Completion guruhida rasmsiz matn bor. Diagramma manbasi aniqlanmaguncha to‘plamga kiritilmagan. Qolgan HTML/PDFlar keyingi import navbatida.

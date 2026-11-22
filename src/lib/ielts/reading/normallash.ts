@@ -1,5 +1,5 @@
 // Gap-fill answer normalisation: case-insensitive, extra spaces ignored, word limit enforced.
-import { sozSoni, type Savol } from './sxema.ts';
+import { javobSozSoni, type Savol } from './sxema.ts';
 
 /** Lowercases, unifies quotes and dashes, collapses whitespace. */
 export function normalMatn(s: string): string {
@@ -17,7 +17,7 @@ export function boshliqTogri(javob: string, savol: Savol): boolean {
   const toza = normalMatn(javob);
   if (toza === '') return false;
   // More words than allowed is wrong even if the extra words are harmless.
-  if (typeof savol.wordLimit === 'number' && sozSoni(toza) > savol.wordLimit) return false;
+  if (typeof savol.wordLimit === 'number' && javobSozSoni(toza, savol.allowNumber) > savol.wordLimit) return false;
   const togri = [savol.answer, ...(savol.acceptedAnswers ?? [])].filter((x): x is string => typeof x === 'string');
   return togri.some((t) => normalMatn(t) === toza);
 }
