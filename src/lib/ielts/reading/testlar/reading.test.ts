@@ -296,3 +296,23 @@ test('next step: weakest type under 60% gets its lesson, otherwise a new test', 
   assert.equal(tavsiyaTanla({ 'gap-fill': { togri: 0, jami: 4 }, tfng: { togri: 8, jami: 8 } }).manzil, '/uz/ielts/qollanma/reading/');
   assert.equal(tavsiyaTanla({ tfng: { togri: 6, jami: 10 }, mcq: { togri: 9, jami: 10 } }).manzil, '/uz/ielts/mashq/reading/');
 });
+
+
+test('AI provenance requires an explicit reviewed flag and preserves legacy tests', () => {
+  const t = nusxa();
+  t.drafted_by = 'ai';
+  assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((x) => x.includes('test.reviewed')));
+  t.reviewed = false;
+  const q = t.passages[0].groups[0].questions[0];
+  q.drafted_by = 'ai';
+  assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((x) => x.includes('questions[0].reviewed')));
+  q.reviewed = false;
+  assert.deepEqual(tekshirTest(t, { jamiSavol: 5 }), []);
+  assert.deepEqual(tekshirTest(fixture, { jamiSavol: 5 }), []);
+});
+
+test('review status requires an explicit author type', () => {
+  const t = nusxa();
+  t.reviewed = false;
+  assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((x) => x.includes('test.drafted_by')));
+});

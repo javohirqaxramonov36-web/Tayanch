@@ -8,7 +8,8 @@ import { MM, RM } from '../../../../../data/ielts/readingMatn';
 import { saytTestlari } from '../../../../../lib/ielts/reading/saytTestlari';
 import { yol } from '../../../../../lib/yol';
 
-const testSoni = (await saytTestlari()).length;
+const testlar = await saytTestlari();
+const testSoni = testlar.length;
 const IK = {
   soat: '<path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 7v5l3 2"/>',
   savol: '<path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
@@ -41,6 +42,19 @@ const imkonIkonka = [
     </header>
 
     <section class="boshla" aria-label={RM.boshla}>
+      {testSoni > 0 && (
+        <div class="mock-tanlov">
+          <label for="rb-test">Mock tanlang</label>
+          <select id="rb-test" aria-describedby="rb-test-izoh">
+            <option value="">Tasodifiy test</option>
+            {testlar.map((test) => (
+              <option value={test.testId}>{test.title}{test.drafted_by === 'ai' && test.reviewed !== true ? ' · AI qoralamasi, ko‘rik kutilmoqda' : ''}</option>
+            ))}
+          </select>
+          <p id="rb-test-izoh" class="boshla-izoh">Yangi test uchun mockni tanlang va boshlash tugmasini bosing. Boshlangan urinish tugamaguncha shu test davom etadi.</p>
+          <p class="boshla-izoh">Hozir katalogda Tayanch uchun yozilgan testlar bor. Telegram mocklari originalligi yoki ochiq litsenziyasi tekshirilgach qo‘shiladi.</p>
+        </div>
+      )}
       {testSoni > 0 ? (
         <a class="tugma tugma-asosiy katta" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1`}>{RM.boshla}</a>
       ) : (
@@ -52,7 +66,7 @@ const imkonIkonka = [
           </ul>
         </>
       )}
-      {testSoni > 0 && <p class="boshla-izoh">{testSoni === 1 ? RM.bittaTest : RM.tasodif}</p>}
+
       <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
     </section>
 
@@ -131,6 +145,10 @@ const imkonIkonka = [
   .eslatma svg { flex: none; }
 
   .boshla { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3); }
+  .mock-tanlov { display: grid; gap: var(--space-3); width: 100%; }
+  .mock-tanlov label { font-weight: var(--font-weight-semibold); }
+  .mock-tanlov select { width: 100%; min-width: 0; min-height: var(--size-touch-min); padding: var(--space-3); border: var(--border-width-1) solid var(--input-border); border-radius: var(--radius-md); background: var(--input-bg); color: var(--input-text); font: inherit; }
+  .mock-tanlov select:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
   .boshla-izoh { color: var(--matn-ikkinchi); line-height: 1.5; }
   .boshla-davom { padding: var(--b-3) var(--b-4); border-radius: var(--r-yon); background: var(--rang-asosiy-och); color: var(--matn); font-weight: 700; line-height: 1.5; }
   .boshla-davom[hidden] { display: none; }

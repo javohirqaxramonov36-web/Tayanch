@@ -18,7 +18,13 @@ export interface Variant {
   text: string;
 }
 
-export interface Savol {
+export interface Mualliflik {
+  /** Present together for new AI-authored content. Older records may omit both. */
+  drafted_by?: 'ai' | 'human';
+  reviewed?: boolean;
+}
+
+export interface Savol extends Mualliflik {
   /** question number (1..40); omitted when `numbers` is used */
   number?: number;
   /** "Choose TWO" questions occupy two consecutive numbers, e.g. [20, 21] */
@@ -59,7 +65,7 @@ export interface Passage {
   groups: Guruh[];
 }
 
-export interface ReadingTest {
+export interface ReadingTest extends Mualliflik {
   schemaVersion: 1;
   testId: string;
   title: string;
@@ -67,6 +73,14 @@ export interface ReadingTest {
   /** language of the explanations, for the `lang` attribute on the result screen (default "en") */
   explanationLang?: 'en' | 'uz';
   passages: Passage[];
+}
+
+function tekshirMualliflik(x: Record<string, unknown>, joy: string, xatolar: string[]): void {
+  if (x.drafted_by === undefined && x.reviewed === undefined) return;
+  if (x.drafted_by !== 'ai' && x.drafted_by !== 'human') {
+    xatolar.push(`${joy}.drafted_by: must be "ai" or "human"`);
+  }
+  if (typeof x.reviewed !== 'boolean') xatolar.push(`${joy}.reviewed: must be a boolean`);
 }
 
 /** Numbers a question occupies: one for regular questions, two for "Choose TWO". */
@@ -124,6 +138,7 @@ export function tekshirTest(test: unknown, sozlama: TekshiruvSozlama = {}): stri
   if (!matn(test.testId) || !/^[a-z0-9-]+$/.test(test.testId as string)) xato.push('testId: lowercase letters, digits and "-" only');
   if (!matn(test.title)) xato.push('title: required');
   if (typeof test.durationMinutes !== 'number' || !(test.durationMinutes > 0)) xato.push('durationMinutes: must be a positive number');
+  tekshirMualliflik(test, 'test', xato);
   if (test.explanationLang !== undefined && test.explanationLang !== 'en' && test.explanationLang !== 'uz') {
     xato.push('explanationLang: must be "en" or "uz"');
   }
@@ -205,6 +220,7 @@ export function tekshirTest(test: unknown, sozlama: TekshiruvSozlama = {}): stri
         raqamlar.push(...nums);
         const nom = nums.length ? `Q${nums.join('-')}` : sj;
 
+        tekshirMualliflik(s, sj, xato);
         if (!matn(s.prompt)) xato.push(`${nom}: prompt is required`);
         if (!matn(s.explanation)) xato.push(`${nom}: explanation is required`);
 

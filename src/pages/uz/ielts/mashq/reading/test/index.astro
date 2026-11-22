@@ -25,6 +25,7 @@ const testIdlar = (await saytTestlari()).map((t) => t.testId);
 
   <div id="rt" data-testlar={JSON.stringify(testIdlar)}>
     <h1 class="ekranda-yoq">{RM.testNomi}</h1>
+    <p class="rt-ogoh" id="rt-qoralama" role="note" hidden>Namuna · AI yozgan qoralama. Savol va javoblar muallif ko‘rigini kutmoqda.</p>
     <div class="rt-ogoh" id="rt-ogoh-xotira" role="alert" hidden></div>
     <div class="rt-ogoh" id="rt-ogoh-tab" role="alert" hidden>
       <p id="rt-ogoh-tab-matn"></p>

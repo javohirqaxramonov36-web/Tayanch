@@ -24,6 +24,20 @@ export function ishgaTushirBoshlash(): void {
   // An unfinished attempt: the main button continues it instead of starting a new test.
   const tugma = document.getElementById('rb-boshla');
   const izoh = document.getElementById('rb-davom');
+  const testTanlov = document.getElementById('rb-test');
+  if (testTanlov instanceof HTMLSelectElement && tugma instanceof HTMLAnchorElement) {
+    testTanlov.disabled = faol !== null;
+    testTanlov.value = faol?.testId ?? '';
+    const yangilaHavola = () => {
+      const parametrlar = new URLSearchParams({ boshla: '1' });
+      if (testTanlov.value) parametrlar.set('test', testTanlov.value);
+      tugma.href = `${yol(READING_YOL.test)}?${parametrlar}`;
+    };
+    if (!faol) {
+      yangilaHavola();
+      testTanlov.addEventListener('change', yangilaHavola);
+    }
+  }
   if (faol && izoh) {
     const hozir = Date.now();
     izoh.textContent = vaqtTugadi(faol.deadline, hozir) ? RM.vaqtOtgan : RM.davomIzoh(vaqtMatn(qolganMs(faol.deadline, hozir)));

@@ -56,6 +56,14 @@ Matn va savollar faqat original (`docs/kontent-siyosati.md`). Ekranda test
 | `passages[].paragraphs[]` | `label` (passage ichida takrorlanmaydi) va `text`. |
 | `passages[].groups[]` | Bir turdagi savollar guruhi: `type`, `instructions`, `questions`. |
 
+## AI muallifligi va ko‘rik
+
+Yangi AI test va savol yozuvlarida `drafted_by: "ai"`, `reviewed: false` bo‘ladi. Muallif ko‘rigidan keyin `reviewed` o‘zgartiriladi. `drafted_by` qiymati `ai` yoki `human`, `reviewed` boolean bo‘lishi kerak. Maydonlar birga beriladi. Eski fayllar va fixture ikkala maydonsiz ham o‘qiladi. Hozirgi to‘rt testning AI muallifligi `docs/ielts-reading-0N-tekshiruv.md`larda qayd etilgan, barcha savollari ko‘rik kutilayotgan deb belgilandi.
+
+Reading boshlash sahifasida aniq test yoki tasodifiy tanlov bor. `?boshla=1&test=<testId>` aniq testni boshlaydi. Faol urinish mavjud bo‘lsa davom ettiriladi. Noma’lum test identifikatori bilan yangi urinish yaratilmaydi. Tugash vaqti saqlangan `deadline` timestampidan hisoblanadi, vaqt tugaganda avtomatik yakunlanadi. Har matn kiritish va variant tanlash hodisasi darhol saqlanadi. Deadline o‘tganidan keyingi javob qabul qilinmaydi.
+
+Telegram mocklari importidan oldin matn originalligi yoki ochiq litsenziyasi va javob kaliti tekshiriladi. Tashqi saytda erkin ochilishi ochiq litsenziya isboti hisoblanmaydi. Muallifning 2026-11-22 qo‘shimcha sharti.
+
 ## Savol turlari
 
 Hamma savolda majburiy: `prompt`, `answer`, `explanation`, `evidence`.
