@@ -1,5 +1,7 @@
 # Tayanch: sessiyalar orasida holat (2026-11-09)
 
+- **2026-11-22, EYUF yakuniy audit branchi**. `codex/eyuf-yakun-audit`, muallif239 tasdiq yetarli dedi.298 yozuv,239 tasdiq/59 ko‘rik,252 matnli dars,20 soha8+1.20 kesim va11 variant tuzatildi, barcha100 eski IQ shartlari sinxron. Metodik ssenariylar T01 bilan alohida. Unit399/399 va EYUF28/28, build148.28 qo‘shimcha axe holati0, asosiy6 yo‘l Lighthouse100. Nashr holati yakuniy PR/deploy qaydida beriladi. Batafsil `docs/eyuf/yakunlash-holati.md`ning oxirgi bo‘limi.
+
 - **2026-11-21, EYUF davomiy kengaytma**. `codex/eyuf-yakunlash`: 250 test yozuvi (154 tasdiq/96 ochiq), 40 savol/60 daqiqa mock va 10 savol diagnostika, 171 suhbat savoli, esse himoyasi, 14 hudud va sanali yangiliklar. PREP_2dan 110 C yozuvi, shundan 26 tasdiq; 30 takror savol PREP_1 manbasiga bog‘langan. Kitob o‘chirgichi yangi trenajyor/mock uchun faol, eski IQ PR #204 bo‘yicha mustaqil. 23 test, build146, axe16 holat0, yangi 2 yo‘l Lighthouse a11y100. `docs/eyuf/yakunlash-holati.md` ochiq kontent/difficulty/transkripsiya/rubrika va qurilma chegaralarini saqlaydi. AI suhbatdoshi hozirgi topshiriqqa ko‘ra keyingi bosqich, interfeysi bor. Har main pushdan keyin quyidagi A1 nashri tiklanadi.
 
 Yangi sessiya shu fayldan boshlaydi. Ish qoidalari: `CLAUDE.md`. Dizayn tizimi: `DESIGN.md`. Repo: `javohirqaxramonov36-web/Tayanch`, sayt: https://tayanchedu.uz/uz/ (domen 2026-11-16 da olingan, ko'chish tartibi `docs/domen.md`; oldin https://javohirqaxramonov36-web.github.io/Tayanch/uz/)

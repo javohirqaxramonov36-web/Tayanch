@@ -35,3 +35,7 @@ Ochiq yozuv ko‘rilmagan degani emas. Masalan, final C7da oddiy vertikal yig‘
 ## To‘liq ko‘rinadigan A/B importi va matn ko‘rigi
 
 2026-11-21. Inventardagi48to‘liq A/Bnomzod kiritildi, ularning orasidagi betlar yo‘q. Endi bank298yozuv,231tasdiq. Barcha sonli/harfli savollarning sharti va variantlari matnga ko‘chirildi. PREP_1dagi umumiy noto‘g‘ri tur teglariga inventar xaritasi qaytarildi. PREP_2 C10,9-blok mustaqil yechildi — chap songa o‘ngning teskari yozilishini qo‘shish53ni beradi, kalitAga mos. Avariantlari7–8-sinf guruhi bilan alohida belgilandi. `inventory-15` 49-betda boshlangan yangi final Avariantini bildiradi, yangi Cblok soni degani emas.
+
+## 2026-11-22 yakuniy bank chegarasi
+
+Muallif 239 tasdiqlangan savol yetarli ekanini aytdi. Saqlangan 298 yozuvdan 239 tasdiq,59 ochiq ko‘rik yozuvi. 48 A/B nomzodning barcha rasmlari ko‘rildi.20 kesim qayta olindi,11 tushib qolgan E varianti tiklandi. Barcha298 tur va metodik qiyinlik ko‘rildi.239 bilan yangi yechim izlash to‘xtatildi. Matnli shartlar ikkala IQ kirishida bor.74 grafik variant to‘plamining to‘liq semantik transkripsiyasi hali yozilmagan, ular image_only sifatida saqlangan. Rasm o‘rniga taxminiy shakl yoki yetishmagan shart kiritilmadi.

@@ -15,7 +15,7 @@ const quota = quotas.items.find(item => item.track_id === track.id)!;
     <h2 id="soha-holat-h">Trek holati</h2>
     <p>2026-2 ochiq tanlov kvotasi — bakalavr {quota.open.bachelor}, magistr {quota.open.master}. Ushbu sonlar keyingi tanlovga avtomatik qo‘llanmaydi.</p>
     <p>Manba S03, PDF 1-bet. Tekshirilgan sana 20.11.2026.</p>
-    <p>Soha faktlari, islohotlar, iqtiboslar, talab va tashkilotlar uchun manbalar yig‘ilmoqda. Darslarda manba kutilayotgan joylar ochiq ko‘rsatilgan. Hozir metodik ish varag‘i va mutaxassisliklar qoralamasi mavjud.</p>
+    <p>Darslarda manbali soha faktlari, qisqa iqtiboslar, kasbiy talab dalillari va ishlangan Tayanch mashqlari bor. Har blokda manbasi va ko‘rik holati ko‘rsatilgan. Namunalar hamda shaxsiy reja topshiriqlari metodik material sifatida ajratilgan.</p>
     {!track.level.includes('bachelor') && <p>Ushbu tanlovning ochiq kvotasi asosida trek magistrlar uchun ko‘rsatilmoqda.</p>}
   </section>
   <Mutaxassisliklar specialties={track.specialties} />

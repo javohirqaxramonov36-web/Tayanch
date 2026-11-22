@@ -25,6 +25,7 @@ export interface IqSavol {
   kitobJavobi: Variant;
   tekshirilgan: boolean;
   yechim: string;
+  matn?: string;
 }
 
 export interface Sessiya {

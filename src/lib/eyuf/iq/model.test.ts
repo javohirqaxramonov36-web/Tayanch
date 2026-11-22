@@ -87,5 +87,25 @@ test('PREP_1 kaliti va ko‘rik holati ikkala kirish nuqtasida bir xil', () => {
     assert(unified, savol.id);
     assert.equal(unified.book_answer, savol.kitobJavobi, savol.id);
     assert.equal(unified.verified, savol.tekshirilgan, savol.id);
+    assert.equal(unified.stem, savol.matn, savol.id);
+  }
+});
+
+test('Bog‘liq matritsa va savol matni eski IQ kirishida ham saqlanadi', () => {
+  const original = savollar.find(savol => savol.id === 'iq-4-14')!;
+  const replacement = savollar.find(savol => savol.id === 'iq-4-15')!;
+  assert.equal(replacement.rasmlar[0].fayl, original.rasmlar[0].fayl);
+  assert.match(savollar.find(savol => savol.id === 'iq-2-14')!.matn!, /hosil bo‘ladi/);
+});
+
+test('Rasmda mavjud E variantlari yangi bankda tanlanadi', () => {
+  const ids = [
+    'prep2-03-c08', 'prep2-06-c01', 'prep2-06-c04', 'prep2-06-c06',
+    'prep2-07-c06', 'prep2-07-c08', 'prep2-07-c10', 'prep2-10-c05',
+    'prep2-12-c03', 'prep2-12-c07', 'prep2-13-c02',
+  ];
+  for (const id of ids) {
+    const savol = bank.items.find(item => item.id === id)!;
+    assert.deepEqual(savol.options.map(option => option.id), ['A', 'B', 'C', 'D', 'E'], id);
   }
 });

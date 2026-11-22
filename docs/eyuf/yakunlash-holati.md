@@ -147,3 +147,52 @@ Son blok miqdorini bildiradi. 0 qolgan manbali kontent ishini ko‘rsatadi. Musb
 ### Davomchi uchun aniq yo‘llar
 
 Worktree `/Users/javohir/.codex/worktrees/eyuf-yakun-audit/Tayanch-SAT prep`, branch `codex/eyuf-yakun-audit`. Inherited WIP `18663073`da saqlangan, main `5885b718` bilan merge `7503e811`. Keyingi o‘zgarishlar shu worktree ichida. Eski importlarni rerun qilmang. Yangi skriptlar `/private/tmp/eyuf-local-evidence-v9.py`, `eyuf-local-evidence-v11.py`, `eyuf-definitions-v12.py`, `eyuf-difficulty-v13.py`. Oxirgi skript visual_review_evidence maydonini qo‘shadi, keyingi tuzatishda bu izoh mavjud answer_evidence maydoniga o‘tkazildi, shu sabab uni o‘zgartirmasdan rerun qilmang.
+## Yakuniy ko‘rik, 2026-11-22
+
+Muallif 239 tasdiqlangan savol yetarli ekanini bildirdi. Bank hajmini oshirish shu chegarada to‘xtatildi. Saqlangan 298 yozuvdan 239 tasdiqlangan, 59 ko‘rik yozuvi. Mock faqat tasdiqlangan yozuvlardan tuziladi. 30 A yozuvining mos kalit beti mahalliy nusxada yo‘q, qolgan ochiq yozuvlarning mustaqil dalili yetarli emas. Ular ball va XP bermaydi.
+
+- 48 to‘liq A/B savol asl kesimlari bilan ko‘rildi. Yangi import qilinmadi. C va A/Bdan jami 20 kesim qayta olinib, kesilgan formula, namuna yoki variant tiklandi.
+- 11 C savolidagi tushib qolgan E variant qaytarildi. Tur ko‘rigi 298/298, metodik qiyinlik 298/298. Barcha shartlar aniq matnga o‘girildi. Grafik variantlarning to‘liq matnli tavsifi 74 yozuvda hali yo‘q, image_only belgisi saqlangan. Ularning shart va tasvirlari bor, matnli transkripsiya tugallangan deb ko‘rsatilmaydi.
+- PREP_1ning 100 sharti eski IQ kirishiga ham ulandi. 4-test15ga oldingi matritsa qo‘shildi. 4-test20ning qora tugun haqidagi xato izohi daraja2/3 bilan tuzatildi. 2-test14dagi oldingi noto‘g‘ri izoh ham qayta tuzatildi. Ikkala tildagi asl shart hosil bo‘ladigan kubni so‘raydi. B kub uch yuzning fazoviy yo‘nalishlari bilan tasdiqlanadi.
+- Yangi ikki mustaqil yechim. 9-tur C8da 7984ning 8 raqami takrorlanadi, D. 7-tur C2da oxirgi ikki raqam yig‘iladi, qolgan qism teskarilanadi. Oltita o‘tish 34826, C javobini tasdiqlaydi.
+- 20 trekdagi 8+1 darslar matnli. Qolgan 19 trekning 513 outline bloki soha vaziyati, ishlangan metodik namuna, shaxsiy mashq va tekshiruv bilan almashtirildi. Arxitektura oldin alohida ishlangan. Metodik vaziyatlar T01 va verified=false bilan manbali faktdan ajratilgan.
+- Barcha 20 trekda manbali soha ta’rifi, mahalliy muammo dalillari, islohot, qisqa Prezident iqtibosi, talab, istiqbol va tashkilot yo‘nalishi bor. Mutaxassislik va magistr tadqiqoti darslari shaxsiy ish varag‘i. N01 milliy ish beruvchilar so‘rovi umumiy ko‘nikmalar talabini bildiradi. Alohida kasb vakansiyalari sonini bermaydi. W01 tanlangan15 kasbiy yo‘nalish bo‘yicha xalqaro prognoz qo‘shadi. BLS ma’lumoti AQSHning 2025–2035 prognozi sifatida qoladi. 2031–2032 shaxsiy ssenariysi metodik reja.
+- Eski kurslar kirish sahifasiga ham to‘rt kursning normal havolalari qo‘shildi. Top Admission diff0.
+- Umumiy unit399/399, EYUF unit28/28. Schema/assets/manba validator298 savol,252 dars,20 trek,14 hudud,171 suhbat yozuvini tekshirdi. Build148 sahifa bilan o‘tdi. Repo1267 faylda muammosiz.
+- Normal kirish, diagnostika, faqat rozilikli afzalliklarni saqlash, bakalavr8/magistr9 filtri, progress reload, esse rozilik/reload, esse himoyasi, mock suhbat va71/100 rubrika tekshirildi. Yangi28 axe holati (360/1280, yorug‘/qorong‘i,7 yo‘l) xato0, JS0. Avvalgi16 holat ham xato0.
+- Lighthouse accessibility. Kurslar, hujjatlar, arxitektura, trenajyor, suhbat va mock sahifalari100. Telefon hozir adb ro‘yxatida yo‘q. Oldingi Samsung sensor/mikrofon start-stop/blob/delete sinovi qayd etilgan. Ovozning eshitilish sifati, VoiceOver va iPhone/TalkBack amalda sinalmagan.
+
+### Manba chegaralari
+
+G01–G17ning qayta ko‘rigi `rasmiy-qayta-audit.md`da. Ochiq rasmiy hujjatlar orasida2026-2 uchun alohida tasdiqlangan yangi rubrika, Jamg‘arma ma’lumotnoma blankasi va tuition summasining davri topilmagan. Interfeys ularni aniq manba davri bilan ko‘rsatadi. Universitetlar API492 yozuv, reyting nashrlari alohida.
+
+### Hozirgi fakt bloklari
+
+Sonlar manbada tekshirilgan bloklar miqdori. Dars08–09 metodik savol/tadqiqot mahsulotlari bo‘lib, nollari dars yo‘qligini anglatmaydi. Mahalliy muammolar bir blokda uchta dalilni qamrashi mumkin.
+
+| Trek | Asos | Mahalliy | Islohot | Iqtibos | Talab | Istiqbol | Tashkilot | Savollar | Tadqiqot |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Muhandislik ishi | 1 | 1 | 1 | 1 | 4 | 2 | 1 | 0 | 0 |
+| Arxitektura va qurilish | 1 | 3 | 2 | 2 | 5 | 1 | 2 | 0 | 0 |
+| Ishlab chiqarish va ishlov berish | 1 | 1 | 2 | 1 | 3 | 2 | 1 | 0 | 0 |
+| Axborot-kommunikatsiya texnologiyalari | 1 | 1 | 1 | 1 | 5 | 2 | 1 | 0 | 0 |
+| Fizika va tabiiy fanlar | 1 | 1 | 2 | 1 | 2 | 1 | 1 | 0 | 0 |
+| Matematika va statistika | 1 | 1 | 2 | 1 | 3 | 1 | 1 | 0 | 0 |
+| Biologik va turdosh fanlar | 1 | 1 | 2 | 1 | 2 | 1 | 1 | 0 | 0 |
+| Xizmat ko‘rsatish | 1 | 2 | 1 | 1 | 4 | 1 | 1 | 0 | 0 |
+| Atrof-muhit | 1 | 1 | 1 | 1 | 3 | 2 | 1 | 0 | 0 |
+| Qishloq, o‘rmon, baliq xo‘jaligi | 1 | 1 | 2 | 1 | 4 | 2 | 1 | 0 | 0 |
+| Transport xizmatlari | 1 | 1 | 1 | 1 | 3 | 2 | 1 | 0 | 0 |
+| Biznes va boshqaruv | 1 | 1 | 3 | 1 | 3 | 1 | 1 | 0 | 0 |
+| Veterinariya | 1 | 1 | 2 | 1 | 3 | 1 | 1 | 0 | 0 |
+| Ijtimoiy va xulq-atvor fanlari | 1 | 1 | 2 | 1 | 3 | 1 | 1 | 0 | 0 |
+| Jurnalistika va axborot | 1 | 1 | 1 | 1 | 3 | 1 | 1 | 0 | 0 |
+| Huquq | 1 | 1 | 2 | 1 | 3 | 2 | 1 | 0 | 0 |
+| Sog‘liqni saqlash va ijtimoiy ta’minot | 1 | 1 | 2 | 1 | 5 | 2 | 1 | 0 | 0 |
+| Ta’lim | 1 | 1 | 2 | 1 | 4 | 1 | 1 | 0 | 0 |
+| San’at | 1 | 1 | 3 | 1 | 3 | 1 | 2 | 0 | 0 |
+| Tillar | 1 | 1 | 2 | 1 | 4 | 1 | 1 | 0 | 0 |
+
+### Nashr oldi qo‘shimcha tekshiruv
+
+297 ta WebP savol tasviri macOS Vision QR detektori bilan ko‘rildi, QR0. XP qayta sinovida PREP_2ID, takror javob, eski IQreload, ikki tab va300XPlimit o‘tdi. Storage.setItem bloklangan holatda javob ko‘rinadi, saqlanmagan XP0, JS0. Astrocheck453faylda4avvalgi boshqa bo‘lim xatosini ko‘rsatdi, EYUFxatosi0. Telefon adb ro‘yxati bo‘sh.
