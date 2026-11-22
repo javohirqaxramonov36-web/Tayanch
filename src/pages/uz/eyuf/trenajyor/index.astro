@@ -6,11 +6,11 @@ import bank from '../../../../../data/eyuf/questions-iq.json';
 import { yol } from '../../../../lib/yol';
 ---
 <EyufSahifa title="IQ trenajyor" description="Tur bo‘yicha mashq, sprint va xatolarni oraliq takrorlash.">
- <p class="eyuf-panel">PREP_1ning 100 savoli, 88 tasdiqlangan javob. Qo‘shimcha 40 Tayanch so‘z-mantiq va tadqiqot mashqi hamda PREP_2ning 110 savoli mavjud, shundan 26 javob mustaqil tekshirilgan. Qolgan yozuvlar baholanmaydigan ko‘rik nusxalari. Kitob savollarining tur tasnifi va qiyinlik ko‘rigi davom etmoqda. <a href={yol('/uz/eyuf/iq/')}>Besh to‘plamli IQ mashqi</a></p>
+ <p class="eyuf-panel">PREP_1 — {bank.items.filter(q => q.source.book === 'S11').length} savol, {bank.items.filter(q => q.source.book === 'S11' && q.verified).length} tasdiqlangan javob. PREP_2 — {bank.items.filter(q => q.source.book === 'S12').length} savol, {bank.items.filter(q => q.source.book === 'S12' && q.verified).length} tasdiqlangan javob. Qo‘shimcha 40 Tayanch so‘z-mantiq va tadqiqot mashqi mavjud. Ochiq javoblar baholanmaydi. Ayrim kitob kalitlari mustaqil yechim bilan mos kelmagan. Metodik qiyinlik ko‘rigi empirik kalibratsiyadan alohida. <a href={yol('/uz/eyuf/iq/')}>Besh to‘plamli IQ mashqi</a></p>
  {!settings.book_content_enabled && <p class="eyuf-panel">Kitob kontenti ushbu qoralama paketda o‘chirilgan. Mashqni ochish uchun kontent sozlamasi muallif ko‘rigidan o‘tkaziladi.</p>}
  {settings.book_content_enabled && <div id="eyuf-trenajyor">
   <p data-storage role="status" hidden></p>
-  <section class="eyuf-panel" data-start><h2>Mashqni tanlang</h2><label>Ta’lim darajasi<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Savol turi<select data-type><option value="all">Barcha turlar</option>{[...new Set(bank.items.map(q=>q.type))].map(t=><option value={t}>{t.replaceAll('-',' ')}</option>)}</select></label><label>Rejim<select data-mode><option value="practice">Mashq — izoh darhol</option><option value="sprint">Sprint — 60 soniya</option><option value="combo">Combo zanjiri</option><option value="daily">Kunlik 10 savol</option><option value="review">Xatolarni takrorlash</option></select></label><button class="tugma tugma-asosiy" data-begin>Boshlash</button><p data-empty role="status"></p><p><a href={yol('/uz/eyuf/mock/')}>40 savollik simulyatsiya yoki qisqa diagnostika</a></p></section>
+  <section class="eyuf-panel" data-start><h2>Mashqni tanlang</h2><label>Ta’lim darajasi<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Savol turi<select data-type><option value="all">Barcha turlar</option>{[...new Set(bank.items.map(q=>q.type))].map(t=><option value={t}>{t.replaceAll('-',' ')}</option>)}</select></label><label>Rejim<select data-mode><option value="practice">Mashq — izoh darhol</option><option value="sprint">Sprint — 60 soniya</option><option value="combo">Combo zanjiri</option><option value="daily">Kunlik 10 savol</option><option value="review">Xatolarni takrorlash</option></select></label><button class="tugma tugma-asosiy" data-begin disabled>Boshlash</button><p data-empty role="status"></p><p><a href={yol('/uz/eyuf/mock/')}>40 savollik simulyatsiya yoki qisqa diagnostika</a></p></section>
   <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1">Savol</h2><output data-timer aria-label="Qolgan vaqt"></output></div><p data-stem></p><p data-pending hidden>Javob tekshirilmoqda. Ushbu savol ball va XP bermaydi.</p><div data-images></div><div class="eyuf-grid" data-options role="group" aria-label="Javob variantlari"></div><p class="eyuf-small">A–G klavishlari bilan variantni tanlang. Matn maydonida bu klavishlar javob bermaydi.</p><section data-feedback hidden aria-live="polite"></section><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-next hidden>Keyingi</button><button class="tugma tugma-ikkinchi" data-finish>Yakunlash</button></div></section>
   <section class="eyuf-panel" data-result hidden><h2 tabindex="-1" data-result-h>Mashq natijasi</h2><p data-summary></p><button class="tugma tugma-asosiy" data-again>Rejim tanlash</button></section>
   <section class="eyuf-panel"><h2>Mahorat va progress</h2><p data-streak></p><ul class="eyuf-list" data-mastery></ul><ul class="eyuf-list" data-badges></ul><button class="tugma tugma-ikkinchi" data-clear>Trenajyor progressini tozalash</button></section>
@@ -28,6 +28,7 @@ import {
   progressTogrimi,
   javobniYoz,
   mahorat,
+  mosSavolniTanla,
   streak,
   badges,
   toshkentKuni,
@@ -36,6 +37,8 @@ import { lokalOqi, lokalYoz, matnElement } from '../../../../lib/eyuf/holat';
 import { savollar } from '../../../../lib/eyuf/iq/savollar';
 import {
   holatniOqi,
+  iqQulf,
+  type IqSavol,
   yangiSessiya,
   mukofotHisobla,
   SAQLASH_KALITI,
@@ -102,28 +105,39 @@ if (root) {
       );
   }
   function reward(id: string, answer: string) {
+    return iqQulf(() => rewardLocked(id, answer));
+  }
+  function rewardLocked(id: string, answer: string) {
     try {
-      const q = savollar.find((x) => x.id === id);
-      if (!q) return 0;
+      const source = bank.items.find((x) => x.id === id);
+      if (!source?.verified || source.answer === null) return 0;
+      const q: IqSavol = {
+        id: source.id, test: 1, raqam: source.source.number,
+        variantlar: source.options.map(option => option.id) as IqSavol['variantlar'],
+        rasmlar: [], kitobJavobi: source.answer as IqSavol['kitobJavobi'],
+        tekshirilgan: true, yechim: source.explanation.rule,
+      };
       const old = holatniOqi(localStorage.getItem(SAQLASH_KALITI), savollar);
       const session = yangiSessiya('aralash', [q], 30);
       session.javoblar[id] = answer as typeof q.kitobJavobi;
-      const updated = mukofotHisobla({ ...old, sessiya: session }, savollar);
-      lokalYoz(SAQLASH_KALITI, { ...old, mukofotlar: updated.mukofotlar }, msg);
-      return updated.sessiya!.olinganXp;
+      const updated = mukofotHisobla({ ...old, sessiya: session }, [q]);
+      const saved = lokalYoz(SAQLASH_KALITI, { ...old, mukofotlar: updated.mukofotlar }, msg);
+      return saved ? updated.sessiya!.olinganXp : 0;
     } catch {
       msg.hidden = false;
       msg.textContent = 'XP bu brauzerda saqlanmadi.';
       return 0;
     }
   }
-  function finish() {
+  let pendingReward: Promise<void> = Promise.resolve();
+  async function finish() {
+    await pendingReward;
     if (clock) clearInterval(clock);
     clock = null;
     el('[data-question]').hidden = true;
     el('[data-result]').hidden = false;
     el('[data-summary]').textContent =
-      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. XP PREP_1dagi tasdiqlangan savolning birinchi to‘g‘ri javobiga beriladi. Bu mashq natijasi.`;
+      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. XP tasdiqlangan savolning birinchi to‘g‘ri javobiga beriladi. Bu mashq natijasi.`;
     if (mode === 'daily' && i >= pool.length) {
       const day = toshkentKuni();
       p.days = [...new Set([...p.days, day])];
@@ -132,7 +146,7 @@ if (root) {
     progress();
     el('[data-result-h]').focus();
   }
-  function choose(answer: string) {
+  async function choose(answer: string) {
     if (answered) return;
     if (mode === 'sprint' && Date.now() >= deadline) {
       finish();
@@ -148,7 +162,8 @@ if (root) {
       if (correct) {
         right++;
         combo++;
-        xp += reward(q.id, answer);
+        pendingReward = reward(q.id, answer).then(amount => { xp += amount; });
+        await pendingReward;
       } else combo = 0;
       best = Math.max(best, combo);
       p = javobniYoz(p, q.id, q.type, correct);
@@ -257,6 +272,11 @@ if (root) {
         'Hozir bu tanlov uchun savol yo‘q. Boshqa tur yoki rejimni tanlang.';
       return;
     }
+    if (mode === 'practice' || mode === 'combo') {
+      const next = mosSavolniTanla(pool, p);
+      const index = next ? pool.indexOf(next) : -1;
+      if (index >= 0) [pool[0], pool[index]] = [pool[index], pool[0]];
+    }
     i = right = scored = combo = best = xp = 0;
     el('[data-start]').hidden = true;
     el('[data-result]').hidden = true;
@@ -273,6 +293,11 @@ if (root) {
   });
   el('[data-next]').addEventListener('click', () => {
     i++;
+    if (mode === 'practice' || mode === 'combo') {
+      const next = mosSavolniTanla(pool.slice(i), p);
+      const index = next ? pool.indexOf(next, i) : -1;
+      if (index >= 0) [pool[i], pool[index]] = [pool[index], pool[i]];
+    }
     show();
   });
   el('[data-finish]').addEventListener('click', finish);
@@ -315,6 +340,7 @@ if (root) {
     if (clock) clearInterval(clock);
   });
   progress();
+  el<HTMLButtonElement>('[data-begin]').disabled = false;
 }
 </script>
 <style is:global>

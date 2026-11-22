@@ -2,7 +2,7 @@ import { yol } from '../../yol';
 import { savollar } from './savollar';
 import {
   SAQLASH_KALITI, TOGRI_XP, aralashtir, boshHolat, chegaraMatni, daqiqaTogrimi,
-  holatniOqi, mukofotHisobla, natijaniHisobla, rejimNomi, ulashishMatni, yangiSessiya,
+  iqQulf, holatniOqi, mukofotHisobla, natijaniHisobla, rejimNomi, ulashishMatni, yangiSessiya,
   type Holat, type IqSavol, type Rejim, type Variant,
 } from './model';
 
@@ -58,6 +58,7 @@ export function ishgaTushir() {
     img.width = rasm.kenglik;
     img.height = rasm.balandlik;
     img.alt = `${savol.test}-test, ${savol.raqam}-savol${savol.rasmlar.length > 1 ? `, ${qism + 1}-qism` : ''}. Savol va javob variantlari.`;
+    if (savol.matn) img.alt = savol.matn + (savol.rasmlar.length > 1 ? ` ${qism + 1}-qism.` : '');
     img.decoding = 'async';
     return img;
   }
@@ -93,6 +94,8 @@ export function ishgaTushir() {
     top('#iq-savol-h').textContent = `${indeks + 1}-savol`;
     top('[data-manba]').textContent = `${savol.test}-test · ${savol.raqam}-savol`;
     top('[data-tekshiruv]').hidden = savol.tekshirilgan;
+    top('[data-savol-matn]').textContent = savol.matn ?? '';
+    top('[data-savol-matn]').hidden = !savol.matn;
     rasmlarniChiz(top('[data-rasmlar]'), savol);
     const variantlar = savol.variantlar.map(harf => {
       const tugma = document.createElement('button');
@@ -207,6 +210,10 @@ export function ishgaTushir() {
   }
 
   function yakunla() {
+    void iqQulf(yakunlaQulfda);
+  }
+
+  function yakunlaQulfda() {
     if (!holat.sessiya || holat.sessiya.yakunlangan !== null) return;
     // Boshqa oynada berilgan XP qayta qo‘shilmasin.
     try {

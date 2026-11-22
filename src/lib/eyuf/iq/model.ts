@@ -1,10 +1,11 @@
 import { xpQoida } from '../../../data/satReyting.ts';
+import bank from '../../../../data/eyuf/questions-iq.json' with { type: 'json' };
 
 export const SAQLASH_KALITI = 'tayanch:eyuf-iq:v1';
 export const KONTENT_VERSIYA = 'prep-1-2026-11-20';
 export const TOGRI_XP = xpQoida.javob + xpQoida.togri;
 export const OTISH_BALLI = 61;
-export const VARIANTLAR = ['A', 'B', 'C', 'D', 'E'] as const;
+export const VARIANTLAR = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 export type Variant = typeof VARIANTLAR[number];
 export type Rejim = '1' | '2' | '3' | '4' | '5' | 'aralash' | 'xatolar';
 
@@ -24,6 +25,7 @@ export interface IqSavol {
   kitobJavobi: Variant;
   tekshirilgan: boolean;
   yechim: string;
+  matn?: string;
 }
 
 export interface Sessiya {
@@ -40,6 +42,15 @@ export interface Sessiya {
 }
 
 export interface Mukofot { id: string; kun: string }
+const mukofotIdlari = new Set(bank.items.map(question => question.id));
+
+/** Eski IQ va yangi trenajyor bitta mukofot kalitini atomar yangilaydi. */
+export async function iqQulf<T>(amal: () => T | Promise<T>): Promise<T> {
+  if (typeof navigator !== 'undefined' && navigator.locks) {
+    return navigator.locks.request(SAQLASH_KALITI, amal);
+  }
+  return amal();
+}
 export interface Holat {
   versiya: 1;
   kontent: string;
@@ -141,7 +152,7 @@ export function holatniOqi(xom: string | null, bank: readonly IqSavol[]): Holat 
     const noyob = new Set<string>();
     if (Array.isArray(x.mukofotlar)) {
       bosh.mukofotlar = x.mukofotlar.filter((m: Mukofot) => {
-        if (!m || !xarita.has(m.id) || noyob.has(m.id) || typeof m.kun !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(m.kun)) return false;
+        if (!m || !(xarita.has(m.id) || mukofotIdlari.has(m.id)) || noyob.has(m.id) || typeof m.kun !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(m.kun)) return false;
         noyob.add(m.id);
         return true;
       });

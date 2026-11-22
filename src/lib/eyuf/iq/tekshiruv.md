@@ -1,6 +1,6 @@
 # IQ javoblari tekshiruvi
 
-2026-11-20. 100 savol saqlangan. 88 javob mustaqil tasdiqlandi. 12 javob tekshirilmoqda.
+2026-11-20. 100 savol saqlangan. 2026-11-22 davomiy ko‘rikdan so‘ng 92 javob mustaqil tasdiqlangan, 8 javob tekshirilmoqda.
 
 Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mumkin bo‘lgan yuqori ball chegarasi alohida ko‘rsatiladi.
 
@@ -34,7 +34,7 @@ Davomiy tekshiruvda 27 ochiq savol qayta ko‘rildi. 15 tasi yechim bilan tasdiq
 - 1-savol. Tasdiqlandi. Ketma-ket kvadratlarda ichki gorizontal chiziqlar soni bittadan ortadi. Tushib qolgan holat to‘rt ichki chiziqli C.
 - 2-savol. Tasdiqlandi. Figuraning uzun o‘qi har safar bir xil burchakka buriladi. Yetishmayotgan qiya holat B. Ichki bo‘linmalar soni ham saqlanadi.
 - 3-savol. Tasdiqlandi. Har ustunda yuqoridagi son o‘rtadagi va pastdagi sonlar ko‘paytmasi. 120÷24=5. C.
-- 4-savol. Tekshirilmoqda. Nuqtaning aylana va chiziqlarga nisbatan sohasini variantlarda tekshirdim. Skanerdagi ingichka chiziqlar sabab D ni mustaqil aniq tasdiqlay olmadim. Javob tekshirilmoqda.
+- 4-savol. Tasdiqlandi. Nuqta joylashgan doira ikki parallel kesma va ularni kesuvchi uchinchi kesma bilan bo‘lingan.
 - 5-savol. Tasdiqlandi. Namuna to‘rtta belgini 2,3 / 4,1 tartibiga joylaydi. Ikkinchi to‘plamda ham shu tartib C ni beradi.
 - 6-savol. Tasdiqlandi. Qatorlarda qadamlar mos ravishda +2, +4, +6, +8. Yetishmagan sonlar yuqoridan 12, 13, 26. C.
 - 7-savol. Tekshirilmoqda. A,D,G,K,P harflarining ingliz alifbosidagi o‘rinlari 1,4,7,11,16. Farqlar +3,+3,+4,+5. +6 ni davom ettirish V ni beradi, ammo boshdagi takroriy +3 uchun yagona qoida aniqlanmadi. D — V kaliti tekshirilmoqda.
@@ -44,7 +44,7 @@ Davomiy tekshiruvda 27 ochiq savol qayta ko‘rildi. 15 tasi yechim bilan tasdiq
 - 11-savol. Tasdiqlandi. Qolgan sonlar bir xil raqamli juftlarga ajraladi. 9416/9614, 5278/5872, 6231/6132, 7895/7598. 6394 juftsiz. A.
 - 12-savol. Tasdiqlandi. Qo‘shni ikki beshburchak ustma-ust qo‘yiladi. Ikkalasida ham nuqta bor o‘rinlar rangidan qat’i nazar olib tashlanadi. Faqat bittasida bor nuqtalar o‘z rangi bilan qoladi. Bu qoida pastdan yuqoriga barcha juftliklarda ishlaydi. Eng yuqorida chap oq nuqtalar bekor bo‘ladi, markaz va o‘ngda qora, pastki chapda oq qoladi. D.
 - 13-savol. Tasdiqlandi. Har satrda dastlabki ikki katakdagi chiziqlar ustma-ust qo‘yiladi. Ustma-ust tushgan kesmalar bekor qilinadi. Uchinchi satrda yuqori o‘ng diagonal yarmi va yuqori vertikal kesma bekor bo‘ladi. To‘liq yuqori chap–pastki o‘ng diagonal va chap yarim gorizontal kesma qoladi. C. Shu qoida dastlabki ikki satrga ham mos.
-- 14-savol. Tasdiqlandi. Yoyilmada chiziqsiz doira bilan uning tepasidagi gorizontal chiziqli yuz qarama-qarshi. B ularni yonma-yon ko‘rsatadi, shuning uchun hosil bo‘lmaydi.
+- 14-savol. Tasdiqlandi, 2026-11-22 qayta tekshirildi. B kub hosil bo‘ladi. Uning old yuziga yoyilmaning pastki chiziqsiz yuzi, tepasiga gorizontal qatordagi ikkinchi yuz, o‘ngiga qatordagi birinchi diagonal yuz mos keladi. Oldingi qarama-qarshi yuz izohi noto‘g‘ri yuzni tepaga joylashtirgani sabab xato edi.
 - 15-savol. Tasdiqlandi. Toq o‘rinlardagi sonlar 9,13,17,21,25 bo‘lib +4 ga ortadi. Juft o‘rinlarda 16,13,10,7 bo‘lib −3 ga kamayadi. D — 25.
 - 16-savol. Tasdiqlandi. Namuna nuqtasi uchburchak sohada. A dagi nuqta besh tomonli, B dagisi to‘rt tomonli, C dagisi besh tomonli sohada. Faqat D dagi nuqta ham uch kesma bilan chegaralangan uchburchak ichida. Eng o‘xshash shakl D.
 - 17-savol. Tasdiqlandi. Ayirmalar +3,+6,+9,+12,+15,+18. 31+15=46. C.
@@ -120,3 +120,10 @@ Davomiy tekshiruvda 27 ochiq savol qayta ko‘rildi. 15 tasi yechim bilan tasdiq
 - 18-savol. Tasdiqlandi. Har ustunda yuqoridagi ikki son ko‘paytmasidan uchinchi son ayriladi. 16×4−32=32. D.
 - 19-savol. Tasdiqlandi. Har satrda dastlabki ikki katakning ikkalasida ham nuqta bor o‘rinlar olinadi va rangi teskarilanadi. Boshqa o‘rinlar bo‘sh qoladi. Bu qoida ustunlarda ham ishlaydi. Oxirgi satr va oxirgi ustunda faqat pastki chapdagi oq nuqta umumiy. U qora nuqtaga aylanadi. A.
 - 20-savol. Tekshirilmoqda. Pog‘onali jadvalni yig‘indi, ayirma va ko‘paytma munosabatlari orqali tekshirdim. B — 2 uchun yagona qoida mustaqil tasdiqlanmadi. Javob tekshirilmoqda.
+
+## 2026-11-22 mustaqil matritsa yechimlari
+
+- iq-3-15. Tasdiqlandi. Oldingi qator a,b,c,d bo‘lsa, keyingi qator b+c,a+c,b+d,c+d. Bu qoida barcha berilgan qatorlarga mos. Oxirgi qatorda 95,97,88,93 olinadi. C.
+- iq-5-20. Tasdiqlandi. Har bir to‘liq 2×2 katakdagi sonlar yig‘indisi 15. So‘roq belgili blokda 2+6+5+?=15, demak ?=2. B.
+
+- iq-5-04. Tasdiqlandi. Eng baland to‘rtburchak har qadamda bir to‘rtburchak kengligicha o‘ngga siljiydi. Avval o‘rtacha, keyin past to‘rtburchakni yopadi. Keyingi holatda u eng o‘ngga chiqadi. Tartib o‘rtacha–past–baland, D.

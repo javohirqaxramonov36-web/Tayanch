@@ -162,7 +162,8 @@
               "D",
               "E",
               "F",
-              "G"
+              "G",
+              null
             ]
           },
           "explanation": {
@@ -265,6 +266,10 @@
               },
               "type_verified": {
                 "type": "boolean"
+              },
+              "difficulty_evidence": {
+                "type": "string",
+                "minLength": 1
               }
             },
             "required": [
@@ -349,6 +354,17 @@
             "then": {
               "properties": {
                 "answer": {
+                  "enum": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G"
+                  ]
+                },
+                "book_answer": {
                   "enum": [
                     "A",
                     "B",

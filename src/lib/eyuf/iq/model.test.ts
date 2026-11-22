@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { savollar } from './savollar.ts';
+import bank from '../../../../data/eyuf/questions-iq.json' with { type: 'json' };
 import { boshHolat, yangiSessiya, mukofotHisobla, holatniOqi, aralashtir, natijaniHisobla } from './model.ts';
 
 test('100 savol, har test 20, kalit variantlarda mavjud', () => {
@@ -71,4 +72,40 @@ test('Buzilgan va eski localStorage xavfsiz tashlanadi', () => {
   assert.deepEqual(holatniOqi(JSON.stringify(h),savollar),h);
   h.sessiya.savollar[0]='mavjud-emas';
   assert.equal(holatniOqi(JSON.stringify(h),savollar).sessiya,null);
+});
+test('Yangi bank mukofotlari eski IQ sessiyasida ham saqlanadi', () => {
+  const state = boshHolat();
+  state.mukofotlar = [{ id: 'prep2-09-c01', kun: '2026-11-21' }];
+  state.sessiya = yangiSessiya('1', savollar.slice(0, 20), 30);
+  const restored = holatniOqi(JSON.stringify(state), savollar);
+  assert.deepEqual(restored, state);
+});
+
+test('PREP_1 kaliti va ko‘rik holati ikkala kirish nuqtasida bir xil', () => {
+  for (const savol of savollar) {
+    const unified = bank.items.find(item => item.id === savol.id);
+    assert(unified, savol.id);
+    assert.equal(unified.book_answer, savol.kitobJavobi, savol.id);
+    assert.equal(unified.verified, savol.tekshirilgan, savol.id);
+    assert.equal(unified.stem, savol.matn, savol.id);
+  }
+});
+
+test('Bog‘liq matritsa va savol matni eski IQ kirishida ham saqlanadi', () => {
+  const original = savollar.find(savol => savol.id === 'iq-4-14')!;
+  const replacement = savollar.find(savol => savol.id === 'iq-4-15')!;
+  assert.equal(replacement.rasmlar[0].fayl, original.rasmlar[0].fayl);
+  assert.match(savollar.find(savol => savol.id === 'iq-2-14')!.matn!, /hosil bo‘ladi/);
+});
+
+test('Rasmda mavjud E variantlari yangi bankda tanlanadi', () => {
+  const ids = [
+    'prep2-03-c08', 'prep2-06-c01', 'prep2-06-c04', 'prep2-06-c06',
+    'prep2-07-c06', 'prep2-07-c08', 'prep2-07-c10', 'prep2-10-c05',
+    'prep2-12-c03', 'prep2-12-c07', 'prep2-13-c02',
+  ];
+  for (const id of ids) {
+    const savol = bank.items.find(item => item.id === id)!;
+    assert.deepEqual(savol.options.map(option => option.id), ['A', 'B', 'C', 'D', 'E'], id);
+  }
 });

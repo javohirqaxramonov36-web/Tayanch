@@ -1,6 +1,6 @@
 # EYUF Faza 0. Bo‘shliqlar va ziddiyatlar
 
-`as_of: 2026-11-20`. Holat — muallif ko‘rigi uchun.
+`as_of: 2026-11-20`. Quyidagi dastlabki jadval tarixiy snapshot. 2026-11-22 amaldagi qayta ko‘rik `rasmiy-qayta-audit.md` va `yakunlash-holati.md`ning “Davomiy audit holati” bo‘limida. G13 universitetlar inventari bajarildi. G14 qisman yopilgan, barcha treklar hali tugallanmagan.
 
 Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.
 
