@@ -16,7 +16,7 @@ export interface SavolNatija {
   sizning: string;
   togriJavob: string;
   explanation: string;
-  evidence: Dalil;
+  evidence: Dalil | null;
 }
 
 export interface Stat {

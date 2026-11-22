@@ -5,7 +5,9 @@ import '../../../../../styles/ielts-reading.css';
 import { saytTestlari } from '../../../../../lib/ielts/reading/saytTestlari';
 import { yol } from '../../../../../lib/yol';
 
-const testlar = await saytTestlari();
+const barchaTestlar = await saytTestlari();
+const yuklanganTestlar = barchaTestlar.filter((test) => test.source?.kind === 'uploaded');
+const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
 ---
 <BolimQobiq
   title="Reading mock · IELTS"
@@ -26,12 +28,11 @@ const testlar = await saytTestlari();
         <>
           <label for="rb-test">Mock tanlang</label>
           <select id="rb-test">
-            <option value="">Tasodifiy test</option>
             {testlar.map((test) => (
-              <option value={test.testId}>{test.title}{test.drafted_by === 'ai' && test.reviewed !== true ? ' · AI qoralamasi' : ''}</option>
+              <option value={test.testId}>{test.title}</option>
             ))}
           </select>
-          <a class="tugma tugma-asosiy katta" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1`}>Boshlash</a>
+          <a class="tugma tugma-asosiy katta" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1&test=${encodeURIComponent(testlar[0].testId)}`}>Boshlash</a>
           <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
         </>
       ) : <p>Mocklar tayyorlanmoqda.</p>}
@@ -44,14 +45,14 @@ const testlar = await saytTestlari();
 
     <details class="manba-izoh">
       <summary>Manbalar va izohlar</summary>
-      <p>IELTS formatidagi mashq. AI qoralamalari muallif ko‘rigini kutmoqda.</p>
+      <p>IELTS formatidagi mashq testlari.</p>
       <ManbaBlok
         manbalar={['IE02', 'IE04']}
         tekshirilgan="2026-11-10"
         keyingiTekshiruv="2026-12-10"
         tekshirilmagan={[
           'Band taxminiy. Rasmiy manbada to‘rtta tayanch nuqta bor, oraliq qiymatlar Tayanch taxmini.',
-          'Savollar va matnlar Tayanch uchun yozilgan mashq.',
+          'Yuklangan mocklarda manba javob kaliti ishlatiladi.',
         ]}
       />
     </details>

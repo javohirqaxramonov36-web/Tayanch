@@ -41,7 +41,8 @@ export interface Savol extends Mualliflik {
   /** gap-fill only: other spellings that are also correct */
   acceptedAnswers?: string[];
   explanation: string;
-  evidence: Dalil;
+  /** null when an imported answer key has no verified verbatim evidence. */
+  evidence: Dalil | null;
 }
 
 export interface Guruh {
@@ -66,6 +67,7 @@ export interface Passage {
 }
 
 export interface ReadingTest extends Mualliflik {
+  source?: { kind: 'uploaded'; file: string; rights: 'user-authorized'; answerKeyReviewed: boolean };
   schemaVersion: 1;
   testId: string;
   title: string;
@@ -225,7 +227,9 @@ export function tekshirTest(test: unknown, sozlama: TekshiruvSozlama = {}): stri
         if (!matn(s.explanation)) xato.push(`${nom}: explanation is required`);
 
         // Evidence must point at an existing paragraph and quote it verbatim.
-        if (!obyekt(s.evidence) || !matn(s.evidence.paragraph) || !matn(s.evidence.quote)) {
+        if (s.evidence === null && obyekt(test.source) && test.source.kind === 'uploaded') {
+          // Missing source evidence is shown explicitly, never substituted with an invented quote.
+        } else if (!obyekt(s.evidence) || !matn(s.evidence.paragraph) || !matn(s.evidence.quote)) {
           xato.push(`${nom}: evidence with "paragraph" and "quote" is required`);
         } else if (!paragraflar.has(s.evidence.paragraph)) {
           xato.push(`${nom}: evidence.paragraph "${s.evidence.paragraph}" does not exist in passage "${String(p.id)}"`);

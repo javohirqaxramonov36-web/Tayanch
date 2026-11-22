@@ -9,7 +9,6 @@ import { yol } from '../../../yol.ts';
 import { urinishOmbori } from '../ombor.ts';
 import { QULF_KALIT, QULF_YURAK_MS, qulfBoshat, qulfEgasi, qulfOl } from '../qulf.ts';
 import { savolKaliti, savolRaqamlari, type Guruh, type ReadingTest, type Savol } from '../sxema.ts';
-import { tanlaTest } from '../tanlash.ts';
 import { elonDaqiqa, qolganMs, vaqtMatn } from '../taymer.ts';
 import { savolTuri } from '../turlar/registr.ts';
 import { qoch } from '../turlar/tur.ts';
@@ -569,11 +568,10 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
     if (!f) {
       if (!boshlashSoralgan) return holatXabar(RM.faolYoq, 'boshlash');
       if (idlar.length === 0) return holatXabar(RM.testYoq, 'boshlash');
-      const tarix = repo.urinishlar();
       if (soralganTest !== null && !idlar.includes(soralganTest)) {
         return holatXabar('Tanlangan mock topilmadi. Katalogdan boshqa test tanlang.', 'boshlash');
       }
-      const tanlangan = soralganTest ?? tanlaTest(idlar, tarix.length > 0 ? tarix[tarix.length - 1].testId : null);
+      const tanlangan = soralganTest ?? idlar[0];
       const yuklangan = tanlangan ? await yuklaTest(tanlangan) : 'yoq';
       if (typeof yuklangan === 'string') return holatXabar(RM.yuklashXato, 'qayta');
       t = yuklangan;
@@ -598,8 +596,6 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
     history.replaceState(null, '', location.pathname);
 
     test = t;
-    const qoralama = document.getElementById('rt-qoralama');
-    if (qoralama) qoralama.hidden = test.drafted_by !== 'ai' || test.reviewed === true;
     faol = { ...f, flags: f.flags.filter((k): k is string => typeof k === 'string') };
     test.passages.forEach((p, i) => {
       for (const g of p.groups) {

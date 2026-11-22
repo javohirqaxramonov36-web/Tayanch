@@ -52,7 +52,7 @@ test('testSavollari: one entry per item with its evidence paragraph', () => {
   assert.equal(m.size, 4);
   const j = m.get(testSavolId(fixture.testId, '1'))!;
   assert.equal(j.guruh.type, 'tfng');
-  assert.equal(j.paragraf?.label, j.savol.evidence.paragraph);
+  assert.equal(j.paragraf?.label, j.savol.evidence?.paragraph);
 });
 
 test('testJavobTekshir: normalises raw input; "Choose TWO" needs both letters', () => {

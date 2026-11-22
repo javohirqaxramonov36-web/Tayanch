@@ -58,7 +58,9 @@ test('validator checks answers, evidence and word limits', () => {
 test('validator rejects duplicate paragraph labels and quotes that are not in the text', () => {
   const t = nusxa();
   t.passages[0].paragraphs[1].label = 'A';
-  t.passages[0].groups[0].questions[0].evidence.quote = 'this sentence is not in the passage';
+  const evidence = t.passages[0].groups[0].questions[0].evidence;
+  assert.ok(evidence);
+  evidence.quote = 'this sentence is not in the passage';
   const xato = tekshirTest(t, { jamiSavol: 5 }).join('\n');
   assert.match(xato, /duplicate label "A"/);
   assert.match(xato, /Q1: evidence.quote is not found verbatim/);
@@ -315,4 +317,15 @@ test('review status requires an explicit author type', () => {
   const t = nusxa();
   t.reviewed = false;
   assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((x) => x.includes('test.drafted_by')));
+});
+
+
+test('only imported mocks may explicitly omit unverified source evidence', () => {
+  const t = nusxa();
+  t.passages[0].groups[0].questions[0].evidence = null;
+  assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((x) => x.includes('evidence')));
+  t.source = { kind: 'uploaded', file: 'mock.html', rights: 'user-authorized', answerKeyReviewed: false };
+  assert.deepEqual(tekshirTest(t, { jamiSavol: 5 }), []);
+  const result = baholash(t, TOGRI);
+  assert.equal(result.raw, 5);
 });

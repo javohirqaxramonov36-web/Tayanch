@@ -54,7 +54,7 @@ function savolHtml(q: SavolNatija, tushuntirishTili: string): string {
 <div><dt>${RM.sizning}</dt><dd>${sizning}</dd></div>
 <div><dt>${RM.togriJavob}</dt><dd><span lang="en">${qoch(q.togriJavob)}</span></dd></div>
 <div><dt>${RM.tushuntirish}</dt><dd><span lang="${tushuntirishTili}">${qoch(q.explanation)}</span></dd></div>
-<div><dt>${RM.dalil} (${qoch(RM.paragraf(q.evidence.paragraph))})</dt><dd><blockquote lang="en">${qoch(q.evidence.quote)}</blockquote><button type="button" class="tugma tugma-ikkinchi" data-kor="${q.number}">${RM.matndaKor}</button></dd></div>
+${q.evidence ? `<div><dt>${RM.dalil} (${qoch(RM.paragraf(q.evidence.paragraph))})</dt><dd><blockquote lang="en">${qoch(q.evidence.quote)}</blockquote><button type="button" class="tugma tugma-ikkinchi" data-kor="${q.number}">${RM.matndaKor}</button></dd></div>` : `<div><dt>${RM.dalil}</dt><dd>Matndagi dalil hali tekshirilmagan.</dd></div>`}
 </dl>
 </div>
 </details></li>`;
@@ -173,14 +173,15 @@ ${
     if (!tugma) return;
     const q = baho.qatorlar.find((x) => String(x.number) === tugma.dataset.kor);
     const passage = q ? test.passages[q.passageTartib] : undefined;
-    if (!q || !passage) return;
+    if (!q || !passage || !q.evidence) return;
+    const evidence = q.evidence;
     sarlavha.textContent = passage.title;
     ichi.innerHTML = passage.paragraphs
       .map((p) => {
         let matn = qoch(p.text);
-        const joy = p.label === q.evidence.paragraph ? p.text.indexOf(q.evidence.quote) : -1;
+        const joy = p.label === evidence.paragraph ? p.text.indexOf(evidence.quote) : -1;
         if (joy >= 0) {
-          matn = `${qoch(p.text.slice(0, joy))}<mark tabindex="-1">${qoch(q.evidence.quote)}</mark>${qoch(p.text.slice(joy + q.evidence.quote.length))}`;
+          matn = `${qoch(p.text.slice(0, joy))}<mark tabindex="-1">${qoch(evidence.quote)}</mark>${qoch(p.text.slice(joy + evidence.quote.length))}`;
         }
         return `<p class="rt-par" lang="en"><b class="rt-par-harf">${qoch(p.label)}</b><span>${matn}</span></p>`;
       })
