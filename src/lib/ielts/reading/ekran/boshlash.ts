@@ -27,7 +27,7 @@ export function ishgaTushirBoshlash(): void {
   const testTanlov = document.getElementById('rb-test');
   if (testTanlov instanceof HTMLSelectElement && tugma instanceof HTMLAnchorElement) {
     testTanlov.disabled = faol !== null;
-    testTanlov.value = faol?.testId ?? '';
+    if (faol) testTanlov.value = faol.testId;
     const yangilaHavola = () => {
       const parametrlar = new URLSearchParams({ boshla: '1' });
       if (testTanlov.value) parametrlar.set('test', testTanlov.value);
@@ -50,6 +50,8 @@ export function ishgaTushirBoshlash(): void {
 
   const tarix = document.getElementById('rb-tarix');
   if (!tarix) return;
+  const tarixOram = document.getElementById('rb-tarix-oram');
+  if (tarixOram) tarixOram.hidden = urinishlar.length === 0;
   if (urinishlar.length === 0) {
     tarix.innerHTML = `<p class="rn-bosh-xabar">${qoch(RM.tarixBosh)}</p>`;
     return;
