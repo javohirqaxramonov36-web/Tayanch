@@ -4,8 +4,10 @@
 // Rozilik yo'q (profiles.consent_version bo'sh): rozilik sahifasiga. profiles o'qib bo'lmasa: kontent yopiq, xato.
 // Hisob o'chirilgan (env yo'q): HisobKarta'dagi ogohlik ko'rinadi, kontent yashirin qoladi.
 // Sahifa skripti sessiyani `await hisobQorovul()` bilan oladi (bir xil va'da, ikki marta so'ralmaydi).
+interface Props { kirishgaYonaltir?: boolean; }
+const { kirishgaYonaltir = false } = Astro.props;
 ---
-<div class="hisob-qorovul">
+<div class="hisob-qorovul" data-qorovul-yonaltir={kirishgaYonaltir || undefined}>
   <p class="hisob-holat" role="status" data-qorovul-kutish>Hisob tekshirilmoqda…</p>
   <p class="hisob-alert" role="alert" data-qorovul-xato hidden></p>
   <div data-qorovul-ichi hidden>

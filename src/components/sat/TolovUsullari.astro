@@ -1,0 +1,14 @@
+---
+// inPAY kabinetidagi usullar muallif tomonidan 2026-11-21 da tasdiqlangan.
+---
+<p class="tolov-usullari">Pay with Click, Payme, Uzcard or Humo</p>
+<style>
+  .tolov-usullari {
+    margin: 0;
+    font-size: var(--matn-kichik);
+    color: inherit;
+    line-height: inherit;
+  }
+  :global([data-tolov][hidden]) + .tolov-usullari,
+  :global([data-uzaytir][hidden]) + .tolov-usullari { display: none; }
+</style>

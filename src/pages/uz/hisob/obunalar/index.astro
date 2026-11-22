@@ -1,0 +1,89 @@
+---
+import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
+import HisobQorovul from '../../../../components/hisob/HisobQorovul.astro';
+import { bolimlar } from '../../../../data/bolimlar';
+import { yol } from '../../../../lib/yol';
+---
+<HisobKarta sahifa={{ nomi: 'Obunalarim', tavsif: "Qavat obunalaringiz va to'lovlaringiz." }}>
+  <HisobQorovul kirishgaYonaltir>
+    <div id="obunalar" aria-busy="true">
+      <p id="obuna-holat" role="status">Obunalar yuklanmoqda…</p>
+      <p id="obuna-xato" role="alert" hidden>Obunalarni yuklab bo‘lmadi. Qayta urinib ko‘ring.</p>
+      <button id="obuna-qayta" class="tugma tugma-ikkinchi" type="button" hidden>Qayta urinish</button>
+      <div id="obuna-kontent" hidden>
+        <section aria-labelledby="qavat-sarlavha">
+          <h2 id="qavat-sarlavha">Qavat obunalari</h2>
+          <ul class="obuna-royxat">{bolimlar.map(b => <li class="hisob-karta" data-obuna-bolim={b.slug}>
+            <h3>{b.nomi}</h3><p data-obuna-tarif></p><p data-obuna-muddat hidden></p>
+            {b.slug === 'sat' && <a href={yol('/uz/sat/hisob/obuna/')}>Tarifni o‘zgartirish</a>}
+          </li>)}</ul>
+        </section>
+        <section aria-labelledby="tarix-sarlavha">
+          <h2 id="tarix-sarlavha">To‘lov tarixi</h2>
+          <p>Oxirgi 50 ta jonli to‘lov.</p>
+          <p id="tarix-bosh" hidden>Hali to‘lov yo‘q.</p>
+          <ul id="obuna-tarix" class="obuna-royxat"></ul>
+        </section>
+      </div>
+    </div>
+    <a href={yol('/uz/hisob/profil/')}>Hisobimga qaytish</a>
+  </HisobQorovul>
+</HisobKarta>
+<style>
+  #obunalar, #obuna-kontent { display: grid; gap: var(--b-6); }
+  #obunalar [hidden] { display: none; }
+  .obuna-royxat { list-style: none; padding: 0; display: grid; gap: var(--b-4); margin-block: var(--b-4); }
+  section { min-width: 0; }
+  h3 { font-size: var(--matn-katta); }
+</style>
+<script>
+  import { hisobMijoz, hisobQorovul } from '../../../../lib/hisob';
+  import { bolimlar } from '../../../../data/bolimlar';
+  type Obuna = { bolim: string; name: string; status: string; starts_at: string; ends_at: string | null; sort: number };
+  type Natija = { plans: { bolim: string; code: string; name: string; sort: number }[]; subscriptions: Obuna[];
+    payments: { id: string; bolim: string; name: string; amount_uzs: number; status: string; created_at: string }[] };
+  const root = document.querySelector<HTMLElement>('#obunalar')!;
+  const holat = document.querySelector<HTMLElement>('#obuna-holat')!;
+  const xato = document.querySelector<HTMLElement>('#obuna-xato')!;
+  const qayta = document.querySelector<HTMLButtonElement>('#obuna-qayta')!;
+  const kontent = document.querySelector<HTMLElement>('#obuna-kontent')!;
+  const sana = (s: string) => new Intl.DateTimeFormat('uz-UZ', { timeZone: 'Asia/Tashkent', dateStyle: 'medium', timeStyle: 'short' }).format(new Date(s));
+  const statuslar: Record<string, string> = { active: 'Faol', expired: 'Muddati tugagan', canceled: 'Bekor qilingan', pending: 'Kutilmoqda', created: 'Yaratilgan', paid: 'To‘langan', failed: 'Amalga oshmagan', refunded: 'Qaytarilgan' };
+  async function yukla() {
+    root.setAttribute('aria-busy', 'true'); holat.hidden = false; xato.hidden = true;
+    qayta.disabled = true; kontent.hidden = true;
+    try {
+      const session = await hisobQorovul();
+      if (!session) return;
+      const client = hisobMijoz();
+      if (!client) throw new Error('unavailable');
+      const { data, error } = await client.rpc('account_subscriptions');
+      if (error || !data) throw new Error('load');
+      const n = data as Natija;
+      const now = Date.now();
+      for (const li of document.querySelectorAll<HTMLElement>('[data-obuna-bolim]')) {
+        const slug = li.dataset.obunaBolim;
+        const subs = n.subscriptions.filter(s => s.bolim === slug);
+        const active = subs.filter(s => s.status === 'active' && Date.parse(s.starts_at) <= now && (!s.ends_at || Date.parse(s.ends_at) > now)).sort((a,b) => b.sort - a.sort)[0];
+        const paidPlan = n.plans.some(p => p.bolim === slug && p.sort > 0);
+        const old = subs.sort((a,b) => Date.parse(b.starts_at) - Date.parse(a.starts_at))[0];
+        li.querySelector('[data-obuna-tarif]')!.textContent = active ? `${active.name} · Faol` : paidPlan ? `Free · ${old ? ((old.status === 'active' ? 'Muddati tugagan' : statuslar[old.status]) ?? 'Muddati tugagan') : 'Faol'}` : 'Hozircha bepul';
+        li.querySelector<HTMLElement>('[data-obuna-muddat]')!.hidden = !active;
+        li.querySelector('[data-obuna-muddat]')!.textContent = active ? (active.ends_at ? `Tugaydi ${sana(active.ends_at)} (Toshkent)` : 'Muddatsiz') : '';
+      }
+      const tarix = document.querySelector('#obuna-tarix')!; tarix.replaceChildren();
+      for (const p of n.payments) {
+        const li = document.createElement('li'); li.className = 'hisob-karta';
+        const nom = document.createElement('strong'); nom.textContent = `${bolimlar.find(b => b.slug === p.bolim)?.nomi ?? p.bolim} · ${p.name}`;
+        const detail = document.createElement('p'); detail.textContent = `${new Intl.NumberFormat('uz-UZ').format(p.amount_uzs)} so‘m · ${statuslar[p.status] ?? p.status}`;
+        const vaqt = document.createElement('p'); vaqt.textContent = `${sana(p.created_at)} (Toshkent)`;
+        li.append(nom, detail, vaqt); tarix.append(li);
+      }
+      document.querySelector<HTMLElement>('#tarix-bosh')!.hidden = n.payments.length > 0;
+      kontent.hidden = false; qayta.hidden = true;
+    } catch { xato.hidden = false; qayta.hidden = false; }
+    finally { root.setAttribute('aria-busy','false'); holat.hidden = true; qayta.disabled = false; }
+  }
+  qayta.addEventListener('click', () => void yukla());
+  void yukla();
+</script>

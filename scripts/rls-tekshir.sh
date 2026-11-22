@@ -78,6 +78,7 @@ NO_SP="$("${PSQL[@]}" -At -f "$TMP/search-path.sql")"
 if [[ -n "$NO_SP" ]]; then echo "XATO: search_path belgilanmagan security definer: $NO_SP"; exit 1; fi
 echo "security definer: hammasida search_path belgilangan"
 
+"${PSQL[@]}" -f "$ROOT/supabase/tests/hisob_obunalar_test.sql"
 "${PSQL[@]}" -f "$ROOT/supabase/tests/rls_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/sessiya_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
 "${PSQL[@]}" -f "$ROOT/supabase/tests/kurs_sessiya_test.sql" 2>&1 | sed -E 's/^psql:.*:[0-9]+: (NOTICE|WARNING|ERROR):  /  \1: /'
