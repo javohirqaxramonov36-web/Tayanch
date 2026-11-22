@@ -22,6 +22,7 @@ export const IKONKA = {
 } as const;
 
 export const qollanmalar: IeltsBand[] = [
+  { nomi: 'Ovqatlanish lug‘ati', tavsif: 'Kollokatsiyalarni kontekstda tushunish, 5 ta namuna mashq', qism: 'qollanma/lugat/ovqatlanish/', ikonka: IKONKA.general },
   { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", qism: 'qollanma/listening/', ikonka: IKONKA.listening },
   { nomi: 'Reading', tavsif: 'Skimming, scanning, True/False/Not Given', qism: 'qollanma/reading/', ikonka: IKONKA.reading },
   { nomi: 'Writing Task 2', tavsif: "Mezonlar, insho tuzilmasi va o'zini tekshirish", qism: 'qollanma/writing-task-2/', ikonka: IKONKA.writing },

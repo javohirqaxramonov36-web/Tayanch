@@ -21,7 +21,7 @@ const testBor = (await saytTestlari()).length > 0;
 // "Mening holatim": faqat brauzerdagi ma'lumot bo'lsa chiqadi. Takrorlash havolasi sahifa saytda bo'lsagina (vositalar ro'yxati).
 const holat = {
   darsJami: hammaSavollar.length,
-  darslar: reading,
+  darslar: `${yol('/uz/ielts/')}#qol-h`,
   natija: yol('/uz/ielts/mashq/reading/natija/'),
   takrorlash: vositalar.some((v) => v.qism === 'vosita/takrorlash/') ? yol('/uz/ielts/vosita/takrorlash/') : '',
 };
@@ -348,7 +348,7 @@ const namunalar = [
     const togri = Object.values(progress as Record<string, unknown>)
       .flatMap((m) => (m && typeof m === 'object' ? Object.values(m as Record<string, unknown>) : []))
       .filter((x) => x === 'togri').length;
-    if (togri > 0) qator(H.darslar, 'Reading darslari', `${H.darsJami} ta mashqdan ${togri} tasi to'g'ri yechilgan`);
+    if (togri > 0) qator(H.darslar, 'IELTS darslari', `${H.darsJami} ta mashqdan ${togri} tasi to'g'ri yechilgan`);
   }
   if (qatorlar.length > 0) {
     if (H.takrorlash) qator(H.takrorlash, 'Xatolarni takrorlash', "Xato qilgan savollaringni oraliq bilan qayta ishla");
