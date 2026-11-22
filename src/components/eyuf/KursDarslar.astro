@@ -12,7 +12,7 @@ const links = new Map(sources.items.map(s=>[s.id,s]));
  {lessons.map(l=><details class="eyuf-panel" data-dars={l.id} data-level={l.level.join(' ')} data-esse={l.module==='esse'}>
   <summary>{l.title}</summary>
   <p><strong>Maqsad.</strong> {l.goal}</p><p class="eyuf-small">Taxminan {l.duration_min} daqiqa · Qoralama · Qayd sanasi {l.as_of}</p>
-  {l.content_blocks.map(b=>b.type==='outline'?<p class="eyuf-error">Kontent tayyorlanmoqda. Rejadagi blok — {b.text}</p>:<p>{b.text}</p>)}
+  {l.content_blocks.map(b=>b.type==='outline'?<p class="eyuf-error">Kontent tayyorlanmoqda. Rejadagi blok — {b.text}</p>:<div><p>{b.text}</p><p class="eyuf-small">{b.verified ? 'Manbada tekshirilgan' : b.sources.every(s=>s.id==='T01') ? 'Tayanch metodik mashqi · muallif ko‘rigi kutilmoqda' : 'Mazmun yoki tatbiq ko‘rigi kutilmoqda'} · {b.sources.map(s=>s.id).join(', ')}</p></div>)}
   <p><strong>Mashq.</strong> {l.activity}</p><p><strong>Natija.</strong> {l.output}</p>
   <label>Ish varag‘ingiz<textarea data-note maxlength="30000" placeholder="O‘z dalillaringiz, rejangiz yoki qoralamangiz" /></label>
   {l.module==='hujjat' && <label class="eyuf-check"><input type="checkbox" data-check />Hujjatlarimni manbadagi ro‘yxat bilan solishtirdim</label>}

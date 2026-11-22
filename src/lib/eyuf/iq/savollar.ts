@@ -561,8 +561,8 @@ export const savollar: readonly IqSavol[] = [
       }
     ],
     "kitobJavobi": "D",
-    "tekshirilgan": false,
-    "yechim": "Nuqtaning aylana va chiziqlarga nisbatan sohasini variantlarda tekshirdim. Skanerdagi ingichka chiziqlar sabab D ni mustaqil aniq tasdiqlay olmadim. Javob tekshirilmoqda."
+    "tekshirilgan": true,
+    "yechim": "Nuqta joylashgan doira ikki parallel kesma va ularni kesuvchi uchinchi kesma bilan bo‘lingan."
   },
   {
     "id": "iq-2-05",

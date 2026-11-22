@@ -31,3 +31,7 @@ Ochiq yozuv ko‘rilmagan degani emas. Masalan, final C7da oddiy vertikal yig‘
 ## A variantlari kaliti lokatori qayta tekshirildi
 
 2026-11-21. PDF24,31,42,46-betlarda oldingi tur kalitidan keyin 7–8-sinf A savollari boshlanadi. PDF25,32,43,47-betlarining bosma sahifa raqamlari esa mos ravishda 84,107,138,149, ya’ni o‘rtadagi betlar yo‘q. Keyingi C blokining kalitidagi A qatorini 7–8-sinf savoliga biriktirish tasdiqlanmagan. Bu haqiqiy matematik ziddiyat sifatida hisoblanmaydi. 12 yangi A yozuvining book_answer maydoni null qilindi. Mustaqil yechimlar saqlanadi, kalitga mos tushgan ikkita A javobi ham ehtiyotkorlik bilan baholashdan chiqarildi. B9–B10 PDF36 va PDF38 kaliti bir xil B variantiga tegishli, ular saqlanadi. IDlar o‘zgarmadi. Sxema null kalitni faqat tasdiqlanmagan savolda qabul qiladi.
+
+## To‘liq ko‘rinadigan A/B importi va matn ko‘rigi
+
+2026-11-21. Inventardagi48to‘liq A/Bnomzod kiritildi, ularning orasidagi betlar yo‘q. Endi bank298yozuv,231tasdiq. Barcha sonli/harfli savollarning sharti va variantlari matnga ko‘chirildi. PREP_1dagi umumiy noto‘g‘ri tur teglariga inventar xaritasi qaytarildi. PREP_2 C10,9-blok mustaqil yechildi — chap songa o‘ngning teskari yozilishini qo‘shish53ni beradi, kalitAga mos. Avariantlari7–8-sinf guruhi bilan alohida belgilandi. `inventory-15` 49-betda boshlangan yangi final Avariantini bildiradi, yangi Cblok soni degani emas.

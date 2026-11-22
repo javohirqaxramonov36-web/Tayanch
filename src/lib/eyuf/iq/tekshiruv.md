@@ -1,6 +1,6 @@
 # IQ javoblari tekshiruvi
 
-2026-11-20. 100 savol saqlangan. 88 javob mustaqil tasdiqlandi. 12 javob tekshirilmoqda.
+2026-11-20. 100 savol saqlangan. 2026-11-22 davomiy ko‘rikdan so‘ng 89 javob mustaqil tasdiqlangan, 11 javob tekshirilmoqda.
 
 Tekshirilayotgan javoblar ball va XP bermaydi. Natijada tasdiqlangan ball va mumkin bo‘lgan yuqori ball chegarasi alohida ko‘rsatiladi.
 
@@ -34,7 +34,7 @@ Davomiy tekshiruvda 27 ochiq savol qayta ko‘rildi. 15 tasi yechim bilan tasdiq
 - 1-savol. Tasdiqlandi. Ketma-ket kvadratlarda ichki gorizontal chiziqlar soni bittadan ortadi. Tushib qolgan holat to‘rt ichki chiziqli C.
 - 2-savol. Tasdiqlandi. Figuraning uzun o‘qi har safar bir xil burchakka buriladi. Yetishmayotgan qiya holat B. Ichki bo‘linmalar soni ham saqlanadi.
 - 3-savol. Tasdiqlandi. Har ustunda yuqoridagi son o‘rtadagi va pastdagi sonlar ko‘paytmasi. 120÷24=5. C.
-- 4-savol. Tekshirilmoqda. Nuqtaning aylana va chiziqlarga nisbatan sohasini variantlarda tekshirdim. Skanerdagi ingichka chiziqlar sabab D ni mustaqil aniq tasdiqlay olmadim. Javob tekshirilmoqda.
+- 4-savol. Tasdiqlandi. Nuqta joylashgan doira ikki parallel kesma va ularni kesuvchi uchinchi kesma bilan bo‘lingan.
 - 5-savol. Tasdiqlandi. Namuna to‘rtta belgini 2,3 / 4,1 tartibiga joylaydi. Ikkinchi to‘plamda ham shu tartib C ni beradi.
 - 6-savol. Tasdiqlandi. Qatorlarda qadamlar mos ravishda +2, +4, +6, +8. Yetishmagan sonlar yuqoridan 12, 13, 26. C.
 - 7-savol. Tekshirilmoqda. A,D,G,K,P harflarining ingliz alifbosidagi o‘rinlari 1,4,7,11,16. Farqlar +3,+3,+4,+5. +6 ni davom ettirish V ni beradi, ammo boshdagi takroriy +3 uchun yagona qoida aniqlanmadi. D — V kaliti tekshirilmoqda.

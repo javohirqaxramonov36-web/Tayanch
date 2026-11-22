@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { savollar } from './savollar.ts';
+import bank from '../../../../data/eyuf/questions-iq.json' with { type: 'json' };
 import { boshHolat, yangiSessiya, mukofotHisobla, holatniOqi, aralashtir, natijaniHisobla } from './model.ts';
 
 test('100 savol, har test 20, kalit variantlarda mavjud', () => {
@@ -78,4 +79,13 @@ test('Yangi bank mukofotlari eski IQ sessiyasida ham saqlanadi', () => {
   state.sessiya = yangiSessiya('1', savollar.slice(0, 20), 30);
   const restored = holatniOqi(JSON.stringify(state), savollar);
   assert.deepEqual(restored, state);
+});
+
+test('PREP_1 kaliti va ko‘rik holati ikkala kirish nuqtasida bir xil', () => {
+  for (const savol of savollar) {
+    const unified = bank.items.find(item => item.id === savol.id);
+    assert(unified, savol.id);
+    assert.equal(unified.book_answer, savol.kitobJavobi, savol.id);
+    assert.equal(unified.verified, savol.tekshirilgan, savol.id);
+  }
 });

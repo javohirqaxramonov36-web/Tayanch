@@ -99,3 +99,51 @@ Ochiq35asl savoldan ayrimlari ko‘rildi, hali yechim tasdiqlanmagan. PREP_1tasv
 Keyingi majburiy ishlar: qolganA/Bsavollar, barchaIQmatn/type/kesim/dublikat; difficultyko‘rigi (hozir61savol metodik), XPstorageblocked/xatotestlar; 20soha8+1faktlarining barcha ochiqbloklari (arxitektura birinchi to‘liq namuna); rasmiyG01–G17 vauniversitetro‘yxat492/2027reyting talqini; originalpromptbilan diagnostika/kurs/ijod/stress/rubrika/mocksuhbat qabulmezonlari; yakuniytest/browser/Lighthouse; commit/push/PR/merge/deployvaA1qaytanashr. Hali nashr qilinmagan, umumiytopshiriq tugamagan.
 
 Muhim rasmiyAPIlar qayta tekshirildi: `https://api.el-yurt.uz/api/landing/v1/competition-documents?per_page=100&lang=uz`6hujjat, `template-documents`8hujjat, `universities`492yozuv. Rubrika2025_2PDF, ma’lumotnomablanka yo‘q. Joriy nusxalar `/private/tmp/eyuf-current-competition-documents.json`, `eyuf-current-template-documents.json`, `eyuf-universities-current.json`. S04freshPDF `/private/tmp/eyuf-specialties-audit.pdf`, hashdocsda. 570qator bet+raqam match,35lotinxato tuzatildi, reviewmetadatahammasida.
+
+## Davomiy audit holati, 2026-11-22
+
+Bu bo‘lim oldingi snapshot raqamlaridan keyingi holatni qayd etadi. Umumiy topshiriq hali tugamagan va bu o‘zgarishlar hali nashr qilinmagan.
+
+- Bank 298 savol, 232 mustaqil tasdiq va 66 ochiq. PREP_1 ikkala kirish nuqtasida 89/11. Eski va yangi bank kaliti/maqomi tengligini tekshiradigan regressiya testi qo‘shildi.
+- Mahalliy PDFdagi to‘liq 48 A/B nomzod import qilingan. 30 A yozuvining mos kalit sahifasi mavjud emas, book_answer=null. 16 to‘liq bo‘lmagan parcha shartsiz import qilinmagan.
+- Metodik difficulty ko‘rigi 259/298. Qolgan 39 savolning mustaqil yechimi ochiq. Bu baholar empirik kalibratsiya emas. Sonli va harfli deb belgilangan yozuvlarda matn ko‘rigi bajarilgan, figurali savollar va barcha crop/QR ko‘rigi yakunlanmagan.
+- PREP2 13-B8 mustaqil koordinata hisobida 181,845 cm chiqadi. Kitob variantlari bilan haqiqiy ziddiyat izohga yozildi. Shart o‘zgartirilmadi.
+- 20 soha uchun boshlang‘ich kasbiy tushuncha, xalqaro talab va istiqbol bloklari kiritildi. BLS raqamlari AQSHning 2025–2035 prognozi sifatida berilgan. Butun jahon yoki O‘zbekiston bandlik prognozi deb ko‘rsatilmaydi.
+- 2026-yilgi mahalliy dalillar, qonunlar, tashkilotlar, talab va sog‘liq bo‘yicha iqtibos bilan yana 25 blok qo‘shildi. Shaxsiy ish varag‘i va metodik ssenariy manbada tasdiqlangan faktga aylantirilmadi.
+- Rasmiy G01–G17 ko‘rigi `rasmiy-qayta-audit.md`da. Universitetlarning barcha 492 yozuvi yuklandi. Rubrika hanuz 2025_2, ma’lumotnoma blankasi ochiq 8 namunada yo‘q, tuition jadvalida davr aniq emas.
+- Build 147 sahifa bilan o‘tdi. EYUF unit 26/26. Repo tekshiruvi 1260 faylda muammosiz. Oldingi umumiy unit 399/399 edi, yangi regressiya bilan qayta bajarish kerak. Astro checkdagi to‘rtta boshqa bo‘lim xatosi avvalgi ko‘rikda qayd etilgan.
+
+### Har trekning tekshirilgan fakt bloklari
+
+Son blok miqdorini bildiradi. 0 qolgan manbali kontent ishini ko‘rsatadi. Musbat son butun dars tugallanganini anglatmaydi. Metodik topshiriqlar alohida ko‘rik holatida qoladi. Ustunlar ketma-ket asoslar, mahalliy muammolar, islohot, iqtibos, talab, istiqbol, tashkilot/rollar, suhbat/mutaxassislik va magistr tadqiqoti.
+
+| Trek | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Muhandislik ishi | 1 | 1 | 1 | 0 | 2 | 2 | 1 | 0 | 0 |
+| Arxitektura va qurilish | 1 | 3 | 2 | 2 | 3 | 1 | 2 | 0 | 0 |
+| Ishlab chiqarish va ishlov berish | 1 | 1 | 2 | 0 | 1 | 2 | 1 | 0 | 0 |
+| Axborot-kommunikatsiya texnologiyalari | 1 | 1 | 1 | 1 | 3 | 2 | 1 | 0 | 0 |
+| Fizika va tabiiy fanlar | 1 | 0 | 2 | 0 | 1 | 1 | 1 | 0 | 0 |
+| Matematika va statistika | 1 | 0 | 2 | 1 | 1 | 1 | 1 | 0 | 0 |
+| Biologik va turdosh fanlar | 1 | 0 | 2 | 0 | 1 | 1 | 1 | 0 | 0 |
+| Xizmat ko‘rsatish | 1 | 1 | 1 | 0 | 1 | 1 | 0 | 0 | 0 |
+| Atrof-muhit | 1 | 1 | 1 | 0 | 1 | 2 | 0 | 0 | 0 |
+| Qishloq, o‘rmon, baliq xo‘jaligi | 1 | 1 | 2 | 0 | 2 | 2 | 1 | 0 | 0 |
+| Transport xizmatlari | 1 | 1 | 1 | 0 | 1 | 2 | 1 | 0 | 0 |
+| Biznes va boshqaruv | 1 | 1 | 2 | 0 | 1 | 1 | 1 | 0 | 0 |
+| Veterinariya | 1 | 1 | 2 | 0 | 2 | 1 | 1 | 0 | 0 |
+| Ijtimoiy va xulq-atvor fanlari | 1 | 0 | 2 | 0 | 1 | 1 | 1 | 0 | 0 |
+| Jurnalistika va axborot | 1 | 1 | 1 | 1 | 2 | 1 | 0 | 0 | 0 |
+| Huquq | 1 | 0 | 2 | 0 | 1 | 2 | 0 | 0 | 0 |
+| Sog‘liqni saqlash va ijtimoiy ta’minot | 1 | 1 | 2 | 1 | 3 | 2 | 1 | 0 | 0 |
+| Ta’lim | 1 | 1 | 2 | 0 | 1 | 1 | 0 | 0 | 0 |
+| San’at | 1 | 1 | 3 | 0 | 1 | 1 | 2 | 0 | 0 |
+| Tillar | 1 | 0 | 2 | 1 | 2 | 1 | 0 | 0 | 0 |
+
+### Hali bajariladigan ishlar
+
+20 trekning uchta mahalliy muammosi, joriy islohoti, manbali iqtibosi, mahalliy va global talabi, aniq tashkilot/lavozimlari bo‘yicha jadvaldagi bo‘sh joylarni to‘ldirish. Arxitektura namunasini barcha 8+1 dars bo‘yicha yakunlash. IQdagi qolgan mustaqil yechim, figurali tur/matn/crop/QR/dublikat ko‘rigi. Barcha normal foydalanuvchi oqimlari, mobil yorug‘/qorong‘i, accessibility va saqlash regressiyasi. Shundan so‘ng commit/push/PR/merge/deploy va eng yangi main uchun A1 qayta nashri.
+
+### Davomchi uchun aniq yo‘llar
+
+Worktree `/Users/javohir/.codex/worktrees/eyuf-yakun-audit/Tayanch-SAT prep`, branch `codex/eyuf-yakun-audit`. Inherited WIP `18663073`da saqlangan, main `5885b718` bilan merge `7503e811`. Keyingi o‘zgarishlar shu worktree ichida. Eski importlarni rerun qilmang. Yangi skriptlar `/private/tmp/eyuf-local-evidence-v9.py`, `eyuf-local-evidence-v11.py`, `eyuf-definitions-v12.py`, `eyuf-difficulty-v13.py`. Oxirgi skript visual_review_evidence maydonini qo‘shadi, keyingi tuzatishda bu izoh mavjud answer_evidence maydoniga o‘tkazildi, shu sabab uni o‘zgartirmasdan rerun qilmang.
