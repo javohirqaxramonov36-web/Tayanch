@@ -133,11 +133,11 @@ export const RM = {
 // Text of the practice landing page and of the Reading start page.
 export const MM = {
   mashqSarlavha: 'IELTS mashq testlari',
-  mashqLead: "Haqiqiy test formatida vaqt bilan ishlang. Hozircha Reading ochiq, qolgan bo'limlar tayyorlanmoqda.",
+  mashqLead: "Reading testi, Listening imlo va diktanti hamda Writing Task 2 mashqlaridan boshlang.",
   ustki: 'Mashq',
   ochiq: 'ochiq',
   tezOrada: 'Tez orada',
-  boshlashga: 'Reading testga',
+  boshlashga: 'Mashqni ochish',
   bolimlar: "Bo'limlar",
 
   readingSarlavha: 'IELTS Reading Test',

@@ -40,10 +40,11 @@ export const darslar: IeltsBand[] = [
   { nomi: 'Matching headings', tavsif: 'Paragrafning asosiy fikriga sarlavha tanlash', qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
 ];
 
-/** Mashq testlari (hozircha faqat Reading ishlaydi) */
+/** Mavjud mashqlar. To‘liq Listening va Speaking testlari keyingi bosqichda. */
 export const mashqlar: IeltsBand[] = [
-  { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
+  { nomi: 'Mashq testlari', tavsif: "Reading, Listening mini-mashqlari va Writing Task 2", qism: 'mashq/', ikonka: IKONKA.namuna },
   { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+  { nomi: 'Writing Task 2 mashqi', tavsif: 'Insho yozish va saqlangan ishni davom ettirish', qism: 'mashq/writing/', ikonka: IKONKA.writing },
   { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
   { nomi: 'Harf va raqam diktanti', tavsif: 'Ism, telefon, sana va narxni tinglab yozish', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
 ];
@@ -51,6 +52,17 @@ export const mashqlar: IeltsBand[] = [
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
   { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
+];
+
+/** Barcha IELTS menyulari bir xil sahifa ro‘yxatidan foydalanadi. */
+export const ieltsGuruhlar: { nomi: string; bandlar: IeltsBand[] }[] = [
+  { nomi: 'Mashq', bandlar: mashqlar },
+  { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, ...darslar, asos] },
+  { nomi: 'Natija va takrorlash', bandlar: [
+    { nomi: 'Reading natijalari', tavsif: 'Shu brauzerda saqlangan urinishlar tarixi', qism: 'mashq/reading/#rb-tarix-h', ikonka: IKONKA.tahlil },
+    ...vositalar.filter((band) => band.qism === 'vosita/takrorlash/'),
+  ] },
+  { nomi: 'Reja', bandlar: vositalar.filter((band) => band.qism === 'vosita/reja/') },
 ];
 
 export const KALIT_IELTS_REJA = 'tayanch:ielts-reja';

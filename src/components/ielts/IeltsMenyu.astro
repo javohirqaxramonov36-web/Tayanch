@@ -1,0 +1,87 @@
+---
+import { ieltsGuruhlar } from '../../data/ieltsSahifalar';
+import { yol } from '../../lib/yol';
+
+const joriy = Astro.url.pathname;
+const bosh = yol('/uz/ielts/');
+---
+<section class="ielts-menyu" data-ielts-menyu aria-label="IELTS ichki navigatsiyasi">
+  <div class="im-ust nav-shisha">
+    <a class="im-bosh" href={bosh} aria-current={joriy === bosh ? 'page' : undefined}>IELTS bosh sahifa</a>
+    <button type="button" class="tugma im-tugma" data-im-tugma aria-expanded="false" aria-controls="ielts-menyu-panel" hidden>
+      IELTS menyusi
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg>
+    </button>
+  </div>
+  <nav class="im-panel" id="ielts-menyu-panel" aria-label="IELTS sahifalari">
+    {ieltsGuruhlar.map((guruh, i) => (
+      <section aria-labelledby={`im-guruh-${i}`}>
+        <h2 id={`im-guruh-${i}`}>{guruh.nomi}</h2>
+        <ul role="list">
+          {guruh.bandlar.map((band) => (
+            <li>{band.qism ? (
+              <a href={yol(`/uz/ielts/${band.qism}`)} aria-current={!band.qism.includes('#') && joriy === yol(`/uz/ielts/${band.qism}`) ? 'page' : undefined}>
+                {band.nomi}
+              </a>
+            ) : (
+              <span class="im-kutilmoqda">{band.nomi}<span>Tez orada</span></span>
+            )}</li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </nav>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ielts-menyu]').forEach((menyu) => {
+    const tugma = menyu.querySelector<HTMLButtonElement>('[data-im-tugma]')!;
+    const panel = menyu.querySelector<HTMLElement>('.im-panel')!;
+    const och = (ochiq: boolean) => {
+      panel.hidden = !ochiq;
+      tugma.setAttribute('aria-expanded', String(ochiq));
+    };
+    och(false);
+    tugma.hidden = false;
+    tugma.addEventListener('click', () => och(panel.hidden));
+    menyu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.hidden) {
+        event.preventDefault();
+        och(false);
+        tugma.focus();
+      }
+    });
+    panel.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a[href]')) {
+        och(false);
+        tugma.focus({ preventScroll: true });
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !menyu.contains(event.target)) och(false);
+    });
+  });
+</script>
+
+<style>
+  .ielts-menyu { border-bottom: var(--border-width-1) solid var(--color-border); }
+  .im-ust { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-4); }
+  .im-bosh { display: inline-flex; align-items: center; min-height: var(--space-12); font-weight: var(--text-button-weight); text-decoration: none; }
+  .im-bosh[aria-current] { text-decoration: underline; }
+  .im-tugma { flex-shrink: 0; min-height: var(--space-12); }
+  .im-tugma[hidden], .im-panel[hidden] { display: none; }
+  .im-tugma[aria-expanded='true'] svg { transform: rotate(180deg); }
+  .im-panel { display: grid; grid-template-columns: 1fr; gap: var(--space-6); padding: var(--space-5) var(--space-4); background: var(--color-surface); }
+  .im-panel h2 { margin: 0 0 var(--space-2); font-size: var(--text-body-size); line-height: var(--text-body-lh); font-weight: var(--text-button-weight); }
+  .im-panel ul { display: grid; gap: var(--space-1); list-style: none; margin: 0; padding: 0; }
+  .im-panel a, .im-kutilmoqda { display: flex; align-items: center; gap: var(--space-2); min-height: var(--space-12); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: var(--text-small-size); }
+  .im-panel a { text-decoration: none; }
+  .im-panel a:hover, .im-panel a[aria-current] { background: var(--color-surface-sunken); text-decoration: underline; }
+  .im-panel a[aria-current] { font-weight: var(--text-button-weight); }
+  .im-kutilmoqda { flex-wrap: wrap; color: var(--color-text-secondary); }
+  .im-kutilmoqda > span { font-size: var(--text-caption-size); }
+  @media (min-width: 768px) {
+    .im-ust, .im-panel { padding-inline: var(--space-10); }
+    .im-panel { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+</style>
