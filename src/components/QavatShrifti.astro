@@ -1,0 +1,55 @@
+---
+// Qavat sarlavha shriftlari (ADR 005, 5-band; DS PR 4). BoshQism ichida, <head> da.
+// Har sahifa faqat o'z qavatining @font-face qoidalarini oladi (inline <style>, qo'shimcha CSS so'rovi yo'q).
+// Brauzer woff2 ni faqat shu oila biror elementda ishlatilganda yuklaydi: qavat PR'lari (5–9) gacha
+// hech bir element ishlatmaydi, shuning uchun tarmoq yuki o'zgarmaydi. Preload ataylab yo'q.
+// Subsetlar: faqat latin va latin-ext (unicode-range bilan; latin-ext faqat kerakli belgi chiqsa yuklanadi).
+// Oila nomlari DS (`project/tokens.json`) bilan bir xil; tokenlar `--font-display`, `--font-mono`,
+// `--font-sat`, `--font-ielts`, `--font-eyuf` (tokens.css). 2-qavat Onest 800: alohida fayl kerak emas.
+import barlow700 from '/node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
+import barlow700Ext from '/node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-ext-700-normal.woff2?url';
+import mono400 from '/node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url';
+import mono400Ext from '/node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-ext-400-normal.woff2?url';
+import mono500 from '/node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2?url';
+import mono500Ext from '/node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-ext-500-normal.woff2?url';
+import sora600 from '/node_modules/@fontsource/sora/files/sora-latin-600-normal.woff2?url';
+import sora600Ext from '/node_modules/@fontsource/sora/files/sora-latin-ext-600-normal.woff2?url';
+import lexend600 from '/node_modules/@fontsource/lexend/files/lexend-latin-600-normal.woff2?url';
+import lexend600Ext from '/node_modules/@fontsource/lexend/files/lexend-latin-ext-600-normal.woff2?url';
+import playfair from '/node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2?url';
+import playfairExt from '/node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-ext-wght-normal.woff2?url';
+import playfairKursiv from '/node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-italic.woff2?url';
+import playfairKursivExt from '/node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-ext-wght-italic.woff2?url';
+
+interface Props {
+  qavat: number;
+}
+
+// Google Fonts / Fontsource subset chegaralari (hamma shriftda bir xil). `ʻ` `ʼ` (U+02BB–02BC) latin'da.
+const LATIN = 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
+const LATIN_EXT = 'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';
+
+type Yuz = { oila: string; vazn: string; uslub?: 'normal' | 'italic'; url: string; ext: string; variable?: boolean };
+
+const qavatYuzlari: Record<number, Yuz[]> = {
+  1: [
+    { oila: 'Barlow Condensed', vazn: '700', url: barlow700, ext: barlow700Ext },
+    { oila: 'JetBrains Mono', vazn: '400', url: mono400, ext: mono400Ext },
+    { oila: 'JetBrains Mono', vazn: '500', url: mono500, ext: mono500Ext },
+  ],
+  3: [{ oila: 'Sora', vazn: '600', url: sora600, ext: sora600Ext }],
+  4: [{ oila: 'Lexend', vazn: '600', url: lexend600, ext: lexend600Ext }],
+  5: [
+    { oila: 'Playfair Display', vazn: '400 900', url: playfair, ext: playfairExt, variable: true },
+    { oila: 'Playfair Display', vazn: '400 900', uslub: 'italic', url: playfairKursiv, ext: playfairKursivExt, variable: true },
+  ],
+};
+
+const qoida = (y: Yuz, url: string, oraliq: string) =>
+  `@font-face{font-family:'${y.oila}';font-style:${y.uslub ?? 'normal'};font-weight:${y.vazn};font-display:swap;` +
+  `src:url(${url}) format('${y.variable ? 'woff2-variations' : 'woff2'}');unicode-range:${oraliq}}`;
+
+const { qavat } = Astro.props;
+const css = (qavatYuzlari[qavat] ?? []).flatMap((y) => [qoida(y, y.ext, LATIN_EXT), qoida(y, y.url, LATIN)]).join('');
+---
+{css && <style is:inline set:html={css} />}
