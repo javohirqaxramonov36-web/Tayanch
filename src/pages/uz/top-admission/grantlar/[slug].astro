@@ -1,0 +1,370 @@
+---
+// 2-qavat · Top Admission · grant qo'llanmasi: umumiy shablon (Admission E-seriya, E4).
+// Sahifa faqat `qollanma` bo'limi bor grantlar uchun yaratiladi (qollanmaSahifasiBormi). Türkiye Bursları
+// o'z sahifasida qoladi (src/pages/uz/top-admission/turkiye-burslari/, tegilmaydi).
+// Namuna: Türkiye Bursları sahifasi (viza kartasi, mundarija, bo'limlar, MRZ). Farqi: hamma fakt Fakt.astro orqali
+// (manba va sana bilan); tasdiqlanmagan fakt o'rniga "Ma'lumot tekshirilmoqda". Muhr yo'q: manba har faktda.
+// Bosqichlar: vertikal vaqt chizig'i; 760px dan kengda sana chap ustunda, telefonda nom ustida.
+// Mantiq: src/lib/topAdmission/qollanma.ts. JS yo'q.
+import { getCollection, getEntry } from 'astro:content';
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import Fakt from '../../../../components/topAdmission/Fakt.astro';
+import { faktKorinadimi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
+import {
+  DARAJA_MATNI, MUDDAT_OTGAN_MATNI, deadlineSanasi, muddatHolati, toliqQoplaydimi, type Daraja,
+} from '../../../../lib/topAdmission/grantKatalog';
+import {
+  QOLLANMA_OGOH, bosqichSanaMatni, bosqichlarRoyxati, faktRoyxati, faqRoyxati, mundarija, qolganMatni, qollanmaSahifasiBormi,
+  type Qollanma,
+} from '../../../../lib/topAdmission/qollanma';
+import { EHTIYOJ_IZOHI } from '../../../../lib/topAdmission/universitetMoslik';
+import { toshkentBugun } from '../../../../lib/muddat';
+import { yol } from '../../../../lib/yol';
+
+export async function getStaticPaths() {
+  const grantlar = await getCollection('grantlar');
+  return grantlar
+    .filter((e) => qollanmaSahifasiBormi(e.data))
+    .map((e) => ({ params: { slug: e.data.slug }, props: { id: e.id } }));
+}
+
+const { id } = Astro.props as { id: string };
+const kirish = await getEntry('grantlar', id);
+if (!kirish) throw new Error(`grantlar: '${id}' topilmadi`);
+const g = kirish.data;
+const q = g.qollanma as unknown as Qollanma;
+const davlatId = typeof g.davlat === 'object' && g.davlat && 'id' in g.davlat ? String(g.davlat.id) : String(g.davlat);
+const davlat = await getEntry('davlatlar', davlatId);
+const davlatNom = davlat?.data.nom_uz ?? davlatId;
+
+const bugun = toshkentBugun();
+const nimaniQoplaydi = g.nimani_qoplaydi as FaktT;
+const deadline = g.deadline as FaktT;
+const toliq = toliqQoplaydimi({ toliq_qoplaydi: g.toliq_qoplaydi as FaktT | undefined });
+const otgan = muddatHolati(deadlineSanasi(deadline), bugun) === 'otgan';
+const hostNomi = (url: string) => { try { return new URL(url).host.replace(/^www\./, ''); } catch { return url; } };
+
+const kim = faktRoyxati(q.kim_topshira_oladi);
+const qoplash = faktRoyxati(q.nimani_qoplaydi_batafsil);
+const hujjatlar = faktRoyxati(q.hujjatlar);
+const bosqichlar = bosqichlarRoyxati(q.bosqichlar);
+const faq = faqRoyxati(q.rasmiy_faq);
+const bolimlar = mundarija(q);
+const deadlineFormat = (v: FaktT['qiymat']) => (typeof v === 'string' ? sanaMatni(v) : String(v ?? ''));
+
+const katalog = yol('/uz/top-admission/grantlar/');
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+---
+<BolimQobiq
+  title={`${g.nom} · Top Admission`}
+  description={`${g.nom}: kim topshira oladi, nimani qoplaydi, hujjatlar, bosqichlar va ariza yo'li. Faqat rasmiy manbada tekshirilgan faktlar, manba va sana bilan.`}
+  turi="qollanma"
+  bolim="top-admission"
+  holat="chop-etilgan"
+  yol={['Grantlar katalogi']}
+>
+  <div class="ichki gq-sahifa">
+
+    <section class="gq-viza" aria-labelledby="gq-sarlavha">
+      <div class="gq-viza-bosh">
+        <p class="gq-ustki">Grant qo'llanmasi</p>
+      </div>
+      <h1 id="gq-sarlavha">{g.nom}</h1>
+      <dl class="gq-viza-maydon">
+        <div><dt class="gq-ustki">Turi</dt><dd>{g.turi === 'davlat' ? 'Davlat granti' : 'Universitet granti'}</dd></div>
+        <div><dt class="gq-ustki">Daraja</dt><dd>{DARAJA_MATNI[g.daraja as Daraja]}</dd></div>
+        <div><dt class="gq-ustki">Davlat</dt><dd>{davlatNom}</dd></div>
+        <div><dt class="gq-ustki">Rasmiy sahifa</dt><dd><a href={g.rasmiy_havola} rel="noopener">{hostNomi(g.rasmiy_havola)}</a></dd></div>
+      </dl>
+    </section>
+
+    <p class="gq-ogoh" role="note">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3l9.5 17h-19z" /><path d="M12 10v4" /><path d="M12 17.5v.01" />
+      </svg>
+      <span>{QOLLANMA_OGOH}</span>
+    </p>
+    <p class="gq-matn gq-sust">Har bir fakt yonida rasmiy manba va tekshirilgan sana. Hali tekshirilmagan joylarda "Ma'lumot tekshirilmoqda" yoziladi.</p>
+
+    <details class="gq-mund-telefon">
+      <summary>
+        Mundarija
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </summary>
+      <nav aria-label="Sahifa mundarijasi (telefon)">
+        {bolimlar.map((b) => <a href={`#${b.id}`}>{b.nomi}</a>)}
+      </nav>
+    </details>
+
+    <div class="gq-ikki-ustun">
+      <div class="gq-asosiy">
+
+        <section id="kim" class="gq-bolim gq-bolim-birinchi" aria-labelledby="kim-h">
+          <h2 id="kim-h">Kim topshira oladi</h2>
+          {kim.korinadi.length ? (
+            <ul class="gq-royxat">{kim.korinadi.map((f) => <li><Fakt fakt={f} /></li>)}</ul>
+          ) : <Fakt fakt={null} />}
+          {qolganMatni(kim.tekshirilmoqda, kim.korinadi.length) && <p class="gq-izoh">{qolganMatni(kim.tekshirilmoqda, kim.korinadi.length)}</p>}
+        </section>
+
+        <section id="qoplash" class="gq-bolim" aria-labelledby="qoplash-h">
+          <div class="gq-bolim-bosh">
+            <h2 id="qoplash-h">Nimani qoplaydi</h2>
+            {toliq && <span class="gq-belgi gq-belgi-toliq">To'liq qoplaydi</span>}
+          </div>
+          <div class="gq-xulosa">
+            <p class="gq-ustki">Qisqacha</p>
+            <Fakt fakt={nimaniQoplaydi} />
+            {g.toliq_ehtiyoj && <p class="gq-izoh">{EHTIYOJ_IZOHI}</p>}
+          </div>
+          {qoplash.korinadi.length > 0 && <ul class="gq-royxat">{qoplash.korinadi.map((f) => <li><Fakt fakt={f} /></li>)}</ul>}
+          {qoplash.korinadi.length === 0 && qoplash.tekshirilmoqda > 0 && <p class="gq-izoh">Batafsil ro'yxat: <Fakt fakt={null} /></p>}
+          {qolganMatni(qoplash.tekshirilmoqda, qoplash.korinadi.length) && <p class="gq-izoh">{qolganMatni(qoplash.tekshirilmoqda, qoplash.korinadi.length)}</p>}
+        </section>
+
+        <section id="hujjatlar" class="gq-bolim" aria-labelledby="hujjatlar-h">
+          <h2 id="hujjatlar-h">Hujjatlar</h2>
+          {hujjatlar.korinadi.length ? (
+            <ul class="gq-royxat">{hujjatlar.korinadi.map((f) => <li><Fakt fakt={f} /></li>)}</ul>
+          ) : <Fakt fakt={null} />}
+          {qolganMatni(hujjatlar.tekshirilmoqda, hujjatlar.korinadi.length) && <p class="gq-izoh">{qolganMatni(hujjatlar.tekshirilmoqda, hujjatlar.korinadi.length)}</p>}
+        </section>
+
+        <section id="bosqichlar" class="gq-bolim" aria-labelledby="bosqichlar-h">
+          <h2 id="bosqichlar-h">Bosqichlar</h2>
+          {bosqichlar.korinadi.length ? (
+            <ol class="gq-vaqt">
+              {bosqichlar.korinadi.map((b, i) => (
+                <li class="gq-vaqt-band">
+                  <span class="gq-vaqt-son" aria-hidden="true">{i + 1}</span>
+                  <div class="gq-vaqt-sana"><Fakt fakt={b.sana} format={bosqichSanaMatni} /></div>
+                  <div class="gq-vaqt-matn">
+                    <h3>{b.nom}</h3>
+                    {b.tavsif && faktKorinadimi(b.tavsif) && <Fakt fakt={b.tavsif} />}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : <Fakt fakt={null} />}
+          {qolganMatni(bosqichlar.tekshirilmoqda, bosqichlar.korinadi.length) && <p class="gq-izoh">{qolganMatni(bosqichlar.tekshirilmoqda, bosqichlar.korinadi.length)}</p>}
+        </section>
+
+        <section id="ariza" class="gq-bolim" aria-labelledby="ariza-h">
+          <h2 id="ariza-h">Ariza qayerga beriladi</h2>
+          <dl class="gq-maydonlar">
+            <div><dt>Ariza yo'li</dt><dd><Fakt fakt={q.ariza_yoli} /></dd></div>
+            <div>
+              <dt>Deadline</dt>
+              <dd>
+                <Fakt fakt={deadline} format={deadlineFormat} />
+                {otgan && <span class="gq-belgi gq-belgi-otgan">{MUDDAT_OTGAN_MATNI}</span>}
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        {q.rasmiy_faq?.length ? (
+          <section id="faq" class="gq-bolim" aria-labelledby="faq-h">
+            <h2 id="faq-h">Rasmiy savol-javob</h2>
+            <p class="gq-izoh">Faqat dasturning rasmiy FAQ sahifasidan.</p>
+            {faq.korinadi.length ? (
+              <div class="gq-faq">
+                {faq.korinadi.map((x) => (
+                  <details>
+                    <summary>
+                      <span>{x.savol}</span>
+                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+                    </summary>
+                    <div class="gq-faq-javob"><Fakt fakt={x.javob} /></div>
+                  </details>
+                ))}
+              </div>
+            ) : <Fakt fakt={null} />}
+            {qolganMatni(faq.tekshirilmoqda, faq.korinadi.length) && <p class="gq-izoh">{qolganMatni(faq.tekshirilmoqda, faq.korinadi.length)}</p>}
+          </section>
+        ) : null}
+
+        <section id="havolalar" class="gq-bolim" aria-labelledby="havolalar-h">
+          <h2 id="havolalar-h">Rasmiy havolalar</h2>
+          <ul class="gq-havolalar">
+            <li><a class="gq-havola" href={g.rasmiy_havola} rel="noopener">Dasturning rasmiy sahifasi</a> <span class="gq-sust">({hostNomi(g.rasmiy_havola)})</span></li>
+            {q.rasmiy_havolalar.filter((h) => h.url !== g.rasmiy_havola).map((h) => (
+              <li><a class="gq-havola" href={h.url} rel="noopener">{h.nom}</a> <span class="gq-sust">({hostNomi(h.url)})</span></li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="gq-keyingi" aria-labelledby="keyingi-h">
+          <div class="gq-keyingi-matn">
+            <p class="gq-ustki">Keyingi qadam</p>
+            <p id="keyingi-h" class="gq-keyingi-sarlavha">Boshqa grantlarni ham solishtiring.</p>
+            <a class="gq-havola gq-havola-katta" href={vosita}>Topshirish yo'li</a>
+          </div>
+          <a class="tugma tugma-asosiy gq-katta-tugma" href={katalog}>Grantlar katalogi</a>
+        </section>
+      </div>
+
+      <nav class="gq-mund" aria-label="Sahifa mundarijasi">
+        <p class="gq-ustki">Mundarija</p>
+        {bolimlar.map((b) => <a href={`#${b.id}`}>{b.nomi}</a>)}
+      </nav>
+    </div>
+
+    <div class="gq-oxir">
+      <p class="gq-sust gq-kichik"><strong class="gq-qalin">Natija kafolatlanmaydi.</strong> Tayanch bu dastur bilan bog'liq emas. Qabul yoki grant ehtimoli hisoblanmaydi.</p>
+      <div class="gq-mrz" aria-hidden="true">
+        <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+        <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+      </div>
+    </div>
+  </div>
+</BolimQobiq>
+
+<style>
+  .gq-sahifa { display: grid; gap: var(--space-6); padding-bottom: var(--space-6); }
+  h1 { margin: 0; font-size: var(--text-h1-size); line-height: var(--text-h1-lh); overflow-wrap: anywhere; }
+  h2 { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  h3 { margin: 0; font-size: var(--text-body-size); }
+  .gq-ustki {
+    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .gq-matn { max-width: 62ch; margin: 0; }
+  .gq-sust { color: var(--color-text-secondary); }
+  .gq-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .gq-qalin { color: var(--color-text-primary); }
+  .gq-izoh { margin: 0; max-width: 62ch; font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
+  .gq-havola { color: var(--color-link); font-weight: 700; }
+  .gq-havola-katta { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
+
+  /* Viza kartasi (Türkiye Bursları sahifasidagi kabi): katakli to'r, 2×2 maydon */
+  .gq-viza {
+    display: grid; gap: var(--space-4); padding: var(--space-8);
+    border: 1.5px solid var(--color-text-primary); border-radius: var(--radius-xl);
+    background-color: var(--color-surface);
+    background-image:
+      linear-gradient(to right, var(--color-surface-sunken) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-surface-sunken) 1px, transparent 1px);
+    background-size: var(--space-6) var(--space-6);
+  }
+  .gq-viza-bosh { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+  .gq-viza-maydon { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1.5px solid var(--color-text-primary); }
+  .gq-viza-maydon > div { display: grid; gap: var(--space-1); align-content: start; padding: var(--space-4) var(--space-5) var(--space-4) 0; }
+  .gq-viza-maydon > div:nth-child(even) { padding: var(--space-4) 0 var(--space-4) var(--space-5); border-left: 1px solid var(--color-border-strong); }
+  .gq-viza-maydon > div:nth-child(-n+2) { border-bottom: 1px solid var(--color-border-strong); }
+  .gq-viza-maydon dd { margin: 0; font-weight: 800; overflow-wrap: anywhere; }
+  .gq-viza-maydon dd a { color: var(--color-link); }
+
+  .gq-ogoh {
+    max-width: 62ch; margin: 0; display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3) var(--space-4); border-radius: var(--card-radius);
+    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 600;
+  }
+  .gq-ogoh svg { flex: none; margin-top: 2px; }
+
+  /* Ikki ustun: matn + yopishqoq mundarija (keng ekranda) */
+  .gq-ikki-ustun { display: flex; gap: var(--space-10); align-items: flex-start; }
+  .gq-asosiy { flex: 1; min-width: 0; display: grid; gap: var(--space-8); }
+  .gq-mund {
+    width: 220px; flex: none; position: sticky; top: var(--space-16); display: flex; flex-direction: column; gap: 2px;
+    border-left: 1.5px solid var(--color-border); padding-left: var(--space-3);
+  }
+  .gq-mund .gq-ustki { margin: 0 0 var(--space-2) var(--space-3); }
+  .gq-mund a, .gq-mund-telefon a {
+    display: flex; align-items: center; min-height: var(--size-touch-min); padding: 0 var(--space-3);
+    border-radius: var(--radius-md); text-decoration: none; color: var(--color-text-secondary); font-weight: 600; font-size: var(--text-small-size);
+  }
+  .gq-mund-telefon { display: none; }
+
+  .gq-bolim { display: grid; gap: var(--space-3); padding-top: var(--space-8); border-top: 1px solid var(--color-border); scroll-margin-top: var(--space-6); }
+  .gq-bolim-birinchi { border-top: 0; padding-top: 0; }
+  .gq-bolim-bosh { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-3); }
+  .gq-royxat { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-3); max-width: 62ch; }
+  .gq-xulosa { display: grid; gap: var(--space-2); padding: var(--space-4); border-radius: var(--radius-lg); background: var(--color-surface-sunken); }
+
+  .gq-belgi {
+    display: inline-flex; align-items: center; min-height: var(--badge-height); padding: var(--space-1) var(--badge-pad);
+    border-radius: var(--badge-radius); font-size: var(--text-caption-size); font-weight: 600; max-width: 100%;
+  }
+  .gq-belgi-toliq { background: var(--floor-subtle); color: var(--color-text-primary); border: 1px solid var(--floor-ui); }
+  .gq-belgi-otgan { background: var(--color-warning-subtle); color: var(--color-warning-text); justify-self: start; }
+
+  /* Bosqichlar: vertikal vaqt chizig'i. Keng ekranda [sana | raqam | matn], telefonda [raqam | sana + matn]. */
+  .gq-vaqt { list-style: none; margin: 0; padding: 0; display: grid; }
+  .gq-vaqt-band {
+    position: relative; display: grid; grid-template-columns: 11rem 2.5rem minmax(0, 1fr);
+    grid-template-areas: "sana son matn"; column-gap: var(--space-4); padding-bottom: var(--space-6);
+  }
+  .gq-vaqt-band:last-child { padding-bottom: 0; }
+  .gq-vaqt-band::before {
+    content: ""; position: absolute; top: 2.5rem; bottom: 0; left: calc(11rem + var(--space-4) + 1.25rem - 1px);
+    width: 2px; background: var(--color-border-strong);
+  }
+  .gq-vaqt-band:last-child::before { display: none; }
+  .gq-vaqt-son {
+    grid-area: son; width: 2.5rem; height: 2.5rem; border-radius: var(--radius-full);
+    display: grid; place-content: center; background: var(--floor-ui); color: var(--floor-ui-text); font-weight: 800;
+  }
+  .gq-vaqt-sana { grid-area: sana; padding-top: var(--space-2); min-width: 0; }
+  .gq-vaqt-matn { grid-area: matn; display: grid; gap: var(--space-2); padding-top: var(--space-2); min-width: 0; }
+
+  .gq-maydonlar { margin: 0; display: grid; gap: var(--space-3); }
+  .gq-maydonlar > div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+  .gq-maydonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .gq-maydonlar dd { margin: 0; min-width: 0; display: grid; gap: var(--space-2); }
+
+  .gq-faq { display: grid; gap: var(--space-2); max-width: 62ch; }
+  .gq-faq details { border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); background: var(--color-surface); }
+  .gq-faq summary { min-height: var(--size-touch-min); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-4); font-weight: 700; cursor: pointer; list-style: none; }
+  .gq-faq summary::-webkit-details-marker { display: none; }
+  .gq-faq summary svg { flex: none; }
+  .gq-faq details[open] summary svg { transform: rotate(180deg); }
+  .gq-faq-javob { padding: 0 var(--space-4) var(--space-4); }
+
+  .gq-havolalar { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-1); }
+  .gq-havolalar .gq-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
+
+  .gq-keyingi {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-4);
+    padding: var(--space-6); border: 1.5px solid var(--color-text-primary); border-radius: var(--radius-xl);
+  }
+  .gq-keyingi-matn { display: grid; gap: var(--space-1); justify-items: start; }
+  .gq-keyingi-sarlavha { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: 800; }
+
+  .gq-oxir { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: 1.5px solid var(--color-text-primary); }
+  /* MRZ: pasport metaforasi, shaxsiy ma'lumot yo'q (DESIGN.md) */
+  .gq-mrz { display: grid; gap: var(--space-1); padding: var(--space-4) var(--space-6); overflow: hidden; background: var(--color-surface-sunken); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .gq-mrz p { margin: 0; font-weight: 700; letter-spacing: .22em; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .gq-mund a:hover, .gq-mund-telefon a:hover { background: var(--color-surface-sunken); color: var(--color-text-primary); }
+  }
+
+  @media (max-width: 1180px) {
+    .gq-mund { display: none; }
+    .gq-mund-telefon { display: block; border: 1.5px solid var(--color-border-strong); border-radius: var(--radius-lg); padding: var(--space-1) var(--space-2); }
+    .gq-mund-telefon summary { min-height: var(--size-touch-min); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-2); font-weight: 800; cursor: pointer; list-style: none; }
+    .gq-mund-telefon summary::-webkit-details-marker { display: none; }
+    .gq-mund-telefon[open] summary svg { transform: rotate(180deg); }
+    .gq-mund-telefon nav { display: grid; padding-bottom: var(--space-2); }
+  }
+
+  @media (max-width: 760px) {
+    .gq-viza { padding: var(--space-5); }
+    .gq-viza-maydon { grid-template-columns: 1fr; }
+    .gq-viza-maydon > div, .gq-viza-maydon > div:nth-child(even) { padding: var(--space-3) 0; border-left: 0; border-bottom: 1px solid var(--color-border-strong); }
+    .gq-viza-maydon > div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .gq-bolim { padding-top: var(--space-6); }
+    .gq-vaqt-band {
+      grid-template-columns: 2.5rem minmax(0, 1fr); grid-template-areas: "son sana" "son matn";
+      column-gap: var(--space-3); row-gap: var(--space-1);
+    }
+    .gq-vaqt-band::before { left: calc(1.25rem - 1px); }
+    .gq-vaqt-matn { padding-top: 0; }
+    .gq-maydonlar > div { grid-template-columns: 1fr; gap: var(--space-1); }
+    .gq-keyingi { flex-direction: column; align-items: stretch; padding: var(--space-5); }
+    .gq-katta-tugma { width: 100%; }
+    .gq-mrz { padding: var(--space-3) var(--space-4); }
+    .gq-mrz p { letter-spacing: .18em; }
+  }
+</style>

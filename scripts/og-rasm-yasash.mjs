@@ -1,7 +1,7 @@
 // Ulashish rasmlari (og:image, 1200×630) yasash.
 // Kirish: AI yaratgan xom fotolar (repoga qo'shilmaydi), masalan <xom>/navigator.png.
-// Chiqish: public/og/<slug>.webp. Nom va qavat raqami rasm ustiga shu skript bilan qo'yiladi:
-// shrift Figtree (node_modules), ranglar src/styles/tokens.css dan (qorong'i mavzu qiymatlari).
+// Chiqish: public/og/<slug>.webp. Bo'lim nomi rasm ustiga shu skript bilan qo'yiladi (qavat raqami yozilmaydi):
+// shrift Onest (node_modules), ranglar src/styles/tokens.css dan (qorong'i mavzu qiymatlari).
 // Ishlatish: node scripts/og-rasm-yasash.mjs <xom-papka> [slug ...]
 // Talab: Google Chrome (headless skrinshot) va sharp (Astro bilan keladi).
 import { execFileSync } from 'node:child_process';
@@ -9,6 +9,7 @@ import { mkdtempSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
 import sharp from 'sharp';
 
 const ildiz = resolve(import.meta.dirname, '..');
@@ -16,14 +17,15 @@ const CHROME = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/M
 const KENGLIK = 1200;
 const BALANDLIK = 630;
 
-// Matn: SAT inglizcha (3-qavat qoidasi), qolganlari o'zbekcha.
+// Faqat bo'lim nomi (2026-11-19: saytda "N-qavat" yozuvi yo'q).
 const rasmlar = {
-  navigator: { qavat: '1-qavat', nom: 'Navigator' },
-  'top-admission': { qavat: '2-qavat', nom: 'Top Admission' },
-  sat: { qavat: 'Floor 3', nom: 'SAT<sup>®</sup> prep' },
-  ielts: { qavat: '4-qavat', nom: 'IELTS prep' },
-  eyuf: { qavat: '5-qavat', nom: 'EYUF prep' },
+  navigator: { nom: 'Navigator' },
+  'top-admission': { nom: 'Top Admission' },
+  sat: { nom: 'SAT<sup>®</sup> prep' },
+  ielts: { nom: 'IELTS prep' },
+  eyuf: { nom: 'EYUF prep' },
 };
+const shrift = pathToFileURL(createRequire(import.meta.url).resolve('@fontsource-variable/onest/index.css')).href;
 
 const [xomPapka, ...tanlangan] = process.argv.slice(2);
 if (!xomPapka) {
@@ -42,7 +44,7 @@ for (const slug of sluglar) {
     continue;
   }
   const html = `<!doctype html><html data-mavzu="qorongi"><head><meta charset="utf-8">
-<link rel="stylesheet" href="${url('node_modules/@fontsource-variable/figtree/index.css')}">
+<link rel="stylesheet" href="${shrift}">
 <link rel="stylesheet" href="${url('src/styles/tokens.css')}">
 <style>
   html, body { margin: 0; width: ${KENGLIK}px; height: ${BALANDLIK}px; overflow: hidden; }
@@ -61,12 +63,10 @@ for (const slug of sluglar) {
   .brend { font-size: 20px; font-weight: 700; letter-spacing: var(--oraliq-kichik-sarlavha); }
   .nom { font-size: 44px; line-height: 1.05; font-weight: 700; letter-spacing: var(--oraliq-sarlavha); }
   .nom sup { font-size: 0.4em; vertical-align: 1.2em; font-weight: 600; }
-  .qavat { font-size: 20px; font-weight: 600; color: var(--rang-havola); }
 </style></head><body>
 <div class="karta">
   <span class="brend">Tayanch</span>
   <span class="nom">${r.nom}</span>
-  <span class="qavat">${r.qavat}</span>
 </div></body></html>`;
   const htmlYol = join(ish, `${slug}.html`);
   const png = join(ish, `${slug}.png`);

@@ -1,4 +1,4 @@
-// tolov-yaratish: hisobga kirgan foydalanuvchi uchun SAT tarifiga inPAY to'lovi yaratadi.
+// tolov-yaratish: hisobga kirgan foydalanuvchi uchun tarif qavatiga mos inPAY to'lovi yaratadi.
 //
 // So'rov:  POST, Authorization: Bearer <Supabase sessiya tokeni>,
 //          tana {"plan_code": "pro" | "max", "period"?: "oylik"}  ("plan" ham qabul qilinadi)
@@ -21,7 +21,7 @@ export interface YaratishBogliqlik {
   rpc: (nomi: string, args: Record<string, unknown>) => Promise<RpcNatija>;
   inpayYarat: (s: TolovSorovi) => Promise<YaratishNatijasi>;
   /** Shu foydalanuvchi va tarif uchun OCHIQ_TOLOV_DAQIQA ichida yaratilgan pending to'lov (checkout havolasi bilan). */
-  ochiqTolov: (userId: string, planCode: string) => Promise<{ payment_id: string; checkout_url: string } | null>;
+  ochiqTolov: (userId: string, planCode: string) => Promise<{ payment_id: string; checkout_url: string; bolim: string } | null>;
   jurnal: (xabar: string, tafsilot?: Record<string, unknown>) => void;
 }
 
@@ -43,19 +43,26 @@ export const DAVRLAR = ['oylik'] as const;
 /** Mijoz yuborishi mumkin bo'lmagan summa maydonlari. */
 const SUMMA_MAYDONLARI = ['amount', 'amount_uzs', 'price', 'price_uzs', 'summa', 'narx'];
 
+/** Faqat to'lov natijasi sahifasi tayyor qavatlar. Qavatni serverdagi tarif/to'lov belgilaydi. */
+const TOLOV_BOLIMLARI = new Map([
+  ['sat', { nomi: 'SAT', natijaYoli: '/uz/sat/hisob/tolov-natija/' }],
+]);
+
 interface YaratilganTolov {
   payment_id: string;
   amount_uzs: number;
   period_days: number;
   plan_code: string;
   plan_name: string;
+  bolim: string;
 }
 
 function yaratilganmi(x: unknown): x is YaratilganTolov {
   if (typeof x !== 'object' || x === null) return false;
   const o = x as Record<string, unknown>;
   return typeof o.payment_id === 'string' && Number.isSafeInteger(o.amount_uzs) &&
-    Number.isSafeInteger(o.period_days) && typeof o.plan_code === 'string' && typeof o.plan_name === 'string';
+    Number.isSafeInteger(o.period_days) && typeof o.plan_code === 'string' && typeof o.plan_name === 'string' &&
+    typeof o.bolim === 'string';
 }
 
 export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise<Response> {
@@ -96,8 +103,9 @@ export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise
 
   const ochiq = await d.ochiqTolov(userId, plan);
   if (ochiq) {
+    if (!TOLOV_BOLIMLARI.has(ochiq.bolim)) return javob(409, { error: 'bolim_not_supported' });
     d.jurnal('ochiq to\'lov qayta berildi', { payment_id: ochiq.payment_id });
-    return javob(200, { ...ochiq, reused: true });
+    return javob(200, { payment_id: ochiq.payment_id, checkout_url: ochiq.checkout_url, reused: true });
   }
 
   const yaratish = await d.rpc('payment_create', { p_user: userId, p_plan_code: plan });
@@ -112,13 +120,27 @@ export async function tolovYaratish(req: Request, d: YaratishBogliqlik): Promise
     return javob(500, { error: 'server_error' });
   }
   const p = yaratish.data;
+  const bolim = TOLOV_BOLIMLARI.get(p.bolim);
+  if (!bolim) {
+    // inPAY'ga yuborilmagan yozuv ochiq to'lov kvotasini egallab qolmasin.
+    const yopish = await d.rpc('payment_set_invoice', {
+      p_payment_id: p.payment_id,
+      p_provider_order_id: null,
+      p_response: { code: 'bolim_not_supported' },
+    });
+    if (yopish.error) {
+      d.jurnal('qo\'llanmaydigan qavat to\'lovi yopilmadi', { payment_id: p.payment_id, kod: yopish.error.code });
+      return javob(500, { error: 'server_error' });
+    }
+    return javob(409, { error: 'bolim_not_supported' });
+  }
 
   const natija = await d.inpayYarat({
     paymentId: p.payment_id,
     planCode: p.plan_code,
     amountUzs: p.amount_uzs,
-    description: `Tayanch SAT ${p.plan_name}, ${p.period_days} days`,
-    returnUrl: `${d.saytUrl}/uz/sat/hisob/tolov-natija/?tolov=${encodeURIComponent(p.payment_id)}`,
+    description: `Tayanch ${bolim.nomi} ${p.plan_name}, ${p.period_days} days`,
+    returnUrl: `${d.saytUrl}${bolim.natijaYoli}?tolov=${encodeURIComponent(p.payment_id)}`,
     webhookUrl: `${d.supabaseUrl}/functions/v1/inpay-webhook`,
   });
 

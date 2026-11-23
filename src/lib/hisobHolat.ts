@@ -13,7 +13,7 @@ export function kirganFoydalanuvchi(): Foydalanuvchi | null {
   try {
     const u = JSON.parse(localStorage.getItem(hisobSozlama.sessiyaKaliti) ?? 'null')?.user;
     if (!u?.email) return null;
-    return { email: String(u.email), ism: String(u.user_metadata?.display_name ?? '') };
+    return { email: String(u.email), ism: String(u.user_metadata?.display_name ?? u.user_metadata?.full_name ?? '') };
   } catch {
     return null;
   }
@@ -42,5 +42,6 @@ export function hisobHavolalari() {
   yangila();
   if (ulangan) return;
   ulangan = true;
+  document.addEventListener('tayanch:hisob-kirdi', yangila);
   window.addEventListener('storage', (e) => { if (e.key === hisobSozlama.sessiyaKaliti) yangila(); });
 }

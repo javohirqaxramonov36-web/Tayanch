@@ -3,16 +3,16 @@
 // Bezak: aria-hidden. Ikonkalar qavatlar.ts dan. Geometriya va CSS DS dan; yongan yorliq rangi --floor-on-fill (PR 3: 4, 5-qavatda oq).
 // Yonish: `aktiv` qavat yonib turadi. Sahifada [data-bino-yoq="N"] elementga hover yoki fokus
 // kelsa, o'sha qavat yonadi (CSS :has). Reduced-motion'da DS davomiylik tokenlari 0ms.
-import { qavatlar } from '../data/qavatlar';
+import { qavatlar, type Qavat } from '../data/qavatlar';
 
 interface Props {
-  aktiv?: 1 | 2 | 3 | 4 | 5;
+  aktiv?: Qavat['raqam'];
   class?: string;
 }
 const { aktiv = 1, class: klass } = Astro.props;
 
 // DS FLOORS kalitlari (gradient ranglari --color-floor-<key>-500)
-const KALIT = ['navigator', 'admission', 'sat', 'ielts', 'eyuf'] as const;
+const KALIT = ['navigator', 'admission', 'sat', 'ielts', 'eyuf', 'ai'] as const;
 
 const cxm = 130, a = 100, b = 50, h = 36, pitch = 44, base = 330;
 const P = (pts: number[][]) => pts.map((p) => p.join(',')).join(' ');
@@ -33,7 +33,9 @@ const qavatShakli = qavatlar.map((q) => {
     win: `translate(${cxm},${yF + 10}) matrix(1 -.5 0 1 0 0)`,
   };
 });
-const y5 = base - 4 * pitch - h;
+// Eng yuqori qavat (6-qavat qo'shilgach DS 5 qavatli viewBox yuqoriga kengaytirildi, geometriya o'sha)
+const y5 = base - (qavatlar.length - 1) * pitch - h;
+const ortiqcha = (qavatlar.length - 5) * pitch;
 
 const W = 'var(--color-neutral-0)', K = 'var(--color-neutral-950)';
 const st = (o: number, c: string, d: string, p: number) => `<stop offset="${o}" style="stop-color:color-mix(in srgb, ${c} ${p}%, ${d})"/>`;
@@ -56,7 +58,7 @@ ${ON(' .win')}{fill:var(--floor-indicator-window-on);stroke:var(--floor-indicato
 ${KALIT.map((k, i) => `:root:has([data-bino-yoq="${i + 1}"]:is(:hover, :focus-visible)) .fi-hero .tip{fill:var(--color-floor-${k}-fill)}`).join('\n')}
 `;
 ---
-<svg class:list={['fi-hero', klass]} viewBox="0 0 260 360" aria-hidden="true" focusable="false">
+<svg class:list={['fi-hero', klass]} viewBox={`0 ${-ortiqcha} 260 ${360 + ortiqcha}`} aria-hidden="true" focusable="false">
   <defs>
     <Fragment set:html={gradientlar} />
   </defs>

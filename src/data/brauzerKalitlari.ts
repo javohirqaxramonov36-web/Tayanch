@@ -15,7 +15,7 @@ export const brauzerKalitlari: BrauzerKalit[] = [
   { kalit: 'tayanch:auth-code-verifier', uz: "Google bilan kirishda bir martalik tekshiruv kodi.", en: 'A one-time check code used while signing in with Google.' },
   { kalit: 'tayanch:hisob-keyin', uz: "Google bilan kirgandan keyin qaysi sahifaga qaytish.", en: 'Which page to return to after signing in with Google.', sessiya: true },
   { kalit: 'tayanch:mavzu, tayanch:sidebar', uz: "Yorug' yoki qorong'i mavzu va yon panel holati.", en: 'Light or dark theme and the side panel state.' },
-  { kalit: 'tayanch:qavat', uz: 'Qaysi qavatda ekaningiz.', en: 'Which floor of the site you are on.', sessiya: true },
+  { kalit: 'tayanch:qavat', uz: "Saytning qaysi bo'limida ekaningiz.", en: 'Which section of the site you are on.', sessiya: true },
   { kalit: 'tayanch:sat-…', uz: "SAT: javoblar, dars progressi, xato daftari, takrorlash, lug'at, reja, rasmiy testlar, kun savoli, to'lov holati, o'qish afzalliklari.", en: 'SAT: answers, lesson progress, mistake log, review, vocabulary, plan, official tests, question of the day, payment status, study preferences.' },
   { kalit: 'tayanch:sat-tarif-kesh', uz: "SAT: amaldagi tarif (yon paneldagi Upgrade bandi uchun), 10 daqiqa.", en: 'SAT: your current plan (for the Upgrade link in the side panel), kept for 10 minutes.', sessiya: true },
   { kalit: 'tayanch:sat-reyting', uz: "SAT reytingida tanlangan davr (hafta yoki oy) va doira.", en: 'The period (week or month) and view you chose on the SAT leaderboard.' },

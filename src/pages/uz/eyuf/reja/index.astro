@@ -1,0 +1,206 @@
+---
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+const yn = [['unknown', 'Aniqlashtirish kerak'], ['yes', 'Ha'], ['no', 'Yo‘q']];
+const selects = [
+ ['citizen','O‘zbekiston fuqarosimisiz?'],['prior','Avval xorijda shu darajadagi o‘xshash yo‘nalishda o‘qiganmisiz? Magistr uchun turdosh yo‘nalish ham kiradi.'],
+ ['study','Tanlangan xorijiy dastur sirtqi yoki onlaynmi?'],['conviction','Tugallanmagan yoki olib tashlanmagan sudlanganlik bormi?'],
+ ['school','Prezident, ijod yoki ixtisoslashtirilgan maktab bitiruvchisimisiz?']
+];
+---
+<EyufSahifa title="Tayyorgarlik rejangiz" description="Holatingizni tekshiring, tayyorgarlik yo‘lini va kunlik ishlarni belgilang.">
+ <form id="eyuf-reja" class="eyuf-panel">
+  <p>Sezgir javoblar shu tab xotirasida qoladi. Rejani saqlashga rozilik bersangiz, faqat daraja va tayyorgarlik afzalliklari saqlanadi.</p>
+  <fieldset><legend>Daraja va vaqt</legend><div class="eyuf-grid">
+   <label>Ta’lim darajasi<select name="level"><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label>
+   <label>Kunlik vaqt, daqiqa<input name="minutes" type="number" min="5" max="480" step="5" value="30" required /></label>
+   <label>Suhbatgacha qolgan kunlar<input name="days" type="number" min="1" max="730" placeholder="Sana hali noma’lum" /></label>
+   <label>Yosh<input name="age" type="number" min="1" max="100" /></label>
+   <label>Qayd etilgan mehnat staji, yil<input name="work" type="number" min="0" max="60" step="0.1" /></label>
+   <label>Hudud<select name="region"><option value="unknown">Tanlanmagan</option>{['Qoraqalpog‘iston Respublikasi','Andijon','Buxoro','Farg‘ona','Jizzax','Xorazm','Namangan','Navoiy','Qashqadaryo','Samarqand','Sirdaryo','Surxondaryo','Toshkent viloyati','Toshkent shahri'].map(t=><option>{t}</option>)}</select></label>
+  </div></fieldset>
+  <fieldset><legend>Universitet va qabul</legend><div class="eyuf-grid">
+   <label>Ta’lim sohasi<input name="specialty" maxlength="200" /></label><label>Universitet<input name="university" maxlength="200" /></label>
+   <label>Global reyting tizimi<select name="rankingSystem"><option value="unknown">Aniqlashtirish kerak</option><option>QS</option><option>THE</option></select></label>
+   <label>Reyting nashri<input name="rankingEdition" maxlength="80" placeholder="Nashr yili va havolasi" /></label>
+   <label>Reytingdagi o‘rni<input name="ranking" type="number" min="1" max="5000" /></label>
+   <label>Qabul xati<select name="letter"><option value="unknown">Aniqlashtirish kerak</option><option value="unconditional">Shartsiz</option><option value="conditional">Shartli</option><option value="none">Yo‘q</option></select></label>
+   <label>Grant qamrovi<select name="funding"><option value="unknown">Aniqlashtirish kerak</option><option value="full-cost">Barcha ta’lim xarajatlari</option><option value="tuition">Faqat tuition to‘liq</option><option value="partial">Tuition qisman</option><option value="none">Grant yo‘q</option></select></label>
+   <label>Qisman tuition granti, foiz<input name="grantPercent" type="number" min="0" max="100" /></label>
+   <label>IELTS Academic umumiy bali<input name="ielts" type="number" min="0" max="9" step="0.5" /></label>
+  </div></fieldset>
+  <fieldset><legend>Moslik uchun qo‘shimcha ma’lumot</legend><div class="eyuf-grid">{selects.map(([name,label])=><label>{label}<select name={name}>{yn.map(([value,t])=><option value={value}>{t}</option>)}</select></label>)}</div></fieldset>
+  <fieldset><legend>Testdan ozodlik sertifikati</legend><div class="eyuf-grid">
+   <label>Sertifikat<select name="certificate"><option value="unknown">Aniqlashtirish kerak</option><option value="none">Yo‘q</option><option value="sat">SAT</option><option value="gre">GRE</option><option value="gmat">GMAT</option><option value="alevel">A-Level</option></select></label>
+   <label>Sertifikat amaldami?<select name="certificateValid">{yn.map(([v,t])=><option value={v}>{t}</option>)}</select></label>
+   <label>Sertifikat sanasi<input name="certificateDate" type="date" /></label>
+   <label>SAT bali<input name="sat" type="number" min="400" max="1600" step="10" /></label>
+   <label>Verbal, persentil<input name="verbal" type="number" min="0" max="100" /></label>
+   <label>Quantitative, persentil<input name="quant" type="number" min="0" max="100" /></label>
+   <label>GRE Writing, persentil<input name="writing" type="number" min="0" max="100" /></label>
+   <label>A-Level barcha fanlar kamida A darajadami?<select name="alevel">{yn.map(([v,t])=><option value={v}>{t}</option>)}</select></label>
+  </div><p class="eyuf-small">Sertifikatning amaldaligi va qabul qilinadigan formati rasmiy tekshiruv talab qiladi.</p></fieldset>
+  <label class="eyuf-check"><input name="save" type="checkbox" />Darajam va kunlik vaqtimni shu brauzerda eslab qolish</label>
+  <p data-storage role="status" hidden></p>
+  <div class="eyuf-actions"><button class="tugma tugma-asosiy" type="submit">Hisobot va rejani ko‘rish</button><button class="tugma tugma-ikkinchi" type="button" data-clear>Saqlangan rejamni o‘chirish</button></div>
+ </form>
+ <section id="eyuf-reja-natija" class="eyuf-panel" hidden aria-labelledby="reja-h"><h2 id="reja-h" tabindex="-1">Hisobot va kunlik reja</h2><div data-report></div><p><a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">Manba — PF-77, 3-ilova, 5, 12, 21–24-bandlar (yangi oynada)</a></p><h3>Kunlik ishlar</h3><p data-plan-note></p><ol class="eyuf-list" data-plan></ol><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-edit>Tahrirlash</button><button class="tugma tugma-ikkinchi" data-download>Rejani yuklab olish</button></div></section>
+</EyufSahifa>
+<script>
+import {
+  moslik,
+  imtihonsiz,
+  testIstisnosi,
+  rejaTuz,
+  type Profil,
+} from '../../../../lib/eyuf/reja';
+import {
+  lokalOqi,
+  lokalYoz,
+  matnElement,
+  matnYukla,
+} from '../../../../lib/eyuf/holat';
+import lessons from '../../../../../data/eyuf/lessons.json';
+const form = document.querySelector<HTMLFormElement>('#eyuf-reja')!;
+const result = document.querySelector<HTMLElement>('#eyuf-reja-natija')!;
+const status = form.querySelector<HTMLElement>('[data-storage]')!;
+const key = 'tayanch:eyuf-reja:v1';
+const saved = lokalOqi(
+  key,
+  (
+    v,
+  ): v is {
+    version: 1;
+    level: 'bachelor' | 'master';
+    minutes: number;
+    days: number | null;
+  } =>
+    !!v &&
+    typeof v === 'object' &&
+    'version' in v &&
+    v.version === 1 &&
+    'level' in v &&
+    ['bachelor', 'master'].includes(String(v.level)) &&
+    'minutes' in v &&
+    typeof v.minutes === 'number' &&
+    v.minutes >= 5 &&
+    v.minutes <= 480 &&
+    'days' in v &&
+    (v.days === null ||
+      (typeof v.days === 'number' && v.days >= 1 && v.days <= 730)),
+  null,
+  status,
+);
+if (saved) {
+  for (const name of ['level', 'minutes', 'days'] as const)
+    (form.elements.namedItem(name) as HTMLInputElement).value =
+      saved[name] === null ? '' : String(saved[name]);
+  (form.elements.namedItem('save') as HTMLInputElement).checked = true;
+}
+let download = '';
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (!form.reportValidity()) return;
+  const fd = new FormData(form);
+  const val = (n: string) => String(fd.get(n) || '');
+  const num = (n: string) => (val(n).trim() === '' ? null : Number(val(n)));
+  const p = Object.fromEntries(fd) as unknown as Profil;
+  for (const n of [
+    'age',
+    'work',
+    'ielts',
+    'grantPercent',
+    'ranking',
+    'sat',
+    'verbal',
+    'quant',
+    'writing',
+  ] as const)
+    p[n] = num(n);
+  const reports = [
+    ['Moslik', moslik(p)],
+    ['Imtihonsiz yo‘l', imtihonsiz(p)],
+    ['Testdan ozodlik', testIstisnosi(p)],
+  ] as const;
+  const box = result.querySelector('[data-report]')!;
+  box.replaceChildren();
+  const labels = {
+    mos: 'Kiritilgan shartlarga mos',
+    'mos-emas': 'Shartga mos kelmaydigan band bor',
+    aniqlashtirish: 'Aniqlashtirish kerak',
+  };
+  download = 'Tayanch EYUF tayyorgarlik rejasi\n';
+  for (const [name, report] of reports) {
+    const block = matnElement('section', '');
+    block.append(
+      matnElement('h3', name),
+      matnElement('p', labels[report.state]),
+    );
+    const ul = matnElement('ul', '');
+    ul.className = 'eyuf-list';
+    for (const r of report.reasons) ul.append(matnElement('li', r));
+    block.append(ul);
+    box.append(block);
+  }
+  const plan = rejaTuz(
+    lessons.items,
+    p.level,
+    num('minutes')!,
+    num('days'),
+    reports[2][1].state === 'mos',
+  );
+  result.querySelector('[data-plan-note]')!.textContent =
+    `Davomiyliklar taxminiy. ${plan.remaining ? `${plan.remaining} kunlik ish muddatga sig‘madi. Ustuvor vazifalarni tanlang.` : 'Vazifalarni va ajratilgan vaqtni o‘zingizga moslab tahrirlang.'}${plan.oversized ? ' Ayrim darsni bir nechta kunga bo‘lib bajaring.' : ''}`;
+  const list = result.querySelector('[data-plan]')!;
+  list.replaceChildren();
+  for (const day of plan.days) {
+    const t = `${day.day}-kun, taxminan ${day.minutes} daqiqa. ${day.titles.join('; ')}`;
+    const item = matnElement('li', '');
+    const label = matnElement(
+      'label',
+      `${day.day}-kun vazifalari — tahrirlashingiz mumkin`,
+    );
+    const textarea = document.createElement('textarea');
+    textarea.value = t;
+    textarea.maxLength = 4000;
+    label.append(textarea);
+    item.append(label);
+    list.append(item);
+  }
+  if (fd.has('save'))
+    lokalYoz(
+      key,
+      {
+        version: 1,
+        level: p.level,
+        minutes: num('minutes'),
+        days: num('days'),
+      },
+      status,
+    );
+  result.hidden = false;
+  document.querySelector<HTMLElement>('#reja-h')!.focus();
+});
+result.querySelector('[data-edit]')!.addEventListener('click', () => {
+  form.scrollIntoView();
+  (form.elements.namedItem('level') as HTMLSelectElement).focus();
+});
+result.querySelector('[data-download]')!.addEventListener('click', () => {
+  const edits = [
+    ...result.querySelectorAll<HTMLTextAreaElement>('[data-plan] textarea'),
+  ].map((field) => field.value);
+  matnYukla(download + edits.join('\n'), 'eyuf-reja.txt');
+});
+form.querySelector('[data-clear]')!.addEventListener('click', () => {
+  if (confirm('Faqat saqlangan EYUF reja afzalliklari o‘chirilsinmi?')) {
+    try {
+      localStorage.removeItem(key);
+      status.hidden = false;
+      status.textContent = 'Saqlangan reja afzalliklari o‘chirildi.';
+      (form.elements.namedItem('save') as HTMLInputElement).checked = false;
+    } catch {
+      status.hidden = false;
+      status.textContent = 'Saqlangan rejani o‘chirib bo‘lmadi.';
+    }
+  }
+});
+</script>

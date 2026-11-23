@@ -1,0 +1,47 @@
+---
+interface Specialty {
+  id: string;
+  title: string;
+  title_original: string;
+  sources: { id: string; locator: string }[];
+  verified: boolean;
+}
+interface Props { specialties: Specialty[] }
+const { specialties } = Astro.props;
+---
+<details class="eyuf-panel" data-specialties>
+  <summary>Ustuvor mutaxassisliklar — ko‘rik uchun qoralama</summary>
+  <p>S04, 2026-yil ro‘yxati. 570 yozuvning kirill matni PDFning bet va qatori bilan solishtirildi, lotin transkripsiyasi Codex auditidan o‘tdi. Muallifning inson ko‘rigi kutilmoqda. Asl nom har bir yozuv ostida berilgan.</p>
+  <label>Mutaxassislikni qidiring<input type="search" data-search maxlength="200" placeholder="Lotincha yoki kirillcha nom" /></label>
+  <p role="status" data-count>{specialties.length} yozuv</p>
+  <ul class="eyuf-list" data-specialty-list>
+    {specialties.map(s => (
+      <li data-specialty data-search-text={`${s.title} ${s.title_original}`}>
+        <p>{s.title}</p>
+        <p lang="uz-Cyrl" class="eyuf-small">{s.title_original}</p>
+        <p class="eyuf-small">{s.sources.map(source => source.locator).join(' · ')}</p>
+      </li>
+    ))}
+  </ul>
+  <a href="https://api.el-yurt.uz/storage/competition-documents/585002d1-c195-4bd2-bb9e-556606cb7eff-1775139502.pdf" target="_blank" rel="noopener noreferrer">Asl mutaxassisliklar PDFi (yangi oynada)</a>
+</details>
+<script>
+import { qidiruvMatni } from '../../lib/eyuf/soha';
+for (const root of document.querySelectorAll<HTMLElement>(
+  '[data-specialties]',
+)) {
+  const input = root.querySelector<HTMLInputElement>('[data-search]')!;
+  const items = [...root.querySelectorAll<HTMLElement>('[data-specialty]')];
+  input.addEventListener('input', () => {
+    const query = qidiruvMatni(input.value);
+    let count = 0;
+    for (const item of items) {
+      item.hidden = !qidiruvMatni(item.dataset.searchText!).includes(query);
+      if (!item.hidden) count++;
+    }
+    root.querySelector('[data-count]')!.textContent = count
+      ? `${count} yozuv topildi`
+      : 'Mos yozuv topilmadi. Qidiruv so‘zini qisqartirib ko‘ring.';
+  });
+}
+</script>

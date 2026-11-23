@@ -1,0 +1,210 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "as_of": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "bachelor",
+                "master"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "lesson_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 9,
+            "uniqueItems": true,
+            "maxItems": 9
+          },
+          "specialties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "enum": [
+                          "S01",
+                          "S02",
+                          "S03",
+                          "S04",
+                          "S05",
+                          "S06",
+                          "S07",
+                          "S08",
+                          "S09",
+                          "S10",
+                          "S11",
+                          "S12",
+                          "S13",
+                          "T01"
+                        ]
+                      },
+                      "locator": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "locator"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "uniqueItems": false
+                },
+                "verified": {
+                  "type": "boolean"
+                },
+                "title_original": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "review": {
+                  "type": "object",
+                  "properties": {
+                    "source_text_verified": {
+                      "type": "boolean"
+                    },
+                    "reviewed_by": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "as_of": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "method": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "source_text_verified",
+                    "reviewed_by",
+                    "as_of",
+                    "method"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "sources",
+                "verified",
+                "title_original"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0,
+            "uniqueItems": false
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "as_of": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "enum": [
+                    "S01",
+                    "S02",
+                    "S03",
+                    "S04",
+                    "S05",
+                    "S06",
+                    "S07",
+                    "S08",
+                    "S09",
+                    "S10",
+                    "S11",
+                    "S12",
+                    "S13",
+                    "T01"
+                  ]
+                },
+                "locator": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "locator"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "uniqueItems": false
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "level",
+          "lesson_ids",
+          "specialties",
+          "verified",
+          "as_of",
+          "sources"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "as_of",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

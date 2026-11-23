@@ -1,181 +1,75 @@
 ---
-// Bosh sahifa: hero, yaqin muddatlar, qavat kartalari va muallif hikoyasi.
-// "Qayerdan boshlayman?" savoliga bitta kirish yo'li: hero va menyudagi "Boshlash" (Navigator onboarding, boshqaruv.ts).
+import onestLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
+import onestSymbols from '@fontsource-variable/onest/files/onest-symbols-wght-normal.woff2?url';
 import Asosiy from '../../layouts/Asosiy.astro';
-import MuallifYoli from '../../components/MuallifYoli.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
-import { bolimlar } from '../../data/bolimlar';
+import BoshTariflar from '../../components/BoshTariflar.astro';
+import { boshKartalar } from '../../data/boshSahifa';
 import { qavatlar } from '../../data/qavatlar';
-import { qavatHolatMatni } from '../../data/umumiyMatn';
 import { yol } from '../../lib/yol';
-import Bino from '../../components/Bino.astro';
-import YolBelgisi from '../../components/navigator/YolBelgisi.astro';
-import YolXaritasi from '../../components/navigator/YolXaritasi.astro';
-
-const sochilgan = [
-  { t: 'IELTS', x: 6, y: 8, r: -6 },
-  { t: 'Common App', x: 66, y: 2, r: 4 },
-  { t: 'Motivatsion esse', x: 0, y: 32, r: 3 },
-  { t: 'SAT', x: 78, y: 30, r: -8 },
-  { t: 'Tavsiyanoma', x: 2, y: 56, r: 5 },
-  { t: 'Stipendiya', x: 72, y: 54, r: -3 },
-  { t: 'Muddat?', x: 74, y: 80, r: 7, qora: true },
-  { t: 'Hujjatlar', x: 8, y: 82, r: -4 },
-];
 ---
-<Asosiy
-  title="Tayanch"
-  description="Chet elda o'qishni xohlovchi o'zbek yoshlari uchun ochiq yo'riqnoma: universitetga topshirish, IELTS, SAT va El-Yurt Umidi."
-  turi="bosh-sahifa"
-  bolim="umumiy"
-  holat="chop-etilgan"
-  tekshirilgan="2026-11-04"
-  keyingiTekshiruv="2026-12-04"
->
-  <YolBelgisi slot="bosh" />
-
-  <!-- 0. Shaxsiy yo'l xaritasi (Navigator onboarding): faqat saqlangan profil bo'lsa ko'rinadi -->
-  <YolXaritasi />
-
-  <!-- 1. Muammo -->
-  <section class="ichki muammo" aria-labelledby="s1">
-    <div class="muammo-matn">
-      <h1 id="s1">Imtihon, hujjat, esse, muddat.<br /><span class="xira">Qayerdan boshlash kerak?</span></h1>
-      <p class="lead">Chet elda o'qishni xohlagan har bir o'quvchi shu savoldan boshlaydi. Javob bor, va u bitta joyda.</p>
-      <p class="hero-amal">
-        <button type="button" class="tugma tugma-asosiy hero-tugma" data-boshlash="hero" aria-haspopup="dialog">Yo'limni tanlash</button>
-      </p>
-    </div>
-    <div class="sochilgan" aria-hidden="true">
-      <Bino aktiv={1} class="sochilgan-bino" />
-      {sochilgan.map((s) => (
-        <span class={s.qora ? 'yorliq-katta qora' : 'yorliq-katta'} style={`left:${s.x}%;top:${s.y}%;transform:rotate(${s.r}deg)`}>{s.t}</span>
-      ))}
-    </div>
-  </section>
-
-  <section class="ichki blok muddatlar" aria-labelledby="s6">
-    <h2 id="s6" class="kichik-h2">Yaqin muddatlar</h2>
-    <DeadlineRoyxati faqatKelajak limit={3} />
-    <p><a href={yol('/uz/deadline/')}>Hamma muddatlar</a></p>
-  </section>
-
-  <section id="qavatlar" class="ichki blok qavatlar" aria-labelledby="qavatlar-h">
-    <h2 id="qavatlar-h">Qaysi bo'limdan boshlaysiz?</h2>
-    <ul class="kartalar">
-      {bolimlar.map((b) => {
-        // Tez-oradagi qavatga ham kirsa bo'ladi (Lift kabi: "qavat qurilmoqda" sahifasi)
-        const ochiq = b.holat !== 'tez-orada';
-        const holat = qavatHolatMatni(b.holat, 'uz');
-        const raqam = qavatlar.find((q) => q.slug === b.slug)?.raqam;
-        const manzil = yol(`/uz/${b.slug}/`);
-        return (
-          <li>
-            <article class:list={['ds-karta', 'karta', { tez: !ochiq }]} data-floor={raqam} aria-labelledby={`karta-${b.slug}`}>
-              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ikonka ds-karta-belgi">
-                {b.ikonka === 'qalpoq' && <><path d="M3 10l9-5 9 5-9 5z" /><path d="M7 12v5c3 2 7 2 10 0v-5" /></>}
-                {b.ikonka === 'suhbat' && <><path d="M4 5h16v11H8l-4 4z" /><path d="M8 9h8M8 12h5" /></>}
-                {b.ikonka === 'varaq' && <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h4" /></>}
-                {b.ikonka === 'medal' && <><circle cx="12" cy="9" r="5" /><path d="M9 13l-2 8 5-3 5 3-2-8" /></>}
-              </svg>
-              <h3 class="karta-nom" id={`karta-${b.slug}`}>
-                {b.nomi}
-              </h3>
-              <p class="karta-tavsif">{b.tavsif}</p>
-              {b.xususiyatlar.length > 0 && (
-                <ul class="xususiyatlar">
-                  {b.xususiyatlar.map((x) => (
-                    <li>
-                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-                      {x}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {b.holat === 'qoralama' && <span class="yorliq karta-yorliq">{holat} · ayrim yo‘nalishlar ochiq</span>}
-              {ochiq
-                ? <a class="tugma tugma-asosiy karta-tugma karta-havola" href={manzil} data-bino-yoq={raqam}>{b.nomi}'ni boshlash</a>
-                : <span class="yorliq karta-yorliq" id={`tez-${b.slug}`}>Tez orada</span>}
-            </article>
-          </li>
-        );
-      })}
-    </ul>
-  </section>
-
-  <section class="kulrang" aria-labelledby="s2">
-    <div class="ichki blok">
-      <h2 id="s2">Tayanch qanday ishlaydi?</h2>
-      <div class="vadalar">
-        <p><strong>Rasmiy manba bilan.</strong> Har qoida va muddat yonida manba havolasi va tekshirilgan sana.</p>
-        <p><strong>Ro'yxatsiz va to'lovsiz.</strong> Kiritgan narsangiz brauzeringizda qoladi. Ixtiyoriy hisobga kirsangiz, yo'l xaritangiz hisobingizda ham saqlanadi.</p>
-        <p><strong>Halol.</strong> Natija kafolatlanmaydi. Uydirma raqam va sharh yo'q.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Cho'qqi -->
-  <MuallifYoli />
-
-
+<Asosiy title="Tayanch" description="Chet elda o'qish yo'lingiz — bitta joyda." turi="bosh-sahifa" bolim="umumiy" holat="chop-etilgan" sahifaOxiri={false}>
+  <Fragment slot="bosh"><link rel="preload" href={onestLatin} as="font" type="font/woff2" crossorigin /><link rel="preload" href={onestSymbols} as="font" type="font/woff2" crossorigin /></Fragment>
+  <div class="home">
+    <section class="home-hero" aria-labelledby="home-h1">
+      <h1 id="home-h1">Chet elda o'qish yo'lingiz — <span>bitta joyda.</span></h1>
+      <p>Imtihon, hujjat, grant va muddatlar — o'zbek tilida. Bo'limni tanlang va bepul boshlang.</p>
+    </section>
+    <section id="qavatlar" class="home-sections" aria-label="Bo'limlar">
+      <ul class="home-cards" role="list">
+        {boshKartalar.map((k) => <li>
+          <a class="home-card" href={yol(k.href)} style={`--section-color:${k.color}`}>
+            <span class="home-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={qavatlar.find((q) => q.slug === k.slug)?.ikonka} /></span>
+            {k.free && <span class="home-free">Bepul</span>}
+            <h2>{k.title}</h2>
+            <p class="home-long">{k.line}</p><p class="home-short">{k.short}</p>
+            <span class="home-cta">{k.cta}</span>
+            <svg class="home-chevron" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7" /></svg>
+          </a>
+        </li>)}
+      </ul>
+    </section>
+    <a class="home-help" href={yol('/uz/yol-tanlash/')}><span>Qaysi biri kerakligini bilmayapsizmi?</span> <strong>3 savolga javob bering →</strong></a>
+    <section class="home-deadlines" aria-labelledby="home-muddat">
+      <h2 id="home-muddat">Yaqin muddatlar</h2>
+      <DeadlineRoyxati faqatKelajak limit={3} />
+      <a href={yol('/uz/deadline/')}>Hamma muddatlar →</a>
+    </section>
+    <BoshTariflar />
+  </div>
 </Asosiy>
-
 <style>
-  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 520px; }
-  .blok { padding-block: var(--b-24); display: flex; flex-direction: column; gap: var(--b-10); }
-  .kulrang { background: var(--fon-ikkinchi); }
-
-  /* 1. Muammo */
-  .muammo { padding-block: var(--b-24) 88px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
-  .muammo-matn { flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
-  .muammo h1 { font-size: var(--matn-hero); line-height: 1.04; letter-spacing: var(--oraliq-hero); font-weight: 900; }
-  .xira { color: var(--color-text-secondary); }
-  .sochilgan { flex: 1 1 420px; min-width: 0; position: relative; height: 340px; }
-  /* DS shisha bino: yorliqlar uning atrofida, bino ularning ostida */
-  .sochilgan :global(.sochilgan-bino) { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: auto; height: 100%; }
-  .yorliq-katta { z-index: var(--z-raised); }
-  .yorliq-katta {
-    position: absolute; white-space: nowrap;
-    background: var(--fon-ikkinchi); color: var(--matn-sust);
-    border-radius: var(--r-toliq); padding: 10px 18px;
-    font-weight: 700; font-size: 17px;
+  .home { max-width: var(--header-max); padding: var(--space-8); margin-inline: auto; }
+  .home-hero { padding-block: var(--space-8); max-width: var(--home-hero-width); }
+  .home-hero h1 { font-size: var(--home-title); font-weight: 800; line-height: var(--home-title-lh); letter-spacing: var(--oraliq-hero); }
+  .home-hero h1 span { color: var(--color-text-secondary); }
+  .home-hero p { color: var(--color-text-secondary); font-size: var(--text-body-size); max-width: var(--home-copy-width); margin-block: var(--space-4) 0; }
+  .home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--home-card-min), 1fr)); gap: var(--space-4); list-style: none; padding: 0; margin: var(--space-5) 0; }
+  .home-card { height: 100%; min-height: var(--home-card-height); position: relative; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-text-primary); text-decoration: none; transition: transform var(--duration-fast) var(--ease-state); }
+  @media (hover: hover) { .home-card:hover { transform: translateY(calc(-1 * var(--space-1))); border-color: var(--color-link); } }
+  .home-icon { width: var(--space-12); height: var(--space-12); display: grid; place-items: center; border-radius: var(--radius-full); background: var(--section-color); color: var(--home-icon-ink); }
+  .home-free { position: absolute; top: var(--space-5); right: var(--space-4); background: var(--home-free-bg); color: var(--home-free-ink); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 600; padding: var(--space-1) var(--space-2); }
+  .home-card h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); margin-top: var(--space-2); white-space: nowrap; }
+  .home-long { color: var(--color-text-secondary); font-size: var(--text-small-size); line-height: var(--text-small-lh); margin: 0; }
+  .home-cta { color: var(--color-link); font-size: var(--text-small-size); font-weight: 700; margin-top: auto; padding-top: var(--space-3); }
+  .home-short, .home-chevron { display: none; }
+  .home-help { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); width: fit-content; margin: var(--space-6) auto var(--space-12); padding: var(--space-3) var(--space-5); border: var(--border-width-1) dashed var(--color-border-strong); border-radius: var(--radius-full); color: var(--color-text-secondary); font-size: var(--text-small-size); text-decoration: none; }
+  .home-help strong { color: var(--color-link); }
+  .home-deadlines { display: grid; gap: var(--space-4); padding-block: var(--space-6) var(--space-12); }
+  .home-deadlines :global(.royxat li) { border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+  @media (width < 768px) {
+    .home { padding: var(--space-4); }
+    .home-hero { padding-block: var(--space-3) var(--space-2); }
+    .home-hero h1 { font-size: var(--home-title-mobile); line-height: var(--home-title-lh); }
+    .home-hero p { font-size: var(--text-small-size); line-height: var(--text-small-lh); margin-top: var(--space-3); }
+    .home-cards { grid-template-columns: 1fr; gap: var(--space-2); margin-block: var(--space-4); }
+    .home-card { min-height: var(--home-row-height); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--space-3); row-gap: 0; align-content: center; padding: var(--space-3); }
+    .home-icon { grid-row: 1 / 3; width: var(--space-10); height: var(--space-10); align-self: center; }
+    .home-card h2 { grid-column: 2; font-size: var(--text-body-size); line-height: var(--text-body-lh); margin: 0; }
+    .home-short { display: block; grid-column: 2; margin: 0; color: var(--color-text-secondary); font-size: var(--text-caption-size); line-height: var(--text-small-lh); }
+    .home-chevron { display: block; grid-column: 3; grid-row: 1 / 3; align-self: center; color: var(--color-link); }
+    .home-free { top: var(--space-3); right: var(--space-9); font-size: var(--home-badge-mobile); padding: 0 var(--space-1); }
+    .home-long, .home-cta { display: none; }
+    .home-help { margin-block: var(--space-4) var(--space-6); padding: var(--space-3); border-radius: var(--radius-lg); }
   }
-  .yorliq-katta.qora { background: var(--qora); color: #ffffff; }
-  @media (max-width: 640px) { .sochilgan { height: 260px; overflow: clip; } .yorliq-katta { font-size: 15px; padding: 8px 14px; } }
-
-  .hero-amal { margin: 0; }
-  .hero-tugma { min-width: 200px; }
-  @media (max-width: 640px) { .hero-tugma { width: 100%; } }
-
-  /* 2. Qavat kartalari: 2x2, telefonda 1 ustun */
-  .qavatlar { padding-top: 0; }
-  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
-  @media (max-width: 760px) { .kartalar { grid-template-columns: 1fr; } }
-  /* DS karta (global .ds-karta), urg'u qavat rangida (data-floor) */
-  .karta {
-    position: relative; height: 100%; box-sizing: border-box;
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
-    padding: var(--card-pad);
-  }
-  /* DS: hover faqat sichqoncha bilan, faqat transform (global a.ds-karta kabi) */
-  @media (hover: hover) and (pointer: fine) { .karta:has(.karta-havola:hover) { transform: translateY(var(--card-lift)); } }
-  .karta .ikonka { width: var(--control-height-md); height: var(--control-height-md); padding: var(--space-3); }
-  .karta-nom { font-weight: 900; font-size: var(--matn-h3); margin: 0; }
-  /* Havola butun kartani qoplaydi: bitta Tab to'xtashi, karta istalgan joyidan bosiladi */
-  .karta-havola::after { content: ''; position: absolute; inset: 0; border-radius: var(--card-radius); }
-  .karta-tavsif { font-size: 15px; line-height: 1.5; color: var(--matn-ikkinchi); margin: 0; }
-  .xususiyatlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
-  .xususiyatlar li { display: flex; align-items: flex-start; gap: var(--space-2); font-size: 15px; line-height: 1.5; }
-  .xususiyatlar svg { flex: none; margin-top: 2px; color: var(--floor-text); }
-  .karta-tugma { margin-top: auto; align-self: stretch; }
-  .karta-yorliq { margin-top: auto; }
-
-  /* 3. Burilish */
-  .blok h2 { max-width: 760px; font-weight: 900; }
-  .vadalar { display: flex; flex-wrap: wrap; gap: 28px 48px; }
-  .vadalar p { flex: 1 1 280px; font-size: 17px; color: var(--matn-ikkinchi); }
-  .vadalar strong { color: var(--matn); }
-
-  .muddatlar { padding-block: var(--b-6) var(--b-14); gap: var(--b-5); }
-  .kichik-h2 { font-size: 1.75rem; }
 </style>

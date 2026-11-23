@@ -1012,6 +1012,82 @@ $$;
 
 reset role;
 
+-- ADR 006: har qavat uchun tarif -> to'lov -> obuna va to'lovdagi qavat nusxasi.
+insert into auth.users (id, email, raw_user_meta_data)
+values ('00000000-0000-4000-8000-000000000006', 'qavat@sinov.invalid', '{}');
+
+set local role service_role;
+
+do $$
+declare
+  v_user constant uuid := '00000000-0000-4000-8000-000000000006';
+  v_bolim text;
+  v_code text;
+  v_order text;
+  v_payment jsonb;
+  v_event jsonb;
+  v_result jsonb;
+  v_id uuid;
+begin
+  foreach v_bolim in array array['top-admission', 'sat', 'ielts', 'eyuf', 'ai-academy'] loop
+    v_code := 'floor_test_' || replace(v_bolim, '-', '_');
+    v_order := 'order_' || v_code;
+    insert into public.plans (code, name, bolim, price_uzs, period_days, is_active)
+    select v_code, 'SINOV qavat tarifi', v_bolim, price_uzs, period_days, true
+      from public.plans where code = 'pro';
+
+    v_payment := public.payment_create(v_user, v_code);
+    v_id := (v_payment ->> 'payment_id')::uuid;
+    if v_payment ->> 'bolim' is distinct from v_bolim
+       or (select bolim from public.payments where id = v_id) is distinct from v_bolim then
+      raise exception 'FAIL 23: payment_create qavati mos emas (%)', v_bolim;
+    end if;
+    perform public.payment_set_invoice(v_id, v_order, '{"livemode": false}'::jsonb);
+
+    -- To'lovdan keyin tarif o'zgarsa ham obuna to'lov yaratilgandagi qavatga tegishli.
+    if v_bolim = 'ai-academy' then
+      update public.plans set bolim = 'sat' where code = v_code;
+    end if;
+    v_event := jsonb_build_object('id', 'evt_' || v_code, 'type', 'payment.succeeded', 'livemode', false,
+      'data', jsonb_build_object('object', jsonb_build_object(
+        'id', v_order, 'amount', v_payment -> 'amount_uzs', 'currency', 'UZS',
+        'metadata', jsonb_build_object('payment_id', v_id))));
+    v_result := public.payment_apply_event(v_event);
+    if v_result ->> 'result' is distinct from 'paid'
+       or (select bolim from public.subscriptions where payment_id = v_id) is distinct from v_bolim then
+      raise exception 'FAIL 23: webhook qavati mos emas (%)', v_bolim;
+    end if;
+    if v_bolim = 'ai-academy' then
+      update public.plans set bolim = v_bolim where code = v_code;
+    end if;
+    v_result := public.payment_apply_event(v_event);
+    if v_result ->> 'result' is distinct from 'duplicate'
+       or (select count(*) from public.subscriptions where payment_id = v_id) <> 1 then
+      raise exception 'FAIL 23: takror webhook obunani o''zgartirdi (%)', v_bolim;
+    end if;
+
+    begin
+      update public.plans set bolim = 'noma_lum' where code = v_code;
+      raise exception 'FAIL 23: plans noma''lum qavatni qabul qildi';
+    exception when check_violation then null;
+    end;
+    begin
+      update public.payments set bolim = 'noma_lum' where id = v_id;
+      raise exception 'FAIL 23: payments noma''lum qavatni qabul qildi';
+    exception when check_violation then null;
+    end;
+    begin
+      update public.subscriptions set bolim = 'noma_lum' where payment_id = v_id;
+      raise exception 'FAIL 23: subscriptions noma''lum qavatni qabul qildi';
+    exception when check_violation then null;
+    end;
+  end loop;
+  raise notice 'OK 23 ADR 006: besh qavat, plans -> payments -> subscriptions, qavat nusxasi, takror webhook va check cheklovlari';
+end
+$$;
+
+reset role;
+
 do $$ begin raise notice 'HAMMASI O''TDI'; end $$;
 
 rollback;

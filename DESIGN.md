@@ -216,6 +216,12 @@ Tokenlar `src/styles/tokens.css` ("Poydevor · Liquid Glass" bloki), stillar `sr
 
 Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat zich shishada. 1-qavat qorong'i mavzusida shaffof shisha nur dog'i ustiga qo'yilmaydi (yoki matn zich shishada bo'ladi). Qavat o'z PR'ida o'z foni va shishasi bilan qayta hisoblaydi.
 
+### Qavat foto foni (2026-11-19, muallif tanlovi)
+
+- Qavat kirish sahifalarida (Top Admission, SAT, IELTS, EYUF) `QavatFoto` rasmi butun ekranni qoplaydi va joyida qotib turadi (`position: fixed`, `object-fit: cover`), ustida `--qavat-fon-parda`.
+- Kontent (`main`) foto ustida zich shishada: `--qavat-fon-shisha` (yorug'da sirt 78% + parda 30%, qorong'ida 75% + parda 40%; eng yomon holatda, ya'ni foto pikseli qora yoki oq bo'lsa, `--color-text-secondary` 4.5:1 dan past emas: yorug'da ~4.6:1, qorong'ida ~4.6:1), `--qavat-fon-blur`. Shisha `main::before` da, chunki `main` ning o'zidagi `backdrop-filter` fixed fotoni o'z qutisiga qamaydi.
+- Zaxira: `prefers-reduced-transparency` yoki `backdrop-filter` yo'q bo'lsa, zich `--color-surface`.
+
 ### Hozir: shishasiz (2026-11-13), qavat o'z PR'iga yetguncha
 
 - Ustki qatorlar (`Menyu`, `BolimYon` ustki qatori, `SatFokus` sarlavhasi) va Lift telefon paneli: zich `--color-surface` fon, 1px `--color-border` chiziq.
@@ -244,7 +250,7 @@ Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 �
 | Fokus `accent-500` / `accent-400` | 4.89 / 7.81 | 2.08 / 3.33 | 2.93 / 4.69 | 4.13 / 6.60 |
 | `sat-blue` (grafik, chet) | 4.89 | 2.08 (faqat hover bezagi) | 2.93 | 4.13 |
 
-`sat-on-blue-fill` / `sat-blue-fill` 5.12. Pastki bo'limlar (sahnadan tashqari): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
+`sat-on-blue-fill` / `sat-blue-fill` 5.12. Navy sahna noshaffof, shuning uchun "Qavat foto foni" (`main` zich shishada) ichida ham sahna kontrasti o'zgarmaydi. Foto fon ustidagi zich shishada (eng yomon foto pikseli oq yoki qora) `sat-text` 10.54+, `sat-text-muted` 4.81+, `sat-blue-text` 5.26+; `sat-line-strong` u yerda 2.76 bo'lgani uchun faqat qattiq kartalar ichida. Pastki bo'limlar (sahnadan tashqari, qattiq kartalar): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
 
 ## Harakat
 
@@ -281,7 +287,7 @@ Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 �
 - **Bo'lim yon paneli** (`BolimYon`, `bolim="sat" | "ielts"`, qolip `BolimQobiq`): 1024px va undan kengda chapda doimiy (`--yon-kenglik` 288px), yig'ilganda `--yon-yigilgan` 72px. Undan torda sticky ustki qator (zich fon) va undagi hamburger tugmasi panelni chapdan chiqaradi: Esc yopadi, fokus panel ichida qoladi, qolgan sahifa `inert`. Pastda "Tayanch bosh sahifasi" havolasi va mavzu tugmasi.
 - **Tayanch binosi** (2026-11-05, muallif qarori): sayt 5 qavatli bino. 1 Navigator (`/uz/`), 2 Top Admission, 3 SAT prep, 4 IELTS prep, 5 EYUF prep. Ma'lumot `src/data/qavatlar.ts` (2–5 qavat holati `bolimlar.ts` dan), `joriyQavat(pathname)`.
 - **Shisha bino** (`Bino.astro`, DS `heroSVG`): bosh sahifa hero'sida, sochilgan yorliqlar uning atrofida. Server tomonda chiziladi (JS'siz), `aria-hidden`, ikonkalar `qavatlar.ts` dan, raqamlar "01" ko'rinishida. Geometriya, gradientlar, filtrlar va CSS DS dan o'zgarishsiz. `aktiv` qavat yonib turadi (bosh sahifada 1). Sahifadagi `[data-bino-yoq="N"]` elementga (qavat kartalaridagi havola yoki tugma) hover yoki fokus kelsa, o'sha qavat yonadi (CSS `:has()`); reduced motion'da animatsiyasiz.
-- **Lift** (`Lift.astro`, 2026-11-15 "Unify navigation" dan beri): JavaScriptsiz `<details name="tayanch-navigatsiya">` ochiladigan ro'yxat, bo'lim ustki qatorida (`BolimYon`) logo bilan hamburger orasida. Yopiq holatda joriy qavat ("Floor 3 · SAT prep") va "Floors" yozuvi (o'zbekcha qavatlarda "Qavatlar"); ochilganda 5 qavat havolasi holati bilan (`aria-current="location"`) va Suhbatdosh. Hamburger paneli bilan bir `name` guruhida: biri ochilsa ikkinchisi yopiladi. Eski ko'rinishlar (yon panel ustuni, telefon pastki paneli, "2 → 3" ko'rsatkichi) olib tashlangan.
+- **Qavatlar ro'yxati** (2026-11-19 dan; oldin `Lift.astro`, 2026-11-15 "Unify navigation"): ustki qatordagi Lift ("Floor 3 · SAT prep / Floors") olib tashlandi, muallif uni ortiqcha deb topdi. Qavatlar endi hamburger panelida (`BolimYon`) "Qavatlar"/"Floors" guruhida: raqam doirasi + nom, joriy qavat `aria-current="location"` (qalin, sust fon), "tez orada" yorlig'i, Suhbatdosh. Panel o'ng tomondan, tugma tagidan ochiladi. Mavzu tugmasi faqat ustki qatorda. Qavat yo'li qavat kirish sahifasida ko'rsatilmaydi.
 - **Telefon pastki paneli yo'q** (2026-11-15): pastki Lift ham, SAT tab bari ham olib tashlangan; bo'lim navigatsiyasi hamma ekranda ustki qatordagi hamburger panelida (`BolimYon`). `SatTabBar.astro` va `src/lib/sat/satTab.ts` repoda qolgan, lekin hech qayerda ulanmagan (muallif qarori: qaytariladimi yoki o'chiriladimi).
 - **Qavat yo'li** (`QavatYoli.astro`): SAT'da yon panel guruhidagi sahifaning guruh nomi `satYonGuruhlar` dan olinadi ("Plan › Study planner", "Learn › Math lessons"), sahifa bergan `yol` dan emas: yo'l satri va panel guruhi ajralib ketmaydi. Guruhda yo'q sahifalar (sessiya, mock imtihon, huquqiy) o'z bandlarini saqlaydi.
 - **Qavat yo'li** (`QavatYoli.astro`): sahifa tepasida "3-qavat › Mashq › Test"; oxirgi band havola emas (`aria-current="page"`). 1-qavat bosh sahifasida yo'q.
