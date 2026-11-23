@@ -9,6 +9,7 @@ import QavatYoli from '../components/QavatYoli.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import SatSinxron from '../components/SatSinxron.astro';
+import SatTabBar from '../components/sat/SatTabBar.astro';
 import TelegramTugma from '../components/TelegramTugma.astro';
 import { telegramKorinadi } from '../data/telegram';
 import type { BolimSlug } from '../data/bolimlar';
@@ -54,6 +55,7 @@ const beta = bolim !== 'top-admission';
       {bolim === 'sat' && <SatEslatma />}
       {bolim === 'sat' && <SatSinxron />}
     </div>
+    {bolim === 'sat' && <SatTabBar />}
   </body>
 </html>
 

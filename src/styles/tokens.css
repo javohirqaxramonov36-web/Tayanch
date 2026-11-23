@@ -476,6 +476,11 @@
 @media (min-width: 720px){
   :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; }
 }
+/* 3-qavat SAT · telefon tab bari (DS PR 5d, 2026-11-23, SatTabBar.astro). Faqat <720px.
+   joy = band (56) + ichki 2×4 + pastdagi 8 + kontent bilan 8 oraliq; safe area komponentda qo'shiladi. */
+:root{
+  --size-sat-tabbar-joy:calc(var(--size-sat-tabbar) + var(--space-6));
+}
 
 /* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
