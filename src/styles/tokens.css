@@ -33,6 +33,8 @@
   --color-floor-sat-100:#F2F7FF; --color-floor-sat-200:#C9DFFF; --color-floor-sat-300:#9EC5FE; --color-floor-sat-400:#6FA9FF; --color-floor-sat-500:#2F86FF; --color-floor-sat-600:#156AD9; --color-floor-sat-700:#0050B0; --color-floor-sat-800:#003982; --color-floor-sat-900:#002357;
   --color-floor-ielts-100:#F3F7FF; --color-floor-ielts-200:#D2E1FF; --color-floor-ielts-300:#B0CAFF; --color-floor-ielts-400:#8FB3FF; --color-floor-ielts-500:#2760DE; --color-floor-ielts-600:#1F53CB; --color-floor-ielts-700:#1846B8; --color-floor-ielts-800:#0C308D; --color-floor-ielts-900:#07205C;
   --color-floor-eyuf-100:#E5FEF1; --color-floor-eyuf-200:#BDF2D9; --color-floor-eyuf-300:#92E6C0; --color-floor-eyuf-400:#5ED9A8; --color-floor-eyuf-500:#10895F; --color-floor-eyuf-600:#0D7E57; --color-floor-eyuf-700:#0A7350; --color-floor-eyuf-800:#045036; --color-floor-eyuf-900:#022F1E;
+  /* 6-qavat AI Academy (2026-11-19): binafsha urg'u. 500 = #7C3AED, oq fonda 5.70:1, #F5F3FF da 5.20:1 */
+  --color-floor-ai-100:#F5F3FF; --color-floor-ai-200:#DDD6FE; --color-floor-ai-300:#C4B5FD; --color-floor-ai-400:#A78BFA; --color-floor-ai-500:#7C3AED; --color-floor-ai-600:#6D28D9; --color-floor-ai-700:#5B21B6; --color-floor-ai-800:#4C1D95; --color-floor-ai-900:#2E1065;
   --color-success-100:#EEFAF3; --color-success-200:#BDE6CD; --color-success-300:#8BD0A8; --color-success-400:#57B784; --color-success-500:#02985F; --color-success-600:#047C4D; --color-success-700:#01613B; --color-success-800:#00482A; --color-success-900:#00301A;
   --color-warning-100:#FFF5EC; --color-warning-200:#FFDDC1; --color-warning-300:#FEC491; --color-warning-400:#FEA855; --color-warning-500:#EF8C0F; --color-warning-600:#C56E01; --color-warning-700:#9A5201; --color-warning-800:#713901; --color-warning-900:#4A2100;
   --color-error-100:#FEF4F4; --color-error-200:#FFC6CA; --color-error-300:#FF929D; --color-error-400:#ED5F75; --color-error-500:#CD1E4C; --color-error-600:#AF013B; --color-error-700:#8E002E; --color-error-800:#6D0021; --color-error-900:#4E0016;
@@ -147,6 +149,7 @@
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-700);             --color-floor-sat-ui:var(--color-floor-sat-600);             --color-floor-sat-subtle:var(--color-floor-sat-100);
   --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-700);         --color-floor-ielts-ui:var(--color-floor-ielts-600);         --color-floor-ielts-subtle:var(--color-floor-ielts-100);
   --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-700);           --color-floor-eyuf-ui:var(--color-floor-eyuf-700);           --color-floor-eyuf-subtle:var(--color-floor-eyuf-100);
+  --color-floor-ai-fill:var(--color-floor-ai-500);             --color-floor-ai-text:var(--color-floor-ai-500);             --color-floor-ai-ui:var(--color-floor-ai-500);             --color-floor-ai-subtle:var(--color-floor-ai-100);
 
   --color-indicator-off:var(--color-neutral-400);
   --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 82%, transparent);
@@ -193,6 +196,7 @@
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-400);             --color-floor-sat-ui:var(--color-floor-sat-500);             --color-floor-sat-subtle:color-mix(in srgb, var(--color-floor-sat-900) 60%, var(--color-neutral-900));
   --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-400);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
   --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-400);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
+  --color-floor-ai-fill:var(--color-floor-ai-500);             --color-floor-ai-text:var(--color-floor-ai-400);             --color-floor-ai-ui:var(--color-floor-ai-400);             --color-floor-ai-subtle:color-mix(in srgb, var(--color-floor-ai-900) 60%, var(--color-neutral-900));
 
   --color-indicator-off:var(--color-neutral-700);
   --color-indicator-glass-top:color-mix(in srgb, var(--color-neutral-0) 12%, transparent);
@@ -234,12 +238,13 @@
   --floor-car-duration:var(--duration-base); --floor-car-ease:var(--ease-state);
 }
 /* floor context: any element with data-floor exposes --floor-* for its children (1-qavat = :root standarti).
-   --floor-on-fill: belgi rangi (fill, 500) ustidagi matn, masalan bino yorlig'i (4, 5-qavatda oq). */
+   --floor-on-fill: belgi rangi (fill, 500) ustidagi matn, masalan bino yorlig'i (4–6-qavatda oq). */
 :where(:root), [data-floor="1"]{ --floor-fill:var(--color-floor-navigator-fill); --floor-text:var(--color-floor-navigator-text); --floor-ui:var(--color-floor-navigator-ui); --floor-subtle:var(--color-floor-navigator-subtle); --floor-on-fill:var(--color-on-floor); }
 [data-floor="2"]{ --floor-fill:var(--color-floor-admission-fill); --floor-text:var(--color-floor-admission-text); --floor-ui:var(--color-floor-admission-ui); --floor-subtle:var(--color-floor-admission-subtle); --floor-on-fill:var(--color-on-floor); }
 [data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); --floor-on-fill:var(--color-on-floor); }
 [data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
 [data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
+[data-floor="6"]{ --floor-fill:var(--color-floor-ai-fill);        --floor-text:var(--color-floor-ai-text);        --floor-ui:var(--color-floor-ai-ui);        --floor-subtle:var(--color-floor-ai-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
 [data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-on-fill:var(--color-on-floor); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
 
 /* desktop type roles (sayt: container query o'rniga media query) */
@@ -355,6 +360,19 @@
   --nav-glass-bg:color-mix(in srgb, var(--color-neutral-925) 96%, transparent);
   --nav-glass-desktop:blur(var(--space-10)) saturate(1.35);
   --nav-glass-sheen:linear-gradient(160deg, color-mix(in srgb, var(--color-neutral-0) 4%, transparent), transparent 48%);
+}
+
+/* Qavat foto foni (2026-11-19, muallif tanlovi): rasm butun sahifa orqasida, ustida parda,
+   kontent zich shishada (DESIGN.md "Sirtlar": uzun matn faqat zich shishada). */
+:root {
+  /* Zichlik eng yomon holatdan (foto piksel qora/oq): --color-text-secondary >= 4.5:1 (2026-11-19 hisob). */
+  --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 30%, transparent);
+  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 78%, transparent);
+  --qavat-fon-blur:blur(var(--space-6)) saturate(1.4);
+}
+:root[data-mavzu='qorongi'] {
+  --qavat-fon-parda:color-mix(in srgb, var(--color-bg) 40%, transparent);
+  --qavat-fon-shisha:color-mix(in srgb, var(--color-surface) 75%, transparent);
 }
 
 /* ==========================================================================
@@ -577,3 +595,51 @@
    Sayt palitrasidan istisno (DESIGN.md, "Google tugmasi"). hover: holat qatlami, Google qiymati emas. */
 :root{ --google-fon:#ffffff; --google-chiziq:#747775; --google-matn:#1f1f1f; --google-hover:rgba(31, 31, 31, 0.08); }
 :root[data-mavzu='qorongi']{ --google-fon:#131314; --google-chiziq:#8e918f; --google-matn:#e3e3e3; --google-hover:rgba(227, 227, 227, 0.08); }
+
+/* Homepage/header brief, 2026-11-21. Existing semantic surfaces follow both themes. */
+:root {
+  --header-height: 76px;
+  --header-max: 1376px;
+  --header-logo: 116px;
+  --header-logo-mobile: 108px;
+  --header-pill-pad: 6px;
+  --header-column-min: 170px;
+  --header-menu-width: 420px;
+  --header-language-width: 240px;
+  --header-accent: #315BDD;
+  --flag-blue: #0099B5;
+  --flag-green: #1EB53A;
+  --flag-red: #CE1126;
+}
+
+:root {
+  --home-title: 52px;
+  --home-title-mobile: 28px;
+  --home-title-lh: 1.14;
+  --home-hero-width: 900px;
+  --home-copy-width: 760px;
+  --home-card-min: 220px;
+  --home-card-height: 290px;
+  --home-row-height: 80px;
+  --home-badge-mobile: 10px;
+  --home-button-radius: 14px;
+  --home-admission: #F5C542;
+  --home-sat: #4F7CFF;
+  --home-ielts: #EF5B4C;
+  --home-eyuf: #4CC38A;
+  --home-ai: #8B5CF6;
+  --home-icon-ink: #0A0A0C;
+  --home-free-bg: var(--color-success-100);
+  --home-free-ink: var(--color-success-800);
+}
+:root[data-mavzu='qorongi'] {
+  --home-free-bg: #17291F;
+  --home-free-ink: #7EE2A8;
+}
+
+:root {
+  --login-width: 460px;
+  --login-radius: 24px;
+  --login-button-height: 54px;
+  --login-backdrop: rgba(0, 0, 0, 0.6);
+}

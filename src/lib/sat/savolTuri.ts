@@ -5,7 +5,7 @@
 // Matn maydonlari (passage, stem, options[].text, natija.izoh) formati:
 //   - ruxsat etilgan teglar: u em strong sup sub br p table thead tbody tr th td (atribut: faqat th[scope]);
 //     qolgan teglar ochib tashlanadi (matni qoladi), script/style butunlay o'chiriladi (xavfsizMatn.ts);
-//   - formula: $...$ (qator ichida), $$...$$ (alohida qator), KaTeX; oddiy dollar belgisi: \$;
+//   - formula: \(...\) yoki $...$ (qator ichida), \[...\] yoki $$...$$ (alohida qator), KaTeX; oddiy dollar belgisi: \$;
 //   - she'r qatorlari: <br> bilan.
 
 export type SavolBolimi = 'math' | 'rw';

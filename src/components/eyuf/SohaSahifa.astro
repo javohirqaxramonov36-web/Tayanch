@@ -1,0 +1,24 @@
+---
+import EyufSahifa from './EyufSahifa.astro';
+import KursDarslar from './KursDarslar.astro';
+import Mutaxassisliklar from './Mutaxassisliklar.astro';
+import tracks from '../../../data/eyuf/tracks.json';
+import quotas from '../../../data/eyuf/quotas.json';
+import { yol } from '../../lib/yol';
+interface Props { trackId: string }
+const track = tracks.items.find(item => item.id === Astro.props.trackId)!;
+const quota = quotas.items.find(item => item.track_id === track.id)!;
+---
+<EyufSahifa title={track.title} description="Soha treki. Mutaxassisligingiz, dalillar va qaytish rejangizni suhbat javoblariga bog‘lang.">
+  <p><a href={yol('/uz/eyuf/soha/')}>Barcha soha treklari</a></p>
+  <section class="eyuf-panel" aria-labelledby="soha-holat-h">
+    <h2 id="soha-holat-h">Trek holati</h2>
+    <p>2026-2 ochiq tanlov kvotasi — bakalavr {quota.open.bachelor}, magistr {quota.open.master}. Ushbu sonlar keyingi tanlovga avtomatik qo‘llanmaydi.</p>
+    <p>Manba S03, PDF 1-bet. Tekshirilgan sana 20.11.2026.</p>
+    <p>Darslarda manbali soha faktlari, qisqa iqtiboslar, kasbiy talab dalillari va ishlangan Tayanch mashqlari bor. Har blokda manbasi va ko‘rik holati ko‘rsatilgan. Namunalar hamda shaxsiy reja topshiriqlari metodik material sifatida ajratilgan.</p>
+    {!track.level.includes('bachelor') && <p>Ushbu tanlovning ochiq kvotasi asosida trek magistrlar uchun ko‘rsatilmoqda.</p>}
+  </section>
+  <Mutaxassisliklar specialties={track.specialties} />
+  <KursDarslar module={`trek-${track.id}`} />
+  <p><a href={yol('/uz/eyuf/suhbat/')}>Soha javoblarini suhbat kartalarida mashq qilish</a></p>
+</EyufSahifa>

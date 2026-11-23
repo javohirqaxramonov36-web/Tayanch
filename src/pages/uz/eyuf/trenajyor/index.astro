@@ -1,0 +1,361 @@
+---
+import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import settings from '../../../../../data/eyuf/settings.json';
+import bank from '../../../../../data/eyuf/questions-iq.json';
+import { yol } from '../../../../lib/yol';
+---
+<EyufSahifa title="IQ trenajyor" description="Tur bo‘yicha mashq, sprint va xatolarni oraliq takrorlash.">
+ <p class="eyuf-panel">PREP_1 — {bank.items.filter(q => q.source.book === 'S11').length} savol, {bank.items.filter(q => q.source.book === 'S11' && q.verified).length} tasdiqlangan javob. PREP_2 — {bank.items.filter(q => q.source.book === 'S12').length} savol, {bank.items.filter(q => q.source.book === 'S12' && q.verified).length} tasdiqlangan javob. Qo‘shimcha 40 Tayanch so‘z-mantiq va tadqiqot mashqi mavjud. Ochiq javoblar baholanmaydi. Ayrim kitob kalitlari mustaqil yechim bilan mos kelmagan. Metodik qiyinlik ko‘rigi empirik kalibratsiyadan alohida. <a href={yol('/uz/eyuf/iq/')}>Besh to‘plamli IQ mashqi</a></p>
+ {!settings.book_content_enabled && <p class="eyuf-panel">Kitob kontenti ushbu qoralama paketda o‘chirilgan. Mashqni ochish uchun kontent sozlamasi muallif ko‘rigidan o‘tkaziladi.</p>}
+ {settings.book_content_enabled && <div id="eyuf-trenajyor">
+  <p data-storage role="status" hidden></p>
+  <section class="eyuf-panel" data-start><h2>Mashqni tanlang</h2><label>Ta’lim darajasi<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Savol turi<select data-type><option value="all">Barcha turlar</option>{[...new Set(bank.items.map(q=>q.type))].map(t=><option value={t}>{t.replaceAll('-',' ')}</option>)}</select></label><label>Rejim<select data-mode><option value="practice">Mashq — izoh darhol</option><option value="sprint">Sprint — 60 soniya</option><option value="combo">Combo zanjiri</option><option value="daily">Kunlik 10 savol</option><option value="review">Xatolarni takrorlash</option></select></label><button class="tugma tugma-asosiy" data-begin disabled>Boshlash</button><p data-empty role="status"></p><p><a href={yol('/uz/eyuf/mock/')}>40 savollik simulyatsiya yoki qisqa diagnostika</a></p></section>
+  <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1">Savol</h2><output data-timer aria-label="Qolgan vaqt"></output></div><p data-stem></p><p data-pending hidden>Javob tekshirilmoqda. Ushbu savol ball va XP bermaydi.</p><div data-images></div><div class="eyuf-grid" data-options role="group" aria-label="Javob variantlari"></div><p class="eyuf-small">A–G klavishlari bilan variantni tanlang. Matn maydonida bu klavishlar javob bermaydi.</p><section data-feedback hidden aria-live="polite"></section><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-next hidden>Keyingi</button><button class="tugma tugma-ikkinchi" data-finish>Yakunlash</button></div></section>
+  <section class="eyuf-panel" data-result hidden><h2 tabindex="-1" data-result-h>Mashq natijasi</h2><p data-summary></p><button class="tugma tugma-asosiy" data-again>Rejim tanlash</button></section>
+  <section class="eyuf-panel"><h2>Mahorat va progress</h2><p data-streak></p><ul class="eyuf-list" data-mastery></ul><ul class="eyuf-list" data-badges></ul><button class="tugma tugma-ikkinchi" data-clear>Trenajyor progressini tozalash</button></section>
+  <dialog data-zoom aria-label="Savol rasmi"><button class="tugma tugma-ikkinchi" data-close>Rasmni yopish</button><img data-zoom-image alt="" /></dialog>
+ </div>}
+<h2>Tayyorlanish darslari</h2><KursDarslar course="c2" />
+</EyufSahifa>
+<script>
+import bank from '../../../../../data/eyuf/questions-iq.json';
+import settings from '../../../../../data/eyuf/settings.json';
+import { savollarniSarala } from '../../../../../data/eyuf/saralash.mjs';
+import {
+  boshProgress,
+  progressniBirlashtir,
+  progressTogrimi,
+  javobniYoz,
+  mahorat,
+  mosSavolniTanla,
+  streak,
+  badges,
+  toshkentKuni,
+} from '../../../../lib/eyuf/trenajyor';
+import { lokalOqi, lokalYoz, matnElement } from '../../../../lib/eyuf/holat';
+import { savollar } from '../../../../lib/eyuf/iq/savollar';
+import {
+  holatniOqi,
+  iqQulf,
+  type IqSavol,
+  yangiSessiya,
+  mukofotHisobla,
+  SAQLASH_KALITI,
+} from '../../../../lib/eyuf/iq/model';
+import { yol } from '../../../../lib/yol';
+const root = document.querySelector<HTMLElement>('#eyuf-trenajyor');
+if (root) {
+  const el = <T extends HTMLElement = HTMLElement>(s: string) =>
+    root.querySelector<T>(s)!;
+  const msg = el('[data-storage]'),
+    key = 'tayanch:eyuf-iq-progress:v1';
+  let p = lokalOqi(key, progressTogrimi, boshProgress(), msg);
+  let pool: typeof bank.items = [],
+    i = 0,
+    right = 0,
+    scored = 0,
+    combo = 0,
+    best = 0,
+    xp = 0,
+    answered = false,
+    deadline = 0,
+    clock: ReturnType<typeof setInterval> | null = null,
+    mode = 'practice';
+  const zoom = el<HTMLDialogElement>('[data-zoom]');
+  let origin: HTMLElement | null = null;
+  function closeZoom() {
+    zoom.close();
+    origin?.focus();
+  }
+  el('[data-close]').addEventListener('click', closeZoom);
+  zoom.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeZoom();
+  });
+  function save() {
+    p = progressniBirlashtir(
+      p,
+      lokalOqi(key, progressTogrimi, boshProgress(), msg),
+    );
+    lokalYoz(key, p, msg);
+  }
+  function progress() {
+    el('[data-streak]').textContent =
+      `${streak(p)} kunlik streak. Takrorlash oralig‘i 1, 3, 7 kun.`;
+    const list = el('[data-mastery]');
+    list.replaceChildren();
+    for (const t of new Set(bank.items.map((q) => q.type))) {
+      const m = mahorat(p, t);
+      list.append(
+        matnElement(
+          'li',
+          `${t.replaceAll('-', ' ')} — ${m.percent}%, ${m.count} baholangan javob.`,
+        ),
+      );
+    }
+    const b = el('[data-badges]');
+    b.replaceChildren();
+    for (const badge of badges(p))
+      b.append(
+        matnElement(
+          'li',
+          `${badge.name} — ${Math.min(10, badge.count)}/10 noyob to‘g‘ri javob${badge.count >= 10 ? ', olindi' : ''}.`,
+        ),
+      );
+  }
+  function reward(id: string, answer: string) {
+    return iqQulf(() => rewardLocked(id, answer));
+  }
+  function rewardLocked(id: string, answer: string) {
+    try {
+      const source = bank.items.find((x) => x.id === id);
+      if (!source?.verified || source.answer === null) return 0;
+      const q: IqSavol = {
+        id: source.id, test: 1, raqam: source.source.number,
+        variantlar: source.options.map(option => option.id) as IqSavol['variantlar'],
+        rasmlar: [], kitobJavobi: source.answer as IqSavol['kitobJavobi'],
+        tekshirilgan: true, yechim: source.explanation.rule,
+      };
+      const old = holatniOqi(localStorage.getItem(SAQLASH_KALITI), savollar);
+      const session = yangiSessiya('aralash', [q], 30);
+      session.javoblar[id] = answer as typeof q.kitobJavobi;
+      const updated = mukofotHisobla({ ...old, sessiya: session }, [q]);
+      const saved = lokalYoz(SAQLASH_KALITI, { ...old, mukofotlar: updated.mukofotlar }, msg);
+      return saved ? updated.sessiya!.olinganXp : 0;
+    } catch {
+      msg.hidden = false;
+      msg.textContent = 'XP bu brauzerda saqlanmadi.';
+      return 0;
+    }
+  }
+  let pendingReward: Promise<void> = Promise.resolve();
+  async function finish() {
+    await pendingReward;
+    if (clock) clearInterval(clock);
+    clock = null;
+    el('[data-question]').hidden = true;
+    el('[data-result]').hidden = false;
+    el('[data-summary]').textContent =
+      `${scored} baholangan javobdan ${right} to‘g‘ri. Eng uzun combo ${best}. +${xp} lokal XP. XP tasdiqlangan savolning birinchi to‘g‘ri javobiga beriladi. Bu mashq natijasi.`;
+    if (mode === 'daily' && i >= pool.length) {
+      const day = toshkentKuni();
+      p.days = [...new Set([...p.days, day])];
+      save();
+    }
+    progress();
+    el('[data-result-h]').focus();
+  }
+  async function choose(answer: string) {
+    if (answered) return;
+    if (mode === 'sprint' && Date.now() >= deadline) {
+      finish();
+      return;
+    }
+    answered = true;
+    const q = pool[i];
+    const feedback = el('[data-feedback]');
+    feedback.replaceChildren();
+    if (q.verified) {
+      const correct = q.answer === answer;
+      scored++;
+      if (correct) {
+        right++;
+        combo++;
+        pendingReward = reward(q.id, answer).then(amount => { xp += amount; });
+        await pendingReward;
+      } else combo = 0;
+      best = Math.max(best, combo);
+      p = javobniYoz(p, q.id, q.type, correct);
+      save();
+      feedback.append(
+        matnElement('h3', correct ? 'To‘g‘ri javob' : 'Qayta ko‘rib chiqing'),
+      );
+    } else {
+      combo = 0;
+      feedback.append(matnElement('h3', 'Javob tekshirilmoqda'));
+    }
+    const steps = document.createElement('ol');
+    for (const step of q.explanation.steps)
+      steps.append(matnElement('li', step));
+    feedback.append(
+      matnElement('p', q.explanation.rule),
+      steps,
+      matnElement('p', 'Tuzoq. ' + q.explanation.trap),
+    );
+    feedback.hidden = false;
+    el('[data-next]').hidden = false;
+    for (const b of el('[data-options]').querySelectorAll('button'))
+      b.disabled = true;
+    progress();
+  }
+  function show() {
+    if (i >= pool.length) {
+      finish();
+      return;
+    }
+    answered = false;
+    const q = pool[i];
+    el('[data-heading]').textContent = `${i + 1} / ${pool.length} savol`;
+    el('[data-stem]').textContent = q.stem;
+    el('[data-pending]').hidden = q.verified;
+    el('[data-feedback]').hidden = true;
+    el('[data-next]').hidden = true;
+    const images = el('[data-images]');
+    images.replaceChildren();
+    for (const image of q.image) {
+      const button = document.createElement('button');
+      button.className = 'eyuf-image-button';
+      button.type = 'button';
+      button.setAttribute(
+        'aria-label',
+        `Savol rasmini kattalashtirish, ${image.page}-bet`,
+      );
+      const img = document.createElement('img');
+      img.src = yol(image.path);
+      img.alt = image.alt;
+      img.width = image.width;
+      img.height = image.height;
+      button.append(img);
+      button.addEventListener('click', () => {
+        origin = button;
+        const z = el<HTMLImageElement>('[data-zoom-image]');
+        z.src = img.src;
+        z.alt = img.alt;
+        zoom.showModal();
+        el('[data-close]').focus();
+      });
+      images.append(button);
+    }
+    const options = el('[data-options]');
+    options.replaceChildren();
+    for (const o of q.options) {
+      const b = document.createElement('button');
+      b.className = 'tugma tugma-ikkinchi';
+      b.textContent = `${o.id}. ${o.text}`;
+      b.addEventListener('click', () => choose(o.id));
+      options.append(b);
+    }
+    el('[data-heading]').focus();
+  }
+  el('[data-begin]').addEventListener('click', () => {
+    mode = el<HTMLSelectElement>('[data-mode]').value;
+    const type = el<HTMLSelectElement>('[data-type]').value;
+    pool = savollarniSarala(bank, settings, {
+      level: el<HTMLSelectElement>('[data-level]').value,
+      mock: false,
+    }).filter(
+      (q: (typeof bank.items)[number]) => type === 'all' || q.type === type,
+    );
+    if (mode === 'review')
+      pool = pool.filter(
+        (q) => p.reviews[q.id] && p.reviews[q.id].due <= Date.now(),
+      );
+    if (mode === 'daily') {
+      const day = toshkentKuni();
+      const available = savollarniSarala(bank, settings, {
+        level: el<HTMLSelectElement>('[data-level]').value,
+        mock: true,
+      });
+      if (!p.daily[day]) {
+        p.daily[day] = available
+          .slice(0, 10)
+          .map((q: (typeof bank.items)[number]) => q.id);
+        save();
+      }
+      pool = available.filter((q: (typeof bank.items)[number]) =>
+        p.daily[day].includes(q.id),
+      );
+    }
+    if (!pool.length) {
+      el('[data-empty]').textContent =
+        'Hozir bu tanlov uchun savol yo‘q. Boshqa tur yoki rejimni tanlang.';
+      return;
+    }
+    if (mode === 'practice' || mode === 'combo') {
+      const next = mosSavolniTanla(pool, p);
+      const index = next ? pool.indexOf(next) : -1;
+      if (index >= 0) [pool[0], pool[index]] = [pool[index], pool[0]];
+    }
+    i = right = scored = combo = best = xp = 0;
+    el('[data-start]').hidden = true;
+    el('[data-result]').hidden = true;
+    el('[data-question]').hidden = false;
+    deadline = Date.now() + 60000;
+    el('[data-timer]').textContent = '';
+    if (mode === 'sprint')
+      clock = setInterval(() => {
+        const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+        el('[data-timer]').textContent = `${seconds} soniya`;
+        if (!seconds) finish();
+      }, 250);
+    show();
+  });
+  el('[data-next]').addEventListener('click', () => {
+    i++;
+    if (mode === 'practice' || mode === 'combo') {
+      const next = mosSavolniTanla(pool.slice(i), p);
+      const index = next ? pool.indexOf(next, i) : -1;
+      if (index >= 0) [pool[i], pool[index]] = [pool[index], pool[i]];
+    }
+    show();
+  });
+  el('[data-finish]').addEventListener('click', finish);
+  el('[data-again]').addEventListener('click', () => {
+    el('[data-result]').hidden = true;
+    el('[data-start]').hidden = false;
+    el<HTMLSelectElement>('[data-mode]').focus();
+  });
+  root.addEventListener('keydown', (e) => {
+    if (
+      zoom.open ||
+      el('[data-question]').hidden ||
+      (e.target as HTMLElement).matches('input,textarea,select') ||
+      e.ctrlKey ||
+      e.metaKey ||
+      e.altKey
+    )
+      return;
+    const letter = e.key.toUpperCase();
+    if (
+      /^[A-G]$/.test(letter) &&
+      pool[i]?.options.some((o) => o.id === letter)
+    ) {
+      e.preventDefault();
+      choose(letter);
+    }
+  });
+  el('[data-clear]').addEventListener('click', () => {
+    if (
+      confirm(
+        'Trenajyor tarix, mahorat va takrorlash navbati tozalansinmi? Eski IQ XP saqlanadi.',
+      )
+    ) {
+      p = boshProgress();
+      lokalYoz(key, p, msg);
+      progress();
+    }
+  });
+  window.addEventListener('pagehide', () => {
+    if (clock) clearInterval(clock);
+  });
+  progress();
+  el<HTMLButtonElement>('[data-begin]').disabled = false;
+}
+</script>
+<style is:global>
+.eyuf-ui .eyuf-image-button {
+  display: block;
+  width: 100%;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  cursor: zoom-in;
+}
+.eyuf-image-button img {
+  max-width: 100%;
+  height: auto;
+}
+</style>

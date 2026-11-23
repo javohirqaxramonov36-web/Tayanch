@@ -10,7 +10,7 @@ import { qavatlar } from '../data/qavatlar';
 import { korinadiganDeadlinelar } from '../data/deadline';
 import { yol } from '../lib/yol';
 
-interface Props { bolim: BolimSlug }
+interface Props { bolim: Exclude<BolimSlug, 'ai-academy'> }
 const { bolim } = Astro.props;
 const b = bolimlar.find((x) => x.slug === bolim)!;
 const q = qavatlar.find((x) => x.slug === bolim)!;
@@ -19,7 +19,7 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
 ---
 <Asosiy
   title={q.nomi}
-  description={`${q.raqam}-qavat · ${q.nomi}. ${b.tavsif}`}
+  description={`${q.nomi}. ${b.tavsif}`}
   turi="bolim-kirishi"
   bolim={bolim}
   holat="qoralama"
@@ -29,8 +29,8 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
   tekshirilmagan={["Bo'lim hali qurilmoqda: bu sahifada faqat tavsif va rasmiy manbali muddatlar bor."]}
 >
   <section class="ichki qurilmoqda" aria-labelledby="q-h">
-    <p class="pill">Qavat qurilmoqda</p>
-    <h1 id="q-h">{q.raqam}-qavat · {q.nomi}</h1>
+    <p class="pill">Bo'lim qurilmoqda</p>
+    <h1 id="q-h">{q.nomi}</h1>
     <p class="tavsif">{b.tavsif}</p>
 
     {bolim === 'top-admission' && (
@@ -38,6 +38,14 @@ const manbaIdlar = [...new Set(muddatlar.flatMap((d) => d.manbaIdlar))];
         <span class="vk-yorliq">Vosita</span>
         <span class="vk-nom">Topshirish yo'li</span>
         <span class="vk-matn">Davlat, daraja va grant bo'yicha mos ariza yo'llari.</span>
+      </a>
+    )}
+
+    {bolim === 'eyuf' && (
+      <a class="vosita-karta" href={yol('/uz/eyuf/kurslar/')}>
+        <span class="vk-yorliq">Kurslar</span>
+        <span class="vk-nom">Bepul kurslar</span>
+        <span class="vk-matn">Nega chet elda o'qish kerak va El-Yurt Umidi suhbatiga tayyorgarlik.</span>
       </a>
     )}
 

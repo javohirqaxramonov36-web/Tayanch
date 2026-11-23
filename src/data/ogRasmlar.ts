@@ -3,7 +3,8 @@
 // alt: SAT inglizcha (3-qavat qoidasi), qolganlari o'zbekcha.
 import type { BolimSlug } from './bolimlar';
 
-export type OgSlug = 'navigator' | BolimSlug;
+// AI Academy'ning o'z rasmi hali yo'q: ogQavat uni 1-qavat (navigator) rasmiga tushiradi.
+export type OgSlug = 'navigator' | Exclude<BolimSlug, 'ai-academy'>;
 
 export const OG_KENGLIK = 1200;
 export const OG_BALANDLIK = 630;
@@ -11,23 +12,23 @@ export const OG_BALANDLIK = 630;
 export const ogRasmlar: Record<OgSlug, { fayl: string; alt: string }> = {
   navigator: {
     fayl: '/og/navigator.webp',
-    alt: "Ertalabki shahar ko'rinadigan deraza oldidagi stol: kompas, xarita, daftar va choy piyolasi. Tayanch, 1-qavat: Navigator.",
+    alt: "Ertalabki shahar ko'rinadigan deraza oldidagi stol: kompas, xarita, daftar va choy piyolasi. Tayanch: Navigator.",
   },
   'top-admission': {
     fayl: '/og/top-admission.webp',
-    alt: "Kutubxona stolida konvertlar, pero ruchka va choy piyolasi. Tayanch, 2-qavat: Top Admission.",
+    alt: "Kutubxona stolida konvertlar, pero ruchka va choy piyolasi. Tayanch: Top Admission.",
   },
   sat: {
     fayl: '/og/sat.webp',
-    alt: 'A hand sketching on grid paper next to a laptop, a calculator and a cup of green tea. Tayanch, Floor 3: SAT prep.',
+    alt: 'A hand sketching on grid paper next to a laptop, a calculator and a cup of green tea. Tayanch: SAT prep.',
   },
   ielts: {
     fayl: '/og/ielts.webp',
-    alt: "Kechki o'qish burchagi: ochiq kitob ushlagan qo'llar, quloqchin va choy piyolasi. Tayanch, 4-qavat: IELTS prep.",
+    alt: "Kechki o'qish burchagi: ochiq kitob ushlagan qo'llar, quloqchin va choy piyolasi. Tayanch: IELTS prep.",
   },
   eyuf: {
     fayl: '/og/eyuf.webp',
-    alt: "Aeroport ko'rinadigan deraza oldida atlas ro'molli chamadon va ryukzak. Tayanch, 5-qavat: EYUF prep.",
+    alt: "Aeroport ko'rinadigan deraza oldida atlas ro'molli chamadon va ryukzak. Tayanch: EYUF prep.",
   },
 };
 

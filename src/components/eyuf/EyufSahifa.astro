@@ -1,0 +1,212 @@
+---
+import BolimQobiq from '../../layouts/BolimQobiq.astro';
+import QavatFoto from '../QavatFoto.astro';
+import { yol } from '../../lib/yol';
+import sourceRegistry from '../../../data/eyuf/sources.json';
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/'], ['IQ mashq', '/uz/eyuf/trenajyor/'], ['Mock', '/uz/eyuf/mock/'], ['Suhbat', '/uz/eyuf/suhbat/'], ['Sohalar', '/uz/eyuf/soha/'], ['Natija', '/uz/eyuf/natija/']];
+---
+<BolimQobiq title={`${title} · EYUF`} description={description} turi="vosita" bolim="eyuf" holat="qoralama">
+  <div class="ichki eyuf-ui">
+    <nav class="eyuf-tabs" aria-label="EYUF tayyorgarlik"><a href={yol('/uz/eyuf/')}>EYUF</a>{links.map(([name, path]) => <a href={yol(path)} aria-current={Astro.url.pathname === path ? 'page' : undefined}>{name}</a>)}</nav>
+    <header><h1>{title}</h1><p>{description}</p></header>
+    <slot />
+    <footer class="eyuf-panel eyuf-small"><p>Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p><p>Manba reyestri yangilangan sana — {sourceRegistry.as_of}. Har manbaning davri alohida qayd etiladi. Joriy tanlov uchun rasmiy e’lonni tekshiring. <a href="https://el-yurt.uz/candidates" target="_blank" rel="noopener noreferrer">Jamg‘arma sayti (yangi oynada)</a></p><button type="button" class="tugma tugma-ikkinchi" data-eyuf-tozala>EYUF ma’lumotlarimni o‘chirish</button><p data-eyuf-tozalash-xabar role="status"></p></footer>
+  </div><QavatFoto bolim="eyuf" />
+</BolimQobiq>
+<style is:global>
+.eyuf-ui {
+  display: grid;
+  gap: var(--space-6);
+  padding-top: var(--space-5);
+}
+.eyuf-ui [hidden] {
+  display: none !important;
+}
+.eyuf-ui header {
+  display: grid;
+  gap: var(--space-3);
+}
+.eyuf-ui header p,
+.eyuf-ui .eyuf-small {
+  color: var(--color-text-secondary);
+}
+.eyuf-ui .eyuf-small {
+  font-size: var(--text-small-size);
+}
+.eyuf-ui .eyuf-panel {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--nav-glass-bg);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--nav-glass-mobile);
+}
+.eyuf-ui .eyuf-panel .eyuf-panel {
+  backdrop-filter: none;
+  background: var(--color-surface);
+}
+.eyuf-ui .eyuf-tabs,
+.eyuf-ui .eyuf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+.eyuf-ui .eyuf-tabs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch-min);
+  padding-inline: var(--space-3);
+  color: var(--color-link);
+}
+.eyuf-ui a[aria-current="page"] {
+  font-weight: var(--font-weight-bold);
+  text-decoration-thickness: var(--border-width-2);
+}
+.eyuf-ui fieldset {
+  min-width: 0;
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-4);
+}
+.eyuf-ui legend {
+  padding-inline: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+}
+.eyuf-ui label {
+  display: grid;
+  gap: var(--space-2);
+}
+.eyuf-ui input:not([type="checkbox"]),
+.eyuf-ui select,
+.eyuf-ui textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--size-touch-min);
+  padding: var(--space-3);
+  border: var(--border-width-1) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+}
+.eyuf-ui textarea {
+  min-height: var(--space-16);
+  resize: vertical;
+}
+.eyuf-ui .eyuf-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, calc(var(--space-16) * 4)), 1fr)
+  );
+  gap: var(--space-4);
+}
+.eyuf-ui .eyuf-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: var(--size-touch-min);
+}
+.eyuf-ui input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: var(--space-1);
+  width: var(--space-5);
+  height: var(--space-5);
+}
+.eyuf-ui .eyuf-list {
+  display: grid;
+  gap: var(--space-3);
+  padding-left: var(--space-5);
+}
+.eyuf-ui .eyuf-error {
+  color: var(--color-text-primary);
+  border-inline-start: var(--border-width-2) solid var(--color-border-strong);
+  padding: var(--space-3);
+  background: var(--color-surface);
+}
+.eyuf-ui summary {
+  cursor: pointer;
+  min-height: var(--size-touch-min);
+  padding-block: var(--space-3);
+  font-weight: var(--font-weight-semibold);
+}
+.eyuf-ui button,
+.eyuf-ui a {
+  touch-action: manipulation;
+}
+.eyuf-ui :focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--space-1);
+}
+.eyuf-ui h2:focus,
+.eyuf-ui h3:focus {
+  outline: none;
+}
+.eyuf-ui audio {
+  width: 100%;
+}
+.eyuf-ui progress {
+  width: 100%;
+  height: var(--space-3);
+  accent-color: var(--floor-ui);
+}
+.eyuf-ui dialog {
+  max-width: calc(100% - var(--space-6));
+  max-height: calc(100% - var(--space-6));
+  padding: var(--space-4);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+.eyuf-ui dialog img {
+  max-width: 100%;
+  height: auto;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .eyuf-ui .eyuf-panel {
+    background: var(--color-surface);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .eyuf-ui .eyuf-panel {
+    background: var(--color-surface);
+    backdrop-filter: none;
+  }
+}
+</style>
+
+<script>
+const button = document.querySelector<HTMLButtonElement>('[data-eyuf-tozala]');
+button?.addEventListener('click', () => {
+  if (
+    !confirm(
+      'Ushbu brauzerdagi EYUF reja, kurs, esse, suhbat va IQ progressi, jumladan lokal XP o‘chirilsinmi?',
+    )
+  )
+    return;
+  try {
+    for (const key of [
+      'tayanch:eyuf-reja:v1',
+      'tayanch:eyuf-kurs-progress:v1',
+      'tayanch:eyuf-esse:v1',
+      'tayanch:eyuf-suhbat-progress:v1',
+      'tayanch:eyuf-iq-progress:v1',
+      'tayanch:eyuf-iq:v1',
+      'tayanch:eyuf-mock:v1',
+    ])
+      localStorage.removeItem(key);
+    window.location.reload();
+  } catch {
+    document.querySelector('[data-eyuf-tozalash-xabar]')!.textContent =
+      'Ayrim ma’lumotlarni o‘chirib bo‘lmadi. Brauzer ruxsatlarini tekshirib qayta urinib ko‘ring.';
+  }
+});
+</script>

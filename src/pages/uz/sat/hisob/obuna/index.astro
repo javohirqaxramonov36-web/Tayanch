@@ -16,6 +16,7 @@
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import UsageBar from '../../../../../components/sat/UsageBar.astro';
+import TolovUsullari from '../../../../../components/sat/TolovUsullari.astro';
 import Belgi from '../../../../../components/sat/TarifBelgi.astro';
 import { satTarif, usulNomi } from '../../../../../data/satTarif';
 import { yol } from '../../../../../lib/yol';
@@ -59,6 +60,7 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
           <p class="ikkinchi kichik" data-cheklov-yoq hidden>Nothing on this site is limited on Free right now.</p>
         </div>
         <button type="button" class="tugma tugma-asosiy uzaytir" data-uzaytir hidden>Extend</button>
+        <TolovUsullari />
       </section>
 
       <!-- 1. Joriy tarif va sarf -->
@@ -125,6 +127,7 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
               </div>
               <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
               <button type="button" class="tugma tugma-asosiy tolov-tugma" data-tolov={t.kod} hidden>Continue to payment</button>
+              <TolovUsullari />
             </article>
           ))}
         </div>

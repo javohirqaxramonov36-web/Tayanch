@@ -13,11 +13,11 @@ Holat: P04, PR #59 da 2026-11-13 merge qilingan. Adapter hisob moduliga (P03, `h
 | `src/components/SatSinxron.astro` | "Import this device's progress?" dialogi (BolimQobiq `bolim="sat"` va SatFokus) |
 | `scripts/sinxron-test.ts` | Soxta server bilan sinov: `npm run sinxron:tekshir` |
 
-Yozish nuqtalari adapterga ulangan: `darsSaqlash.oqi/yoz` (dars progressi, xato daftari, takrorlash, reja, xato sababi `xatoSabab.ts`), `mashq/test` (javoblar), `vosita/rasmiy-testlar` (Test tracker, P11; "Delete all data" `holatOchir` orqali), o'chirish tugmalari (`vosita/natijalar`, `vosita/reja`, `vosita/takrorlash`). Boshqa bo'limlar (IELTS, Top Admission) kalitlari faqat localStorage'da qoladi: adapter ularni kuzatmaydi.
+Yozish nuqtalari adapterga ulangan: `darsSaqlash.oqi/yoz` (dars progressi, xato daftari, takrorlash, reja, xato sababi `xatoSabab.ts`), `mashq/test` (javoblar), `vosita/rasmiy-testlar` (Test tracker, P11; "Delete all data" `holatOchir` orqali), o'chirish tugmalari (`vosita/natijalar`, `vosita/reja`, `vosita/takrorlash`). Top Admission'dan bitta kalit: "Menga mos universitet" shortlisti (`tayanch:admission-shortlist`, Admission D-seriya Q4, `src/pages/uz/top-admission/universitetlar/`). Boshqa bo'limlar (IELTS, Top Admission'ning qolgan kalitlari) faqat localStorage'da qoladi: adapter ularni kuzatmaydi.
 
 ## Kalit → jadval xaritasi
 
-Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `primary key (user_id, key)`, RLS: faqat o'z qatorlari).
+Hamma SAT kaliti (va Top Admission shortlisti) `public.user_state` ga yoziladi (bitta qator = bitta kalit, `primary key (user_id, key)`, RLS: faqat o'z qatorlari).
 
 | Brauzer kaliti | Shakl (localStorage) | Yozuv id'si | `user_state.key` |
 | --- | --- | --- | --- |
@@ -29,6 +29,7 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 | `tayanch:sat-xato-sabab` | `{ versiya: 1, savollar: { id: { teg, izoh } } }` (P09, `xatoSabab.ts`) | savol id | xuddi shu |
 | `tayanch:sat-rasmiy-testlar` | `{ versiya: 1, testlar, xatolar }` (P11, `rasmiyTestlar.ts`) | `test` yoki `xato` + TAB + `id` | xuddi shu |
 | `tayanch:sat-afzallik` | `{ versiya: 1, rejim: 'practice' \| 'timed', kunlikDaqiqa: 15 \| 30 \| 45 \| 60 \| null }` (My SAT profile, `src/lib/sat/afzallik.ts`) | `afzallik` (bitta yozuv) | xuddi shu |
+| `tayanch:admission-shortlist` | `[{ id: slug }]`, yangisi birinchi, 200 tagacha (`src/lib/topAdmission/universitetMoslik.ts`) | `id` (universitet slug'i) | xuddi shu |
 | — | — | — | `tayanch:sat-import`: profil bayrog'i `{ versiya, migrated, birinchi, oxirgi, soni }` |
 
 `user_state.value` shakli: `{ versiya: 1, qiymat, t, o }`. `qiymat` brauzerdagi qiymatning o'zi, `t` har yozuvning oxirgi o'zgarish vaqti (ms), `o` o'chirilgan yozuvlar (tombstone, ms; har kalitda eng yangi 1000 tasi).
@@ -84,7 +85,7 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 ## Mahalliy nusxa
 
 - Importdan keyin brauzerdagi nusxa qoladi (zaxira).
-- **Clear local copy** (dialogning yakuniy qadamida, tasdiq bilan): brauzerdagi 7 ta SAT kaliti (ro'yxatdagilar) va yordamchi kalitlarni o'chiradi, hisobdagi nusxaga tegmaydi (tombstone qo'yilmaydi). Yuborilmagan o'zgarish bo'lsa o'chirmaydi. Hisob bilan kirilgan holatda keyingi SAT sahifasida nusxa serverdan qayta yuklanadi.
+- **Clear local copy** (dialogning yakuniy qadamida, tasdiq bilan): brauzerdagi ro'yxatdagi kalitlar (SAT kalitlari va Top Admission shortlisti) va yordamchi kalitlarni o'chiradi, hisobdagi nusxaga tegmaydi (tombstone qo'yilmaydi). Yuborilmagan o'zgarish bo'lsa o'chirmaydi. Hisob bilan kirilgan holatda keyingi SAT sahifasida nusxa serverdan qayta yuklanadi.
 - 1-qavatdagi "brauzer ma'lumotlarini o'chirish" tugmasi ham faqat brauzerni tozalaydi.
 
 ## Ma'lum cheklovlar
@@ -93,6 +94,14 @@ Hamma SAT kaliti `public.user_state` ga yoziladi (bitta qator = bitta kalit, `pr
 - Bir vaqtda ikki tab: har biri o'z navbatini yuboradi, birlashtirish idempotent bo'lgani uchun ma'lumot yo'qolmaydi, lekin ortiqcha so'rov bo'lishi mumkin.
 - `user_state` qatori 256 KB bilan cheklangan; hozirgi chegaralar (500 javob, 300 xato, 1000 tombstone) bilan bu yetarli bo'lishi kerak, haqiqiy hajm tekshirilmagan.
 - Server qismi faqat soxta server bilan sinalgan; haqiqiy Supabase (upsert, RLS) bilan hali sinalmagan.
+
+## Top Admission shortlisti (Q4)
+
+- Server tomonda o'zgarish yo'q: `user_state.key` faqat `^tayanch:[a-z0-9:_-]{1,92}$` bilan tekshiriladi, RLS o'z qatorlari. Kalit faqat mijozdagi `SINXRON_KALITLAR` ga qo'shilgan (migratsiya, RPC, jadval yo'q).
+- Rozilik umumiy: SAT dialogidagi "Import" yoki Top Admission sahifasidagi "Hisobga saqlash" tugmasi (`importQil`) bir xil qaror. "Hisobga saqlash" matni SAT progressi ham ko'chishini aytadi. Top Admission sahifasida avtomatik dialog yo'q: holat matni va tugma sahifa ichida (`sinxronHolati()`).
+- `hisobniUla()` ni shortlist sahifasi o'zi chaqiradi (BolimQobiq faqat SAT'da chaqiradi). Hisobsiz: supabase-js yuklanmaydi, hech narsa yuborilmaydi.
+- SAT dialogidagi sanoqda "saved university (Top Admission)" qatori ko'rinadi; "Clear local copy" shortlistni ham brauzerdan o'chiradi (hisobdagi nusxa qoladi).
+- Sinov: `npm run sinxron:tekshir` dagi "Shortlist" sinovi (soxta server). Haqiqiy Supabase bilan sinalmagan.
 
 ## Hisob bilan ulash
 

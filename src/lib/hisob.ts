@@ -181,7 +181,16 @@ export function hisobQorovul(): Promise<Session | null> {
     if (!c) return null;
     const { data } = await c.auth.getSession();
     if (!data.session) {
-      location.replace(`${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname)}`);
+      if (document.querySelector('[data-kirish-dialog]') && !document.querySelector('[data-qorovul-yonaltir]')) {
+        const kirdi = new Promise<void>((resolve) => document.addEventListener('tayanch:hisob-kirdi', () => resolve(), { once: true }));
+        document.dispatchEvent(new CustomEvent('tayanch:kirish-och', { detail: { keyin: location.pathname + location.search } }));
+        await kirdi;
+        const session = (await c.auth.getSession()).data.session;
+        if (!session) return null;
+        if ((await rozilikHolati(c, session)) === 'yoq') { location.replace(rozilikYoli(location.pathname + location.search)); return null; }
+        return session;
+      }
+      location.replace(`${hisobYoli('kirish')}?keyin=${encodeURIComponent(location.pathname + location.search)}`);
       return null;
     }
     if ((await rozilikHolati(c, data.session)) === 'yoq') {

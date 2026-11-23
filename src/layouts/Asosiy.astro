@@ -13,7 +13,7 @@ export interface Props {
   description: string;
   til?: 'uz' | 'en';
   turi: 'bosh-sahifa' | 'bolim-kirishi' | 'qollanma' | 'yonalish' | 'mashq' | 'vosita' | 'umumiy';
-  bolim: 'umumiy' | 'top-admission' | 'ielts' | 'sat' | 'eyuf';
+  bolim: 'umumiy' | 'top-admission' | 'ielts' | 'sat' | 'eyuf' | 'ai-academy';
   holat: 'qoralama' | 'chop-etilgan';
   tekshirilgan?: string;
   keyingiTekshiruv?: string;
@@ -38,7 +38,7 @@ const {
   </head>
   <body>
     <a class="otish" href="#asosiy">Asosiy matnga o'tish</a>
-    <Menyu />
+    <Menyu qm={Astro.slots.has('menyu')}><slot name="menyu" slot="markaz" /></Menyu>
     <main id="asosiy">
       <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={title} /></div>
       <slot />

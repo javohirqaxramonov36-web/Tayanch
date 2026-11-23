@@ -1,0 +1,429 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "as_of": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "course": {
+            "enum": [
+              "c0",
+              "c1",
+              "c2",
+              "c3",
+              "c4"
+            ]
+          },
+          "module": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "bachelor",
+                "master"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "goal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "duration_min": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "content_blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "outline",
+                    "text"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "verified": {
+                  "type": "boolean"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "enum": [
+                          "S01",
+                          "S02",
+                          "S03",
+                          "S04",
+                          "S05",
+                          "S06",
+                          "S07",
+                          "S08",
+                          "S09",
+                          "S10",
+                          "S11",
+                          "S12",
+                          "S13",
+                          "T01",
+                          "R01",
+                          "R02",
+                          "RP1",
+                          "RP2",
+                          "R03",
+                          "RP3",
+                          "R04",
+                          "RP4",
+                          "RP5",
+                          "R05",
+                          "RP6",
+                          "RP7",
+                          "R06",
+                          "R07",
+                          "RP8",
+                          "R08",
+                          "R09",
+                          "R10",
+                          "R11",
+                          "RP9",
+                          "R12",
+                          "RP10",
+                          "R13",
+                          "RP11",
+                          "R14",
+                          "N1",
+                          "N2",
+                          "N3",
+                          "P01",
+                          "P02",
+                          "P03",
+                          "P04",
+                          "P05",
+                          "P06",
+                          "P07",
+                          "P08",
+                          "P09",
+                          "P10",
+                          "P11",
+                          "P12",
+                          "P13",
+                          "P14",
+                          "P15",
+                          "P16",
+                          "P17",
+                          "D01",
+                          "D02",
+                          "D03",
+                          "N4",
+                          "H01",
+                          "H02",
+                          "H03",
+                          "A01",
+                          "A02",
+                          "A03",
+                          "A04",
+                          "A05",
+                          "P18",
+                          "P19",
+                          "D04",
+                          "D05",
+                          "D06",
+                          "D07",
+                          "D08",
+                          "D09",
+                          "D10",
+                          "D11",
+                          "D12",
+                          "D13",
+                          "D14",
+                          "D15",
+                          "D16",
+                          "D17",
+                          "D18",
+                          "L01",
+                          "L02",
+                          "L03",
+                          "L04",
+                          "L05",
+                          "L06",
+                          "L07",
+                          "L08",
+                          "L09",
+                          "L10",
+                          "Q01",
+                          "Q02",
+                          "Q03",
+                          "Q04",
+                          "Q05",
+                          "Q06",
+                          "L11",
+                          "Q07",
+                          "Q08",
+                          "Q09",
+                          "Q10",
+                          "Q11",
+                          "Q12",
+                          "Q13",
+                          "Q14",
+                          "O01",
+                          "O02",
+                          "O03",
+                          "N01",
+                          "W01"
+                        ]
+                      },
+                      "locator": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "locator"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "uniqueItems": false
+                }
+              },
+              "required": [
+                "type",
+                "text",
+                "verified",
+                "sources"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "uniqueItems": false
+          },
+          "activity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "output": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "enum": [
+                    "S01",
+                    "S02",
+                    "S03",
+                    "S04",
+                    "S05",
+                    "S06",
+                    "S07",
+                    "S08",
+                    "S09",
+                    "S10",
+                    "S11",
+                    "S12",
+                    "S13",
+                    "T01",
+                    "R01",
+                    "R02",
+                    "RP1",
+                    "RP2",
+                    "R03",
+                    "RP3",
+                    "R04",
+                    "RP4",
+                    "RP5",
+                    "R05",
+                    "RP6",
+                    "RP7",
+                    "R06",
+                    "R07",
+                    "RP8",
+                    "R08",
+                    "R09",
+                    "R10",
+                    "R11",
+                    "RP9",
+                    "R12",
+                    "RP10",
+                    "R13",
+                    "RP11",
+                    "R14",
+                    "N1",
+                    "N2",
+                    "N3",
+                    "P01",
+                    "P02",
+                    "P03",
+                    "P04",
+                    "P05",
+                    "P06",
+                    "P07",
+                    "P08",
+                    "P09",
+                    "P10",
+                    "P11",
+                    "P12",
+                    "P13",
+                    "P14",
+                    "P15",
+                    "P16",
+                    "P17",
+                    "D01",
+                    "D02",
+                    "D03",
+                    "N4",
+                    "H01",
+                    "H02",
+                    "H03",
+                    "A01",
+                    "A02",
+                    "A03",
+                    "A04",
+                    "A05",
+                    "P18",
+                    "P19",
+                    "D04",
+                    "D05",
+                    "D06",
+                    "D07",
+                    "D08",
+                    "D09",
+                    "D10",
+                    "D11",
+                    "D12",
+                    "D13",
+                    "D14",
+                    "D15",
+                    "D16",
+                    "D17",
+                    "D18",
+                    "L01",
+                    "L02",
+                    "L03",
+                    "L04",
+                    "L05",
+                    "L06",
+                    "L07",
+                    "L08",
+                    "L09",
+                    "L10",
+                    "Q01",
+                    "Q02",
+                    "Q03",
+                    "Q04",
+                    "Q05",
+                    "Q06",
+                    "L11",
+                    "Q07",
+                    "Q08",
+                    "Q09",
+                    "Q10",
+                    "Q11",
+                    "Q12",
+                    "Q13",
+                    "Q14",
+                    "O01",
+                    "O02",
+                    "O03",
+                    "N01",
+                    "W01"
+                  ]
+                },
+                "locator": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "locator"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "uniqueItems": false
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "as_of": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "review_notes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "uniqueItems": false
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "published"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "course",
+          "module",
+          "title",
+          "level",
+          "goal",
+          "duration_min",
+          "content_blocks",
+          "activity",
+          "output",
+          "sources",
+          "verified",
+          "as_of",
+          "review_notes",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "as_of",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

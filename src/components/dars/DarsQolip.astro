@@ -11,6 +11,8 @@ import type { DarsBolim, DarsSavol } from '../../data/darsTurlar';
 import { tinishmi } from '../../lib/belgilashGuruh';
 import { bolimTili, matn } from '../../data/umumiyMatn';
 import { yol } from '../../lib/yol';
+import TelegramTugma from '../TelegramTugma.astro';
+import { telegramKorinadi } from '../../data/telegram';
 
 interface Props {
   bolim: DarsBolim;
@@ -60,7 +62,7 @@ const katalog = bolim === 'ielts' ? '/uz/ielts/qollanma/reading/'
   : bolim === 'sat' && Astro.url.pathname.includes('/reading-writing/') ? '/uz/sat/qollanma/reading-writing/'
   : bolim === 'sat' ? '/uz/sat/qollanma/qayerdan-boshlash/' : null;
 const qadamNomlari = Astro.props.qadamNomlari ?? M.qadamNomlari;
-// Indekslash: SAT va IELTS darslari chop etilgan (muallif, 2026-11-18); Top Admission hali qoralama.
+// Indekslash: hamma darslar chop etilgan (SAT, IELTS: muallif 2026-11-18; Top Admission: 2026-11-21, "Qoralama" yorlig'i ham olingan).
 const HARF = 'ABCD';
 const qadamlar = [
   { id: 'animatsiya', nomi: qadamNomlari[0] },
@@ -74,14 +76,14 @@ const qadamlar = [
   turi="qollanma"
   yol={yolBandlari}
   bolim={bolim}
-  holat={bolim === 'top-admission' ? 'qoralama' : 'chop-etilgan'}
+  holat="chop-etilgan"
 >
   <div class="ichki dars" data-modul={modul} data-savol-tili={savolTili}>
     <header class="bosh">
       <p class="pill-qator">
         <span class="ustki-kok">{darsTuri}</span>
         <span class="pill">{yonalish}</span>
-        <span class="pill pill-chiziq">{M.qoralama}</span>
+        {bolim !== 'top-admission' && <span class="pill pill-chiziq">{M.qoralama}</span>}
       </p>
       <h1>{sarlavha}</h1>
       {keyingi && <a class="dars-keyingi" href={keyingi.href}>{keyingiNomi}</a>}
@@ -252,6 +254,15 @@ const qadamlar = [
         </nav>
       ) : keyingi && (
         <a class="katta asosiy keyingi-dars" href={keyingi.href}>{keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi)}</a>
+      )}
+      {telegramKorinadi('guruh') && (
+        <aside class="telegram-blok" aria-labelledby="telegram-h">
+          <div>
+            <h3 id="telegram-h">{M.telegramSavol}</h3>
+            <p class="kichik ikkinchi">{M.telegramIzoh}</p>
+          </div>
+          <TelegramTugma turi="guruh" matn={M.telegramTugma} yangiTab={matn[til].yon.yangiTab} />
+        </aside>
       )}
       <QavatlarAro kartalar={darsQavatlarAro[modul] ?? []} daraja="h3" />
     </section>
@@ -734,4 +745,7 @@ const qadamlar = [
     .dars .soz-bolaklar { font-size: 18px; }
     .dars .parcha { padding: var(--b-3); }
   }
+  .telegram-blok { align-self: stretch; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3) var(--b-5); padding: var(--b-5); border: 1px solid var(--chiziq); border-radius: var(--r-orta); background: var(--sirt); }
+  .telegram-blok h3 { margin: 0; }
+  .telegram-blok p { margin: 0; }
 </style>

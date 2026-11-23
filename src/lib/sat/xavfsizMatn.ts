@@ -1,5 +1,5 @@
 // Savol matnini xavfsiz DOM ga aylantiradi (P06). innerHTML ishlatilmaydi.
-// 1) Formulalar ($...$, $$...$$) belgi bilan almashtiriladi (TeX dagi < > HTML sifatida o'qilmasin).
+// 1) Formulalar (\(...\), \[...\], $...$, $$...$$) belgi bilan almashtiriladi (TeX dagi < > HTML sifatida o'qilmasin).
 // 2) Matn DOMParser bilan inert hujjatga o'qiladi: skript ishlamaydi, rasm yuklanmaydi.
 // 3) Daraxt qayta quriladi: faqat ruxsat etilgan teglar createElement bilan, matn createTextNode bilan.
 //    Atributlardan faqat th[scope] (row/col). Boshqa teglar ochib tashlanadi, xavfli teglar mazmuni bilan o'chadi.
@@ -12,6 +12,8 @@ const FORMULA_BOSH = '\uE000';
 const FORMULA_OXIR = '\uE001';
 const DOLLAR = '\uE002';
 const BELGI_RE = /\uE000(\d+)\uE001/g;
+/** \[...\] | \(...\) | $$...$$ | $...$ (shu tartibda). */
+const FORMULA_RE = /\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g;
 
 interface Formula { tex: string; alohida: boolean }
 
@@ -44,8 +46,10 @@ function formulalarniAjrat(manba: string): { matn: string; formulalar: Formula[]
   const matn = manba
     .replace(/[\uE000-\uE002]/g, '') // ichki belgilar manbada bo'lmasin
     .replace(/\\\$/g, DOLLAR)
-    .replace(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g, (_, alohida: string | undefined, ichki: string | undefined) => {
-      formulalar.push({ tex: (alohida ?? ichki ?? '').trim(), alohida: alohida !== undefined });
+    // P05 savol formati \( ... \) va \[ ... \] ishlatadi (docs/savol-formati.md §4), eski matnlar $...$ va $$...$$.
+    .replace(FORMULA_RE, (_, kvAlohida?: string, kvIchki?: string, alohida?: string, ichki?: string) => {
+      const tex = kvAlohida ?? kvIchki ?? alohida ?? ichki ?? '';
+      formulalar.push({ tex: tex.trim(), alohida: kvAlohida !== undefined || alohida !== undefined });
       return `${FORMULA_BOSH}${formulalar.length - 1}${FORMULA_OXIR}`;
     });
   return { matn, formulalar };
@@ -133,4 +137,7 @@ export async function xavfsizMatn(manba: string, ota: HTMLElement): Promise<void
 }
 
 /** Testlar va SPR ko'rinishi uchun: matnda formula bormi */
-export const formulaBormi = (s: string) => /\$[^$]+\$/.test((s ?? '').replace(/\\\$/g, ''));
+export const formulaBormi = (s: string) => {
+  const t = (s ?? '').replace(/\\\$/g, '');
+  return /\$[^$]+\$/.test(t) || /\\\([\s\S]+?\\\)/.test(t) || /\\\[[\s\S]+?\\\]/.test(t);
+};

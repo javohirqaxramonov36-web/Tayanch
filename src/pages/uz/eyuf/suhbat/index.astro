@@ -1,0 +1,373 @@
+---
+import EsseHimoya from '../../../../components/eyuf/EsseHimoya.astro';
+import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import tracks from '../../../../../data/eyuf/tracks.json';
+import { yol } from '../../../../lib/yol';
+---
+<EyufSahifa title="Suhbatga tayyorgarlik" description="Savol kartalari, lokal ovoz yozuvi va mezonlar bo‘yicha o‘z bahongiz.">
+ <p class="eyuf-panel">Savollar norasmiy tayyorgarlik materiallaridan olingan. Xona bo‘linishi qo‘llanmadagi mashq tuzilishi. Rasmiy Nizom suhbat davlat tilida bo‘lishini belgilaydi. <a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">PF-77, 3-ilova, 25-band (yangi oynada)</a></p>
+ <p><a href={yol('/uz/eyuf/soha/')}>20 soha trekidan o‘zingiznikini toping</a> · <a href={yol('/uz/eyuf/hududlar/')}>Hududlar va sanali islohotlar</a></p>
+ <div id="eyuf-suhbat">
+  <p data-storage role="status" hidden></p>
+  <section class="eyuf-panel"><h2>Mashqni tanlang</h2><div class="eyuf-grid"><label>Xona<select data-room><option value="all">Barcha savollar</option><option value="1">1-xona</option><option value="2">2-xona</option><option value="specialty">Soha savollari</option></select></label><label>Daraja<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Soha<select data-track><option value="all">Barcha sohalar</option>{tracks.items.map(track=><option value={track.id}>{track.title}</option>)}</select></label><label>Mock davomiyligi<select data-minutes><option value="15">15 daqiqa</option><option value="20">20 daqiqa</option></select></label></div><div class="eyuf-actions"><button class="tugma tugma-asosiy" data-random>Tasodifiy savol</button><button class="tugma tugma-ikkinchi" data-mock>Mock suhbat</button></div><p data-queue role="status"></p><p>“Suhbatdosh” AI — keyingi bosqich.</p></section>
+  <section class="eyuf-panel" data-card hidden><div class="eyuf-actions"><h2 data-question tabindex="-1">Savol</h2><output data-timer aria-label="Mashq vaqti"></output></div><details><summary>Qo‘shimcha inglizcha mashq</summary><p lang="en" data-english></p><p>Norasmiy savolning Tayanch o‘quv tarjimasi. Rasmiy Nizom suhbat davlat tilida bo‘lishini belgilaydi.</p></details><p class="eyuf-small" data-source></p><p data-warning></p><label>Yozma javobingiz<textarea data-answer maxlength="15000" /></label><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-record>Ovoz yozishni boshlash</button><button class="tugma tugma-ikkinchi" data-stop disabled>Yozishni to‘xtatish</button></div><p data-record-state role="status">Ovoz tab xotirasida qoladi. Tabni yopishdan oldin yozuvni yuklab oling.</p><audio data-audio controls hidden></audio><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-audio-download disabled>Ovozni yuklab olish</button><button class="tugma tugma-ikkinchi" data-audio-clear disabled>Ovozni o‘chirish</button><button class="tugma tugma-asosiy" data-next>Keyingi savol</button><button class="tugma tugma-ikkinchi" data-finish>O‘z bahomga o‘tish</button></div></section>
+  <section class="eyuf-panel" aria-labelledby="rubrika-h"><h2 id="rubrika-h" tabindex="-1">O‘z-o‘zini baholash</h2><p>Tarixiy 2025-2 uslubiyoti asosidagi mashq. Joriy tanlovga tatbiqi tasdiqlanmagan. Ushbu baho rasmiy natija emas.</p><p><a href="https://api.el-yurt.uz/storage/competition-documents/67ec55a7-f608-4303-b7a7-799e020d0408-1763475015.pdf" target="_blank" rel="noopener noreferrer">2025-2 baholash uslubiyoti, 3–5-betlar (yangi oynada)</a></p>
+   <form data-rubric><div class="eyuf-grid">{[['Qadriyat, sadoqat va dunyoqarash',30],['Esse, maqsad va bilimni qo‘llash',30],['Mutaxassislik bilimi va amaliyot',40]].map(([name,max],i)=><fieldset><legend>{name}</legend><label>O‘z bahom, 0–{max}<input data-score={i} name={`score-${i}`} type="number" min="0" max={max} step="1" required /></label><label>Javobimdan asoslovchi misol<textarea name={`evidence-${i}`} maxlength="4000" required /></label></fieldset>)}</div><label class="eyuf-check"><input name="save" type="checkbox" />Faqat ball, savol IDsi va mashq sanasini shu brauzerda saqlash</label><button class="tugma tugma-asosiy" type="submit">O‘z bahomni ko‘rish</button></form>
+   <section data-result hidden aria-labelledby="suhbat-natija-h"><h3 id="suhbat-natija-h" tabindex="-1">Mezonlar bo‘yicha natija</h3><p data-total></p><div data-chart></div><table><caption>O‘z bahomning matnli jadvali</caption><thead><tr><th scope="col">Mezon</th><th scope="col">Ball</th></tr></thead><tbody data-table></tbody></table><label>Keyingi mashq vazifangiz<textarea data-task maxlength="4000" /></label><button class="tugma tugma-ikkinchi" data-download>Natijani yuklab olish</button></section><p data-history></p><button class="tugma tugma-ikkinchi" data-clear>Saqlangan suhbat progressini o‘chirish</button>
+  </section>
+ </div>
+<EsseHimoya />
+<h2>Tayyorlanish darslari</h2><KursDarslar modules={['yadro', 'simulyatsiya']} />
+</EyufSahifa>
+<script>
+import bank from '../../../../../data/eyuf/questions-interview.json';
+import { aralashtir } from '../../../../lib/eyuf/iq/model';
+import {
+  lokalOqi,
+  lokalYoz,
+  matnElement,
+  matnYukla,
+} from '../../../../lib/eyuf/holat';
+const root = document.querySelector<HTMLElement>('#eyuf-suhbat')!;
+const el = <T extends HTMLElement = HTMLElement>(s: string) =>
+  root.querySelector<T>(s)!;
+let current: (typeof bank.items)[number] | null = null;
+let queue: typeof bank.items = [];
+let mock = false,
+  index = 0,
+  deadline = 0,
+  start = 0,
+  tick: ReturnType<typeof setInterval> | null = null;
+const notes = new Map<string, string>();
+const recordings = new Map<string, { blob: Blob; url: string }>();
+let recorder: MediaRecorder | null = null,
+  stream: MediaStream | null = null,
+  request = 0;
+const record = el<HTMLButtonElement>('[data-record]'),
+  stop = el<HTMLButtonElement>('[data-stop]');
+const key = 'tayanch:eyuf-suhbat-progress:v1';
+interface History {
+  version: 1;
+  attempts: { at: string; scores: number[]; questions: string[] }[];
+}
+const valid = (v: unknown): v is History =>
+  !!v &&
+  typeof v === 'object' &&
+  'version' in v &&
+  v.version === 1 &&
+  'attempts' in v &&
+  Array.isArray(v.attempts) &&
+  v.attempts.every(
+    (a) =>
+      a &&
+      typeof a.at === 'string' &&
+      Array.isArray(a.scores) &&
+      a.scores.length === 3 &&
+      a.scores.every(
+        (n: unknown, i: number) =>
+          typeof n === 'number' && n >= 0 && n <= [30, 30, 40][i],
+      ) &&
+      Array.isArray(a.questions) &&
+      a.questions.every((q: unknown) => typeof q === 'string'),
+  );
+let history = lokalOqi(
+  key,
+  valid,
+  { version: 1, attempts: [] },
+  el('[data-storage]'),
+);
+el('[data-history]').textContent =
+  `Ushbu brauzerda ${history.attempts.length} mashq bahosi saqlangan.`;
+function audioView() {
+  const recording = current && recordings.get(current.id);
+  const audio = el<HTMLAudioElement>('[data-audio]');
+  audio.pause();
+  audio.hidden = !recording;
+  if (recording) audio.src = recording.url;
+  else audio.removeAttribute('src');
+  el<HTMLButtonElement>('[data-audio-download]').disabled = !recording;
+  el<HTMLButtonElement>('[data-audio-clear]').disabled = !recording;
+}
+async function stopRecording() {
+  request++;
+  if (recorder && recorder.state !== 'inactive')
+    await new Promise<void>((resolve) => {
+      recorder!.addEventListener('stop', () => resolve(), { once: true });
+      recorder!.stop();
+    });
+  stream?.getTracks().forEach((t) => t.stop());
+  stream = null;
+  recorder = null;
+  record.disabled = false;
+  stop.disabled = true;
+}
+function saveNote() {
+  if (current)
+    notes.set(current.id, el<HTMLTextAreaElement>('[data-answer]').value);
+}
+async function show(q: (typeof bank.items)[number]) {
+  await stopRecording();
+  saveNote();
+  current = q;
+  el('[data-card]').hidden = false;
+  el('[data-question]').textContent = q.stem;
+  el('[data-english]').textContent = q.stem_en;
+  el('[data-source]').textContent =
+    q.source.book === 'T01'
+      ? 'Tayanch soha mashqi. Norasmiy savol.'
+      : `${q.source.book}, PDF ${q.source.page.join(', ')}-bet, ${q.source.number}-savol. Transkripsiya ko‘rigi kutilmoqda.`;
+  el('[data-warning]').textContent =
+    q.id === 'interview-s09-1-37'
+      ? 'Bu savoldagi ishlash muddati manbaning asl matni. Amaldagi darajaviy majburiyatni shartnomangiz bilan tekshiring.'
+      : '';
+  el<HTMLTextAreaElement>('[data-answer]').value = notes.get(q.id) || '';
+  audioView();
+  el('[data-question]').focus();
+}
+function setClock() {
+  if (tick) clearInterval(tick);
+  tick = setInterval(() => {
+    const seconds = Math.floor(
+      (mock ? Math.max(0, deadline - Date.now()) : Date.now() - start) / 1000,
+    );
+    el('[data-timer]').textContent =
+      `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+    if (mock && Date.now() >= deadline) finish();
+  }, 500);
+}
+async function finish() {
+  if (tick) clearInterval(tick);
+  tick = null;
+  await stopRecording();
+  saveNote();
+  el('[data-card]').hidden = true;
+  el('[data-queue]').textContent =
+    'Mashq tugadi. Mezonlar bo‘yicha o‘z bahongizni kiriting.';
+  el('#rubrika-h').focus();
+}
+el('[data-random]').addEventListener('click', async () => {
+  const room = el<HTMLSelectElement>('[data-room]').value;
+  const level = el<HTMLSelectElement>('[data-level]').value;
+  const track = el<HTMLSelectElement>('[data-track]').value;
+  const pool = bank.items.filter(
+    (q) =>
+      q.level.includes(level) &&
+      (track === 'all' ||
+        !q.track_ids.length ||
+        q.track_ids.some((id) => id === track)) &&
+      (room === 'all' ||
+        (room === 'specialty' &&
+          (q.track_ids.length > 0 ||
+            (q.source.book === 'S09' &&
+              q.room === 1 &&
+              q.number >= 19 &&
+              q.number <= 34))) ||
+        String(q.room) === room),
+  );
+  if (!pool.length) {
+    el('[data-queue]').textContent = 'Bu tanlov uchun savol tayyorlanmoqda.';
+    return;
+  }
+  mock = false;
+  queue = aralashtir(pool);
+  index = 0;
+  start = Date.now();
+  await show(queue[0]);
+  setClock();
+  el('[data-queue]').textContent = 'Tasodifiy savol mashqi.';
+});
+el('[data-mock]').addEventListener('click', async () => {
+  const level = el<HTMLSelectElement>('[data-level]').value;
+  const pool = bank.items.filter(
+    (q) => q.level.includes(level) && q.source.book === 'S09',
+  );
+  const track = el<HTMLSelectElement>('[data-track]').value;
+  const specialty = bank.items.filter(
+    (q) => q.track_ids.some((id) => id === track) && q.level.includes(level),
+  );
+  queue = [
+    ...aralashtir(pool.filter((q) => q.room === 1)).slice(
+      0,
+      specialty.length ? 2 : 4,
+    ),
+    ...aralashtir(specialty).slice(0, 2),
+    ...aralashtir(pool.filter((q) => q.room === 2)).slice(0, 4),
+  ];
+  index = 0;
+  mock = true;
+  start = Date.now();
+  deadline =
+    start + Number(el<HTMLSelectElement>('[data-minutes]').value) * 60000;
+  await show(queue[0]);
+  setClock();
+  el('[data-queue]').textContent =
+    'Tayanch mock — ikki xona va tanlangan sohadan jami 8 mashq savoli.';
+});
+el('[data-next]').addEventListener('click', async () => {
+  index++;
+  if (index >= queue.length) {
+    await finish();
+    return;
+  }
+  await show(queue[index]);
+  el('[data-queue]').textContent = `${index + 1} / ${queue.length} savol`;
+});
+el('[data-finish]').addEventListener('click', finish);
+record.addEventListener('click', async () => {
+  if (!current) return;
+  if (
+    !navigator.mediaDevices?.getUserMedia ||
+    typeof MediaRecorder === 'undefined'
+  ) {
+    el('[data-record-state]').textContent =
+      'Bu brauzerda ovoz yozish mavjud emas. Yozma mashqni davom ettiring.';
+    return;
+  }
+  const serial = ++request;
+  const id = current.id;
+  record.disabled = true;
+  stop.disabled = false;
+  el('[data-record-state]').textContent = 'Mikrofon ruxsati kutilmoqda.';
+  try {
+    const media = await navigator.mediaDevices.getUserMedia({ audio: true });
+    if (serial !== request) {
+      media.getTracks().forEach((t) => t.stop());
+      return;
+    }
+    stream = media;
+    const chunks: BlobPart[] = [];
+    recorder = new MediaRecorder(media);
+    recorder.addEventListener('dataavailable', (e) => {
+      if (e.data.size) chunks.push(e.data);
+    });
+    recorder.addEventListener('stop', () => {
+      const mime = chunks[0] instanceof Blob ? chunks[0].type : 'audio/webm';
+      const blob = new Blob(chunks, { type: mime });
+      const old = recordings.get(id);
+      if (old) URL.revokeObjectURL(old.url);
+      if (blob.size)
+        recordings.set(id, { blob, url: URL.createObjectURL(blob) });
+      media.getTracks().forEach((t) => t.stop());
+      record.disabled = false;
+      stop.disabled = true;
+      if (current?.id === id) audioView();
+      el('[data-record-state]').textContent = blob.size
+        ? 'Yozuv tayyor. Tabni yopishdan oldin yuklab oling.'
+        : 'Yozuv bo‘sh. Qayta urinib ko‘ring.';
+    });
+    recorder.addEventListener('error', () => {
+      el('[data-record-state]').textContent =
+        'Yozish uzildi. Yozma javobni davom ettiring.';
+      void stopRecording();
+    });
+    recorder.start();
+    el('[data-record-state]').textContent =
+      'Yozilmoqda. Ovoz qurilmangizda qoladi.';
+  } catch {
+    record.disabled = false;
+    stop.disabled = true;
+    stream?.getTracks().forEach((t) => t.stop());
+    el('[data-record-state]').textContent =
+      'Mikrofonga kirilmadi. Ruxsatni tekshiring yoki yozma mashqni davom ettiring.';
+  }
+});
+stop.addEventListener('click', async () => {
+  await stopRecording();
+  if (!recordings.has(current?.id || ''))
+    el('[data-record-state]').textContent =
+      'Yozish to‘xtatildi. Yozma mashqni davom ettirishingiz mumkin.';
+});
+el('[data-audio-download]').addEventListener('click', () => {
+  const item = current && recordings.get(current.id);
+  if (!item) return;
+  const link = document.createElement('a');
+  link.href = item.url;
+  link.download = `${current!.id}.${item.blob.type.includes('mp4') ? 'm4a' : 'webm'}`;
+  link.click();
+});
+el('[data-audio-clear]').addEventListener('click', () => {
+  if (!current || !confirm('Ushbu ovoz yozuvi o‘chirilsinmi?')) return;
+  const item = recordings.get(current.id);
+  if (item) URL.revokeObjectURL(item.url);
+  recordings.delete(current.id);
+  audioView();
+});
+let report = '';
+const names = [
+  'Qadriyat, sadoqat va dunyoqarash',
+  'Esse, maqsad va bilimni qo‘llash',
+  'Mutaxassislik bilimi va amaliyot',
+];
+el<HTMLFormElement>('[data-rubric]').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const form = e.currentTarget as HTMLFormElement;
+  if (!form.reportValidity()) return;
+  const fd = new FormData(form);
+  const scores = [0, 1, 2].map((i) => Number(fd.get(`score-${i}`)));
+  el('[data-result]').hidden = false;
+  const total = scores.reduce((a, b) => a + b, 0);
+  el('[data-total]').textContent =
+    `O‘z bahongiz ${total}/100. Joriy rasmiy natijadan alohida mashq.`;
+  const chart = el('[data-chart]'),
+    table = el('[data-table]');
+  chart.replaceChildren();
+  table.replaceChildren();
+  report = 'Tarixiy 2025-2 uslubiyoti asosidagi o‘z bahom\n';
+  scores.forEach((score, i) => {
+    const label = matnElement(
+      'label',
+      `${names[i]} — ${score}/${[30, 30, 40][i]}`,
+    );
+    const bar = document.createElement('progress');
+    bar.max = [30, 30, 40][i];
+    bar.value = score;
+    bar.setAttribute('aria-label', names[i]);
+    label.append(bar);
+    chart.append(label);
+    const tr = document.createElement('tr');
+    tr.append(
+      matnElement('th', names[i]),
+      matnElement('td', `${score}/${[30, 30, 40][i]}`),
+    );
+    tr.querySelector('th')!.scope = 'row';
+    table.append(tr);
+    report += `${names[i]}: ${score}\nMisol: ${fd.get(`evidence-${i}`)}\n`;
+  });
+  if (fd.has('save')) {
+    history = lokalOqi(key, valid, history);
+    history.attempts.push({
+      at: new Date().toISOString(),
+      scores,
+      questions: queue.slice(0, index + 1).map((q) => q.id),
+    });
+    history.attempts = history.attempts.slice(-100);
+    lokalYoz(key, history, el('[data-storage]'));
+    el('[data-history]').textContent =
+      `${history.attempts.length} mashq bahosi saqlangan.`;
+  }
+  el('#suhbat-natija-h').focus();
+});
+el('[data-download]').addEventListener('click', () =>
+  matnYukla(
+    report +
+      '\nKeyingi vazifa: ' +
+      el<HTMLTextAreaElement>('[data-task]').value,
+    'eyuf-suhbat.txt',
+  ),
+);
+el('[data-clear]').addEventListener('click', () => {
+  if (confirm('Faqat saqlangan suhbat baholari o‘chirilsinmi?')) {
+    history = { version: 1, attempts: [] };
+    lokalYoz(key, history, el('[data-storage]'));
+    el('[data-history]').textContent = 'Saqlangan suhbat baholari tozalandi.';
+  }
+});
+window.addEventListener('pagehide', () => {
+  request++;
+  if (tick) clearInterval(tick);
+  if (recorder?.state === 'recording') recorder.stop();
+  stream?.getTracks().forEach((t) => t.stop());
+  for (const item of recordings.values()) URL.revokeObjectURL(item.url);
+});
+</script>

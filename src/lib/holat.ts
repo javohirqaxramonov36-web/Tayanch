@@ -1,7 +1,7 @@
 // Saqlash adapteri: brauzerdagi tayanch:* kalitlarini bitta joydan o'qish va yozish.
 // Hisobsiz: faqat localStorage (avvalgidek). Hisob bilan va foydalanuvchi roziligidan keyin: localStorage +
 // server (Supabase user_state) — debounce, oflayn navbat, xatoda qayta urinish. Qoidalar: docs/sinxron-qoidalari.md.
-// Faqat SINXRON_KALITLAR (SAT) kuzatiladi; boshqa kalitlar (IELTS, Top Admission, mavzu) oddiy localStorage.
+// Faqat SINXRON_KALITLAR (SAT + Top Admission shortlist) kuzatiladi; boshqa kalitlar (IELTS, mavzu va h.k.) oddiy localStorage.
 // Har o'qish/yozish try/catch ichida: maxfiy oyna yoki bloklangan saqlashda sahifa baribir ishlaydi.
 import {
   SINXRON_KALITLAR, sinxronKalitmi, vaqtniYangila, birlashtir, sanoq, boshQiymat, serverTomon, serverQiymat, tomonTengmi,
@@ -340,6 +340,20 @@ export async function mahalliyNusxaniTozala(): Promise<boolean> {
     localStorage.removeItem(NAVBAT_KALIT);
   } catch { return false; }
   return true;
+}
+
+/**
+ * Sahifa uchun sinxron holati (masalan Top Admission shortlist yozuvi):
+ * 'hisobsiz' (ulanmagan), 'faol' (hisobga yoziladi), 'sorov' yoki 'keyin' (rozilik kutilmoqda; serverga hech narsa
+ * ketmaydi), 'mahalliy' ("Don't ask again": shu qurilma faqat brauzerda).
+ */
+export function sinxronHolati(): 'hisobsiz' | 'faol' | 'sorov' | 'keyin' | 'mahalliy' {
+  if (!server || !foydalanuvchi) return 'hisobsiz';
+  if (faol) return 'faol';
+  if (kutilayotgan) return 'sorov';
+  const r = rozilik();
+  if (r?.foydalanuvchi === foydalanuvchi && r.holat === 'mahalliy') return 'mahalliy';
+  return 'keyin';
 }
 
 /** Test uchun ichki holat */

@@ -1,0 +1,68 @@
+---
+// 5-qavat · EYUF · Kurs: "El-Yurt Umidi'ni yutaylik" (SKELET, 2026-11-19).
+// Muallif qarori: hozircha faqat sarlavha, tavsif va bo'lim sarlavhalari. Matnni muallif keyin alohida yuklaydi.
+// Bu yerga to'liq matn yoki fakt yozilmasin. Bo'lim sarlavhalari: src/data/eyufKurslar.ts.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import SahifaOxiri from '../../../../../components/SahifaOxiri.astro';
+import { eyufKurs, KURS_HOLATI_YORLIQ } from '../../../../../data/eyufKurslar';
+import { yol } from '../../../../../lib/yol';
+
+const kurs = eyufKurs('el-yurt-umidi');
+const sana = '2026-11-19';
+const keyingi = '2026-12-19';
+const tekshirilmagan = ["Kurs to'ldirilmagan: material muallifdan kutilmoqda."];
+const idlar = ['suhbat', 'bridge', 'savollar', 'caselar'];
+---
+<BolimQobiq
+  title="El-Yurt Umidi'ni yutaylik · EYUF"
+  description={kurs.tavsif}
+  turi="qollanma"
+  bolim="eyuf"
+  holat="qoralama"
+  tekshirilgan={sana}
+  keyingiTekshiruv={keyingi}
+  tekshirilmagan={tekshirilmagan}
+  yol={['Kurslar']}
+>
+  <article class="ichki kurs">
+    <header class="bosh">
+      <p class="yorliqlar"><span class="yorliq">Bepul kurs</span><span class="yorliq">{KURS_HOLATI_YORLIQ[kurs.holat]}</span></p>
+      <h1>{kurs.nomi}</h1>
+      <p class="tavsif">{kurs.tavsif}</p>
+      <p class="holat" role="status">TO'LDIRILMAGAN — material keyinroq qo'shiladi</p>
+    </header>
+
+    <ol class="bolimlar" role="list">
+      {kurs.bolimlar.map((nom, i) => (
+        <li>
+          <section id={idlar[i]} class="bolim" aria-labelledby={`${idlar[i]}-h`}>
+            <p class="ustki">{i + 1}-bo'lim</p>
+            <h2 id={`${idlar[i]}-h`}>{nom}</h2>
+            <p class="bosh-joy">Material keyinroq qo'shiladi.</p>
+          </section>
+        </li>
+      ))}
+    </ol>
+
+    <p><a class="orqaga" href={yol('/uz/eyuf/kurslar/')}>Barcha kurslar</a></p>
+  </article>
+  <SahifaOxiri tekshirilgan={sana} keyingiTekshiruv={keyingi} tekshirilmagan={tekshirilmagan} />
+<p class="ichki">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+</BolimQobiq>
+
+<style>
+  .kurs { display: grid; gap: var(--b-8); padding-block: var(--b-6); max-width: 72ch; }
+  .bosh { display: grid; gap: var(--b-3); }
+  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .yorliq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+  .holat { justify-self: start; padding: var(--b-2) var(--b-4); border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); font-weight: 800; font-size: var(--matn-mayda); letter-spacing: .04em; }
+  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .bolimlar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-4); }
+  .bolim { border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); display: grid; gap: var(--b-2); }
+  .bosh-joy { color: var(--matn-sust); }
+  .orqaga { display: inline-flex; align-items: center; min-height: 44px; color: var(--rang-havola); font-weight: 700; }
+  a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+</style>

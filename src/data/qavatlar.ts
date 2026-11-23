@@ -1,10 +1,10 @@
-// Tayanch binosi: 5 qavat (muallif qarori, 2026-11-05).
-// 2–5 qavat holati bolimlar.ts dan olinadi, bu yerda takrorlanmaydi.
+// Tayanch binosi: 6 qavat (5 qavat muallif qarori 2026-11-05; 6-qavat AI Academy 2026-11-19).
+// 2–6 qavat holati bolimlar.ts dan olinadi, bu yerda takrorlanmaydi.
 import { bolimlar, type Bolim, type BolimSlug } from './bolimlar';
 import { yol } from '../lib/yol';
 
 export interface Qavat {
-  raqam: 1 | 2 | 3 | 4 | 5;
+  raqam: 1 | 2 | 3 | 4 | 5 | 6;
   slug: 'navigator' | BolimSlug;
   nomi: string;
   qisqaNom: string;
@@ -20,6 +20,8 @@ const IKONKA = {
   suhbat: '<path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>',
   varaq: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',
   medal: '<circle cx="12" cy="9" r="5"/><path d="M9 13l-2 8 5-3 5 3-2-8"/>',
+  // AI Academy: kod belgisi (< / >)
+  kod: '<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/>',
 };
 
 const holatI = (slug: BolimSlug) => bolimlar.find((b) => b.slug === slug)?.holat ?? 'tez-orada';
@@ -31,6 +33,7 @@ export const qavatlar: Qavat[] = [
   { raqam: 3, slug: 'sat', nomi: 'SAT prep', qisqaNom: 'SAT', manzil: '/uz/sat/', holat: holatI('sat'), ikonka: ikonkaI('sat') },
   { raqam: 4, slug: 'ielts', nomi: 'IELTS prep', qisqaNom: 'IELTS', manzil: '/uz/ielts/', holat: holatI('ielts'), ikonka: ikonkaI('ielts') },
   { raqam: 5, slug: 'eyuf', nomi: 'EYUF prep', qisqaNom: 'EYUF', manzil: '/uz/eyuf/', holat: holatI('eyuf'), ikonka: ikonkaI('eyuf') },
+  { raqam: 6, slug: 'ai-academy', nomi: 'AI Academy', qisqaNom: 'AI Academy', manzil: '/uz/ai-academy/', holat: holatI('ai-academy'), ikonka: ikonkaI('ai-academy') },
 ];
 
 /** Sahifa manzilidan qavat raqami. /uz/deadline/, /uz/manbalar/, /uz/maxfiylik/ va boshqalar = 1-qavat. */

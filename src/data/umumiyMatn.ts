@@ -14,12 +14,11 @@ export const yolTili = (pathname: string): Til => (/\/uz\/sat(\/|$)/.test(pathna
 
 const uz = {
   otish: "Asosiy matnga o'tish",
-  qavat: (n: number) => `${n}-qavat`,
   qavatYoli: 'Qayerdaman',
   qavatOta: 'Yuqori sahifa',
-  lift: { nomi: 'Qavatlar', ochiq: 'Ochiq', qoralama: 'Qoralama', tezOrada: 'tez orada' },
-  zina: { nomi: "Zina: qo'shni qavatlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
-  qavatlarAro: 'Boshqa qavatda',
+  lift: { nomi: "Bo'limlar", ochiq: 'Ochiq', qoralama: 'Qoralama', tezOrada: 'tez orada' },
+  zina: { nomi: "Qo'shni bo'limlar", past: 'Pastga', yuqori: 'Yuqoriga', qurilmoqda: 'Coming soon' },
+  qavatlarAro: "Boshqa bo'limlar",
   yon: {
     menyuOchish: 'Menyuni ochish',
     menyuYopish: 'Menyuni yopish',
@@ -31,6 +30,7 @@ const uz = {
     tashqi: 'Tashqi havolalar',
     rasmiySayt: 'rasmiy sayt',
     yangiTab: '(yangi tabda ochiladi)',
+    telegramKanal: "Telegram kanalimizga qo'shiling",
     mavzu: "Qorong'i mavzu",
     tezOrada: 'tez orada',
     hisob: 'Hisob',
@@ -48,6 +48,9 @@ const uz = {
   },
   fokus: { qaytish: "SAT bo'limiga qaytish" },
   dars: {
+    telegramSavol: 'Savolingiz bormi?',
+    telegramIzoh: "Telegram guruhimizda so'rang.",
+    telegramTugma: "Telegram guruhiga o'tish",
     qadamNomlari: ['Animatsiya', 'Formula', "Sinab ko'r"] as [string, string, string],
     qoralama: 'Qoralama',
     maqsad: 'Bu darsdan keyin',
@@ -111,12 +114,11 @@ type Matn = typeof uz;
 
 const en: Matn = {
   otish: 'Skip to main content',
-  qavat: (n) => `Floor ${n}`,
   qavatYoli: 'You are here',
   qavatOta: 'Parent page',
-  lift: { nomi: 'Floors', ochiq: 'Open', qoralama: 'Draft', tezOrada: 'coming soon' },
-  zina: { nomi: 'Stairs: neighboring floors', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
-  qavatlarAro: 'On another floor',
+  lift: { nomi: 'Sections', ochiq: 'Open', qoralama: 'Draft', tezOrada: 'coming soon' },
+  zina: { nomi: 'Neighboring sections', past: 'Down', yuqori: 'Up', qurilmoqda: 'Coming soon' },
+  qavatlarAro: 'Other sections',
   yon: {
     menyuOchish: 'Open menu',
     menyuYopish: 'Close menu',
@@ -128,6 +130,7 @@ const en: Matn = {
     tashqi: 'External links',
     rasmiySayt: 'official site',
     yangiTab: '(opens in a new tab)',
+    telegramKanal: 'Join our Telegram channel',
     mavzu: 'Dark mode',
     tezOrada: 'soon',
     hisob: 'Account',
@@ -145,6 +148,9 @@ const en: Matn = {
   },
   fokus: { qaytish: 'Back to the SAT section' },
   dars: {
+    telegramSavol: 'Have a question?',
+    telegramIzoh: 'Ask in our Telegram group.',
+    telegramTugma: 'Open the Telegram group',
     qadamNomlari: ['Animation', 'Formula', 'Try it'],
     qoralama: 'Draft',
     maqsad: 'After this lesson',

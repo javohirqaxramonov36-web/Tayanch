@@ -1,0 +1,9 @@
+---
+import SohaSahifa from '../../../../components/eyuf/SohaSahifa.astro';
+import tracks from '../../../../../data/eyuf/tracks.json';
+export function getStaticPaths() {
+  return tracks.items.filter(track => track.id !== 'arxitektura').map(track => ({ params: { soha: track.id }, props: { trackId: track.id } }));
+}
+const { trackId } = Astro.props;
+---
+<SohaSahifa trackId={trackId} />

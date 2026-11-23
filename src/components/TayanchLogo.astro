@@ -1,0 +1,22 @@
+---
+import logo from '../assets/tayanch-logo.svg?raw';
+---
+
+<span class="tayanch-logo" role="img" aria-label="Tayanch">
+  <Fragment set:html={logo} />
+</span>
+
+<style>
+  .tayanch-logo {
+    display: block;
+    inline-size: calc(var(--space-12) * 3);
+    max-inline-size: 100%;
+    color: var(--color-text-primary);
+  }
+
+  .tayanch-logo :global(svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+</style>

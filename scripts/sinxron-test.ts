@@ -112,7 +112,7 @@ await sinov('Kirish: brauzerda ma\'lumot bor → dialog so\'raladi, rozilikgacha
   assert.deepEqual(sorov, {
     'tayanch:sat-javoblar': 2, 'tayanch:sat-dars-progress': 3, 'tayanch:sat-xato-daftari': 2,
     'tayanch:sat-takrorlash': 2, 'tayanch:sat-reja': 1, 'tayanch:sat-xato-sabab': 2,
-    'tayanch:sat-rasmiy-testlar': 3, 'tayanch:sat-afzallik': 0,
+    'tayanch:sat-rasmiy-testlar': 3, 'tayanch:sat-afzallik': 0, 'tayanch:admission-shortlist': 0,
   });
   assert.equal(A.oqishlar + A.yozishlar, 0);
   // Rozilikdan oldingi yozish ham yuborilmaydi
@@ -308,6 +308,53 @@ await sinov('Clear local copy: brauzer nusxasi o\'chadi, hisobdagi nusxa qoladi'
   assert.ok(ls.getItem('tayanch:ielts-xato-daftari'), 'IELTS kaliti qoladi');
   assert.ok(ls.getItem('tayanch:sat-lugat'), "Lug'at kaliti (P15) qoladi");
   assert.deepEqual(new Map(B.qatorlar), serverOldin);
+});
+
+// ---------- Top Admission shortlist (Admission D-seriya, Q4): tayanch:admission-shortlist ----------
+await sinov('Shortlist: hisobsiz faqat brauzerda; sinxron yoqilganda user_state ga, olib tashlash boshqa qurilmaga o\'tadi', async () => {
+  const SL = 'tayanch:admission-shortlist';
+  ls.clear();
+  (g.sessionStorage as Xotira).clear();
+  H.uzish();
+  assert.equal(H.sinxronHolati(), 'hisobsiz');
+  // Hisobsiz: faqat localStorage, navbat yo'q
+  vaqt = 9_000_000;
+  assert.equal(H.holatYoz(SL, [{ id: 'sinov-universiteti-a' }]), true);
+  assert.deepEqual(H._ichki.navbat(), []);
+  // Kirish: brauzerda shortlist bor → rozilik so'raladi, hech narsa yuborilmaydi
+  const S = new SoxtaServer();
+  assert.equal(H.ulash(S, 'u9'), 'sorov');
+  assert.equal(H.sinxronHolati(), 'sorov');
+  assert.equal(S.oqishlar + S.yozishlar, 0);
+  // Foydalanuvchi "Hisobga saqlash" (importQil) → serverga
+  await H.importQil();
+  assert.equal(H.sinxronHolati(), 'faol');
+  assert.deepEqual(S.q(SL).qiymat, [{ id: 'sinov-universiteti-a' }]);
+  // Qo'shish: debounce navbati → serverga, yangisi birinchi
+  vaqt = 9_100_000;
+  H.holatYoz(SL, [{ id: 'sinov-universiteti-b' }, { id: 'sinov-universiteti-a' }]);
+  await H.sinxronlaHozir();
+  assert.deepEqual(S.q(SL).qiymat.map((x: { id: string }) => x.id), ['sinov-universiteti-b', 'sinov-universiteti-a']);
+  // Boshqa qurilma uchun shu paytdagi server nusxasi (A va B bor)
+  const ikkinchi = new Map(S.qatorlar);
+  // Birinchi qurilmada A olib tashlanadi → tombstone serverga
+  vaqt = 9_200_000;
+  H.holatYoz(SL, [{ id: 'sinov-universiteti-b' }]);
+  await H.sinxronlaHozir();
+  assert.deepEqual(S.q(SL).qiymat, [{ id: 'sinov-universiteti-b' }]);
+  assert.equal(S.q(SL).o['sinov-universiteti-a'], 9_200_000);
+  // Eski nusxali boshqa qurilma (A hali bor, vaqti eski) sinxronda A ni o'chiradi, qaytarib qo'ymaydi
+  ls.clear();
+  H.uzish();
+  const eski = JSON.parse(ikkinchi.get(SL)!);
+  ls.setItem(SL, JSON.stringify(eski.qiymat));
+  ls.setItem('tayanch:sat-sinxron-vaqt', JSON.stringify({ [SL]: { t: eski.t, o: eski.o } }));
+  ls.setItem('tayanch:sat-sinxron', JSON.stringify({ foydalanuvchi: 'u9', holat: 'ulangan' }));
+  assert.equal(H.ulash(S, 'u9'), 'ulangan');
+  await H.sinxronlaHozir();
+  assert.deepEqual(oqi(SL), [{ id: 'sinov-universiteti-b' }]);
+  assert.deepEqual(S.q(SL).qiymat, [{ id: 'sinov-universiteti-b' }]);
+  H.uzish();
 });
 
 console.log(`${n} ta sinov o'tdi`);

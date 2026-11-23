@@ -1,0 +1,105 @@
+---
+// 6-qavat AI Academy: kirish sahifasi (qobiq). Kurs darslari keyingi vazifada.
+// Kurslar src/data/aiAcademy.ts dan: kursni ochish uchun faqat o'sha fayldagi `holat` o'zgaradi.
+// Hozircha noindex (holat="qoralama"). Tarif va hisob ulanmagan.
+import Asosiy from '../../../layouts/Asosiy.astro';
+import { bolimlar } from '../../../data/bolimlar';
+import { qavatlar } from '../../../data/qavatlar';
+import { aiKurslar, aiKursManzili } from '../../../data/aiAcademy';
+import { qavatHolatMatni } from '../../../data/umumiyMatn';
+import { yol } from '../../../lib/yol';
+
+const b = bolimlar.find((x) => x.slug === 'ai-academy')!;
+const boshqalar = qavatlar.filter((q) => q.slug !== 'ai-academy');
+---
+<Asosiy
+  title="AI Academy"
+  description={b.tavsif}
+  turi="bolim-kirishi"
+  bolim="ai-academy"
+  holat="qoralama"
+  tekshirilgan="2026-11-19"
+  keyingiTekshiruv="2026-12-19"
+  tekshirilmagan={["Bo'lim qurilmoqda: kurs darslari hali yozilmagan."]}
+>
+  <section class="ichki ai-kirish" aria-labelledby="ai-h">
+    <a class="orqaga" href={yol('/uz/')}>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+      Bosh sahifa
+    </a>
+    <h1 id="ai-h">AI Academy</h1>
+    <p class="tavsif">{b.tavsif}</p>
+
+    <section class="kurslar" aria-labelledby="kurslar-h">
+      <h2 id="kurslar-h">Kurslar</h2>
+      <ul class="kurs-royxat" role="list">
+        {aiKurslar.map((k) => (
+          <li>
+            {k.holat === 'ochiq'
+              ? (
+                <a class="ds-karta kurs-karta" data-floor="6" href={yol(aiKursManzili(k))}>
+                  <span class="kurs-nom">{k.nomi}</span>
+                  <span class="kurs-izoh">{k.izoh}</span>
+                </a>
+              )
+              : (
+                <article class="ds-karta kurs-karta" data-floor="6" aria-labelledby={`kurs-${k.slug}`}>
+                  <h3 class="kurs-nom" id={`kurs-${k.slug}`}>{k.nomi}</h3>
+                  <p class="kurs-izoh">{k.izoh}</p>
+                  <span class="yorliq">Tez orada</span>
+                </article>
+              )}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <nav class="boshqa" aria-labelledby="boshqa-h">
+      <h2 id="boshqa-h">Boshqa bo'limlar</h2>
+      <ul class="boshqa-royxat" role="list">
+        {boshqalar.map((q) => {
+          const holat = q.holat === 'ochiq' ? undefined : qavatHolatMatni(q.holat, 'uz');
+          return (
+            <li>
+              <a class="ds-karta boshqa-karta" data-floor={q.raqam} href={yol(q.manzil)}>
+                <span class="nuqta" aria-hidden="true"></span>
+                <span>{q.slug === 'navigator' ? 'Bosh sahifa' : q.nomi}</span>
+                {holat && <span class="boshqa-holat">{holat}</span>}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  </section>
+</Asosiy>
+
+<style>
+  .ai-kirish { display: flex; flex-direction: column; gap: var(--b-6); padding-block: var(--b-6) 0; }
+  .orqaga {
+    align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-2);
+    min-block-size: var(--size-touch-min); color: var(--rang-havola); font-weight: 700; text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) { .orqaga:hover { text-decoration: underline; } }
+  h1 { margin: 0; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
+  .tavsif { margin: 0; font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
+  h2 { margin: 0 0 var(--b-4); font-size: var(--matn-h3); }
+
+  .kurs-royxat, .boshqa-royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-4); }
+  .kurs-royxat { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .kurs-karta {
+    height: 100%; box-sizing: border-box; padding: var(--card-pad);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2);
+    border-block-start: var(--border-width-3) solid var(--floor-fill);
+  }
+  .kurs-nom { margin: 0; font-weight: 800; font-size: var(--matn-h3); }
+  .kurs-izoh { margin: 0; color: var(--matn-ikkinchi); line-height: 1.5; }
+
+  .boshqa-royxat { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .boshqa-karta {
+    display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-1) var(--space-2);
+    min-block-size: var(--size-touch-min); padding: var(--space-3) var(--space-4); font-weight: 700;
+  }
+  .nuqta { flex: none; width: var(--space-2); height: var(--space-2); border-radius: var(--radius-full); background: var(--floor-fill); }
+  .boshqa-holat { font-size: var(--text-caption-size); font-weight: 500; color: var(--matn-ikkinchi); }
+</style>

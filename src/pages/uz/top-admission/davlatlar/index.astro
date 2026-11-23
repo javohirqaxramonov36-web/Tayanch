@@ -1,0 +1,543 @@
+---
+// 2-qavat · Top Admission · vosita: Davlatlarni taqqoslash (Admission D-seriya, Q2).
+// Ma'lumot: content collection `davlatlar` va `grantlar` (src/data/topAdmission/, sxema src/lib/topAdmission/sxema.ts),
+// valyuta kurslari src/data/topAdmission/kurslar.json. Mantiq: src/lib/topAdmission/davlatTaqqos.ts.
+// Qoida: saytda faqat "tasdiqlangan" fakt (Fakt.astro); filtr, saralash va taxminiy narx ham faqat tasdiqlangan faktdan.
+// Sayt reyting bermaydi: standart tartib alifbo, narx bo'yicha saralash faqat o'quvchi tanlasa.
+// JS'siz: hamma kartalar alifbo tartibida, filtr va taqqoslash yashirin.
+// JS bilan: filtr chiplari va saralash <button aria-pressed>, taqqoslash 2–3 davlat (keng ekranda jadval,
+// 760px dan torda ketma-ket kartalar). Holat URL query'da (?f=&s=&t=), brauzerda hech narsa saqlanmaydi.
+import { getCollection } from 'astro:content';
+import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
+import GrantYoqIzoh from '../../../../components/topAdmission/GrantYoqIzoh.astro';
+import Fakt from '../../../../components/topAdmission/Fakt.astro';
+import kurslarJson from '../../../../data/topAdmission/kurslar.json';
+import { kurslarSxema } from '../../../../lib/topAdmission/sxema';
+import { faktKorinadimi, faktQiymatMatni, kurslarBormi, sanaMatni, type Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
+import {
+  FILTRLAR, MAKS_TAQQOS, davlatXulosasi, grantKorinadimi, grantYoqIzohi, saralash, tasdiqlanganSoni,
+  type DavlatKirish, type GrantKirish,
+} from '../../../../lib/topAdmission/davlatTaqqos';
+import { yol } from '../../../../lib/yol';
+
+const kurslar = kurslarSxema.parse(kurslarJson);
+const narxMumkin = kurslarBormi(kurslar);
+
+const grantYozuvlari = await getCollection('grantlar');
+// Ekranga chiqadigan grant: nom va "nimani qoplaydi" fakti (havola Grantlar katalogiga).
+interface GrantKorinish { nom: string; nimani_qoplaydi: FaktT }
+const grantlar = new Map<string, GrantKorinish & GrantKirish>(grantYozuvlari.map((g) => [g.id, g.data as unknown as GrantKorinish & GrantKirish]));
+const grantKirish: Map<string, GrantKirish> = grantlar;
+
+const davlatYozuvlari = (await getCollection('davlatlar')).filter((e) => !e.data.kop_davlatli);
+const davlatlar = davlatYozuvlari.map((e) => {
+  const d = e.data;
+  const kirish = { ...d, grant: { ...d.grant, davlat_grantlari: (d.grant.davlat_grantlari as { id: string }[]).map((r) => r.id) } } as unknown as DavlatKirish;
+  const xulosa = davlatXulosasi(kirish, grantKirish, kurslar);
+  const korGrantlar = kirish.grant.davlat_grantlari.map((s) => grantlar.get(s)).filter((g): g is GrantKorinish & GrantKirish => grantKorinadimi(g));
+  const chuqurHavola = d.chuqur_qollanma_havola
+    ? d.chuqur_qollanma_havola.startsWith('/') ? yol(d.chuqur_qollanma_havola) : /^https:\/\//.test(d.chuqur_qollanma_havola) ? d.chuqur_qollanma_havola : undefined
+    : undefined;
+  return { d: kirish, chuqur: d.chuqur_qollanma, chuqurHavola, xulosa, grantlar: korGrantlar };
+});
+const tartibli = saralash(davlatlar.map((x) => ({ ...x, nom: x.xulosa.nom, usd: x.xulosa.usd })), 'nom');
+const tasdiqlanganJami = davlatlar.reduce((n, x) => n + tasdiqlanganSoni(x.d) + x.grantlar.length, 0);
+const boshHolat = tasdiqlanganJami === 0;
+
+type Satr =
+  | { id: string; nom: string; tur: 'fakt'; fakt: (d: DavlatKirish) => FaktT | undefined; birlik?: (d: DavlatKirish) => string | undefined }
+  | { id: string; nom: string; tur: 'usd' | 'grant' };
+// Taqqoslash jadvali satrlari (5 mezon bo'yicha).
+const satrlar: Satr[] = [
+  { id: 'ogoh', nom: 'Safar ogohlantirishi', tur: 'fakt', fakt: (d) => d.xavfsizlik?.ogohlantirish },
+  { id: 'barqaror', nom: 'Siyosiy barqarorlik', tur: 'fakt', fakt: (d) => d.xavfsizlik?.siyosiy_barqarorlik },
+  { id: 'kontrakt', nom: 'Kontrakt (yillik)', tur: 'fakt', fakt: (d) => d.narx.kontrakt_yillik, birlik: (d) => d.narx.valyuta },
+  { id: 'yashash', nom: 'Viza uchun yashash summasi', tur: 'fakt', fakt: (d) => d.narx.viza_yashash_summasi, birlik: (d) => d.narx.valyuta },
+  ...(narxMumkin ? [{ id: 'usd', nom: 'Taxminiy yillik xarajat', tur: 'usd' } as Satr] : []),
+  { id: 'grant', nom: 'Davlat grantlari', tur: 'grant' },
+  { id: 'ingliz', nom: 'Ingliz tilida dastur', tur: 'fakt', fakt: (d) => d.til.ingliz_tilida_dastur_bor },
+  { id: 'ielts', nom: 'Odatiy IELTS talabi', tur: 'fakt', fakt: (d) => d.til.odatiy_ielts },
+  { id: 'ishlash', nom: "O'qish paytida ishlash", tur: 'fakt', fakt: (d) => d.ishlash.oqish_paytida },
+  { id: 'keyin', nom: 'Bitirgandan keyin ishlash', tur: 'fakt', fakt: (d) => d.ishlash.bitirgandan_keyin },
+  { id: 'diplom', nom: "11 yillik maktab diplomi to'g'ridan-to'g'ri", tur: 'fakt', fakt: (d) => d.diplom.togridan_togri },
+  { id: 'tayyorlov', nom: 'Tayyorlov dasturi (foundation va h.k.)', tur: 'fakt', fakt: (d) => d.diplom.tayyorlov_nomi },
+];
+/** Kartada faqat tekshirilgan fakt ko'rsatiladi; yo'qlari pastda bitta qatorda sanaladi. */
+const kor = (...f: (FaktT | undefined)[]) => f.some((x) => faktKorinadimi(x));
+const yoqlar = (d: DavlatKirish, grantBor: boolean) => [
+  !kor(d.narx.kontrakt_yillik, d.narx.viza_yashash_summasi) && 'narx',
+  !grantBor && !grantYoqIzohi(d) && 'davlat granti',
+  !kor(d.til.ingliz_tilida_dastur_bor) && 'til',
+  !kor(d.ishlash.oqish_paytida) && 'ishlash huquqi',
+  !kor(d.diplom.togridan_togri) && 'diplom',
+].filter((x): x is string => !!x);
+const usdMatn = (usd: number | null) => (usd === null ? null : `≈ ${faktQiymatMatni(usd)} USD`);
+const kursIzoh = narxMumkin ? `taxminiy, kurs sanasi: ${sanaMatni(kurslar.sana)}` : '';
+
+const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
+const platformalar = yol('/uz/top-admission/platformalar/');
+// Grant nomi Grantlar katalogiga shu davlat filtri bilan olib boradi (katalog `?d=<davlat-slug>` ni o'qiydi; muallif qarori, 2026-11-20).
+const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d=${encodeURIComponent(slug)}`;
+---
+<BolimQobiq
+  title="Davlatlarni taqqoslash · Top Admission"
+  description={`${davlatYozuvlari.length} davlatni taqqoslang: xavfsizlik, narx, grant, til talabi, ishlash huquqi va diplom. Faqat rasmiy manbada tekshirilgan faktlar, manba va sana bilan.`}
+  turi="vosita"
+  bolim="top-admission"
+  holat="chop-etilgan"
+  yol={['Vositalar']}
+>
+  <div class="ichki dt-sahifa" data-davlat-taqqos data-narx={narxMumkin ? '1' : '0'} data-maks={MAKS_TAQQOS}>
+    <header class="dt-bosh">
+      <p class="dt-ustki">Vosita</p>
+      <h1>Davlatlarni taqqoslash</h1>
+      <p class="dt-matn">O'zingizga muhim mezonni tanlang: xavfsizlik, narx, grant, til talabi, o'qish paytida ishlash yoki diplom. Sayt reyting bermaydi, davlatlarni faqat rasmiy faktlar bo'yicha saralaydi.</p>
+      <p class="dt-matn dt-sust">Faqat rasmiy manbada tekshirilgan fakt ko'rsatiladi, yonida manba va tekshirilgan sana. Qolganlari o'rniga "Ma'lumot tekshirilmoqda" yoziladi. Topshirishdan oldin rasmiy sahifani tekshiring.</p>
+    </header>
+
+    {boshHolat ? (
+      <section class="dt-bosh-holat" aria-labelledby="dt-bosh-sarlavha">
+        <svg class="dt-bosh-ikonka" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18" />
+        </svg>
+        <h2 id="dt-bosh-sarlavha">Ma'lumotlar rasmiy manbada tekshirilmoqda</h2>
+        <p class="dt-matn">Har bir fakt davlat yoki universitetning rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan ma'lumot yo'q, shuning uchun filtr va taqqoslash ochilmagan.</p>
+        {tartibli.length > 0 && (
+          <>
+            <h3 class="dt-ustki">Sahifaga kiradigan davlatlar</h3>
+            <ul class="dt-nomlar">
+              {tartibli.map((x) => (
+                <li>
+                  {x.nom}
+                  {x.chuqur && (x.chuqurHavola
+                    ? <a class="dt-chuqur" href={x.chuqurHavola}>Chuqur qo'llanma</a>
+                    : <span class="yorliq">chuqur qo'llanma tez orada</span>)}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        <p class="dt-bosh-yol">Hozircha shulardan boshlang:</p>
+        <div class="dt-tugmalar">
+          <a class="tugma tugma-ikkinchi" href={vosita}>Topshirish yo'li</a>
+          <a class="tugma tugma-ikkinchi" href={platformalar}>Platformalar xaritasi</a>
+        </div>
+      </section>
+    ) : (
+      <>
+        <div class="dt-asboblar" hidden data-asboblar>
+          <div class="dt-guruh">
+            <p class="dt-ustki" id="dt-filtr-sarlavha">Filtrlar</p>
+            <div class="dt-chiplar" role="group" aria-labelledby="dt-filtr-sarlavha">
+              {FILTRLAR.map((f) => <button type="button" class="dt-chip" data-filtr={f.id} aria-pressed="false">{f.nomi}</button>)}
+            </div>
+            <p class="dt-kichik dt-sust">Filtr faqat tasdiqlangan faktga qaraydi: ma'lumoti hali tekshirilayotgan davlat filtrlanganda ko'rinmaydi.</p>
+          </div>
+          <div class="dt-guruh">
+            <p class="dt-ustki" id="dt-saralash-sarlavha">Saralash</p>
+            {narxMumkin ? (
+              <>
+                <div class="dt-chiplar" role="group" aria-labelledby="dt-saralash-sarlavha">
+                  <button type="button" class="dt-chip" data-saralash="nom" aria-pressed="true">Nomi bo'yicha</button>
+                  <button type="button" class="dt-chip" data-saralash="narx" aria-pressed="false">Taxminiy yillik xarajat, arzonidan</button>
+                </div>
+                <p class="dt-kichik dt-sust">
+                  Kontrakt + viza uchun yashash summasi, USD'da ({kursIzoh}; <a class="dt-havola" href={kurslar.manba_url} rel="noopener">{kurslar.manba_nomi || 'kurs manbasi'}</a>). Narxi tasdiqlanmagan davlatlar ro'yxat oxirida.
+                </p>
+              </>
+            ) : (
+              <p class="dt-kichik dt-sust">Hozir nomi bo'yicha. Valyuta kursi ma'lumoti yo'q, shuning uchun xarajat bo'yicha saralash hozircha o'chiq.</p>
+            )}
+          </div>
+          <div class="dt-holat-qator">
+            <p class="dt-kichik" aria-live="polite" data-soni></p>
+            <p class="dt-kichik" aria-live="polite" data-taqqos-holat></p>
+            <a class="dt-havola dt-kichik" href="#taqqoslash" hidden data-taqqos-otish>Taqqoslashni ko'rish</a>
+          </div>
+        </div>
+
+        <ul class="dt-kartalar" data-royxat aria-label="Davlatlar">
+          {tartibli.map(({ d, chuqur, chuqurHavola, xulosa, grantlar: gr }) => (
+            <li class="dt-karta" data-slug={d.slug} data-nom={xulosa.nom} data-usd={xulosa.usd ?? ''} data-belgilar={xulosa.belgilar.join(' ')}>
+              <div class="dt-karta-bosh">
+                <h2 class="dt-karta-nom" id={`d-${d.slug}`}>{xulosa.nom}</h2>
+                {chuqur && (chuqurHavola
+                  ? <a class="dt-chuqur" href={chuqurHavola}>Chuqur qo'llanma<span class="dt-sr">: {xulosa.nom}</span></a>
+                  : <span class="yorliq">chuqur qo'llanma tez orada</span>)}
+              </div>
+              <dl class="dt-mezonlar">
+                {d.xavfsizlik && kor(d.xavfsizlik.ogohlantirish, d.xavfsizlik.siyosiy_barqarorlik) && (
+                  <div>
+                    <dt>Xavfsizlik</dt>
+                    <dd>
+                      {kor(d.xavfsizlik.ogohlantirish) && <><span class="dt-ichki-nom">Safar ogohlantirishi</span><Fakt fakt={d.xavfsizlik.ogohlantirish} /></>}
+                      {kor(d.xavfsizlik.siyosiy_barqarorlik) && <><span class="dt-ichki-nom">Siyosiy barqarorlik</span><Fakt fakt={d.xavfsizlik.siyosiy_barqarorlik} /></>}
+                    </dd>
+                  </div>
+                )}
+                {d.tanlov && (
+                  <div>
+                    <dt>STEM</dt>
+                    <dd>
+                      {d.tanlov.universitet_misollari.length > 0 && (
+                        <><span class="dt-ichki-nom">Universitet misollari</span><span>{d.tanlov.universitet_misollari.join(', ')}</span></>
+                      )}
+                      {kor(d.tanlov.izoh) && <><span class="dt-ichki-nom">Tanlashda</span><Fakt fakt={d.tanlov.izoh} /></>}
+                      {d.tanlov.portal && <a class="dt-havola" href={d.tanlov.portal} rel="noopener">Rasmiy ta'lim portali<span class="dt-sr">: {xulosa.nom}</span></a>}
+                    </dd>
+                  </div>
+                )}
+                {kor(d.narx.kontrakt_yillik, d.narx.viza_yashash_summasi) && (
+                  <div>
+                    <dt>Narx</dt>
+                    <dd>
+                      {kor(d.narx.kontrakt_yillik) && <><span class="dt-ichki-nom">Kontrakt (yillik)</span><Fakt fakt={d.narx.kontrakt_yillik} birlik={d.narx.valyuta} /></>}
+                      {kor(d.narx.viza_yashash_summasi) && <><span class="dt-ichki-nom">Viza uchun yashash summasi</span><Fakt fakt={d.narx.viza_yashash_summasi} birlik={d.narx.valyuta} /></>}
+                      {narxMumkin && xulosa.usd !== null && <span class="dt-taxmin">Taxminiy yillik xarajat: <strong>{usdMatn(xulosa.usd)}</strong> <span class="dt-sust">({kursIzoh})</span></span>}
+                    </dd>
+                  </div>
+                )}
+                {(gr.length > 0 || grantYoqIzohi(d)) && (
+                  <div>
+                    <dt>Grant</dt>
+                    <dd>
+                      {gr.length > 0 ? (
+                        <ul class="dt-grantlar">
+                          {gr.map((g) => <li><a class="dt-havola" href={katalogHavola(d.slug)}>{g.nom}<span class="dt-sr"> (Grantlar katalogida)</span></a></li>)}
+                        </ul>
+                      ) : <GrantYoqIzoh fakt={grantYoqIzohi(d)} />}
+                    </dd>
+                  </div>
+                )}
+                {kor(d.til.ingliz_tilida_dastur_bor) && (
+                  <div>
+                    <dt>Til</dt>
+                    <dd><span class="dt-ichki-nom">Ingliz tilida dastur</span><Fakt fakt={d.til.ingliz_tilida_dastur_bor} /></dd>
+                  </div>
+                )}
+                {kor(d.ishlash.oqish_paytida) && (
+                  <div>
+                    <dt>Ishlash</dt>
+                    <dd><span class="dt-ichki-nom">O'qish paytida</span><Fakt fakt={d.ishlash.oqish_paytida} /></dd>
+                  </div>
+                )}
+                {kor(d.diplom.togridan_togri) && (
+                  <div>
+                    <dt>Diplom</dt>
+                    <dd><span class="dt-ichki-nom">To'g'ridan-to'g'ri qabul</span><Fakt fakt={d.diplom.togridan_togri} /></dd>
+                  </div>
+                )}
+              </dl>
+              {yoqlar(d, gr.length > 0).length > 0 && <p class="dt-kichik dt-sust dt-yoqlar">Hali tekshirilmoqda: {yoqlar(d, gr.length > 0).join(', ')}.</p>}
+              <button type="button" class="dt-taqqos-tugma" data-taqqos={d.slug} aria-pressed="false" hidden>
+                <svg class="dt-belgi-ikonka" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="4" y="4" width="16" height="16" rx="3" /><path class="dt-belgi-chiziq" d="M8 12l3 3 5-6" />
+                </svg>
+                Taqqoslash<span class="dt-sr">: {xulosa.nom}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <div class="dt-bosh-filtr" hidden data-bosh-filtr>
+          <p>Bu filtrlarga mos davlat yo'q. Ko'p faktlar hali tekshirilmoqda, shuning uchun ro'yxat to'liq emas.</p>
+          <button type="button" class="tugma tugma-ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
+        </div>
+
+        <section class="dt-taqqos" id="taqqoslash" aria-labelledby="dt-taqqos-sarlavha" hidden data-taqqos-bolim tabindex="-1">
+          <div class="dt-taqqos-bosh">
+            <h2 id="dt-taqqos-sarlavha">Taqqoslash</h2>
+            <button type="button" class="tugma tugma-ikkinchi" data-taqqos-tozala>Tanlovni tozalash</button>
+          </div>
+          <p class="dt-sust" data-taqqos-izoh></p>
+          <div class="dt-jadval-orami" data-jadval>
+            <table class="dt-jadval">
+              <caption class="dt-sr">Tanlangan davlatlar mezonlar bo'yicha</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Mezon</th>
+                  {tartibli.map((x) => <th scope="col" data-ustun={x.d.slug} hidden>{x.nom}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {satrlar.map((s) => (
+                  <tr>
+                    <th scope="row">{s.nom}</th>
+                    {tartibli.map((x) => (
+                      <td data-ustun={x.d.slug} hidden>
+                        {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} qisqa />
+                          : s.tur === 'usd' ? (x.xulosa.usd === null ? <Fakt fakt={null} qisqa /> : <span>{usdMatn(x.xulosa.usd)}<br /><span class="dt-kichik dt-sust">{kursIzoh}</span></span>)
+                          : x.grantlar.length > 0 ? (
+                            <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
+                          ) : <GrantYoqIzoh fakt={grantYoqIzohi(x.d)} />}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <ul class="dt-taqqos-kartalar" data-taqqos-kartalar>
+            {tartibli.map((x) => (
+              <li class="dt-taqqos-karta" data-ustun={x.d.slug} hidden>
+                <h3>{x.nom}</h3>
+                <dl>
+                  {satrlar.map((s) => (
+                    <div>
+                      <dt>{s.nom}</dt>
+                      <dd>
+                        {s.tur === 'fakt' ? <Fakt fakt={s.fakt(x.d)} birlik={s.birlik?.(x.d)} qisqa />
+                          : s.tur === 'usd' ? (x.xulosa.usd === null ? <Fakt fakt={null} qisqa /> : <span>{usdMatn(x.xulosa.usd)} <span class="dt-kichik dt-sust">({kursIzoh})</span></span>)
+                          : x.grantlar.length > 0 ? (
+                            <ul class="dt-grantlar">{x.grantlar.map((g) => <li><a class="dt-havola" href={katalogHavola(x.d.slug)}>{g.nom}</a><Fakt fakt={g.nimani_qoplaydi} /></li>)}</ul>
+                          ) : <GrantYoqIzoh fakt={grantYoqIzohi(x.d)} />}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </>
+    )}
+
+    <p class="dt-matn">Qaysi yo'l sizga mosligini bilmasangiz, <a class="dt-havola" href={vosita}>Topshirish yo'li</a> vositasida 3 ta savolga javob bering.</p>
+  </div>
+</BolimQobiq>
+
+<script>
+  import {
+    FILTR_IDLARI, MAKS_TAQQOS, MIN_TAQQOS, filtrdanOtadimi, holatniOqi, holatniYoz, saralash, taqqosAlmashtir,
+    type FiltrId, type Saralash,
+  } from '../../../../lib/topAdmission/davlatTaqqos';
+
+  const ildiz = document.querySelector<HTMLElement>('[data-davlat-taqqos]');
+  const royxat = ildiz?.querySelector<HTMLUListElement>('[data-royxat]');
+  const asboblar = ildiz?.querySelector<HTMLElement>('[data-asboblar]');
+  if (ildiz && royxat && asboblar) {
+    const narxMumkin = ildiz.dataset.narx === '1';
+    const xlar = [...royxat.querySelectorAll<HTMLLIElement>('li[data-slug]')].map((el) => ({
+      el,
+      slug: el.dataset.slug!,
+      nom: el.dataset.nom!,
+      usd: el.dataset.usd ? Number(el.dataset.usd) : null,
+      belgilar: (el.dataset.belgilar ?? '').split(' ').filter(Boolean) as FiltrId[],
+      tugma: el.querySelector<HTMLButtonElement>('[data-taqqos]')!,
+    }));
+    const filtrTugmalar = [...asboblar.querySelectorAll<HTMLButtonElement>('[data-filtr]')];
+    const saralashTugmalar = [...asboblar.querySelectorAll<HTMLButtonElement>('[data-saralash]')];
+    const soni = asboblar.querySelector<HTMLElement>('[data-soni]')!;
+    const taqqosHolat = asboblar.querySelector<HTMLElement>('[data-taqqos-holat]')!;
+    const taqqosOtish = asboblar.querySelector<HTMLAnchorElement>('[data-taqqos-otish]')!;
+    const boshFiltr = ildiz.querySelector<HTMLElement>('[data-bosh-filtr]')!;
+    const bolim = ildiz.querySelector<HTMLElement>('[data-taqqos-bolim]')!;
+    const izoh = bolim.querySelector<HTMLElement>('[data-taqqos-izoh]')!;
+    const jadval = bolim.querySelector<HTMLElement>('[data-jadval]')!;
+    const taqqosKartalar = bolim.querySelector<HTMLElement>('[data-taqqos-kartalar]')!;
+    const ustunlar = [...bolim.querySelectorAll<HTMLElement>('[data-ustun]')];
+
+    let h = holatniOqi(location.search, xlar.map((x) => x.slug), narxMumkin);
+    let xabar = '';
+
+    const chiz = () => {
+      filtrTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(h.filtrlar.includes(b.dataset.filtr as FiltrId))));
+      saralashTugmalar.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.saralash === h.saralash)));
+
+      let n = 0;
+      for (const x of saralash(xlar, h.saralash)) {
+        royxat.append(x.el);
+        const kor = filtrdanOtadimi(x, h.filtrlar);
+        x.el.hidden = !kor;
+        if (kor) n++;
+        const tanlangan = h.tanlov.includes(x.slug);
+        x.tugma.setAttribute('aria-pressed', String(tanlangan));
+        if (!tanlangan && h.tanlov.length >= MAKS_TAQQOS) x.tugma.setAttribute('aria-disabled', 'true');
+        else x.tugma.removeAttribute('aria-disabled');
+      }
+      soni.textContent = h.filtrlar.length ? `${xlar.length} tadan ${n} ta davlat` : `${n} ta davlat`;
+      royxat.hidden = n === 0;
+      boshFiltr.hidden = n !== 0;
+
+      const k = h.tanlov.length;
+      taqqosHolat.textContent = xabar || (k ? `Taqqoslashda: ${k} / ${MAKS_TAQQOS}` : `Taqqoslash uchun kartadagi tugma bilan ${MIN_TAQQOS}–${MAKS_TAQQOS} ta davlat tanlang.`);
+      taqqosOtish.hidden = k < MIN_TAQQOS;
+      bolim.hidden = k === 0;
+      const yetarli = k >= MIN_TAQQOS;
+      jadval.hidden = !yetarli;
+      taqqosKartalar.hidden = !yetarli;
+      izoh.textContent = yetarli ? '' : `Yana ${MIN_TAQQOS - k} ta davlat tanlang (ko'pi bilan ${MAKS_TAQQOS} ta).`;
+      izoh.hidden = yetarli;
+      ustunlar.forEach((el) => { el.hidden = !h.tanlov.includes(el.dataset.ustun!); });
+
+      const q = holatniYoz(h, location.search);
+      history.replaceState(history.state, '', location.pathname + q + location.hash);
+    };
+
+    filtrTugmalar.forEach((b) => b.addEventListener('click', () => {
+      const id = b.dataset.filtr as FiltrId;
+      const f = h.filtrlar.includes(id) ? h.filtrlar.filter((x) => x !== id) : [...h.filtrlar, id];
+      h = { ...h, filtrlar: FILTR_IDLARI.filter((x) => f.includes(x)) };
+      xabar = '';
+      chiz();
+    }));
+    saralashTugmalar.forEach((b) => b.addEventListener('click', () => {
+      h = { ...h, saralash: b.dataset.saralash as Saralash };
+      xabar = '';
+      chiz();
+    }));
+    xlar.forEach((x) => x.tugma.addEventListener('click', () => {
+      const yangi = taqqosAlmashtir(h.tanlov, x.slug);
+      xabar = yangi.length === h.tanlov.length && !h.tanlov.includes(x.slug)
+        ? `Ko'pi bilan ${MAKS_TAQQOS} ta davlatni taqqoslash mumkin. Avval bittasini olib tashlang.`
+        : '';
+      h = { ...h, tanlov: yangi };
+      chiz();
+    }));
+    ildiz.querySelector('[data-filtr-tozala]')?.addEventListener('click', () => {
+      h = { ...h, filtrlar: [] };
+      xabar = '';
+      chiz();
+      filtrTugmalar[0]?.focus();
+    });
+    bolim.querySelector('[data-taqqos-tozala]')?.addEventListener('click', () => {
+      h = { ...h, tanlov: [] };
+      xabar = '';
+      chiz();
+      (xlar.find((x) => !x.el.hidden)?.tugma ?? filtrTugmalar[0])?.focus();
+    });
+
+    xlar.forEach((x) => { x.tugma.hidden = false; });
+    asboblar.hidden = false;
+    chiz();
+  }
+</script>
+
+<style>
+  .dt-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
+  .dt-bosh { display: grid; gap: var(--space-3); }
+  .dt-ustki {
+    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .dt-matn { max-width: 62ch; margin: 0; }
+  .dt-sust { color: var(--color-text-secondary); }
+  .dt-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .dt-havola { color: var(--color-link); font-weight: 700; }
+  .dt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  [hidden] { display: none !important; }
+
+  /* Asboblar: filtr, saralash, holat */
+  .dt-asboblar { display: grid; gap: var(--space-5); }
+  .dt-guruh { display: grid; gap: var(--space-2); }
+  .dt-chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .dt-chip {
+    min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
+    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .dt-chip:active { transform: var(--bosilish); }
+  .dt-chip[aria-pressed="true"] { background: var(--color-text-primary); border-color: var(--color-text-primary); color: var(--color-surface); }
+  .dt-holat-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-4); }
+  .dt-holat-qator .dt-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
+
+  /* Davlat kartalari */
+  .dt-kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .dt-karta {
+    display: flex; flex-direction: column; gap: var(--space-4); min-width: 0;
+    padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--card-radius); box-shadow: var(--card-shadow);
+  }
+  .dt-karta-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .dt-karta-nom { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .dt-chuqur {
+    display: inline-flex; align-items: center; min-height: var(--size-touch-min); padding: 0 var(--space-3);
+    border: 1.5px solid var(--floor-ui); border-radius: var(--radius-full);
+    color: var(--color-text-primary); font-size: var(--text-small-size); font-weight: 700; text-decoration: none;
+  }
+  .dt-mezonlar { margin: 0; display: grid; gap: var(--space-3); }
+  .dt-mezonlar > div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+  .dt-mezonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .dt-mezonlar dd { margin: 0; display: grid; gap: var(--space-1); min-width: 0; }
+  .dt-ichki-nom { font-size: var(--text-small-size); color: var(--color-text-secondary); }
+  .dt-ichki-nom:not(:first-child) { margin-top: var(--space-1); }
+  .dt-taxmin { font-size: var(--text-small-size); margin-top: var(--space-1); }
+  .dt-belgi {
+    justify-self: start; display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
+    margin-top: var(--space-1); border-radius: var(--badge-radius); background: var(--color-warning-subtle); color: var(--color-warning-text);
+    font-size: var(--text-caption-size); font-weight: 600;
+  }
+  .dt-yoq { color: var(--color-text-secondary); font-style: italic; }
+  .dt-grantlar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  .dt-grantlar li { display: grid; gap: var(--space-1); }
+
+  .dt-taqqos-tugma {
+    margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
+    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer;
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .dt-taqqos-tugma:active { transform: var(--bosilish); }
+  .dt-belgi-ikonka { color: var(--floor-ui); flex: none; }
+  .dt-belgi-chiziq { opacity: 0; transition: opacity var(--duration-fast) var(--ease-state); }
+  .dt-taqqos-tugma[aria-pressed="true"] { border-color: var(--floor-ui); background: var(--floor-subtle); }
+  .dt-taqqos-tugma[aria-pressed="true"] .dt-belgi-chiziq { opacity: 1; }
+  .dt-taqqos-tugma[aria-disabled="true"] { color: var(--color-text-secondary); cursor: not-allowed; }
+  .dt-taqqos-tugma[aria-disabled="true"] .dt-belgi-ikonka { color: var(--color-text-secondary); }
+
+  .dt-bosh-filtr { display: grid; gap: var(--space-3); justify-items: start; padding: var(--card-pad); border: 1px dashed var(--color-border-strong); border-radius: var(--card-radius); }
+  .dt-bosh-filtr p { margin: 0; max-width: 62ch; }
+
+  /* Taqqoslash */
+  .dt-taqqos { display: grid; gap: var(--space-4); scroll-margin-top: var(--space-16); }
+  .dt-taqqos:focus { outline: none; }
+  .dt-taqqos-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .dt-taqqos-bosh h2 { margin: 0; }
+  .dt-taqqos > p { margin: 0; }
+  .dt-jadval-orami { overflow-x: auto; border: 1px solid var(--card-border); border-radius: var(--card-radius); background: var(--card-bg); }
+  .dt-jadval { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .dt-jadval th, .dt-jadval td { padding: var(--space-3) var(--space-4); text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border); overflow-wrap: anywhere; }
+  .dt-jadval tbody tr:last-child > * { border-bottom: 0; }
+  .dt-jadval thead th { font-size: var(--text-body-size); background: var(--color-surface-sunken); }
+  .dt-jadval thead th:first-child, .dt-jadval tbody th { width: 13rem; font-size: var(--text-small-size); color: var(--color-text-secondary); font-weight: 700; }
+  .dt-taqqos-kartalar { display: none; list-style: none; margin: 0; padding: 0; gap: var(--space-4); }
+  .dt-taqqos-karta { padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); }
+  .dt-taqqos-karta h3 { margin: 0 0 var(--space-3); }
+  .dt-taqqos-karta dl { margin: 0; display: grid; }
+  .dt-taqqos-karta dl > div { display: grid; gap: var(--space-1); padding-block: var(--space-3); border-top: 1px solid var(--color-border); }
+  .dt-taqqos-karta dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .dt-taqqos-karta dd { margin: 0; }
+
+  /* Bo'sh holat */
+  .dt-bosh-holat {
+    display: grid; gap: var(--space-3); justify-items: start; padding: var(--space-8) var(--card-pad);
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); box-shadow: var(--card-shadow);
+  }
+  .dt-bosh-holat h2 { margin: 0; }
+  .dt-bosh-ikonka { color: var(--floor-ui); }
+  .dt-bosh-holat .dt-ustki { margin-top: var(--space-3); }
+  .dt-nomlar { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .dt-nomlar li {
+    display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-height: var(--size-touch-min);
+    padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-full); background: var(--color-surface-sunken);
+  }
+  .dt-nomlar .dt-chuqur { min-height: var(--badge-height); padding: 0 var(--space-2); }
+  .dt-bosh-yol { margin: var(--space-3) 0 0; }
+  .dt-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .dt-chip:hover, .dt-taqqos-tugma:hover:not([aria-disabled="true"]) { border-color: var(--color-text-primary); }
+  }
+  @media (max-width: 760px) {
+    .dt-chiplar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: var(--space-1); }
+    .dt-chip { flex: none; }
+    .dt-kartalar { grid-template-columns: 1fr; }
+    .dt-jadval-orami { display: none !important; }
+    .dt-taqqos-kartalar { display: grid; }
+    .dt-taqqos-kartalar[hidden] { display: none !important; }
+    .dt-tugmalar { display: grid; width: 100%; }
+    .dt-tugmalar .tugma { width: 100%; }
+  }
+</style>

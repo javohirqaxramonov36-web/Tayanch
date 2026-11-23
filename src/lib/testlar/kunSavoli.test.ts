@@ -26,10 +26,10 @@ test('next question time: Tashkent midnight, local time added elsewhere', () => 
 });
 
 test('streak text: no blame when it breaks', () => {
-  assert.equal(streakMatni({ current: 0, active_today: false }), 'Answer today to start a streak.');
-  assert.equal(streakMatni({ current: 1, active_today: true }), 'Day 1 of your streak. Nice start.');
-  assert.equal(streakMatni({ current: 4, active_today: true }), '4-day streak.');
-  assert.equal(streakMatni({ current: 4, active_today: false }), "4-day streak. Answer today's question to keep it going.");
+  assert.equal(streakMatni({ current: 0, active_today: false }), 'Answer today to start a Question of the day streak.');
+  assert.equal(streakMatni({ current: 1, active_today: true }), 'Question of the day: day 1 of your streak. Nice start.');
+  assert.equal(streakMatni({ current: 4, active_today: true }), 'Question of the day: 4-day streak.');
+  assert.equal(streakMatni({ current: 4, active_today: false }), "Question of the day: 4-day streak. Answer today's question to keep it going.");
   for (const s of [0, 1, 5].flatMap((c) => [true, false].map((a) => streakMatni({ current: c, active_today: a })))) {
     assert.doesNotMatch(s, /lost|broke|miss|fail/i);
   }

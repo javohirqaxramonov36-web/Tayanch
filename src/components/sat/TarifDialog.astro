@@ -4,6 +4,7 @@
 // Boshqaruv: src/lib/sat/tarifDialog.ts (tarifDialogOch). Ro'yxat bazadan (plans) keladi, bu yerda raqam yo'q.
 // Bosim yo'q: taymer, "oxirgi imkoniyat", qizil rang yo'q. Matn inglizcha (SAT bo'limi).
 import { yol } from '../../lib/yol';
+import TolovUsullari from './TolovUsullari.astro';
 ---
 <dialog class="td" id="tarif-dialog" aria-labelledby="td-h" aria-describedby="td-matn" lang="en">
   <div class="td-ichi">
@@ -22,6 +23,7 @@ import { yol } from '../../lib/yol';
       <button type="button" class="tugma tugma-ikkinchi" data-td-yop>Maybe later</button>
       <a class="tugma tugma-asosiy" href={yol('/uz/sat/hisob/obuna/')} data-td-rejalar>See plans</a>
     </div>
+    <TolovUsullari />
   </div>
 </dialog>
 

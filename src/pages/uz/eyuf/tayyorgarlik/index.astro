@@ -1,0 +1,9 @@
+---
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
+import { yol } from '../../../../lib/yol';
+---
+<EyufSahifa title="Hujjatlar, universitet va esse" description="Birinchi kurs. Har darsda shaxsiy ish varag‘i va aniq tayyorgarlik natijasi.">
+ <nav class="eyuf-panel" aria-label="To‘rt kurs"><h2>Tayyorgarlik yo‘li</h2><ol class="eyuf-list"><li>Hujjatlar, universitet va esse — shu sahifada</li><li><a href={yol('/uz/eyuf/trenajyor/')}>Test bosqichi</a></li><li><a href={yol('/uz/eyuf/suhbat/')}>Suhbat bosqichi</a></li><li><a href={yol('/uz/eyuf/natija/')}>Natija va keyingi qadamlar</a></li></ol></nav>
+ <KursDarslar course="c1" />
+</EyufSahifa>

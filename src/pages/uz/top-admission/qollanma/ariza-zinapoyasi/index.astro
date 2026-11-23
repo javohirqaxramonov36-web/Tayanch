@@ -109,6 +109,7 @@ const MISOL = 'turkiye';
       </div>
       <p class="kichik ikkinchi" id="zp-yol-izoh" hidden>Topshirish yo'lidagi javobingizga qarab tanlandi.</p>
       <p class="vazifa-holat" id="zp-sinab-holat" aria-live="polite">Hali joylanmagan.</p>
+      <p class="kichik zp-xp" id="zp-xp" aria-live="polite"></p>
     </div>
     <div class="segment">
       <button type="button" class="katta asosiy" id="zp-tekshir">Tekshirish</button>
@@ -120,6 +121,9 @@ const MISOL = 'turkiye';
 <script>
   import { belgilashGuruhi } from '../../../../../lib/belgilashGuruh';
   import type { Zinapoya } from '../../../../../data/topAdmissionDarslar/zinapoyalar';
+  import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from 'astro:env/client';
+  import { hisobSozlama } from '../../../../../data/hisobSozlama';
+  import { xpYozuvi, zinapoyaXpYuboruvchi } from '../../../../../lib/topAdmission/zinapoyaXp';
 
   const { zinapoyalar, ARALASH, MISOL, KALIT } = JSON.parse(document.getElementById('zp-data')!.textContent || '{}') as {
     zinapoyalar: Zinapoya[]; ARALASH: number[]; MISOL: string; KALIT: string;
@@ -138,6 +142,21 @@ const MISOL = 'turkiye';
     const mos = s && typeof s === 'object' ? zinapoyalar.find((z) => z.davlat === s.davlat) : undefined;
     if (mos) { sinabYol = mos.id; $('zp-yol-izoh').hidden = false; }
   } catch { /* o'qib bo'lmadi: Common App qoladi */ }
+
+  // XP (Q5): faqat hisob bilan kirganda, zinapoya to'g'ri terilganda. supabase-js faqat sessiya kaliti bo'lsa yuklanadi.
+  // Login yo'q yoki xato: jim o'tadi. Faqat o'z natijasi ko'rsatiladi (reyting yo'q).
+  const xpYubor = zinapoyaXpYuboruvchi(async () => {
+    if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) return null;
+    try { if (localStorage.getItem(hisobSozlama.sessiyaKaliti) === null) return null; } catch { return null; }
+    const { hisobMijoz } = await import('../../../../../lib/hisob');
+    const c = hisobMijoz();
+    if (!c) return null;
+    return {
+      kirganmi: async () => Boolean((await c.auth.getSession()).data.session),
+      chaqir: async (p_step) => await c.rpc('admission_step_done', { p_step }),
+    };
+  });
+  const xpJoy = $('zp-xp');
 
   let qadam = 'animatsiya';
   let joriy: Zinapoya = zina(MISOL);
@@ -268,6 +287,8 @@ const MISOL = 'turkiye';
     if (!xatolar.length) {
       holat.textContent = `Hammasi to'g'ri: ${joriy.nomi} zinapoyasi tayyor.`;
       holat.dataset.ok = '1';
+      const id = joriy.id;
+      void xpYubor(id).then((xp) => { const m = xpYozuvi(xp); if (m && joriy.id === id) xpJoy.textContent = `${m}: ${joriy.nomi} zinapoyasi.`; });
     } else {
       holat.textContent = `${4 - xatolar.length} / 4 to'g'ri. ${xatolar.join(' ')} Kartalarni ko'chirib, qayta tekshiring.`;
       holat.dataset.ok = '';
@@ -328,6 +349,8 @@ const MISOL = 'turkiye';
   .zp-karta.zp-joylandi { background: var(--fon-ikkinchi); color: var(--matn-ikkinchi); }
   .zp-karta-joy { font-size: var(--matn-mayda); color: var(--matn-ikkinchi); }
   .zp-karta-joy:empty { display: none; }
+  .zp-xp { margin: 0; font-weight: 700; color: var(--matn); }
+  .zp-xp:empty { display: none; }
 
   .dars .zp-qoida { font-size: var(--matn-asosiy); font-weight: 600; line-height: 1.5; }
   .zp-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
