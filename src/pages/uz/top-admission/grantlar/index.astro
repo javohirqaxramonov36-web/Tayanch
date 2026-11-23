@@ -1,4 +1,5 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css (.adm doira, chip tanlovi to'q sariq, sarlavha Onest 800).
 // 2-qavat · Top Admission · vosita: Grantlar katalogi (Admission D-seriya, Q3). Uslub Q2 (davlatlar/) bilan bir xil.
 // Ma'lumot: content collection `grantlar` (+ `davlatlar`, `universitetlar` nomlari uchun), sxema src/lib/topAdmission/sxema.ts.
 // Mantiq: src/lib/topAdmission/grantKatalog.ts.
@@ -21,6 +22,7 @@ import {
 import { EHTIYOJ_IZOHI } from '../../../../lib/topAdmission/universitetMoslik';
 import { toshkentBugun } from '../../../../lib/muddat';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/adm.css';
 
 const bugun = toshkentBugun();
 const refId = (r: unknown) => (r && typeof r === 'object' && 'id' in r ? String((r as { id: string }).id) : undefined);
@@ -73,8 +75,8 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 >
   <div class="ichki gk-sahifa" data-grant-katalog>
     <header class="gk-bosh">
-      <p class="gk-ustki">Vosita</p>
-      <h1>Grantlar katalogi</h1>
+      <p class="adm-eyebrow">Vosita</p>
+      <h1 class="adm-h1">Grantlar katalogi</h1>
       <p class="gk-matn">Davlat grantlari va universitetlarning xalqaro talabalarga beradigan yordami bir joyda. Turi, davlat va daraja bo'yicha filtrlang. Ro'yxat deadline bo'yicha: eng yaqini birinchi.</p>
       <p class="gk-ogoh" role="note">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -303,8 +305,8 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
   .gk-bosh { display: grid; gap: var(--space-3); }
   .gk-ustki {
-    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
-    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+    margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted);
   }
   .gk-matn { max-width: 62ch; margin: 0; }
   .gk-sust { color: var(--color-text-secondary); }
@@ -326,12 +328,12 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .gk-chip {
     min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
-    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    border: var(--border-width-1) solid var(--color-adm-line-strong); background: var(--color-adm-surface); color: var(--color-adm-text);
     font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
     transition: transform var(--duration-fast) var(--ease-state);
   }
   .gk-chip:active { transform: var(--bosilish); }
-  .gk-chip[aria-pressed="true"] { background: var(--color-text-primary); border-color: var(--color-text-primary); color: var(--color-surface); }
+  .gk-chip[aria-pressed="true"] { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
 
   /* Grant kartalari */
   .gk-kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
