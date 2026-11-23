@@ -355,6 +355,29 @@ Manba: artifakt v15 `qavat-2-top-admission.md`, `tokens.json` (`adm-*`), `bundle
 | `adm-line-strong` / `adm-surface`, zich shisha | 3.82, 3.76 | 3.81, 3.92 |
 | Foto ustida `main` shishasi (eng yomon piksel): `text-muted`, `accent-text`, `line-strong` | 5.58, 4.53, 3.04 | 8.18, 7.21, 3.47 |
 
+### 5-qavat EYUF (PR 9 `ds-eyuf`, 2026-11-23)
+
+Manba: artifakt v15 `qavat-5-eyuf.md`, `tokens.json` (`eyuf-*`), `bundle.css` "5 · EYUF", `components/Eyuf*`. Hamma `/uz/eyuf/` sahifasi yangi ko'rinishda.
+
+- **Tokenlar** (`tokens.css`, "5-qavat EYUF mini-DS"): primitiv `--color-eyuf-night`, `-ivory`, `-ink`, `-on-accent`; mavzuli `--color-eyuf-bg`, `-bg-deep`, `-surface` (zich shishaning noshaffof zaxirasi), `-glass`, `-glass-strong`, `-glass-border`, `-tile`, `-text`, `-text-muted`, `-accent`, `-accent-hover`, `-accent-text`, `-gold`, `-gold-line`, `-halo`, `-line`, `-line-strong`. Tipografiya `--text-eyuf-hero-*` (34/40, ≥640px 40/46, ≥1280px 56/62), `--text-eyuf-h1-*`, `--text-eyuf-h2-*` (26/32), `--text-eyuf-raqam-*` (40/44); o'lcham `--size-eyuf-doira`, `-qator`, `-halqa`. Shrift `--font-eyuf` (Playfair Display 600, raqam `lining-nums tabular-nums`).
+- **Qavat qatlami** (`src/styles/eyuf.css`, faqat EYUF sahifalari import qiladi): `html:root[data-floor="5"]` da poydevor tokenlari (`--color-bg`, `-surface`, `-text-*`, `-border*`, `-link`, `-focus-ring`, `-action-primary-*`, `-glass-*`, `--floor-text`) eyuf-* ga o'tadi. Shuning uchun mavjud forma, test va panel kodi o'zgarmasdan palitrani oladi. Sarlavhalar (`main h1–h3`) Playfair; ro'yxat qatori sarlavhasi Onest.
+- **Sirtlar.** `main` foto ustida zich shishada (`QavatFoto`), shuning uchun uning ichidagi panellar tekis zich (`eyuf-glass-strong`, blur yo'q): `.eyuf-panel`, `.eyuf-panel-zich`, IQ ekranlari. Shisha (`.t-shisha`) faqat noshaffof sahnada `.eyuf-sahna.t-fon` (hero). Forma, test, savol va uzun matn faqat zich sirtda.
+- **Komponentlar** (`src/components/eyuf/`): `EyufHero` (sahna + shaffof shisha; `obyekt` bilan oltin orbita, ekranda bitta; `ixcham` ichki sahifa sarlavhasi), `EyufBosqich` (oltin serif raqamli kartalar, holat chipi so'z va ikonka bilan, joriy `aria-current`; `zich` sahnadan tashqarida), `EyufRoyxat` (zich panelda 64px qatorlar, 44px doira ikonka, holat so'zi, chevron), `EyufTayyorlik` (halqa `--ulush` 0–100 va bandlar; IQ natijasida dinamik), `EyufIkonka`, `EyufYulduz`. Tugma: urg'u `.t-tugma.eyuf-tugma--urgu` (sahifada bitta), ikkinchi `.t-tugma--ikkinchi` (sahnada oltin chet), sahifa ichidagi eski `.tugma-asosiy` zumrad fill.
+- **Matn qoidasi.** Shaffof shishada va sahnada faqat `eyuf-text` (`eyuf-text-muted` qorong'ida 4.21). Oltin faqat serif raqam, kursiv urg'u (24px+) va bezak chizig'i; tugma, havola yoki holat rangi emas. Fokus `eyuf-accent-text`.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: panellar `eyuf-surface` + `eyuf-line-strong` chet, urg'u kapsula tekis `eyuf-accent`.
+
+**Kontrast (node, 2026-11-23).** Eng yomon holat: sahna nur dog'i markazi (`floor-eyuf-glow` × 0.9, blursiz); `main` foto ustida (foto pikseli qora yoki oq). Yorug' / qorong'i.
+
+| Juftlik | Sahna nur markazi | Shaffof shisha / nur | Zich panel / main | Main (foto) |
+| --- | --- | --- | --- | --- |
+| `eyuf-text` | 7.96 / 7.86 | 12.73 / 7.63 | 17.21+ / 14.33+ | 12.45+ / 9.40+ |
+| `eyuf-text-muted` | 3.16 / 4.34 | 5.06 / **4.21** | 6.84+ / 7.92+ | 4.95+ / 5.19+ |
+| `eyuf-accent-text` (havola, fokus) | 2.90 / 4.96 | 4.64 / 4.82 | 6.27+ / 9.05+ | 4.53+ / 5.93+ |
+| `eyuf-gold` | 2.52 / 5.28 | 4.03 / 5.12 | 5.45+ / 9.62+ | 3.94+ / 6.31+ |
+| `eyuf-line-strong` (maydon cheti) | 1.86 / 1.93 | 2.97 / 1.87 | 4.02+ / 3.51+ | 2.91+ / 2.31+ |
+
+`eyuf-on-accent` / `eyuf-accent` 5.34 / 5.13 (hover 6.73 / 6.50). Shundan: maydon cheti va holat chipi ma'noli bo'lsa faqat zich panelda; sahnada matn faqat `eyuf-text`.
+
 ## Harakat
 
 - Davomiylik (2026-11-13): `--duration-fast` 150ms, `--duration-base` 200ms, `--duration-slow` 200ms, `--duration-stagger` 50ms. Hamma harakat 120–200ms.

@@ -1,0 +1,24 @@
+---
+// EyufTayyorlik (DS 5-qavat, PR 9): zich panelda halqa ko'rsatkich (ulush 0–100) va bandlar ro'yxati (slot, <ul>).
+// Faqat foydalanuvchining o'z ma'lumoti. Halqa ichidagi matn slot "halqa" (dinamik bo'lsa skript yangilaydi);
+// `dinamik` bo'lsa halqada role/aria-label yo'q: ichidagi matn (skript yangilaydi) o'zi o'qiladi, sarlavhaga fokus beriladi.
+import '../../styles/eyuf.css';
+interface Props { id: string; sarlavha: string; ulush?: number; halqaYorliq?: string; dinamik?: boolean; namuna?: boolean; sarlavhaDaraja?: 2 | 3 }
+const { id, sarlavha, ulush = 0, halqaYorliq, dinamik = false, namuna = false, sarlavhaDaraja = 2 } = Astro.props;
+const Sarlavha = sarlavhaDaraja === 2 ? 'h2' : 'h3';
+---
+<section class="eyuf-panel-zich eyuf-tayyorlik" aria-labelledby={id}>
+  <div class="eyuf-tayyorlik-ichki">
+    <div
+      class="eyuf-halqa"
+      style={`--ulush: ${ulush}`}
+      data-eyuf-halqa={dinamik ? '' : undefined}
+      role={dinamik ? undefined : 'img'}
+      aria-label={dinamik ? undefined : halqaYorliq}
+    ><span><slot name="halqa" /></span></div>
+    <div class="eyuf-tayyorlik-bandlar">
+      <div class="eyuf-sarlavha"><Sarlavha id={id} tabindex={dinamik ? '-1' : undefined}>{sarlavha}</Sarlavha>{namuna && <span class="eyuf-namuna">Namuna</span>}</div>
+      <slot />
+    </div>
+  </div>
+</section>

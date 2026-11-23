@@ -771,3 +771,65 @@
   --login-button-height: 54px;
   --login-backdrop: rgba(0, 0, 0, 0.6);
 }
+
+/* ==========================================================================
+   5-qavat EYUF mini-DS (ADR 005, PR 9 `ds-eyuf`, 2026-11-23). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: eyuf-*; qavat-5-eyuf.md). Stillar: eyuf.css (faqat EYUF sahifalari import qiladi).
+   Zumrad tun (qorong'i) va fil suyagi (yorug'), shampan oltin faqat bezak va serif raqam.
+   Faqat 5-qavatda ishlatiladi (DESIGN.md "Bino qoidasi": boshqa qavat eyuf-* ni olmaydi).
+   ========================================================================== */
+:root{
+  /* PRIMITIVE */
+  --color-eyuf-night:#0A1A14; --color-eyuf-ivory:#F4F3EC; --color-eyuf-ink:#0A1A14;
+  --color-eyuf-on-accent:var(--color-neutral-0);
+
+  /* SEMANTIC · yorug' (fil suyagi) */
+  --color-eyuf-bg:var(--color-eyuf-ivory);
+  --color-eyuf-bg-deep:color-mix(in srgb, var(--color-eyuf-ivory) 92%, var(--color-eyuf-ink));
+  --color-eyuf-surface:var(--color-neutral-0);           /* glass-strong ning noshaffof zaxirasi */
+  --color-eyuf-glass:rgb(255 255 255 / 0.55);
+  --color-eyuf-glass-strong:rgb(255 255 255 / 0.88);
+  --color-eyuf-glass-border:rgb(255 255 255 / 0.9);
+  --color-eyuf-tile:rgb(15 125 88 / 0.08);
+  --color-eyuf-text:var(--color-eyuf-ink);
+  --color-eyuf-text-muted:#4A5C53;
+  --color-eyuf-accent:#0B7A55;                            /* yagona urg'u fill, ustida on-accent */
+  --color-eyuf-accent-hover:color-mix(in srgb, var(--color-eyuf-accent) 82%, var(--color-eyuf-night));
+  --color-eyuf-accent-text:#0A6B4A;
+  --color-eyuf-gold:#7F6234;                              /* serif raqam, kursiv urg'u, yulduzcha */
+  --color-eyuf-gold-line:#C2A774;                         /* faqat bezak chizig'i (2.1:1) */
+  --color-eyuf-halo:rgb(15 125 88 / 0.3);
+  --color-eyuf-line:#D7DDD4;
+  --color-eyuf-line-strong:#6E8077;
+
+  /* COMPONENT · tipografiya (Playfair Display 600 = --font-eyuf) */
+  --text-eyuf-hero-size:34px; --text-eyuf-hero-lh:40px; --text-eyuf-hero-ls:-0.01em;
+  --text-eyuf-h1-size:30px; --text-eyuf-h1-lh:36px;
+  --text-eyuf-h2-size:26px; --text-eyuf-h2-lh:32px;
+  --text-eyuf-raqam-size:40px; --text-eyuf-raqam-lh:44px;
+  --size-eyuf-doira:44px; --size-eyuf-qator:64px; --size-eyuf-halqa:140px; --size-eyuf-halqa-qalinlik:14px;
+}
+:root[data-mavzu='qorongi']{
+  --color-eyuf-bg:var(--color-eyuf-night);
+  --color-eyuf-bg-deep:color-mix(in srgb, var(--color-eyuf-night) 70%, var(--color-neutral-950));
+  --color-eyuf-surface:#0C241B;
+  --color-eyuf-glass:rgb(36 92 70 / 0.28);
+  --color-eyuf-glass-strong:rgb(12 36 27 / 0.92);
+  --color-eyuf-glass-border:rgb(216 200 166 / 0.18);
+  --color-eyuf-tile:rgb(255 255 255 / 0.06);
+  --color-eyuf-text:#EEF5F0;
+  --color-eyuf-text-muted:#A7BCB1;
+  --color-eyuf-accent:#0F7D58;
+  --color-eyuf-accent-text:#5ED9A8;
+  --color-eyuf-gold:#D8C8A6;
+  --color-eyuf-gold-line:#B7A68A;
+  --color-eyuf-halo:rgb(32 208 152 / 0.45);
+  --color-eyuf-line:#1D3A2E;
+  --color-eyuf-line-strong:#5F7D6F;
+}
+@media (min-width: 640px){
+  :root{ --text-eyuf-hero-size:40px; --text-eyuf-hero-lh:46px; --text-eyuf-h1-size:36px; --text-eyuf-h1-lh:42px; }
+}
+@media (min-width: 1280px){
+  :root{ --text-eyuf-hero-size:56px; --text-eyuf-hero-lh:62px; }
+}

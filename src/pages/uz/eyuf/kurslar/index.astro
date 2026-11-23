@@ -1,14 +1,32 @@
 ---
-// 5-qavat · EYUF · Kurslar ro'yxati. Dizayn fayli yo'q (HANDOFF): DESIGN.md tokenlari bilan minimal karta ro'yxati.
+// 5-qavat · EYUF · Kurslar ro'yxati. Mini-DS (PR 9): EyufHero (ixcham), EyufBosqich (to'rt kurs), EyufRoyxat (kirish kurslari).
 // Ma'lumot: src/data/eyufKurslar.ts.
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import SahifaOxiri from '../../../../components/SahifaOxiri.astro';
 import { eyufKurslar, KURS_HOLATI_YORLIQ } from '../../../../data/eyufKurslar';
 import { yol } from '../../../../lib/yol';
+import EyufHero from '../../../../components/eyuf/EyufHero.astro';
+import EyufBosqich from '../../../../components/eyuf/EyufBosqich.astro';
+import EyufRoyxat from '../../../../components/eyuf/EyufRoyxat.astro';
+import '../../../../styles/eyuf.css';
 
 const sana = '2026-11-19';
 const keyingi = '2026-12-19';
-const tekshirilmagan = ["5-qavatning o'z dizayni hali yo'q: sahifa umumiy DS tokenlari bilan qurilgan."];
+const tekshirilmagan: string[] = [];
+const tayyorgarlik = [
+  { nomi: 'Hujjatlar va esse', izoh: 'Universitet, hujjatlar, esse.', href: yol('/uz/eyuf/tayyorgarlik/') },
+  { nomi: 'Test bosqichi', izoh: 'IQ mashq va simulyatsiya.', href: yol('/uz/eyuf/trenajyor/') },
+  { nomi: 'Suhbat bosqichi', izoh: 'Savol kartalari va soha.', href: yol('/uz/eyuf/suhbat/') },
+  { nomi: 'Natija', izoh: 'Keyingi qadamlar va B reja.', href: yol('/uz/eyuf/natija/') },
+];
+const kirish = eyufKurslar.map((k) => ({
+  href: yol(`/uz/eyuf/kurslar/${k.slug}/`),
+  nomi: k.nomi,
+  meta: [k.bepul ? 'Bepul' : null, `${k.bolimlar.length} bo'lim`].filter(Boolean).join(' · '),
+  holat: KURS_HOLATI_YORLIQ[k.holat],
+  tayyor: k.holat === 'tayyor',
+  ikonka: 'kurs' as const,
+}));
 ---
 <BolimQobiq
   title="Kurslar · EYUF"
@@ -21,63 +39,18 @@ const tekshirilmagan = ["5-qavatning o'z dizayni hali yo'q: sahifa umumiy DS tok
   tekshirilmagan={tekshirilmagan}
 >
   <div class="ichki kurslar">
-    <header class="bosh">
-      <p class="ustki">5-qavat · El-Yurt Umidi</p>
-      <h1>Kurslar</h1>
-      <p class="tavsif">Bepul kurslar. Qoida va muddatlar faqat rasmiy manbadan, natija kafolatlanmaydi.</p>
-    </header>
-
-    <nav aria-label="To‘rt kursli EYUF tayyorgarligi">
-      <h2>Tayyorgarlik kurslari</h2>
-      <ol>
-        <li><a href={yol('/uz/eyuf/tayyorgarlik/')}>Hujjatlar, universitet va esse</a></li>
-        <li><a href={yol('/uz/eyuf/trenajyor/')}>Test bosqichi</a></li>
-        <li><a href={yol('/uz/eyuf/suhbat/')}>Suhbat bosqichi</a></li>
-        <li><a href={yol('/uz/eyuf/natija/')}>Natija va keyingi qadamlar</a></li>
-      </ol>
-    </nav>
-    <h2>Kirish kurslari</h2>
-    <ul class="royxat" role="list">
-      {eyufKurslar.map((k) => (
-        <li>
-          <a class="karta" href={yol(`/uz/eyuf/kurslar/${k.slug}/`)}>
-            <span class="yorliqlar">
-              {k.bepul && <span class="yorliq">Bepul</span>}
-              <span class:list={['yorliq', 'holat', k.holat]}>{KURS_HOLATI_YORLIQ[k.holat]}</span>
-            </span>
-            <span class="nom">{k.nomi}</span>
-            <span class="matn">{k.tavsif}</span>
-            <span class="bolimlar">{k.bolimlar.length} bo'lim</span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <EyufHero id="kurslar-h" yorliq="5-qavat · El-Yurt Umidi" sarlavha="Kurslar" matn="Bepul kurslar. Qoida va muddatlar faqat rasmiy manbadan, natija kafolatlanmaydi." ixcham />
+    <section class="kurslar-yol" aria-labelledby="kurslar-yol-h">
+      <h2 id="kurslar-yol-h">Tayyorgarlik kurslari</h2>
+      <EyufBosqich bosqichlar={tayyorgarlik} yorliq="To‘rt kursli EYUF tayyorgarligi" zich />
+    </section>
+    <EyufRoyxat id="kirish-kurslar-h" sarlavha="Kirish kurslari" qatorlar={kirish} />
   </div>
   <SahifaOxiri tekshirilgan={sana} keyingiTekshiruv={keyingi} tekshirilmagan={tekshirilmagan} />
 <p class="ichki">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
 </BolimQobiq>
 
 <style>
-  .kurslar { display: grid; gap: var(--b-8); padding-block: var(--b-6); }
-  .bosh { display: grid; gap: var(--b-2); }
-  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
-  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
-  .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
-  nav ol { display: grid; gap: var(--space-3); padding-inline-start: var(--space-6); }
-  nav a { display: inline-flex; align-items: center; min-height: var(--size-touch-min); }
-  .royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
-  .karta {
-    display: grid; gap: var(--b-3); height: 100%; padding: var(--b-6);
-    border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta);
-    background: var(--sirt); color: var(--matn); text-decoration: none;
-  }
-  .karta:hover { border-color: var(--matn); }
-  .karta:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
-  .yorliq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  .holat.tayyor { color: var(--matn); }
-  .holat.skelet { border: 1px dashed var(--chiziq-kuchli); }
-  .nom { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
-  .matn { color: var(--matn-ikkinchi); }
-  .bolimlar { font-size: var(--matn-mayda); color: var(--matn-sust); font-weight: 700; }
+  .kurslar { display: grid; gap: var(--space-6); padding-block: var(--space-6); }
+  .kurslar-yol { display: grid; gap: var(--space-4); }
 </style>

@@ -2,15 +2,15 @@
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import QavatFoto from '../../../../components/QavatFoto.astro';
 import IqTest from '../../../../components/eyuf/IqTest.astro';
+import EyufHero from '../../../../components/eyuf/EyufHero.astro';
+import '../../../../styles/eyuf.css';
 import { yol } from '../../../../lib/yol';
 ---
 <BolimQobiq title="IQ test · El-Yurt Umidi" description="El-Yurt Umidi test bosqichiga mustaqil tayyorgarlik. Besh to‘plam, aralash savollar, taymer va xatolar tahlili." turi="mashq" bolim="eyuf" holat="chop-etilgan">
   <div class="ichki eyuf-iq-sahifa">
-    <header class="eyuf-iq-bosh">
-      <a href={yol('/uz/eyuf/')}>← El-Yurt Umidi</a>
-      <h1>IQ test</h1>
-      <p>Tanlang, yeching, xatolaringizni tahlil qiling.</p>
-    </header>
+    <EyufHero id="eyuf-iq-h" yorliq="Test bosqichi" sarlavha="IQ" urgu="test" matn="Tanlang, yeching, xatolaringizni tahlil qiling." ixcham>
+      <a slot="ustki" class="eyuf-iq-orqaga" href={yol('/uz/eyuf/')}><span aria-hidden="true">←</span> El-Yurt Umidi</a>
+    </EyufHero>
     <details class="eyuf-iq-eslatma" open>
       <summary>Tayyorgarlik mashqi haqida</summary>
       <p>Bu tayyorgarlik mashqi. Rasmiy test intellektual, tahliliy, ijodiy qobiliyat va psixologik barqarorlikni o‘lchaydi. Amaldagi SAT 1300+, GMAT Verbal/Quantitative bo‘yicha kamida 75-persentil, GRE’ning har bir Verbal, Quantitative va Writing bo‘limida kamida 75-persentil yoki A-Level fanlari bo‘yicha kamida A sertifikati taqdim etilsa, testdan ozod qilish nazarda tutilgan. Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
@@ -24,11 +24,14 @@ import { yol } from '../../../../lib/yol';
 
 <style>
   .eyuf-iq-sahifa { display: grid; gap: var(--space-6); padding-top: var(--space-4); }
-  .eyuf-iq-bosh { display: grid; gap: var(--space-3); }
-  .eyuf-iq-bosh > a { color: var(--color-link); font-size: var(--text-small-size); }
-  .eyuf-iq-bosh > p { color: var(--color-text-secondary); }
-  .eyuf-iq-eslatma { padding: var(--space-4); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); font-size: var(--text-small-size); }
-  .eyuf-iq-eslatma summary { min-height: var(--size-touch-min); cursor: pointer; font-weight: var(--font-weight-semibold); }
+  .eyuf-iq-orqaga { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--size-touch-min); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); }
+  /* Uzun matn: zich panel (main ichida tekis, blur yo'q) */
+  .eyuf-iq-eslatma { padding: var(--space-4) var(--space-5); background: var(--color-eyuf-glass-strong); border: var(--border-width-1) solid var(--color-eyuf-glass-border); border-radius: var(--radius-xl); box-shadow: inset 0 1px 0 var(--color-glass-highlight), var(--shadow-1); font-size: var(--text-small-size); }
+  .eyuf-iq-eslatma summary { display: flex; align-items: center; min-height: var(--size-touch-min); cursor: pointer; font-weight: var(--font-weight-semibold); }
+  .eyuf-iq-eslatma p { max-width: var(--size-measure); color: var(--color-text-secondary); }
   .eyuf-iq-eslatma p + p { margin-top: var(--space-3); }
   .eyuf-iq-eslatma a { color: var(--color-link); }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .eyuf-iq-eslatma { background: var(--color-eyuf-surface); border-color: var(--color-eyuf-line-strong); }
+  }
 </style>
