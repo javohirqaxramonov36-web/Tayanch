@@ -279,6 +279,19 @@ Sahifalar: Results (`/uz/sat/vosita/natijalar/`), Question bank (`/uz/sat/mashq/
 | Yulduz (tanlangan) / `sat-line` | 3.70 (fill) | 5.42 (sky) |
 | Ko'rsatkich ikonka fill / zich sirt | 5.05 | 3.09 |
 
+#### Savol ekranlari: SatSavol (PR 5c `ds-sat-savol`, 2026-11-23)
+
+Manba: artifakt v15 `components/SatSavol`. Sahifalar: mashq sessiyasi (`/uz/sat/mashq/sessiya/`), Practice test (`/uz/sat/mashq/test/`), Kun savoli (`KunSavoli`, `/uz/sat/`), mock imtihon, takrorlash va musobaqa savollari (umumiy `SavolUslub.astro`), `SatFokus` qolipi. Faqat ko'rinish: xatti-harakat, kalitlar va matn o'zgarmagan.
+
+- **Panel.** Savol, passage va natija faqat zich shishada: `sat-glass-strong`, 1px `sat-glass-border`, `radius-lg`, `shadow-glass`, `glass-backdrop`. Ichidagi variant, maydon va tugmalar tekis (ichma-ich blur yo'q). Foto fon zich shishasi ichida (Kun savoli, `/uz/sat/`) panel qattiq karta: `sat-surface`, `sat-line`, blursiz.
+- **Variant.** Tekis, 1px `sat-line-strong`, `radius-lg`, min 44px; harf 36px doira, Sora 600. Hover (faqat sichqoncha) chet `sat-blue`, darhol. Tanlangan: chet va inset 1px `sat-blue-fill`, harf to'ladi (`sat-blue-fill` + oq). Holat yana `aria-checked` / `checked` bilan aytiladi.
+- **Holatlar.** To'g'ri: fon `success-subtle`, chet `success-ui`, harf 2px `success-ui` halqa, ✓ belgi `success-text`. Xato: uzuq chet `sat-text`, matn ustidan chiziq, harf to'la `sat-text`, × belgi. Cross out: uzuq chet va xira matn. Natija sarlavhasi Sora, to'g'risi `success-text`; xabar so'z bilan (`aria-live`).
+- **Ustki qator.** Savol raqami `sat-yorliq` uslubida (`sat-text-muted`), asboblar kapsula, faol holat `sat-line-strong` chet.
+- **Tugma.** Tekshirish ko'k kapsula (`.t-tugma.sat-tugma--kok` yoki `.sk-asosiy`), panelda bitta; keyingi savol `.t-tugma`. Nofaol ko'k kapsula poydevordagi nofaol tugma kabi.
+- **SatFokus.** `body` foni `sat-bg`, `main` = `.sat.t-fon` (5b token sohasi va nur dog'lari, nur xiraroq), ustki qator `sat-glass-strong` blursiz + `sat-line` chiziq, nom Sora, progress `sat-blue-fill`. Sessiya pastki qatori (sticky) zich shisha: savol paneli bilan yonma-yon, ichma-ich emas.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more` va blursiz brauzerda panel tekis `sat-surface` + `sat-line-strong`, ko'k kapsula tekis.
+- **Kontrast.** 5b jadvalidagi zich shisha qiymatlari amal qiladi (`sat-text` 13.28+, `sat-text-muted` 6.37+, `sat-line-strong` 3.66+, oq / `sat-blue-fill` 5.12). Axe 4.14 (390/1280, yorug'/qorong'i, javobdan oldin va keyin): sessiya, test, Kun savoli, savol namunasi 0 buzilish.
+
 ### 4-qavat IELTS (PR 8 `ds-ielts-tokenlar`, 2026-11-23)
 
 Manba: artifakt v15 `qavat-4-ielts.md`, `tokens.json` (`ielts-*`), `bundle.css` "4 · IELTS". Bu PR faqat tokenlar va stillar: IELTS sahifalari va komponentlari hali ishlatmaydi (u yerda Codex ishlayapti, muallif qarori). Hero, plitkalar, ko'rsatkich va ro'yxat keyingi PR'da.
