@@ -1,0 +1,88 @@
+---
+// Muddatlar sahifasi (/uz/deadline/) uchun grant muddatlari: Grantlar katalogidagi (content collection `grantlar`)
+// deadline fakti tasdiqlangan va aniq YYYY-MM-DD bo'lgan grantlar. Yangi fakt yo'q: sana, manba va tekshirilgan sana
+// grant JSON'idan olinadi. Build paytida o'tganlari tashlanadi; brauzerda bugungi vaqt bilan qayta tekshiriladi:
+// o'tgan qator yashiriladi, qolganida "N kun qoldi" yoziladi. JS'siz: build tartibidagi ro'yxat, holat yorlig'isiz.
+import { getCollection } from 'astro:content';
+import { DARAJA_MATNI, TUR_MATNI, deadlineSanasi, grantKorinadimi, muddatHolati, type GrantKirish } from '../lib/topAdmission/grantKatalog';
+import { sanaMatni, type Fakt } from '../lib/topAdmission/fakt';
+import { muddatChegarasi, toshkentBugun } from '../lib/muddat';
+import { yol } from '../lib/yol';
+
+const bugun = toshkentBugun();
+const refId = (r: unknown) => (r && typeof r === 'object' && 'id' in r ? String((r as { id: string }).id) : '');
+const davlatNomlari = new Map((await getCollection('davlatlar')).map((e) => [e.id, e.data.nom_uz]));
+
+const qatorlar = (await getCollection('grantlar'))
+  .map((e) => ({ ...e.data, davlat: refId(e.data.davlat) }) as unknown as GrantKirish & { deadline: Fakt & { source_url?: string } })
+  .filter((g) => grantKorinadimi(g))
+  .map((g) => ({ g, sana: deadlineSanasi(g.deadline) }))
+  .filter((x): x is { g: typeof x.g; sana: string } => !!x.sana && muddatHolati(x.sana, bugun) === 'kelajak')
+  .sort((a, b) => a.sana.localeCompare(b.sana) || a.g.nom.localeCompare(b.g.nom, 'uz'))
+  .map(({ g, sana }) => ({
+    g,
+    sana,
+    chegara: muddatChegarasi(sana),
+    davlatNom: davlatNomlari.get(g.davlat) ?? g.davlat,
+    katalog: yol(`/uz/top-admission/grantlar/?d=${encodeURIComponent(g.davlat)}`),
+  }));
+---
+<section class="grant-muddat" aria-labelledby="grant-muddat-h">
+  <h2 id="grant-muddat-h">Grant muddatlari</h2>
+  <p class="sust">Grantlar katalogidan: faqat aniq sanasi rasmiy sahifada tekshirilgan grantlar, eng yaqini birinchi. O'tgan muddatlar ro'yxatdan o'zi chiqib ketadi. Sana universitet yoki dastur vaqt mintaqasida bo'lishi mumkin: rasmiy sahifada tekshiring.</p>
+  {qatorlar.length > 0 ? (
+    <ul class="grant-royxat" data-grant-muddatlar>
+      {qatorlar.map(({ g, sana, chegara, davlatNom, katalog }) => (
+        <li data-kun={chegara.kun} data-oxir={chegara.oxir}>
+          <div class="grant-sana">
+            <strong>{sanaMatni(sana)}</strong>
+            <span class="grant-holat" data-grant-holat hidden></span>
+          </div>
+          <span class="grant-nom">{g.nom}</span>
+          <span class="kichik sust">{davlatNom} · {TUR_MATNI[g.turi]} · {DARAJA_MATNI[g.daraja]}</span>
+          <span class="kichik sust">
+            {g.deadline.source_url && <><a href={g.deadline.source_url}>Rasmiy manba</a> ({new URL(g.deadline.source_url).hostname}) · </>}
+            Tekshirilgan: {sanaMatni(g.deadline.tekshirilgan_sana)} · <a href={katalog}>Katalogda ko'rish</a>
+          </span>
+        </li>
+      ))}
+    </ul>
+  ) : null}
+  <p class="grant-bosh" data-grant-bosh hidden={qatorlar.length > 0}>Hozircha aniq sanali yaqin grant muddati yo'q. <a href={yol('/uz/top-admission/grantlar/')}>Grantlar katalogi</a></p>
+</section>
+
+<script>
+  import { muddatHolati } from '../lib/muddat';
+
+  const royxat = document.querySelector<HTMLElement>('[data-grant-muddatlar]');
+  const bosh = document.querySelector<HTMLElement>('[data-grant-bosh]');
+  function yangila() {
+    if (!royxat) return;
+    const hozir = Date.now();
+    let ochiq = 0;
+    for (const li of Array.from(royxat.children) as HTMLElement[]) {
+      const holat = muddatHolati(hozir, Number(li.dataset.kun), Number(li.dataset.oxir));
+      li.hidden = holat === 'Tugadi';
+      if (!li.hidden) ochiq++;
+      const yorliq = li.querySelector<HTMLElement>('[data-grant-holat]');
+      if (yorliq) { yorliq.textContent = holat; yorliq.hidden = false; }
+    }
+    royxat.hidden = ochiq === 0;
+    if (bosh) bosh.hidden = ochiq > 0;
+  }
+  yangila();
+  addEventListener('pageshow', (e) => { if (e.persisted) yangila(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) yangila(); });
+</script>
+
+<style>
+  .grant-muddat { display: grid; gap: var(--space-4); }
+  .grant-muddat h2, .grant-muddat p { margin: 0; }
+  .grant-royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  .grant-royxat li { display: grid; gap: var(--space-1); padding: var(--space-4) var(--space-5); background: var(--color-surface-sunken); border-radius: var(--radius-md); }
+  .grant-sana { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); }
+  .grant-holat { font-size: var(--text-small-size); color: var(--color-text-secondary); }
+  .grant-nom { font-weight: var(--font-weight-bold); }
+  .grant-bosh { padding: var(--space-6); border: var(--border-width-1) dashed var(--color-border-strong); border-radius: var(--radius-md); color: var(--color-text-secondary); }
+  [hidden] { display: none !important; }
+</style>

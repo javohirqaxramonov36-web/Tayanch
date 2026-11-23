@@ -286,6 +286,7 @@ body:has(main.adm)::before { display: none; }
 
 /* ---------- AdmMuddat ---------- */
 .adm-muddat { padding: var(--space-6); display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
+.adm-muddat[hidden], [data-adm-bosh][hidden] { display: none; }
 .adm-muddat-tepa { display: flex; justify-content: space-between; align-items: start; gap: var(--space-4); }
 .adm-muddat-tepa > div { display: grid; gap: var(--space-1); min-width: 0; }
 .adm-muddat h3 { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: var(--font-weight-bold); letter-spacing: var(--text-h3-ls); }
