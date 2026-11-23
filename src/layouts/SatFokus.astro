@@ -69,7 +69,7 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
       ) : <span class="fokus-oraliq" aria-hidden="true"></span>}
       <slot name="amal" />
     </section>
-    <main id="asosiy" class="fokus-asosiy">
+    <main id="asosiy" class="fokus-asosiy sat t-fon">
       <div class="fokus-yol"><QavatYoli bandlar={bandlar} sahifaNomi={title.split(' · ')[0]} ota={yopish?.href} /></div>
       {joriyMavzu ? (
         <div class="fokus-kurs">
@@ -133,6 +133,7 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
     box-shadow: none;
     color: var(--btn-disabled-text);
   }
+  /* main: #225 dagi .sat token sohasi + .t-fon nur dog'lari (backdrop yo'q, savol paneli ichma-ich blursiz) */
   .fokus-asosiy { flex: 1; padding: var(--b-6) var(--b-8) var(--b-10); }
   .fokus-yol { max-width: 760px; margin: 0 auto var(--b-5); }
   .fokus-kurs { margin-inline: auto; max-inline-size: var(--size-content-max); }

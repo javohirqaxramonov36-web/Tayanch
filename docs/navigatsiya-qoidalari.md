@@ -15,7 +15,7 @@ Yangi sahifa yoki komponent qurishdan oldin shu hujjat o'qiladi.
 | Sahifa boshi | Qavat yo'li (qavat kirish sahifasida yo'q), sarlavha, bir qatorli tushuntirish, **bitta** asosiy tugma |
 | Sahifa oxiri | Manbalar, eslatmalar (`SatEslatma`) |
 
-- Telefonda pastki panel yo'q (2026-11-15 dan). Pastki tab bar qaytarilsa, shu hujjat va `DESIGN.md` birga yangilanadi.
+- Telefonda pastki panel 2026-11-15 da olib tashlangan. 2026-11-23 dan faqat SAT'da (<720px) `SatTabBar` bor: 5 band (Today, Practice, Learn, Progress, Plan) yon panel guruhlaridan (`satYonGuruhlar`), hamburger panel, Lift va hisob bandi o'z joyida qoladi; `SatFokus` sahifalarida yo'q. Asos: ADR 005, DS rejasi (5d) muallif tomonidan 2026-11-18 da tasdiqlangan, qarorlar 2026-11-23 da boshqaruvchi chatga topshirilgan. Tafsilot `DESIGN.md` "Qavat mini-DS'lari".
 - Boshqa qavatga o'tish: bo'lim panelining "Qavatlar" ro'yxati, bosh sahifada yana qavatlar menyusi. Ustki qatorda alohida joriy qavat yozuvi (Lift) yo'q: muallif qarori 2026-11-19 ("ortiqcha"). Bo'limlar ro'yxatiga boshqa qavat tugmalari aralashtirilmaydi.
 - Mavzu tugmasi bitta, ustki qatorda (panel ichida takrorlanmaydi).
 
@@ -48,6 +48,5 @@ Yuqoridan pastga: sarlavha + bitta asosiy tugma → bo'limlar → muddatlar va e
 
 ## Ochiq
 
-- `SatTabBar.astro` va `src/lib/sat/satTab.ts` ulanmagan: qaytariladimi yoki o'chiriladimi (muallif qarori).
 - "Davom ettirish" tugmasi uchun oxirgi sahifa kaliti (`tayanch:...`): interaktiv spetsifikatsiya bilan.
 - IELTS va Top Admission'da qavat yo'li hali sahifa bergan `yol` dan olinadi.

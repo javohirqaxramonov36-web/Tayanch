@@ -1,0 +1,49 @@
+/* 4-qavat IELTS mini-DS (ADR 005, PR 8, 2026-11-23). Manba: Claude Design artifakti, versiya 15,
+   components/bundle.css "4 · IELTS" bloki (.ielts, .ielts-shisha, .ielts-shisha--zich).
+   Tokenlar tokens.css ("4-qavat IELTS mini-DS"), qoidalar DESIGN.md "4-qavat IELTS".
+   Hozircha hech bir sahifa ishlatmaydi: IELTS sahifalari o'z PR'ida yoqadi.
+   Saytga moslash:
+   - DS dagi .ielts → .ielts-qobiq: /uz/ielts/ kirishida "ielts" klassi allaqachon bor (sahifa
+     ichidagi stil), umumiy .ielts u sahifani o'zgartirib yuborardi.
+   - .ielts-shisha / .ielts-shisha--zich → .ielts-glass / .ielts-glass-strong (token nomlari bilan bir xil).
+   - Uzun matn, forma, test va savol faqat .ielts-glass-strong da. Ichma-ich blur yo'q.
+   - Zaxira: backdrop-filter yo'q, prefers-reduced-transparency, prefers-contrast: more. */
+
+/* ---------- Qavat qobig'i: fon, matn, qavat nuri (.t-fon bilan birga ishlatsa bo'ladi) ---------- */
+.ielts-qobiq {
+  --nur: var(--color-floor-ielts-glow);
+  background: var(--color-ielts-bg);
+  color: var(--color-ielts-text);
+}
+.ielts-qobiq.t-fon { background: var(--color-ielts-bg); }
+:where(.ielts-qobiq) :where(h1, h2, h3) {
+  font-family: var(--font-ielts);
+  color: var(--color-ielts-text);
+  text-wrap: balance;
+}
+
+/* ---------- Shisha: shaffof (qisqa matn, plitka, hero) va zich (matn, ro'yxat, test, forma) ---------- */
+.ielts-glass,
+.ielts-glass-strong {
+  border: var(--border-width-1) solid var(--color-ielts-glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-ielts-glass);
+  box-shadow: var(--shadow-glass);
+  -webkit-backdrop-filter: var(--ielts-glass-backdrop);
+  backdrop-filter: var(--ielts-glass-backdrop);
+}
+.ielts-glass-strong { background: var(--color-ielts-glass-strong); }
+
+/* ---------- Zaxira ---------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ielts-glass { background: var(--color-ielts-glass-strong); }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .ielts-glass,
+  .ielts-glass-strong {
+    border-color: var(--color-ielts-line-strong);
+    background: var(--color-ielts-glass-strong);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
