@@ -28,9 +28,11 @@ export interface Props {
   tekshirilmagan?: string[];
   /** Qavat yo'lidagi oraliq bandlar: ["Mashq"] */
   yol?: string[];
+  /** Kontent ustuni foni (qavat mini-DS'i), masalan SAT vositalari: "sat t-fon" (sat.css). Yon panel tegilmaydi. */
+  sahifaSinfi?: string;
 }
 
-const { title, description, holat, bolim = 'sat', yol: bandlar = [] } = Astro.props;
+const { title, description, holat, bolim = 'sat', yol: bandlar = [], sahifaSinfi } = Astro.props;
 // Til bo'limdan: SAT inglizcha (CLAUDE.md), qolganlari o'zbekcha.
 const til = Astro.props.til ?? bolimTili(bolim);
 const sahifaNomi = title.split(' · ')[0];
@@ -45,7 +47,7 @@ const beta = bolim !== 'top-admission';
   <body class="bolim-qobiq">
     <a class="otish" href="#asosiy" data-panel-tashqari>{matn[til].otish}</a>
     <BolimYon bolim={bolim} />
-    <div class="kontent-ustun" data-panel-tashqari>
+    <div class:list={['kontent-ustun', sahifaSinfi]} data-panel-tashqari>
       <main id="asosiy">
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
         <slot />
@@ -61,6 +63,8 @@ const beta = bolim !== 'top-admission';
 
 <style is:global>
   .bolim-qobiq .kontent-ustun { min-width: 0; }
+  /* Qavat foni (sahifaSinfi) qisqa sahifada ham ekran pastigacha */
+  .bolim-qobiq .kontent-ustun.t-fon { min-height: 100dvh; }
   .bolim-qobiq .kontent-ustun .ichki { max-width: 960px; padding-inline: var(--b-4); padding-bottom: var(--b-16); }
   .bolim-qobiq .kontent-ustun .telegram-qator { padding-bottom: 0; }
   .bolim-qobiq .kontent-ustun .beta-holat { margin: 0; padding-block: var(--b-4) var(--b-6); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }

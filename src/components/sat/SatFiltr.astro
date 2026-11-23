@@ -1,0 +1,23 @@
+---
+// SatFiltr (3-qavat mini-DS, ADR 005, PR 5b): filtr paneli (Question bank, Vocabulary).
+// Manba: DS artifakti v15, components/bundle.css "SatFiltr". Faqat .sat ichida (src/styles/sat.css).
+// Panel zich shisha (.t-shisha--zich: forma va filtr faqat zichda). Ichidagi chiplar .sat-chip
+// (<button aria-pressed>), qator nomi <fieldset>/<legend>. Chip holatini sahifa skripti boshqaradi:
+// bu komponent faqat qobiq, xatti-harakat va saqlash kalitlari sahifada o'zgarmaydi.
+// Ichma-ich blur yo'q: ichidagi elementlar tekis yoki zich sirt.
+export interface Props {
+  /** Panel nomi (ekran o'quvchi uchun) */
+  nomi?: string;
+  id?: string;
+  /** Qo'shimcha sinf (sahifa joylashuvi uchun) */
+  class?: string;
+  /** section (mustaqil bo'lim) yoki div */
+  teg?: 'section' | 'div';
+}
+
+const { nomi, id, class: sinf, teg = 'section' } = Astro.props;
+const Teg = teg;
+---
+<Teg class:list={['sat-filtr t-shisha t-shisha--zich', sinf]} id={id} aria-label={nomi}>
+  <slot />
+</Teg>
