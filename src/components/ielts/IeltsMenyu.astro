@@ -43,7 +43,7 @@ const bosh = yol('/uz/ielts/');
     };
     och(false);
     tugma.hidden = false;
-    tugma.addEventListener('click', () => och(panel.hidden));
+    tugma.addEventListener('click', () => och(panel.hidden === true));
     menyu.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !panel.hidden) {
         event.preventDefault();
