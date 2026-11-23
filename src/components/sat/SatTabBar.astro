@@ -1,13 +1,13 @@
 ---
-// SAT telefon pastki tab bari (< 1024px; rekonstruksiya rejasi 1-bosqich qoldig'i, 2026-11-13).
-// Bandlar: Today, Practice, Learn, Progress, Plan (yon panel guruhlari, satYonGuruhlar). Account yon panelda (hamburger) qoladi.
-// SAT'da telefondagi pastki Lift o'rnini egallaydi; qavat lifti chiqib keladigan yon panelga (hamburger menyu) o'tadi
-// (Lift.astro, .yon[data-bolim='sat'] .lift-yon). Ikkalasi bir vaqtda pastda turmaydi.
-// Holatlar: doimiy ko'rinadi (asosiy navigatsiya, aylantirganda yashirinmaydi). Matn maydoni fokusda bo'lsa yashirinadi
-//   (telefon klaviaturasi ustiga chiqmasin), fokus ketganda qaytadi. Yon panel ochiq bo'lsa inert (data-panel-tashqari).
-// Joriy tab URL'dan: aynan tab sahifasi aria-current="page", guruhdagi boshqa sahifa aria-current="true".
-// Balandlik: 64px tab + 2 x 4px = 72px + safe area (global.css body pastki bo'shlig'i bilan bir xil). localStorage yo'q.
-// SatFokus (mashq, mock) sahifalarida yo'q: BolimQobiq'da ulanadi.
+// SAT telefon pastki tab bari (DS PR 5d, 2026-11-23; ADR 005, artifakt "SatTabBar", bundle.css .sat-tabbar).
+// Faqat <720px: pastda suzuvchi zich navy shisha kapsula, ikkala mavzuda bir xil. ≥720px da yon panel yetarli.
+// Bandlar: Today, Practice, Learn, Progress, Plan (yon panel guruhlari satYonGuruhlar, satTab.ts). Account va Lift
+// poydevordagi hamburger panelda qoladi: tab bar ularni takrorlamaydi va almashtirmaydi.
+// Joriy band URL'dan: aynan tab sahifasi aria-current="page", guruhdagi boshqa sahifa aria-current="true".
+// Holatlar: doimiy ko'rinadi (aylantirganda yashirinmaydi). Matn maydoni fokusda bo'lsa yashirinadi (telefon
+//   klaviaturasi ustiga chiqmasin), fokus ketganda qaytadi. Hamburger panel ochiq bo'lsa yashirinadi (panel pastini yopmasin).
+// Sahifa pastida body'ga --size-sat-tabbar-joy + safe area bo'shliq: oxirgi kontent (SatEslatma) yopilmaydi.
+// SatFokus (test, sessiya, mock, lug'at, kurs) sahifalarida yo'q: faqat BolimQobiq ulaydi. localStorage yo'q.
 import { satYonGuruhlar } from '../../data/satSahifalar';
 import { satQism, satTablar, type SatTabKalit } from '../../lib/sat/satTab';
 import { yol } from '../../lib/yol';
@@ -17,7 +17,7 @@ const tablar = satTablar(
   satQism(Astro.url.pathname),
 );
 // Ikonkalar yon paneldagi mos bandlardan (BolimYon.astro): Today = bosh, Practice = Question bank,
-// Learn = Reading & Writing guide, Progress = Progress, Plan = Study planner.
+// Learn = qo'llanma (artifakt), Progress = My results, Plan = Study planner.
 const ikonkalar: Record<SatTabKalit, string> = {
   today: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
   practice: '<rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/>',
@@ -26,14 +26,12 @@ const ikonkalar: Record<SatTabKalit, string> = {
   plan: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 15l2 2 4-4"/>',
 };
 ---
-<nav class="sat-tab" aria-label="SAT sections" data-panel-tashqari data-sat-tab>
-  <ul class="sat-tab-royxat">
+<nav class="sat-tabbar-orami" aria-label="SAT sections" lang="en" data-sat-tab>
+  <ul class="sat-tabbar">
     {tablar.map((t) => (
       <li>
-        <a href={yol(`/uz/sat/${t.qism}`)} aria-current={t.joriy}>
-          <span class="sat-tab-belgi" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={ikonkalar[t.kalit]} />
-          </span>
+        <a class="sat-tab" href={yol(`/uz/sat/${t.qism}`)} aria-current={t.joriy}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={ikonkalar[t.kalit]} />
           <span class="sat-tab-nom">{t.nomi}</span>
         </a>
       </li>
@@ -53,41 +51,94 @@ const ikonkalar: Record<SatTabKalit, string> = {
 </script>
 
 <style>
-  .sat-tab {
-    position: fixed; z-index: 25; left: 0; right: 0; bottom: 0;
-    background: var(--color-surface);
-    border-top: var(--border-width-1) solid var(--color-border);
-    padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
-  }
-  .sat-tab.klaviatura { display: none; }
-  .sat-tab-royxat {
-    list-style: none; margin: 0 auto; padding: 0; max-width: 40rem;
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-1);
-  }
-  .sat-tab-royxat a {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-    height: var(--size-bottombar); min-width: 0; border-radius: var(--radius-md);
-    color: var(--color-text-secondary); text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .sat-tab-belgi {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 52px; height: 30px; border-radius: var(--radius-full);
-  }
-  .sat-tab-nom {
-    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
-  }
-  .sat-tab-royxat a[aria-current] { color: var(--color-text-primary); }
-  .sat-tab-royxat a[aria-current] .sat-tab-belgi { background: var(--floor-ui); color: var(--floor-ui-text); }
-  .sat-tab-royxat a[aria-current] .sat-tab-nom { font-weight: 800; }
-  @media (hover: hover) and (pointer: fine) {
-    .sat-tab-royxat a:not([aria-current]):hover .sat-tab-belgi { background: var(--floor-subtle); color: var(--floor-text); }
-  }
-  .sat-tab-royxat a:active .sat-tab-belgi { transform: var(--bosilish); }
-  .sat-tab-belgi { transition: transform var(--duration-fast) var(--ease-enter); }
+  .sat-tabbar-orami { display: none; }
 
-  @media (min-width: 1024px) {
-    .sat-tab { display: none; }
+  @media (width < 720px) {
+    /* Oxirgi kontent tab bar ostida qolmasin */
+    :global(body:has([data-sat-tab])) {
+      padding-bottom: calc(var(--size-sat-tabbar-joy) + env(safe-area-inset-bottom));
+    }
+    /* Klaviatura bilan fokuslangan element tab bar ostida qolmasin (WCAG 2.4.11) */
+    :global(html:has([data-sat-tab])) {
+      scroll-padding-bottom: calc(var(--size-sat-tabbar-joy) + env(safe-area-inset-bottom));
+    }
+    .sat-tabbar-orami {
+      display: block;
+      position: fixed;
+      z-index: var(--z-sticky);
+      left: var(--space-2);
+      right: var(--space-2);
+      bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+      /* Navy ustida fokus halqasi (sat.css .sat-sahna bilan bir xil) */
+      --color-focus-ring: var(--color-accent-400);
+      --color-focus-gap: var(--color-sat-navy);
+      color-scheme: dark;
+    }
+    .sat-tabbar-orami.klaviatura,
+    :global(body:has(.yon-orami[open])) .sat-tabbar-orami { display: none; }
+  }
+
+  /* Zich navy shisha: qisqa yorliq ham har qanday kontent ustida o'qiladi (shaffof variant emas) */
+  .sat-tabbar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-1);
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: var(--space-1);
+    list-style: none;
+    border: var(--border-width-1) solid var(--color-sat-glass-navy-border);
+    border-radius: var(--radius-xl);
+    background: var(--color-sat-glass-navy-strong);
+    box-shadow: var(--shadow-sat-panel-navy);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+    backdrop-filter: var(--glass-backdrop);
+  }
+  .sat-tab {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: var(--space-1);
+    min-width: 0;
+    min-height: var(--size-sat-tabbar);
+    border-radius: var(--radius-lg);
+    color: var(--color-sat-on-navy-muted);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .sat-tab svg { width: var(--size-icon-md); height: var(--size-icon-md); }
+  .sat-tab-nom {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--text-caption-size);
+    line-height: var(--text-caption-lh);
+    font-weight: var(--font-weight-medium);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .sat-tab:hover { color: var(--color-sat-on-navy); }
+  }
+  .sat-tab[aria-current] {
+    color: var(--color-sat-sky);
+    background: var(--color-sat-navy-high);
+    box-shadow: inset 0 1px 0 var(--color-sat-glass-navy-border);
+  }
+  .sat-tab[aria-current] .sat-tab-nom { font-weight: var(--font-weight-semibold); }
+  .sat-tab:active { transform: var(--bosilish); }
+
+  /* Zaxira: blur yo'q brauzer, shaffoflik kamaytirilgan yoki yuqori kontrast: tekis navy sirt */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .sat-tabbar { background: var(--color-sat-navy-raised); }
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .sat-tabbar {
+      border-color: var(--color-sat-line-on-navy);
+      background: var(--color-sat-navy-raised);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
 </style>
