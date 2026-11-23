@@ -14,14 +14,14 @@ import { yol } from '../../../../lib/yol';
 <HisobKarta sahifa={hisobSahifalar.profil}>
   <HisobQorovul>
     <div class="profil">
-      <section class="hisob-karta" aria-labelledby="hisob-malumot">
+      <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="hisob-malumot">
         <h2 id="hisob-malumot">Hisob</h2>
         <a href={yol('/uz/hisob/obunalar/')}>Obunalarim</a>
         <p>Siz <strong id="profil-email"></strong> bilan kirgansiz.</p>
         <p class="hisob-sust">SAT savol banki va mashq sessiyalaridagi javoblaringiz hisobingizda saqlanadi. Dars natijalari hozircha faqat shu brauzerda.</p>
       </section>
 
-      <section class="hisob-karta" aria-labelledby="profil-sarlavha">
+      <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="profil-sarlavha">
         <h2 id="profil-sarlavha">Ma'lumotlaringiz</h2>
         <form class="hisob-forma" id="profil-forma" novalidate aria-labelledby="profil-sarlavha">
           <p class="hisob-alert" id="profil-xato" role="alert" hidden></p>
@@ -36,7 +36,7 @@ import { yol } from '../../../../lib/yol';
         </form>
       </section>
 
-      <section class="hisob-karta" aria-labelledby="statistika-sarlavha">
+      <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="statistika-sarlavha">
         <h2 id="statistika-sarlavha">Foydalanish statistikasi</h2>
         <p class="hisob-sust">Sayt qanday ishlatilayotganini bilish uchun Tayanch bir nechta hodisani yozadi: ro'yxatdan o'tish, mashq sessiyasini boshlash va tugatish, kun savoliga javob, tariflar sahifasini ochish. Savol matni, javobingiz, email va IP manzil yozilmaydi. Batafsil: <a href={yol('/uz/maxfiylik/#statistika')}>Maxfiylik siyosati</a>.</p>
         <p class="hisob-alert" id="statistika-xato" role="alert" hidden></p>
@@ -50,13 +50,13 @@ import { yol } from '../../../../lib/yol';
         <p class="hisob-holat" id="statistika-holat" role="status" hidden></p>
       </section>
 
-      <section class="hisob-karta" aria-labelledby="chiqish-sarlavha">
+      <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="chiqish-sarlavha">
         <h2 id="chiqish-sarlavha">Hisobdan chiqish</h2>
         <p class="hisob-sust">Shu qurilmada hisobdan chiqasiz. Brauzerda saqlangan natijalar shu yerda qoladi.</p>
         <button type="button" class="tugma tugma-ikkinchi" id="chiqish-tugma">Chiqish</button>
       </section>
 
-      <section class="hisob-karta" aria-labelledby="eksport-sarlavha">
+      <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="eksport-sarlavha">
         <h2 id="eksport-sarlavha">Ma'lumotlaringiz nusxasi</h2>
         <p class="hisob-sust">Serverdagi hamma ma'lumotingiz (hisob, profil, savol-javob tarixi, obuna va to'lovlar) va shu brauzerdagi Tayanch yozuvlari bitta JSON faylga yuklanadi. Sessiya kaliti faylga kirmaydi.</p>
         <p class="hisob-alert" id="eksport-xato" role="alert" hidden></p>
@@ -64,7 +64,7 @@ import { yol } from '../../../../lib/yol';
         <button type="button" class="tugma tugma-ikkinchi" id="eksport-tugma">Ma'lumotlarimni yuklab olish (JSON)</button>
       </section>
 
-      <section class="hisob-karta" aria-labelledby="ochirish-sarlavha">
+      <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="ochirish-sarlavha">
         <h2 id="ochirish-sarlavha">Hisobni o'chirish</h2>
         <p class="hisob-sust">Hisobingiz, profil, savol-javob tarixi va obunangiz serverdan butunlay o'chiriladi. Faol obuna ham tugaydi: pulni qaytarishni xohlasangiz, avval <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>ni o'qing. To'lov yozuvlari hisobdan uzilgan holda saqlanadi (<a href={yol('/uz/maxfiylik/#ochirish')}>Maxfiylik siyosati</a>). Shu brauzerdagi natijalar qoladi.</p>
         <button type="button" class="tugma tugma-ikkinchi" id="ochirish-tugma" aria-expanded="false" aria-controls="ochirish-tasdiq">Hisobni o'chirish</button>

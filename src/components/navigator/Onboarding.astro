@@ -122,14 +122,15 @@ const belgi = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
   .onb-forma { display: flex; flex-direction: column; width: 100%; min-height: 0; }
   .onb-bosh { padding: var(--b-5) var(--b-6) var(--b-3); display: flex; flex-direction: column; gap: var(--b-2); }
   .onb-bosh-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
-  .onb-nom { font-weight: 800; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .onb-nom { font-family: var(--font-display); font-weight: var(--font-weight-bold); font-size: var(--text-h3-size); line-height: var(--text-nav-sarlavha-lh); letter-spacing: var(--text-nav-sarlavha-ls); text-transform: uppercase; color: var(--color-nav-text); }
   .onb-otkaz {
     min-height: 48px; padding: 0 var(--b-3); margin-right: calc(-1 * var(--b-3));
     border: none; background: none; color: var(--rang-havola);
     font: inherit; font-weight: 700; cursor: pointer; border-radius: var(--r-toliq);
   }
   @media (hover: hover) and (pointer: fine) { .onb-otkaz:hover { background: var(--fon-ikkinchi); } }
-  .onb-hisob { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  /* Navigator mono yorlig'i (nav.css .nav-chip qoidasi): qadam hisobi */
+  .onb-hisob { justify-self: start; width: fit-content; padding: var(--space-1) var(--space-2); border: var(--border-width-1) solid var(--color-nav-line-strong); border-radius: var(--radius-sm); color: var(--color-nav-text-muted); font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; }
   .onb-progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .onb-progress div { height: 100%; width: 33.33%; background: var(--rang-asosiy); border-radius: var(--r-toliq); }
 

@@ -1,11 +1,14 @@
 ---
 // Navigator tepasidagi shaxsiy blok: salom, "Keyingi qadam" kartasi, yo'l xaritasi va "qayta tuzish".
+// Ko'rinish: Navigator mini-DS (nav.css) qora sahnasi; kartasi NavRamka, qadamlar NavYol (navYol.ts chizadi).
 // Ko'rinishi <html data-yol="bor"> ga bog'liq (YolBelgisi.astro). Mazmunni skript chizadi.
 // Qadam "tayyor"ligi shu yerda, build paytida hisoblanadi: sahifa fayli src/pages da bo'lishi kerak.
 // Qoidalarda noma'lum ID bo'lsa build to'xtaydi (to'qima havola chiqmasligi uchun).
 import { globSync } from 'node:fs';
 import { sep } from 'node:path';
 import Onboarding from './Onboarding.astro';
+import NavYol from './NavYol.astro';
+import NavRamka from './NavRamka.astro';
 import { navigatorMatni } from '../../data/navigatorMatn';
 import { navigatorSahifalar } from '../../data/navigatorSahifalar';
 import { qoidalar, UMUMIY_REJA } from '../../data/yolXaritasiQoidalar';
@@ -21,32 +24,35 @@ const sahifalar = tayyorlikniBelgila(navigatorSahifalar, mavjud);
 const m = navigatorMatni('uz');
 ---
 <section class="ichki yol-blok" data-yol-blok aria-labelledby="yol-salom">
-  <div class="yol-bosh">
-    <h2 id="yol-salom" class="yol-salom" tabindex="-1" data-yol-salom></h2>
-    <p class="yol-meta">
-      <span data-yol-bugun hidden></span>
-      <span class="yorliq" data-yol-muddat hidden></span>
-    </p>
-  </div>
-
-  <div class="keyingi" data-yol-keyingi hidden>
-    <div class="keyingi-matn">
-      <p class="keyingi-yorliq">{m.keyingiQadam}</p>
-      <p class="keyingi-nom" id="keyingi-nom" data-yol-k-nom></p>
-      <p class="keyingi-izoh" data-yol-k-izoh></p>
+  <div class="nav-sahna yol-sahna">
+    <div class="yol-bosh">
+      <h2 id="yol-salom" class="nav-nom yol-salom" tabindex="-1" data-yol-salom></h2>
+      <p class="yol-meta">
+        <span class="nav-chip nav-chip--sahna" data-yol-bugun hidden></span>
+        <span class="nav-chip nav-chip--sahna" data-yol-muddat hidden></span>
+      </p>
     </div>
-    <a class="tugma tugma-asosiy keyingi-tugma" data-yol-k-havola aria-describedby="keyingi-nom">{m.boshlash}</a>
-  </div>
 
-  <div class="yol-royxat">
-    <h3 class="yol-sarlavha">{m.yolXaritasi}</h3>
-    <p class="yol-asosiy ikkinchi" data-yol-asosiy hidden></p>
-    <ol class="qadamlar" aria-label={m.yolXaritasiRoyxat} data-yol-qadamlar></ol>
-    <p class="yol-ogoh" data-yol-ogoh hidden></p>
-    <p class="sust kichik" data-yol-izoh></p>
-    <p class="sust kichik" data-yol-saqlanmadi hidden>{m.saqlanmadi}</p>
-    <div>
-      <button type="button" class="tugma tugma-ikkinchi" data-yol-qayta>{m.qaytaTuzish}</button>
+    <NavRamka sarlavha={m.keyingiQadam} class="keyingi" data-yol-keyingi hidden>
+      <div class="keyingi-ichi">
+        <div class="keyingi-matn">
+          <p class="keyingi-nom" id="keyingi-nom" data-yol-k-nom></p>
+          <p class="keyingi-izoh" data-yol-k-izoh></p>
+        </div>
+        <a class="t-tugma keyingi-tugma" data-yol-k-havola aria-describedby="keyingi-nom">{m.boshlash}</a>
+      </div>
+    </NavRamka>
+
+    <div class="yol-royxat">
+      <h3 class="nav-nom yol-sarlavha">{m.yolXaritasi}</h3>
+      <p class="yol-asosiy" data-yol-asosiy hidden></p>
+      <NavYol aria-label={m.yolXaritasiRoyxat} data-yol-qadamlar />
+      <p class="yol-ogoh" data-yol-ogoh hidden></p>
+      <p class="yol-izoh" data-yol-izoh></p>
+      <p class="yol-izoh" data-yol-saqlanmadi hidden>{m.saqlanmadi}</p>
+      <div>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-yol-qayta>{m.qaytaTuzish}</button>
+      </div>
     </div>
   </div>
 </section>
@@ -60,59 +66,36 @@ const m = navigatorMatni('uz');
 </script>
 
 <style>
+  /* Navigator mini-DS: qora sahna (nav.css). Sahnada matn nav-on-stage, ikkinchi matn on-stage-muted (7.5:1). */
   .yol-blok { display: none; }
-  :global(html[data-yol='bor']) .yol-blok {
-    display: flex; flex-direction: column; gap: var(--b-6);
-    padding-block: var(--b-6) var(--b-10);
-  }
-  .yol-bosh { display: flex; flex-direction: column; gap: var(--b-2); }
-  .yol-salom { font-size: var(--matn-h2); font-weight: 900; line-height: 1.15; min-height: 1.15em; }
+  :global(html[data-yol='bor']) .yol-blok { display: block; padding-block: var(--space-6) var(--space-10); }
+  .yol-sahna { display: flex; flex-direction: column; gap: var(--space-8); }
+  .yol-bosh { display: flex; flex-direction: column; gap: var(--space-3); }
+  .yol-salom { min-height: 1em; }
   .yol-salom:focus { outline: none; }
-  .yol-salom:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
-  .yol-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-3); color: var(--matn-ikkinchi); font-size: var(--matn-katta); }
-  .yol-meta [hidden] { display: none; }
+  .yol-salom:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); border-radius: var(--radius-sm); }
+  .yol-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; }
 
-  .keyingi {
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
-    padding: var(--b-5) var(--b-6);
-    background: var(--sirt); border: 1.5px solid var(--matn); border-radius: var(--r-katta);
-  }
   .keyingi[hidden] { display: none; }
-  .keyingi-matn { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: var(--b-1); }
-  .keyingi-yorliq { font-size: var(--matn-kichik); font-weight: 800; color: var(--rang-havola); }
-  .keyingi-nom { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
-  .keyingi-izoh { color: var(--matn-ikkinchi); }
+  .keyingi-ichi { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .keyingi-matn { flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+  .keyingi-nom { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: var(--font-weight-bold); color: var(--color-nav-on-stage); }
+  .keyingi-izoh { margin: 0; color: var(--color-nav-on-stage-muted); }
   .keyingi-izoh:empty { display: none; }
   .keyingi-tugma { flex: none; }
 
-  .yol-royxat { display: flex; flex-direction: column; gap: var(--b-3); }
-  .yol-sarlavha { font-size: var(--matn-h3); font-weight: 800; }
+  .yol-royxat { display: flex; flex-direction: column; gap: var(--space-4); }
   .yol-royxat [hidden] { display: none; }
-  .qadamlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .qadamlar :global(li) {
-    display: flex; align-items: flex-start; gap: var(--b-3);
-    padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi);
-  }
-  .qadamlar :global(.q-raqam) {
-    flex: none; width: 32px; height: 32px; border-radius: var(--r-toliq);
-    display: flex; align-items: center; justify-content: center; font-weight: 800;
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
-  }
-  .qadamlar :global(li.tez .q-raqam) { background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); }
-  .qadamlar :global(.q-matn) { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .qadamlar :global(.q-nom) { font-weight: 800; }
-  .qadamlar :global(a.q-nom) {
-    color: var(--rang-havola); display: inline-flex; align-items: center; min-height: 44px; margin-block: -6px;
-  }
-  .qadamlar :global(.q-qator) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .qadamlar :global(.q-izoh) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .yol-sarlavha { margin-bottom: var(--space-2); }
+  .yol-asosiy { margin: 0; color: var(--color-nav-on-stage-muted); }
+  .yol-izoh { margin: 0; color: var(--color-nav-on-stage-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  /* Ogohlik: holat juftligi (poydevor), sahnada ham tekis fonda */
   .yol-ogoh {
-    padding: var(--b-2) var(--b-3); border-radius: var(--r-kichik);
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-kichik);
+    margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--text-small-size);
   }
 
   @media (max-width: 640px) {
-    .keyingi { padding: var(--b-4); }
     .keyingi-tugma { width: 100%; }
   }
 </style>

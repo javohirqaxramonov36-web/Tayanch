@@ -63,6 +63,9 @@ const uz = {
   yolXaritasiRoyxat: "Yo'l xaritasi qadamlari",
   qaytaTuzish: "Yo'l xaritamni qayta tuzish",
   tezOrada: 'Tez orada',
+  /** NavYol holat yorliqlari: holat rang bilan yolg'iz aytilmaydi */
+  holatHozir: 'Hozir',
+  holatKeyin: 'Keyin',
   hammasiTezOrada: "Bu yo'nalishdagi sahifalar hali tayyorlanmoqda.",
   qolganKun: (n: number) => (n === 0 ? 'Muddat bugun' : `Muddatgacha ${n} kun`),
   sanaOtibKetdi: "Belgilangan sana o'tib ketdi. Yo'l xaritasini qayta tuzing.",
