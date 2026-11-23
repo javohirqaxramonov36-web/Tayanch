@@ -50,8 +50,8 @@ import { yol } from '../../../../../lib/yol';
 
     <div class="pastki">
       <button type="button" class="matn-tugma" id="otkazish">Skip</button>
-      <button type="button" class="katta asosiy" id="tekshir" disabled>Check</button>
-      <button type="button" class="katta qora" id="keyingi" hidden>Next question</button>
+      <button type="button" class="t-tugma sat-tugma--kok" id="tekshir" disabled>Check</button>
+      <button type="button" class="t-tugma" id="keyingi" hidden>Next question</button>
     </div>
   </div>
 
@@ -60,7 +60,7 @@ import { yol } from '../../../../../lib/yol';
     <h1 id="tugadi-h" tabindex="-1">Sample set complete</h1>
     <p class="tugadi-matn" id="tugadi-matn"></p>
     <div class="tugadi-tugmalar">
-      <a class="katta asosiy" href={yol('/uz/sat/vosita/natijalar/')}>See results</a>
+      <a class="t-tugma sat-tugma--kok" href={yol('/uz/sat/vosita/natijalar/')}>See results</a>
       <button type="button" class="katta ikkinchi" id="qayta">Start over</button>
     </div>
   </section>
@@ -199,89 +199,110 @@ import { yol } from '../../../../../lib/yol';
 </script>
 
 <style>
-
-  .ustun, .tugadi { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
-  .savol-karta {
-    background: var(--fon); border-radius: var(--r-katta);
-    box-shadow: var(--soya);
-    padding: 36px;
-    display: flex; flex-direction: column; gap: var(--b-6);
+  /* DS PR 5c (2026-11-23): artifakt v15 `SatSavol`. Savol kartasi, izoh va yakun zich shishada,
+     variant harfi doirada (Sora), tanlangan harf sat-blue-fill. Ichma-ich blur yo'q. */
+  .ustun, .tugadi { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-4); }
+  .savol-karta, .izoh, .tugadi {
+    background: var(--color-sat-glass-strong);
+    border: var(--border-width-1) solid var(--color-sat-glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glass);
+    color: var(--color-sat-text);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+    backdrop-filter: var(--glass-backdrop);
   }
-  :global([data-mavzu='qorongi']) .savol-karta { background: var(--fon-ikkinchi); }
-  .karta-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
-  .pill { align-self: flex-start; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
+  .savol-karta { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .karta-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .pill {
+    align-self: flex-start; margin: 0;
+    font-size: var(--text-caption-size); line-height: var(--text-caption-lh);
+    font-weight: var(--font-weight-semibold); letter-spacing: 0.04em;
+    color: var(--color-sat-text-muted); font-variant-numeric: tabular-nums;
+  }
   .bayroq {
-    min-height: 44px; padding: 0 14px;
-    border: 0; border-radius: var(--r-toliq);
-    background: transparent; color: var(--matn-ikkinchi);
-    font: inherit; font-weight: 700; font-size: var(--matn-kichik);
-    display: flex; align-items: center; gap: var(--b-2); cursor: pointer;
+    min-height: var(--size-touch-min); padding: 0 var(--space-3);
+    border: var(--border-width-1) solid transparent; border-radius: var(--radius-full);
+    background: transparent; color: var(--color-sat-text-muted);
+    font: inherit; font-weight: var(--font-weight-semibold); font-size: var(--matn-kichik);
+    display: flex; align-items: center; gap: var(--space-2); cursor: pointer;
   }
-  .bayroq svg { color: var(--rang-havola); }
+  .bayroq svg { color: var(--color-sat-blue-text); }
+  .bayroq[aria-pressed='true'] { border-color: var(--color-sat-line-strong); color: var(--color-sat-text); }
   .bayroq[aria-pressed='true'] svg { fill: currentColor; }
-  @media (hover: hover) and (pointer: fine) { .bayroq:hover { background: var(--fon-ikkinchi); } }
-  #savol { font-size: 24px; line-height: 1.4; font-weight: 700; }
+  @media (hover: hover) and (pointer: fine) { .bayroq:hover { border-color: var(--color-sat-blue); } }
+  #savol {
+    margin: 0; max-width: var(--size-measure);
+    font-size: var(--font-size-body-d); line-height: var(--line-height-body-d); font-weight: var(--font-weight-medium);
+  }
   #savol:focus { outline: none; }
 
-  .variantlar { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
+  .variantlar { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
   .variant {
     position: relative;
-    min-height: 60px; padding: 10px 18px;
-    border-radius: var(--r-orta);
-    background: var(--fon); border: 2px solid var(--chiziq-kuchli);
-    font-size: 17px; font-weight: 600;
-    display: flex; align-items: center; gap: var(--b-4);
+    min-height: var(--size-touch-min); padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+    border-radius: var(--radius-lg);
+    background: transparent; border: var(--border-width-1) solid var(--color-sat-line-strong);
+    font-size: var(--matn-asosiy); font-weight: var(--font-weight-medium); font-variant-numeric: tabular-nums;
+    display: flex; align-items: center; gap: var(--space-3);
     cursor: pointer;
   }
   .variant input { position: absolute; opacity: 0; pointer-events: none; }
-  .variant:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  @media (hover: hover) and (pointer: fine) { .variant:hover { border-color: var(--rang-asosiy); } }
+  .variant:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  @media (hover: hover) and (pointer: fine) { .variant:hover { border-color: var(--color-sat-blue); } }
   .harf {
-    width: 32px; height: 32px; flex: none; border-radius: var(--r-logo);
-    display: flex; align-items: center; justify-content: center;
-    font-size: var(--matn-kichik); font-weight: 800;
-    background: var(--fon-ikkinchi); color: var(--matn-ikkinchi);
+    width: 36px; height: 36px; flex: none; border-radius: var(--radius-full);
+    display: grid; place-items: center;
+    border: var(--border-width-1) solid var(--color-sat-line-strong);
+    font-family: var(--font-sat); font-size: var(--matn-kichik); font-weight: var(--font-weight-semibold); line-height: 1;
+    background: transparent; color: var(--color-sat-text);
   }
   .v-matn { flex: 1; }
-  .variant:has(input:checked) { border-color: var(--rang-asosiy); }
-  .variant:has(input:checked) .harf, .variant.togri .harf { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variant:has(input:checked) { border-color: var(--color-sat-blue-fill); box-shadow: inset 0 0 0 1px var(--color-sat-blue-fill); }
+  .variant:has(input:checked) .harf { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .variant:has(input:disabled) { cursor: default; }
-  @media (hover: hover) and (pointer: fine) { .variant:has(input:disabled):hover { border-color: var(--chiziq-kuchli); } }
-  .variant.togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
-  @media (hover: hover) and (pointer: fine) { .variant.togri:hover { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); } }
-  .variant.xato { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; }
-  @media (hover: hover) and (pointer: fine) { .variant.xato:hover { background: var(--fon-ikkinchi); border: 2px dashed var(--matn); text-decoration: line-through; } }
-  .variant.xato .harf { background: var(--matn); color: var(--fon); }
+  @media (hover: hover) and (pointer: fine) { .variant:has(input:disabled):hover { border-color: var(--color-sat-line-strong); } }
+  .variant.togri, .variant.togri:has(input:checked) { background: var(--color-success-subtle); border-color: var(--color-success-ui); box-shadow: inset 0 0 0 1px var(--color-success-ui); }
+  @media (hover: hover) and (pointer: fine) { .variant.togri:hover { border-color: var(--color-success-ui); } }
+  .variant.togri .harf, .variant.togri:has(input:checked) .harf { background: transparent; border: var(--border-width-2) solid var(--color-success-ui); color: var(--color-success-text); }
+  .variant.xato, .variant.xato:has(input:checked) { border: var(--border-width-1) dashed var(--color-sat-text); box-shadow: none; text-decoration: line-through; }
+  @media (hover: hover) and (pointer: fine) { .variant.xato:hover { border-color: var(--color-sat-text); } }
+  .variant.xato .harf, .variant.xato:has(input:checked) .harf { background: var(--color-sat-text); border-color: var(--color-sat-text); color: var(--color-sat-surface); }
   .belgi { display: none; flex: none; }
-  .variant.togri .belgi-togri { display: block; color: var(--rang-havola); }
-  .variant.xato .belgi-xato { display: block; color: var(--matn); }
+  .variant.togri .belgi-togri { display: block; color: var(--color-success-text); }
+  .variant.xato .belgi-xato { display: block; color: var(--color-sat-text); }
 
-  .izoh {
-    border-radius: var(--r-katta); padding: 24px 28px;
-    background: var(--qora); color: var(--qora-matn);
-    border: 1px solid var(--qora-chiziq);
-    display: flex; flex-direction: column; gap: var(--b-2);
-  }
+  .izoh { padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
   .izoh[hidden] { display: none; }
+  .izoh p { margin: 0; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .izoh.izoh-togri { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
-  .izoh-sarlavha { font-size: 18px; font-weight: 800; }
+  .izoh.izoh-togri { border-color: var(--color-success-ui); }
+  .izoh-sarlavha { font-family: var(--font-sat); font-size: var(--font-size-body-d); line-height: var(--line-height-body-d); font-weight: var(--font-weight-semibold); }
+  .izoh.izoh-togri .izoh-sarlavha { color: var(--color-success-text); }
 
-  .pastki { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
-  .katta { margin-left: auto; }
-  .katta[hidden] { display: none; }
-  .katta.ikkinchi { margin-left: 0; }
+  .pastki { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .pastki .t-tugma { margin-left: auto; }
 
-  .tugadi { background: var(--fon); border-radius: var(--r-katta); box-shadow: var(--soya); padding: 36px; }
+  .tugadi { padding: var(--space-6); }
   .tugadi[hidden] { display: none; }
-  .tugadi h1 { font-size: 32px; font-weight: 900; }
+  .tugadi h1 { margin: 0; font-family: var(--font-sat); font-size: var(--text-sat-h2-size); line-height: var(--text-sat-h2-lh); letter-spacing: var(--text-sat-h2-ls); font-weight: var(--font-weight-semibold); }
   .tugadi h1:focus { outline: none; }
-  .tugadi-matn { font-size: 17px; color: var(--matn-ikkinchi); }
-  .tugadi-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
-  .tugadi-tugmalar .katta { margin-left: 0; }
+  .tugadi-matn { margin: 0; color: var(--color-sat-text-muted); max-width: var(--size-measure); }
+  .tugadi-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .savol-karta, .izoh, .tugadi { background: var(--color-sat-surface); }
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .savol-karta, .izoh, .tugadi {
+      background: var(--color-sat-surface); border-color: var(--color-sat-line-strong);
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+    }
+    .izoh.izoh-togri { border-color: var(--color-success-ui); }
+  }
 
   @media (max-width: 640px) {
-    .savol-karta, .tugadi { padding: 22px; }
-    #savol { font-size: 20px; }
+    .savol-karta, .tugadi { padding: var(--space-5) var(--space-4); }
+    .izoh { padding: var(--space-4); }
+    #savol { font-size: var(--matn-asosiy); }
   }
 </style>

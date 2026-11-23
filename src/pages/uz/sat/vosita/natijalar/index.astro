@@ -7,6 +7,8 @@ import { kursTavsiyaYollari } from '../../../../../lib/sat/kursKatalog';
 //    ko'rsatiladi va belgilanadi; hisob bilan kirganda namuna ko'rsatilmaydi.
 // Ball hisoblanmaydi.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import SatKorsatkich from '../../../../../components/sat/SatKorsatkich.astro';
+import '../../../../../styles/sat.css';
 import { namunaJavoblar } from '../../../../../data/satNamuna';
 import { analitikaSozlama as A } from '../../../../../data/satAnalitika';
 import { yol } from '../../../../../lib/yol';
@@ -25,12 +27,13 @@ const holatIzohi = [
   yol={['Practice']}
   bolim="sat"
   holat="chop-etilgan"
+  sahifaSinfi="sat t-fon"
 >
   <script type="application/json" id="namuna-data" set:html={JSON.stringify(namunaJavoblar)} />
   <div class="ichki natija" data-kurs={JSON.stringify(kursTavsiyaYollari())}>
     <section class="bosh" aria-labelledby="nat-h">
       <p class="pill-qator"><span class="pill">Tool</span><span class="pill pill-chiziq" id="mock-pill" hidden>Sample data</span></p>
-      <h1 id="nat-h">My results</h1>
+      <h1 id="nat-h" class="sat-sarlavha">My results</h1>
       <p class="lead">See where you are strong and what to practice next: accuracy by skill, pacing, study time and activity. No score is calculated: this is not an SAT score.</p>
     </section>
 
@@ -42,8 +45,8 @@ const holatIzohi = [
       data-sessiya-url={yol('/uz/sat/mashq/sessiya/')}
       data-obuna-url={yol('/uz/sat/hisob/obuna/')}
     >
-      <h2 id="an-h" class="panel-h" tabindex="-1">Practice analytics</h2>
-      <div class="holat-quti" id="an-holat" role="status" aria-live="polite">
+      <h2 id="an-h" class="panel-h sat-sarlavha" tabindex="-1">Practice analytics</h2>
+      <div class="holat-quti sat-panel" id="an-holat" role="status" aria-live="polite">
         <p class="hq-sarlavha">Loading your results…</p>
       </div>
 
@@ -62,18 +65,18 @@ const holatIzohi = [
       </svg>
 
       <div class="tana" id="an-tana" hidden>
-        <dl class="plitkalar" aria-label="Summary">
-          <div class="plitka"><dt>Attempts</dt><dd id="pl-urinish"></dd><dd class="pl-izoh" id="pl-urinish-izoh"></dd></div>
-          <div class="plitka"><dt>Accuracy</dt><dd id="pl-aniqlik"></dd><dd class="pl-izoh" id="pl-aniqlik-izoh"></dd></div>
-          <div class="plitka"><dt>Saved questions</dt><dd id="pl-saqlangan"></dd><dd class="pl-izoh">Bookmarked in practice sessions</dd></div>
-          <div class="plitka"><dt>Day streak</dt><dd id="pl-streak"></dd><dd class="pl-izoh" id="pl-streak-izoh"></dd></div>
-        </dl>
+        <SatKorsatkich nomi="Summary" bandlar={[
+          { nomi: 'Attempts', ikonka: 'urinish', qiymatId: 'pl-urinish', izohId: 'pl-urinish-izoh' },
+          { nomi: 'Accuracy', ikonka: 'aniqlik', qiymatId: 'pl-aniqlik', izohId: 'pl-aniqlik-izoh' },
+          { nomi: 'Saved questions', ikonka: 'saqlangan', qiymatId: 'pl-saqlangan', izoh: 'Bookmarked in practice sessions' },
+          { nomi: 'Day streak', ikonka: 'seriya', qiymatId: 'pl-streak', izohId: 'pl-streak-izoh' },
+        ]} />
 
         <section class="blok" aria-labelledby="tav-h">
           <h3 id="tav-h">Skills to practice</h3>
           <p class="blok-izoh">Your lowest-accuracy skills, up to {A.maxTavsiya}. A skill is listed only after {A.minUrinish} attempts, so one or two answers do not decide it.</p>
-          <ul class="tavsiya" id="tavsiya"></ul>
-          <p class="bosh-blok" id="tavsiya-bosh" hidden></p>
+          <ul class="tavsiya sat-panel" id="tavsiya"></ul>
+          <p class="bosh-blok sat-panel" id="tavsiya-bosh" hidden></p>
         </section>
 
         <section class="blok" aria-labelledby="kon-h">
@@ -84,8 +87,8 @@ const holatIzohi = [
               <li><span class={`holat holat-${h.kalit}`}><span class="holat-belgi" aria-hidden="true"></span>{h.nomi}</span> <span class="izoh-matn">{h.izoh}</span></li>
             ))}
           </ul>
-          <div class="jadval-quti" id="jadval-rw" tabindex="0" role="group" aria-label="Reading and Writing skills table"></div>
-          <div class="jadval-quti" id="jadval-math" tabindex="0" role="group" aria-label="Math skills table"></div>
+          <div class="jadval-quti sat-panel" id="jadval-rw" tabindex="0" role="group" aria-label="Reading and Writing skills table"></div>
+          <div class="jadval-quti sat-panel" id="jadval-math" tabindex="0" role="group" aria-label="Math skills table"></div>
         </section>
 
         <section class="blok" aria-labelledby="qiy-h">
@@ -93,11 +96,11 @@ const holatIzohi = [
           <div id="keng" hidden>
             <p class="blok-izoh">Easy, Medium and Hard are the same groups as in the question bank. Pacing is your median time per question, counted only for answers with a recorded time.</p>
             <div class="ikki">
-              <figure class="chizma">
+              <figure class="chizma sat-panel">
                 <figcaption>Accuracy</figcaption>
                 <div class="qatorlar-ch" id="ch-aniqlik"></div>
               </figure>
-              <figure class="chizma">
+              <figure class="chizma sat-panel">
                 <figcaption>Median time per question</figcaption>
                 <div class="qatorlar-ch" id="ch-vaqt"></div>
               </figure>
@@ -113,14 +116,14 @@ const holatIzohi = [
         <section class="blok" aria-labelledby="vaqt-h">
           <h3 id="vaqt-h">Study time by section</h3>
           <p class="blok-izoh">Time recorded on the questions you answered in practice sessions.</p>
-          <figure class="chizma"><div class="qatorlar-ch" id="ch-bolim"></div></figure>
+          <figure class="chizma sat-panel"><div class="qatorlar-ch" id="ch-bolim"></div></figure>
           <details class="jadval-muqobil"><summary>Show as a table</summary><div id="jm-bolim" tabindex="0" role="group" aria-label="Study time by section table"></div></details>
         </section>
 
         <section class="blok" aria-labelledby="fao-h">
           <h3 id="fao-h">Activity, last {A.kunlar} days</h3>
           <p class="blok-izoh" id="fao-izoh"></p>
-          <div class="xarita-quti" tabindex="0" role="group" aria-label="Activity map"><div id="xarita"></div></div>
+          <div class="xarita-quti sat-panel" tabindex="0" role="group" aria-label="Activity map"><div id="xarita"></div></div>
           <p class="afsona" aria-hidden="true">
             <span>Less</span>
             {[0, 1, 2, 3, 4].map((d) => (<svg width="14" height="14"><rect class={`katak d${d}`} x="0.5" y="0.5" width="13" height="13" rx="3" /></svg>))}
@@ -132,9 +135,9 @@ const holatIzohi = [
         <section class="blok" aria-labelledby="sab-h">
           <h3 id="sab-h">Mistake reasons</h3>
           <p class="blok-izoh">The reasons you set for questions in your review queue.</p>
-          <figure class="chizma" id="sab-chizma"><div class="qatorlar-ch" id="ch-sabab"></div></figure>
+          <figure class="chizma sat-panel" id="sab-chizma"><div class="qatorlar-ch" id="ch-sabab"></div></figure>
           <details class="jadval-muqobil" id="sab-jadval"><summary>Show as a table</summary><div id="jm-sabab" tabindex="0" role="group" aria-label="Mistake reasons table"></div></details>
-          <p class="bosh-blok" id="sabab-bosh" hidden>No questions are in your review queue yet. Wrong answers from practice sessions are added there.</p>
+          <p class="bosh-blok sat-panel" id="sabab-bosh" hidden>No questions are in your review queue yet. Wrong answers from practice sessions are added there.</p>
         </section>
 
         <p class="pastki-izoh">Days and streaks are counted in {A.vaqtMintaqasiYozuv}. You are never compared with other students.</p>
@@ -143,9 +146,9 @@ const holatIzohi = [
 
     <section class="bosh mahalliy-bosh" id="mahalliy-bosh" aria-labelledby="mah-h">
       <p class="pill-qator"><span class="pill pill-chiziq" id="namuna-pill">Sample data</span></p>
-      <h2 id="mah-h">Practice test in this browser</h2>
+      <h2 id="mah-h" class="sat-sarlavha">Practice test in this browser</h2>
       <p class="lead">Answers from the practice test are saved only in this browser and are not part of the analytics above.</p>
-      <p class="namuna-izoh" id="namuna-izoh">You have not solved any practice questions yet, so a sample is shown below. <a href={yol('/uz/sat/mashq/test/')}>Start the practice test</a>, and your answers will appear here.</p>
+      <p class="namuna-izoh sat-panel" id="namuna-izoh">You have not solved any practice questions yet, so a sample is shown below. <a href={yol('/uz/sat/mashq/test/')}>Start the practice test</a>, and your answers will appear here.</p>
     </section>
 
     <section class="korsatkich mahalliy" aria-label="Practice test summary">
@@ -160,7 +163,7 @@ const holatIzohi = [
           <div class="bq-iz" aria-hidden="true"><div class="bq-toldirish"></div></div>
         </div>
       </div>
-      <div class="chiziq-blok">
+      <div class="chiziq-blok sat-panel">
         <p class="kb-nom">Needs review</p>
         <p class="kb-son" id="xato-soni">0</p>
         <p class="kb-izoh">wrong answers</p>
@@ -172,16 +175,16 @@ const holatIzohi = [
       <div class="tarix-bosh">
         <h3 id="royxat-h">Answer history</h3>
         <div class="segment" role="group" aria-label="Filter">
-          <button type="button" aria-pressed="true" data-filtr="hammasi">All <span class="soni"></span></button>
-          <button type="button" aria-pressed="false" data-filtr="xato">Mistakes <span class="soni"></span></button>
-          <button type="button" aria-pressed="false" data-filtr="togri">Correct <span class="soni"></span></button>
+          <button type="button" class="sat-chip" aria-pressed="true" data-filtr="hammasi">All <span class="soni"></span></button>
+          <button type="button" class="sat-chip" aria-pressed="false" data-filtr="xato">Mistakes <span class="soni"></span></button>
+          <button type="button" class="sat-chip" aria-pressed="false" data-filtr="togri">Correct <span class="soni"></span></button>
         </div>
       </div>
-      <ul class="qatorlar" id="qatorlar"></ul>
-      <p class="bosh-holat" id="bosh-holat" hidden>No answers for this filter.</p>
+      <ul class="qatorlar sat-panel" id="qatorlar"></ul>
+      <p class="bosh-holat sat-panel" id="bosh-holat" hidden>No answers for this filter.</p>
     </section>
 
-    <section class="malumot mahalliy" aria-label="Data">
+    <section class="malumot mahalliy sat-panel" aria-label="Data">
       <div>
         <p class="m-sarlavha">Data stays in this browser</p>
         <p class="m-matn">This list is not visible on another device or browser. If you delete it, it cannot be restored.</p>
@@ -685,10 +688,11 @@ const holatIzohi = [
   .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
   .pill[hidden] { display: none; }
   .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
+  /* Sarlavhalar Sora 600 (sat.css .sat-sarlavha): Sora'da boshqa vazn yo'q, qalinroq yozilmaydi */
+  h1 { font-size: 46px; line-height: 1.1; font-weight: var(--font-weight-semibold); letter-spacing: var(--text-sat-hero-ls); }
   h1:focus { outline: none; }
   .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
-  .namuna-izoh { font-size: 15px; color: var(--matn-ikkinchi); background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); max-width: 70ch; }
+  .namuna-izoh { font-size: 15px; color: var(--matn-ikkinchi); padding: var(--b-3) var(--b-4); max-width: 70ch; }
   .namuna-izoh[hidden] { display: none; }
   .namuna-izoh a, .chiziq-blok a { color: var(--rang-havola); font-weight: 700; }
   .ustki-yorliq { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
@@ -705,24 +709,19 @@ const holatIzohi = [
   .bq-bosh { display: flex; justify-content: space-between; gap: var(--b-3); font-weight: 700; }
   .bq-iz { height: 8px; border-radius: var(--r-toliq); background: var(--qora-chiziq); overflow: hidden; }
   .bq-toldirish { height: 100%; width: 0; background: var(--rang-asosiy-qorada); border-radius: var(--r-toliq); }
-  .chiziq-blok { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: 6px; }
+  .chiziq-blok { padding: var(--b-6); display: flex; flex-direction: column; gap: 6px; }
   .kb-nom { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  .kb-son { font-size: 40px; font-weight: 900; line-height: 1.1; }
+  .kb-son { font-family: var(--font-sat); font-size: var(--text-sat-raqam-size); line-height: var(--text-sat-raqam-lh); font-weight: var(--font-weight-semibold); font-variant-numeric: tabular-nums; }
   .kb-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); }
   .chiziq-blok a { margin-top: auto; padding-top: var(--b-2); font-size: 15px; }
 
   .tarix { display: flex; flex-direction: column; gap: var(--b-4); }
   .tarix-bosh { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3); }
   .tarix h3 { font-size: 22px; font-weight: 800; }
-  .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); }
-  .segment button {
-    min-height: 44px; padding: 0 16px; border: 0; border-radius: var(--r-toliq);
-    background: transparent; color: var(--matn-ikkinchi);
-    font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
-  }
-  .segment button[aria-pressed='true'] { background: var(--matn); color: var(--fon); }
-  .soni { opacity: 0.7; }
-  .qatorlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  /* Filtr chiplari: sat.css .sat-chip (aria-pressed, xatti-harakat o'zgarmagan) */
+  .segment { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .soni { font-variant-numeric: tabular-nums; }
+  .qatorlar { list-style: none; margin: 0; padding: 0; overflow: hidden; }
   .qatorlar[hidden] { display: none; }
   .qatorlar :global(li) { display: flex; align-items: center; gap: var(--b-4); padding: 16px 20px; }
   .qatorlar :global(li + li) { border-top: 1px solid var(--chiziq); }
@@ -737,11 +736,12 @@ const holatIzohi = [
     border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn);
     text-decoration: none; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap;
   }
-  @media (hover: hover) and (pointer: fine) { .qatorlar :global(.qayta:hover) { background: var(--chiziq); } }
-  .bosh-holat { padding: var(--b-8); text-align: center; background: var(--fon-ikkinchi); border-radius: var(--r-katta); color: var(--matn-ikkinchi); }
+  /* Hover: SAT ko'k fill + oq matn (5.12); sat-line ustida o'zgarish ko'rinmasdi */
+  @media (hover: hover) and (pointer: fine) { .qatorlar :global(.qayta:hover) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); } }
+  .bosh-holat { padding: var(--b-8); text-align: center; color: var(--matn-ikkinchi); }
   .bosh-holat[hidden] { display: none; }
 
-  .malumot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4); background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); }
+  .malumot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4); padding: var(--b-6); }
   .malumot > div { display: flex; flex-direction: column; gap: var(--b-1); max-width: 56ch; }
   .m-sarlavha { font-weight: 800; }
   .m-matn { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
@@ -760,16 +760,16 @@ const holatIzohi = [
 
   /* ---------- Analitika paneli (P14) ---------- */
   .panel { display: flex; flex-direction: column; gap: var(--b-6); }
-  .panel-h { font-size: 28px; font-weight: 800; }
+  .panel-h { font-size: 28px; font-weight: var(--font-weight-semibold); }
   .panel-h:focus { outline: none; }
-  .mahalliy-bosh h2 { font-size: 28px; font-weight: 800; }
+  .mahalliy-bosh h2 { font-size: 28px; font-weight: var(--font-weight-semibold); }
   .mahalliy-bosh[hidden], .mahalliy[hidden] { display: none; }
   .naqshlar { position: absolute; }
   .naqshlar .nq-fon { fill: var(--sirt-ikkinchi); }
   .naqshlar .nq-kok { fill: var(--rang-havola); }
   .naqshlar .nq-matn { fill: var(--matn); }
 
-  .holat-quti { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); padding: var(--b-6); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
+  .holat-quti { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); padding: var(--b-6); }
   .holat-quti[hidden] { display: none; }
   .holat-quti.jim { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .holat-quti :global(.hq-sarlavha) { font-weight: 800; font-size: 18px; }
@@ -783,17 +783,13 @@ const holatIzohi = [
 
   .tana { display: flex; flex-direction: column; gap: var(--b-10); }
   .tana[hidden] { display: none; }
-  .plitkalar { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--b-4); margin: 0; }
-  .plitka { display: flex; flex-direction: column; gap: var(--b-1); padding: var(--b-5); border: 1.5px solid var(--matn); border-radius: var(--r-katta); min-width: 0; }
-  .plitka dt { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  .plitka dd { margin: 0; font-size: 32px; font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .plitka dd.pl-izoh { font-size: var(--matn-kichik); font-weight: 400; line-height: 1.4; color: var(--matn-sust); }
+  /* Ko'rsatkich kartalari: SatKorsatkich (sat.css) */
 
   .blok { display: flex; flex-direction: column; gap: var(--b-4); min-width: 0; }
   .blok h3 { font-size: 22px; font-weight: 800; }
   .blok-izoh, .pastki-izoh { font-size: 15px; color: var(--matn-ikkinchi); max-width: 70ch; }
   .pastki-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); }
-  .bosh-blok { padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); color: var(--matn-ikkinchi); }
+  .bosh-blok { padding: var(--b-5); color: var(--matn-ikkinchi); }
   .bosh-blok[hidden], .tavsiya[hidden], .chizma[hidden], .jadval-muqobil[hidden], .qulf[hidden], #keng[hidden] { display: none; }
   .panel :global(.sust) { color: var(--matn-sust); }
   .panel :global(.faqat-oquvchi) { margin: 0; }
@@ -818,7 +814,7 @@ const holatIzohi = [
   .panel :global(.ustun .tol-needs-work) { fill: url(#an-naqsh-nuqta); stroke: var(--matn); stroke-width: 1; }
   .panel :global(.ustun .tol-low-data) { fill: var(--matn-sust); }
 
-  .tavsiya { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
+  .tavsiya { list-style: none; margin: 0; padding: 0; overflow: hidden; }
   .tavsiya :global(.tav-qator) { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr) auto; align-items: center; gap: var(--b-3) var(--b-5); padding: var(--b-4) var(--b-5); }
   .tavsiya :global(.tav-qator + .tav-qator) { border-top: 1px solid var(--chiziq); }
   .tavsiya :global(.tav-bosh) { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -833,13 +829,13 @@ const holatIzohi = [
     background: var(--sirt-ikkinchi); color: var(--matn);
     font: inherit; font-weight: 700; font-size: var(--matn-kichik); white-space: nowrap; cursor: pointer;
   }
-  @media (hover: hover) and (pointer: fine) { .panel :global(.mashq-tugma:hover) { background: var(--chiziq-kuchli); } }
+  @media (hover: hover) and (pointer: fine) { .panel :global(.mashq-tugma:hover) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); } }
   .panel :global(.mashq-tugma:disabled) { opacity: 0.6; cursor: progress; }
   .panel :global(.mashq-xabar) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); max-width: 28ch; }
   .panel :global(.mashq-xabar:empty) { display: none; }
 
   /* Jadvallar */
-  .jadval-quti { overflow-x: auto; border: 1.5px solid var(--matn); border-radius: var(--r-katta); }
+  .jadval-quti { overflow-x: auto; }
   .panel :global(.an-jadval) { width: 100%; border-collapse: collapse; font-size: 15px; }
   .panel :global(.an-jadval caption) { text-align: left; font-weight: 800; font-size: 18px; padding: var(--b-4) var(--b-5) var(--b-2); }
   .panel :global(.an-jadval th), .panel :global(.an-jadval td) { text-align: left; padding: var(--b-3) var(--b-5); border-top: 1px solid var(--chiziq); vertical-align: middle; }
@@ -854,7 +850,7 @@ const holatIzohi = [
   .panel :global(.kon-holat .mashq) { margin-top: var(--b-2); }
 
   .ikki { display: grid; grid-template-columns: 1fr 1fr; gap: var(--b-4); }
-  .chizma { margin: 0; padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-katta); display: flex; flex-direction: column; gap: var(--b-3); min-width: 0; }
+  .chizma { margin: 0; padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); min-width: 0; }
   .chizma figcaption { font-weight: 800; }
   .qatorlar-ch { display: flex; flex-direction: column; gap: var(--b-3); }
   .panel :global(.ch-qator) { display: grid; grid-template-columns: minmax(84px, 0.9fr) minmax(60px, 2fr) minmax(0, 1.6fr); align-items: center; gap: var(--b-3); font-size: 15px; }
@@ -868,7 +864,7 @@ const holatIzohi = [
   .qulf a { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
 
   /* Faollik xaritasi: bitta ko'k tus, 4 daraja; son jadvalda va katak <title> ida */
-  .xarita-quti { overflow-x: auto; padding: var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
+  .xarita-quti { overflow-x: auto; padding: var(--b-5); }
   .panel :global(.xarita) { display: block; }
   .panel :global(.xr-yorliq) { font-size: var(--matn-mayda); fill: var(--matn-sust); }
   .panel :global(.katak) { fill: var(--rang-havola); stroke: var(--rang-havola); stroke-width: 1; }
@@ -881,13 +877,10 @@ const holatIzohi = [
   .afsona span:last-child { margin-left: var(--b-1); }
 
   @media (max-width: 900px) {
-    .plitkalar { grid-template-columns: repeat(2, 1fr); }
     .ikki { grid-template-columns: 1fr; }
     .tavsiya :global(.tav-qator) { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .plitka { padding: var(--b-4); }
-    .plitka dd { font-size: 26px; }
     .panel :global(.ch-qator) { grid-template-columns: 1fr 1fr; }
     .panel :global(.ch-qator .ustun), .panel :global(.ch-qator .ch-yoq) { grid-column: 1 / -1; grid-row: 2; }
     .panel :global(.ch-qiymat) { text-align: right; }
