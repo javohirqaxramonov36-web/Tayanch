@@ -1,4 +1,6 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css tokenlari (.adm doira), muhr o'rnida .adm-tekshirildi.
+import '../styles/adm.css';
 // "Topshirish yo'li" vositasi. Prototip asosida (branch prototip-topshirish-yoli), freymvorksiz.
 // Ma'lumot brauzerga <script type="application/json"> orqali beriladi.
 // 3D savol zinapoyasi kodda "savol-zinasi" (saytdagi Zina komponenti boshqa narsa: qavatlar orasidagi o'tish).
@@ -13,8 +15,8 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
 
   <header class="ty-bosh">
     <div class="ty-bosh-matn">
-      <span class="ustki">Top Admission · Vosita</span>
-      <h1>Topshirish yo'li</h1>
+      <span class="adm-eyebrow">Top Admission · Vosita</span>
+      <h1 class="adm-h1">Topshirish yo'li</h1>
       <p class="kirish">Uchta savolga javob bering: qaysi davlat, qaysi daraja va grant kerakmi. Sizga mos ariza yo'llari chiqadi. Kartani aylantirib, rasmiy manbalar va muhim izohlarni ko'ring.</p>
       <div class="yorliqlar">
         <span class="pill pill-namuna" id="namuna-yorliq" hidden>Namuna</span>
@@ -180,11 +182,13 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
           const a = el('a', null, `${f.manbaId} · ${m.tashkilot}`);
           a.setAttribute('href', m.havola); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener');
           matn.append(a);
-          const muhr = el('span', 'muhr');
-          muhr.setAttribute('role', 'img');
-          muhr.setAttribute('aria-label', `Tekshirilgan ${m.sana}`);
-          muhr.append(el('b', null, 'TEKSHIRILGAN'), el('span', null, m.sana));
-          li.append(matn, muhr);
+          // 2-qavat mini-DS: eski muhr o'rnida AdmTekshirildi belgisi (adm.css .adm-tekshirildi)
+          const belgi = el('span', 'adm-tekshirildi');
+          belgi.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>';
+          const yozuv = el('span');
+          yozuv.append(el('span', 'adm-yashirin', 'Rasmiy manbada '), 'Tekshirilgan: ', el('span', 'adm-tekshirildi-sana', m.sana));
+          belgi.append(yozuv);
+          li.append(matn, belgi);
           fl.append(li);
         });
         orqa.append(fl);
@@ -256,10 +260,10 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   /* Prototip uslublari, ranglar tokens.css dan (yorug' va qorong'i mavzu) */
   .ty { display: grid; gap: var(--b-14); }
   .ty h1, .ty h2, .ty h3 { text-wrap: balance; margin: 0; font-weight: 800; }
-  .ty h1 { font-size: clamp(2.125rem, 6vw, var(--matn-h1)); line-height: 1.12; }
+  .ty h1 { font-size: var(--text-adm-h1-size); line-height: var(--text-adm-h1-lh); letter-spacing: var(--text-adm-hero-ls); }
   .ty h2 { font-size: clamp(1.625rem, 4vw, 2rem); line-height: 1.2; }
   .ty .savol-h, .ty :global(h3) { font-size: 1.25rem; line-height: 1.25; }
-  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--matn-sust); }
+  .ustki { font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
   .ty :global(.pill) { display: inline-flex; align-items: center; gap: 6px; font-size: var(--matn-mayda); font-weight: 700; padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); }
   .ty :global(.pill.kok) { background: var(--rang-asosiy-och); color: var(--rang-havola); }
   .ty :global(.pill-namuna) { background: var(--fon); border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
@@ -361,17 +365,6 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   .yollar :global(.faktlar), .yollar :global(.yoq) { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
   .yollar :global(.faktlar li) { font-size: 15px; display: flex; gap: 10px; align-items: center; }
   .yollar :global(.fakt-matn) { flex: 1; min-width: 0; display: grid; gap: 2px; line-height: 1.45; }
-  /* Muhr: faqat rasmiy manbada tekshirilgan faktda (DESIGN.md, Top Admission pasport detallari) */
-  .yollar :global(.muhr) {
-    width: 58px; height: 58px; flex: none; border-radius: 50%;
-    border: 2px dashed var(--rang-asosiy); outline: 1.5px solid var(--rang-asosiy); outline-offset: -6px;
-    color: var(--rang-havola); background: var(--fon);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-    transform: rotate(-8deg); text-align: center;
-  }
-  :global([data-mavzu='qorongi']) .yollar :global(.muhr) { border-color: var(--rang-havola); outline-color: var(--rang-havola); }
-  .yollar :global(.muhr b) { font-size: 6px; letter-spacing: .03em; font-weight: 800; }
-  .yollar :global(.muhr span) { font-size: 8px; font-weight: 700; }
   .yollar :global(.faktlar a) { font-size: var(--matn-mayda); font-weight: 700; color: var(--rang-havola); text-decoration: none; }
   @media (hover: hover) and (pointer: fine) { .yollar :global(.faktlar a:hover) { text-decoration: underline; } }
   .yollar :global(.yoq li) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); display: flex; align-items: flex-start; gap: var(--b-2); }

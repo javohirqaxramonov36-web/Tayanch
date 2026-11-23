@@ -1,0 +1,12 @@
+---
+// AdmTekshirildi (2-qavat, PR 7): "rasmiy manbada tekshirilgan" belgisi. Eski "muhr" (shtamp, v1) o'rnida:
+// kichik chip, chap tomonda belgi, matn adm-text-muted emas (chip foni ustida adm-text, 14:1+).
+// Faqat rasmiy manbada tekshirilgan faktda ishlatiladi (sana manbalar.ts dan).
+import '../../styles/adm.css';
+export interface Props { sana: string }
+const { sana } = Astro.props;
+---
+<span class="adm-tekshirildi">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
+  <span><span class="adm-yashirin">Rasmiy manbada </span>Tekshirilgan: <span class="adm-tekshirildi-sana">{sana}</span></span>
+</span>

@@ -2,7 +2,8 @@
 // 2-qavat · Top Admission · grant qo'llanmasi: umumiy shablon (Admission E-seriya, E4).
 // Sahifa faqat `qollanma` bo'limi bor grantlar uchun yaratiladi (qollanmaSahifasiBormi). Türkiye Bursları
 // o'z sahifasida qoladi (src/pages/uz/top-admission/turkiye-burslari/, tegilmaydi).
-// Namuna: Türkiye Bursları sahifasi (viza kartasi, mundarija, bo'limlar, MRZ). Farqi: hamma fakt Fakt.astro orqali
+// 2-qavat mini-DS (ADR 005, PR 7): sarlavha AdmHero, matn zich kartada (adm.css); v1 viza kartasi va MRZ olib tashlandi.
+// Namuna: Türkiye Bursları sahifasi (mundarija, bo'limlar). Farqi: hamma fakt Fakt.astro orqali
 // (manba va sana bilan); tasdiqlanmagan fakt o'rniga "Ma'lumot tekshirilmoqda". Muhr yo'q: manba har faktda.
 // Bosqichlar: vertikal vaqt chizig'i; 760px dan kengda sana chap ustunda, telefonda nom ustida.
 // Mantiq: src/lib/topAdmission/qollanma.ts. JS yo'q.
@@ -20,6 +21,8 @@ import {
 import { EHTIYOJ_IZOHI } from '../../../../lib/topAdmission/universitetMoslik';
 import { toshkentBugun } from '../../../../lib/muddat';
 import { yol } from '../../../../lib/yol';
+import AdmHero from '../../../../components/topAdmission/AdmHero.astro';
+import '../../../../styles/adm.css';
 
 export async function getStaticPaths() {
   const grantlar = await getCollection('grantlar');
@@ -65,18 +68,14 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 >
   <div class="ichki gq-sahifa">
 
-    <section class="gq-viza" aria-labelledby="gq-sarlavha">
-      <div class="gq-viza-bosh">
-        <p class="gq-ustki">Grant qo'llanmasi</p>
-      </div>
-      <h1 id="gq-sarlavha">{g.nom}</h1>
-      <dl class="gq-viza-maydon">
-        <div><dt class="gq-ustki">Turi</dt><dd>{g.turi === 'davlat' ? 'Davlat granti' : 'Universitet granti'}</dd></div>
-        <div><dt class="gq-ustki">Daraja</dt><dd>{DARAJA_MATNI[g.daraja as Daraja]}</dd></div>
-        <div><dt class="gq-ustki">Davlat</dt><dd>{davlatNom}</dd></div>
-        <div><dt class="gq-ustki">Rasmiy sahifa</dt><dd><a href={g.rasmiy_havola} rel="noopener">{hostNomi(g.rasmiy_havola)}</a></dd></div>
+    <AdmHero id="gq-sarlavha" yorliq="Grant qo'llanmasi" sarlavha={g.nom} katta={false}>
+      <dl class="adm-qatorlar gq-maydon">
+        <div><dt>Turi</dt><dd>{g.turi === 'davlat' ? 'Davlat granti' : 'Universitet granti'}</dd></div>
+        <div><dt>Daraja</dt><dd>{DARAJA_MATNI[g.daraja as Daraja]}</dd></div>
+        <div><dt>Davlat</dt><dd>{davlatNom}</dd></div>
+        <div><dt>Rasmiy sahifa</dt><dd><a href={g.rasmiy_havola} rel="noopener">{hostNomi(g.rasmiy_havola)}</a></dd></div>
       </dl>
-    </section>
+    </AdmHero>
 
     <p class="gq-ogoh" role="note">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -97,7 +96,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
     </details>
 
     <div class="gq-ikki-ustun">
-      <div class="gq-asosiy">
+      <div class="gq-asosiy adm-karta">
 
         <section id="kim" class="gq-bolim gq-bolim-birinchi" aria-labelledby="kim-h">
           <h2 id="kim-h">Kim topshira oladi</h2>
@@ -200,7 +199,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
             <p id="keyingi-h" class="gq-keyingi-sarlavha">Boshqa grantlarni ham solishtiring.</p>
             <a class="gq-havola gq-havola-katta" href={vosita}>Topshirish yo'li</a>
           </div>
-          <a class="tugma tugma-asosiy gq-katta-tugma" href={katalog}>Grantlar katalogi</a>
+          <a class="t-tugma adm-tugma--urgu gq-katta-tugma" href={katalog}>Grantlar katalogi</a>
         </section>
       </div>
 
@@ -212,10 +211,6 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 
     <div class="gq-oxir">
       <p class="gq-sust gq-kichik"><strong class="gq-qalin">Natija kafolatlanmaydi.</strong> Tayanch bu dastur bilan bog'liq emas. Qabul yoki grant ehtimoli hisoblanmaydi.</p>
-      <div class="gq-mrz" aria-hidden="true">
-        <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
-        <p>TAYANCH&lt;&lt;TOP&lt;ADMISSION&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
-      </div>
     </div>
   </div>
 </BolimQobiq>
@@ -226,34 +221,18 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   h2 { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
   h3 { margin: 0; font-size: var(--text-body-size); }
   .gq-ustki {
-    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
-    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+    margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted);
   }
   .gq-matn { max-width: 62ch; margin: 0; }
   .gq-sust { color: var(--color-text-secondary); }
   .gq-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
   .gq-qalin { color: var(--color-text-primary); }
   .gq-izoh { margin: 0; max-width: 62ch; font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
-  .gq-havola { color: var(--color-link); font-weight: 700; }
+  .gq-havola { color: var(--color-adm-accent-text); font-weight: var(--font-weight-bold); text-decoration: underline; text-decoration-thickness: var(--border-width-1); }
   .gq-havola-katta { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
 
-  /* Viza kartasi (Türkiye Bursları sahifasidagi kabi): katakli to'r, 2×2 maydon */
-  .gq-viza {
-    display: grid; gap: var(--space-4); padding: var(--space-8);
-    border: 1.5px solid var(--color-text-primary); border-radius: var(--radius-xl);
-    background-color: var(--color-surface);
-    background-image:
-      linear-gradient(to right, var(--color-surface-sunken) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--color-surface-sunken) 1px, transparent 1px);
-    background-size: var(--space-6) var(--space-6);
-  }
-  .gq-viza-bosh { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
-  .gq-viza-maydon { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1.5px solid var(--color-text-primary); }
-  .gq-viza-maydon > div { display: grid; gap: var(--space-1); align-content: start; padding: var(--space-4) var(--space-5) var(--space-4) 0; }
-  .gq-viza-maydon > div:nth-child(even) { padding: var(--space-4) 0 var(--space-4) var(--space-5); border-left: 1px solid var(--color-border-strong); }
-  .gq-viza-maydon > div:nth-child(-n+2) { border-bottom: 1px solid var(--color-border-strong); }
-  .gq-viza-maydon dd { margin: 0; font-weight: 800; overflow-wrap: anywhere; }
-  .gq-viza-maydon dd a { color: var(--color-link); }
+  .gq-maydon dd a { color: var(--color-adm-accent-text); }
 
   .gq-ogoh {
     max-width: 62ch; margin: 0; display: flex; align-items: flex-start; gap: var(--space-2);
@@ -264,7 +243,8 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
 
   /* Ikki ustun: matn + yopishqoq mundarija (keng ekranda) */
   .gq-ikki-ustun { display: flex; gap: var(--space-10); align-items: flex-start; }
-  .gq-asosiy { flex: 1; min-width: 0; display: grid; gap: var(--space-8); }
+  .gq-asosiy { flex: 1; min-width: 0; display: grid; gap: var(--space-8); padding: var(--space-8); }
+  @media (max-width: 760px) { .gq-asosiy { padding: var(--space-5); } }
   .gq-mund {
     width: 220px; flex: none; position: sticky; top: var(--space-16); display: flex; flex-direction: column; gap: 2px;
     border-left: 1.5px solid var(--color-border); padding-left: var(--space-3);
@@ -331,11 +311,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gq-keyingi-matn { display: grid; gap: var(--space-1); justify-items: start; }
   .gq-keyingi-sarlavha { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: 800; }
 
-  .gq-oxir { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: 1.5px solid var(--color-text-primary); }
-  /* MRZ: pasport metaforasi, shaxsiy ma'lumot yo'q (DESIGN.md) */
-  .gq-mrz { display: grid; gap: var(--space-1); padding: var(--space-4) var(--space-6); overflow: hidden; background: var(--color-surface-sunken); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-  .gq-mrz p { margin: 0; font-weight: 700; letter-spacing: .22em; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; }
-
+  .gq-oxir { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: var(--border-width-1) solid var(--color-adm-line-strong); }
   @media (hover: hover) and (pointer: fine) {
     .gq-mund a:hover, .gq-mund-telefon a:hover { background: var(--color-surface-sunken); color: var(--color-text-primary); }
   }
@@ -350,10 +326,6 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   }
 
   @media (max-width: 760px) {
-    .gq-viza { padding: var(--space-5); }
-    .gq-viza-maydon { grid-template-columns: 1fr; }
-    .gq-viza-maydon > div, .gq-viza-maydon > div:nth-child(even) { padding: var(--space-3) 0; border-left: 0; border-bottom: 1px solid var(--color-border-strong); }
-    .gq-viza-maydon > div:last-child { border-bottom: 0; padding-bottom: 0; }
     .gq-bolim { padding-top: var(--space-6); }
     .gq-vaqt-band {
       grid-template-columns: 2.5rem minmax(0, 1fr); grid-template-areas: "son sana" "son matn";
@@ -364,7 +336,5 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
     .gq-maydonlar > div { grid-template-columns: 1fr; gap: var(--space-1); }
     .gq-keyingi { flex-direction: column; align-items: stretch; padding: var(--space-5); }
     .gq-katta-tugma { width: 100%; }
-    .gq-mrz { padding: var(--space-3) var(--space-4); }
-    .gq-mrz p { letter-spacing: .18em; }
   }
 </style>
