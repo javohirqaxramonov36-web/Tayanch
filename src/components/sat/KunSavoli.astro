@@ -285,7 +285,14 @@ const kirish = yol('/uz/hisob/kirish/');
 
   .kun-bosh { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--b-3) var(--b-6); }
   .kun-sarlavha { display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
-  .kun h2 { font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; letter-spacing: var(--oraliq-sarlavha); text-wrap: balance; }
+  .kun h2 { font-family: var(--font-sat); font-size: var(--text-sat-h2-size); font-weight: var(--font-weight-semibold); line-height: var(--text-sat-h2-lh); letter-spacing: var(--text-sat-h2-ls); text-wrap: balance; }
+  /* SatSavol (DS PR 5c): /uz/sat/ da blok foto fonning zich shishasi ichida, shuning uchun
+     savol paneli qattiq karta (ichma-ich blur yo'q, DESIGN.md "Sirtlar"). */
+  .kun :global(:is(.sk-passage, .sk-savol, .sk-natija)) {
+    background: var(--color-sat-surface); border-color: var(--color-sat-line);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .kun :global(.sk-natija.sk-natija-togri) { border-color: var(--color-success-ui); }
   .kun h2:focus { outline: none; }
   .kun-izoh { color: var(--matn-ikkinchi); max-width: 62ch; text-wrap: pretty; }
 
