@@ -18,6 +18,8 @@ import { taChiptalar } from '../../../data/taChiptalar';
 import { manbalar } from '../../../data/manbalar';
 import { qabulXatlari } from '../../../data/muallif';
 import { SAVOLLAR, KALIT } from '../../../data/topshirishYoli';
+import { getCollection } from 'astro:content';
+import { grantKorinadimi, type GrantKirish } from '../../../lib/topAdmission/grantKatalog';
 import { yol } from '../../../lib/yol';
 
 const m = (id: string) => manbalar.find((x) => x.id === id)!;
@@ -28,12 +30,20 @@ const platformalar = yol('/uz/top-admission/platformalar/');
 // Muddat chiptalari va ularning .ics fayllari bitta manbadan (taChiptalar.ts).
 const chiptalar = taChiptalar;
 
-const tezOrada = [
-  { kod: 'UZ → US', nomi: 'AQSH' },
-  { kod: 'UZ → GB', nomi: 'Buyuk Britaniya' },
-  { kod: 'UZ → AU', nomi: 'Avstraliya' },
-  { kod: 'UZ → KR', nomi: 'Janubiy Koreya' },
-];
+// Boshqa davlatlar: Grantlar katalogidagi ko'rinadigan grantlar soni (yangi fakt yo'q), har biri katalog filtriga olib boradi.
+const korinadiganGrantlar = (await getCollection('grantlar')).filter((e) => grantKorinadimi(e.data as unknown as GrantKirish));
+const grantSoni = (davlat: string) => korinadiganGrantlar.filter((e) => (e.data.davlat as { id?: string })?.id === davlat).length;
+const boshqaDavlatlar = [
+  { kod: 'UZ → US', nomi: 'AQSH', slug: 'aqsh' },
+  { kod: 'UZ → GB', nomi: 'Buyuk Britaniya', slug: 'buyuk-britaniya' },
+  { kod: 'UZ → DE', nomi: 'Germaniya', slug: 'germaniya' },
+  { kod: 'UZ → KR', nomi: 'Janubiy Koreya', slug: 'janubiy-koreya' },
+  { kod: 'UZ → JP', nomi: 'Yaponiya', slug: 'yaponiya' },
+  { kod: 'UZ → AU', nomi: 'Avstraliya', slug: 'avstraliya' },
+]
+  .map((d) => ({ ...d, soni: grantSoni(d.slug), href: yol(`/uz/top-admission/grantlar/?d=${d.slug}`) }))
+  .filter((d) => d.soni > 0);
+const shGrant = korinadiganGrantlar.find((e) => e.id === 'stipendium-hungaricum');
 // "Mening yo'lim": Topshirish yo'li javoblari (faqat o'qiladi). Variant nomlari skriptga JSON bilan beriladi.
 const yolMalumot = {
   KALIT,
@@ -179,23 +189,26 @@ const tekshirilmagan = [
           <AdmTekshirildi sana={m('TB01').tekshirilganSana} />
         </article>
         <article class="yonalish adm-karta">
-          <p class="yorliqlar"><span class="adm-chip adm-chip--sust">tez orada</span> <span class="adm-chip adm-chip--sust">UZ → HU</span></p>
+          <p class="yorliqlar"><span class="adm-chip adm-chip--sust">UZ → HU</span></p>
           <h3>Stipendium Hungaricum</h3>
           <p class="fakt">
             <AdmTekshirildi sana={m('SH01').tekshirilganSana} />
             <span>O'zbekiston hamkor davlatlar ro'yxatida</span>
           </p>
+          {shGrant && <p class="yonalish-past"><a class="havola" href={yol('/uz/top-admission/grantlar/stipendium-hungaricum/')}>Grant sahifasi</a></p>}
           <span class="yorliq yorliq-ogoh">2027/28 e'loni hali chiqmagan</span>
         </article>
       </div>
-      <div class="tez-orada">
-        <ul class="tez-royxat">
-          {tezOrada.map((t) => (
-            <li><span class="tez-kod">{t.kod}</span> <span class="tez-nom">{t.nomi}</span></li>
-          ))}
-        </ul>
-        <span class="yorliq">tez orada</span>
-      </div>
+      {boshqaDavlatlar.length > 0 && (
+        <nav class="tez-orada" aria-label="Boshqa davlatlar grantlari">
+          <ul class="tez-royxat">
+            {boshqaDavlatlar.map((t) => (
+              <li><a class="tez-havola" href={t.href}><span class="tez-kod">{t.kod}</span> <span class="tez-nom">{t.nomi}</span> <span class="tez-soni">{t.soni} ta grant</span></a></li>
+            ))}
+          </ul>
+          <a class="havola" href={yol('/uz/top-admission/davlatlar/')}>Barcha davlatlar</a>
+        </nav>
+      )}
     </section>
 
     <div class="yol-qator">
@@ -354,7 +367,7 @@ const tekshirilmagan = [
   .muddatlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--space-4); }
   .kalendar { gap: var(--space-2); white-space: nowrap; }
 
-  /* Yo'nalishlar: 1 katta + 1 o'rta, ostida tez-oradagilar qatori */
+  /* Yo'nalishlar: 1 katta + 1 o'rta, ostida boshqa davlatlar qatori (katalog filtriga havola, grant soni bilan) */
   .yonalishlar { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); }
   .yonalish { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
   .yonalish h3 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: var(--font-weight-extrabold); }
@@ -373,6 +386,10 @@ const tekshirilmagan = [
   .tez-royxat li { display: inline-flex; align-items: baseline; gap: var(--space-2); }
   .tez-kod { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-adm-text-muted); }
   .tez-nom { font-weight: var(--font-weight-extrabold); }
+  .tez-havola { display: inline-flex; align-items: baseline; gap: var(--space-2); min-height: var(--space-11); padding-block: var(--space-2); color: inherit; text-decoration: none; }
+  .tez-havola:hover .tez-nom, .tez-havola:focus-visible .tez-nom { text-decoration: underline; text-underline-offset: 0.2em; }
+  .tez-soni { font-size: var(--text-small-size); color: var(--color-adm-text-muted); }
+  .tez-kod, .tez-nom, .tez-soni { white-space: nowrap; }
 
   .yol-qator { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: stretch; }
   .mening-yolim { flex: 1 1 260px; padding: var(--space-6); display: grid; gap: var(--space-3); align-content: start; }
@@ -393,7 +410,10 @@ const tekshirilmagan = [
     .katta-tugma { width: 100%; }
     .yonalishlar { grid-template-columns: 1fr; }
     .yonalish-katta { flex-direction: column; }
-    .tez-orada { align-items: flex-start; }
+    .tez-orada { flex-direction: column; align-items: flex-start; }
+    .tez-royxat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+    .tez-havola { flex-wrap: wrap; column-gap: var(--space-2); row-gap: 0; }
+    .tez-kod { flex-basis: 100%; }
     .previewlar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (prefers-reduced-motion: reduce) {
