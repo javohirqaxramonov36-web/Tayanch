@@ -70,9 +70,9 @@ const qavat = (slug: string) => qavatlar.find((q) => q.slug === slug);
   @media (hover: hover) and (pointer: fine) { .home-card:hover { transform: translateY(calc(-1 * var(--space-1))); border-color: var(--color-nav-line-strong); } }
   .home-card:active { transform: var(--bosilish); }
   .home-icon { position: absolute; top: var(--space-5); right: var(--space-5); display: grid; place-items: center; color: var(--color-nav-text-muted); }
-  .home-raqam { gap: var(--space-3); }
-  .home-raqam :global(.nav-nom) { white-space: nowrap; }
-  .home-free { align-self: flex-start; }
+  .home-card :global(.home-raqam) { gap: var(--space-3); }
+  .home-card :global(.home-raqam .nav-nom) { white-space: nowrap; }
+  .home-card :global(.home-free) { align-self: flex-start; justify-self: start; }
   .home-long { color: var(--color-nav-text-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); margin: 0; }
   .home-cta { color: var(--color-nav-text); font-size: var(--text-small-size); font-weight: var(--font-weight-bold); margin-top: auto; padding-top: var(--space-3); text-decoration: underline; text-underline-offset: 0.2em; }
   .home-short, .home-chevron { display: none; }
@@ -87,10 +87,10 @@ const qavat = (slug: string) => qavatlar.find((q) => q.slug === slug);
     .home-cards { grid-template-columns: 1fr; gap: var(--space-2); }
     .home-card { min-height: var(--home-row-height); display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-3); row-gap: var(--space-1); align-content: center; padding: var(--space-3) var(--space-4); }
     .home-icon { display: none; }
-    .home-raqam { grid-column: 1; display: flex; align-items: baseline; gap: var(--space-3); }
-    .home-raqam :global(.nav-num) { font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); }
-    .home-raqam :global(.nav-nom) { font-size: var(--text-h3-size); line-height: var(--text-nav-sarlavha-lh); }
-    .home-free { grid-column: 1; grid-row: 3; }
+    .home-card :global(.home-raqam) { grid-column: 1; display: flex; align-items: baseline; gap: var(--space-3); }
+    .home-card :global(.home-raqam .nav-num) { font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); }
+    .home-card :global(.home-raqam .nav-nom) { font-size: var(--text-h3-size); line-height: var(--text-nav-sarlavha-lh); }
+    .home-card :global(.home-free) { grid-column: 1; grid-row: 3; }
     .home-short { display: block; grid-column: 1; margin: 0; color: var(--color-nav-text-muted); font-size: var(--text-caption-size); line-height: var(--text-small-lh); }
     .home-chevron { display: block; grid-column: 2; grid-row: 1 / 4; align-self: center; color: var(--color-nav-text); }
     .home-long, .home-cta { display: none; }

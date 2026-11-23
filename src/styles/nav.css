@@ -79,6 +79,8 @@
 .nav-chip--laym { border-color: var(--color-nav-lime); background: var(--color-nav-lime); color: var(--color-nav-on-lime); }
 .nav-chip--sahna { border-color: var(--color-nav-line-on-stage); color: var(--color-nav-on-stage-muted); }
 .nav-chip--matn { border: 0; padding-inline: 0; }
+/* Nur dog'i ustida (.t-fon sahna) on-stage-muted 3.65 ga tushadi: u yerda yorliq matni on-stage (7.62) */
+.nav-sahna.t-fon .nav-chip--sahna { color: var(--color-nav-on-stage); }
 
 /* ---------- NavRaqam: katta raqam va nom ---------- */
 .nav-raqam-blok { display: grid; gap: var(--space-2); margin: 0; }

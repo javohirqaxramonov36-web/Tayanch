@@ -252,6 +252,40 @@ Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 �
 
 `sat-on-blue-fill` / `sat-blue-fill` 5.12. Navy sahna noshaffof, shuning uchun "Qavat foto foni" (`main` zich shishada) ichida ham sahna kontrasti o'zgarmaydi. Foto fon ustidagi zich shishada (eng yomon foto pikseli oq yoki qora) `sat-text` 10.54+, `sat-text-muted` 4.81+, `sat-blue-text` 5.26+; `sat-line-strong` u yerda 2.76 bo'lgani uchun faqat qattiq kartalar ichida. Pastki bo'limlar (sahnadan tashqari, qattiq kartalar): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
 
+### 1-qavat Navigator (PR 6 `ds-navigator`, 2026-11-23)
+
+Manba: artifakt `qavat-1-navigator.md`, `tokens.json` (`nav-*`, `nav-node`), `bundle.css` "1 · Navigator", `components/Nav*`. Qo'llangan sahifalar: `/uz/`, `/uz/yol-tanlash/`, `/uz/hisob/*` va boshqa 1-qavat sahifalari (`html[data-floor="1"]`, `Asosiy` qolipi).
+
+- **Tokenlar** (`tokens.css`, "1-qavat Navigator mini-DS"): o'zgarmas bloklar `--color-nav-stage` (#181818), `-stage-raised`, `-paper`, `-cream`, `-on-stage`, `-on-stage-muted`, `-on-paper(-muted)`, `-line-on-stage`, `-lime` (= `floor-navigator-500`), `-on-lime`. Mavzuli: `--color-nav-bg`, `-surface`, `-text`, `-text-muted`, `-lime-text`, `-line`, `-line-strong`. Sahna shishasi `--color-nav-glass-stage(-strong, -border, -highlight)`, `--shadow-nav-glass-stage`. O'lcham `--size-nav-node` (20), `-node-hozir` (28), `-burchak` (12). Tipografiya `--text-nav-raqam-*` (72, ≥640px 96), `--text-nav-sarlavha-*` (28/32), `--text-nav-hero-*` (56, ≥720px 88), `--text-nav-yorliq-*` (mono 12/16, 0.08em), `--text-nav-kod-*`.
+- **Sahifa.** `html[data-floor="1"]` da poydevor `--color-bg`, `-bg-deep`, `-surface`, `-text-primary`, `-text-secondary`, `-border`, `-border-strong` nav qiymatga o'tadi: studio foni o'rniga `nav-bg`, eski taxalluslar (`--fon`, `--sirt`, `--matn`) ham. `main h1` Barlow Condensed, katta harflar.
+- **Stillar** `src/styles/nav.css` (`Asosiy` import qiladi): `.nav-sahna` (qora sahna; poydevor shisha, matn, havola va fokus tokenlarini qora qiymatga almashtiradi, `.t-fon` bilan `overflow: clip`, nur xiraroq `--fon-nur-opacity-nav` 0.5), `.nav-qogoz`, `.nav-krem`, `.nav-hero`.
+- **Komponentlar** (`src/components/navigator/`): `NavYorliq` (`.nav-chip`: oddiy, `laym`, `sahna`, `matn`), `NavRaqam` (ikki xonali raqam va nom bitta sarlavhada), `NavRamka` (burchak qavslari, sarlavha mono laym `// `, ro'yxat `> `), `NavYol` (`ol.nav-yol`, `li.nav-qadam[data-holat]`; skript uchun `src/lib/navigator/navYol.ts` `navQadam()` xuddi shu belgilashni beradi).
+- **"Mening yo'lim"** (`YolXaritasi`, `/uz/yol-tanlash/`): qora sahnada; "Keyingi qadam" `NavRamka`, yo'l `NavYol`. "Keyingi qadam"dagi yo'l qadami `hozir` (laym tugun va raqam, "Hozir" yorlig'i, `aria-current="step"`), qolganlari `keyin`; tayyor bo'lmagani "Tez orada". Bajarilgan qadam kuzatilmaydi, shuning uchun `bajarildi` ishlatilmaydi. Onboarding `<dialog>`, `tayanch:navigator-yol:v1` va havolalar o'zgarmagan.
+- **Bosh sahifa** `/uz/`: hero qora sahnada (`.t-fon` laym nuri, `.t-tugma`), bo'lim kartalarida `NavRaqam` (raqam = `qavatlar.ts` dagi qavat raqami), "Bepul" `NavYorliq`. Kartalardagi rangli ikonka doiralari va `BoshTariflar` dagi ko'k urg'u olindi (bitta urg'u qoidasi): Pro kartasi qora chegara va mono qora tasma, Pro tugmasi `.t-tugma`.
+- **Hisob** (`HisobKarta`): `.hisob-karta` = `.t-shisha.t-shisha--zich`, orqada `.t-fon` laym nuri. Forma tugmalari poydevor `.tugma-asosiy` (yuklanish holati uchun) qoldi.
+- **Laym qoidasi.** Laym faqat qora sahnada (matn, tugun, ramka sarlavhasi) yoki fill (ustida `nav-on-lime`). Yorug' fonda laym matn yoki chiziq yo'q (1.52:1), u yerda `nav-lime-text`. Laym yorliq ekranda bitta ("Hozir").
+- **Repoga moslash.** DS dagi qorong'i `nav-line-strong` #6E6E6E `nav-surface` ustida 2.59 bo'lgani uchun #828282 qilingan (maydon chegarasi 3:1). Nur dog'i ustidagi sahna yorlig'i `on-stage` rangida (muted u yerda 3.65).
+
+**Kontrast (node, 2026-11-23).** Nur markazi: blursiz, `floor-navigator-glow` × 0.5; zich shisha ostida `saturate(1.6)`.
+
+| Juftlik | Qiymat |
+| --- | --- |
+| `nav-text` / `nav-bg`, `nav-surface` (yorug') | 15.58 / 17.76 |
+| `nav-text-muted` / `nav-bg`, oq, krem (yorug') | 6.05 / 6.90 / 5.86 |
+| `nav-line-strong` / `nav-bg`, oq (yorug') | 3.80 / 4.33 |
+| `nav-lime-text` / `nav-bg` (yorug' 700, qorong'i 400) | 5.26 / 12.02 |
+| `nav-text` / `nav-bg`, `nav-surface` (qorong'i) | 15.58 / 11.58 |
+| `nav-text-muted` / `nav-bg`, `nav-surface` (qorong'i) | 7.47 / 5.55 |
+| `nav-line-strong` #828282 / `nav-bg`, `nav-surface` (qorong'i) | 4.62 / 3.43 |
+| Sahna: `on-stage`, `on-stage-muted`, laym / `stage` | 15.58 / 7.47 / 10.23 |
+| `on-stage-muted`, laym / `stage-raised` (ramka) | 5.55 / 7.60 |
+| `on-lime` / laym; `line-on-stage` / `stage` | 10.23 / 3.48 |
+| Nur markazi: `on-stage`, laym (fokus, 56px+ sarlavha) | 7.62 / 5.00 |
+| Hisob zich shisha / nur: matn, muted (yorug') | 16.67 / 6.47 |
+| Hisob zich shisha / nur: matn, muted (qorong'i) | 12.20 / 5.85 |
+
+Sinalmagan: VoiceOver, haqiqiy telefon (shisha tezligi), `prefers-reduced-transparency` emulyatsiyasi.
+
 ## Harakat
 
 - Davomiylik (2026-11-13): `--duration-fast` 150ms, `--duration-base` 200ms, `--duration-slow` 200ms, `--duration-stagger` 50ms. Hamma harakat 120–200ms.

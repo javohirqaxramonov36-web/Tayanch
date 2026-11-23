@@ -686,7 +686,8 @@
   --color-nav-text-muted:var(--color-nav-on-stage-muted);
   --color-nav-lime-text:var(--color-floor-navigator-400);
   --color-nav-line:#3C3C3C;
-  --color-nav-line-strong:#6E6E6E;
+  /* DS #6E6E6E nav-surface (#303030) ustida 2.59: maydon va ma'noli chiziq 3:1 uchun ochroq (3.43 / bg 4.62) */
+  --color-nav-line-strong:#828282;
 }
 @media (min-width: 640px){
   :root{ --text-nav-raqam-size:96px; --text-nav-sarlavha-size:32px; }
