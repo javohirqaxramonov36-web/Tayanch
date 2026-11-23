@@ -279,6 +279,39 @@ Sahifalar: Results (`/uz/sat/vosita/natijalar/`), Question bank (`/uz/sat/mashq/
 | Yulduz (tanlangan) / `sat-line` | 3.70 (fill) | 5.42 (sky) |
 | Ko'rsatkich ikonka fill / zich sirt | 5.05 | 3.09 |
 
+### 4-qavat IELTS (PR 8 `ds-ielts-tokenlar`, 2026-11-23)
+
+Manba: artifakt v15 `qavat-4-ielts.md`, `tokens.json` (`ielts-*`), `bundle.css` "4 · IELTS". Bu PR faqat tokenlar va stillar: IELTS sahifalari va komponentlari hali ishlatmaydi (u yerda Codex ishlayapti, muallif qarori). Hero, plitkalar, ko'rsatkich va ro'yxat keyingi PR'da.
+
+- **Xarakter.** "Tungi ilova": qorong'i mavzuda navy sahna (`ielts-night`), yorug'da "tong" (`ielts-dawn`), shisha panellar, bitta elektr ko'k urg'u va hero obyekti ostida bitta nurli halqa. Sarlavha va raqam Lexend 600 (`--font-ielts`), oddiy harflar; matn Onest.
+- **3 va 4-qavat ko'klari yaqin** (`floor-sat-500` / `floor-ielts-500` 1.57:1). Muallif qarori (2026-11-18): ikkalasi ko'k qoladi, farq shrift (Sora / Lexend), motiv (SAT plitka va tab bar / IELTS nurli obyekt va halqa) va qavat raqami bilan. Lift va binoda rang doim raqam bilan.
+- **Tokenlar** (`tokens.css`, "4-qavat IELTS mini-DS"): primitiv `--color-ielts-night`, `-dawn`, `-ink`, `-on-accent` (oq); mavzuli `--color-ielts-bg`, `-glass`, `-glass-strong`, `-glass-border`, `-tile`, `-text`, `-text-muted`, `-accent` (yorug'da = `floor-ielts-500`), `-accent-text` (700 / 400), `-accent-display`, `-halo`, `-line`, `-line-strong`. Shisha filtri `--ielts-glass-backdrop` (blur + `saturate(1.5)`). Tipografiya `--text-ielts-hero-*` (32/40, ≥481px 40/48), `--text-ielts-h2-*` (24/32), `--text-ielts-raqam-*` (28/32, `tabular-nums`), `--text-ielts-birlik-*` (13/18, Onest 500). Nur poydevordagi `--color-floor-ielts-glow`.
+- **Stillar** `src/styles/ielts.css` (`global.css` import qiladi): `.ielts-qobiq` (fon `ielts-bg`, matn `ielts-text`, `--nur` = IELTS nuri, `h1–h3` Lexend; `.t-fon` bilan ishlaydi), `.ielts-glass` (shaffof: qisqa matn, plitka, hero), `.ielts-glass-strong` (zich: uzun matn, ro'yxat, test, forma). DS dagi `.ielts` nomi olinmadi: `/uz/ielts/` kirishida `ielts` klassi allaqachon bor.
+- **Matn qoidasi.** `.t-fon` nur dog'i ustida (shishasiz) faqat `ielts-text`. `ielts-text-muted`, `ielts-accent-text` va `ielts-line-strong` shishada; `line-strong` (chip, maydon cheti) va `accent` chegarasi shaffof shishada nur ustida 3:1 ga yetmaydi, shuning uchun ular zich shishada yoki tekis fonda. `ielts-accent-display` faqat 24px+. `ielts-accent` fill ustida doim `ielts-on-accent`. Urg'u rangi bitta (ikkinchi urg'u yo'q), halqa ekranda bitta.
+- **Zaxira.** `backdrop-filter` yo'q brauzerda `.ielts-glass` zich bo'ladi; `prefers-reduced-transparency` / `prefers-contrast: more` da ikkala shisha zich, blursiz, chet `ielts-line-strong`.
+
+**Kontrast (node, 2026-11-23).** Nur markazi: `.t-fon` dog'i blursiz, `floor-ielts-glow` × 0.9. Shisha ostida `saturate(1.5)`.
+
+| Juftlik (yorug') | Fon tekis | Nur markazi | Shaffof / fon | Shaffof / nur | Zich / fon | Zich / nur |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ielts-text` | 16.35 | 7.29 | 17.27 | 12.34 | 17.80 | 16.10 |
+| `ielts-text-muted` | 6.01 | 2.68 | 6.34 | 4.53 | 6.54 | 5.91 |
+| `ielts-accent-text` | 7.30 | 3.26 | 7.71 | 5.51 | 7.95 | 7.19 |
+| `ielts-accent-display` (24px+) | 4.99 | 2.23 | 5.27 | 3.77 | 5.43 | 4.91 |
+| `ielts-line-strong` (3:1) | 3.56 | 1.59 | 3.76 | 2.69 | 3.87 | 3.50 |
+| `ielts-accent` chegara (3:1) | 4.99 | 2.23 | 5.27 | 3.77 | 5.43 | 4.91 |
+
+| Juftlik (qorong'i) | Fon tekis | Nur markazi | Shaffof / fon | Shaffof / nur | Zich / fon | Zich / nur |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ielts-text` | 16.23 | 8.95 | 13.64 | 8.59 | 15.27 | 14.61 |
+| `ielts-text-muted` | 8.63 | 4.76 | 7.25 | 4.57 | 8.12 | 7.77 |
+| `ielts-accent-text` | 8.64 | 4.76 | 7.26 | 4.57 | 8.13 | 7.78 |
+| `ielts-accent-display` (24px+) | 6.71 | 3.70 | 5.63 | 3.55 | 6.31 | 6.04 |
+| `ielts-line-strong` (3:1) | 3.81 | 2.10 | 3.20 | 2.02 | 3.58 | 3.43 |
+| `ielts-accent` chegara (3:1) | 3.85 | 2.12 | 3.23 | 2.04 | 3.62 | 3.47 |
+
+`ielts-on-accent` / `ielts-accent`: yorug' 5.51, qorong'i 4.69. Foto fon (`QavatFoto`) ustidagi kontrast IELTS sahifalari yangi ko'rinishga o'tganda o'sha PR'da hisoblanadi.
+
 ## Harakat
 
 - Davomiylik (2026-11-13): `--duration-fast` 150ms, `--duration-base` 200ms, `--duration-slow` 200ms, `--duration-stagger` 50ms. Hamma harakat 120–200ms.

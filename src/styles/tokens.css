@@ -489,6 +489,60 @@
 }
 
 /* ==========================================================================
+   4-qavat IELTS mini-DS (ADR 005, PR 8, 2026-11-23). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: ielts-*; qavat-4-ielts.md). Stillar: ielts.css (.ielts-qobiq, .ielts-glass, .ielts-glass-strong).
+   Hozircha faqat tokenlar: IELTS sahifalari hali ishlatmaydi. Boshqa qavat ielts-* ni olmaydi.
+   3-qavat ko'ki bilan yaqin (1.57:1): muallif qarori (2026-11-18) ikkalasi ko'k, farq shrift
+   (Lexend, --font-ielts), halqa motivi va qavat raqami bilan.
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · tungi navy va tong (ikkala mavzuda bir xil) */
+  --color-ielts-night:#0B1530; --color-ielts-dawn:#F0F4FB; --color-ielts-ink:#0B1530;
+  --color-ielts-on-accent:var(--color-neutral-0);
+
+  /* SEMANTIC · yorug' ("tong") */
+  --color-ielts-bg:var(--color-ielts-dawn);
+  --color-ielts-glass:rgb(255 255 255 / 0.55);          /* qisqa matn, plitka, hero. Uzun matn emas */
+  --color-ielts-glass-strong:rgb(255 255 255 / 0.86);   /* matnli panel, ro'yxat, test, forma */
+  --color-ielts-glass-border:rgb(255 255 255 / 0.9);
+  --color-ielts-tile:rgb(39 96 222 / 0.08);             /* ikonka katagi, eskiz foni (blursiz) */
+  --color-ielts-text:var(--color-ielts-ink);
+  --color-ielts-text-muted:#4F5D78;
+  --color-ielts-accent:var(--color-floor-ielts-500);    /* yagona urg'u fill, ustida doim on-accent */
+  --color-ielts-accent-text:var(--color-floor-ielts-700); /* oddiy o'lchamdagi ko'k matn va ikonka */
+  --color-ielts-accent-display:var(--color-floor-ielts-500); /* faqat 24px+ sarlavha urg'usi, katta raqam */
+  --color-ielts-halo:rgb(39 96 222 / 0.4);              /* halqa motivi: bezak */
+  --color-ielts-line:#D3DBEA;                           /* bezak chizig'i */
+  --color-ielts-line-strong:#74819A;                    /* ma'noli chegara (chip, maydon) */
+
+  /* COMPONENT · tipografiya (Lexend 600 = --font-ielts, oddiy harflar) */
+  --text-ielts-hero-size:32px; --text-ielts-hero-lh:40px; --text-ielts-hero-ls:-0.02em;
+  --text-ielts-h2-size:24px; --text-ielts-h2-lh:32px; --text-ielts-h2-ls:-0.01em;
+  --text-ielts-raqam-size:28px; --text-ielts-raqam-lh:32px;
+  --text-ielts-birlik-size:13px; --text-ielts-birlik-lh:18px;
+  --ielts-glass-backdrop:blur(var(--size-glass-blur)) saturate(1.5);
+}
+:root[data-mavzu='qorongi']{
+  /* SEMANTIC · qorong'i ("tun", qavatning asosiy ko'rinishi) */
+  --color-ielts-bg:var(--color-ielts-night);
+  --color-ielts-glass:rgb(40 62 110 / 0.38);
+  --color-ielts-glass-strong:rgb(16 28 56 / 0.92);
+  --color-ielts-glass-border:rgb(150 190 255 / 0.16);
+  --color-ielts-tile:rgb(255 255 255 / 0.06);
+  --color-ielts-text:#EEF3FF;
+  --color-ielts-text-muted:#A6B4CF;
+  --color-ielts-accent:#2F6BF0;
+  --color-ielts-accent-text:var(--color-floor-ielts-400);
+  --color-ielts-accent-display:#6F9BFF;
+  --color-ielts-halo:rgb(80 140 255 / 0.75);
+  --color-ielts-line:#1F2E50;
+  --color-ielts-line-strong:#62739A;
+}
+@media (min-width: 481px){
+  :root{ --text-ielts-hero-size:40px; --text-ielts-hero-lh:48px; }
+}
+
+/* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
    ========================================================================== */
 :root{
