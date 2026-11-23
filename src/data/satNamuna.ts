@@ -6,66 +6,98 @@ export interface Savol {
   id: string;
   bolim: 'Math' | 'Reading & Writing';
   mavzu: string;
+  /** Reading & Writing: savoldan oldin o'qiladigan qisqa matn (passage). Math'da yo'q. */
+  parcha?: string;
   matn: string;
   variantlar: string[]; // A, B, C, D tartibida
   togri: number; // variantlar indeksi
   izoh: string;
 }
 
+// 2-versiya (2026-11-23, audit): savollar haqiqiy Digital SAT'ning o'rta darajasiga yaqinlashtirildi,
+// R&W savollari qisqa matn bilan, izohda "nega boshqa variantlar xato". Id'lar yangi (-2), mavzu nomlari
+// eskilari bilan bir xil, shuning uchun Natijalar'dagi "Solve again" filtri ishlayveradi. Muallif ko'rigi kerak.
 export const savollar: Savol[] = [
   {
-    id: 'm-chiziqli-1',
+    id: 'm-chiziqli-2',
     bolim: 'Math',
     mavzu: 'Linear equations',
-    matn: 'If 3x + 5 = 20, what is the value of x?',
-    variantlar: ['3', '5', '15', '25/3'],
+    matn: 'A school club sells small notebooks for $3 each and large notebooks for $5 each. On Monday, the club sold 40 notebooks for a total of $156. How many large notebooks did the club sell on Monday?',
+    variantlar: ['12', '18', '22', '31'],
     togri: 1,
-    izoh: 'Subtract 5 from both sides: 3x = 15. Then divide by 3: x = 5. Check: 3 · 5 + 5 = 20.',
+    izoh: 'Let s and L be the numbers of small and large notebooks: s + L = 40 and 3s + 5L = 156. Substitute s = 40 − L: 120 − 3L + 5L = 156, so 2L = 36 and L = 18. Why not the others: 22 is the number of small notebooks (40 − 18). 31 comes from 156 ÷ 5, which ignores the small notebooks. 12 does not satisfy both equations.',
   },
   {
-    id: 'm-foiz-1',
+    id: 'm-foiz-2',
     bolim: 'Math',
     mavzu: 'Percentages and ratios',
-    matn: 'What is 25 percent of 80?',
-    variantlar: ['15', '20', '25', '60'],
+    matn: 'The price of a jacket was increased by 20%. Later, the new price was decreased by 20%. The final price is what percent of the original price?',
+    variantlar: ['80%', '96%', '100%', '104%'],
     togri: 1,
-    izoh: '25% = 0.25. 80 · 0.25 = 20.',
+    izoh: 'An increase of 20% multiplies the price by 1.2, and a decrease of 20% multiplies it by 0.8. 1.2 · 0.8 = 0.96, so the final price is 96% of the original. Why not 100%: the 20% decrease is taken from a larger number, so it removes more than the increase added.',
   },
   {
-    id: 'm-kvadrat-1',
+    id: 'm-kvadrat-2',
     bolim: 'Math',
     mavzu: 'Quadratic equations',
-    matn: 'If x² = 49 and x > 0, what is x?',
-    variantlar: ['5', '7', '14', '49'],
-    togri: 1,
-    izoh: 'The roots of the equation x² = 49 are 7 and −7. The condition says x > 0, so x = 7.',
+    matn: 'The function h(t) = −5t² + 20t + 25 gives the height, in meters, of a ball t seconds after it is thrown. How many seconds after it is thrown does the ball hit the ground?',
+    variantlar: ['1', '2', '5', '25'],
+    togri: 2,
+    izoh: 'The ball hits the ground when h(t) = 0. Divide −5t² + 20t + 25 = 0 by −5: t² − 4t − 5 = 0, so (t − 5)(t + 1) = 0. Time cannot be negative, so t = 5. Why not the others: 2 is the time of the highest point (t = −b ÷ 2a), not the landing time. 25 is the starting height in meters. 1 comes from a sign error in the factors.',
   },
   {
-    id: 'm-funksiya-1',
+    id: 'm-funksiya-2',
     bolim: 'Math',
     mavzu: 'Functions',
-    matn: 'If f(x) = 2x − 1, what is f(4)?',
-    variantlar: ['3', '7', '8', '9'],
-    togri: 1,
-    izoh: 'Substitute 4 for x: 2 · 4 − 1 = 7.',
+    matn: 'For the linear function f, f(2) = 7 and f(6) = 19. What is the value of f(10)?',
+    variantlar: ['27', '30', '31', '38'],
+    togri: 2,
+    izoh: 'The slope is (19 − 7) ÷ (6 − 2) = 3. Then 7 = 3 · 2 + b, so b = 1 and f(x) = 3x + 1. f(10) = 31. Why not the others: 30 is 3 · 10 without the y-intercept. 38 doubles f(6), which works only if the line passes through the origin. 27 uses a slope of 2.',
   },
   {
-    id: 'rw-tinish-1',
-    bolim: 'Reading & Writing',
-    mavzu: 'Punctuation',
-    matn: 'Which choice completes the sentence correctly? "The library opened in ___ has served the town ever since."',
-    variantlar: ['1998, and it', '1998 and, it', '1998, it', '1998 it'],
-    togri: 0,
-    izoh: 'Two independent clauses are joined with a comma and "and": "1998, and it". Using only a comma (C) is an error.',
-  },
-  {
-    id: 'rw-soz-1',
+    id: 'rw-soz-2',
     bolim: 'Reading & Writing',
     mavzu: 'Meaning of a word in context',
-    matn: 'Which word fits most logically? "The scientist was cautious, refusing to draw conclusions until every result was ___."',
-    variantlar: ['verified', 'ignored', 'imagined', 'hidden'],
+    parcha: 'Early weather maps were drawn by hand from reports sent by telegraph. Because each station reported at a slightly different time, forecasters had to ______ the readings into a single picture, adjusting for the delays before they could predict where a storm would move.',
+    matn: 'Which choice completes the text with the most logical and precise word?',
+    variantlar: ['reconcile', 'dismiss', 'duplicate', 'celebrate'],
     togri: 0,
-    izoh: 'A "cautious" scientist does not draw conclusions until the results are checked: "verified" means checked.',
+    izoh: '"Reconcile" means to make different pieces of information fit together, which is what forecasters did when they adjusted for the delays. Why not the others: "dismiss" means to ignore, but they used the readings. "Duplicate" means to copy, which does not combine anything. "Celebrate" does not fit the task described.',
+  },
+  {
+    id: 'rw-otish-1',
+    bolim: 'Reading & Writing',
+    mavzu: 'Transitions',
+    parcha: 'Many desert plants store water in thick, fleshy leaves. The aloe plant, for instance, keeps water in a gel inside its leaves. ______ some cacti have no true leaves at all and store water in their stems instead.',
+    matn: 'Which choice completes the text with the most logical transition?',
+    variantlar: ['For example,', 'As a result,', 'By contrast,', 'In other words,'],
+    togri: 2,
+    izoh: 'The last sentence describes plants that store water in a different place (stems, not leaves), so it contrasts with the first two sentences. Why not the others: "For example" would need another plant that stores water in its leaves. "As a result" claims a cause, but the aloe does not cause anything about cacti. "In other words" would need a restatement, not a new fact.',
+  },
+  {
+    id: 'rw-goya-1',
+    bolim: 'Reading & Writing',
+    mavzu: 'Central ideas and details',
+    parcha: 'For a class project, students counted how often birds visited feeders placed at different heights in a city park. Feeders near the ground were visited less often than feeders hung two meters high, even though all of them held the same seeds. The students noted that the ground feeders were close to bushes where cats often hid, and they suggested that birds may choose feeding spots partly by how safe the spots seem.',
+    matn: 'Which choice best states the main idea of the text?',
+    variantlar: [
+      'Birds in the park preferred some kinds of seeds over others.',
+      'Students found that birds visited higher feeders more often and proposed that a sense of safety may explain this.',
+      'Cats in city parks catch more birds than the students expected.',
+      'Feeders hung two meters high hold more seeds than ground feeders.',
+    ],
+    togri: 1,
+    izoh: 'The text reports one finding (higher feeders got more visits) and one possible explanation (safety from cats). Choice B states both. Why not the others: A contradicts the text, since all feeders held the same seeds. C is not stated: the text says cats hid nearby, not how many birds they caught. D is not supported: the amount of seeds was the same.',
+  },
+  {
+    id: 'rw-tinish-2',
+    bolim: 'Reading & Writing',
+    mavzu: 'Punctuation',
+    parcha: "The museum's newest exhibit features three tools used by early ______ a bone folder, a wooden press, and a curved needle.",
+    matn: 'Which choice completes the text so that it conforms to the conventions of Standard English?',
+    variantlar: ['bookbinders;', 'bookbinders:', 'bookbinders,', 'bookbinders'],
+    togri: 1,
+    izoh: 'The part before the blank is a complete sentence, and the list after it names the "three tools." A colon is used to introduce such a list. Why not the others: a semicolon (A) must be followed by a complete sentence, but the list is not one. A comma (C) makes the list look like more items added to "bookbinders." No punctuation (D) runs the noun and the list together.',
   },
 ];
 

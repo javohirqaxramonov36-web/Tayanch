@@ -28,6 +28,7 @@ import { yol } from '../../../../../lib/yol';
           Come back later
         </button>
       </div>
+      <p class="parcha" id="parcha" hidden={!savollar[0].parcha}>{savollar[0].parcha}</p>
       <h1 id="savol">{savollar[0].matn}</h1>
       <fieldset class="variantlar" id="variantlar" aria-labelledby="savol">
         {savollar[0].variantlar.map((v, i) => (
@@ -112,6 +113,8 @@ import { yol } from '../../../../../lib/yol';
     $('desmos').hidden = s.bolim !== 'Math';
     $('fokus-nomi').textContent = s.mavzu;
     $('savol-raqam').textContent = `Question ${i + 1}`;
+    $('parcha').textContent = s.parcha ?? '';
+    $('parcha').hidden = !s.parcha;
     $('savol').textContent = s.matn;
     const bayroq = $('bayroq');
     bayroq.setAttribute('aria-pressed', 'false');
@@ -235,6 +238,13 @@ import { yol } from '../../../../../lib/yol';
     font-size: var(--font-size-body-d); line-height: var(--line-height-body-d); font-weight: var(--font-weight-medium);
   }
   #savol:focus { outline: none; }
+  /* R&W matni (passage): savoldan oldin, alohida sirtda; bo'sh joy chizig'i (______) o'qilishi uchun keng qator oralig'i */
+  .parcha {
+    margin: 0; max-width: var(--size-measure); padding: var(--space-4) var(--space-5);
+    border-left: var(--border-width-2) solid var(--color-sat-blue); background: transparent; color: var(--color-sat-text);
+    font-size: var(--font-size-body-d); line-height: var(--line-height-body-d);
+  }
+  .parcha[hidden] { display: none; }
 
   .variantlar { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
   .variant {
@@ -304,5 +314,6 @@ import { yol } from '../../../../../lib/yol';
     .savol-karta, .tugadi { padding: var(--space-5) var(--space-4); }
     .izoh { padding: var(--space-4); }
     #savol { font-size: var(--matn-asosiy); }
+    .parcha { padding: var(--space-3) var(--space-4); font-size: var(--matn-asosiy); }
   }
 </style>
