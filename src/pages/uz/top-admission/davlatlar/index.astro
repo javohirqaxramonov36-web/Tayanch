@@ -1,4 +1,5 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css (.adm doira, chip tanlovi to'q sariq, sarlavha Onest 800).
 // 2-qavat · Top Admission · vosita: Davlatlarni taqqoslash (Admission D-seriya, Q2).
 // Ma'lumot: content collection `davlatlar` va `grantlar` (src/data/topAdmission/, sxema src/lib/topAdmission/sxema.ts),
 // valyuta kurslari src/data/topAdmission/kurslar.json. Mantiq: src/lib/topAdmission/davlatTaqqos.ts.
@@ -19,6 +20,7 @@ import {
   type DavlatKirish, type GrantKirish,
 } from '../../../../lib/topAdmission/davlatTaqqos';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/adm.css';
 
 const kurslar = kurslarSxema.parse(kurslarJson);
 const narxMumkin = kurslarBormi(kurslar);
@@ -89,8 +91,8 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
 >
   <div class="ichki dt-sahifa" data-davlat-taqqos data-narx={narxMumkin ? '1' : '0'} data-maks={MAKS_TAQQOS}>
     <header class="dt-bosh">
-      <p class="dt-ustki">Vosita</p>
-      <h1>Davlatlarni taqqoslash</h1>
+      <p class="adm-eyebrow">Vosita</p>
+      <h1 class="adm-h1">Davlatlarni taqqoslash</h1>
       <p class="dt-matn">O'zingizga muhim mezonni tanlang: xavfsizlik, narx, grant, til talabi, o'qish paytida ishlash yoki diplom. Sayt reyting bermaydi, davlatlarni faqat rasmiy faktlar bo'yicha saralaydi.</p>
       <p class="dt-matn dt-sust">Faqat rasmiy manbada tekshirilgan fakt ko'rsatiladi, yonida manba va tekshirilgan sana. Qolganlari o'rniga "Ma'lumot tekshirilmoqda" yoziladi. Topshirishdan oldin rasmiy sahifani tekshiring.</p>
     </header>
@@ -417,8 +419,8 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
   .dt-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
   .dt-bosh { display: grid; gap: var(--space-3); }
   .dt-ustki {
-    margin: 0; font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: 700;
-    letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-secondary);
+    margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted);
   }
   .dt-matn { max-width: 62ch; margin: 0; }
   .dt-sust { color: var(--color-text-secondary); }
@@ -433,12 +435,12 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
   .dt-chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .dt-chip {
     min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
-    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    border: var(--border-width-1) solid var(--color-adm-line-strong); background: var(--color-adm-surface); color: var(--color-adm-text);
     font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
     transition: transform var(--duration-fast) var(--ease-state);
   }
   .dt-chip:active { transform: var(--bosilish); }
-  .dt-chip[aria-pressed="true"] { background: var(--color-text-primary); border-color: var(--color-text-primary); color: var(--color-surface); }
+  .dt-chip[aria-pressed="true"] { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
   .dt-holat-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-4); }
   .dt-holat-qator .dt-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
 
@@ -475,7 +477,7 @@ const katalogHavola = (slug: string) => `${yol('/uz/top-admission/grantlar/')}?d
   .dt-taqqos-tugma {
     margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-2);
     min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
-    border: 1.5px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text-primary);
+    border: var(--border-width-1) solid var(--color-adm-line-strong); background: var(--color-adm-surface); color: var(--color-adm-text);
     font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer;
     transition: transform var(--duration-fast) var(--ease-state);
   }

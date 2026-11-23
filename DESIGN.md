@@ -252,6 +252,36 @@ Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 �
 
 `sat-on-blue-fill` / `sat-blue-fill` 5.12. Navy sahna noshaffof, shuning uchun "Qavat foto foni" (`main` zich shishada) ichida ham sahna kontrasti o'zgarmaydi. Foto fon ustidagi zich shishada (eng yomon foto pikseli oq yoki qora) `sat-text` 10.54+, `sat-text-muted` 4.81+, `sat-blue-text` 5.26+; `sat-line-strong` u yerda 2.76 bo'lgani uchun faqat qattiq kartalar ichida. Pastki bo'limlar (sahnadan tashqari, qattiq kartalar): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
 
+### 2-qavat Top Admission (PR 7 `ds-top-admission`, 2026-11-23)
+
+Manba: artifakt v15 `qavat-2-top-admission.md`, `tokens.json` (`adm-*`), `bundle.css` (`.adm-*`). Hamma `/uz/top-admission/` sahifalari (16 ta) shu ko'rinishda. Til issiq va jasoratli: krem / issiq qora, bitta to'q sariq urg'u, Onest 800 sarlavha.
+
+- **Doira `.adm`.** `BolimQobiq` dagi `<main>` `bolim="top-admission"` da `adm` sinfini oladi. Stil `src/styles/adm.css` da, uni faqat Top Admission sahifalari (va `Adm*` komponentlari) import qiladi. Doira poydevor va eski nomli tokenlarni (`--color-bg`, `--color-surface`, `--color-text-*`, `--color-link`, `--btn-*`, `--card-*`, `--fon`, `--matn`, `--chiziq*`, `--rang-*`, `--floor-*`) 2-qavat qiymatiga almashtiradi. Shuning uchun eski sahifa CSS'i ham krem/qora/to'q sariq tusni oladi. Sahifa foni `adm-bg`, studio gradienti 2-qavatda yo'q. Foto fonli kirishda `main` shishasi `adm-foto-shisha`.
+- **Tokenlar** (`tokens.css`, "2-qavat Top Admission mini-DS"): `--color-adm-ink`, `-cream`, `-ember`, `-orange` (= `floor-admission-500`), `-on-accent`; mavzuli `-bg`, `-surface`, `-sunken`, `-chip`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-accent`, `-accent-display`, `-accent-text`, `-on-accent-text`, `-accent-subtle`, `-line`, `-line-strong`, `-foto-shisha`. Tipografiya `--text-adm-hero-*` (36–96, `12.5cqi`), `--text-adm-h1-*` (36/40, ≥720px 48/52), `--text-adm-h2-*` (32/36, ≥720px 44/48, 500), `--text-adm-eyebrow-*`, `--text-adm-raqam-*` (44). DS'dan farq: qorong'i `adm-line-strong` `#8A7A6F` (DS `#6E5F55` sirtda 2.57 edi); `adm-surface`, `-sunken`, `-chip`, `-accent-subtle`, `-on-accent-text`, `-foto-shisha` DS'da yo'q (tekis zaxira va eski sinflar uchun).
+- **Sinflar.** `.adm-shisha` (blur bilan, qisqa matn), `.adm-shisha--zich`, `.adm-karta` (zich, blursiz: uzun matn, ro'yxat), `.adm-ichki` (karta ichidagi tekis qator), `.adm-h1`, `.adm-h2`, `.adm-urgu` (faqat 24px+ qalin), `.adm-eyebrow` (oldida 24px to'q sariq chiziq), `.adm-chip` (to'q sariq fill, qora matn), `.adm-chip--sust`, `.t-tugma.adm-tugma--urgu`.
+- **Komponentlar** (`src/components/topAdmission/`):
+  - `AdmHero`: `.t-fon` ustida zich shisha panel, katta harfli sarlavha va urg'u so'z, 1–2 kapsula. `katta={false}`: ichki sahifa sarlavhasi (`adm-h1`). DS'dan farq: panel zich (nur dog'i markazida shaffof shishada urg'u so'z 2.68 bo'lardi).
+  - `AdmPlitka`: bo'lim plitkalari, chiziqli ikonka, joriy `aria-current="page"`. Faqat mavjud sahifalar.
+  - `AdmMuddat`: zich shisha muddat kartasi. Sana `taChiptalar.ts` (`deadline.ts`) dan, manba va tekshirilgan sana `manbalar.ts` dan. Qolgan kun `muddatHolati` (Toshkent kuni): "N kun qoldi", "Bugun tugaydi", "Tugadi", ochilishdan oldin "Ochilishi kutilmoqda". JS'siz "20-fevral oxirgi kun". Ota-elementda `data-adm-tartib` bo'lsa tugagan karta oxiriga tushadi.
+  - `AdmRoyxat`: haqiqiy checkbox qatorlar (52px), belgilangani to'q sariq fill. Holatni sahifa skripti boshqaradi (kurs darsidagi tekshiruv mezonlari, kalit o'zgarmagan).
+  - `AdmTekshirildi`: "Tekshirilgan: sana" chipi (ekran o'quvchiga "Rasmiy manbada tekshirilgan"). Eski muhr o'rnida.
+- **Olib tashlandi** (v1, muallif DS'da rad etgan): muhr (shtamp), chipta, MRZ lentasi, viza kartasi va katakli to'r, kirishdagi yo'l xaritasi. Faktlar, sanalar, manbalar va matn o'zgarmagan.
+- **Matn qoidasi.** Uzun matn (darslar, namunalar, qo'llanmalar, grant qo'llanmasi) `.adm-karta` ichida. To'q sariq yorug' fonda kichik matn sifatida ishlatilmaydi: kichik to'q sariq matn va havola faqat `adm-accent-text` (tagi chizilgan), `adm-accent` faqat fill, `adm-accent-display` faqat 24px+ qalin. Oq matn to'q sariqda yo'q. Ikkinchi urg'u rangi yo'q: havola ham to'q sariq matn rangida.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: shisha va kartalar tekis `adm-surface` + `adm-line-strong` chet, foto ustidagi `main` shishasi tekis `adm-bg`, urg'u kapsula tekis to'q sariq.
+
+**Kontrast (node, 2026-11-23).** Nur dog'i markazi: `floor-admission-glow` × 0.9, blursiz.
+
+| Juftlik | Yorug' | Qorong'i |
+| --- | --- | --- |
+| `adm-text` / `adm-bg` | 17.53 | 17.05 |
+| `adm-text-muted` / `adm-bg`, zich shisha / nur | 6.29, 6.39 | 8.10, 6.33 |
+| `adm-accent-text` / `adm-bg`, `adm-sunken`, `adm-accent-subtle` | 5.11, 4.58, 4.58 | 9.03, 7.92, 6.92 |
+| `adm-accent-display` / zich shisha nur ustida (24px+) | 3.27 | 5.70 |
+| `adm-on-accent` / `adm-accent` | 6.26 | 7.50 |
+| `adm-on-accent-text` / `adm-accent-text` | 5.70 | 9.29 |
+| `adm-line-strong` / `adm-surface`, zich shisha | 3.82, 3.76 | 3.81, 3.92 |
+| Foto ustida `main` shishasi (eng yomon piksel): `text-muted`, `accent-text`, `line-strong` | 5.58, 4.53, 3.04 | 8.18, 7.21, 3.47 |
+
 ## Harakat
 
 - Davomiylik (2026-11-13): `--duration-fast` 150ms, `--duration-base` 200ms, `--duration-slow` 200ms, `--duration-stagger` 50ms. Hamma harakat 120–200ms.
