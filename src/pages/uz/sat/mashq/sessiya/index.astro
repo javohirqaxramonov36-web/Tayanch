@@ -1285,9 +1285,13 @@ const IK = {
     position: sticky; bottom: 0; z-index: 2;
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3);
     padding: var(--b-3) 0; margin-top: var(--b-2);
-    background: var(--fon-ikkinchi); border-top: 1px solid var(--chiziq);
+    /* DS PR 5c: zich shisha (savol ostidan suriladi); savol paneli bilan yonma-yon, ichma-ich emas */
+    background: var(--color-sat-glass-strong); border-top: var(--border-width-1) solid var(--color-sat-line);
+    -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop);
   }
-  [data-mavzu='qorongi'] .sessiya-pastki { background: var(--fon); }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .sessiya-pastki { background: var(--color-sat-surface); border-top-color: var(--color-sat-line-strong); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
   .sessiya-pastki #tekshir, .sessiya-pastki #keyingi { margin-left: auto; }
   .sessiya-pastki #otkaz:not([hidden]) + #tekshir { margin-left: 0; }
   .sessiya-pastki #otkaz { margin-left: auto; }
@@ -1324,7 +1328,7 @@ const IK = {
     border: 2px solid var(--chiziq-maydon); background: var(--fon); color: var(--matn);
     font: inherit; font-weight: 800; cursor: pointer;
   }
-  .katak.answered, .katak.pending { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katak.answered, .katak.pending { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .katak.skipped { border-style: dashed; }
   .katak[aria-current] { box-shadow: 0 0 0 3px var(--fon), 0 0 0 5px var(--matn); }
   .katak-bayroq { position: absolute; top: 3px; right: 3px; }
@@ -1334,7 +1338,7 @@ const IK = {
     width: 18px; height: 18px; border-radius: var(--r-kichik); border: 2px solid var(--chiziq-maydon); background: var(--fon);
     display: inline-flex; align-items: center; justify-content: center; color: var(--matn);
   }
-  .namuna-katak.answered { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
+  .namuna-katak.answered { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); }
   .namuna-katak.skipped { border-style: dashed; }
   .namuna-katak.flag { border: 0; }
   .xarita-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
