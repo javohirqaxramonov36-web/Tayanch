@@ -425,6 +425,8 @@
   --shadow-sat-panel-navy:inset 0 1px 0 rgb(255 255 255 / 0.12), 0 14px 32px -14px rgb(0 0 0 / 0.7);
   --shadow-sat-plitka-hover:var(--shadow-sat-panel-navy), 0 10px 24px -10px var(--color-floor-sat-glow);
   --shadow-sat-plitka-joriy:var(--shadow-sat-panel-navy), 0 10px 24px -8px var(--color-floor-sat-glow);
+  --shadow-sat-ikon:0 6px 14px -6px var(--color-floor-sat-glow);   /* PR 5b: ko'rsatkich ikonkasi ostidagi nur */
+  --shadow-sat-chip:0 8px 18px -8px var(--color-floor-sat-glow);   /* PR 5b: tanlangan chip */
 
   /* SEMANTIC · yorug' */
   --color-sat-bg:var(--color-sat-mist);
@@ -442,6 +444,10 @@
   --size-sat-plitka:64px; --size-sat-tabbar:56px;
   --text-sat-hero-size:36px; --text-sat-hero-lh:40px; --text-sat-hero-ls:-0.02em;
   --text-sat-h2-size:24px; --text-sat-h2-lh:30px; --text-sat-h2-ls:-0.01em;
+  /* PR 5b · vositalar: ko'rsatkich raqami (sat-raqam 32/36, desktop 40/44) va vosita foni nuri.
+     Nur xiraroq (0.4 / 0.25): oddiy sahifa matni (muted, blue-text) nur markazida ham 4.5+ (DESIGN.md). */
+  --text-sat-raqam-size:32px; --text-sat-raqam-lh:36px;
+  --sat-fon-nur-opacity:0.4; --sat-fon-nur-opacity-past:0.25;
 }
 :root[data-mavzu='qorongi']{
   --color-sat-bg:var(--color-sat-navy);
@@ -456,7 +462,7 @@
   --color-sat-line-strong:var(--color-sat-line-on-navy);
 }
 @media (min-width: 720px){
-  :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; }
+  :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; --text-sat-raqam-size:40px; --text-sat-raqam-lh:44px; }
 }
 
 /* ==========================================================================

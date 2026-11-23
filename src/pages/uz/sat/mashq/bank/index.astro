@@ -4,6 +4,8 @@
 // statik build'da hech qanday raqam yo'q. Sof mantiq: src/lib/savolBanki.ts.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import TarifDialog from '../../../../../components/sat/TarifDialog.astro';
+import SatFiltr from '../../../../../components/sat/SatFiltr.astro';
+import '../../../../../styles/sat.css';
 import { savolTaksonomiya, type SavolBolim } from '../../../../../data/satTaksonomiya';
 import { HAJMLAR } from '../../../../../lib/savolBanki';
 import { yol } from '../../../../../lib/yol';
@@ -21,13 +23,14 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   yol={['Practice']}
   bolim="sat"
   holat="chop-etilgan"
+  sahifaSinfi="sat t-fon"
 >
   <div class="ichki bank" data-holat="loading"
     data-sessiya-url={yol('/uz/sat/mashq/sessiya/')}
     data-bank-url={yol('/uz/sat/mashq/bank/')}>
     <section class="bosh" aria-labelledby="bank-h">
       <p class="pill-qator"><span class="pill">Practice</span></p>
-      <h1 id="bank-h">Question bank</h1>
+      <h1 id="bank-h" class="sat-sarlavha">Question bank</h1>
       <p class="lead">Pick the skills you want to work on, set the difficulty and start a session. Only questions the author has checked are included.</p>
       <p class="kvota" id="kvota" hidden></p>
       <div class="ogoh" id="kvota-tugadi" tabindex="-1" hidden>
@@ -37,13 +40,13 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       </div>
     </section>
 
-    <div class="izoh-karta" id="izoh" role="status" hidden>
+    <div class="izoh-karta sat-panel" id="izoh" role="status" hidden>
       <p class="izoh-sarlavha" id="izoh-sarlavha"></p>
       <p class="izoh-matn" id="izoh-matn"></p>
       <button type="button" class="kichik-tugma" id="qayta" hidden>Retry</button>
     </div>
 
-    <section class="filtrlar" aria-label="Filters">
+    <SatFiltr nomi="Filters" class="filtrlar">
       <div class="segment" role="tablist" aria-label="Section">
         {BOLIMLAR.map((b, i) => (
           <button type="button" role="tab" id={`tab-${b.kalit}`} aria-controls={`panel-${b.kalit}`}
@@ -54,20 +57,20 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       <div class="filtr-qatorlar">
         <fieldset class="qator">
           <legend class="qator-nom">Difficulty</legend>
-          <button type="button" class="chip" aria-pressed="true" data-qiyinlik="">All</button>
-          <button type="button" class="chip" aria-pressed="false" data-qiyinlik="easy">Easy</button>
-          <button type="button" class="chip" aria-pressed="false" data-qiyinlik="medium">Medium</button>
-          <button type="button" class="chip" aria-pressed="false" data-qiyinlik="hard">Hard</button>
+          <button type="button" class="chip sat-chip" aria-pressed="true" data-qiyinlik="">All</button>
+          <button type="button" class="chip sat-chip" aria-pressed="false" data-qiyinlik="easy">Easy</button>
+          <button type="button" class="chip sat-chip" aria-pressed="false" data-qiyinlik="medium">Medium</button>
+          <button type="button" class="chip sat-chip" aria-pressed="false" data-qiyinlik="hard">Hard</button>
         </fieldset>
         <fieldset class="qator">
           <legend class="qator-nom">Questions</legend>
-          <button type="button" class="chip" aria-pressed="true" data-yechilgan="all">All</button>
-          <button type="button" class="chip" aria-pressed="false" data-yechilgan="unsolved">Unsolved</button>
+          <button type="button" class="chip sat-chip" aria-pressed="true" data-yechilgan="all">All</button>
+          <button type="button" class="chip sat-chip" aria-pressed="false" data-yechilgan="unsolved">Unsolved</button>
           <label class="belgi-qutisi"><input type="checkbox" id="belgilangan" /> Marked for review</label>
           <label class="belgi-qutisi"><input type="checkbox" id="qayta-yechish" /> Redo list</label>
         </fieldset>
       </div>
-    </section>
+    </SatFiltr>
 
     {BOLIMLAR.map((b, i) => (
       <section class="skilllar" role="tabpanel" id={`panel-${b.kalit}`} aria-labelledby={`tab-${b.kalit}`} hidden={i !== 0} data-panel={b.kalit}>
@@ -80,7 +83,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
           {Object.entries(savolTaksonomiya[b.kalit]).map(([domen, skills]) => {
             const d = `${b.kalit}-${id(domen)}`;
             return (
-              <div class="domen" data-domen={domen}>
+              <div class="domen sat-panel" data-domen={domen}>
                 <label class="domen-bosh" for={`d-${d}`}>
                   <input type="checkbox" id={`d-${d}`} data-domen-quti />
                   <span class="d-nom">{domen}</span>
@@ -104,19 +107,19 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
       </section>
     ))}
 
-    <section class="sozlama" aria-label="Session settings">
+    <SatFiltr nomi="Session settings" class="sozlama">
       <fieldset class="qator">
         <legend class="qator-nom">Questions per session</legend>
         {HAJMLAR.map((h, i) => (
-          <button type="button" class="chip" aria-pressed={i === 1 ? 'true' : 'false'} data-hajm={String(h)}>{h === 'all' ? 'All' : h}</button>
+          <button type="button" class="chip sat-chip" aria-pressed={i === 1 ? 'true' : 'false'} data-hajm={String(h)}>{h === 'all' ? 'All' : h}</button>
         ))}
       </fieldset>
       <fieldset class="qator">
         <legend class="qator-nom">Mode</legend>
-        <button type="button" class="chip" aria-pressed="true" data-rejim="practice">Untimed</button>
-        <button type="button" class="chip" aria-pressed="false" data-rejim="timed">Timed</button>
+        <button type="button" class="chip sat-chip" aria-pressed="true" data-rejim="practice">Untimed</button>
+        <button type="button" class="chip sat-chip" aria-pressed="false" data-rejim="timed">Timed</button>
       </fieldset>
-    </section>
+    </SatFiltr>
 
     <section class="tanlov qora-kontekst" aria-label="Start a session">
       <div class="tanlov-holat" aria-live="polite">
@@ -571,7 +574,8 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   .bosh { display: flex; flex-direction: column; gap: 14px; max-width: 62ch; }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
   .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
+  /* Sora 600 (.sat-sarlavha): boshqa vazn yo'q */
+  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: var(--font-weight-semibold); letter-spacing: var(--text-sat-hero-ls); }
   .lead { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); }
   .kvota { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
   .ogoh {
@@ -583,7 +587,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
 
   .izoh-karta {
     display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2);
-    border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6);
+    padding: var(--b-5) var(--b-6);
   }
   .izoh-sarlavha { font-size: var(--matn-katta); font-weight: 800; }
   .izoh-matn { color: var(--matn-ikkinchi); max-width: 62ch; }
@@ -592,7 +596,8 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
     border: 0; background: var(--matn); color: var(--fon); font: inherit; font-weight: 800; cursor: pointer;
   }
 
-  .filtrlar { display: flex; flex-direction: column; gap: var(--b-5); border-bottom: 1px solid var(--chiziq); padding-bottom: var(--b-6); }
+  /* Filtr va sessiya sozlamasi: SatFiltr (zich shisha), chiplar .sat-chip (sat.css) */
+  .bank :global(.filtrlar) { display: flex; flex-direction: column; gap: var(--b-5); }
   .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); align-self: flex-start; }
   .segment button {
     min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--r-toliq);
@@ -603,16 +608,9 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   .filtr-qatorlar { display: flex; flex-direction: column; gap: var(--b-3); }
   fieldset.qator { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
   .qator-nom { float: left; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); margin-right: var(--b-2); min-width: 9ch; }
-  .chip {
-    min-height: 44px; padding: 0 16px; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
-    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli);
-  }
-  @media (hover: hover) and (pointer: fine) { .chip:hover { border-color: var(--rang-asosiy); } }
-  .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
   .belgi-qutisi { display: flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: var(--b-2); font-size: 15px; font-weight: 600; cursor: pointer; }
   input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--rang-asosiy); }
-  input[type='checkbox']:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  input[type='checkbox']:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
   .skilllar { display: flex; flex-direction: column; gap: var(--b-4); }
   .skill-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-2); }
@@ -620,7 +618,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   .skill-izoh { font-size: var(--matn-kichik); color: var(--matn-sust); font-weight: 600; }
   .bolim-bosh { color: var(--matn-ikkinchi); font-weight: 600; }
   .domenlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr)); gap: var(--b-4); }
-  .domen { border: 1.5px solid var(--matn); border-radius: 20px; padding: var(--b-2) var(--b-3) var(--b-3); }
+  .domen { padding: var(--b-2) var(--b-3) var(--b-3); }
   .domen-bosh, .skill {
     display: flex; align-items: center; gap: var(--b-3); min-height: 44px; padding: var(--b-1) var(--b-2);
     border-radius: var(--r-yon); cursor: pointer;
@@ -642,7 +640,7 @@ const id = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
   }
   .bank:not([data-holat='ready']) .son:empty { display: none; }
 
-  .sozlama { display: flex; flex-direction: column; gap: var(--b-3); border-top: 1px solid var(--chiziq); padding-top: var(--b-6); }
+  .bank :global(.sozlama) { display: flex; flex-direction: column; gap: var(--b-3); }
 
   .tanlov {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4);
