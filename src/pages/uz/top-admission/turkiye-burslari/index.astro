@@ -127,7 +127,7 @@ const tekshirilmagan = [
             <h2 id="kimga-h">Kimga mos</h2>
             <AdmTekshirildi sana={m('TB02').tekshirilganSana} />
           </div>
-          <div class="jadval-quti">
+          <div class="jadval-quti" tabindex="0" role="region" aria-label="Rasmiy minimal shartlar jadvali">
             <table>
               <caption class="sust kichik">Rasmiy minimal shartlar (TB02)</caption>
               <thead><tr><th scope="col">Daraja</th><th scope="col">Minimal o'zlashtirish</th><th scope="col">Yosh</th></tr></thead>
@@ -292,6 +292,7 @@ const tekshirilmagan = [
   .royxat li::marker { color: var(--color-adm-accent-text); }
   .izoh { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-small-size); color: var(--color-adm-text-muted); }
 
+  .jadval-quti:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
   .jadval-quti { overflow-x: auto; border: var(--border-width-1) solid var(--color-adm-line-strong); border-radius: var(--radius-md); background: var(--color-adm-surface); }
   table { width: 100%; border-collapse: collapse; font-size: var(--text-body-size); }
   caption { text-align: left; padding: var(--space-3) var(--space-4) 0; }
