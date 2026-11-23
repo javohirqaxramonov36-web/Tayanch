@@ -6,6 +6,8 @@ import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import SahifaOxiri from '../../../../../components/SahifaOxiri.astro';
 import { eyufKurs, KURS_HOLATI_YORLIQ } from '../../../../../data/eyufKurslar';
 import { yol } from '../../../../../lib/yol';
+import EyufHero from '../../../../../components/eyuf/EyufHero.astro';
+import '../../../../../styles/eyuf.css';
 
 const kurs = eyufKurs('el-yurt-umidi');
 const sana = '2026-11-19';
@@ -25,12 +27,9 @@ const idlar = ['suhbat', 'bridge', 'savollar', 'caselar'];
   yol={['Kurslar']}
 >
   <article class="ichki kurs">
-    <header class="bosh">
-      <p class="yorliqlar"><span class="yorliq">Bepul kurs</span><span class="yorliq">{KURS_HOLATI_YORLIQ[kurs.holat]}</span></p>
-      <h1>{kurs.nomi}</h1>
-      <p class="tavsif">{kurs.tavsif}</p>
+    <EyufHero id="kurs-h" yorliq={`Bepul kurs · ${KURS_HOLATI_YORLIQ[kurs.holat]}`} sarlavha={kurs.nomi} matn={kurs.tavsif} ixcham>
       <p class="holat" role="status">TO'LDIRILMAGAN — material keyinroq qo'shiladi</p>
-    </header>
+    </EyufHero>
 
     <ol class="bolimlar" role="list">
       {kurs.bolimlar.map((nom, i) => (
@@ -55,10 +54,9 @@ const idlar = ['suhbat', 'bridge', 'savollar', 'caselar'];
   .bosh { display: grid; gap: var(--b-3); }
   .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
   .yorliq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
   .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
-  .holat { justify-self: start; padding: var(--b-2) var(--b-4); border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); font-weight: 800; font-size: var(--matn-mayda); letter-spacing: .04em; }
+  .holat { justify-self: start; color: var(--color-eyuf-text); padding: var(--b-2) var(--b-4); border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); font-weight: 800; font-size: var(--matn-mayda); letter-spacing: .04em; }
   .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
   .bolimlar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-4); }
   .bolim { border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); display: grid; gap: var(--b-2); }

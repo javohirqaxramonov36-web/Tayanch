@@ -1,7 +1,9 @@
 ---
 import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
 import tracks from '../../../../../data/eyuf/tracks.json';
+import EyufIkonka from '../../../../components/eyuf/EyufIkonka.astro';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/eyuf.css';
 ---
 <EyufSahifa title="Soha treklari" description="Darajangiz va mutaxassisligingiz bo‘yicha suhbatga tayyorlaning.">
   <section class="eyuf-panel" data-track-catalog aria-labelledby="treklar-h">
@@ -12,15 +14,20 @@ import { yol } from '../../../../lib/yol';
     </div>
     <p>2026-2 ochiq kvotalar snapshoti bo‘yicha tartiblanadi. AI qo‘shimcha o‘rinlari AKTning asosiy qatoriga qayta qo‘shilmaydi.</p>
     <p role="status" data-track-count></p>
-    <ol class="eyuf-list" data-track-list>
-      {tracks.items.map(track => (
-        <li data-track={track.id}>
-          <a data-track-link href={yol(`/uz/eyuf/soha/${track.id}/`)}>{track.title}</a>
-          <p class="eyuf-small" data-quota></p>
-          <p class="eyuf-small">{track.specialties.length} mutaxassislik yozuvi · Lotincha transkripsiya ko‘rikda</p>
-        </li>
-      ))}
-    </ol>
+    <div class="eyuf-royxat-panel soha-royxat">
+      <ol class="eyuf-royxat" data-track-list>
+        {tracks.items.map(track => (
+          <li data-track={track.id}>
+            <a class="eyuf-qator" data-track-link href={yol(`/uz/eyuf/soha/${track.id}/`)}>
+              <span class="eyuf-doira"><EyufIkonka nomi="soha" /></span>
+              <span class="eyuf-qator-matn"><h3>{track.title}</h3><span class="meta" data-quota></span><span class="meta">{track.specialties.length} mutaxassislik yozuvi · Lotincha transkripsiya ko‘rikda</span></span>
+              <span />
+              <EyufIkonka nomi="chevron" qalinlik={2} />
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
     <p><a href="https://api.el-yurt.uz/storage/quota-documents/992ee8d2-a625-47f9-9fbb-2fdf8bad0954-1793432390.pdf" target="_blank" rel="noopener noreferrer">S03 — rasmiy kvota jadvali (yangi oynada)</a></p>
     <noscript><p>Daraja filtri va qidiruv uchun JavaScript’ni yoqing. Yuqorida barcha treklar berilgan.</p></noscript>
   </section>
@@ -75,3 +82,7 @@ level.addEventListener('change', render);
 search.addEventListener('input', render);
 render();
 </script>
+<style>
+  /* Treklar ro'yxati eyuf-panel (zich) ichida: EyufRoyxat qatorlari, panel ichki chetsiz */
+  .soha-royxat { padding: 0; }
+</style>
