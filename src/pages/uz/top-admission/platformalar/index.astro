@@ -1,4 +1,5 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css (.adm doira, eyebrow, Onest 800 sarlavha; uzun matn zich sirtda).
 // 2-qavat · Top Admission · qo'llanma: Platformalar xaritasi.
 // Qaysi davlatga qaysi platforma orqali topshiriladi va qaysi yordamchi saytlar kerak bo'ladi.
 // Ma'lumot: src/data/taPlatformalar.ts (ariza platformalari topshirishYoli.ts dan, yordamchilar CS01, BF01, ID04, KI01, GR01).
@@ -9,6 +10,7 @@ import { PLATFORMALAR, DAVLATLAR, TEKSHIRILMAGAN, platformaManbalari } from '../
 import { KALIT } from '../../../../data/topshirishYoli';
 import { manbalar } from '../../../../data/manbalar';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/adm.css';
 
 const sana = '2026-11-19';
 const keyingi = '2026-12-19';
@@ -34,8 +36,8 @@ const guruhlar = [
 >
   <div class="ichki pl-sahifa">
     <header class="pl-bosh">
-      <p class="ustki">Qo'llanma</p>
-      <h1>Platformalar xaritasi</h1>
+      <p class="adm-eyebrow">Qo'llanma</p>
+      <h1 class="adm-h1">Platformalar xaritasi</h1>
       <p class="matn">Har davlatga ariza boshqa platforma orqali topshiriladi. Davlatni tanlang: qaysi platformada ariza berasiz va qaysi saytlar yordam beradi, shu yerda ko'rinadi. Havolalar faqat ma'lumot uchun.</p>
     </header>
 
@@ -112,7 +114,7 @@ const guruhlar = [
 
 <style>
   .pl-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); }
-  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .ustki { margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
   .matn { max-width: 62ch; }
   .pl-bosh { display: grid; gap: var(--b-3); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -125,9 +127,9 @@ const guruhlar = [
     font: inherit; font-size: var(--matn-kichik); font-weight: 700; cursor: pointer;
     transition: transform var(--harakat-tez) var(--harakat-egri);
   }
-  .chip:active { transform: scale(.97); }
-  .chip[aria-pressed="true"] { background: var(--matn); border-color: var(--matn); color: var(--fon); }
-  .chip:focus-visible { outline: 2px solid var(--rang-havola); outline-offset: 2px; }
+  .chip:active { transform: var(--bosilish); }
+  .chip[aria-pressed="true"] { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
+  .chip:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
   .guruh { display: grid; gap: var(--b-4); }
   .guruh[hidden], .karta[hidden] { display: none; }
@@ -135,7 +137,7 @@ const guruhlar = [
   .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
   .karta {
     display: flex; flex-direction: column; gap: var(--b-2);
-    padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt);
+    padding: var(--b-5); border: var(--border-width-1) solid var(--color-adm-glass-border); border-radius: var(--radius-xl); background: var(--color-adm-glass-strong); box-shadow: var(--shadow-glass);
   }
   .karta h3 { margin: 0; }
   .qayerga { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }

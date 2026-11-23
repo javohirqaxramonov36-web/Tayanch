@@ -1,0 +1,29 @@
+---
+// AdmHero (2-qavat mini-DS, ADR 005, PR 7): krem/issiq qora .t-fon ustida zich shisha panel,
+// katta harfli qalin sarlavha (oxirgi so'z .adm-urgu), qisqa matn va 1–2 kapsula tugma (slot "tugmalar").
+// Manba: DS artifakti v15, components/AdmHero. DS dan farq: panel zich shishada (nur dog'i markazida
+// shaffof shishada urg'u so'z 2.68 bo'lardi, 3:1 kerak). Stillar src/styles/adm.css.
+import '../../styles/adm.css';
+
+export interface Props {
+  /** h1 id si (aria-labelledby) */
+  id: string;
+  /** Sarlavhaning urg'usiz qismi */
+  sarlavha: string;
+  /** Oxirgi urg'u so'z (to'q sariq, 24px+) */
+  urgu?: string;
+  /** Sarlavha ustidagi yorliq */
+  yorliq?: string;
+  /** Katta harfli hero (kirish) yoki oddiy h1 (ichki sahifa) */
+  katta?: boolean;
+}
+const { id, sarlavha, urgu, yorliq, katta = true } = Astro.props;
+---
+<section class="adm-hero-fon t-fon" data-floor="2" aria-labelledby={id}>
+  <div class="adm-shisha adm-shisha--zich adm-hero" class:list={{ 'adm-hero--ichki': !katta }}>
+    {yorliq && <p class="adm-eyebrow">{yorliq}</p>}
+    <h1 id={id} class:list={{ 'adm-h1': !katta }}>{sarlavha}{urgu && <> <span class="adm-urgu">{urgu}</span></>}</h1>
+    <slot />
+    {Astro.slots.has('tugmalar') && <div class="adm-hero-tugmalar"><slot name="tugmalar" /></div>}
+  </div>
+</section>

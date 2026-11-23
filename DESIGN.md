@@ -359,6 +359,59 @@ Manba: artifakt v15 `qavat-4-ielts.md`, `tokens.json` (`ielts-*`), `bundle.css` 
 
 `ielts-on-accent` / `ielts-accent`: yorug' 5.51, qorong'i 4.69. Foto fon (`QavatFoto`) ustidagi kontrast IELTS sahifalari yangi ko'rinishga o'tganda o'sha PR'da hisoblanadi.
 
+### 2-qavat Top Admission (PR 7 `ds-top-admission`, 2026-11-23)
+
+Manba: artifakt v15 `qavat-2-top-admission.md`, `tokens.json` (`adm-*`), `bundle.css` (`.adm-*`). Hamma `/uz/top-admission/` sahifalari (16 ta) shu ko'rinishda. Til issiq va jasoratli: krem / issiq qora, bitta to'q sariq urg'u, Onest 800 sarlavha.
+
+- **Doira `.adm`.** `BolimQobiq` dagi `<main>` `bolim="top-admission"` da `adm` sinfini oladi. Stil `src/styles/adm.css` da, uni faqat Top Admission sahifalari (va `Adm*` komponentlari) import qiladi. Doira poydevor va eski nomli tokenlarni (`--color-bg`, `--color-surface`, `--color-text-*`, `--color-link`, `--btn-*`, `--card-*`, `--fon`, `--matn`, `--chiziq*`, `--rang-*`, `--floor-*`) 2-qavat qiymatiga almashtiradi. Shuning uchun eski sahifa CSS'i ham krem/qora/to'q sariq tusni oladi. Sahifa foni `adm-bg`, studio gradienti 2-qavatda yo'q. Foto fonli kirishda `main` shishasi `adm-foto-shisha`.
+- **Tokenlar** (`tokens.css`, "2-qavat Top Admission mini-DS"): `--color-adm-ink`, `-cream`, `-ember`, `-orange` (= `floor-admission-500`), `-on-accent`; mavzuli `-bg`, `-surface`, `-sunken`, `-chip`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-accent`, `-accent-display`, `-accent-text`, `-on-accent-text`, `-accent-subtle`, `-line`, `-line-strong`, `-foto-shisha`. Tipografiya `--text-adm-hero-*` (36–96, `12.5cqi`), `--text-adm-h1-*` (36/40, ≥720px 48/52), `--text-adm-h2-*` (32/36, ≥720px 44/48, 500), `--text-adm-eyebrow-*`, `--text-adm-raqam-*` (44). DS'dan farq: qorong'i `adm-line-strong` `#8A7A6F` (DS `#6E5F55` sirtda 2.57 edi); `adm-surface`, `-sunken`, `-chip`, `-accent-subtle`, `-on-accent-text`, `-foto-shisha` DS'da yo'q (tekis zaxira va eski sinflar uchun).
+- **Sinflar.** `.adm-shisha` (blur bilan, qisqa matn), `.adm-shisha--zich`, `.adm-karta` (zich, blursiz: uzun matn, ro'yxat), `.adm-ichki` (karta ichidagi tekis qator), `.adm-h1`, `.adm-h2`, `.adm-urgu` (faqat 24px+ qalin), `.adm-eyebrow` (oldida 24px to'q sariq chiziq), `.adm-chip` (to'q sariq fill, qora matn), `.adm-chip--sust`, `.t-tugma.adm-tugma--urgu`.
+- **Komponentlar** (`src/components/topAdmission/`):
+  - `AdmHero`: `.t-fon` ustida zich shisha panel, katta harfli sarlavha va urg'u so'z, 1–2 kapsula. `katta={false}`: ichki sahifa sarlavhasi (`adm-h1`). DS'dan farq: panel zich (nur dog'i markazida shaffof shishada urg'u so'z 2.68 bo'lardi).
+  - `AdmPlitka`: bo'lim plitkalari, chiziqli ikonka, joriy `aria-current="page"`. Faqat mavjud sahifalar.
+  - `AdmMuddat`: zich shisha muddat kartasi. Sana `taChiptalar.ts` (`deadline.ts`) dan, manba va tekshirilgan sana `manbalar.ts` dan. Qolgan kun `muddatHolati` (Toshkent kuni): "N kun qoldi", "Bugun tugaydi", "Tugadi", ochilishdan oldin "Ochilishi kutilmoqda". JS'siz "20-fevral oxirgi kun". Ota-elementda `data-adm-tartib` bo'lsa tugagan karta oxiriga tushadi.
+  - `AdmRoyxat`: haqiqiy checkbox qatorlar (52px), belgilangani to'q sariq fill. Holatni sahifa skripti boshqaradi (kurs darsidagi tekshiruv mezonlari, kalit o'zgarmagan).
+  - `AdmTekshirildi`: "Tekshirilgan: sana" chipi (ekran o'quvchiga "Rasmiy manbada tekshirilgan"). Eski muhr o'rnida.
+- **Olib tashlandi** (v1, muallif DS'da rad etgan): muhr (shtamp), chipta, MRZ lentasi, viza kartasi va katakli to'r, kirishdagi yo'l xaritasi. Faktlar, sanalar, manbalar va matn o'zgarmagan.
+- **Matn qoidasi.** Uzun matn (darslar, namunalar, qo'llanmalar, grant qo'llanmasi) `.adm-karta` ichida. To'q sariq yorug' fonda kichik matn sifatida ishlatilmaydi: kichik to'q sariq matn va havola faqat `adm-accent-text` (tagi chizilgan), `adm-accent` faqat fill, `adm-accent-display` faqat 24px+ qalin. Oq matn to'q sariqda yo'q. Ikkinchi urg'u rangi yo'q: havola ham to'q sariq matn rangida.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: shisha va kartalar tekis `adm-surface` + `adm-line-strong` chet, foto ustidagi `main` shishasi tekis `adm-bg`, urg'u kapsula tekis to'q sariq.
+
+**Kontrast (node, 2026-11-23).** Nur dog'i markazi: `floor-admission-glow` × 0.9, blursiz.
+
+| Juftlik | Yorug' | Qorong'i |
+| --- | --- | --- |
+| `adm-text` / `adm-bg` | 17.53 | 17.05 |
+| `adm-text-muted` / `adm-bg`, zich shisha / nur | 6.29, 6.39 | 8.10, 6.33 |
+| `adm-accent-text` / `adm-bg`, `adm-sunken`, `adm-accent-subtle` | 5.11, 4.58, 4.58 | 9.03, 7.92, 6.92 |
+| `adm-accent-display` / zich shisha nur ustida (24px+) | 3.27 | 5.70 |
+| `adm-on-accent` / `adm-accent` | 6.26 | 7.50 |
+| `adm-on-accent-text` / `adm-accent-text` | 5.70 | 9.29 |
+| `adm-line-strong` / `adm-surface`, zich shisha | 3.82, 3.76 | 3.81, 3.92 |
+| Foto ustida `main` shishasi (eng yomon piksel): `text-muted`, `accent-text`, `line-strong` | 5.58, 4.53, 3.04 | 8.18, 7.21, 3.47 |
+
+### 5-qavat EYUF (PR 9 `ds-eyuf`, 2026-11-23)
+
+Manba: artifakt v15 `qavat-5-eyuf.md`, `tokens.json` (`eyuf-*`), `bundle.css` "5 · EYUF", `components/Eyuf*`. Hamma `/uz/eyuf/` sahifasi yangi ko'rinishda.
+
+- **Tokenlar** (`tokens.css`, "5-qavat EYUF mini-DS"): primitiv `--color-eyuf-night`, `-ivory`, `-ink`, `-on-accent`; mavzuli `--color-eyuf-bg`, `-bg-deep`, `-surface` (zich shishaning noshaffof zaxirasi), `-glass`, `-glass-strong`, `-glass-border`, `-tile`, `-text`, `-text-muted`, `-accent`, `-accent-hover`, `-accent-text`, `-gold`, `-gold-line`, `-halo`, `-line`, `-line-strong`. Tipografiya `--text-eyuf-hero-*` (34/40, ≥640px 40/46, ≥1280px 56/62), `--text-eyuf-h1-*`, `--text-eyuf-h2-*` (26/32), `--text-eyuf-raqam-*` (40/44); o'lcham `--size-eyuf-doira`, `-qator`, `-halqa`. Shrift `--font-eyuf` (Playfair Display 600, raqam `lining-nums tabular-nums`).
+- **Qavat qatlami** (`src/styles/eyuf.css`, faqat EYUF sahifalari import qiladi): `html:root[data-floor="5"]` da poydevor tokenlari (`--color-bg`, `-surface`, `-text-*`, `-border*`, `-link`, `-focus-ring`, `-action-primary-*`, `-glass-*`, `--floor-text`) eyuf-* ga o'tadi. Shuning uchun mavjud forma, test va panel kodi o'zgarmasdan palitrani oladi. Sarlavhalar (`main h1–h3`) Playfair; ro'yxat qatori sarlavhasi Onest.
+- **Sirtlar.** `main` foto ustida zich shishada (`QavatFoto`), shuning uchun uning ichidagi panellar tekis zich (`eyuf-glass-strong`, blur yo'q): `.eyuf-panel`, `.eyuf-panel-zich`, IQ ekranlari. Shisha (`.t-shisha`) faqat noshaffof sahnada `.eyuf-sahna.t-fon` (hero). Forma, test, savol va uzun matn faqat zich sirtda.
+- **Komponentlar** (`src/components/eyuf/`): `EyufHero` (sahna + shaffof shisha; `obyekt` bilan oltin orbita, ekranda bitta; `ixcham` ichki sahifa sarlavhasi), `EyufBosqich` (oltin serif raqamli kartalar, holat chipi so'z va ikonka bilan, joriy `aria-current`; `zich` sahnadan tashqarida), `EyufRoyxat` (zich panelda 64px qatorlar, 44px doira ikonka, holat so'zi, chevron), `EyufTayyorlik` (halqa `--ulush` 0–100 va bandlar; IQ natijasida dinamik), `EyufIkonka`, `EyufYulduz`. Tugma: urg'u `.t-tugma.eyuf-tugma--urgu` (sahifada bitta), ikkinchi `.t-tugma--ikkinchi` (sahnada oltin chet), sahifa ichidagi eski `.tugma-asosiy` zumrad fill.
+- **Matn qoidasi.** Shaffof shishada va sahnada faqat `eyuf-text` (`eyuf-text-muted` qorong'ida 4.21). Oltin faqat serif raqam, kursiv urg'u (24px+) va bezak chizig'i; tugma, havola yoki holat rangi emas. Fokus `eyuf-accent-text`.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: panellar `eyuf-surface` + `eyuf-line-strong` chet, urg'u kapsula tekis `eyuf-accent`.
+
+**Kontrast (node, 2026-11-23).** Eng yomon holat: sahna nur dog'i markazi (`floor-eyuf-glow` × 0.9, blursiz); `main` foto ustida (foto pikseli qora yoki oq). Yorug' / qorong'i.
+
+| Juftlik | Sahna nur markazi | Shaffof shisha / nur | Zich panel / main | Main (foto) |
+| --- | --- | --- | --- | --- |
+| `eyuf-text` | 7.96 / 7.86 | 12.73 / 7.63 | 17.21+ / 14.33+ | 12.45+ / 9.40+ |
+| `eyuf-text-muted` | 3.16 / 4.34 | 5.06 / **4.21** | 6.84+ / 7.92+ | 4.95+ / 5.19+ |
+| `eyuf-accent-text` (havola, fokus) | 2.90 / 4.96 | 4.64 / 4.82 | 6.27+ / 9.05+ | 4.53+ / 5.93+ |
+| `eyuf-gold` | 2.52 / 5.28 | 4.03 / 5.12 | 5.45+ / 9.62+ | 3.94+ / 6.31+ |
+| `eyuf-line-strong` (maydon cheti) | 1.86 / 1.93 | 2.97 / 1.87 | 4.02+ / 3.51+ | 2.91+ / 2.31+ |
+
+`eyuf-on-accent` / `eyuf-accent` 5.34 / 5.13 (hover 6.73 / 6.50). Shundan: maydon cheti va holat chipi ma'noli bo'lsa faqat zich panelda; sahnada matn faqat `eyuf-text`.
+
 ## Harakat
 
 - Davomiylik (2026-11-13): `--duration-fast` 150ms, `--duration-base` 200ms, `--duration-slow` 200ms, `--duration-stagger` 50ms. Hamma harakat 120–200ms.

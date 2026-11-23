@@ -1,0 +1,26 @@
+---
+// EyufRoyxat (DS 5-qavat, PR 9): zich panel ichida doira ikonkali qatorlar, holat so'zi va chevron.
+// Qator kamida 64px (touch-min dan katta). Holat doim so'z bilan; "tayyor" holati zumrad, qolgani muted.
+// Telefonda (panel ≤480px) holat meta ostiga tushadi.
+import '../../styles/eyuf.css';
+import EyufIkonka, { type EyufIkonkaNomi } from './EyufIkonka.astro';
+export interface EyufRoyxatQator { href: string; nomi: string; meta?: string; holat?: string; tayyor?: boolean; ikonka: EyufIkonkaNomi }
+interface Props { id: string; sarlavha: string; qatorlar: EyufRoyxatQator[]; namuna?: boolean; daraja?: 2 | 3 }
+const { id, sarlavha, qatorlar, namuna = false, daraja = 2 } = Astro.props;
+const Sarlavha = daraja === 2 ? 'h2' : 'h3';
+---
+<section class="eyuf-panel-zich eyuf-royxat-panel" aria-labelledby={id}>
+  <div class="eyuf-sarlavha"><Sarlavha id={id}>{sarlavha}</Sarlavha>{namuna && <span class="eyuf-namuna">Namuna</span>}</div>
+  <ul class="eyuf-royxat">
+    {qatorlar.map((q) => (
+      <li>
+        <a class="eyuf-qator" href={q.href}>
+          <span class="eyuf-doira"><EyufIkonka nomi={q.ikonka} /></span>
+          <span class="eyuf-qator-matn"><h3>{q.nomi}</h3>{q.meta && <span class="meta">{q.meta}</span>}</span>
+          {q.holat ? <span class="holat" data-holat={q.tayyor ? 'tayyor' : undefined}>{q.holat}</span> : <span />}
+          <EyufIkonka nomi="chevron" qalinlik={2} />
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
