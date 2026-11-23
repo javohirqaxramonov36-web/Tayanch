@@ -1,0 +1,1 @@
+var e={minYosh:12,voyagaYetmaganQoida:{yoshgacha:18,talab:`ota-ona-roziligi`,manbalar:[`LX02`,`LX03`]},maxfiylikSahifa:`/uz/maxfiylik/`,shartlarSahifa:`/uz/shartlar/`,parolMinUzunlik:8,rozilikVersiya:`2026-11-10`,taxallusNaqsh:`[A-Za-z0-9_]{3,20}`,sessiyaKaliti:`tayanch:auth`,keyinKaliti:`tayanch:hisob-keyin`},t={min:400,max:1600,manba:`CB04`};export{t as n,e as t};

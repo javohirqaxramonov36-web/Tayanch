@@ -1,0 +1,1 @@
+var e=()=>{try{sessionStorage.removeItem(`tayanch:sat-tarif-kesh`)}catch{}};export{e as t};
