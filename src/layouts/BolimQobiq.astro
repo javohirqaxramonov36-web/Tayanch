@@ -45,7 +45,8 @@ const beta = bolim !== 'top-admission';
     <a class="otish" href="#asosiy" data-panel-tashqari>{matn[til].otish}</a>
     <BolimYon bolim={bolim} />
     <div class="kontent-ustun" data-panel-tashqari>
-      <main id="asosiy">
+      <!-- 2-qavat: .adm doirasi (adm.css, DS PR 7). Stil faqat Top Admission sahifalari adm.css ni import qilganda ishlaydi -->
+      <main id="asosiy" class:list={[{ adm: bolim === 'top-admission' }]}>
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
         <slot />
         {telegramKorinadi('kanal') && <div class="ichki telegram-qator"><TelegramTugma turi="kanal" matn={matn[til].yon.telegramKanal} yangiTab={matn[til].yon.yangiTab} /></div>}

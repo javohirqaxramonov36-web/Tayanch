@@ -1,0 +1,38 @@
+---
+// AdmPlitka (2-qavat mini-DS, ADR 005, PR 7): bo'lim plitkalari, shisha kvadrat, chiziqli ikonka va 1–2 so'zli nom.
+// Manba: DS artifakti v15, components/AdmPlitka. Faqat haqiqiy sahifalar (href yol() orqali beriladi).
+// Joriy sahifa: aria-current="page" (to'q sariq chet va nur). Hover (sichqoncha): chet line-strong, darhol.
+// Bosish: --bosilish (faqat transform). Telefonda kamida 3 ustun (104px). Stillar src/styles/adm.css.
+import '../../styles/adm.css';
+
+export type AdmIkonka = 'grant' | 'universitet' | 'hujjat' | 'muddat' | 'davlat' | 'kurs' | 'manba' | 'yol';
+
+export interface Props {
+  bandlar: { href: string; nomi: string; ikonka: AdmIkonka }[];
+  joriy?: string;
+  /** <nav> yorlig'i */
+  yorliq: string;
+}
+const { bandlar, joriy, yorliq } = Astro.props;
+---
+<nav aria-label={yorliq}>
+  <ul class="adm-plitkalar">
+    {bandlar.map((b) => (
+      <li>
+        <a class="adm-shisha adm-plitka" href={b.href} aria-current={b.href === joriy ? 'page' : undefined}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            {b.ikonka === 'grant' && <><path d="M3 9l9-5 9 5-9 5-9-5z" /><path d="M7 11v5c0 1 2.2 3 5 3s5-2 5-3v-5" /></>}
+            {b.ikonka === 'universitet' && <path d="M3 21h18M5 21V10M19 21V10M9 21v-6h6v6M3 10l9-6 9 6" />}
+            {b.ikonka === 'hujjat' && <><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5M10 13h6M10 17h6" /></>}
+            {b.ikonka === 'muddat' && <><rect x="4" y="5" width="16" height="16" rx="2" /><path d="M8 3v4M16 3v4M4 10h16" /></>}
+            {b.ikonka === 'davlat' && <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9z" /></>}
+            {b.ikonka === 'kurs' && <><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z" /><path d="M20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z" /></>}
+            {b.ikonka === 'manba' && <><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></>}
+            {b.ikonka === 'yol' && <><circle cx="6" cy="18" r="2" /><circle cx="18" cy="6" r="2" /><path d="M8 18h6a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h6" /></>}
+          </svg>
+          {b.nomi}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
