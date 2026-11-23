@@ -1,48 +1,83 @@
 ---
+// 5-qavat EYUF kirishi. Mini-DS (ADR 005, PR 9): EyufHero (sahna, orbita), EyufBosqich (to'rt kurs),
+// EyufRoyxat (bo'limning hamma sahifasi, eyufSahifalar.ts dan — yon panel bilan bir manba).
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
+import EyufHero from '../../../components/eyuf/EyufHero.astro';
+import EyufBosqich from '../../../components/eyuf/EyufBosqich.astro';
+import EyufRoyxat, { type EyufRoyxatQator } from '../../../components/eyuf/EyufRoyxat.astro';
+import type { EyufIkonkaNomi } from '../../../components/eyuf/EyufIkonka.astro';
 import { yol } from '../../../lib/yol';
 import { eyufGuruhlar } from '../../../data/eyufSahifalar';
-// Kirish sahifasida bo'limning hamma sahifasi ko'rinadi (yon panel bilan bir manba). IQ test alohida karta.
-const boshqaGuruhlar = eyufGuruhlar
-  .map((g) => ({ ...g, bandlar: g.bandlar.filter((b) => b.href && b.href !== 'eyuf/iq/') }))
-  .filter((g) => g.bandlar.length > 0);
+import '../../../styles/eyuf.css';
+
+// Qator izohi va ikonkasi: izohlar shu sahifalarning o'z tavsifidan (EyufSahifa description).
+const qatorMalumot: Record<string, { ikonka: EyufIkonkaNomi; meta: string }> = {
+  'eyuf/tayyorgarlik/': { ikonka: 'hujjat', meta: 'Birinchi kurs: har darsda shaxsiy ish varag‘i' },
+  'eyuf/reja/': { ikonka: 'reja', meta: 'Holatingiz, tayyorgarlik yo‘li va kunlik ishlar' },
+  'eyuf/kurslar/': { ikonka: 'kurs', meta: 'Kirish kurslari, bepul' },
+  'eyuf/iq/': { ikonka: 'iq', meta: 'Besh test to‘plami va aralash 20 savol, taymer va xatolar tahlili' },
+  'eyuf/trenajyor/': { ikonka: 'trenajyor', meta: 'Tur bo‘yicha mashq, sprint va oraliq takrorlash' },
+  'eyuf/mock/': { ikonka: 'mock', meta: 'Darajangizga mos ikki blok va taymer' },
+  'eyuf/suhbat/': { ikonka: 'suhbat', meta: 'Savol kartalari, ovoz yozuvi va mezonlar' },
+  'eyuf/soha/': { ikonka: 'soha', meta: 'Daraja va mutaxassislik bo‘yicha treklar' },
+  'eyuf/hududlar/': { ikonka: 'hudud', meta: 'Hududiy dalillar va sanali islohotlar' },
+  'eyuf/natija/': { ikonka: 'natija', meta: 'Hujjatlar, majburiyatlar va B reja' },
+};
+const guruhlar = eyufGuruhlar
+  .map((g) => ({
+    nomi: g.nomi,
+    qatorlar: g.bandlar
+      .filter((b) => b.href)
+      .map((b): EyufRoyxatQator => {
+        const m = qatorMalumot[b.href!];
+        if (!m) throw new Error(`EYUF kirish: qator ma'lumoti yo'q: ${b.href}`);
+        return { href: yol(`/uz/${b.href}`), nomi: b.nomi, meta: m.meta, ikonka: m.ikonka };
+      }),
+  }))
+  .filter((g) => g.qatorlar.length > 0);
+
+// To'rt kursli tayyorgarlik yo'li (tanlov bosqichlari tartibida: hujjat, test, suhbat, natija)
+const kurslar = [
+  { nomi: 'Hujjatlar va esse', izoh: 'Universitet, hujjatlar, esse.', href: yol('/uz/eyuf/tayyorgarlik/') },
+  { nomi: 'Test bosqichi', izoh: 'IQ mashq va simulyatsiya.', href: yol('/uz/eyuf/trenajyor/') },
+  { nomi: 'Suhbat bosqichi', izoh: 'Savol kartalari va soha.', href: yol('/uz/eyuf/suhbat/') },
+  { nomi: 'Natija', izoh: 'Keyingi qadamlar va B reja.', href: yol('/uz/eyuf/natija/') },
+];
 ---
 <BolimQobiq title="El-Yurt Umidi" description="El-Yurt Umidi tayyorgarligi. IQ test mashqlari va kurslar." turi="bolim-kirishi" bolim="eyuf" holat="chop-etilgan">
-  <section class="ichki eyuf-kirish" aria-labelledby="eyuf-h">
-    <p class="eyuf-yorliq">Mustaqil tayyorgarlik</p>
-    <h1 id="eyuf-h">El-Yurt Umidi</h1>
-    <p>Test bosqichiga mashq qiling va tayyorgarlik kurslarini ko‘rib chiqing.</p>
-    <a class="eyuf-iq-karta" href={yol('/uz/eyuf/iq/')}>
-      <span class="eyuf-yorliq">Test bosqichi</span>
-      <h2>IQ test</h2>
-      <span>Besh test to‘plami va aralash 20 savol. Taymer, natija va xatolarni qayta yechish.</span>
-      <span class="eyuf-havola">Mashqni boshlash →</span>
-    </a>
+  <div class="ichki eyuf-kirish">
+    <EyufHero
+      id="eyuf-h"
+      yorliq="5-qavat · Mustaqil tayyorgarlik"
+      sarlavha="El-Yurt"
+      urgu="Umidi"
+      matn="Test bosqichiga mashq qiling va tayyorgarlik kurslarini ko‘rib chiqing."
+      obyekt="qalpoq"
+      yulduz
+    >
+      <Fragment slot="tugmalar">
+        <a class="t-tugma eyuf-tugma--urgu" href={yol('/uz/eyuf/iq/')}>IQ testni boshlash <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="t-tugma t-tugma--ikkinchi" href={yol('/uz/eyuf/reja/')}>Tayyorgarlik rejasi</a>
+      </Fragment>
+      <div slot="pastki" class="eyuf-kirish-yol">
+        <h2 id="eyuf-yol-h" class="eyuf-kirish-yol-h">Tayyorgarlik yo‘li</h2>
+        <EyufBosqich bosqichlar={kurslar} yorliq="Tayyorgarlik yo‘li: to‘rt kurs" />
+      </div>
+    </EyufHero>
+
     <div class="eyuf-guruhlar">
-      {boshqaGuruhlar.map((g, i) => (
-        <section class="eyuf-guruh" aria-labelledby={`eyuf-g-${i}`}>
-          <h2 class="eyuf-guruh-nom" id={`eyuf-g-${i}`}>{g.nomi}</h2>
-          <ul>
-            {g.bandlar.map((b) => <li><a href={yol(`/uz/${b.href}`)}>{b.nomi}</a></li>)}
-          </ul>
-        </section>
-      ))}
+      {guruhlar.map((g, i) => <EyufRoyxat id={`eyuf-g-${i}`} sarlavha={g.nomi} qatorlar={g.qatorlar} />)}
     </div>
-    <p class="eyuf-yorliq">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
-  </section>
+    <p class="eyuf-kirish-eslatma">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+  </div>
   <QavatFoto bolim="eyuf" />
 </BolimQobiq>
 
 <style>
-  .eyuf-kirish { display: grid; gap: var(--space-5); padding-top: var(--space-6); }
-  .eyuf-kirish > p { max-width: 60ch; }
-  .eyuf-yorliq { color: var(--color-text-secondary); font-size: var(--text-small-size); }
-  .eyuf-iq-karta { display: grid; gap: var(--space-3); padding: var(--space-6); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); text-decoration: none; }
-  .eyuf-havola { color: var(--floor-text); font-weight: var(--font-weight-semibold); }
-  .eyuf-guruhlar { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
-  .eyuf-guruh { padding: var(--space-5); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
-  .eyuf-guruh-nom { margin: 0 0 var(--space-3); font-size: var(--text-small-size); color: var(--color-text-secondary); font-weight: var(--font-weight-semibold); }
-  .eyuf-guruh ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); }
-  .eyuf-guruh a { display: block; padding-block: var(--space-2); min-height: var(--size-touch-min); box-sizing: border-box; color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+  .eyuf-kirish { display: grid; gap: var(--space-6); padding-top: var(--space-6); }
+  .eyuf-kirish-yol { display: grid; gap: var(--space-4); margin-top: var(--space-6); }
+  .eyuf-kirish-yol-h { padding-inline: var(--space-1); }
+  .eyuf-guruhlar { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); align-items: start; }
+  .eyuf-kirish-eslatma { color: var(--color-text-secondary); font-size: var(--text-small-size); }
 </style>
