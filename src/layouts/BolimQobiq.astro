@@ -9,6 +9,7 @@ import QavatYoli from '../components/QavatYoli.astro';
 import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import SatSinxron from '../components/SatSinxron.astro';
+import SatTabBar from '../components/sat/SatTabBar.astro';
 import TelegramTugma from '../components/TelegramTugma.astro';
 import { telegramKorinadi } from '../data/telegram';
 import type { BolimSlug } from '../data/bolimlar';
@@ -27,9 +28,11 @@ export interface Props {
   tekshirilmagan?: string[];
   /** Qavat yo'lidagi oraliq bandlar: ["Mashq"] */
   yol?: string[];
+  /** Kontent ustuni foni (qavat mini-DS'i), masalan SAT vositalari: "sat t-fon" (sat.css). Yon panel tegilmaydi. */
+  sahifaSinfi?: string;
 }
 
-const { title, description, holat, bolim = 'sat', yol: bandlar = [] } = Astro.props;
+const { title, description, holat, bolim = 'sat', yol: bandlar = [], sahifaSinfi } = Astro.props;
 // Til bo'limdan: SAT inglizcha (CLAUDE.md), qolganlari o'zbekcha.
 const til = Astro.props.til ?? bolimTili(bolim);
 const sahifaNomi = title.split(' · ')[0];
@@ -44,7 +47,7 @@ const beta = bolim !== 'top-admission';
   <body class="bolim-qobiq">
     <a class="otish" href="#asosiy" data-panel-tashqari>{matn[til].otish}</a>
     <BolimYon bolim={bolim} />
-    <div class="kontent-ustun" data-panel-tashqari>
+    <div class:list={['kontent-ustun', sahifaSinfi]} data-panel-tashqari>
       <!-- 2-qavat: .adm doirasi (adm.css, DS PR 7). Stil faqat Top Admission sahifalari adm.css ni import qilganda ishlaydi -->
       <main id="asosiy" class:list={[{ adm: bolim === 'top-admission' }]}>
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} /></div>
@@ -55,11 +58,14 @@ const beta = bolim !== 'top-admission';
       {bolim === 'sat' && <SatEslatma />}
       {bolim === 'sat' && <SatSinxron />}
     </div>
+    {bolim === 'sat' && <SatTabBar />}
   </body>
 </html>
 
 <style is:global>
   .bolim-qobiq .kontent-ustun { min-width: 0; }
+  /* Qavat foni (sahifaSinfi) qisqa sahifada ham ekran pastigacha */
+  .bolim-qobiq .kontent-ustun.t-fon { min-height: 100dvh; }
   .bolim-qobiq .kontent-ustun .ichki { max-width: 960px; padding-inline: var(--b-4); padding-bottom: var(--b-16); }
   .bolim-qobiq .kontent-ustun .telegram-qator { padding-bottom: 0; }
   .bolim-qobiq .kontent-ustun .beta-holat { margin: 0; padding-block: var(--b-4) var(--b-6); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }

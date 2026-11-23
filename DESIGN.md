@@ -232,12 +232,13 @@ Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat
 
 ### 3-qavat SAT (PR 5a `ds-sat-kirish`, 2026-11-18)
 
-Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". Hozircha faqat `/uz/sat/` kirishi yangi ko'rinishda; vositalar (5b), savol ekranlari (5c), tab bar (5d) keyingi PR'larda.
+Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". `/uz/sat/` kirishi (5a), Results, Question bank, Vocabulary (5b), savol ekranlari (5c) va telefon tab bari (5d) yangi ko'rinishda.
 
 - **Tokenlar** (`tokens.css`, "3-qavat SAT mini-DS"): `--color-sat-navy`, `-navy-raised`, `-navy-high`, `-mist`, `-on-navy`, `-on-navy-muted`, `-sky`, `-line-on-navy`, `-blue` (= `floor-sat-500`), `-blue-fill`, `-on-blue-fill`, `-glass-navy(-strong, -border)`; mavzuli `--color-sat-bg`, `-surface`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-blue-text`, `-line`, `-line-strong`. Soya `--shadow-sat-panel-navy`, `--shadow-sat-plitka-hover`, `--shadow-sat-plitka-joriy`. O'lcham `--size-sat-plitka` (64, ≥720px 72), `--size-sat-tabbar`. Tipografiya `--text-sat-hero-*` (36/40, ≥720px 56/60), `--text-sat-h2-*` (24/30), shrift `--font-sat` (Sora 600, faqat inglizcha).
 - **Stillar** `src/styles/sat.css` (faqat SAT sahifasi import qiladi): `.sat-sahna` (navy sahna, `.t-fon` bilan), `.sat-sarlavha`, `.sat-yorliq`, `.t-tugma.sat-tugma--kok`. Sahna poydevor tokenlarini (`--color-glass-*`, `--shadow-glass`, `--color-text-primary`, `--color-surface`, `--color-focus-ring`) navy qiymatga almashtiradi, shuning uchun ichida oddiy `.t-shisha`, `.t-shisha--zich`, `.t-tugma--ikkinchi` ishlatiladi (DS dagi `.sat-shisha` kerak emas). `overflow: clip`.
 - **`SatPlitka`** (`src/components/sat/SatPlitka.astro`): `<ul>` ichida `<a>` plitkalar, ikonka `.t-shisha` (navy shisha, `sat-sky`), ostida yorliq; joriy bo'lim `aria-current="page"` (ko'k fill). Hover (faqat sichqoncha): chet `sat-blue` va nur, darhol. Bosish: ikonka `--bosilish`, 150ms. Telefonda 3 ustun, ≥720px 6.
 - **Matn qoidasi.** Sahnada (nur dog'i ustida) matn faqat `sat-on-navy`; `on-navy-muted` va `sky` faqat zich shishada yoki 24px+ sarlavhada. Fokus sahnada `accent-400`, oraliq navy. Ko'k kapsula sahifada bitta.
+- **`SatTabBar`** (PR 5d `ds-sat-tabbar`, 2026-11-23; `src/components/sat/SatTabBar.astro`, mantiq `src/lib/sat/satTab.ts`): faqat <720px, ekran pastida suzuvchi kapsula (`position: fixed`, chetdan `--space-2`, pastda `env(safe-area-inset-bottom)` qo'shiladi). 5 band: Today, Practice, Learn, Progress, Plan, yon panel guruhlaridan (`satYonGuruhlar`), har biri guruhning birinchi sahifasiga. Account va Lift poydevordagi hamburger panelda qoladi. Fon zich navy shisha (`sat-glass-navy-strong`, ikkala mavzuda bir xil), yorliq `sat-on-navy-muted` 11/14 (caption), joriy band `sat-sky` + `sat-navy-high` fon: aynan tab sahifasida `aria-current="page"`, guruhning boshqa sahifasida `"true"` (ko'rinishi bir xil). Band balandligi `--size-sat-tabbar`, body pastki bo'shlig'i va `scroll-padding-bottom` `--size-sat-tabbar-joy` + safe area (oxirgi kontent, `SatEslatma` yopilmaydi). Yashiriladi: `SatFokus` sahifalarida (ulanmaydi), matn maydoni fokusda bo'lganda, hamburger panel ochiq bo'lganda. Fokus `accent-400`, oraliq navy. Stil komponent ichida (sat.css'ga tegmaydi). Kontrast (node, 2026-11-23, zich navy shisha 0.9 ostida eng yorug' kontent oq): `sat-on-navy-muted` 5.62+, joriy `sat-sky` / `sat-navy-high` 5.43, fokus `accent-400` 5.29+; tekis zaxirada `sat-on-navy-muted` / `sat-navy-raised` 6.92.
 - **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more`: sahnadagi shisha tekis `sat-navy-raised` + `sat-line-on-navy` chet, ko'k kapsula tekis `sat-blue-fill` (hover'da ham).
 
 **Kontrast (node, 2026-11-18).** Eng yomon holat: `.t-fon` nur dog'i markazi (blursiz, `floor-sat-glow` × 0.9), shisha ostida `saturate(1.6)`.
@@ -251,6 +252,65 @@ Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 �
 | `sat-blue` (grafik, chet) | 4.89 | 2.08 (faqat hover bezagi) | 2.93 | 4.13 |
 
 `sat-on-blue-fill` / `sat-blue-fill` 5.12. Navy sahna noshaffof, shuning uchun "Qavat foto foni" (`main` zich shishada) ichida ham sahna kontrasti o'zgarmaydi. Foto fon ustidagi zich shishada (eng yomon foto pikseli oq yoki qora) `sat-text` 10.54+, `sat-text-muted` 4.81+, `sat-blue-text` 5.26+; `sat-line-strong` u yerda 2.76 bo'lgani uchun faqat qattiq kartalar ichida. Pastki bo'limlar (sahnadan tashqari, qattiq kartalar): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
+
+#### Vositalar (PR 5b `ds-sat-vositalar`, 2026-11-18)
+
+Sahifalar: Results (`/uz/sat/vosita/natijalar/`), Question bank (`/uz/sat/mashq/bank/`), Vocabulary (`/uz/sat/mashq/lugat/`). Takrorlash, Reja, Rasmiy testlar va boshqa vositalar hozircha eski ko'rinishda (keyingi PR).
+
+- **`.sat`** (`sat.css`): vosita sahifa foni `sat-bg` (yorug' `sat-mist`, qorong'i `sat-navy`) va `.t-fon` nur dog'lari. `BolimQobiq` ning `sahifaSinfi="sat t-fon"` propi kontent ustuniga qo'yadi; yon panel (`BolimYon`) va boshqa SAT sahifalari tegilmaydi. Soha ichida poydevor tokenlari (`--color-glass-*` → `sat-glass*`, `--color-text-*`, `--color-surface`, `--color-border`) va eski o'zbekcha nomlar (`--matn*`, `--fon*`, `--sirt*`, `--chiziq*`, `--rang-asosiy*`, `--rang-havola`, `--qora*`) SAT qiymatiga o'tadi: eski sahifa CSS'i yangi ranglarni oladi. `overflow: clip` (sticky va `scrollIntoView` buzilmaydi). `.sat--fonsiz`: faqat token sohasi (Lug'at `SatFokus` ichida, `SatFokus` 5c da o'tadi).
+- **Nur xiraroq**: `--sat-fon-nur-opacity` 0.4 / `-past` 0.25 (poydevorda 0.9 / 0.55). Sabab: vosita sahifasida oddiy matn (`sat-text-muted`, `sat-blue-text`) to'g'ridan-to'g'ri fon ustida, 0.9 da nur markazida 3.38–3.70.
+- **`.sat-panel`**: zich sirt blursiz (`glass-bg-strong` + `glass-border` + `shadow-glass`, `radius-lg`). Ro'yxat, jadval, grafik, forma bloklari uchun: ichma-ich blur va o'nlab `backdrop-filter` bo'lmaydi. Haqiqiy shisha (`.t-shisha--zich`) faqat `SatKorsatkich` kartalari va `SatFiltr` panelida.
+- **`SatKorsatkich`** (`src/components/sat/SatKorsatkich.astro`): `<dl>` 4 karta (telefonda 2 ustun, ≥900px 4), ikonka `sat-blue-fill` doirada oq chiziq (`--shadow-sat-ikon`), raqam Sora 600 `--text-sat-raqam-*` (32/36, ≥720px 40/44) `tabular-nums`, izoh `sat-text-muted`. Raqamni sahifa skripti `qiymatId` bo'yicha yozadi.
+- **`SatFiltr`** (`src/components/sat/SatFiltr.astro`): zich shisha qobiq (`section` yoki `div`), ichida `.sat-chip` (`<button aria-pressed>`), `.sat-natija-bosh`, `.sat-qatorlar`/`.sat-qator`. Chip: chet `sat-line-strong`, tanlangan fill `sat-blue-fill` + oq matn, chet `--sat-tanlangan-chet` (yorug' fill, qorong'i `sat-sky`), soya `--shadow-sat-chip`; hover faqat sichqoncha bilan chet `sat-blue`, darhol; `:active` `--bosilish`; `forced-colors` da `Highlight`. Xatti-harakat (aria-pressed, filtr mantiqi, URL) sahifalarda o'zgarmagan.
+- **Hover tuzatish**: `.sat` da `--rang-asosiy` = `sat-blue-fill`, `--rang-asosiy-matn` oq, `--rang-asosiy-toq` = fill 80% + navy. Eski qorong'i hover (qora matn / to'q ko'k 3.99) Results sahifasida yo'q; `.qayta` va `.mashq-tugma` hover fill + oq (5.12). SavolUslub va Rasmiy testlar hover'lari hali eski (5c / keyingi PR).
+- **Zaxira**: `prefers-reduced-transparency` / `prefers-contrast: more` da `.sat-panel` tekis `sat-surface` + `sat-line-strong` chet, chip `sat-surface`, soyasiz.
+
+**Kontrast (node, 2026-11-18, skript notes `sat-vosita-kontrast.mjs`).** Eng yomon holat: nur markazi (`floor-sat-glow` × 0.4), shisha ostida `saturate(1.6)`.
+
+| Juftlik | Yorug' | Qorong'i |
+| --- | --- | --- |
+| Fon nur markazi: `sat-text-muted` / `sat-blue-text` | 4.76 / 5.21 | 5.88 / 5.71 |
+| Zich shisha (nur 0.9 da ham): `sat-text` / `muted` / `blue-text` | 15.82 / 6.37 / 6.97 | 13.28 / 7.00 / 6.80 |
+| Zich shisha: `sat-line-strong` (chip cheti) | 3.66 | 3.96 |
+| Tanlangan chip: oq / `sat-blue-fill` | 5.12 | 5.12 |
+| Tanlangan chip cheti / zich shisha | 4.73 (fill) | 6.80 (`sat-sky`; fill 2.86) |
+| Hover fill: oq / `--rang-asosiy-toq` | 6.57 | 6.57 |
+| Pill / hover fon (`sat-line`): `sat-text-muted` | 5.00 | 5.59 |
+| Yulduz (tanlangan) / `sat-line` | 3.70 (fill) | 5.42 (sky) |
+| Ko'rsatkich ikonka fill / zich sirt | 5.05 | 3.09 |
+
+### 4-qavat IELTS (PR 8 `ds-ielts-tokenlar`, 2026-11-23)
+
+Manba: artifakt v15 `qavat-4-ielts.md`, `tokens.json` (`ielts-*`), `bundle.css` "4 · IELTS". Bu PR faqat tokenlar va stillar: IELTS sahifalari va komponentlari hali ishlatmaydi (u yerda Codex ishlayapti, muallif qarori). Hero, plitkalar, ko'rsatkich va ro'yxat keyingi PR'da.
+
+- **Xarakter.** "Tungi ilova": qorong'i mavzuda navy sahna (`ielts-night`), yorug'da "tong" (`ielts-dawn`), shisha panellar, bitta elektr ko'k urg'u va hero obyekti ostida bitta nurli halqa. Sarlavha va raqam Lexend 600 (`--font-ielts`), oddiy harflar; matn Onest.
+- **3 va 4-qavat ko'klari yaqin** (`floor-sat-500` / `floor-ielts-500` 1.57:1). Muallif qarori (2026-11-18): ikkalasi ko'k qoladi, farq shrift (Sora / Lexend), motiv (SAT plitka va tab bar / IELTS nurli obyekt va halqa) va qavat raqami bilan. Lift va binoda rang doim raqam bilan.
+- **Tokenlar** (`tokens.css`, "4-qavat IELTS mini-DS"): primitiv `--color-ielts-night`, `-dawn`, `-ink`, `-on-accent` (oq); mavzuli `--color-ielts-bg`, `-glass`, `-glass-strong`, `-glass-border`, `-tile`, `-text`, `-text-muted`, `-accent` (yorug'da = `floor-ielts-500`), `-accent-text` (700 / 400), `-accent-display`, `-halo`, `-line`, `-line-strong`. Shisha filtri `--ielts-glass-backdrop` (blur + `saturate(1.5)`). Tipografiya `--text-ielts-hero-*` (32/40, ≥481px 40/48), `--text-ielts-h2-*` (24/32), `--text-ielts-raqam-*` (28/32, `tabular-nums`), `--text-ielts-birlik-*` (13/18, Onest 500). Nur poydevordagi `--color-floor-ielts-glow`.
+- **Stillar** `src/styles/ielts.css` (`global.css` import qiladi): `.ielts-qobiq` (fon `ielts-bg`, matn `ielts-text`, `--nur` = IELTS nuri, `h1–h3` Lexend; `.t-fon` bilan ishlaydi), `.ielts-glass` (shaffof: qisqa matn, plitka, hero), `.ielts-glass-strong` (zich: uzun matn, ro'yxat, test, forma). DS dagi `.ielts` nomi olinmadi: `/uz/ielts/` kirishida `ielts` klassi allaqachon bor.
+- **Matn qoidasi.** `.t-fon` nur dog'i ustida (shishasiz) faqat `ielts-text`. `ielts-text-muted`, `ielts-accent-text` va `ielts-line-strong` shishada; `line-strong` (chip, maydon cheti) va `accent` chegarasi shaffof shishada nur ustida 3:1 ga yetmaydi, shuning uchun ular zich shishada yoki tekis fonda. `ielts-accent-display` faqat 24px+. `ielts-accent` fill ustida doim `ielts-on-accent`. Urg'u rangi bitta (ikkinchi urg'u yo'q), halqa ekranda bitta.
+- **Zaxira.** `backdrop-filter` yo'q brauzerda `.ielts-glass` zich bo'ladi; `prefers-reduced-transparency` / `prefers-contrast: more` da ikkala shisha zich, blursiz, chet `ielts-line-strong`.
+
+**Kontrast (node, 2026-11-23).** Nur markazi: `.t-fon` dog'i blursiz, `floor-ielts-glow` × 0.9. Shisha ostida `saturate(1.5)`.
+
+| Juftlik (yorug') | Fon tekis | Nur markazi | Shaffof / fon | Shaffof / nur | Zich / fon | Zich / nur |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ielts-text` | 16.35 | 7.29 | 17.27 | 12.34 | 17.80 | 16.10 |
+| `ielts-text-muted` | 6.01 | 2.68 | 6.34 | 4.53 | 6.54 | 5.91 |
+| `ielts-accent-text` | 7.30 | 3.26 | 7.71 | 5.51 | 7.95 | 7.19 |
+| `ielts-accent-display` (24px+) | 4.99 | 2.23 | 5.27 | 3.77 | 5.43 | 4.91 |
+| `ielts-line-strong` (3:1) | 3.56 | 1.59 | 3.76 | 2.69 | 3.87 | 3.50 |
+| `ielts-accent` chegara (3:1) | 4.99 | 2.23 | 5.27 | 3.77 | 5.43 | 4.91 |
+
+| Juftlik (qorong'i) | Fon tekis | Nur markazi | Shaffof / fon | Shaffof / nur | Zich / fon | Zich / nur |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ielts-text` | 16.23 | 8.95 | 13.64 | 8.59 | 15.27 | 14.61 |
+| `ielts-text-muted` | 8.63 | 4.76 | 7.25 | 4.57 | 8.12 | 7.77 |
+| `ielts-accent-text` | 8.64 | 4.76 | 7.26 | 4.57 | 8.13 | 7.78 |
+| `ielts-accent-display` (24px+) | 6.71 | 3.70 | 5.63 | 3.55 | 6.31 | 6.04 |
+| `ielts-line-strong` (3:1) | 3.81 | 2.10 | 3.20 | 2.02 | 3.58 | 3.43 |
+| `ielts-accent` chegara (3:1) | 3.85 | 2.12 | 3.23 | 2.04 | 3.62 | 3.47 |
+
+`ielts-on-accent` / `ielts-accent`: yorug' 5.51, qorong'i 4.69. Foto fon (`QavatFoto`) ustidagi kontrast IELTS sahifalari yangi ko'rinishga o'tganda o'sha PR'da hisoblanadi.
 
 ### 2-qavat Top Admission (PR 7 `ds-top-admission`, 2026-11-23)
 
@@ -318,7 +378,7 @@ Manba: artifakt v15 `qavat-2-top-admission.md`, `tokens.json` (`adm-*`), `bundle
 - **Tayanch binosi** (2026-11-05, muallif qarori): sayt 5 qavatli bino. 1 Navigator (`/uz/`), 2 Top Admission, 3 SAT prep, 4 IELTS prep, 5 EYUF prep. Ma'lumot `src/data/qavatlar.ts` (2–5 qavat holati `bolimlar.ts` dan), `joriyQavat(pathname)`.
 - **Shisha bino** (`Bino.astro`, DS `heroSVG`): bosh sahifa hero'sida, sochilgan yorliqlar uning atrofida. Server tomonda chiziladi (JS'siz), `aria-hidden`, ikonkalar `qavatlar.ts` dan, raqamlar "01" ko'rinishida. Geometriya, gradientlar, filtrlar va CSS DS dan o'zgarishsiz. `aktiv` qavat yonib turadi (bosh sahifada 1). Sahifadagi `[data-bino-yoq="N"]` elementga (qavat kartalaridagi havola yoki tugma) hover yoki fokus kelsa, o'sha qavat yonadi (CSS `:has()`); reduced motion'da animatsiyasiz.
 - **Qavatlar ro'yxati** (2026-11-19 dan; oldin `Lift.astro`, 2026-11-15 "Unify navigation"): ustki qatordagi Lift ("Floor 3 · SAT prep / Floors") olib tashlandi, muallif uni ortiqcha deb topdi. Qavatlar endi hamburger panelida (`BolimYon`) "Qavatlar"/"Floors" guruhida: raqam doirasi + nom, joriy qavat `aria-current="location"` (qalin, sust fon), "tez orada" yorlig'i, Suhbatdosh. Panel o'ng tomondan, tugma tagidan ochiladi. Mavzu tugmasi faqat ustki qatorda. Qavat yo'li qavat kirish sahifasida ko'rsatilmaydi.
-- **Telefon pastki paneli yo'q** (2026-11-15): pastki Lift ham, SAT tab bari ham olib tashlangan; bo'lim navigatsiyasi hamma ekranda ustki qatordagi hamburger panelida (`BolimYon`). `SatTabBar.astro` va `src/lib/sat/satTab.ts` repoda qolgan, lekin hech qayerda ulanmagan (muallif qarori: qaytariladimi yoki o'chiriladimi).
+- **Telefon pastki paneli** (2026-11-15 da olib tashlangan; 2026-11-23 da faqat SAT'da qaytdi): pastki Lift yo'q, bo'lim navigatsiyasi hamma ekranda ustki qatordagi hamburger panelida (`BolimYon`). SAT'da <720px da qo'shimcha `SatTabBar` ("Qavat mini-DS'lari" → 3-qavat SAT). Asos: ADR 005 (`docs/qarorlar/005-qavat-ds.md`), muallif 2026-11-18 da 12 PR'lik DS rejasini (5d SatTabBar ichida) tasdiqlagan, 2026-11-23 da qarorlarni boshqaruvchi chatga topshirgan. Tab bar hamburger panel, Lift va hisob bandini almashtirmaydi.
 - **Qavat yo'li** (`QavatYoli.astro`): SAT'da yon panel guruhidagi sahifaning guruh nomi `satYonGuruhlar` dan olinadi ("Plan › Study planner", "Learn › Math lessons"), sahifa bergan `yol` dan emas: yo'l satri va panel guruhi ajralib ketmaydi. Guruhda yo'q sahifalar (sessiya, mock imtihon, huquqiy) o'z bandlarini saqlaydi.
 - **Qavat yo'li** (`QavatYoli.astro`): sahifa tepasida "3-qavat › Mashq › Test"; oxirgi band havola emas (`aria-current="page"`). 1-qavat bosh sahifasida yo'q.
 - **Zina** (`Zina.astro`): qavat kirish sahifasi pastida qo'shni qavatlarga ikki DS link karta (pastga chapda, yuqoriga o'ngda). 5-qavatda faqat pastga. 1-qavat bosh sahifasida yo'q (2026-11-13, N2: qavat kartalari hero ostida).
