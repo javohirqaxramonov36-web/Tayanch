@@ -232,7 +232,7 @@ Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat
 
 ### 3-qavat SAT (PR 5a `ds-sat-kirish`, 2026-11-18)
 
-Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". `/uz/sat/` kirishi (5a) va Results, Question bank, Vocabulary (5b) yangi ko'rinishda; savol ekranlari (5c), tab bar (5d) keyingi PR'larda.
+Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". `/uz/sat/` kirishi (5a) va Results, Question bank, Vocabulary (5b) yangi ko'rinishda; savol ekranlari (5c) yangi ko'rinishda; tab bar (5d) keyingi PR'da.
 
 - **Tokenlar** (`tokens.css`, "3-qavat SAT mini-DS"): `--color-sat-navy`, `-navy-raised`, `-navy-high`, `-mist`, `-on-navy`, `-on-navy-muted`, `-sky`, `-line-on-navy`, `-blue` (= `floor-sat-500`), `-blue-fill`, `-on-blue-fill`, `-glass-navy(-strong, -border)`; mavzuli `--color-sat-bg`, `-surface`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-blue-text`, `-line`, `-line-strong`. Soya `--shadow-sat-panel-navy`, `--shadow-sat-plitka-hover`, `--shadow-sat-plitka-joriy`. O'lcham `--size-sat-plitka` (64, ≥720px 72), `--size-sat-tabbar`. Tipografiya `--text-sat-hero-*` (36/40, ≥720px 56/60), `--text-sat-h2-*` (24/30), shrift `--font-sat` (Sora 600, faqat inglizcha).
 - **Stillar** `src/styles/sat.css` (faqat SAT sahifasi import qiladi): `.sat-sahna` (navy sahna, `.t-fon` bilan), `.sat-sarlavha`, `.sat-yorliq`, `.t-tugma.sat-tugma--kok`. Sahna poydevor tokenlarini (`--color-glass-*`, `--shadow-glass`, `--color-text-primary`, `--color-surface`, `--color-focus-ring`) navy qiymatga almashtiradi, shuning uchun ichida oddiy `.t-shisha`, `.t-shisha--zich`, `.t-tugma--ikkinchi` ishlatiladi (DS dagi `.sat-shisha` kerak emas). `overflow: clip`.
@@ -277,6 +277,19 @@ Sahifalar: Results (`/uz/sat/vosita/natijalar/`), Question bank (`/uz/sat/mashq/
 | Pill / hover fon (`sat-line`): `sat-text-muted` | 5.00 | 5.59 |
 | Yulduz (tanlangan) / `sat-line` | 3.70 (fill) | 5.42 (sky) |
 | Ko'rsatkich ikonka fill / zich sirt | 5.05 | 3.09 |
+
+#### Savol ekranlari: SatSavol (PR 5c `ds-sat-savol`, 2026-11-23)
+
+Manba: artifakt v15 `components/SatSavol`. Sahifalar: mashq sessiyasi (`/uz/sat/mashq/sessiya/`), Practice test (`/uz/sat/mashq/test/`), Kun savoli (`KunSavoli`, `/uz/sat/`), mock imtihon, takrorlash va musobaqa savollari (umumiy `SavolUslub.astro`), `SatFokus` qolipi. Faqat ko'rinish: xatti-harakat, kalitlar va matn o'zgarmagan.
+
+- **Panel.** Savol, passage va natija faqat zich shishada: `sat-glass-strong`, 1px `sat-glass-border`, `radius-lg`, `shadow-glass`, `glass-backdrop`. Ichidagi variant, maydon va tugmalar tekis (ichma-ich blur yo'q). Foto fon zich shishasi ichida (Kun savoli, `/uz/sat/`) panel qattiq karta: `sat-surface`, `sat-line`, blursiz.
+- **Variant.** Tekis, 1px `sat-line-strong`, `radius-lg`, min 44px; harf 36px doira, Sora 600. Hover (faqat sichqoncha) chet `sat-blue`, darhol. Tanlangan: chet va inset 1px `sat-blue-fill`, harf to'ladi (`sat-blue-fill` + oq). Holat yana `aria-checked` / `checked` bilan aytiladi.
+- **Holatlar.** To'g'ri: fon `success-subtle`, chet `success-ui`, harf 2px `success-ui` halqa, ✓ belgi `success-text`. Xato: uzuq chet `sat-text`, matn ustidan chiziq, harf to'la `sat-text`, × belgi. Cross out: uzuq chet va xira matn. Natija sarlavhasi Sora, to'g'risi `success-text`; xabar so'z bilan (`aria-live`).
+- **Ustki qator.** Savol raqami `sat-yorliq` uslubida (`sat-text-muted`), asboblar kapsula, faol holat `sat-line-strong` chet.
+- **Tugma.** Tekshirish ko'k kapsula (`.t-tugma.sat-tugma--kok` yoki `.sk-asosiy`), panelda bitta; keyingi savol `.t-tugma`. Nofaol ko'k kapsula poydevordagi nofaol tugma kabi.
+- **SatFokus.** `body` foni `sat-bg`, `main` = `.sat.t-fon` (5b token sohasi va nur dog'lari, nur xiraroq), ustki qator `sat-glass-strong` blursiz + `sat-line` chiziq, nom Sora, progress `sat-blue-fill`. Sessiya pastki qatori (sticky) zich shisha: savol paneli bilan yonma-yon, ichma-ich emas.
+- **Zaxira.** `prefers-reduced-transparency` / `prefers-contrast: more` va blursiz brauzerda panel tekis `sat-surface` + `sat-line-strong`, ko'k kapsula tekis.
+- **Kontrast.** 5b jadvalidagi zich shisha qiymatlari amal qiladi (`sat-text` 13.28+, `sat-text-muted` 6.37+, `sat-line-strong` 3.66+, oq / `sat-blue-fill` 5.12). Axe 4.14 (390/1280, yorug'/qorong'i, javobdan oldin va keyin): sessiya, test, Kun savoli, savol namunasi 0 buzilish.
 
 ## Harakat
 
