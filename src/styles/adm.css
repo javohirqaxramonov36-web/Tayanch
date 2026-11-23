@@ -239,11 +239,13 @@ body:has(main.adm)::before { display: none; }
   overflow-wrap: break-word;
 }
 .adm-hero-matn { margin: 0; max-width: 46ch; color: var(--color-adm-text-muted); font-size: var(--text-body-size); line-height: var(--text-body-lh); }
-.adm-hero--ichki { gap: var(--space-3); }
+.adm-hero--ichki { gap: var(--space-3); padding: var(--space-6); }
+.adm-hero--ichki h1 { font-size: var(--text-adm-h1-size); line-height: var(--text-adm-h1-lh); text-transform: none; }
 .adm-hero-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
 @media (min-width: 720px) {
   .adm-hero-fon { padding: var(--space-6); }
   .adm-hero { padding: var(--space-12); }
+  .adm-hero--ichki { padding: var(--space-8); }
 }
 
 /* ---------- AdmPlitka ---------- */
