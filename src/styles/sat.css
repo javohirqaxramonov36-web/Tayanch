@@ -63,3 +63,209 @@
     color: var(--color-sat-on-blue-fill);
   }
 }
+
+/* ==========================================================================
+   PR 5b · vosita sahifalari (2026-11-18). DS bundle.css ".sat", "SatKorsatkich", "SatFiltr".
+   ========================================================================== */
+
+/* ---------- .sat: vosita sahifa foni (yorug' mist, qorong'i navy) ----------
+   BolimQobiq sahifaSinfi="sat t-fon" bilan kontent ustuniga qo'yiladi (yon panel tegilmaydi).
+   Poydevor va eski o'zbekcha tokenlar shu sohada SAT qiymatiga o'tadi: sahifa CSS'i o'zgarmasdan
+   SAT ranglarini oladi. Nur xiraroq (--sat-fon-nur-*): oddiy matn nur markazida ham 4.5+. */
+.sat {
+  --nur: var(--color-floor-sat-glow);
+  --fon-nur-opacity: var(--sat-fon-nur-opacity);
+  --fon-nur-opacity-past: var(--sat-fon-nur-opacity-past);
+  /* Poydevor: shisha SAT tusida (.t-shisha, .t-shisha--zich, .sat-panel) */
+  --color-glass-bg: var(--color-sat-glass);
+  --color-glass-bg-strong: var(--color-sat-glass-strong);
+  --color-glass-border: var(--color-sat-glass-border);
+  --color-text-primary: var(--color-sat-text);
+  --color-text-secondary: var(--color-sat-text-muted);
+  --color-surface: var(--color-sat-surface);
+  --color-border: var(--color-sat-line);
+  --btn-secondary-border: var(--color-sat-line-strong);
+  /* Eski nomlar (tokens.css "Eski o'zbekcha nomlar") :root da hisoblangan, shuning uchun bu yerda qayta */
+  --matn: var(--color-sat-text);
+  --matn-ikkinchi: var(--color-sat-text-muted);
+  --matn-sust: var(--color-sat-text-muted);
+  --fon: var(--color-sat-surface);
+  --fon-ikkinchi: color-mix(in srgb, var(--color-sat-line) 60%, var(--color-sat-surface));
+  --sirt: var(--color-sat-surface);
+  --sirt-ikkinchi: var(--color-sat-line);
+  --chiziq: var(--color-sat-line);
+  --chiziq-kuchli: var(--color-sat-line-strong);
+  --chiziq-maydon: var(--color-sat-line-strong);
+  --rang-havola: var(--color-sat-blue-text);
+  /* Urg'u fill: oq matn 5.12, hover to'qroq (oq 6.57). Eski qorong'i hover (qora matn / toq ko'k 3.99) yo'qoladi */
+  --rang-asosiy: var(--color-sat-blue-fill);
+  --rang-asosiy-toq: color-mix(in srgb, var(--color-sat-blue-fill) 80%, var(--color-sat-navy));
+  --rang-asosiy-matn: var(--color-sat-on-blue-fill);
+  --rang-asosiy-qorada: var(--color-sat-sky);
+  /* Qora sahna → navy */
+  --qora: var(--color-sat-navy);
+  --qora-sirt: var(--color-sat-navy-raised);
+  --qora-chiziq: var(--color-sat-navy-high);
+  --qora-matn: var(--color-sat-on-navy);
+  --qora-matn-ikkinchi: var(--color-sat-on-navy-muted);
+  /* Tanlangan holat cheti: yorug'da fill (zichda 4.73), qorong'ida sky (fill zich navy'da 2.86) */
+  --sat-tanlangan-chet: var(--color-sat-blue-fill);
+  background: var(--color-sat-bg);
+  color: var(--color-sat-text);
+}
+:root[data-mavzu='qorongi'] .sat {
+  --qora: var(--color-sat-navy-raised);
+  --qora-sirt: var(--color-sat-navy-high);
+  --sat-tanlangan-chet: var(--color-sat-sky);
+  --color-focus-gap: var(--color-sat-navy);
+}
+/* clip: .t-fon dagi hidden kabi kesadi, lekin sticky (Savol banki "Start") va scrollIntoView buzilmaydi */
+.sat.t-fon { overflow: clip; background: var(--color-sat-bg); }
+
+/* ---------- Zich sirt (blursiz): ro'yxat, jadval, grafik, forma bloklari ----------
+   Ichma-ich blur va o'nlab backdrop-filter bo'lmasligi uchun sahifa ichidagi bloklar shisha tusini
+   blursiz oladi. Fon va ostidagi nur allaqachon xira, ko'rinish zich shisha bilan bir xil. */
+.sat-panel {
+  border: var(--border-width-1) solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-glass-bg-strong);
+  box-shadow: var(--shadow-glass);
+}
+
+/* ---------- SatKorsatkich: raqamli kartalar ---------- */
+.sat-korsatkichlar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+@media (min-width: 900px) {
+  .sat-korsatkichlar { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.sat-korsatkich {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+.sat-korsatkich dt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--color-sat-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: var(--font-weight-medium);
+}
+.sat-korsatkich-ikon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-full);
+  background: var(--color-sat-blue-fill);
+  color: var(--color-sat-on-blue-fill);
+  box-shadow: var(--shadow-sat-ikon);
+}
+.sat-korsatkich-ikon svg { width: var(--space-4); height: var(--space-4); }
+.sat-korsatkich dd { margin: 0; min-width: 0; }
+.sat-korsatkich-qiymat {
+  color: var(--color-sat-text);
+  font-family: var(--font-sat);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sat-raqam-size);
+  line-height: var(--text-sat-raqam-lh);
+  letter-spacing: var(--text-sat-h2-ls);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.sat-korsatkich-izoh {
+  color: var(--color-sat-text-muted);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+}
+.sat-korsatkich-izoh:empty { display: none; }
+
+/* ---------- SatFiltr: zich shisha panel, chiplar, natija soni, qatorlar ---------- */
+.sat-filtr {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+@media (min-width: 720px) {
+  .sat-filtr { padding: var(--space-5) var(--space-6); }
+}
+.sat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--size-touch-min);
+  padding: 0 var(--space-4);
+  border: var(--border-width-1) solid var(--color-sat-line-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-sat-glass-strong);
+  color: var(--color-sat-text);
+  font: inherit;
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+/* Hover faqat sichqoncha bilan, chet darhol (bezak: holat aria-pressed va fill bilan aytiladi) */
+@media (hover: hover) and (pointer: fine) {
+  .sat-chip:hover:not([aria-pressed='true']) { border-color: var(--color-sat-blue); }
+}
+.sat-chip[aria-pressed='true'] {
+  border-color: var(--sat-tanlangan-chet);
+  background: var(--color-sat-blue-fill);
+  color: var(--color-sat-on-blue-fill);
+  box-shadow: var(--shadow-sat-chip);
+}
+/* Bosish: faqat transform (global transition 150ms), reduced motion'da --bosilish = 1 */
+.sat-chip:active { transform: var(--bosilish); }
+.sat-natija-bosh {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-sat-text-muted);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: var(--font-weight-medium);
+}
+.sat-qatorlar { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.sat-qator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--size-touch-min);
+  padding: var(--space-4);
+  color: var(--color-sat-text);
+}
+
+/* ---------- Zaxira: shaffoflik kamaytirilgan yoki yuqori kontrast ---------- */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .sat-panel {
+    border-color: var(--color-sat-line-strong);
+    background: var(--color-sat-surface);
+    box-shadow: none;
+  }
+  .sat-chip:not([aria-pressed='true']) { background: var(--color-sat-surface); }
+  .sat-chip[aria-pressed='true'] { box-shadow: none; }
+}
+/* Majburiy ranglar: fill yo'qoladi, tanlangan chip tizim rangida */
+@media (forced-colors: active) {
+  .sat-chip[aria-pressed='true'] { forced-color-adjust: none; border-color: Highlight; background: Highlight; color: HighlightText; }
+}
+
+/* Token sohasi foni yo'q: qobig'i hali eski sahifa (Lug'at SatFokus ichida, SatFokus 5c da o'tadi) */
+.sat.sat--fonsiz { background: transparent; }
