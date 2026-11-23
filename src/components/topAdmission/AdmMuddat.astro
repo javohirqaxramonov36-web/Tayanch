@@ -3,7 +3,7 @@
 // Manba: DS artifakti v15, components/AdmMuddat. Sana faqat deadline.ts dan (chegara lib/muddat.ts, Toshkent kuni),
 // manba va tekshirilgan sana manbalar.ts dan. JS bo'lmasa: "zaxira" matni (masalan "20-fevral oxirgi kun") qoladi.
 // Holat: ochilishdan oldin "Ochilishi kutilmoqda", keyin "N kun qoldi" / "Bugun tugaydi" / "Tugadi" (muddatHolati).
-// Ro'yxat ota-elementida data-adm-tartib bo'lsa, tugagan muddat oxiriga tushadi. Stillar src/styles/adm.css.
+// Ro'yxat ota-elementida data-adm-tartib bo'lsa ("Yaqin muddatlar"), tugagan muddat yashiriladi; hammasi tugasa [data-adm-bosh] chiqadi. Stillar src/styles/adm.css.
 import '../../styles/adm.css';
 import type { Manba } from '../../data/manbalar';
 import AdmTekshirildi from './AdmTekshirildi.astro';
@@ -66,6 +66,12 @@ const H = `h${sarlavhaDarajasi}`;
       matn.textContent = holat;
     }
     k.dataset.holat = holat === 'Tugadi' ? 'tugadi' : 'ochiq';
-    if (holat === 'Tugadi' && k.parentElement?.hasAttribute('data-adm-tartib')) k.parentElement.append(k);
+    if (holat === 'Tugadi' && k.parentElement?.hasAttribute('data-adm-tartib')) k.hidden = true;
+  });
+  // "Yaqin muddatlar" ro'yxatida hamma muddat tugagan bo'lsa, ro'yxat o'rniga bo'sh holat matni.
+  document.querySelectorAll<HTMLElement>('[data-adm-tartib]').forEach((r) => {
+    const ochiq = [...r.querySelectorAll<HTMLElement>('.adm-muddat')].some((k) => !k.hidden);
+    const bosh = r.parentElement?.querySelector<HTMLElement>('[data-adm-bosh]');
+    if (bosh) bosh.hidden = ochiq;
   });
 </script>

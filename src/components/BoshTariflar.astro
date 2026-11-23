@@ -10,9 +10,9 @@ import { yol } from '../lib/yol';
       <a class="tarif-button" href={yol('/uz/#qavatlar')}>Bepul boshlash</a>
     </article>
     <article class="tarif-card pro"><p class="tarif-strip">Tavsiya etamiz</p><h3>Pro</h3><p class="tarif-scope">SAT bo'limi uchun</p>
-      <p class="tarif-price" data-home-price>[TO'LDIRING: Pro narxi va davri]</p>
+      <p class="tarif-price" data-home-price>Narx yuklanmoqda…</p>
       <p class="tarif-day" data-home-day></p>
-      <ul data-home-features><li>[TO'LDIRING: Pro imkoniyatlari]</li></ul>
+      <ul data-home-features><li>Bepul tarifdagi barcha imkoniyatlar</li></ul>
       <button type="button" class="t-tugma tarif-tugma" data-home-pro disabled>Pro bilan boshlash</button>
       <p class="tarif-status" data-home-price-status role="status">Amaldagi tarif tekshirilmoqda.</p>
     </article>
@@ -29,7 +29,7 @@ import { yol } from '../lib/yol';
   let tayyor = false;
   async function narxniOl() {
     const c = hisobMijoz();
-    if (!c) { holat.textContent = 'Tarif ma’lumoti hozircha yuklanmadi.'; return; }
+    if (!c) { narxYuklanmadi(); holat.textContent = 'Tarif ma’lumoti hozircha yuklanmadi.'; return; }
     try {
       const { data, error } = await c.from('plans').select('price_uzs, period_days, features').eq('bolim', 'sat').eq('code', 'pro').eq('is_active', true).maybeSingle();
       if (error || !data || !Number.isSafeInteger(data.price_uzs) || data.price_uzs <= 0 || !Number.isInteger(data.period_days) || data.period_days <= 0) throw new Error('Tarif');
@@ -42,7 +42,13 @@ import { yol } from '../lib/yol';
       tayyor = true;
       tugma.disabled = false;
       holat.textContent = 'Bir martalik to’lov. Avtomatik yangilanmaydi.';
-    } catch { holat.textContent = 'Tarif ma’lumoti yuklanmadi. Sahifani yangilab, qayta urinib ko’ring.'; }
+    } catch { narxYuklanmadi(); holat.textContent = 'Tarif ma’lumoti yuklanmadi. Sahifani yangilab, qayta urinib ko’ring.'; }
+  }
+  function narxYuklanmadi() {
+    const havola = document.createElement('a');
+    havola.href = yol('/uz/sat/hisob/obuna/');
+    havola.textContent = 'Narxni Subscription sahifasida ko’ring';
+    document.querySelector<HTMLElement>('[data-home-price]')!.replaceChildren(havola);
   }
   async function tolov() {
     if (!tayyor || tugma.disabled) return;
