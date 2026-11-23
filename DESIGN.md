@@ -232,7 +232,7 @@ Shundan qoida: **shaffof shishada faqat `text-primary`**. `text-secondary` faqat
 
 ### 3-qavat SAT (PR 5a `ds-sat-kirish`, 2026-11-18)
 
-Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". Hozircha faqat `/uz/sat/` kirishi yangi ko'rinishda; vositalar (5b), savol ekranlari (5c), tab bar (5d) keyingi PR'larda.
+Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 · SAT prep". `/uz/sat/` kirishi (5a) va Results, Question bank, Vocabulary (5b) yangi ko'rinishda; savol ekranlari (5c), tab bar (5d) keyingi PR'larda.
 
 - **Tokenlar** (`tokens.css`, "3-qavat SAT mini-DS"): `--color-sat-navy`, `-navy-raised`, `-navy-high`, `-mist`, `-on-navy`, `-on-navy-muted`, `-sky`, `-line-on-navy`, `-blue` (= `floor-sat-500`), `-blue-fill`, `-on-blue-fill`, `-glass-navy(-strong, -border)`; mavzuli `--color-sat-bg`, `-surface`, `-glass(-strong, -border)`, `-text`, `-text-muted`, `-blue-text`, `-line`, `-line-strong`. Soya `--shadow-sat-panel-navy`, `--shadow-sat-plitka-hover`, `--shadow-sat-plitka-joriy`. O'lcham `--size-sat-plitka` (64, ≥720px 72), `--size-sat-tabbar`. Tipografiya `--text-sat-hero-*` (36/40, ≥720px 56/60), `--text-sat-h2-*` (24/30), shrift `--font-sat` (Sora 600, faqat inglizcha).
 - **Stillar** `src/styles/sat.css` (faqat SAT sahifasi import qiladi): `.sat-sahna` (navy sahna, `.t-fon` bilan), `.sat-sarlavha`, `.sat-yorliq`, `.t-tugma.sat-tugma--kok`. Sahna poydevor tokenlarini (`--color-glass-*`, `--shadow-glass`, `--color-text-primary`, `--color-surface`, `--color-focus-ring`) navy qiymatga almashtiradi, shuning uchun ichida oddiy `.t-shisha`, `.t-shisha--zich`, `.t-tugma--ikkinchi` ishlatiladi (DS dagi `.sat-shisha` kerak emas). `overflow: clip`.
@@ -251,6 +251,32 @@ Manba: artifakt v15 `qavat-3-sat.md`, `tokens.json` (`sat-*`), `bundle.css` "3 �
 | `sat-blue` (grafik, chet) | 4.89 | 2.08 (faqat hover bezagi) | 2.93 | 4.13 |
 
 `sat-on-blue-fill` / `sat-blue-fill` 5.12. Navy sahna noshaffof, shuning uchun "Qavat foto foni" (`main` zich shishada) ichida ham sahna kontrasti o'zgarmaydi. Foto fon ustidagi zich shishada (eng yomon foto pikseli oq yoki qora) `sat-text` 10.54+, `sat-text-muted` 4.81+, `sat-blue-text` 5.26+; `sat-line-strong` u yerda 2.76 bo'lgani uchun faqat qattiq kartalar ichida. Pastki bo'limlar (sahnadan tashqari, qattiq kartalar): `sat-text` 13.13+, `sat-text-muted` 6.16+ (yorug') / 6.92+ (qorong'i), `sat-blue-text` 6.72+, `sat-line-strong` 3.54+.
+
+#### Vositalar (PR 5b `ds-sat-vositalar`, 2026-11-18)
+
+Sahifalar: Results (`/uz/sat/vosita/natijalar/`), Question bank (`/uz/sat/mashq/bank/`), Vocabulary (`/uz/sat/mashq/lugat/`). Takrorlash, Reja, Rasmiy testlar va boshqa vositalar hozircha eski ko'rinishda (keyingi PR).
+
+- **`.sat`** (`sat.css`): vosita sahifa foni `sat-bg` (yorug' `sat-mist`, qorong'i `sat-navy`) va `.t-fon` nur dog'lari. `BolimQobiq` ning `sahifaSinfi="sat t-fon"` propi kontent ustuniga qo'yadi; yon panel (`BolimYon`) va boshqa SAT sahifalari tegilmaydi. Soha ichida poydevor tokenlari (`--color-glass-*` → `sat-glass*`, `--color-text-*`, `--color-surface`, `--color-border`) va eski o'zbekcha nomlar (`--matn*`, `--fon*`, `--sirt*`, `--chiziq*`, `--rang-asosiy*`, `--rang-havola`, `--qora*`) SAT qiymatiga o'tadi: eski sahifa CSS'i yangi ranglarni oladi. `overflow: clip` (sticky va `scrollIntoView` buzilmaydi). `.sat--fonsiz`: faqat token sohasi (Lug'at `SatFokus` ichida, `SatFokus` 5c da o'tadi).
+- **Nur xiraroq**: `--sat-fon-nur-opacity` 0.4 / `-past` 0.25 (poydevorda 0.9 / 0.55). Sabab: vosita sahifasida oddiy matn (`sat-text-muted`, `sat-blue-text`) to'g'ridan-to'g'ri fon ustida, 0.9 da nur markazida 3.38–3.70.
+- **`.sat-panel`**: zich sirt blursiz (`glass-bg-strong` + `glass-border` + `shadow-glass`, `radius-lg`). Ro'yxat, jadval, grafik, forma bloklari uchun: ichma-ich blur va o'nlab `backdrop-filter` bo'lmaydi. Haqiqiy shisha (`.t-shisha--zich`) faqat `SatKorsatkich` kartalari va `SatFiltr` panelida.
+- **`SatKorsatkich`** (`src/components/sat/SatKorsatkich.astro`): `<dl>` 4 karta (telefonda 2 ustun, ≥900px 4), ikonka `sat-blue-fill` doirada oq chiziq (`--shadow-sat-ikon`), raqam Sora 600 `--text-sat-raqam-*` (32/36, ≥720px 40/44) `tabular-nums`, izoh `sat-text-muted`. Raqamni sahifa skripti `qiymatId` bo'yicha yozadi.
+- **`SatFiltr`** (`src/components/sat/SatFiltr.astro`): zich shisha qobiq (`section` yoki `div`), ichida `.sat-chip` (`<button aria-pressed>`), `.sat-natija-bosh`, `.sat-qatorlar`/`.sat-qator`. Chip: chet `sat-line-strong`, tanlangan fill `sat-blue-fill` + oq matn, chet `--sat-tanlangan-chet` (yorug' fill, qorong'i `sat-sky`), soya `--shadow-sat-chip`; hover faqat sichqoncha bilan chet `sat-blue`, darhol; `:active` `--bosilish`; `forced-colors` da `Highlight`. Xatti-harakat (aria-pressed, filtr mantiqi, URL) sahifalarda o'zgarmagan.
+- **Hover tuzatish**: `.sat` da `--rang-asosiy` = `sat-blue-fill`, `--rang-asosiy-matn` oq, `--rang-asosiy-toq` = fill 80% + navy. Eski qorong'i hover (qora matn / to'q ko'k 3.99) Results sahifasida yo'q; `.qayta` va `.mashq-tugma` hover fill + oq (5.12). SavolUslub va Rasmiy testlar hover'lari hali eski (5c / keyingi PR).
+- **Zaxira**: `prefers-reduced-transparency` / `prefers-contrast: more` da `.sat-panel` tekis `sat-surface` + `sat-line-strong` chet, chip `sat-surface`, soyasiz.
+
+**Kontrast (node, 2026-11-18, skript notes `sat-vosita-kontrast.mjs`).** Eng yomon holat: nur markazi (`floor-sat-glow` × 0.4), shisha ostida `saturate(1.6)`.
+
+| Juftlik | Yorug' | Qorong'i |
+| --- | --- | --- |
+| Fon nur markazi: `sat-text-muted` / `sat-blue-text` | 4.76 / 5.21 | 5.88 / 5.71 |
+| Zich shisha (nur 0.9 da ham): `sat-text` / `muted` / `blue-text` | 15.82 / 6.37 / 6.97 | 13.28 / 7.00 / 6.80 |
+| Zich shisha: `sat-line-strong` (chip cheti) | 3.66 | 3.96 |
+| Tanlangan chip: oq / `sat-blue-fill` | 5.12 | 5.12 |
+| Tanlangan chip cheti / zich shisha | 4.73 (fill) | 6.80 (`sat-sky`; fill 2.86) |
+| Hover fill: oq / `--rang-asosiy-toq` | 6.57 | 6.57 |
+| Pill / hover fon (`sat-line`): `sat-text-muted` | 5.00 | 5.59 |
+| Yulduz (tanlangan) / `sat-line` | 3.70 (fill) | 5.42 (sky) |
+| Ko'rsatkich ikonka fill / zich sirt | 5.05 | 3.09 |
 
 ### 4-qavat IELTS (PR 8 `ds-ielts-tokenlar`, 2026-11-23)
 

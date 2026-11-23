@@ -1,0 +1,35 @@
+---
+// SatKorsatkich (3-qavat mini-DS, ADR 005, PR 5b): raqamli ko'rsatkich kartalari (Results tepasida).
+// Manba: DS artifakti v15, components/bundle.css "SatKorsatkich". Faqat .sat ichida (src/styles/sat.css).
+// <dl>: har karta zich shisha (.t-shisha--zich), <dt> da ikonka (ko'k doira, oq chiziq) va nom, <dd> da raqam
+// (Sora 600, tabular-nums) va izoh. Raqamni sahifa skripti qiymatId bo'yicha yozadi: statik build'da raqam yo'q.
+// Holat faqat rang bilan emas: hamma narsa matn. Interaktiv emas (tugma yo'q), harakat yo'q.
+export type SatKorsatkichIkonka = 'urinish' | 'aniqlik' | 'saqlangan' | 'seriya';
+
+export interface Props {
+  bandlar: { nomi: string; ikonka: SatKorsatkichIkonka; qiymatId: string; izohId?: string; izoh?: string }[];
+  /** <dl> nomi (ekran o'quvchi uchun) */
+  nomi: string;
+}
+
+const { bandlar, nomi } = Astro.props;
+---
+<dl class="sat-korsatkichlar" aria-label={nomi}>
+  {bandlar.map((b) => (
+    <div class="sat-korsatkich t-shisha t-shisha--zich">
+      <dt>
+        <span class="sat-korsatkich-ikon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            {b.ikonka === 'urinish' && <><path d="M4 20h4L19 9l-4-4L4 16z" /><path d="m13.5 6.5 4 4" /></>}
+            {b.ikonka === 'aniqlik' && <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></>}
+            {b.ikonka === 'saqlangan' && <path d="M7 4h10v16l-5-3.5L7 20z" />}
+            {b.ikonka === 'seriya' && <><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16" /><path d="m9 15 2 2 4-4" /></>}
+          </svg>
+        </span>
+        <span>{b.nomi}</span>
+      </dt>
+      <dd class="sat-korsatkich-qiymat" id={b.qiymatId}></dd>
+      <dd class="sat-korsatkich-izoh" id={b.izohId}>{b.izoh}</dd>
+    </div>
+  ))}
+</dl>
