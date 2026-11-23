@@ -1,0 +1,22 @@
+---
+// Navigator mono yorlig'i (DS NavYorliq): qadam, holat yoki bo'lim kodi. Stil: src/styles/nav.css (.nav-chip).
+// tur: oddiy (nav-bg/nav-surface ustida), laym (joriy holat, ekranda bitta), sahna (qora sahnada), matn (chegarasiz).
+// Qismlar "·" bilan: "1-qadam · 3 savol". JetBrains Mono'da ʻ yo'q: yorliq qisqa, asosiy ma'no Onest matnida.
+interface Props {
+  tur?: 'oddiy' | 'laym' | 'sahna' | 'sahna-matn' | 'matn';
+  teg?: 'span' | 'p';
+  class?: string;
+  [k: `data-${string}`]: string | boolean | undefined;
+  hidden?: boolean;
+  id?: string;
+}
+const { tur = 'oddiy', teg: Teg = 'span', class: klass, ...rest } = Astro.props;
+const turlar: Record<NonNullable<Props['tur']>, string> = {
+  oddiy: '',
+  laym: 'nav-chip--laym',
+  sahna: 'nav-chip--sahna',
+  'sahna-matn': 'nav-chip--sahna nav-chip--matn',
+  matn: 'nav-chip--matn',
+};
+---
+<Teg class:list={['nav-chip', turlar[tur], klass]} {...rest}><slot /></Teg>

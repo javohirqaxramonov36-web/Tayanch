@@ -637,3 +637,72 @@
   --login-button-height: 54px;
   --login-backdrop: rgba(0, 0, 0, 0.6);
 }
+
+/* ==========================================================================
+   1-qavat Navigator mini-DS (ADR 005, PR 6 `ds-navigator`, 2026-11-23). Manba: Claude Design artifakti
+   (tokens.json: nav-*, nav-node; qavat-1-navigator.md; bundle.css "1 · Navigator"). Stillar: nav.css.
+   Faqat 1-qavat sahifalarida (html[data-floor="1"]: /uz/, /uz/yol-tanlash/, /uz/hisob/*, /uz/deadline/ va h.k.).
+   Laym (nav-lime) faqat qora sahna ustida yoki fill; yorug' fonda laym ohangli matn nav-lime-text.
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · bloklar (ikkala mavzuda bir xil) */
+  --color-nav-stage:#181818; --color-nav-stage-raised:#303030;
+  --color-nav-paper:#F0F0F0; --color-nav-cream:#EEEED6;
+  --color-nav-on-stage:var(--color-nav-paper); --color-nav-on-stage-muted:#A8A8A8;
+  --color-nav-on-paper:var(--color-nav-stage); --color-nav-on-paper-muted:#5A5A5A;
+  --color-nav-line-on-stage:#6E6E6E;
+  --color-nav-lime:var(--color-floor-navigator-500);
+  --color-nav-on-lime:var(--color-nav-stage);
+  /* Qora sahna ichidagi shisha (poydevor qorong'i shishasi qiymatlari; sahna ikkala mavzuda bir xil) */
+  --color-nav-glass-stage:color-mix(in srgb, var(--color-neutral-0) 7%, transparent);
+  --color-nav-glass-stage-strong:color-mix(in srgb, var(--color-nav-stage-raised) 92%, transparent);
+  --color-nav-glass-stage-border:color-mix(in srgb, var(--color-neutral-0) 14%, transparent);
+  --color-nav-glass-stage-highlight:color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
+  --shadow-nav-glass-stage:inset 0 1px 0 var(--color-nav-glass-stage-highlight);
+
+  /* SEMANTIC · yorug' */
+  --color-nav-bg:var(--color-nav-paper);
+  --color-nav-surface:var(--color-neutral-0);
+  --color-nav-text:var(--color-nav-stage);
+  --color-nav-text-muted:var(--color-nav-on-paper-muted);
+  --color-nav-lime-text:var(--color-floor-navigator-700);
+  --color-nav-line:#C8C8C0;
+  --color-nav-line-strong:#7A7A72;
+
+  /* COMPONENT · o'lcham va tipografiya (Barlow Condensed 700 = --font-display, JetBrains Mono = --font-mono) */
+  --size-nav-node:20px; --size-nav-node-hozir:28px; --size-nav-burchak:12px;
+  --text-nav-raqam-size:72px; --text-nav-raqam-lh:0.9; --text-nav-raqam-ls:-0.01em;
+  --text-nav-sarlavha-size:28px; --text-nav-sarlavha-lh:1; --text-nav-sarlavha-ls:0.01em;
+  --text-nav-hero-size:56px; --text-nav-hero-lh:0.95;
+  --text-nav-yorliq-size:12px; --text-nav-yorliq-lh:16px; --text-nav-yorliq-ls:0.08em;
+  --text-nav-kod-size:13px; --text-nav-kod-lh:20px;
+  /* Qora sahnadagi nur dog'i: nav-on-stage nur markazida 4.5:1 dan past tushmasligi uchun xiraroq */
+  --fon-nur-opacity-nav:0.5; --fon-nur-opacity-past-nav:0.35;
+}
+:root[data-mavzu='qorongi']{
+  --color-nav-bg:var(--color-nav-stage);
+  --color-nav-surface:var(--color-nav-stage-raised);
+  --color-nav-text:var(--color-nav-paper);
+  --color-nav-text-muted:var(--color-nav-on-stage-muted);
+  --color-nav-lime-text:var(--color-floor-navigator-400);
+  --color-nav-line:#3C3C3C;
+  --color-nav-line-strong:#6E6E6E;
+}
+@media (min-width: 640px){
+  :root{ --text-nav-raqam-size:96px; --text-nav-sarlavha-size:32px; }
+}
+@media (min-width: 720px){
+  :root{ --text-nav-hero-size:88px; }
+}
+/* 1-qavat sahifasi: poydevor fon, sirt va matn tokenlari nav-* qiymatga o'tadi (studio foni o'rniga nav-bg).
+   html:root (0,2,1) mavzu qoidasidan ((0,2,0)) ustun. Eski taxalluslar (--fon, --sirt, --matn) :root da
+   shu tokenlardan olingani uchun ular ham o'zgaradi. */
+html:root[data-floor="1"]{
+  --color-bg:var(--color-nav-bg);
+  --color-bg-deep:var(--color-nav-bg);
+  --color-surface:var(--color-nav-surface);
+  --color-text-primary:var(--color-nav-text);
+  --color-text-secondary:var(--color-nav-text-muted);
+  --color-border:var(--color-nav-line);
+  --color-border-strong:var(--color-nav-line-strong);
+}

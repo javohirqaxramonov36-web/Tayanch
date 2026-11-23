@@ -1,0 +1,215 @@
+/* 1-qavat Navigator mini-DS (ADR 005, PR 6, 2026-11-23). Manba: Claude Design artifakti,
+   components/bundle.css "1 · Navigator" bloki (NavYorliq, NavRaqam, NavRamka, NavYol).
+   Tokenlar tokens.css ("1-qavat Navigator mini-DS"), qoidalar DESIGN.md "Qavat mini-DS'lari".
+   Asosiy qolipi import qiladi; sinflar faqat 1-qavat sahifalarida ishlatiladi.
+   Saytga moslash:
+   - DS nomlari repo nomlariga: --nav-stage → --color-nav-stage, --nav-node → --size-nav-node va h.k.
+   - Poydevor sinflari (.t-fon, .t-shisha, .t-tugma) qayta ishlatiladi: qora sahna ular o'qiydigan
+     tokenlarni o'z qiymatiga almashtiradi (SAT .sat-sahna kabi).
+   - Harakat sayt qoidasi bo'yicha: rang va chegara darhol, faqat transform (--bosilish).
+   - Laym faqat sahnada yoki fill (ustida nav-on-lime). Yorug' fonda laym matn yoki chiziq bo'lmaydi. */
+
+/* ---------- 1-qavat sahifasi: sarlavha shrifti ---------- */
+[data-floor="1"] main h1 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--text-nav-sarlavha-ls);
+  text-transform: uppercase;
+}
+
+/* ---------- Qora sahna: ikkala mavzuda bir xil ---------- */
+.nav-sahna {
+  --nur: var(--color-floor-navigator-glow);
+  --fon-nur-opacity: var(--fon-nur-opacity-nav);
+  --fon-nur-opacity-past: var(--fon-nur-opacity-past-nav);
+  /* Poydevor tokenlari sahna ichida qora qiymatga o'tadi (.t-shisha, .t-tugma, fokus, havola) */
+  --color-glass-bg: var(--color-nav-glass-stage);
+  --color-glass-bg-strong: var(--color-nav-glass-stage-strong);
+  --color-glass-border: var(--color-nav-glass-stage-border);
+  --color-glass-highlight: var(--color-nav-glass-stage-highlight);
+  --shadow-glass: var(--shadow-nav-glass-stage);
+  --color-text-primary: var(--color-nav-on-stage);
+  --color-text-secondary: var(--color-nav-on-stage-muted);
+  --color-surface: var(--color-nav-stage-raised);
+  --color-border: var(--color-nav-line-on-stage);
+  --btn-secondary-border: var(--color-nav-line-on-stage);
+  --color-link: var(--color-nav-on-stage);
+  --color-focus-ring: var(--color-nav-lime);
+  --color-focus-gap: var(--color-nav-stage);
+  color-scheme: dark;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  background: var(--color-nav-stage);
+  color: var(--color-nav-on-stage);
+}
+/* clip: .t-fon dagi hidden kabi kesadi, lekin skript (scrollIntoView, fokus) sahnani ichidan sura olmaydi */
+.nav-sahna.t-fon { overflow: clip; background: var(--color-nav-stage); }
+.nav-sahna a:not(.t-tugma) { color: var(--color-nav-on-stage); text-decoration: underline; text-underline-offset: 0.2em; }
+.nav-qogoz,
+.nav-krem {
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  color: var(--color-nav-on-paper);
+  /* Qog'oz va krem ikkala mavzuda yorug': ichidagi poydevor matni ham qora */
+  --color-text-primary: var(--color-nav-on-paper);
+  --color-text-secondary: var(--color-nav-on-paper-muted);
+  color-scheme: light;
+}
+.nav-qogoz { background: var(--color-nav-paper); }
+.nav-krem { background: var(--color-nav-cream); }
+@media (min-width: 640px) {
+  .nav-sahna, .nav-qogoz, .nav-krem { padding: var(--space-12); }
+}
+
+/* ---------- NavYorliq: mono yorliq ---------- */
+.nav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width-1) solid var(--color-nav-line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-nav-text-muted);
+  font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono);
+  letter-spacing: var(--text-nav-yorliq-ls);
+  text-transform: uppercase;
+}
+.nav-chip[hidden] { display: none; }
+.nav-chip--laym { border-color: var(--color-nav-lime); background: var(--color-nav-lime); color: var(--color-nav-on-lime); }
+.nav-chip--sahna { border-color: var(--color-nav-line-on-stage); color: var(--color-nav-on-stage-muted); }
+.nav-chip--matn { border: 0; padding-inline: 0; }
+
+/* ---------- NavRaqam: katta raqam va nom ---------- */
+.nav-raqam-blok { display: grid; gap: var(--space-2); margin: 0; }
+.nav-num {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-nav-raqam-size);
+  line-height: var(--text-nav-raqam-lh);
+  letter-spacing: var(--text-nav-raqam-ls);
+  font-variant-numeric: tabular-nums;
+}
+.nav-num--laym { color: var(--color-nav-lime); }
+.nav-nom {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-nav-sarlavha-size);
+  line-height: var(--text-nav-sarlavha-lh);
+  letter-spacing: var(--text-nav-sarlavha-ls);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.nav-hero {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-nav-hero-size);
+  line-height: var(--text-nav-hero-lh);
+  letter-spacing: var(--text-nav-sarlavha-ls);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* ---------- NavRamka: burchak qavsli karta (faqat sahnada, yo'l yoki raqam yonida) ---------- */
+.nav-ramka {
+  position: relative;
+  padding: var(--space-4);
+  border-radius: var(--radius-none);
+  background: var(--color-nav-stage-raised);
+  color: var(--color-nav-on-stage);
+}
+.nav-ramka::before,
+.nav-ramka::after {
+  content: '';
+  position: absolute;
+  width: var(--size-nav-burchak);
+  height: var(--size-nav-burchak);
+  border: 0 solid var(--color-nav-on-stage-muted);
+  pointer-events: none;
+}
+.nav-ramka::before { left: calc(-1 * var(--border-width-1)); top: calc(-1 * var(--border-width-1)); border-left-width: var(--border-width-2); border-top-width: var(--border-width-2); }
+.nav-ramka::after { right: calc(-1 * var(--border-width-1)); bottom: calc(-1 * var(--border-width-1)); border-right-width: var(--border-width-2); border-bottom-width: var(--border-width-2); }
+.nav-ramka-sarlavha {
+  margin: 0 0 var(--space-2);
+  color: var(--color-nav-lime);
+  font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono);
+  letter-spacing: var(--text-nav-yorliq-ls);
+  text-transform: uppercase;
+}
+.nav-ramka-sarlavha::before { content: '// '; }
+.nav-ramka-royxat { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-1); }
+.nav-ramka-royxat li { color: var(--color-nav-on-stage-muted); font: var(--font-weight-regular) var(--text-nav-kod-size) / var(--text-nav-kod-lh) var(--font-mono); }
+.nav-ramka-royxat li::before { content: '> '; }
+
+/* ---------- NavYol: vertikal yo'l, tugunlar va katta raqamlar (sahnada) ---------- */
+.nav-yol { list-style: none; margin: 0; padding: 0; display: grid; }
+.nav-qadam {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--space-10) minmax(0, 1fr);
+  column-gap: var(--space-4);
+  row-gap: var(--space-4);
+  padding-bottom: var(--space-8);
+}
+.nav-qadam:last-child { padding-bottom: 0; }
+/* Yo'l chizig'i: tugun markazidan keyingi tugungacha */
+.nav-qadam::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--space-10) / 2 - var(--border-width-1));
+  top: var(--size-nav-node-hozir);
+  bottom: calc(-1 * var(--space-1));
+  width: var(--border-width-2);
+  background: var(--color-nav-line-on-stage);
+}
+.nav-qadam:last-child::before { display: none; }
+.nav-qadam[data-holat='bajarildi']::before { background: var(--color-nav-lime); }
+.nav-tugun {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  box-sizing: border-box;
+  width: var(--size-nav-node);
+  height: var(--size-nav-node);
+  margin-top: var(--space-1);
+  display: grid;
+  place-items: center;
+  border: var(--border-width-2) solid var(--color-nav-line-on-stage);
+  border-radius: var(--radius-full);
+  background: var(--color-nav-stage);
+  color: var(--color-nav-on-lime);
+}
+.nav-tugun svg { width: var(--space-3); height: var(--space-3); }
+.nav-qadam[data-holat='bajarildi'] .nav-tugun { border-color: var(--color-nav-lime); background: var(--color-nav-lime); }
+.nav-qadam[data-holat='hozir'] .nav-tugun {
+  width: var(--size-nav-node-hozir);
+  height: var(--size-nav-node-hozir);
+  margin-top: 0;
+  border-color: var(--color-nav-lime);
+  background: var(--color-nav-lime);
+  box-shadow: 0 0 0 var(--space-1) var(--color-nav-stage), 0 0 0 calc(var(--space-1) + var(--border-width-2)) var(--color-nav-lime);
+}
+.nav-qadam-asos { grid-column: 2; display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
+.nav-qadam-asos .nav-chip { justify-self: start; }
+.nav-qadam[data-holat='keyin'] .nav-num { color: var(--color-nav-on-stage-muted); }
+.nav-qadam[data-holat='hozir'] .nav-num { color: var(--color-nav-lime); }
+.nav-qadam .nav-ramka { grid-column: 2; }
+.nav-qadam-yorliqlar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.nav-qadam-izoh { margin: 0; color: var(--color-nav-on-stage-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+.nav-qadam a.nav-nom { color: var(--color-nav-on-stage); text-decoration: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: 0.12em; }
+@media (min-width: 720px) {
+  .nav-qadam { column-gap: var(--space-8); padding-bottom: var(--space-12); }
+  .nav-qadam:has(.nav-ramka) { grid-template-columns: var(--space-10) minmax(0, 1fr) minmax(0, 1fr); }
+  .nav-qadam .nav-ramka { grid-column: 3; grid-row: 1; align-self: start; margin-top: var(--space-2); }
+}
+
+/* ---------- Zaxira: shaffoflik kamaytirilgan yoki yuqori kontrast (sahnada tekis ko'tarilgan sirt) ---------- */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .nav-sahna .t-shisha,
+  .nav-sahna .t-shisha--zich { border-color: var(--color-nav-line-on-stage); background: var(--color-nav-stage-raised); }
+}

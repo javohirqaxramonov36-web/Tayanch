@@ -13,7 +13,7 @@ import { yol } from '../../../../lib/yol';
       <div id="obuna-kontent" hidden>
         <section aria-labelledby="qavat-sarlavha">
           <h2 id="qavat-sarlavha">Qavat obunalari</h2>
-          <ul class="obuna-royxat">{bolimlar.map(b => <li class="hisob-karta" data-obuna-bolim={b.slug}>
+          <ul class="obuna-royxat">{bolimlar.map(b => <li class="hisob-karta t-shisha t-shisha--zich" data-obuna-bolim={b.slug}>
             <h3>{b.nomi}</h3><p data-obuna-tarif></p><p data-obuna-muddat hidden></p>
             {b.slug === 'sat' && <a href={yol('/uz/sat/hisob/obuna/')}>Tarifni o‘zgartirish</a>}
           </li>)}</ul>

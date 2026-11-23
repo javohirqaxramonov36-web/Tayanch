@@ -3,7 +3,7 @@ import { bepulImkoniyatlar } from '../data/boshSahifa';
 import { yol } from '../lib/yol';
 ---
 <section class="home-pricing" aria-labelledby="tarif-h">
-  <p class="tarif-label">TARIFLAR</p><h2 id="tarif-h">O'zingizga mos tarifni tanlang</h2>
+  <p class="nav-chip tarif-label">Tariflar</p><h2 id="tarif-h" class="nav-nom">O'zingizga mos tarifni tanlang</h2>
   <div class="tarif-cards">
     <article class="tarif-card"><h3>Bepul</h3><p class="tarif-price">0 so'm</p>
       <ul>{bepulImkoniyatlar.map((x) => <li>{x}</li>)}</ul>
@@ -13,7 +13,7 @@ import { yol } from '../lib/yol';
       <p class="tarif-price" data-home-price>[TO'LDIRING: Pro narxi va davri]</p>
       <p class="tarif-day" data-home-day></p>
       <ul data-home-features><li>[TO'LDIRING: Pro imkoniyatlari]</li></ul>
-      <button type="button" class="tarif-button" data-home-pro disabled>Pro bilan boshlash</button>
+      <button type="button" class="t-tugma tarif-tugma" data-home-pro disabled>Pro bilan boshlash</button>
       <p class="tarif-status" data-home-price-status role="status">Amaldagi tarif tekshirilmoqda.</p>
     </article>
   </div>
@@ -76,19 +76,20 @@ import { yol } from '../lib/yol';
   });
 </script>
 <style>
-  .home-pricing { padding-block: var(--space-8) var(--space-12); }
-  .tarif-label { color: var(--color-link); font-size: var(--text-caption-size); font-weight: 700; letter-spacing: var(--text-caption-ls); }
-  .tarif-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-8); }
+  .home-pricing { padding-block: 0 var(--space-12); }
+  /* 1-qavat Navigator mini-DS: yorliq NavYorliq (.nav-chip), sarlavha .nav-nom, bitta urg'u (laym, faqat sahnada) */
+  .home-pricing { display: grid; gap: var(--space-3); justify-items: start; }
+  .tarif-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-5); justify-self: stretch; }
   .tarif-card { position: relative; display: flex; flex-direction: column; padding: var(--space-8); gap: var(--space-4); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); }
   .tarif-card p { margin: 0; }
-  .tarif-card.pro { border: var(--border-width-2) solid var(--header-accent); padding-top: var(--space-14); }
-  .tarif-strip { position: absolute; inset: 0 0 auto; text-align: center; padding: var(--space-2); border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--header-accent); color: var(--color-neutral-0); font-size: var(--text-small-size); font-weight: 700; }
+  .tarif-card.pro { border: var(--border-width-2) solid var(--color-nav-stage); padding-top: var(--space-14); }
+  .tarif-strip { position: absolute; inset: 0 0 auto; text-align: center; padding: var(--space-2); border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--color-nav-stage); color: var(--color-nav-on-stage); font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; }
   .tarif-price { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: 800; min-height: calc(var(--text-h2-lh) * 2); }
   .tarif-day { min-height: var(--text-small-lh); }
   .tarif-day, .tarif-status, .tarif-scope { color: var(--color-text-secondary); font-size: var(--text-small-size); }
   .tarif-card ul { margin: 0 0 var(--space-4); padding-left: var(--space-5); display: grid; gap: var(--space-3); }
   .tarif-button { display: flex; align-items: center; justify-content: center; min-height: var(--space-12); margin-top: auto; padding: var(--space-3); border: var(--border-width-1) solid var(--color-border); border-radius: var(--home-button-radius); background: var(--color-surface-sunken); color: var(--color-text-primary); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
-  .pro .tarif-button { background: var(--header-accent); color: var(--color-neutral-0); }
+  .tarif-tugma { width: 100%; margin-top: auto; }
   .tarif-button:disabled { opacity: var(--opacity-muted); cursor: default; }
   @media (width < 768px) { .tarif-cards { grid-template-columns: 1fr; } .tarif-card { padding: var(--space-6); } }
 </style>

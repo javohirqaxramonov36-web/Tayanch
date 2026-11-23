@@ -1,11 +1,23 @@
 ---
+// 1-qavat · Yo'l tanlash: Navigator mini-DS (nav.css). Hero qora sahnada (.nav-sahna + .t-fon laym nuri),
+// "Mening yo'lim" bloki YolXaritasi (NavRamka + NavYol). Onboarding <dialog> va tayanch:navigator-yol:v1 o'zgarmagan.
 import Asosiy from '../../../layouts/Asosiy.astro';
 import YolBelgisi from '../../../components/navigator/YolBelgisi.astro';
 import YolXaritasi from '../../../components/navigator/YolXaritasi.astro';
+import NavYorliq from '../../../components/navigator/NavYorliq.astro';
 ---
 <Asosiy title="Yo'l tanlash" description="Uch savolga javob berib, o'z yo'lingizni tanlang." turi="vosita" bolim="umumiy" holat="chop-etilgan" sahifaOxiri={false}>
   <YolBelgisi slot="bosh" />
-  <section class="ichki tanlash"><h1>Yo'lingizni tanlang</h1><button type="button" class="tugma tugma-asosiy" data-boshlash="hero" aria-haspopup="dialog">3 savolga javob bering →</button></section>
+  <section class="ichki tanlash-orami" aria-labelledby="tanlash-h">
+    <div class="nav-sahna t-fon tanlash">
+      <NavYorliq tur="sahna">01 · Navigator</NavYorliq>
+      <h1 id="tanlash-h" class="nav-hero">Yo'lingizni tanlang</h1>
+      <button type="button" class="t-tugma" data-boshlash="hero" aria-haspopup="dialog">3 savolga javob bering →</button>
+    </div>
+  </section>
   <YolXaritasi />
 </Asosiy>
-<style>.tanlash { display: grid; gap: var(--space-5); padding-block: var(--space-8); justify-items: start; }</style>
+<style>
+  .tanlash-orami { padding-block: var(--space-6) 0; }
+  .tanlash { display: grid; gap: var(--space-6); justify-items: start; }
+</style>
