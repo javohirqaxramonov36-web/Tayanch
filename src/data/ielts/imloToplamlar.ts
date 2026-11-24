@@ -25,9 +25,9 @@ export const imloToplamlar: ImloToplam[] = [
   {
     id: 'sanalar',
     nomi: 'Kunlar va oylar',
-    tavsif: "Sana, kun va vaqt so'zlari",
+    tavsif: "Sana, kun va vaqt soʻzlari",
     sozlar: [
-      { soz: 'Wednesday', tarjima: 'chorshanba', maslahat: "O'rtadagi d eshitilmaydi: Wed-nes-day." },
+      { soz: 'Wednesday', tarjima: 'chorshanba', maslahat: "Oʻrtadagi d eshitilmaydi: Wed-nes-day." },
       { soz: 'February', tarjima: 'fevral', maslahat: 'Birinchi r ko\'pincha eshitilmaydi: Feb-ru-ary.' },
       { soz: 'Thursday', tarjima: 'payshanba' },
       { soz: 'September', tarjima: 'sentabr' },
@@ -41,14 +41,14 @@ export const imloToplamlar: ImloToplam[] = [
   },
   {
     id: 'pul',
-    nomi: "Pul va to'lov",
-    tavsif: "Bank, narx va to'lov so'zlari",
+    nomi: "Pul va toʻlov",
+    tavsif: "Bank, narx va toʻlov soʻzlari",
     sozlar: [
       { soz: 'cheque', variantlar: ['check'], tarjima: 'chek (bank cheki)', maslahat: 'Britancha cheque, amerikancha check.' },
-      { soz: 'deposit', tarjima: "oldindan to'lov, omonat" },
+      { soz: 'deposit', tarjima: "oldindan toʻlov, omonat" },
       { soz: 'receipt', tarjima: 'kvitansiya, chek', maslahat: 'p yoziladi, lekin eshitilmaydi: re-ceipt.' },
       { soz: 'discount', tarjima: 'chegirma' },
-      { soz: 'instalment', variantlar: ['installment'], tarjima: "bo'lib to'lashning bir qismi", maslahat: 'Britancha bitta l (instalment), amerikancha ikkita (installment).' },
+      { soz: 'instalment', variantlar: ['installment'], tarjima: "boʻlib toʻlashning bir qismi", maslahat: 'Britancha bitta l (instalment), amerikancha ikkita (installment).' },
       { soz: 'salary', tarjima: 'maosh' },
       { soz: 'refund', tarjima: 'pulni qaytarish' },
       { soz: 'insurance', tarjima: "sug'urta", maslahat: 'Oxiri -ance.' },
@@ -58,7 +58,7 @@ export const imloToplamlar: ImloToplam[] = [
   },
   {
     id: 'oqish',
-    nomi: "O'qish va universitet",
+    nomi: "Oʻqish va universitet",
     tavsif: "Kurs, dars va talabalar hayoti",
     sozlar: [
       { soz: 'library', tarjima: 'kutubxona', maslahat: 'Ikkita r: li-bra-ry.' },
@@ -75,8 +75,8 @@ export const imloToplamlar: ImloToplam[] = [
   },
   {
     id: 'joylar',
-    nomi: "Joylar va yo'nalish",
-    tavsif: "Shahar, bino va yo'l so'zlari",
+    nomi: "Joylar va yoʻnalish",
+    tavsif: "Shahar, bino va yoʻl soʻzlari",
     sozlar: [
       { soz: 'centre', variantlar: ['center'], tarjima: 'markaz', maslahat: 'Britancha -re (centre), amerikancha -er (center).' },
       { soz: 'theatre', variantlar: ['theater'], tarjima: 'teatr', maslahat: 'Britancha -re (theatre), amerikancha -er (theater).' },
@@ -92,7 +92,7 @@ export const imloToplamlar: ImloToplam[] = [
   },
   {
     id: 'kundalik',
-    nomi: "Sog'liq va kundalik hayot",
+    nomi: "Sogʻliq va kundalik hayot",
     tavsif: "Shifokor, ish va xizmatlar",
     sozlar: [
       { soz: 'appointment', tarjima: 'uchrashuv vaqti, qabul', maslahat: 'Ikkita p: ap-point-ment.' },
@@ -100,7 +100,7 @@ export const imloToplamlar: ImloToplam[] = [
       { soz: 'colleague', tarjima: 'hamkasb', maslahat: 'Ikkita l, oxiri -gue.' },
       { soz: 'questionnaire', tarjima: "so'rovnoma", maslahat: 'Ikkita n: question-naire.' },
       { soz: 'programme', variantlar: ['program'], tarjima: 'dastur', maslahat: 'Britancha programme, amerikancha program (kompyuter dasturi britanchada ham program).' },
-      { soz: 'equipment', tarjima: 'jihozlar', maslahat: "Ko'plik -s qo'shilmaydi." },
+      { soz: 'equipment', tarjima: 'jihozlar', maslahat: "Koʻplik -s qoʻshilmaydi." },
       { soz: 'environment', tarjima: 'atrof-muhit', maslahat: 'n eshitilmay qolishi mumkin: envi-ron-ment.' },
       { soz: 'necessary', tarjima: 'zarur', maslahat: 'Bitta c, ikkita s: ne-ces-sa-ry.' },
       { soz: 'guarantee', tarjima: 'kafolat', maslahat: 'u eshitilmaydi: gu-a-ran-tee.' },

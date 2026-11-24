@@ -66,7 +66,7 @@ const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
 
   <div slot="animatsiya">
     <p>The point moves along the circle from 0° to 360°. The lengths of the blue segment (cos) and the black segment (sin) change, and their signs change when the quadrant changes.</p>
-    <div class="segment"><button type="button" class="katta asosiy" id="anim-boshla">Rotate</button></div>
+    <div class="segment"><button type="button" class="t-tugma sat-tugma--kok" id="anim-boshla">Rotate</button></div>
     <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Press the button.</span></div>
   </div>
 
@@ -93,7 +93,7 @@ const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
       </div>
       <div class="slayder"><label for="a-theta">θ</label><input type="range" id="a-theta" min="0" max="359" step="1" value="30" /><output for="a-theta" id="a-theta-o">30°</output></div>
       <div class="segment" role="group" aria-label="Special angles">
-        {maxsus.map((g) => <button type="button" class="kichik-tugma" data-burchak={g}>{g}°</button>)}
+        {maxsus.map((g) => <button type="button" class="t-tugma t-tugma--ikkinchi" data-burchak={g}>{g}°</button>)}
       </div>
     </div>
     <dl class="qiymatlar" id="a-qiymatlar"></dl>
@@ -243,16 +243,16 @@ const maxsus = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270];
 
 <style is:global>
   .dars .aylana-quti svg { touch-action: pan-y; }
-  .dars .a-oq { stroke: var(--matn-sust); stroke-width: 1.5; }
-  .dars .a-aylana { fill: none; stroke: var(--matn); stroke-width: 2; }
-  .dars .a-raqam, .dars .a-chorak { fill: var(--matn-ikkinchi); font-size: 13px; font-weight: 700; font-family: var(--shrift); }
-  .dars .a-chorak { font-size: 15px; }
-  .dars .a-radius { stroke: var(--matn-sust); stroke-width: 2; }
-  .dars .a-cos { stroke: var(--rang-havola); stroke-width: 6; stroke-linecap: round; }
-  .dars .a-sin { stroke: var(--matn); stroke-width: 6; stroke-linecap: round; }
-  .dars .a-yoy { fill: none; stroke: var(--matn-sust); stroke-width: 2; }
-  .dars .a-yozuv { fill: var(--matn); font-size: 15px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 5px; }
-  .dars .a-kichik { font-size: 12px; }
-  .dars .g-tutqich circle:not(.g-hit) { fill: var(--rang-asosiy); stroke: var(--fon); stroke-width: 3; }
+  .dars .a-oq { stroke: var(--color-sat-text-muted); stroke-width: 1.5; }
+  .dars .a-aylana { fill: none; stroke: var(--color-sat-text); stroke-width: 2; }
+  .dars .a-raqam, .dars .a-chorak { fill: var(--color-sat-text-muted); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); font-family: var(--shrift); }
+  .dars .a-chorak { font-size: var(--text-small-size); }
+  .dars .a-radius { stroke: var(--color-sat-text-muted); stroke-width: 2; }
+  .dars .a-cos { stroke: var(--color-sat-blue-text); stroke-width: 6; stroke-linecap: round; }
+  .dars .a-sin { stroke: var(--color-sat-text); stroke-width: 6; stroke-linecap: round; }
+  .dars .a-yoy { fill: none; stroke: var(--color-sat-text-muted); stroke-width: 2; }
+  .dars .a-yozuv { fill: var(--color-sat-text); font-size: var(--text-small-size); font-weight: var(--font-weight-extrabold); font-family: var(--shrift); paint-order: stroke; stroke: var(--color-sat-sunken); stroke-width: 5px; }
+  .dars .a-kichik { font-size: var(--text-caption-size); }
+  .dars .g-tutqich circle:not(.g-hit) { fill: var(--color-sat-blue-fill); stroke: var(--color-sat-surface); stroke-width: 3; }
   .dars .g-hit { fill: transparent; }
 </style>

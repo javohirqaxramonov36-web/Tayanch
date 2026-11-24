@@ -17,7 +17,7 @@ const paragraflar = [
     ],
     asosiy: [0],
     togri: 2,
-    izoh: "Birinchi gap asosiy fikr: butun shahar soatga qarab yashagan. Ikkinchi gap buni misollar bilan ko'rsatadi.",
+    izoh: "Birinchi gap asosiy fikr: butun shahar soatga qarab yashagan. Ikkinchi gap buni misollar bilan koʻrsatadi.",
   },
   {
     harf: 'B',
@@ -27,7 +27,7 @@ const paragraflar = [
     ],
     asosiy: [0, 1],
     togri: 3,
-    izoh: "\"However\" o'zgarishni bildiradi: soat endi kerak emas. Ikkala gap birga shu fikrni beradi.",
+    izoh: "\"However\" oʻzgarishni bildiradi: soat endi kerak emas. Ikkala gap birga shu fikrni beradi.",
   },
   {
     harf: 'C',
@@ -87,7 +87,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
 >
   <div slot="sahna">
     <div class="sahna-quti ir-quti">
-      <p class="ir-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi">O'ylab topilgan matn</span></p>
+      <p class="ir-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi">Oʻylab topilgan matn</span></p>
       <div class="ir-paragraflar" id="ir-paragraflar" role="group" aria-label="Paragraflar">
         {paragraflar.map((p, k) => (
           <button type="button" class="ir-paragraf" data-bolak={k} aria-pressed="false">
@@ -115,28 +115,28 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
   </div>
 
   <div slot="animatsiya">
-    <p>A paragraf namuna: imtihonda ham ba'zan bitta paragraf oldindan moslangan bo'ladi. Sahnada asosiy fikr gapi tagchiziq bilan, mos sarlavha ko'k fon bilan belgilangan.</p>
+    <p>A paragraf namuna: imtihonda ham baʼzan bitta paragraf oldindan moslangan boʻladi. Sahnada asosiy fikr gapi tagchiziq bilan, mos sarlavha koʻk fon bilan belgilangan.</p>
     <div class="formula"><span class="kichik ikkinchi">Nega</span><span class="f-qiymat ir-qoida" id="ir-misol-izoh">{paragraflar[0].izoh}</span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">O'zim moslayman</button></div>
+    <div class="segment"><button type="button" class="t-tugma ielts-tugma--urgu" data-qadamga="sinab">Oʻzim moslayman</button></div>
   </div>
 
   <div slot="formula">
     <dl class="ir-qoidalar">
       <div><dt>Asosiy fikr</dt><dd>Paragrafning hamma gapi shu fikrga xizmat qiladi. Sarlavha uni qamraydi.</dd></div>
-      <div><dt>Detal</dt><dd>Bitta misol, son yoki tafsilot. U asosiy fikrni ko'rsatadi, lekin o'zi sarlavha emas.</dd></div>
-      <div><dt>Kalit so'z tuzog'i</dt><dd>Paragrafdagi so'z sarlavhada bor, lekin ma'no boshqa.</dd></div>
+      <div><dt>Detal</dt><dd>Bitta misol, son yoki tafsilot. U asosiy fikrni koʻrsatadi, lekin oʻzi sarlavha emas.</dd></div>
+      <div><dt>Kalit soʻz tuzogʻi</dt><dd>Paragrafdagi soʻz sarlavhada bor, lekin maʼno boshqa.</dd></div>
       <div><dt>Juda keng</dt><dd>Mavzu umumiy, paragraf esa uning bitta holati haqida.</dd></div>
     </dl>
   </div>
 
   <div slot="sinab">
     <div class="vazifa">
-      <p><b>Vazifa.</b> A paragraf namuna. B va C uchun: sahnada paragrafni bosing, keyin unga mos sarlavhani bosing. Bitta sarlavha faqat bitta paragrafga beriladi. Hammasi tayyor bo'lsa, tekshiring.</p>
+      <p><b>Vazifa.</b> A paragraf namuna. B va C uchun: sahnada paragrafni bosing, keyin unga mos sarlavhani bosing. Bitta sarlavha faqat bitta paragrafga beriladi. Hammasi tayyor boʻlsa, tekshiring.</p>
       <p class="vazifa-holat" id="ir-sinab-holat" aria-live="polite">Hali biriktirilmagan.</p>
     </div>
     <div class="segment">
-      <button type="button" class="katta asosiy" id="ir-tekshir">Tekshirish</button>
-      <button type="button" class="kichik-tugma" id="ir-qayta">Qayta boshlash</button>
+      <button type="button" class="t-tugma ielts-tugma--urgu" id="ir-tekshir">Tekshirish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="ir-qayta">Qayta boshlash</button>
     </div>
   </div>
 </DarsQolip>
@@ -251,40 +251,40 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
 </script>
 
 <style is:global>
-  .ir-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
-  .ir-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .ir-paragraflar { display: flex; flex-direction: column; gap: var(--b-3); }
+  .ir-quti { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+  .ir-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .ir-paragraflar { display: flex; flex-direction: column; gap: var(--space-3); }
   .ir-paragraf {
-    display: flex; flex-direction: column; gap: var(--b-2); width: 100%; text-align: left;
-    padding: var(--b-3) var(--b-4); min-height: 48px;
-    background: var(--fon); color: var(--matn); font: inherit; cursor: pointer;
-    border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-orta);
+    display: flex; flex-direction: column; gap: var(--space-2); width: 100%; text-align: left;
+    padding: var(--space-3) var(--space-4); min-height: 48px;
+    background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; cursor: pointer;
+    border: 2px solid var(--color-ielts-line); border-radius: var(--radius-md);
   }
-  @media (hover: hover) and (pointer: fine) { .ir-paragraf:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
+  @media (hover: hover) and (pointer: fine) { .ir-paragraf:hover:not(:disabled) { border-color: var(--color-ielts-accent-text); } }
   .ir-paragraf:focus-visible, .ir-sarlavha:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .ir-paragraf[aria-pressed='true'] { border-color: var(--rang-asosiy); box-shadow: inset 4px 0 0 var(--rang-asosiy); }
+  .ir-paragraf[aria-pressed='true'] { border-color: var(--color-ielts-accent-text); box-shadow: inset 4px 0 0 var(--color-ielts-accent-text); }
   .ir-paragraf:disabled { cursor: default; }
-  .ir-paragraf.ir-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
-  .ir-paragraf.ir-xato { border-style: dashed; border-color: var(--matn); }
-  .ir-p-bosh { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .ir-harf { width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--r-logo); background: var(--matn); color: var(--fon); font-weight: 800; font-size: var(--matn-kichik); }
-  .ir-biriktirilgan { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+  .ir-paragraf.ir-togri { background: var(--color-ielts-tile); border-color: var(--color-ielts-accent-text); }
+  .ir-paragraf.ir-xato { border-style: dashed; border-color: var(--color-ielts-text); }
+  .ir-p-bosh { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .ir-harf { width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--color-ielts-text); color: var(--color-ielts-bg); font-weight: var(--font-weight-extrabold); font-size: var(--text-small-size); }
+  .ir-biriktirilgan { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); }
   .ir-p-matn { line-height: 1.6; }
-  .ir-gap.ir-asosiy { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; font-weight: 600; }
-  .ir-s-royxat { list-style: none; margin: var(--b-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
+  .ir-gap.ir-asosiy { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; font-weight: var(--font-weight-semibold); }
+  .ir-s-royxat { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
   .ir-sarlavha {
-    display: flex; align-items: center; gap: var(--b-3); width: 100%; min-height: 48px; padding: var(--b-2) var(--b-4); text-align: left;
-    background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer;
-    border: 2px solid var(--chiziq-kuchli); border-radius: var(--r-toliq);
+    display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 48px; padding: var(--space-2) var(--space-4); text-align: left;
+    background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; font-weight: var(--font-weight-bold); cursor: pointer;
+    border: 2px solid var(--color-ielts-line); border-radius: var(--radius-full);
   }
-  @media (hover: hover) and (pointer: fine) { .ir-sarlavha:hover:not(:disabled) { border-color: var(--rang-asosiy); } }
-  .ir-sarlavha[aria-pressed='true'] { border-color: var(--rang-asosiy); }
+  @media (hover: hover) and (pointer: fine) { .ir-sarlavha:hover:not(:disabled) { border-color: var(--color-ielts-accent-text); } }
+  .ir-sarlavha[aria-pressed='true'] { border-color: var(--color-ielts-accent-text); }
   .ir-sarlavha:disabled { cursor: default; }
-  .ir-sarlavha.ir-togri { background: var(--rang-asosiy-och); border-color: var(--rang-asosiy); }
-  .ir-rim { min-width: 32px; font-weight: 800; color: var(--rang-havola); }
-  .dars .ir-qoida { font-size: 16px; font-weight: 600; line-height: 1.5; }
-  .ir-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .ir-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
-  .ir-qoidalar dt { font-weight: 800; }
-  .ir-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+  .ir-sarlavha.ir-togri { background: var(--color-ielts-tile); border-color: var(--color-ielts-accent-text); }
+  .ir-rim { min-width: 32px; font-weight: var(--font-weight-extrabold); color: var(--color-link); }
+  .dars .ir-qoida { font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); line-height: 1.5; }
+  .ir-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .ir-qoidalar div { background: var(--color-ielts-tile); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .ir-qoidalar dt { font-weight: var(--font-weight-extrabold); }
+  .ir-qoidalar dd { margin: 0; line-height: 1.5; color: var(--color-ielts-text-muted); }
 </style>

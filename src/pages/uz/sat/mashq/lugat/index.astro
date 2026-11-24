@@ -97,8 +97,8 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
             <button type="button" class="dumaloq" id="oldingi" aria-label="Previous card">
               <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
             </button>
-            <button type="button" class="tugma-l chiziqli" id="bilmayman">Still learning</button>
-            <button type="button" class="tugma-l kok" id="bilaman">I know it</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" id="bilmayman">Still learning</button>
+            <button type="button" class="t-tugma sat-tugma--kok" id="bilaman">I know it</button>
             <button type="button" class="dumaloq" id="keyingi" aria-label="Next card">
               <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
             </button>
@@ -119,7 +119,7 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
             <p class="ustki-yorliq">Words</p>
             <ul id="sozlar"></ul>
           </div>
-          <button type="button" class="tugma-l ikkinchi" id="bilmaganga">
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="bilmaganga">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></svg>
             Go to a word I don't know
           </button>
@@ -129,7 +129,7 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
       <div class="bosh-holat sat-panel" id="karta-bosh" hidden>
         <h2 class="bosh-sarlavha" id="karta-bosh-sarlavha" tabindex="-1">Nothing to review right now</h2>
         <p class="bosh-matn" id="karta-bosh-matn"></p>
-        <button type="button" class="kichik-tugma" data-tabga="library">Open the Library</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-tabga="library">Open the Library</button>
       </div>
     </section>
 
@@ -144,7 +144,7 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
       <div class="quiz-blok sat-panel" id="quiz-bosh">
         <h2 class="bosh-sarlavha">Quiz</h2>
         <p class="bosh-matn">Read a definition and choose the word that matches it. Questions are made from the words in your current filter. Quizzes don't change your review schedule.</p>
-        <button type="button" class="tugma-l kok" id="quiz-boshla">Start a quiz</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="quiz-boshla">Start a quiz</button>
         <p class="bosh-matn" id="quiz-kam" hidden></p>
       </div>
       <div class="quiz-blok sat-panel" id="quiz-savol" hidden>
@@ -152,13 +152,13 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
         <h2 class="quiz-tarif" id="quiz-tarif" tabindex="-1"></h2>
         <div class="variantlar" id="quiz-variantlar" role="group" aria-labelledby="quiz-tarif"></div>
         <p class="baho-xabar" id="quiz-javob" role="status"></p>
-        <button type="button" class="tugma-l kok" id="quiz-keyingi" hidden>Next question</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="quiz-keyingi" hidden>Next question</button>
       </div>
       <div class="quiz-blok sat-panel" id="quiz-yakun" hidden>
         <h2 class="bosh-sarlavha" id="quiz-natija" tabindex="-1"></h2>
         <p class="bosh-matn" id="quiz-xato-sarlavha" hidden>Words to review:</p>
         <ul class="quiz-xatolar" id="quiz-xatolar"></ul>
-        <button type="button" class="tugma-l kok" id="quiz-qayta">New quiz</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="quiz-qayta">New quiz</button>
       </div>
     </section>
 
@@ -167,7 +167,7 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
       <div class="bosh-holat sat-panel" id="oz-yopiq">
         <h2 class="bosh-sarlavha">My Words</h2>
         <p class="bosh-matn" id="oz-yopiq-matn"></p>
-        <a class="kichik-tugma" id="oz-yopiq-havola" hidden></a>
+        <a class="t-tugma t-tugma--ikkinchi" id="oz-yopiq-havola" hidden></a>
       </div>
       <div class="oz-ochiq" id="oz-ochiq" hidden>
         <form class="oz-forma sat-panel" id="oz-forma" novalidate>
@@ -195,7 +195,7 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
             <label for="oz-misol">Example sentence (optional)</label>
             <textarea id="oz-misol" name="example" maxlength="300" rows="2"></textarea>
           </div>
-          <button type="submit" class="tugma-l kok" id="oz-qosh">Add word</button>
+          <button type="submit" class="t-tugma sat-tugma--kok" id="oz-qosh">Add word</button>
           <p class="baho-xabar" id="oz-natija" role="status"></p>
         </form>
         <div class="oz-royxat-blok">
@@ -498,7 +498,7 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
     amallar.append(yulduzTugma(k));
     if (ochir) {
       const o = document.createElement('button');
-      o.type = 'button'; o.className = 'kichik-tugma chiziqli'; o.dataset.ochir = k.id!;
+      o.type = 'button'; o.className = 't-tugma t-tugma--ikkinchi'; o.dataset.ochir = k.id!;
       o.textContent = 'Delete';
       o.setAttribute('aria-label', `Delete “${k.word}”`);
       amallar.append(o);
@@ -847,196 +847,191 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
 </script>
 
 <style>
-  .lugat-sahifa { max-width: 1184px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
+  .lugat-sahifa { max-width: 1184px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-5); }
   .lugat-sahifa [hidden] { display: none !important; }
-  .ustqator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3) var(--b-6); }
-  .saqlash { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  .saqlash :global(a) { color: var(--rang-havola); font-weight: 700; }
+  .ustqator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3) var(--space-6); }
+  .saqlash { font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .saqlash :global(a) { color: var(--color-sat-blue-text); font-weight: var(--font-weight-bold); }
 
-  .segment { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--b-1); background: var(--fon); border-radius: var(--r-toliq); }
-  :global([data-mavzu='qorongi']) .segment { background: var(--fon-ikkinchi); }
+  .segment { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-1); background: var(--color-sat-surface); border-radius: var(--radius-full); }
+  :global([data-mavzu='qorongi']) .segment { background: var(--color-sat-sunken); }
   .segment button {
-    min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--r-toliq);
-    background: transparent; color: var(--matn-ikkinchi);
-    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
+    min-height: 44px; padding: 0 var(--space-4); border: 0; border-radius: var(--radius-full);
+    background: transparent; color: var(--color-sat-text-muted);
+    font: inherit; font-weight: var(--font-weight-bold); font-size: var(--text-small-size); cursor: pointer;
   }
-  .segment button[aria-selected='true'] { background: var(--matn); color: var(--fon); }
+  .segment button[aria-selected='true'] { background: var(--color-sat-text); color: var(--color-sat-surface); }
 
   /* Filtr: SatFiltr (zich shisha), chiplar .sat-chip (sat.css). Holat va JS o'zgarmagan */
-  .lugat-sahifa :global(.filtrlar) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-6); }
-  fieldset.qator { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .qator-nom { float: left; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); margin-right: var(--b-2); padding: 0; }
+  .lugat-sahifa :global(.filtrlar) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); }
+  fieldset.qator { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .qator-nom { float: left; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); margin-right: var(--space-2); padding: 0; }
   .chiplar { display: contents; }
-  .belgi-qutisi { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 600; cursor: pointer; }
-  input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--rang-asosiy); }
+  .belgi-qutisi { display: flex; align-items: center; gap: var(--space-2); min-height: 44px; font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); cursor: pointer; }
+  input[type='checkbox'] { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--color-sat-blue-fill); }
   input[type='checkbox']:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
   .ogoh {
-    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-3);
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
-    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3);
+    background: var(--color-warning-subtle); color: var(--color-warning-text);
+    border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold);
   }
   .ogoh > span:first-child { display: inline-flex; }
-  .ogoh a { color: inherit; font-weight: 800; min-height: 44px; display: inline-flex; align-items: center; }
+  .ogoh a { color: inherit; font-weight: var(--font-weight-extrabold); min-height: 44px; display: inline-flex; align-items: center; }
 
   /* Kartalar: avvalgi ekran */
-  .lugat { display: flex; gap: var(--b-8); }
-  .markaz { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: var(--b-6); }
+  .lugat { display: flex; gap: var(--space-8); }
+  .markaz { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
   .karta-qobiq { position: relative; width: 100%; max-width: 760px; }
   .karta {
     position: relative; width: 100%; min-height: 440px;
-    padding: 64px 40px; border-radius: var(--r-katta);
+    padding: var(--space-16) var(--space-10); border-radius: var(--radius-lg);
     font: inherit; text-align: center;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     cursor: pointer;
-    background: var(--fon); color: var(--matn);
-    border: 1.5px solid var(--matn); box-shadow: var(--soya);
+    background: var(--color-sat-surface); color: var(--color-sat-text);
+    border: 1.5px solid var(--color-sat-text); box-shadow: var(--shadow-2);
   }
-  .karta.orqa { background: var(--qora); color: var(--qora-matn); border-color: var(--qora-chiziq); box-shadow: none; }
+  .karta.orqa { background: var(--color-sat-stage); color: var(--color-sat-on-navy); border-color: var(--color-sat-navy-high); box-shadow: none; }
   .yuz-yorliq {
     position: absolute; top: 20px; left: 24px;
-    padding: 4px 12px; border-radius: var(--r-toliq);
-    font-size: var(--matn-mayda); font-weight: 700;
-    background: var(--sirt-ikkinchi); color: var(--matn);
+    padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+    font-size: var(--text-caption-size); font-weight: var(--font-weight-bold);
+    background: var(--color-sat-line); color: var(--color-sat-text);
   }
-  .karta.orqa .yuz-yorliq { background: var(--qora-chiziq); color: var(--qora-matn); }
-  .oldi, .orqasi { display: flex; flex-direction: column; align-items: center; gap: var(--b-3); }
-  .orqasi { gap: 18px; max-width: 560px; }
-  .soz { font-size: 56px; font-weight: 900; letter-spacing: var(--oraliq-hero); overflow-wrap: anywhere; }
-  .turkum { font-size: 16px; font-weight: 600; color: var(--matn-sust); }
-  .tarif { font-size: 26px; font-weight: 800; line-height: 1.35; }
-  .tarjima { font-size: 36px; font-weight: 800; line-height: 1.2; }
-  .tarjima.kichik { font-size: 18px; font-weight: 700; }
-  .tarjima-yorliq { color: var(--qora-matn-ikkinchi); }
-  .misol { font-size: 18px; line-height: 1.6; color: var(--qora-matn-ikkinchi); font-style: italic; }
-  .maslahat { position: absolute; bottom: 20px; left: 0; right: 0; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
-  .karta.orqa .maslahat { color: var(--qora-matn-ikkinchi); }
+  .karta.orqa .yuz-yorliq { background: var(--color-sat-navy-high); color: var(--color-sat-on-navy); }
+  .oldi, .orqasi { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+  .orqasi { gap: var(--space-4); max-width: 560px; }
+  .soz { font-size: var(--text-display-size); font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-hero); overflow-wrap: anywhere; }
+  .turkum { font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .tarif { font-size: var(--text-h2-size); font-weight: var(--font-weight-extrabold); line-height: 1.35; }
+  .tarjima { font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1.2; }
+  .tarjima.kichik { font-size: var(--text-h3-size); font-weight: var(--font-weight-bold); }
+  .tarjima-yorliq { color: var(--color-sat-on-navy-muted); }
+  .misol { font-size: var(--text-h3-size); line-height: 1.6; color: var(--color-sat-on-navy-muted); font-style: italic; }
+  .maslahat { position: absolute; bottom: 20px; left: 0; right: 0; font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .karta.orqa .maslahat { color: var(--color-sat-on-navy-muted); }
 
   .lugat-sahifa :global(.yulduz) {
-    width: 48px; height: 48px; border: 0; border-radius: var(--r-toliq); cursor: pointer;
+    width: 48px; height: 48px; border: 0; border-radius: var(--radius-full); cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; flex: none;
-    background: var(--sirt-ikkinchi); color: var(--matn);
+    background: var(--color-sat-line); color: var(--color-sat-text);
   }
   .lugat-sahifa :global(.yulduz svg) { fill: none; }
-  .lugat-sahifa :global(.yulduz[aria-pressed='true']) { color: var(--rang-asosiy); }
-  :global([data-mavzu='qorongi']) .lugat-sahifa :global(.yulduz[aria-pressed='true']) { color: var(--rang-havola); }
+  .lugat-sahifa :global(.yulduz[aria-pressed='true']) { color: var(--color-sat-blue-fill); }
+  :global([data-mavzu='qorongi']) .lugat-sahifa :global(.yulduz[aria-pressed='true']) { color: var(--color-sat-blue-text); }
   .lugat-sahifa :global(.yulduz[aria-pressed='true'] svg) { fill: currentColor; }
-  @media (hover: hover) and (pointer: fine) { .lugat-sahifa :global(.yulduz:hover) { background: var(--fon-ikkinchi); } }
+  @media (hover: hover) and (pointer: fine) { .lugat-sahifa :global(.yulduz:hover) { background: var(--color-sat-sunken); } }
   .karta-qobiq > .yulduz { position: absolute; top: 12px; right: 12px; }
-  .karta.orqa ~ .yulduz, :global([data-mavzu='qorongi']) .karta.orqa ~ .yulduz[aria-pressed='true'], .lugat-sahifa .karta.orqa ~ :global(.yulduz) { background: var(--qora-chiziq); color: var(--rang-asosiy-matn); }
-  .karta.orqa ~ .yulduz[aria-pressed='true'] { color: var(--rang-asosiy-matn); }
+  .karta.orqa ~ .yulduz, :global([data-mavzu='qorongi']) .karta.orqa ~ .yulduz[aria-pressed='true'], .lugat-sahifa .karta.orqa ~ :global(.yulduz) { background: var(--color-sat-navy-high); color: var(--color-sat-on-blue-fill); }
+  .karta.orqa ~ .yulduz[aria-pressed='true'] { color: var(--color-sat-on-blue-fill); }
   .lugat-sahifa :global(.yulduz.kichik) { width: 44px; height: 44px; }
 
-  .boshqaruv { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--b-3); }
+  .boshqaruv { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--space-3); }
   .dumaloq {
-    width: 52px; height: 52px; border: 0; border-radius: var(--r-toliq);
-    background: var(--fon); color: var(--matn);
+    width: 52px; height: 52px; border: 0; border-radius: var(--radius-full);
+    background: var(--color-sat-surface); color: var(--color-sat-text);
     display: flex; align-items: center; justify-content: center; cursor: pointer;
   }
-  :global([data-mavzu='qorongi']) .dumaloq { background: var(--fon-ikkinchi); }
-  @media (hover: hover) and (pointer: fine) { .dumaloq:hover { background: var(--sirt-ikkinchi); } }
-  .baho-xabar { min-height: 1.5em; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); text-align: center; }
+  :global([data-mavzu='qorongi']) .dumaloq { background: var(--color-sat-sunken); }
+  @media (hover: hover) and (pointer: fine) { .dumaloq:hover { background: var(--color-sat-line); } }
+  .baho-xabar { min-height: 1.5em; font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); text-align: center; }
 
-  .holat { width: 300px; flex: none; display: flex; flex-direction: column; gap: var(--b-4); }
-  .oq-blok { padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4); }
-  .royxat-blok { padding: var(--b-2); gap: 0; }
-  .royxat-blok .ustki-yorliq { margin: var(--b-3) var(--b-4) var(--b-2); }
-  .ustki-yorliq { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
-  .sonlar { display: flex; gap: var(--b-3); }
-  .son { flex: 1; border-radius: var(--r-orta); padding: var(--b-4); display: flex; flex-direction: column; gap: 2px; font-size: var(--matn-kichik); font-weight: 600; }
-  .raqam { font-size: 32px; font-weight: 900; line-height: 1.2; }
-  .kok-son { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .chiziq-son { border: 1.5px solid var(--matn); }
-  .bugun-matn { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  #sozlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; max-height: 420px; overflow-y: auto; }
+  .holat { width: 300px; flex: none; display: flex; flex-direction: column; gap: var(--space-4); }
+  .oq-blok { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .royxat-blok { padding: var(--space-2); gap: 0; }
+  .royxat-blok .ustki-yorliq { margin: var(--space-3) var(--space-4) var(--space-2); }
+  .ustki-yorliq { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
+  .sonlar { display: flex; gap: var(--space-3); }
+  .son { flex: 1; border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); }
+  .raqam { font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1.2; }
+  .kok-son { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
+  .chiziq-son { border: 1.5px solid var(--color-sat-text); }
+  .bugun-matn { font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  #sozlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); max-height: 420px; overflow-y: auto; }
   #sozlar :global(button) {
-    width: 100%; min-height: 44px; padding: 0 16px;
-    border: 0; border-radius: 14px; background: transparent; color: var(--matn);
-    font: inherit; font-size: 15px; font-weight: 700;
-    display: flex; align-items: center; justify-content: space-between; gap: var(--b-2); cursor: pointer;
+    width: 100%; min-height: 44px; padding: 0 var(--space-4);
+    border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-sat-text);
+    font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold);
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); cursor: pointer;
   }
-  #sozlar :global(button[aria-current='true']) { background: var(--fon-ikkinchi); }
-  @media (hover: hover) and (pointer: fine) { #sozlar :global(button:hover) { background: var(--fon-ikkinchi); } }
-  :global([data-mavzu='qorongi']) #sozlar :global(button[aria-current='true']) { background: var(--sirt-ikkinchi); }
-  @media (hover: hover) and (pointer: fine) { :global([data-mavzu='qorongi']) #sozlar :global(button:hover) { background: var(--sirt-ikkinchi); } }
-  #sozlar :global(.s-holat) { font-size: 12px; font-weight: 700; color: var(--matn-sust); }
-  #sozlar :global(.s-holat[data-holat='bilaman']) { color: var(--rang-havola); }
-  #sozlar :global(.s-holat[data-holat='organ']) { color: var(--matn); }
+  #sozlar :global(button[aria-current='true']) { background: var(--color-sat-sunken); }
+  @media (hover: hover) and (pointer: fine) { #sozlar :global(button:hover) { background: var(--color-sat-sunken); } }
+  :global([data-mavzu='qorongi']) #sozlar :global(button[aria-current='true']) { background: var(--color-sat-line); }
+  @media (hover: hover) and (pointer: fine) { :global([data-mavzu='qorongi']) #sozlar :global(button:hover) { background: var(--color-sat-line); } }
+  #sozlar :global(.s-holat) { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
+  #sozlar :global(.s-holat[data-holat='bilaman']) { color: var(--color-sat-blue-text); }
+  #sozlar :global(.s-holat[data-holat='organ']) { color: var(--color-sat-text); }
 
   /* Bloklar zich sirtda (.sat-panel); .oz-royxat-blok ichidagi qatorlar o'zi panel, blok fonsiz */
   .bosh-holat, .quiz-blok, .oz-forma, .oz-royxat-blok {
-    padding: var(--b-8);
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-4);
+    padding: var(--space-8);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4);
   }
-  .oz-royxat-blok { padding: var(--b-2) 0; }
-  .bosh-sarlavha { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
-  .bosh-matn { max-width: 62ch; color: var(--matn-ikkinchi); line-height: 1.6; }
-  .lugat-sahifa :global(.kichik-tugma) {
-    min-height: 44px; padding: 0 20px; border-radius: var(--r-toliq);
-    border: 0; background: var(--matn); color: var(--fon); font: inherit; font-weight: 800; cursor: pointer;
-    display: inline-flex; align-items: center; text-decoration: none;
-  }
-  .lugat-sahifa :global(.kichik-tugma.chiziqli) { background: transparent; color: var(--matn); border: 1.5px solid var(--matn); }
+  .oz-royxat-blok { padding: var(--space-2) 0; }
+  .bosh-sarlavha { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); line-height: 1.25; }
+  .bosh-matn { max-width: 62ch; color: var(--color-sat-text-muted); line-height: 1.6; }
+  .lugat-sahifa :global(.t-tugma) { display: inline-flex; }
 
   /* Kutubxona */
-  .son-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
-  .kutubxona { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); width: 100%; }
+  .son-matn { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
+  .kutubxona { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); width: 100%; }
   .kutubxona :global(.k-qator) {
-    display: flex; align-items: flex-start; justify-content: space-between; gap: var(--b-4);
-    padding: var(--b-4) var(--b-5);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
   }
-  .kutubxona :global(.k-matn) { min-width: 0; display: flex; flex-direction: column; gap: var(--b-1); }
-  .kutubxona :global(.k-bosh) { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-2); }
-  .kutubxona :global(.k-soz) { font-size: var(--matn-katta); font-weight: 800; overflow-wrap: anywhere; }
-  .kutubxona :global(.k-turkum) { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
-  .kutubxona :global(.k-yorliq) { padding: 2px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  .kutubxona :global(.k-tarif) { color: var(--matn-ikkinchi); line-height: 1.5; overflow-wrap: anywhere; }
-  .kutubxona :global(.k-meta) { font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-sust); }
-  .kutubxona :global(.k-amal) { display: flex; align-items: center; gap: var(--b-2); flex: none; }
+  .kutubxona :global(.k-matn) { min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+  .kutubxona :global(.k-bosh) { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2); }
+  .kutubxona :global(.k-soz) { font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); overflow-wrap: anywhere; }
+  .kutubxona :global(.k-turkum) { font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .kutubxona :global(.k-yorliq) { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); background: var(--color-sat-line); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .kutubxona :global(.k-tarif) { color: var(--color-sat-text-muted); line-height: 1.5; overflow-wrap: anywhere; }
+  .kutubxona :global(.k-meta) { font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .kutubxona :global(.k-amal) { display: flex; align-items: center; gap: var(--space-2); flex: none; }
 
   /* Quiz */
   .quiz-blok { max-width: 760px; width: 100%; }
-  .quiz-tarif { font-size: 24px; font-weight: 800; line-height: 1.4; }
-  .variantlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--b-3); width: 100%; }
+  .quiz-tarif { font-size: var(--text-h2-size); font-weight: var(--font-weight-extrabold); line-height: 1.4; }
+  .variantlar { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--space-3); width: 100%; }
   .variantlar :global(.variant) {
-    min-height: 56px; padding: var(--b-2) var(--b-4); border-radius: var(--r-orta);
-    border: 2px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn);
-    font: inherit; font-size: 17px; font-weight: 700; text-align: left; cursor: pointer;
-    display: flex; align-items: center; gap: var(--b-3);
+    min-height: 56px; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
+    border: 2px solid var(--color-sat-line-strong); background: var(--color-sat-surface); color: var(--color-sat-text);
+    font: inherit; font-size: var(--text-body-size); font-weight: var(--font-weight-bold); text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: var(--space-3);
   }
-  :global([data-mavzu='qorongi']) .variantlar :global(.variant) { background: var(--fon); }
-  @media (hover: hover) and (pointer: fine) { .variantlar :global(.variant:hover:not(:disabled)) { border-color: var(--rang-asosiy); } }
+  :global([data-mavzu='qorongi']) .variantlar :global(.variant) { background: var(--color-sat-surface); }
+  @media (hover: hover) and (pointer: fine) { .variantlar :global(.variant:hover:not(:disabled)) { border-color: var(--color-sat-blue-fill); } }
   .variantlar :global(.variant:disabled) { cursor: default; }
-  .variantlar :global(.variant[data-holat='togri']) { border-color: var(--rang-asosiy); }
-  .variantlar :global(.variant[data-holat='tanlangan']) { border-color: var(--matn); border-style: dashed; }
+  .variantlar :global(.variant[data-holat='togri']) { border-color: var(--color-sat-blue-fill); }
+  .variantlar :global(.variant[data-holat='tanlangan']) { border-color: var(--color-sat-text); border-style: dashed; }
   .variantlar :global(.v-harf) {
-    width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi);
-    display: inline-flex; align-items: center; justify-content: center; font-size: var(--matn-kichik); font-weight: 800;
+    width: 32px; height: 32px; flex: none; border-radius: var(--radius-full); background: var(--color-sat-line);
+    display: inline-flex; align-items: center; justify-content: center; font-size: var(--text-small-size); font-weight: var(--font-weight-extrabold);
   }
-  .variantlar :global(.variant[data-holat='togri'] .v-harf) { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .variantlar :global(.variant[data-holat='togri'] .v-harf) { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .variantlar :global(.v-nom) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-  .variantlar :global(.v-belgi) { font-size: var(--matn-mayda); font-weight: 800; color: var(--matn-ikkinchi); }
+  .variantlar :global(.v-belgi) { font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); color: var(--color-sat-text-muted); }
   .quiz-blok .baho-xabar { text-align: left; }
-  .quiz-xatolar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.5; color: var(--matn-ikkinchi); }
+  .quiz-xatolar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--space-2); line-height: 1.5; color: var(--color-sat-text-muted); }
 
   /* My Words */
-  .oz-ochiq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--b-6); align-items: start; }
+  .oz-ochiq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
   .oz-forma .baho-xabar { text-align: left; }
-  .maydon { display: flex; flex-direction: column; gap: var(--b-2); width: 100%; }
-  .maydon label { font-weight: 700; }
+  .maydon { display: flex; flex-direction: column; gap: var(--space-2); width: 100%; }
+  .maydon label { font-weight: var(--font-weight-bold); }
   .maydon input, .maydon textarea, .maydon select {
-    min-height: 48px; padding: 10px 14px; width: 100%;
-    background: var(--sirt); color: var(--matn); border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
-    font: inherit; font-size: var(--matn-asosiy);
+    min-height: 48px; padding: var(--space-2) var(--space-4); width: 100%;
+    background: var(--color-sat-surface); color: var(--color-sat-text); border: 2px solid var(--color-sat-line-strong); border-radius: var(--radius-md);
+    font: inherit; font-size: var(--text-body-size);
   }
   .maydon textarea { resize: vertical; line-height: 1.5; }
-  .maydon :is(input, textarea, select):focus-visible { outline: none; border: 3px solid var(--rang-asosiy); padding: 9px 13px; }
-  .maydon-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .maydon :is(input, textarea, select):focus-visible { outline: none; border: 3px solid var(--color-sat-blue-fill); padding: var(--space-2) var(--space-3); }
+  .maydon-izoh { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
   .maydon-xato {
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-kichik);
-    padding: var(--b-2) var(--b-3); font-size: var(--matn-kichik); font-weight: 600;
+    background: var(--color-warning-subtle); color: var(--color-warning-text); border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold);
   }
-  .maydon-xato::before { content: '! '; font-weight: 900; }
+  .maydon-xato::before { content: '! '; font-weight: var(--font-weight-extrabold); }
   .xatolar { width: 100%; }
 
   @media (max-width: 1023.98px) {
@@ -1045,15 +1040,15 @@ const ogohSvg = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 
     .oz-ochiq { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
-    .karta { min-height: 340px; padding: 56px 20px; }
-    .soz { font-size: 40px; }
-    .tarif { font-size: 20px; }
-    .tarjima { font-size: 26px; }
-    .boshqaruv .tugma-l { flex: 1 1 140px; }
-    .bosh-holat, .quiz-blok, .oz-forma, .oz-royxat-blok { padding: var(--b-5); }
-    .quiz-tarif { font-size: 20px; }
-    .kutubxona :global(.k-qator) { padding: var(--b-3) var(--b-4); }
-    .segment { width: 100%; flex-wrap: nowrap; gap: 2px; }
-    .segment button { flex: 1 1 0; min-width: 0; padding: 0 6px; font-size: 14px; white-space: nowrap; }
+    .karta { min-height: 340px; padding: var(--space-14) var(--space-5); }
+    .soz { font-size: var(--text-h1-size); }
+    .tarif { font-size: var(--text-h3-size); }
+    .tarjima { font-size: var(--text-h2-size); }
+    .boshqaruv .t-tugma { flex: 1 1 140px; }
+    .bosh-holat, .quiz-blok, .oz-forma, .oz-royxat-blok { padding: var(--space-5); }
+    .quiz-tarif { font-size: var(--text-h3-size); }
+    .kutubxona :global(.k-qator) { padding: var(--space-3) var(--space-4); }
+    .segment { width: 100%; flex-wrap: nowrap; gap: var(--space-1); }
+    .segment button { flex: 1 1 0; min-width: 0; padding: 0 var(--space-2); font-size: var(--text-small-size); white-space: nowrap; }
   }
 </style>

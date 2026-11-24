@@ -70,7 +70,7 @@ const DALIL = 2;
   <div slot="animatsiya">
     <p>Each sentence in the scene has a label that shows its role. The evidence sentence has a blue border and an underline; the others have a dashed border.</p>
     <div class="formula"><span class="kichik ikkinchi">Why this sentence</span><span class="f-qiymat rw-qoida">{gaplar[DALIL].sabab}</span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
+    <div class="segment"><button type="button" class="t-tugma sat-tugma--kok" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
@@ -88,7 +88,7 @@ const DALIL = 2;
       <p><b>Task.</b> Read the claim and tap the sentence in the scene's text that supports it. With a keyboard: press Tab to enter the text, move with the arrow keys, press Enter to mark.</p>
       <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Nothing marked yet.</p>
     </div>
-    <div class="segment"><button type="button" class="kichik-tugma" id="rw-qayta">Try again</button></div>
+    <div class="segment"><button type="button" class="t-tugma t-tugma--ikkinchi" id="rw-qayta">Try again</button></div>
   </div>
 </DarsQolip>
 
@@ -150,12 +150,12 @@ const DALIL = 2;
 </script>
 
 <style is:global>
-  .rw-quti { padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-4); }
-  .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); }
-  .rw-davo { font-size: 18px; font-weight: 700; line-height: 1.5; display: flex; flex-direction: column; gap: var(--b-1); }
-  .dars .rw-qoida { font-size: 16px; font-weight: 600; line-height: 1.5; }
-  .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .rw-qoidalar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
-  .rw-qoidalar dt { font-weight: 800; }
-  .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--matn-ikkinchi); }
+  .rw-quti { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+  .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .rw-davo { font-size: var(--text-h3-size); font-weight: var(--font-weight-bold); line-height: 1.5; display: flex; flex-direction: column; gap: var(--space-1); }
+  .dars .rw-qoida { font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); line-height: 1.5; }
+  .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .rw-qoidalar div { background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .rw-qoidalar dt { font-weight: var(--font-weight-extrabold); }
+  .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--color-sat-text-muted); }
 </style>

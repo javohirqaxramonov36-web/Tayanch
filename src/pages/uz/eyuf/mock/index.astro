@@ -5,15 +5,15 @@ import rules from '../../../../../data/eyuf/rules.json';
 import { yol } from '../../../../lib/yol';
 ---
 <EyufSahifa title="Test simulyatsiyasi" description="Darajangizga mos ikki blok, taymer va yakundagi xatolar tahlili.">
- <p class="eyuf-panel">Tayanch mashq simulyatsiyasi. Rasmiy spetsifikatsiyadagi {rules.test_questions} savol va {rules.test_minutes} daqiqa formati asosida. Savollar rasmiy imtihon bankidan olinmagan. Bakalavrda IQ va so‘z-mantiq, magistrda IQ va ilmiy-tadqiqot mashqlari mavjud. Natija tayyorgarlik ko‘rsatkichi. <a href="https://api.el-yurt.uz/storage/competition-documents/b23391a7-e612-48be-a65b-5f43b079c7c2-1775741766.pdf" target="_blank" rel="noopener noreferrer">S05 — ko‘rilgan spetsifikatsiya (yangi oynada)</a></p>
+ <p class="eyuf-panel">Tayanch mashq simulyatsiyasi. Rasmiy spetsifikatsiyadagi {rules.test_questions} savol va {rules.test_minutes} daqiqa formati asosida. Savollar rasmiy imtihon bankidan olinmagan. Bakalavrda IQ va soʻz-mantiq, magistrda IQ va ilmiy-tadqiqot mashqlari mavjud. Natija tayyorgarlik koʻrsatkichi. <a href="https://api.el-yurt.uz/storage/competition-documents/b23391a7-e612-48be-a65b-5f43b079c7c2-1775741766.pdf" target="_blank" rel="noopener noreferrer">S05 — koʻrilgan spetsifikatsiya (yangi oynada)</a></p>
  <div id="eyuf-mock">
   <p data-storage role="status" hidden></p>
-  <section class="eyuf-panel" data-start><h2>Simulyatsiyani tanlang</h2><label>Daraja<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Mashq<select data-kind><option value="full">40 savol, 60 daqiqa</option><option value="diagnostic">Diagnostika — 10 savol, 15 daqiqa</option></select></label><p>Har blokning yarmi olinadi. Javobni muddat tugaguncha o‘zgartirish mumkin, yechimlar yakunda ko‘rinadi. Sessiya shu brauzerda saqlanadi. Tab yopilganda ham vaqt o‘tadi. Bitta sessiyani bitta tabda ishlating.</p>{!settings.book_content_enabled && <p>Kitob kontenti o‘chirilgan. Yetarli IQ bloki bo‘lmaganda simulyatsiya ochilmaydi.</p>}<div class="eyuf-actions"><button class="tugma tugma-asosiy" data-begin disabled>Boshlash</button><button class="tugma tugma-ikkinchi" data-resume hidden>Saqlangan sessiyani davom ettirish</button></div><p data-empty role="status"></p></section>
-  <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1"></h2><output data-time aria-label="Qolgan vaqt"></output></div><p data-stem></p><div data-images></div><div data-options class="eyuf-grid" role="group" aria-label="Variantlar"></div><p data-answer-state role="status"></p><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-prev>Oldingi</button><button class="tugma tugma-asosiy" data-next>Keyingi</button><button class="tugma tugma-ikkinchi" data-finish>Yakunlash</button></div><p>Javob uchun A–G. Variantlar orasida Tab bilan yuring. Bo‘sh javob bilan keyingisiga o‘tishingiz mumkin.</p></section>
-  <section class="eyuf-panel" data-result hidden><h2 data-result-h tabindex="-1">Mashq natijasi</h2><p data-total></p><p>61 ball bilan taqqoslash o‘quv maqsadida. Ushbu mashqdagi ball rasmiy natija yoki uni oldindan aytuvchi baho hisoblanmaydi.</p><div data-review></div><button class="tugma tugma-asosiy" data-again>Yangi mashq</button></section>
-  <dialog data-zoom aria-label="Savol rasmi"><button class="tugma tugma-ikkinchi" data-close>Yopish</button><img data-zoom-image alt="" /></dialog>
+  <section class="eyuf-panel" data-start><h2>Simulyatsiyani tanlang</h2><label>Daraja<select data-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label><label>Mashq<select data-kind><option value="full">40 savol, 60 daqiqa</option><option value="diagnostic">Diagnostika — 10 savol, 15 daqiqa</option></select></label><p>Har blokning yarmi olinadi. Javobni muddat tugaguncha oʻzgartirish mumkin, yechimlar yakunda koʻrinadi. Sessiya shu brauzerda saqlanadi. Tab yopilganda ham vaqt oʻtadi. Bitta sessiyani bitta tabda ishlating.</p>{!settings.book_content_enabled && <p>Kitob kontenti oʻchirilgan. Yetarli IQ bloki boʻlmaganda simulyatsiya ochilmaydi.</p>}<div class="eyuf-actions"><button class="t-tugma eyuf-tugma--urgu" data-begin disabled>Boshlash</button><button class="t-tugma t-tugma--ikkinchi" data-resume hidden>Saqlangan sessiyani davom ettirish</button></div><p data-empty role="status"></p></section>
+  <section class="eyuf-panel" data-question hidden><div class="eyuf-actions"><h2 data-heading tabindex="-1"></h2><output data-time aria-label="Qolgan vaqt"></output></div><p data-stem></p><div data-images></div><div data-options class="eyuf-grid" role="group" aria-label="Variantlar"></div><p data-answer-state role="status"></p><div class="eyuf-actions"><button class="t-tugma t-tugma--ikkinchi" data-prev>Oldingi</button><button class="t-tugma eyuf-tugma--urgu" data-next>Keyingi</button><button class="t-tugma t-tugma--ikkinchi" data-finish>Yakunlash</button></div><p>Javob uchun A–G. Variantlar orasida Tab bilan yuring. Boʻsh javob bilan keyingisiga oʻtishingiz mumkin.</p></section>
+  <section class="eyuf-panel" data-result hidden><h2 data-result-h tabindex="-1">Mashq natijasi</h2><p data-total></p><p>61 ball bilan taqqoslash oʻquv maqsadida. Ushbu mashqdagi ball rasmiy natija yoki uni oldindan aytuvchi baho hisoblanmaydi.</p><div data-review></div><button class="t-tugma eyuf-tugma--urgu" data-again>Yangi mashq</button></section>
+  <dialog data-zoom aria-label="Savol rasmi"><button class="t-tugma t-tugma--ikkinchi" data-close>Yopish</button><img data-zoom-image alt="" /></dialog>
  </div>
- <p><a href={yol('/uz/eyuf/trenajyor/')}>Tur bo‘yicha trenajyorga qaytish</a></p>
+ <p><a href={yol('/uz/eyuf/trenajyor/')}>Tur boʻyicha trenajyorga qaytish</a></p>
 </EyufSahifa>
 <script>
 import bank from '../../../../../data/eyuf/questions-iq.json';
@@ -212,7 +212,7 @@ function show(focus = true) {
   for (const option of q.options) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'tugma tugma-ikkinchi';
+    button.className = 'eyuf-variant';
     button.textContent = `${option.id}. ${option.text}`;
     button.setAttribute(
       'aria-pressed',
@@ -332,7 +332,7 @@ el<HTMLButtonElement>('[data-begin]').disabled = false;
 #eyuf-mock .eyuf-mock-image {
   display: block;
   border: var(--border-width-1) solid var(--color-border);
-  background: white;
+  background: var(--color-neutral-0);
   max-width: 100%;
   width: 100%;
   cursor: zoom-in;
@@ -344,7 +344,7 @@ el<HTMLButtonElement>('[data-begin]').disabled = false;
 }
 #eyuf-mock [aria-pressed="true"] {
   outline: var(--border-width-2) solid var(--color-link);
-  outline-offset: 2px;
+  outline-offset: var(--focus-ring-gap);
 }
 #eyuf-mock dialog {
   max-width: 95vw;

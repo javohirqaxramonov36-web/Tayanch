@@ -44,8 +44,8 @@ const { title, description, ustki, nomi, chiqish, chiqishNomi } = Astro.props;
       <div class="if-yol"><QavatYoli bandlar={['Mashq']} sahifaNomi={nomi} ota={chiqish} /></div>
       <noscript>
         <section class="if-bosh-holat ds-karta">
-          <p>Test ishlashi uchun brauzerda JavaScript yoqilgan bo'lishi kerak.</p>
-          <a class="tugma tugma-asosiy" href={chiqish}>{RM.boshlashSahifasi}</a>
+          <p>Test ishlashi uchun brauzerda JavaScript yoqilgan boʻlishi kerak.</p>
+          <a class="t-tugma ielts-tugma--urgu" href={chiqish}>{RM.boshlashSahifasi}</a>
         </section>
       </noscript>
       <slot />
@@ -54,31 +54,31 @@ const { title, description, ustki, nomi, chiqish, chiqishNomi } = Astro.props;
 </html>
 
 <style is:global>
-  body.ielts-fokus { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: var(--fon); }
+  body.ielts-fokus { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: var(--color-ielts-bg); }
   .if-bosh {
-    flex: none; min-height: 64px; padding: var(--b-2) var(--b-6);
-    background: var(--fon); border-bottom: 1px solid var(--chiziq);
-    display: flex; align-items: center; gap: var(--b-3);
+    flex: none; min-height: 64px; padding: var(--space-2) var(--space-6);
+    background: var(--color-ielts-bg); border-bottom: 1px solid var(--color-ielts-line);
+    display: flex; align-items: center; gap: var(--space-3);
   }
   .if-yopish {
-    flex: none; width: 44px; height: 44px; border-radius: var(--r-yon);
+    flex: none; width: 44px; height: 44px; border-radius: var(--radius-md);
     display: flex; align-items: center; justify-content: center;
-    color: var(--matn); background: var(--fon-ikkinchi);
+    color: var(--color-ielts-text); background: var(--color-ielts-tile);
   }
-  @media (hover: hover) and (pointer: fine) { .if-yopish:hover { background: var(--sirt-ikkinchi); } }
-  .if-sarlavha { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .if-ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
-  .if-nomi { font-size: 17px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (hover: hover) and (pointer: fine) { .if-yopish:hover { background: var(--color-ielts-tile); } }
+  .if-sarlavha { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .if-ustki { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ielts-text-muted); }
+  .if-nomi { font-size: var(--text-body-size); font-weight: var(--font-weight-extrabold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .if-oraliq { flex: 1; }
   .if-asosiy { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
-  .if-yol { flex: none; padding-inline: var(--b-4); }
+  .if-yol { flex: none; padding-inline: var(--space-4); }
   .if-bosh-holat, .ielts-fokus .rt-holat:has(a) {
-    max-inline-size: min(calc(100% - 2 * var(--b-4)), var(--size-measure));
-    margin: var(--b-6) auto;
-    padding: var(--b-6);
+    max-inline-size: min(calc(100% - 2 * var(--space-4)), var(--size-measure));
+    margin: var(--space-6) auto;
+    padding: var(--space-6);
     text-align: center;
   }
-  .if-bosh-holat a { margin-block-start: var(--b-4); }
+  .if-bosh-holat a { margin-block-start: var(--space-4); }
   .ielts-fokus:has(.if-bosh-holat) #rt { display: none; }
   .ielts-fokus .rt-holat:has(a) {
     border: var(--border-width-1) solid var(--card-border);
@@ -87,7 +87,7 @@ const { title, description, ustki, nomi, chiqish, chiqishNomi } = Astro.props;
   }
 
   @media (max-width: 640px) {
-    .if-bosh { padding-inline: var(--b-4); gap: var(--b-2); }
+    .if-bosh { padding-inline: var(--space-4); gap: var(--space-2); }
     .if-ustki { display: none; }
   }
 </style>

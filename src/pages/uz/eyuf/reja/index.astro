@@ -2,7 +2,7 @@
 import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
 const yn = [['unknown', 'Aniqlashtirish kerak'], ['yes', 'Ha'], ['no', 'Yo‘q']];
 const selects = [
- ['citizen','O‘zbekiston fuqarosimisiz?'],['prior','Avval xorijda shu darajadagi o‘xshash yo‘nalishda o‘qiganmisiz? Magistr uchun turdosh yo‘nalish ham kiradi.'],
+ ['citizen','Oʻzbekiston fuqarosimisiz?'],['prior','Avval xorijda shu darajadagi oʻxshash yoʻnalishda oʻqiganmisiz? Magistr uchun turdosh yoʻnalish ham kiradi.'],
  ['study','Tanlangan xorijiy dastur sirtqi yoki onlaynmi?'],['conviction','Tugallanmagan yoki olib tashlanmagan sudlanganlik bormi?'],
  ['school','Prezident, ijod yoki ixtisoslashtirilgan maktab bitiruvchisimisiz?']
 ];
@@ -11,7 +11,7 @@ const selects = [
  <form id="eyuf-reja" class="eyuf-panel">
   <p>Sezgir javoblar shu tab xotirasida qoladi. Rejani saqlashga rozilik bersangiz, faqat daraja va tayyorgarlik afzalliklari saqlanadi.</p>
   <fieldset><legend>Daraja va vaqt</legend><div class="eyuf-grid">
-   <label>Ta’lim darajasi<select name="level"><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label>
+   <label>Taʼlim darajasi<select name="level"><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label>
    <label>Kunlik vaqt, daqiqa<input name="minutes" type="number" min="5" max="480" step="5" value="30" required /></label>
    <label>Suhbatgacha qolgan kunlar<input name="days" type="number" min="1" max="730" placeholder="Sana hali noma’lum" /></label>
    <label>Yosh<input name="age" type="number" min="1" max="100" /></label>
@@ -19,18 +19,18 @@ const selects = [
    <label>Hudud<select name="region"><option value="unknown">Tanlanmagan</option>{['Qoraqalpog‘iston Respublikasi','Andijon','Buxoro','Farg‘ona','Jizzax','Xorazm','Namangan','Navoiy','Qashqadaryo','Samarqand','Sirdaryo','Surxondaryo','Toshkent viloyati','Toshkent shahri'].map(t=><option>{t}</option>)}</select></label>
   </div></fieldset>
   <fieldset><legend>Universitet va qabul</legend><div class="eyuf-grid">
-   <label>Ta’lim sohasi<input name="specialty" maxlength="200" /></label><label>Universitet<input name="university" maxlength="200" /></label>
+   <label>Taʼlim sohasi<input name="specialty" maxlength="200" /></label><label>Universitet<input name="university" maxlength="200" /></label>
    <label>Global reyting tizimi<select name="rankingSystem"><option value="unknown">Aniqlashtirish kerak</option><option>QS</option><option>THE</option></select></label>
    <label>Reyting nashri<input name="rankingEdition" maxlength="80" placeholder="Nashr yili va havolasi" /></label>
-   <label>Reytingdagi o‘rni<input name="ranking" type="number" min="1" max="5000" /></label>
-   <label>Qabul xati<select name="letter"><option value="unknown">Aniqlashtirish kerak</option><option value="unconditional">Shartsiz</option><option value="conditional">Shartli</option><option value="none">Yo‘q</option></select></label>
-   <label>Grant qamrovi<select name="funding"><option value="unknown">Aniqlashtirish kerak</option><option value="full-cost">Barcha ta’lim xarajatlari</option><option value="tuition">Faqat tuition to‘liq</option><option value="partial">Tuition qisman</option><option value="none">Grant yo‘q</option></select></label>
+   <label>Reytingdagi oʻrni<input name="ranking" type="number" min="1" max="5000" /></label>
+   <label>Qabul xati<select name="letter"><option value="unknown">Aniqlashtirish kerak</option><option value="unconditional">Shartsiz</option><option value="conditional">Shartli</option><option value="none">Yoʻq</option></select></label>
+   <label>Grant qamrovi<select name="funding"><option value="unknown">Aniqlashtirish kerak</option><option value="full-cost">Barcha taʼlim xarajatlari</option><option value="tuition">Faqat tuition toʻliq</option><option value="partial">Tuition qisman</option><option value="none">Grant yoʻq</option></select></label>
    <label>Qisman tuition granti, foiz<input name="grantPercent" type="number" min="0" max="100" /></label>
    <label>IELTS Academic umumiy bali<input name="ielts" type="number" min="0" max="9" step="0.5" /></label>
   </div></fieldset>
-  <fieldset><legend>Moslik uchun qo‘shimcha ma’lumot</legend><div class="eyuf-grid">{selects.map(([name,label])=><label>{label}<select name={name}>{yn.map(([value,t])=><option value={value}>{t}</option>)}</select></label>)}</div></fieldset>
+  <fieldset><legend>Moslik uchun qoʻshimcha maʼlumot</legend><div class="eyuf-grid">{selects.map(([name,label])=><label>{label}<select name={name}>{yn.map(([value,t])=><option value={value}>{t}</option>)}</select></label>)}</div></fieldset>
   <fieldset><legend>Testdan ozodlik sertifikati</legend><div class="eyuf-grid">
-   <label>Sertifikat<select name="certificate"><option value="unknown">Aniqlashtirish kerak</option><option value="none">Yo‘q</option><option value="sat">SAT</option><option value="gre">GRE</option><option value="gmat">GMAT</option><option value="alevel">A-Level</option></select></label>
+   <label>Sertifikat<select name="certificate"><option value="unknown">Aniqlashtirish kerak</option><option value="none">Yoʻq</option><option value="sat">SAT</option><option value="gre">GRE</option><option value="gmat">GMAT</option><option value="alevel">A-Level</option></select></label>
    <label>Sertifikat amaldami?<select name="certificateValid">{yn.map(([v,t])=><option value={v}>{t}</option>)}</select></label>
    <label>Sertifikat sanasi<input name="certificateDate" type="date" /></label>
    <label>SAT bali<input name="sat" type="number" min="400" max="1600" step="10" /></label>
@@ -41,9 +41,9 @@ const selects = [
   </div><p class="eyuf-small">Sertifikatning amaldaligi va qabul qilinadigan formati rasmiy tekshiruv talab qiladi.</p></fieldset>
   <label class="eyuf-check"><input name="save" type="checkbox" />Darajam va kunlik vaqtimni shu brauzerda eslab qolish</label>
   <p data-storage role="status" hidden></p>
-  <div class="eyuf-actions"><button class="tugma tugma-asosiy" type="submit">Hisobot va rejani ko‘rish</button><button class="tugma tugma-ikkinchi" type="button" data-clear>Saqlangan rejamni o‘chirish</button></div>
+  <div class="eyuf-actions"><button class="t-tugma eyuf-tugma--urgu" type="submit">Hisobot va rejani koʻrish</button><button class="t-tugma t-tugma--ikkinchi" type="button" data-clear>Saqlangan rejamni oʻchirish</button></div>
  </form>
- <section id="eyuf-reja-natija" class="eyuf-panel" hidden aria-labelledby="reja-h"><h2 id="reja-h" tabindex="-1">Hisobot va kunlik reja</h2><div data-report></div><p><a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">Manba — PF-77, 3-ilova, 5, 12, 21–24-bandlar (yangi oynada)</a></p><h3>Kunlik ishlar</h3><p data-plan-note></p><ol class="eyuf-list" data-plan></ol><div class="eyuf-actions"><button class="tugma tugma-ikkinchi" data-edit>Tahrirlash</button><button class="tugma tugma-ikkinchi" data-download>Rejani yuklab olish</button></div></section>
+ <section id="eyuf-reja-natija" class="eyuf-panel" hidden aria-labelledby="reja-h"><h2 id="reja-h" tabindex="-1">Hisobot va kunlik reja</h2><div data-report></div><p><a href="https://lex.uz/docs/-7520218" target="_blank" rel="noopener noreferrer">Manba — PF-77, 3-ilova, 5, 12, 21–24-bandlar (yangi oynada)</a></p><h3>Kunlik ishlar</h3><p data-plan-note></p><ol class="eyuf-list" data-plan></ol><div class="eyuf-actions"><button class="t-tugma t-tugma--ikkinchi" data-edit>Tahrirlash</button><button class="t-tugma t-tugma--ikkinchi" data-download>Rejani yuklab olish</button></div></section>
 </EyufSahifa>
 <script>
 import {

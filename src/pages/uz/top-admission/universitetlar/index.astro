@@ -60,7 +60,7 @@ const tekshirilmoqda = universitetlar.filter((x) => x.guruh === 'tekshirilmoqda'
 const grantlarSahifa = yol('/uz/top-admission/grantlar/');
 const davlatlarSahifa = yol('/uz/top-admission/davlatlar/');
 const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
-const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.";
+const OGOH = "Bu roʻyxat rasmiy talablar boʻyicha saralash, qabul ehtimoli emas.";
 ---
 <BolimQobiq
   title="Menga mos universitet · Top Admission"
@@ -74,8 +74,8 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
     <header class="um-bosh">
       <p class="adm-eyebrow">Vosita</p>
       <h1 class="adm-h1">Menga mos universitet</h1>
-      <p class="um-matn">Davlatni tanlang, IELTS balingiz va yillik byudjetingizni kiriting. Ro'yxat universitetning rasmiy talabi va rasmiy xarajatini siz kiritgan qiymat bilan yonma-yon ko'rsatadi.</p>
-      <p class="um-matn um-sust">Faqat rasmiy manbada tekshirilgan fakt ishlatiladi, yonida manba va tekshirilgan sana. SAT bo'yicha solishtirilmaydi: universitetlar rasmiy minimal ballni odatda e'lon qilmaydi.</p>
+      <p class="um-matn">Davlatni tanlang, IELTS balingiz va yillik byudjetingizni kiriting. Roʻyxat universitetning rasmiy talabi va rasmiy xarajatini siz kiritgan qiymat bilan yonma-yon koʻrsatadi.</p>
+      <p class="um-matn um-sust">Faqat rasmiy manbada tekshirilgan fakt ishlatiladi, yonida manba va tekshirilgan sana. SAT boʻyicha solishtirilmaydi: universitetlar rasmiy minimal ballni odatda eʼlon qilmaydi.</p>
     </header>
 
     <p class="um-ogoh" role="note">
@@ -91,12 +91,12 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
           <path d="M3 21h18" /><path d="M5 21V10l7-5 7 5v11" /><path d="M9 21v-6h6v6" />
         </svg>
         <h2 id="um-bosh-sarlavha">Universitetlar rasmiy manbada tekshirilmoqda</h2>
-        <p class="um-matn">Har bir talab va xarajat universitetning o'z rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan ma'lumot yo'q, shuning uchun filtr ochilmagan.</p>
+        <p class="um-matn">Har bir talab va xarajat universitetning oʻz rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan maʼlumot yoʻq, shuning uchun filtr ochilmagan.</p>
         <p class="um-bosh-yol">Hozircha shulardan boshlang:</p>
         <div class="um-tugmalar">
-          <a class="tugma tugma-ikkinchi" href={davlatlarSahifa}>Davlatlarni taqqoslash</a>
-          <a class="tugma tugma-ikkinchi" href={grantlarSahifa}>Grantlar</a>
-          <a class="tugma tugma-ikkinchi" href={vosita}>Topshirish yo'li</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={davlatlarSahifa}>Davlatlarni taqqoslash</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={grantlarSahifa}>Grantlar</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={vosita}>Topshirish yoʻli</a>
         </div>
       </section>
     ) : (
@@ -107,7 +107,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
             <div class="um-chiplar" role="group" aria-labelledby="um-davlat-sarlavha">
               {MOS_DAVLATLAR.map((d) => <button type="button" class="um-chip" data-davlat={d.slug} aria-pressed="false">{d.nom}</button>)}
             </div>
-            <p class="um-kichik um-sust">Hech biri tanlanmasa, uchala davlat ko'rsatiladi.</p>
+            <p class="um-kichik um-sust">Hech biri tanlanmasa, uchala davlat koʻrsatiladi.</p>
           </div>
           <div class="um-maydonlar-qator">
             <div class="um-maydon">
@@ -122,31 +122,31 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
               <label for="um-byudjet">Yillik byudjet, USD</label>
               <input id="um-byudjet" data-byudjet type="text" inputmode="numeric" autocomplete="off" spellcheck="false"
                 placeholder="masalan, 20000" aria-describedby="um-byudjet-izoh" />
-              <p class="um-kichik um-sust" id="um-byudjet-izoh" data-byudjet-izoh>O'qish va yashash uchun bir yilda sarflay oladigan summa. Hech qayerga saqlanmaydi.</p>
+              <p class="um-kichik um-sust" id="um-byudjet-izoh" data-byudjet-izoh>Oʻqish va yashash uchun bir yilda sarflay oladigan summa. Hech qayerga saqlanmaydi.</p>
             </div>
           </div>
           <div class="um-guruh">
-            <p class="um-ustki" id="um-belgi-sarlavha">Ko'rsatish</p>
+            <p class="um-ustki" id="um-belgi-sarlavha">Koʻrsatish</p>
             <div class="um-chiplar um-chiplar-uzun" role="group" aria-labelledby="um-belgi-sarlavha">
               <button type="button" class="um-chip" data-yordam aria-pressed="false">Faqat xalqaro talabaga moliyaviy yordam beradiganlar</button>
               <button type="button" class="um-chip" data-faqat-mos aria-pressed="false">Faqat talabga mos keladiganlar</button>
             </div>
           </div>
           {!kursBor && (
-            <p class="um-kichik um-sust">Valyuta kursi ma'lumoti yo'q: USD'dan boshqa valyutadagi xarajat byudjet bilan solishtirilmaydi, bunday universitetlar "Ma'lumot tekshirilmoqda" guruhida.</p>
+            <p class="um-kichik um-sust">Valyuta kursi maʼlumoti yoʻq: USDʼdan boshqa valyutadagi xarajat byudjet bilan solishtirilmaydi, bunday universitetlar "Maʼlumot tekshirilmoqda" guruhida.</p>
           )}
           {kursBor && (
-            <p class="um-kichik um-sust">Boshqa valyutadagi xarajat USD'ga taxminan o'girilgan, kurs sanasi: {sanaMatni(kurslar.sana)}.</p>
+            <p class="um-kichik um-sust">Boshqa valyutadagi xarajat USDʼga taxminan oʻgirilgan, kurs sanasi: {sanaMatni(kurslar.sana)}.</p>
           )}
         </div>
 
         <section class="um-shortlist" hidden data-shortlist aria-labelledby="um-shortlist-sarlavha">
-          <h2 id="um-shortlist-sarlavha" class="um-h2" tabindex="-1">Mening ro'yxatim <span data-shortlist-soni></span></h2>
-          <p class="um-kichik um-sust" data-shortlist-bosh>Hali universitet saqlanmagan. Kartadagi "Ro'yxatga saqlash" tugmasini bosing.</p>
+          <h2 id="um-shortlist-sarlavha" class="um-h2" tabindex="-1">Mening roʻyxatim <span data-shortlist-soni></span></h2>
+          <p class="um-kichik um-sust" data-shortlist-bosh>Hali universitet saqlanmagan. Kartadagi "Roʻyxatga saqlash" tugmasini bosing.</p>
           <ul class="um-shortlist-royxat" data-shortlist-royxat></ul>
           <div class="um-sinxron">
-            <p class="um-kichik" data-sinxron-matn role="status">Ro'yxat shu brauzerda saqlanadi.</p>
-            <button type="button" class="tugma tugma-ikkinchi" data-sinxron-tugma hidden>Hisobga saqlash</button>
+            <p class="um-kichik" data-sinxron-matn role="status">Roʻyxat shu brauzerda saqlanadi.</p>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" data-sinxron-tugma hidden>Hisobga saqlash</button>
           </div>
         </section>
 
@@ -159,13 +159,13 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
             {asosiy.map((x) => <UniKarta {...x} />)}
           </ul>
           <div class="um-bosh-filtr" hidden data-bosh-filtr>
-            <p>Bu filtrlarga mos universitet yo'q. Ko'p universitetlar hali tekshirilmoqda, shuning uchun ro'yxat to'liq emas.</p>
-            <button type="button" class="tugma tugma-ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
+            <p>Bu filtrlarga mos universitet yoʻq. Koʻp universitetlar hali tekshirilmoqda, shuning uchun roʻyxat toʻliq emas.</p>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
           </div>
         </section>
 
         <section class="um-tekshir" aria-labelledby="um-tekshir-sarlavha" data-tekshir-bolim hidden={tekshirilmoqda.length === 0}>
-          <h2 id="um-tekshir-sarlavha" class="um-h2">Ma'lumot tekshirilmoqda (<span data-tekshir-soni>{tekshirilmoqda.length}</span> ta)</h2>
+          <h2 id="um-tekshir-sarlavha" class="um-h2">Maʼlumot tekshirilmoqda (<span data-tekshir-soni>{tekshirilmoqda.length}</span> ta)</h2>
           <p class="um-kichik um-sust">Bu universitetlarning kerakli fakti (IELTS talabi, yillik xarajat yoki uning "kamida" hisobidagi qismlari, yordam turi) hali tasdiqlanmagan, shuning uchun moslik hisoblanmaydi.</p>
           <ul class="um-kartalar" data-royxat-tekshir aria-label="Ma'lumoti tekshirilayotgan universitetlar">
             {tekshirilmoqda.map((x) => <UniKarta {...x} />)}
@@ -175,7 +175,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
       </>
     )}
 
-    <p class="um-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="um-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida 5 mezon bo'yicha solishtiring. Grantlar <a class="um-havola" href={grantlarSahifa}>Grantlar katalogi</a>da.</p>
+    <p class="um-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="um-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida 5 mezon boʻyicha solishtiring. Grantlar <a class="um-havola" href={grantlarSahifa}>Grantlar katalogi</a>da.</p>
   </div>
 </BolimQobiq>
 
@@ -431,16 +431,16 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
   .um-matn { max-width: 62ch; margin: 0; }
   .um-sust { color: var(--color-text-secondary); }
   .um-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
-  .um-havola { color: var(--color-link); font-weight: 700; }
+  .um-havola { color: var(--color-link); font-weight: var(--font-weight-bold); }
   .um-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   [hidden] { display: none !important; }
 
   .um-ogoh {
     max-width: 62ch; margin: 0; display: flex; align-items: flex-start; gap: var(--space-2);
     padding: var(--space-3) var(--space-4); border-radius: var(--card-radius);
-    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 600;
+    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-semibold);
   }
-  .um-ogoh svg { flex: none; margin-top: 2px; }
+  .um-ogoh svg { flex: none; margin-top: var(--space-1); }
 
   /* Asboblar: filtrlar va kiritish maydonlari */
   .um-asboblar { display: grid; gap: var(--space-5); }
@@ -449,18 +449,18 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
   .um-chip {
     min-height: var(--size-touch-min); padding: var(--space-2) var(--space-4); border-radius: var(--radius-full);
     border: var(--border-width-1) solid var(--color-adm-line-strong); background: var(--color-adm-surface); color: var(--color-adm-text);
-    font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
+    font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); cursor: pointer; text-align: left;
     transition: transform var(--duration-fast) var(--ease-state);
   }
   .um-chip:active { transform: var(--bosilish); }
   .um-chip[aria-pressed="true"] { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
   .um-maydonlar-qator { display: grid; grid-template-columns: repeat(2, minmax(0, 16rem)); gap: var(--space-4); }
   .um-maydon { display: grid; gap: var(--space-1); align-content: start; }
-  .um-maydon label { font-size: var(--text-small-size); font-weight: 700; }
+  .um-maydon label { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); }
   .um-maydon select, .um-maydon input {
     min-height: 48px; width: 100%; padding: 0 var(--space-3); font: inherit;
-    background: var(--sirt); color: var(--color-text-primary);
-    border: 2px solid var(--chiziq-maydon); border-radius: var(--radius-md);
+    background: var(--color-adm-surface); color: var(--color-text-primary);
+    border: 2px solid var(--color-adm-line-strong); border-radius: var(--radius-md);
   }
   .um-maydon select:focus-visible, .um-maydon input:focus-visible { outline: none; box-shadow: var(--focus-ring); }
   .um-maydon input[aria-invalid="true"] { border-color: var(--input-error-border); }
@@ -478,10 +478,10 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2);
     padding-top: var(--space-2); border-top: 1px solid var(--color-border);
   }
-  .um-shortlist-royxat :global(.um-shortlist-nom) { font-weight: 700; overflow-wrap: anywhere; }
+  .um-shortlist-royxat :global(.um-shortlist-nom) { font-weight: var(--font-weight-bold); overflow-wrap: anywhere; }
   .um-shortlist-royxat :global(.um-olib) {
     min-height: var(--size-touch-min); padding: 0 var(--space-3); border: 0; background: none; cursor: pointer;
-    font: inherit; font-size: var(--text-small-size); font-weight: 700; color: var(--color-link); text-decoration: underline;
+    font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-link); text-decoration: underline;
   }
   .um-shortlist-royxat :global(.um-sr) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .um-sinxron { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
@@ -501,7 +501,7 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
     background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); box-shadow: var(--card-shadow);
   }
   .um-bosh-holat h2 { margin: 0; }
-  .um-bosh-ikonka { color: var(--floor-ui); }
+  .um-bosh-ikonka { color: var(--color-adm-accent-text); }
   .um-bosh-yol { margin: var(--space-3) 0 0; }
   .um-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
@@ -516,6 +516,6 @@ const OGOH = "Bu ro'yxat rasmiy talablar bo'yicha saralash, qabul ehtimoli emas.
     .um-maydonlar-qator { grid-template-columns: 1fr; }
     .um-kartalar { grid-template-columns: 1fr; }
     .um-tugmalar { display: grid; width: 100%; }
-    .um-tugmalar .tugma { width: 100%; }
+    .um-tugmalar .t-tugma { width: 100%; }
   }
 </style>

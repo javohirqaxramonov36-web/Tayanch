@@ -16,14 +16,14 @@ export interface Bolim {
 
 export const bolimlar: Bolim[] = [
   { slug: 'top-admission', nomi: 'Top Admission', tavsif: "Universitet tanlashdan qabul xatigacha.", holat: 'ochiq', ikonka: 'qalpoq',
-    xususiyatlar: ["Topshirish yo'li va universitet tanlash", 'Grantlar katalogi va davlatlarni taqqoslash', 'Ariza kursi, shablonlar va namunalar'] },
+    xususiyatlar: ["Topshirish yoʻli va universitet tanlash", 'Grantlar katalogi va davlatlarni taqqoslash', 'Ariza kursi, shablonlar va namunalar'] },
   { slug: 'sat', nomi: 'SAT', tavsif: 'Digital SAT: Reading & Writing va Math.', holat: 'ochiq', ikonka: 'varaq',
-    xususiyatlar: ['Math va Reading & Writing interaktiv darslari', 'Xato daftari va takrorlash', "Lug'at kartalari va natijalar tahlili"] },
-  { slug: 'ielts', nomi: 'IELTS', tavsif: "To'rt ko'nikma bo'yicha strategiya va mashq.", holat: 'ochiq', ikonka: 'suhbat',
-    xususiyatlar: ['Reading testlari va natija tahlili', "Listening, Writing va Speaking qo'llanmalari", 'Shaxsiy tayyorgarlik rejasi'] },
+    xususiyatlar: ['Math va Reading & Writing interaktiv darslari', 'Xato daftari va takrorlash', "Lugʻat kartalari va natijalar tahlili"] },
+  { slug: 'ielts', nomi: 'IELTS', tavsif: "Toʻrt koʻnikma boʻyicha strategiya va mashq.", holat: 'ochiq', ikonka: 'suhbat',
+    xususiyatlar: ['Reading testlari va natija tahlili', "Listening, Writing va Speaking qoʻllanmalari", 'Shaxsiy tayyorgarlik rejasi'] },
   { slug: 'eyuf', nomi: 'El-Yurt Umidi', tavsif: "Hujjatdan suhbatgacha: tanlov bosqichlariga tayyorgarlik.", holat: 'ochiq', ikonka: 'medal',
     xususiyatlar: ['IQ test va test simulyatsiyasi', 'Hujjatlar va esse', 'Suhbatga tayyorgarlik'] },
   // Qavat ochiq (qulfsiz). Kartadagi tugma kurs holatidan (aiAcademy.ts), qavat holatidan emas.
-  { slug: 'ai-academy', nomi: 'AI Academy', tavsif: "Sun'iy intellektdan amalda foydalanishni o'rganing: to'g'ri prompt yozing va o'z muammoingizni AI bilan hal qiling.", holat: 'ochiq', ikonka: 'kod',
-    xususiyatlar: ['Prompt Engineering kursi', "Har kurs oxirida o'z muammoingizni hal qilasiz", 'Birinchi darslar bepul'] },
+  { slug: 'ai-academy', nomi: 'AI Academy', tavsif: "Sunʼiy intellektdan amalda foydalanishni oʻrganing: toʻgʻri prompt yozing va oʻz muammoingizni AI bilan hal qiling.", holat: 'ochiq', ikonka: 'kod',
+    xususiyatlar: ['Prompt Engineering kursi', "Har kurs oxirida oʻz muammoingizni hal qilasiz", 'Birinchi darslar bepul'] },
 ];

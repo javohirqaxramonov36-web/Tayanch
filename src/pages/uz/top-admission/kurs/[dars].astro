@@ -41,7 +41,7 @@ const shablonlar = shablonData.shablonlar.filter((s) => s.darslar.includes(d.raq
     <header class="kd-bosh">
       <p class="adm-eyebrow">{modul.raqam}-modul · {modul.nom} · {d.raqam}-dars</p>
       <h1 class="adm-h1">{d.nom}</h1>
-      <p class="sust">Yo'l: {yolNomlari}. <a class="havola-matn" href={kursHref}>Barcha darslar</a></p>
+      <p class="sust">Yoʻl: {yolNomlari}. <a class="havola-matn" href={kursHref}>Barcha darslar</a></p>
       <p class="kd-holat" data-holat aria-live="polite"></p>
     </header>
 
@@ -78,10 +78,10 @@ const shablonlar = shablonData.shablonlar.filter((s) => s.darslar.includes(d.raq
         <p class="matn">Shu dars uchun shablon: {shablonlar.map((s, i) => <>{i > 0 && ', '}<a class="havola-matn" href={`${yol('/uz/top-admission/kurs/shablonlar/')}#${s.id}`}>{s.nom}</a></>)}.</p>
       )}
       <nav class="kd-nav" aria-label="Darslar">
-        {oldingiDars ? <a class="tugma tugma-ikkinchi" href={darsHref(oldingiDars)}>{oldingiDars.raqam}-dars</a> : <span />}
+        {oldingiDars ? <a class="t-tugma t-tugma--ikkinchi" href={darsHref(oldingiDars)}>{oldingiDars.raqam}-dars</a> : <span />}
         {keyingiDars
-          ? <a class="tugma tugma-asosiy" href={darsHref(keyingiDars)}>{keyingiDars.raqam}-dars: {keyingiDars.nom}</a>
-          : <a class="tugma tugma-asosiy" href={kursHref}>Barcha darslar</a>}
+          ? <a class="t-tugma adm-tugma--urgu" href={darsHref(keyingiDars)}>{keyingiDars.raqam}-dars: {keyingiDars.nom}</a>
+          : <a class="t-tugma adm-tugma--urgu" href={kursHref}>Barcha darslar</a>}
       </nav>
     </section>
 
@@ -134,23 +134,23 @@ const shablonlar = shablonData.shablonlar.filter((s) => s.darslar.includes(d.raq
 </script>
 
 <style>
-  .kd-sahifa { padding-bottom: var(--b-6); max-width: calc(72ch + 2 * var(--space-8)); }
+  .kd-sahifa { padding-bottom: var(--space-6); max-width: calc(72ch + 2 * var(--space-8)); }
   /* Uzun matn zich sirtda (2-qavat mini-DS) */
-  .kd-karta { display: grid; gap: var(--b-8); padding: var(--space-8); }
+  .kd-karta { display: grid; gap: var(--space-8); padding: var(--space-8); }
   @media (max-width: 760px) { .kd-karta { padding: var(--space-5); } }
-  .kd-sahifa section { display: grid; gap: var(--b-3); }
+  .kd-sahifa section { display: grid; gap: var(--space-3); }
   .kd-sahifa h2 { margin: 0; }
-  .kd-bosh { display: grid; gap: var(--b-2); }
+  .kd-bosh { display: grid; gap: var(--space-2); }
   .ustki { margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
   .matn { margin: 0; }
-  .sust { margin: 0; color: var(--matn-ikkinchi); }
-  .havola-matn { color: var(--rang-havola); font-weight: 700; }
-  .kd-holat { margin: 0; font-weight: 700; min-height: 1.5em; }
-  .kd-holat[data-tayyor="1"] { color: var(--rang-asosiy-matn); }
-  .kd-misol { padding: var(--b-5); border: var(--border-width-1) solid var(--color-adm-line); border-radius: var(--radius-lg); background: var(--color-adm-sunken); }
-  .kd-misol-bosh { display: flex; align-items: center; gap: var(--b-3); flex-wrap: wrap; }
-  .kd-iqtibos { margin: 0; padding-left: var(--b-4); border-left: 3px solid var(--chiziq-kuchli); font-weight: 600; }
-  .kd-mashq { font-weight: 600; }
-  .kd-nav { display: flex; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
-  .kd-havolalar { margin: 0; padding-left: 1.2em; display: grid; gap: var(--b-2); }
+  .sust { margin: 0; color: var(--color-adm-text-muted); }
+  .havola-matn { color: var(--color-link); font-weight: var(--font-weight-bold); }
+  .kd-holat { margin: 0; font-weight: var(--font-weight-bold); min-height: 1.5em; }
+  .kd-holat[data-tayyor="1"] { color: var(--color-adm-on-accent-text); }
+  .kd-misol { padding: var(--space-5); border: var(--border-width-1) solid var(--color-adm-line); border-radius: var(--radius-lg); background: var(--color-adm-sunken); }
+  .kd-misol-bosh { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+  .kd-iqtibos { margin: 0; padding-left: var(--space-4); border-left: 3px solid var(--color-adm-line-strong); font-weight: var(--font-weight-semibold); }
+  .kd-mashq { font-weight: var(--font-weight-semibold); }
+  .kd-nav { display: flex; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .kd-havolalar { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-2); }
 </style>

@@ -70,7 +70,7 @@ html[data-floor="5"] main h2 { font-size: var(--text-eyuf-h2-size); line-height:
   font-size: var(--text-caption-size);
   line-height: var(--text-caption-lh);
   font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.14em;
+  letter-spacing: var(--text-eyuf-yorliq-ls);
   text-transform: uppercase;
   color: var(--color-eyuf-text-muted);
 }
@@ -78,7 +78,7 @@ html[data-floor="5"] main h2 { font-size: var(--text-eyuf-h2-size); line-height:
 .eyuf-urgu { color: var(--color-eyuf-gold); font-style: italic; }
 .eyuf-namuna {
   display: inline-block;
-  padding: 2px var(--space-2);
+  padding: calc(var(--space-1) / 2) var(--space-2);
   border: var(--border-width-1) solid var(--color-eyuf-line-strong);
   border-radius: var(--radius-full);
   font-size: var(--text-caption-size);
@@ -170,7 +170,7 @@ a.eyuf-bosqich:active { transform: var(--bosilish); }
 }
 .eyuf-bosqich .holat {
   justify-self: start; display: inline-flex; align-items: center; gap: var(--space-1);
-  padding: 3px var(--space-2);
+  padding: var(--space-1) var(--space-2);
   border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-full);
   font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: var(--font-weight-semibold);
   color: var(--color-eyuf-text);
@@ -233,6 +233,28 @@ a.eyuf-qator:active { transform: var(--bosilish); }
 /* ---------- EyufTayyorlik: zich shishada halqa ko'rsatkich va bandlar ---------- */
 .eyuf-tayyorlik { container-type: inline-size; }
 .eyuf-tayyorlik-ichki { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); align-items: center; padding: var(--space-6); }
+/* Panel ichidagi ikkinchi tugma: main allaqachon blur'li shishada, ichma-ich blur yo'q (tekis zich sirt) */
+.eyuf-ui .eyuf-panel .t-tugma--ikkinchi,
+.eyuf-ui dialog .t-tugma--ikkinchi {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--color-eyuf-glass-strong);
+  border-color: var(--color-eyuf-line-strong);
+  color: var(--color-eyuf-text);
+}
+/* Javob varianti (mock, trenajyor): kapsula emas, uzun matn o'raladi; tanlangan holat aria-pressed + chegara */
+.eyuf-variant {
+  display: flex; align-items: center; width: 100%; min-height: var(--size-touch-min);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-md);
+  background: var(--color-eyuf-surface); color: var(--color-eyuf-text);
+  font: inherit; text-align: start; cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-state);
+}
+.eyuf-variant:active:not(:disabled) { transform: var(--bosilish); }
+.eyuf-variant[aria-pressed='true'] { border-color: var(--color-eyuf-accent); background: var(--color-eyuf-accent); color: var(--color-eyuf-on-accent); font-weight: var(--font-weight-semibold); }
+.eyuf-variant:disabled { cursor: default; }
+
 .eyuf-halqa {
   --ulush: 0;
   position: relative; width: var(--size-eyuf-halqa); height: var(--size-eyuf-halqa); border-radius: var(--radius-full);
@@ -245,7 +267,7 @@ a.eyuf-qator:active { transform: var(--bosilish); }
 }
 .eyuf-halqa > span { position: relative; display: grid; justify-items: center; }
 .eyuf-halqa b {
-  font-family: var(--font-eyuf); font-weight: var(--font-weight-medium); font-size: 36px; line-height: 40px;
+  font-family: var(--font-eyuf); font-weight: var(--font-weight-medium); font-size: var(--text-eyuf-raqam-size); line-height: var(--text-eyuf-raqam-lh);
   color: var(--color-eyuf-text); font-variant-numeric: lining-nums tabular-nums;
 }
 .eyuf-halqa small { font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: var(--font-weight-medium); color: var(--color-eyuf-text-muted); }

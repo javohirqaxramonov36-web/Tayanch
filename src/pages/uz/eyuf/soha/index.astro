@@ -9,10 +9,10 @@ import '../../../../styles/eyuf.css';
   <section class="eyuf-panel" data-track-catalog aria-labelledby="treklar-h">
     <h2 id="treklar-h">Trekni toping</h2>
     <div class="eyuf-grid">
-      <label>Ta’lim darajasi<select data-track-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label>
+      <label>Taʼlim darajasi<select data-track-level><option value="bachelor">Bakalavr</option><option value="master">Magistr</option></select></label>
       <label>Soha yoki mutaxassislik<input type="search" data-track-search maxlength="200" placeholder="Lotincha yoki kirillcha nom" /></label>
     </div>
-    <p>2026-2 ochiq kvotalar snapshoti bo‘yicha tartiblanadi. AI qo‘shimcha o‘rinlari AKTning asosiy qatoriga qayta qo‘shilmaydi.</p>
+    <p>2026-2 ochiq kvotalar snapshoti boʻyicha tartiblanadi. AI qoʻshimcha oʻrinlari AKTning asosiy qatoriga qayta qoʻshilmaydi.</p>
     <p role="status" data-track-count></p>
     <div class="eyuf-royxat-panel soha-royxat">
       <ol class="eyuf-royxat" data-track-list>
@@ -20,7 +20,7 @@ import '../../../../styles/eyuf.css';
           <li data-track={track.id}>
             <a class="eyuf-qator" data-track-link href={yol(`/uz/eyuf/soha/${track.id}/`)}>
               <span class="eyuf-doira"><EyufIkonka nomi="soha" /></span>
-              <span class="eyuf-qator-matn"><h3>{track.title}</h3><span class="meta" data-quota></span><span class="meta">{track.specialties.length} mutaxassislik yozuvi · Lotincha transkripsiya ko‘rikda</span></span>
+              <span class="eyuf-qator-matn"><h3>{track.title}</h3><span class="meta" data-quota></span><span class="meta">{track.specialties.length} mutaxassislik yozuvi · Lotincha transkripsiya koʻrikda</span></span>
               <span />
               <EyufIkonka nomi="chevron" qalinlik={2} />
             </a>
@@ -29,7 +29,7 @@ import '../../../../styles/eyuf.css';
       </ol>
     </div>
     <p><a href="https://api.el-yurt.uz/storage/quota-documents/992ee8d2-a625-47f9-9fbb-2fdf8bad0954-1793432390.pdf" target="_blank" rel="noopener noreferrer">S03 — rasmiy kvota jadvali (yangi oynada)</a></p>
-    <noscript><p>Daraja filtri va qidiruv uchun JavaScript’ni yoqing. Yuqorida barcha treklar berilgan.</p></noscript>
+    <noscript><p>Daraja filtri va qidiruv uchun JavaScriptʼni yoqing. Yuqorida barcha treklar berilgan.</p></noscript>
   </section>
 </EyufSahifa>
 <script>
