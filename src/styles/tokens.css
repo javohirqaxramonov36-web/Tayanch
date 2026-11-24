@@ -514,6 +514,8 @@
   --color-ielts-halo:rgb(39 96 222 / 0.4);              /* halqa motivi: bezak */
   --color-ielts-line:#D3DBEA;                           /* bezak chizig'i */
   --color-ielts-line-strong:#74819A;                    /* ma'noli chegara (chip, maydon) */
+  --color-ielts-surface:var(--color-neutral-0);          /* glass-strong ning noshaffof zaxirasi: maydon, karta */
+  --color-ielts-bg-deep:color-mix(in srgb, var(--color-ielts-dawn) 92%, var(--color-ielts-ink));
 
   /* COMPONENT · tipografiya (Lexend 600 = --font-ielts, oddiy harflar) */
   --text-ielts-hero-size:32px; --text-ielts-hero-lh:40px; --text-ielts-hero-ls:-0.02em;
@@ -537,6 +539,8 @@
   --color-ielts-halo:rgb(80 140 255 / 0.75);
   --color-ielts-line:#1F2E50;
   --color-ielts-line-strong:#62739A;
+  --color-ielts-surface:#111D3A;
+  --color-ielts-bg-deep:color-mix(in srgb, var(--color-ielts-night) 70%, var(--color-neutral-950));
 }
 @media (min-width: 481px){
   :root{ --text-ielts-hero-size:40px; --text-ielts-hero-lh:48px; }

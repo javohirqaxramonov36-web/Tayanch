@@ -21,20 +21,20 @@ const testIdlar = (await saytTestlari()).map((t) => t.testId);
     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 7v5l3 2" /></svg>
     <span id="rt-vaqt">60:00</span>
   </div>
-  <button type="button" class="tugma tugma-asosiy rt-yakunla" id="rt-yakunla" slot="amal" hidden>{RM.yakunlashQisqa}</button>
+  <button type="button" class="t-tugma ielts-tugma--urgu rt-yakunla" id="rt-yakunla" slot="amal" hidden>{RM.yakunlashQisqa}</button>
 
   <div id="rt" data-testlar={JSON.stringify(testIdlar)}>
     <h1 class="ekranda-yoq">{RM.testNomi}</h1>
     <div class="rt-ogoh" id="rt-ogoh-xotira" role="alert" hidden></div>
     <div class="rt-ogoh" id="rt-ogoh-tab" role="alert" hidden>
       <p id="rt-ogoh-tab-matn"></p>
-      <button type="button" class="tugma" id="rt-shu-tab" hidden>{RM.shuTabda}</button>
-      <a class="tugma" id="rt-natija-havola" href={yol('/uz/ielts/mashq/reading/')} hidden>{RM.natijagaOt}</a>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="rt-shu-tab" hidden>{RM.shuTabda}</button>
+      <a class="t-tugma t-tugma--ikkinchi" id="rt-natija-havola" href={yol('/uz/ielts/mashq/reading/')} hidden>{RM.natijagaOt}</a>
     </div>
 
     <div class="rt-holat" id="rt-holat" role="status">
       <p>{RM.yuklanmoqda}</p>
-      <noscript><p>Test ishlashi uchun brauzerda JavaScript yoqilgan bo'lishi kerak.</p></noscript>
+      <noscript><p>Test ishlashi uchun brauzerda JavaScript yoqilgan boʻlishi kerak.</p></noscript>
     </div>
 
     <div class="rt-ish" id="rt-ish" hidden>
@@ -74,8 +74,8 @@ const testIdlar = (await saytTestlari()).map((t) => t.testId);
         <p id="rt-yakun-belgi"></p>
         <p class="ikkinchi">{RM.yakunIzoh}</p>
         <div class="rt-dialog-amal">
-          <button type="button" class="tugma tugma-asosiy" id="rt-yakun-ha">{RM.yakunHa}</button>
-          <button type="button" class="tugma tugma-ikkinchi" id="rt-yakun-yoq">{RM.yakunYoq}</button>
+          <button type="button" class="t-tugma ielts-tugma--urgu" id="rt-yakun-ha">{RM.yakunHa}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="rt-yakun-yoq">{RM.yakunYoq}</button>
         </div>
       </div>
     </dialog>
@@ -88,7 +88,7 @@ const testIdlar = (await saytTestlari()).map((t) => t.testId);
 </script>
 
 <style>
-  .rt-natija { padding-block: var(--b-8) var(--b-14); }
-  .rt-natija-ichki { max-width: calc(912px + 2 * var(--b-5)); display: flex; flex-direction: column; gap: var(--b-6); }
-  .rt-natija-ichki > h2 { font-size: 32px; line-height: 1.15; }
+  .rt-natija { padding-block: var(--space-8) var(--space-14); }
+  .rt-natija-ichki { max-width: calc(912px + 2 * var(--space-5)); display: flex; flex-direction: column; gap: var(--space-6); }
+  .rt-natija-ichki > h2 { font-size: var(--text-h1-size); line-height: 1.15; }
 </style>

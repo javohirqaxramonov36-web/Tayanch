@@ -27,12 +27,12 @@ const IK = {
       <p class="ustki-kok">Mashq · Writing</p>
       <h1>Writing Task 2 baholash</h1>
       <p class="lead">
-        Mavzuni tanlang va inshoni yozing. AI uni IELTS'ning to'rt mezoni bo'yicha baholaydi, har mezonga izoh va bitta maslahat beradi.
-        Haqiqiy imtihonda Task 2 uchun kamida 250 so'z kerak va unga 40 daqiqadan ko'p sarflamaslik tavsiya etiladi.
+        Mavzuni tanlang va inshoni yozing. AI uni IELTSʼning toʻrt mezoni boʻyicha baholaydi, har mezonga izoh va bitta maslahat beradi.
+        Haqiqiy imtihonda Task 2 uchun kamida 250 soʻz kerak va unga 40 daqiqadan koʻp sarflamaslik tavsiya etiladi.
       </p>
       <p class="eslatma">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.info} />
-        <span><strong>Taxminiy baho.</strong> Uni AI qo'yadi, bu rasmiy IELTS natijasi emas. Izohlar inglizcha.</span>
+        <span><strong>Taxminiy baho.</strong> Uni AI qoʻyadi, bu rasmiy IELTS natijasi emas. Izohlar inglizcha.</span>
       </p>
       <p class="hisob-holat" id="hisob-holat" role="status"></p>
     </header>
@@ -53,7 +53,7 @@ const IK = {
         ))}
         <label class="mavzu">
           <input type="radio" name="mavzu" value="oz" />
-          <span class="m-matn"><span class="m-tur">O'z savolim</span><span class="m-izoh">Kitob yoki darsdagi savolni ko'chirib yozing.</span></span>
+          <span class="m-matn"><span class="m-tur">Oʻz savolim</span><span class="m-izoh">Kitob yoki darsdagi savolni koʻchirib yozing.</span></span>
         </label>
         <div class="oz-savol" id="oz-savol-blok" hidden>
           <label for="oz-savol" class="yorliq">Savol matni (inglizcha)</label>
@@ -65,16 +65,16 @@ const IK = {
         <label for="insho" class="kichik-sarlavha">2. Insho</label>
         <textarea id="insho" rows="16" lang="en" spellcheck="false" autocomplete="off" autocapitalize="sentences" aria-describedby="sanoq-izoh"></textarea>
         <p class="sanoq" aria-live="off">
-          <strong id="sanoq">0 so'z</strong>
+          <strong id="sanoq">0 soʻz</strong>
           <span id="sanoq-izoh"></span>
         </p>
-        <p class="mayda">Imlo tekshiruvi o'chirilgan: imtihonda ham u yo'q. Qoralama shu brauzerda avtomatik saqlanadi.</p>
+        <p class="mayda">Imlo tekshiruvi oʻchirilgan: imtihonda ham u yoʻq. Qoralama shu brauzerda avtomatik saqlanadi.</p>
       </div>
 
       <p class="xabar xabar-ogoh" id="forma-xato" role="alert"></p>
 
       <div class="amallar">
-        <button type="submit" class="tugma" id="yubor">Baholash</button>
+        <button type="submit" class="t-tugma t-tugma--ikkinchi" id="yubor">Baholash</button>
         <p class="qoldi" id="qoldi"></p>
       </div>
     </form>
@@ -83,7 +83,7 @@ const IK = {
       <div class="natija-bosh">
         <div>
           <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Taxminiy band</h2>
-          <p class="mayda">Task 2 bo'yicha, to'rt mezon o'rtachasi. Rasmiy IELTS natijasi emas.</p>
+          <p class="mayda">Task 2 boʻyicha, toʻrt mezon oʻrtachasi. Rasmiy IELTS natijasi emas.</p>
         </div>
         <p class="band-katta" id="band-katta"></p>
       </div>
@@ -91,18 +91,18 @@ const IK = {
       <p class="xulosa" id="xulosa" lang="en"></p>
       <ul class="mezonlar" id="mezonlar"></ul>
       <div class="amallar">
-        <button type="button" class="tugma tugma-ikkinchi" id="qayta">Qayta yozish</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Qayta yozish</button>
       </div>
     </section>
 
     <section id="tarix" aria-labelledby="tarix-h" hidden>
       <h2 id="tarix-h" class="bolim-sarlavha">Oldingi natijalar</h2>
-      <p class="mayda">Oxirgi 5 ta. Insholar hisobingizda saqlanadi, istalganini o'chirishingiz mumkin.</p>
+      <p class="mayda">Oxirgi 5 ta. Insholar hisobingizda saqlanadi, istalganini oʻchirishingiz mumkin.</p>
       <ul class="tarix-royxat" id="tarix-royxat"></ul>
     </section>
 
     <p class="mayda">
-      Insho mezonlari va tuzilmasi: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Writing Task 2 qo'llanmasi</a>.
+      Insho mezonlari va tuzilmasi: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Writing Task 2 qoʻllanmasi</a>.
       Insho baholash uchun Anthropic (AQSh) xizmatiga yuboriladi: <a href={yol('/uz/maxfiylik/#ielts-writing')}>Maxfiylik</a>.
     </p>
 
@@ -389,105 +389,105 @@ const IK = {
 </script>
 
 <style>
-  .writing { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-8); max-width: var(--size-measure); }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .writing { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-8); max-width: var(--size-measure); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .bosh p { margin: 0; }
-  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; }
-  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-h1-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); }
+  .lead { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
   .eslatma {
-    align-self: flex-start; margin: 0; padding: var(--b-2) var(--b-4); border-radius: var(--r-yon);
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
-    display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); font-weight: 500; line-height: 1.5;
+    align-self: flex-start; margin: 0; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
+    background: var(--color-warning-subtle); color: var(--color-warning-text);
+    display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); line-height: 1.5;
   }
   .eslatma svg { flex: none; }
   .hisob-holat { line-height: 1.5; }
   .hisob-holat:empty { display: none; }
-  .hisob-holat a { font-weight: 700; color: var(--rang-havola); }
-  .mayda { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); line-height: 1.5; }
-  .mayda a { color: var(--rang-havola); }
+  .hisob-holat a { font-weight: var(--font-weight-bold); color: var(--color-link); }
+  .mayda { margin: 0; font-size: var(--text-small-size); color: var(--color-ielts-text-muted); line-height: 1.5; }
+  .mayda a { color: var(--color-link); }
 
-  .bolim-sarlavha { margin: 0; font-size: var(--matn-h3); font-weight: 800; }
-  .kichik-sarlavha { margin: 0 0 var(--b-2); padding: 0; font-size: var(--matn-asosiy); font-weight: 800; display: flex; align-items: center; gap: var(--b-2); }
-  .pill-namuna { padding: 0 var(--b-2); border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-mayda); font-weight: 700; }
+  .bolim-sarlavha { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
+  .kichik-sarlavha { margin: 0 0 var(--space-2); padding: 0; font-size: var(--text-body-size); font-weight: var(--font-weight-extrabold); display: flex; align-items: center; gap: var(--space-2); }
+  .pill-namuna { padding: 0 var(--space-2); border-radius: var(--radius-full); background: var(--color-warning-subtle); color: var(--color-warning-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
 
-  .panel { padding: var(--b-6); border-radius: var(--r-katta); background: var(--sirt); box-shadow: var(--soya); display: flex; flex-direction: column; gap: var(--b-6); }
+  .panel { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-ielts-surface); box-shadow: var(--shadow-glass); display: flex; flex-direction: column; gap: var(--space-6); }
   .panel[hidden], section[hidden], form[hidden], .oz-savol[hidden] { display: none; }
 
-  .mavzular { margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
+  .mavzular { margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
   .mavzu {
-    display: flex; align-items: flex-start; gap: var(--b-3); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta);
-    background: var(--fon-ikkinchi); cursor: pointer; border: var(--border-width-2) solid transparent;
+    display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+    background: var(--color-ielts-tile); cursor: pointer; border: var(--border-width-2) solid transparent;
   }
-  .mavzu:has(input:checked) { border-color: var(--rang-asosiy); background: var(--fon); }
-  .mavzu input { margin-top: var(--b-1); flex: none; width: var(--b-5); height: var(--b-5); accent-color: var(--rang-asosiy); }
+  .mavzu:has(input:checked) { border-color: var(--color-ielts-accent-text); background: var(--color-ielts-bg); }
+  .mavzu input { margin-top: var(--space-1); flex: none; width: var(--space-5); height: var(--space-5); accent-color: var(--color-ielts-accent-text); }
   .mavzu input:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
-  .m-matn { display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
-  .m-tur { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .m-matn { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .m-tur { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); }
   .m-savol { line-height: 1.5; }
-  .m-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .oz-savol { display: flex; flex-direction: column; gap: var(--b-2); padding-left: var(--b-4); }
-  .yorliq { font-weight: 700; }
+  .m-izoh { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
+  .oz-savol { display: flex; flex-direction: column; gap: var(--space-2); padding-left: var(--space-4); }
+  .yorliq { font-weight: var(--font-weight-bold); }
 
   textarea {
-    width: 100%; padding: var(--b-3) var(--b-4); border: var(--border-width-2) solid var(--matn-sust); border-radius: var(--r-orta);
-    background: var(--fon); color: var(--matn); font: inherit; line-height: 1.6; resize: vertical;
+    width: 100%; padding: var(--space-3) var(--space-4); border: var(--border-width-2) solid var(--color-ielts-text-muted); border-radius: var(--radius-md);
+    background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; line-height: 1.6; resize: vertical;
   }
-  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); border-color: var(--matn); }
-  textarea[readonly] { background: var(--fon-ikkinchi); }
-  .insho-blok { display: flex; flex-direction: column; gap: var(--b-2); }
+  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); border-color: var(--color-ielts-text); }
+  textarea[readonly] { background: var(--color-ielts-tile); }
+  .insho-blok { display: flex; flex-direction: column; gap: var(--space-2); }
   #insho { min-height: 18rem; }
   .sanoq {
-    position: sticky; bottom: 0; margin: 0; padding: var(--b-2) 0; background: var(--sirt);
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-1) var(--b-3); font-size: var(--matn-kichik); color: var(--matn-ikkinchi);
+    position: sticky; bottom: 0; margin: 0; padding: var(--space-2) 0; background: var(--color-ielts-surface);
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); font-size: var(--text-small-size); color: var(--color-ielts-text-muted);
   }
-  #sanoq { font-size: var(--matn-asosiy); color: var(--matn); font-variant-numeric: tabular-nums; }
+  #sanoq { font-size: var(--text-body-size); color: var(--color-ielts-text); font-variant-numeric: tabular-nums; }
 
   .xabar:empty { display: none; }
-  .xabar { margin: 0; padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); line-height: 1.5; }
-  .xabar-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
+  .xabar { margin: 0; padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); line-height: 1.5; }
+  .xabar-ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); }
   .xabar:focus { outline: none; }
 
-  .amallar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-4); }
-  .qoldi { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .amallar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+  .qoldi { margin: 0; font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
   .qoldi:empty { display: none; }
 
-  .natija-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-4); }
-  .natija-bosh > div { display: flex; flex-direction: column; gap: var(--b-1); }
+  .natija-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .natija-bosh > div { display: flex; flex-direction: column; gap: var(--space-1); }
   #natija-h:focus { outline: none; }
-  .band-katta { margin: 0; font-size: var(--matn-h1); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .band-katta { margin: 0; font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1; font-variant-numeric: tabular-nums; }
   .xulosa { margin: 0; line-height: 1.6; }
-  .mezonlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-3); }
-  .writing :global(.mezon) { padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); display: flex; flex-direction: column; gap: var(--b-3); }
-  .writing :global(.mezon-bosh) { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--b-3); }
-  .writing :global(.mezon-nom) { margin: 0; font-size: var(--matn-asosiy); font-weight: 800; display: flex; flex-direction: column; gap: var(--b-1); }
-  .writing :global(.mezon-izoh) { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
-  .writing :global(.mezon-band) { font-size: var(--matn-h3); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .mezonlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .writing :global(.mezon) { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); display: flex; flex-direction: column; gap: var(--space-3); }
+  .writing :global(.mezon-bosh) { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+  .writing :global(.mezon-nom) { margin: 0; font-size: var(--text-body-size); font-weight: var(--font-weight-extrabold); display: flex; flex-direction: column; gap: var(--space-1); }
+  .writing :global(.mezon-izoh) { font-size: var(--text-small-size); font-weight: var(--font-weight-medium); color: var(--color-ielts-text-muted); }
+  .writing :global(.mezon-band) { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
   .writing :global(.mezon-matn), .writing :global(.maslahat) { margin: 0; line-height: 1.6; }
-  .writing :global(.iqtibos) { margin: 0; padding-left: var(--b-3); border-left: var(--border-width-2) solid var(--chiziq-kuchli); display: flex; flex-direction: column; gap: var(--b-1); line-height: 1.5; }
-  .writing :global(.q-yorliq) { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+  .writing :global(.iqtibos) { margin: 0; padding-left: var(--space-3); border-left: var(--border-width-2) solid var(--color-ielts-line); display: flex; flex-direction: column; gap: var(--space-1); line-height: 1.5; }
+  .writing :global(.q-yorliq) { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); }
 
-  #tarix { display: flex; flex-direction: column; gap: var(--b-3); }
+  #tarix { display: flex; flex-direction: column; gap: var(--space-3); }
   #tarix[hidden] { display: none; }
-  .tarix-royxat { list-style: none; margin: 0; padding: var(--b-2); display: flex; flex-direction: column; gap: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
-  .writing :global(.tarix-qator) { display: flex; align-items: center; gap: var(--b-2); }
+  .tarix-royxat { list-style: none; margin: 0; padding: var(--space-2); display: flex; flex-direction: column; gap: var(--space-1); background: var(--color-ielts-tile); border-radius: var(--radius-lg); }
+  .writing :global(.tarix-qator) { display: flex; align-items: center; gap: var(--space-2); }
   .writing :global(.t-ochish) {
-    flex: 1; min-width: 0; min-height: var(--control-height-lg); padding: var(--b-3) var(--b-4); border: 0; border-radius: var(--r-orta);
-    background: transparent; color: var(--matn); font: inherit; text-align: left; cursor: pointer; display: flex; align-items: center; gap: var(--b-4);
+    flex: 1; min-width: 0; min-height: var(--control-height-lg); padding: var(--space-3) var(--space-4); border: 0; border-radius: var(--radius-md);
+    background: transparent; color: var(--color-ielts-text); font: inherit; text-align: left; cursor: pointer; display: flex; align-items: center; gap: var(--space-4);
   }
-  .writing :global(.t-ochish):hover { background: var(--sirt); }
+  .writing :global(.t-ochish):hover { background: var(--color-ielts-surface); }
   .writing :global(.t-ochish):focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
-  .writing :global(.t-matn) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--b-1); }
-  .writing :global(.t-savol) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
-  .writing :global(.t-meta) { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .writing :global(.t-band) { font-size: var(--matn-katta); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .writing :global(.t-matn) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+  .writing :global(.t-savol) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--font-weight-semibold); }
+  .writing :global(.t-meta) { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
+  .writing :global(.t-band) { font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
 
   @media (max-width: 640px) {
-    .writing { padding-top: var(--b-6); gap: var(--b-6); }
-    h1 { font-size: var(--matn-h2); }
-    .panel { padding: var(--b-4); }
-    .mavzu { padding: var(--b-3); }
-    .amallar .tugma { flex: 1 1 100%; }
+    .writing { padding-top: var(--space-6); gap: var(--space-6); }
+    h1 { font-size: var(--text-h2-size); }
+    .panel { padding: var(--space-4); }
+    .mavzu { padding: var(--space-3); }
+    .amallar .t-tugma { flex: 1 1 100%; }
     .writing :global(.tarix-qator) { flex-wrap: wrap; }
     .writing :global(.t-ochir) { flex: 1 1 100%; }
   }

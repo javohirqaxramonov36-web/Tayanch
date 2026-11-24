@@ -23,7 +23,7 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 
     <div class="rn" id="rn">
       <p class="rn-bosh-xabar" role="status">{RM.natijaYuklanmoqda}</p>
-      <noscript><p class="rn-bosh-xabar">Natijani ko'rish uchun brauzerda JavaScript yoqilgan bo'lishi kerak.</p></noscript>
+      <noscript><p class="rn-bosh-xabar">Natijani koʻrish uchun brauzerda JavaScript yoqilgan boʻlishi kerak.</p></noscript>
     </div>
 
     <ManbaBlok
@@ -44,13 +44,13 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 </script>
 
 <style>
-  .rn-sahifa { padding-top: var(--b-10); padding-bottom: var(--b-14); display: flex; flex-direction: column; gap: var(--b-8); max-width: calc(912px + 2 * var(--b-10)) !important; }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-3); }
-  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  .rn-sahifa { padding-top: var(--space-10); padding-bottom: var(--space-14); display: flex; flex-direction: column; gap: var(--space-8); max-width: calc(912px + 2 * var(--space-10)) !important; }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-3); }
+  .ustki-kok { margin: 0; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: -0.5px; }
   .bosh p { margin: 0; }
   @media (max-width: 640px) {
-    .rn-sahifa { padding-top: var(--b-6); }
-    h1 { font-size: 32px; }
+    .rn-sahifa { padding-top: var(--space-6); }
+    h1 { font-size: var(--text-h1-size); }
   }
 </style>

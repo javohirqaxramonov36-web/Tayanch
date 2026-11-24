@@ -85,9 +85,9 @@ export function ishgaTushirTest(): void {
   function holatXabar(matn: string, turi: 'yoq' | 'boshlash' | 'qayta' = 'yoq'): void {
     const amal =
       turi === 'boshlash'
-        ? `<a class="tugma tugma-asosiy" href="${qoch(yol(READING_YOL.boshlash))}">${RM.boshlashSahifasi}</a>`
+        ? `<a class="t-tugma ielts-tugma--urgu" href="${qoch(yol(READING_YOL.boshlash))}">${RM.boshlashSahifasi}</a>`
         : turi === 'qayta'
-          ? `<button type="button" class="tugma tugma-asosiy" data-qayta>${RM.qaytaUrin}</button>`
+          ? `<button type="button" class="t-tugma ielts-tugma--urgu" data-qayta>${RM.qaytaUrin}</button>`
           : '';
     holatEl.innerHTML = `<p>${qoch(matn)}</p>${amal}`;
     holatEl.hidden = false;
@@ -226,9 +226,9 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
           .join('')}</section>`;
       })
       .join('');
-    const oldingi = passage > 0 ? `<button type="button" class="tugma tugma-ikkinchi" data-passage-ot="${passage - 1}">${RM.oldingi}</button>` : '<span></span>';
+    const oldingi = passage > 0 ? `<button type="button" class="t-tugma t-tugma--ikkinchi" data-passage-ot="${passage - 1}">${RM.oldingi}</button>` : '<span></span>';
     const keyingi =
-      passage < test.passages.length - 1 ? `<button type="button" class="tugma tugma-ikkinchi" data-passage-ot="${passage + 1}">${RM.keyingi}</button>` : '';
+      passage < test.passages.length - 1 ? `<button type="button" class="t-tugma t-tugma--ikkinchi" data-passage-ot="${passage + 1}">${RM.keyingi}</button>` : '';
     savolPanel.innerHTML = `<div class="rt-savol-ichi">${guruhlar}${test.passages.length > 1 ? `<div class="rt-otish">${oldingi}${keyingi}</div>` : ''}</div>`;
     savolPanel.scrollTop = 0;
     yangilaNav();
