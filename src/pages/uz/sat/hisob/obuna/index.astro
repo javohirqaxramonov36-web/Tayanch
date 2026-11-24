@@ -123,7 +123,7 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
                 <p class="narx-izoh" data-narx-izoh>The price will appear here once it is set.</p>
               </div>
               <div class="imkoniyat-blok" data-imkoniyat-blok hidden>
-                <h4 class="kichik-sarlavha">What's included</h4>
+                <h4 class="kichik-sarlavha" data-imkoniyat-sarlavha>What's included</h4>
                 <ul class="imkoniyat" data-imkoniyat></ul>
               </div>
               <p class="joriy-belgi" data-joriy-belgi hidden>Your current plan</p>
@@ -281,13 +281,17 @@ const freeTavsif = 'No payment and no end date. Lessons and tools on this site s
       const t = tariflar.find((x) => x.code === kod);
       const tayyor = tarifTayyor(kod);
       // Faol bo'lmagan tarif (masalan Max) RLS tufayli bazadan kelmaydi: "Coming soon".
+      // Rejalashtirilgan narx bo'lsa (satTarif.kutilayotgan) u ham ko'rsatiladi, to'lov tugmasi baribir chiqmaydi.
+      const kut = !t ? satTarif.kutilayotgan[kod as keyof typeof satTarif.kutilayotgan] : undefined;
       $('[data-narx]', karta)!.textContent = tayyor ? narxYozuv(t!.price_uzs!) : t ? 'Not available yet' : 'Coming soon';
       $('[data-narx-izoh]', karta)!.textContent = tayyor
         ? `For ${t!.period_days} days, paid once.`
+        : kut ? `Planned price: ${narxYozuv(kut.narxUzs)} for ${kut.kun} days, paid once. Not on sale yet.`
         : !t ? 'This plan is not open yet.'
         : davrFaol ? 'The price will appear here once it is set.' : 'This billing period is not available yet.';
       const imk = $<HTMLUListElement>('[data-imkoniyat]', karta)!;
-      const royxat = t ? kartaRoyxati(jadval, kod, t.features) : [];
+      const royxat = t ? kartaRoyxati(jadval, kod, t.features) : (kut?.imkoniyatlar ?? []).map((nomi) => ({ nomi, qiymat: '' }));
+      $('[data-imkoniyat-sarlavha]', karta)!.textContent = kut ? 'Planned' : "What's included";
       imk.replaceChildren(...royxat.map((b) => {
         const li = document.createElement('li');
         const matn = document.createElement('span');

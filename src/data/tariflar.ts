@@ -2,8 +2,10 @@
 // Pro narxi docs/tarif-qoidalari.md jadvalidan (plans.price_uzs 59 000, period_days 30, bir martalik; jonli
 // 2026-11-11 dan). Bazada narx o'zgarsa, PRO_NARX ham qo'lda yangilanadi (muallif qarori, 2026-11-24).
 // Imkoniyatlar shu jadvaldan: Free va Pro'da kvotalar hozircha cheklovsiz, Pro farqi kengaytirilgan analitika
-// (/uz/sat/vosita/natijalar/: qiyinlik bo'yicha aniqlik va bir savolga ketgan vaqt), Max faol emas
-// ("Tez orada", narxi belgilanmagan), AI Tutor hamma tarifda yopiq. Jadval o'zgarsa, shu fayl ham yangilanadi.
+// (/uz/sat/vosita/natijalar/: qiyinlik bo'yicha aniqlik va bir savolga ketgan vaqt).
+// Max (muallif qarori, 2026-11-24): 119 000 so'm / 30 kun, farqi AI Tutor (faqat Max'da) va cheklovsiz mock.
+// Sotuvga AI Tutor tayyor bo'lgach chiqadi; shungacha karta "Tez orada", plans.is_active = false.
+// Jadval o'zgarsa, shu fayl ham yangilanadi.
 
 export type TarifKod = 'free' | 'pro' | 'max';
 
@@ -20,11 +22,15 @@ export interface TarifKarta {
   tavsiya?: boolean;
   cta: { matn: string; href: string } | null;
   ctaIzoh?: string;
+  /** cta yo'q ("Tez orada") kartada pill ostidagi qisqa izoh. */
+  tezIzoh?: string;
 }
 
-/** Narxi hali belgilanmagan tarif (Max). */
+/** Narxi hali belgilanmagan tarif. */
 export const NARX_YOQ = '—';
 export const PRO_NARX = '59 000 soʻm';
+/** plans.price_uzs (max) bilan bir xil; bazada o'zgarsa qo'lda yangilanadi. */
+export const MAX_NARX = '119 000 soʻm';
 
 export const tarifKartalar: TarifKarta[] = [
   {
@@ -61,11 +67,16 @@ export const tarifKartalar: TarifKarta[] = [
     kod: 'max',
     nomi: 'Max',
     tavsif: 'SAT boʻlimi uchun.',
-    narx: NARX_YOQ,
+    narx: MAX_NARX,
+    narxIzoh: '30 kunga',
     asos: 'Proʼdagi hamma narsa, plus:',
-    imkoniyatlar: ['Qoʻshimcha imkoniyatlar hali belgilanmagan'],
+    imkoniyatlar: [
+      'AI Tutor: savol va xato boʻyicha tushuntirish (tayyorlanmoqda)',
+      'Mock imtihon cheklovsiz',
+    ],
     cta: null,
     ctaIzoh: 'Tez orada',
+    tezIzoh: 'AI Tutor tayyor boʻlgach sotuvga chiqadi.',
   },
 ];
 
@@ -75,7 +86,8 @@ export interface TaqqosQator { nomi: string; qiymat: Record<TarifKod, Katak> }
 export interface TaqqosGuruh { nomi: string; qatorlar: TaqqosQator[] }
 
 const TEZ = 'Tez orada';
-// Max "Pro'dagi hamma narsa, plus": bepul va Pro'dagi qatorlar Max'da ham bor; faqat yangi imkoniyat "Tez orada".
+// Max "Pro'dagi hamma narsa, plus": bepul va Pro'dagi qatorlar Max'da ham bor. AI Tutor faqat Max'da, "Tez orada".
+// Mock qatori hozirgi holat: limitlar Max sotuvga chiqqanda qo'yiladi (docs/tarif-qoidalari.md "Max sotuvga").
 const hamma = (q: Katak): Record<TarifKod, Katak> => ({ free: q, pro: q, max: q });
 
 export const taqqosGuruhlar: TaqqosGuruh[] = [
@@ -88,7 +100,7 @@ export const taqqosGuruhlar: TaqqosGuruh[] = [
       { nomi: 'Haftalik reja', qiymat: hamma(true) },
       { nomi: 'Lugʻat kartalari', qiymat: hamma(true) },
       { nomi: 'Kengaytirilgan analitika', qiymat: { free: false, pro: true, max: true } },
-      { nomi: 'AI Tutor', qiymat: { free: TEZ, pro: TEZ, max: TEZ } },
+      { nomi: 'AI Tutor', qiymat: { free: false, pro: false, max: TEZ } },
     ],
   },
   {

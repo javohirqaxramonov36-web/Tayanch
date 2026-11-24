@@ -3,7 +3,7 @@
 // Tuzilma: 3 karta (bittasi "Tavsiya etiladi", qora sahnada laym bilan), "X dagi hamma narsa, plus…" ro'yxati,
 // ostida taqqoslash jadvali. Telefonda (<768px) jadval bitta ustun, tepasida tariflar tablari
 // (WAI-ARIA tabs: ←/→, Home/End, standart Pro). JS bo'lmasa tablar yashirin, jadval gorizontal suriladi.
-// Narx src/data/tariflar.ts dan (Max: belgilanmagan). Faqat nav-* va poydevor tokenlari.
+// Narx src/data/tariflar.ts dan (Max: narx bor, sotuvda emas). Faqat nav-* va poydevor tokenlari.
 import { tarifKartalar, taqqosGuruhlar, tarifFaq, NARX_YOQ, type Katak } from '../data/tariflar';
 import { yol } from '../lib/yol';
 
@@ -27,6 +27,7 @@ const katakMatn = (k: Katak) => (k === true ? 'Bor' : k === false ? 'Yoʻq' : k)
           ? <a class:list={['t-tugma tt-tugma', { 't-tugma--ikkinchi': !k.tavsiya }]} href={yol(k.cta.href)}>{k.cta.matn}</a>
           : <p class="tt-tez">{k.ctaIzoh}</p>}
         {k.cta && k.ctaIzoh && <p class="tt-izoh">{k.ctaIzoh}</p>}
+        {!k.cta && k.tezIzoh && <p class="tt-izoh">{k.tezIzoh}</p>}
         <div class="tt-royxat">
           {k.asos && <p class="tt-asos">{k.asos}</p>}
           <ul>
