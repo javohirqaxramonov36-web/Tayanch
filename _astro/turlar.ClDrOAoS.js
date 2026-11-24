@@ -1,0 +1,1 @@
+var e=`tayanch:sat-xato-daftari`,t=`tayanch:sat-reja`;export{e as n,t};

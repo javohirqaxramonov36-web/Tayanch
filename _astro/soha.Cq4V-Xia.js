@@ -1,0 +1,1 @@
+function e(e){return e.normalize(`NFKC`).toLocaleLowerCase(`uz`).replace(/[‘’ʻʼ`']/g,``).replace(/\s+/g,` `).trim()}export{e as t};
