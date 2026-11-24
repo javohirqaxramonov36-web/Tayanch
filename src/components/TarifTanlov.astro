@@ -1,0 +1,204 @@
+---
+// 1-qavat · Tariflar: kartalar + taqqoslash jadvali + ota-onalar FAQ (BoshTariflar, /uz/hisob/obunalar/).
+// Tuzilma: 3 karta (bittasi "Tavsiya etiladi", qora sahnada laym bilan), "X dagi hamma narsa, plus…" ro'yxati,
+// ostida taqqoslash jadvali. Telefonda (<768px) jadval bitta ustun, tepasida tariflar tablari
+// (WAI-ARIA tabs: ←/→, Home/End, standart Pro). JS bo'lmasa tablar yashirin, jadval gorizontal suriladi.
+// Narx joy egasi (src/data/tariflar.ts). Faqat nav-* va poydevor tokenlari.
+import { tarifKartalar, taqqosGuruhlar, tarifFaq, type Katak } from '../data/tariflar';
+import { yol } from '../lib/yol';
+
+interface Props { id?: string; sarlavhaDarajasi?: 2 | 3 }
+const { id = 'tarif', sarlavhaDarajasi = 2 } = Astro.props;
+const H = `h${sarlavhaDarajasi}` as 'h2' | 'h3';
+const Hk = `h${sarlavhaDarajasi + 1}` as 'h3' | 'h4';
+const standart = tarifKartalar.findIndex((k) => k.tavsiya);
+const katakMatn = (k: Katak) => (k === true ? 'Bor' : k === false ? 'Yoʻq' : k);
+---
+<div class="tt" data-tarif-tanlov><div class="tt-ichi">
+  <ul class="tt-kartalar" role="list">
+    {tarifKartalar.map((k) => (
+      <li class:list={['tt-karta', { 'tt-karta--tavsiya': k.tavsiya }]} aria-labelledby={`${id}-${k.kod}-nom`}>
+        {k.tavsiya && <p class="nav-chip nav-chip--laym tt-tavsiya">Tavsiya etiladi</p>}
+        <Hk id={`${id}-${k.kod}-nom`} class="tt-nom">{k.nomi}</Hk>
+        <p class="tt-tavsif">{k.tavsif}</p>
+        <p class="tt-narx">{k.narx}{k.kod !== 'free' && <span class="tt-sr"> (narx bu yerda koʻrsatilmagan)</span>}</p>
+        {k.cta
+          ? <a class:list={['t-tugma tt-tugma', { 't-tugma--ikkinchi': !k.tavsiya }]} href={yol(k.cta.href)}>{k.cta.matn}</a>
+          : <p class="tt-tez">{k.ctaIzoh}</p>}
+        {k.cta && k.ctaIzoh && <p class="tt-izoh">{k.ctaIzoh}</p>}
+        <div class="tt-royxat">
+          {k.asos && <p class="tt-asos">{k.asos}</p>}
+          <ul>
+            {k.imkoniyatlar.map((x) => (
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>{x}</li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <section class="tt-taqqos" aria-labelledby={`${id}-taqqos-h`}>
+    <H id={`${id}-taqqos-h`} class="tt-bolim-h">Tariflarni taqqoslang</H>
+    <div class="tt-tablar" role="tablist" aria-label="Tarifni tanlang" data-tt-tablar hidden>
+      {tarifKartalar.map((k, i) => (
+        <button type="button" role="tab" id={`${id}-tab-${k.kod}`} aria-controls={`${id}-jadval`}
+          aria-selected={i === standart ? 'true' : 'false'} tabindex={i === standart ? 0 : -1} data-tt-tab={k.kod}>{k.nomi}</button>
+      ))}
+    </div>
+    <div class="tt-suruv" id={`${id}-jadval`} data-tt-panel>
+      <table class="tt-jadval">
+        <caption class="tt-sr">Bepul, Pro va Max tariflari imkoniyatlari</caption>
+        <thead>
+          <tr>
+            <th scope="col"><span class="tt-sr">Imkoniyat</span></th>
+            {tarifKartalar.map((k) => <th scope="col" data-ustun={k.kod} class:list={{ 'tt-ustun--tavsiya': k.tavsiya }}>{k.nomi}</th>)}
+          </tr>
+        </thead>
+        {taqqosGuruhlar.map((g) => (
+          <tbody>
+            <tr class="tt-guruh"><th scope="colgroup" colspan={tarifKartalar.length + 1}>{g.nomi}</th></tr>
+            {g.qatorlar.map((q) => (
+              <tr>
+                <th scope="row">{q.nomi}</th>
+                {tarifKartalar.map((k) => {
+                  const v = q.qiymat[k.kod];
+                  return (
+                    <td data-ustun={k.kod} class:list={{ 'tt-ustun--tavsiya': k.tavsiya }}>
+                      {v === true ? <><svg class="tt-belgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg><span class="tt-sr">Bor</span></>
+                        : v === false ? <><svg class="tt-belgi tt-belgi--yoq" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12" /></svg><span class="tt-sr">Yoʻq</span></>
+                        : <span class="tt-matn">{katakMatn(v)}</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        ))}
+      </table>
+    </div>
+  </section>
+
+  <section class="tt-faq" aria-labelledby={`${id}-faq-h`}>
+    <H id={`${id}-faq-h`} class="tt-bolim-h">Ota-onalar uchun savollar</H>
+    <div class="tt-faq-royxat">
+      {tarifFaq.map((f) => (
+        <details class="tt-faq-band">
+          <summary><span>{f.savol}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></summary>
+          <div class="tt-faq-javob">
+            {f.javob.map((p) => <p>{p}</p>)}
+            {f.havola && <p><a href={yol(f.havola.href)}>{f.havola.matn}</a></p>}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+</div></div>
+
+<script>
+  import { keyingiTab } from '../lib/tarifTab';
+  for (const ildiz of document.querySelectorAll<HTMLElement>('[data-tarif-tanlov]')) {
+    const tablar = ildiz.querySelector<HTMLElement>('[data-tt-tablar]');
+    const panel = ildiz.querySelector<HTMLElement>('[data-tt-panel]');
+    if (!tablar || !panel) continue;
+    const tugmalar = [...tablar.querySelectorAll<HTMLButtonElement>('[data-tt-tab]')];
+    const tanla = (i: number, fokus = false) => {
+      tugmalar.forEach((t, j) => { t.setAttribute('aria-selected', String(i === j)); t.tabIndex = i === j ? 0 : -1; });
+      panel.dataset.tanlangan = tugmalar[i].dataset.ttTab;
+      panel.setAttribute('aria-labelledby', tugmalar[i].id);
+      if (fokus) tugmalar[i].focus();
+    };
+    const boshi = Math.max(0, tugmalar.findIndex((t) => t.getAttribute('aria-selected') === 'true'));
+    tanla(boshi);
+    tablar.hidden = false;
+    tugmalar.forEach((t, i) => t.addEventListener('click', () => tanla(i)));
+    tablar.addEventListener('keydown', (e) => {
+      const joriy = tugmalar.indexOf(document.activeElement as HTMLButtonElement);
+      const yangi = keyingiTab(joriy < 0 ? boshi : joriy, e.key, tugmalar.length);
+      if (yangi === null) return;
+      e.preventDefault();
+      tanla(yangi, true);
+    });
+  }
+</script>
+
+<style>
+  .tt { container: tarif / inline-size; justify-self: stretch; min-width: 0; }
+  .tt-ichi { display: grid; gap: var(--space-12); }
+  .tt p { margin: 0; }
+  .tt-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* ---------- Kartalar ---------- */
+  .tt-kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); align-items: stretch; }
+  .tt-karta { position: relative; display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-8); background: var(--color-nav-surface); color: var(--color-nav-text); border: var(--border-width-1) solid var(--color-nav-line); border-radius: var(--radius-lg); }
+  .tt-karta--tavsiya { background: var(--color-nav-stage); color: var(--color-nav-on-stage); border: var(--border-width-2) solid var(--color-nav-lime); }
+  .tt-tavsiya { position: absolute; top: calc(var(--space-3) * -1 - var(--border-width-2)); left: var(--space-8); }
+  .tt-nom { margin: 0; font-family: var(--font-display); font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); letter-spacing: var(--text-nav-sarlavha-ls); text-transform: uppercase; }
+  .tt-tavsif, .tt-izoh, .tt-asos { color: var(--color-nav-text-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .tt-karta--tavsiya :is(.tt-tavsif, .tt-izoh, .tt-asos) { color: var(--color-nav-on-stage-muted); }
+  .tt-narx { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .tt-tugma { width: 100%; }
+  .tt-tez { display: grid; place-items: center; min-height: var(--btn-glass-height); border: var(--border-width-1) dashed var(--color-nav-line-strong); border-radius: var(--radius-full); color: var(--color-nav-text-muted); font-weight: var(--font-weight-semibold); }
+  .tt-royxat { display: grid; gap: var(--space-3); padding-top: var(--space-4); border-top: var(--border-width-1) solid var(--color-nav-line); }
+  .tt-karta--tavsiya .tt-royxat { border-top-color: var(--color-nav-line-on-stage); }
+  .tt-asos { font-weight: var(--font-weight-semibold); }
+  .tt-royxat ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+  .tt-royxat li { display: grid; grid-template-columns: var(--size-icon-md) 1fr; gap: var(--space-2); align-items: start; }
+  .tt-royxat svg, .tt-belgi { width: var(--size-icon-md); height: var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+  .tt-karta--tavsiya .tt-royxat svg { stroke: var(--color-nav-lime); }
+
+  /* ---------- Taqqoslash ---------- */
+  .tt-taqqos, .tt-faq { display: grid; gap: var(--space-5); min-width: 0; }
+  .tt-bolim-h { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .tt-suruv { overflow-x: auto; border: var(--border-width-1) solid var(--color-nav-line); border-radius: var(--radius-lg); background: var(--color-nav-surface); }
+  .tt-jadval { width: 100%; min-width: 40rem; border-collapse: collapse; color: var(--color-nav-text); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .tt-jadval :is(th, td) { padding: var(--space-3) var(--space-4); text-align: left; border-bottom: var(--border-width-1) solid var(--color-nav-line); }
+  .tt-jadval tbody:last-of-type tr:last-child :is(th, td) { border-bottom: 0; }
+  .tt-jadval thead th { font-family: var(--font-display); font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); text-transform: uppercase; letter-spacing: var(--text-nav-sarlavha-ls); }
+  .tt-jadval tbody th[scope='row'] { font-weight: var(--font-weight-medium); width: 34%; }
+  .tt-jadval td { width: 22%; }
+  .tt-guruh th { background: var(--color-nav-bg); font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; color: var(--color-nav-text-muted); }
+  .tt-jadval .tt-ustun--tavsiya { background: color-mix(in srgb, var(--color-nav-text) 5%, transparent); }
+  .tt-jadval thead .tt-ustun--tavsiya { box-shadow: inset 0 var(--border-width-3) 0 var(--color-nav-text); }
+  .tt-belgi--yoq { color: var(--color-nav-text-muted); }
+  .tt-matn { color: var(--color-nav-text-muted); }
+
+  .tt-tablar { display: none; }
+  .tt-tablar button { flex: 1; min-height: var(--btn-glass-height); padding: 0 var(--space-3); border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-nav-text); font: inherit; font-weight: var(--font-weight-semibold); cursor: pointer; transition: background-color var(--harakat-tez) var(--harakat-egri), color var(--harakat-tez) var(--harakat-egri); }
+  .tt-tablar button[aria-selected='true'] { background: var(--color-nav-text); color: var(--color-nav-bg); }
+  .tt-tablar button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+  /* ---------- FAQ ---------- */
+  .tt-faq-royxat { display: grid; border-top: var(--border-width-1) solid var(--color-nav-line); }
+  .tt-faq-band { border-bottom: var(--border-width-1) solid var(--color-nav-line); }
+  .tt-faq-band summary { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); min-height: var(--btn-glass-height); padding: var(--space-4) 0; cursor: pointer; list-style: none; font-weight: var(--font-weight-semibold); color: var(--color-nav-text); }
+  .tt-faq-band summary::-webkit-details-marker { display: none; }
+  .tt-faq-band summary:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
+  .tt-faq-band summary svg { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; transition: transform var(--harakat-tez) var(--harakat-egri); }
+  .tt-faq-band[open] summary svg { transform: rotate(45deg); }
+  .tt-faq-javob { display: grid; gap: var(--space-3); padding-bottom: var(--space-5); max-width: 65ch; color: var(--color-nav-text-muted); }
+  .tt-faq-javob a { color: var(--color-nav-text); }
+
+  @container tarif (width < 960px) and (width >= 720px) {
+    .tt-karta { padding: var(--space-6); }
+    .tt-tavsiya { left: var(--space-6); }
+  }
+  @container tarif (width < 720px) {
+    .tt-ichi { gap: var(--space-10); }
+    .tt-kartalar { grid-template-columns: 1fr; gap: var(--space-8); }
+    .tt-karta { padding: var(--space-6); }
+    .tt-tavsiya { left: var(--space-6); }
+    .tt-tablar:not([hidden]) { display: flex; gap: var(--space-1); padding: var(--space-1); border: var(--border-width-1) solid var(--color-nav-line-strong); border-radius: var(--radius-full); background: var(--color-nav-surface); }
+    .tt-suruv[data-tanlangan] { overflow-x: visible; }
+    .tt-suruv[data-tanlangan] .tt-jadval { min-width: 0; }
+    .tt-suruv[data-tanlangan='free'] [data-ustun]:not([data-ustun='free']),
+    .tt-suruv[data-tanlangan='pro'] [data-ustun]:not([data-ustun='pro']),
+    .tt-suruv[data-tanlangan='max'] [data-ustun]:not([data-ustun='max']) { display: none; }
+    .tt-suruv[data-tanlangan] thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .tt-suruv[data-tanlangan] tbody th[scope='row'] { width: 55%; }
+    .tt-suruv[data-tanlangan] td { width: auto; text-align: right; }
+    .tt-suruv[data-tanlangan] .tt-ustun--tavsiya { background: transparent; }
+    .tt-suruv[data-tanlangan] .tt-belgi { margin-left: auto; display: block; }
+  }
+  @media (prefers-reduced-motion: reduce) { .tt-tablar button, .tt-faq-band summary svg { transition: none; } }
+</style>
