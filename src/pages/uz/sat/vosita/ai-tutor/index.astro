@@ -136,7 +136,7 @@ const tekshirilmagan = [
 
   .eslatma {
     max-width: var(--size-measure); padding: var(--space-4) var(--space-5);
-    border: var(--border-width-1) solid var(--color-border); border-left: var(--border-width-3) solid var(--floor-ui);
+    border: var(--border-width-1) solid var(--color-border); border-left: var(--border-width-3) solid var(--color-sat-blue-fill);
     border-radius: var(--radius-md); background: var(--color-surface);
   }
   .eslatma-h { font-size: var(--text-body-size); margin: 0 0 var(--space-2); }
@@ -166,7 +166,7 @@ const tekshirilmagan = [
   .sanoq { text-align: right; font-variant-numeric: tabular-nums; }
   .kirit {
     width: 100%; min-height: var(--size-control-md); padding: 0 var(--space-4);
-    border: var(--border-width-2) solid var(--chiziq-maydon); border-radius: var(--radius-md);
+    border: var(--border-width-2) solid var(--color-sat-line-strong); border-radius: var(--radius-md);
     background: var(--color-bg); color: var(--color-text-primary); font: inherit; font-size: var(--text-body-size);
   }
   .matn-maydon { padding: var(--space-3) var(--space-4); resize: vertical; line-height: 1.5; }
@@ -182,9 +182,9 @@ const tekshirilmagan = [
     min-height: var(--size-touch-min); padding: var(--space-3) var(--space-4);
     border: var(--border-width-2) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); cursor: pointer;
   }
-  .variant:has(input:checked) { border-color: var(--floor-ui); }
+  .variant:has(input:checked) { border-color: var(--color-sat-blue-fill); }
   .variant:has(input:focus-visible) { box-shadow: var(--focus-ring); }
-  .variant input { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); margin: 0; accent-color: var(--floor-ui); cursor: pointer; }
+  .variant input { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); margin: 0; accent-color: var(--color-sat-blue-fill); cursor: pointer; }
   .variant input:focus-visible { outline: none; }
   .variant-nom { font-weight: 700; }
 
@@ -202,7 +202,7 @@ const tekshirilmagan = [
   .tarix-royxat :global(.tr-nom) { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; flex: 1 1 14rem; overflow-wrap: anywhere; }
   .tarix-royxat :global(.tr-sana) { font-size: var(--text-small-size); color: var(--color-text-secondary); }
   .tarix-royxat :global(.tr-tugmalar) { display: flex; gap: var(--space-2); }
-  .tarix-royxat :global([aria-current='true']) { border-color: var(--floor-ui); }
+  .tarix-royxat :global([aria-current='true']) { border-color: var(--color-sat-blue-fill); }
 
   @media (max-width: 36rem) {
     .tugmalar .tugma { width: 100%; }

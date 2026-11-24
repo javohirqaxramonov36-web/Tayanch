@@ -37,7 +37,7 @@
   .sk-matn u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
   .sk-stem { font-size: var(--font-size-body-d); font-weight: var(--font-weight-medium); }
   .sk-jadval { overflow-x: auto; margin: var(--space-4) 0; max-width: 100%; border-radius: var(--radius-sm); }
-  .sk-jadval table { border-collapse: collapse; font-size: var(--matn-asosiy); min-width: 100%; font-variant-numeric: tabular-nums; }
+  .sk-jadval table { border-collapse: collapse; font-size: var(--text-body-size); min-width: 100%; font-variant-numeric: tabular-nums; }
   .sk-jadval th, .sk-jadval td { border: var(--border-width-1) solid var(--color-sat-line-strong); padding: var(--space-2) var(--space-3); text-align: left; vertical-align: top; }
   .sk-jadval th { background: var(--color-sat-line); font-weight: var(--font-weight-bold); }
   .sk-formula-alohida { margin: var(--space-3) 0; overflow-x: auto; overflow-y: hidden; }
@@ -55,7 +55,7 @@
     min-height: var(--size-touch-min); padding: 0 var(--space-3);
     border: var(--border-width-1) solid transparent; border-radius: var(--radius-full);
     background: transparent; color: var(--color-sat-text-muted);
-    font: inherit; font-weight: var(--font-weight-semibold); font-size: var(--matn-kichik);
+    font: inherit; font-weight: var(--font-weight-semibold); font-size: var(--text-small-size);
     display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer;
   }
   .sk-asbob[hidden] { display: none; }
@@ -66,8 +66,8 @@
 
   /* Rasm */
   .sk-rasm { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
-  .sk-rasm img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-md); border: var(--border-width-1) solid var(--color-sat-line); background: var(--fon); }
-  .sk-rasm figcaption { font-size: var(--matn-kichik); color: var(--color-sat-text-muted); }
+  .sk-rasm img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-md); border: var(--border-width-1) solid var(--color-sat-line); background: var(--color-sat-surface); }
+  .sk-rasm figcaption { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
 
   /* Variantlar (SatSavol .sat-variant): tekis, 1px sat-line-strong, harf doirasi */
   .sk-variantlar { display: flex; flex-direction: column; gap: var(--space-2); }
@@ -78,7 +78,7 @@
     min-height: var(--size-touch-min); padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
     border-radius: var(--radius-lg);
     background: transparent; border: var(--border-width-1) solid var(--color-sat-line-strong);
-    color: var(--color-sat-text); font: inherit; font-size: var(--matn-asosiy); font-weight: var(--font-weight-medium); text-align: left;
+    color: var(--color-sat-text); font: inherit; font-size: var(--text-body-size); font-weight: var(--font-weight-medium); text-align: left;
     font-variant-numeric: tabular-nums;
     display: flex; align-items: center; gap: var(--space-3);
     cursor: pointer;
@@ -93,7 +93,7 @@
     width: 36px; height: 36px; flex: none; border-radius: var(--radius-full);
     display: grid; place-items: center;
     border: var(--border-width-1) solid var(--color-sat-line-strong);
-    font-family: var(--font-sat); font-size: var(--matn-kichik); font-weight: var(--font-weight-semibold); line-height: 1;
+    font-family: var(--font-sat); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); line-height: 1;
     background: transparent; color: var(--color-sat-text);
   }
   .sk-v-matn { flex: 1; min-width: 0; overflow-wrap: break-word; }
@@ -111,7 +111,7 @@
     flex: none; width: var(--size-touch-min); min-height: var(--size-touch-min);
     border-radius: var(--radius-lg); border: var(--border-width-1) solid var(--color-sat-line-strong);
     background: transparent; color: var(--color-sat-text-muted);
-    font: inherit; font-family: var(--font-sat); font-weight: var(--font-weight-semibold); font-size: var(--matn-kichik);
+    font: inherit; font-family: var(--font-sat); font-weight: var(--font-weight-semibold); font-size: var(--text-small-size);
     display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
   }
   .sk-ochir[hidden] { display: none; }
@@ -141,7 +141,7 @@
   .sk-natija-sarlavha { margin: 0; font-family: var(--font-sat); font-size: var(--font-size-body-d); line-height: var(--line-height-body-d); font-weight: var(--font-weight-semibold); }
   .sk-natija.sk-natija-togri { border-color: var(--color-success-ui); }
   .sk-natija.sk-natija-togri .sk-natija-sarlavha { color: var(--color-success-text); }
-  .sk-natija-izoh { font-size: var(--matn-asosiy); }
+  .sk-natija-izoh { font-size: var(--text-body-size); }
   .sk-natija-izoh:empty { display: none; }
 
   /* SPR: maydon tekis sirt (forma zich shisha ichida, blur yo'q) */
@@ -167,17 +167,17 @@
     font: inherit; font-weight: var(--font-weight-semibold); cursor: pointer;
   }
   @media (hover: hover) and (pointer: fine) { .sk-belgi-tugma:hover { border-color: var(--color-sat-blue); } }
-  .sk-yordam { margin: 0; font-size: var(--matn-kichik); color: var(--color-sat-text-muted); max-width: var(--size-measure); }
+  .sk-yordam { margin: 0; font-size: var(--text-small-size); color: var(--color-sat-text-muted); max-width: var(--size-measure); }
   .sk-spr-xato {
     margin: 0; align-self: flex-start;
     padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
-    font-size: var(--matn-kichik); font-weight: var(--font-weight-semibold);
+    background: var(--color-warning-subtle); color: var(--color-warning-text);
+    font-size: var(--text-small-size); font-weight: var(--font-weight-semibold);
     display: flex; align-items: flex-start; gap: var(--space-2);
   }
   .sk-spr-xato[hidden], .sk-korinish[hidden] { display: none; }
   .sk-spr-xato svg { flex: none; width: 18px; height: 18px; margin-top: 1px; }
-  .sk-korinish { display: flex; align-items: center; gap: var(--space-3); font-size: var(--matn-kichik); color: var(--color-sat-text-muted); }
+  .sk-korinish { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
   .sk-korinish-qiymat { font-size: var(--font-size-body-d); color: var(--color-sat-text); }
 
   /* Tugma: SAT ko'k kapsulasi (sat-blue-fill), savol panelida bitta */
@@ -204,7 +204,7 @@
   /* Tor konteyner (telefon): passage tepada, savol pastda */
   @container (max-width: 560px) {
     .sk-passage, .sk-savol, .sk-natija { padding: var(--space-5) var(--space-4); }
-    .sk-matn, .sk-stem { font-size: var(--matn-asosiy); }
+    .sk-matn, .sk-stem { font-size: var(--text-body-size); }
     .sk-spr-maydon { flex: 1 1 100%; }
     .sk-spr-qator .sk-katta { flex: 1 1 100%; }
     .sk-asbob { padding: 0 var(--space-2); }

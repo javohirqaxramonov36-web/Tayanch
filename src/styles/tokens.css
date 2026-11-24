@@ -457,6 +457,13 @@
   --color-sat-blue-text:var(--color-floor-sat-700);
   --color-sat-line:#D3DCE8;
   --color-sat-line-strong:#6F819A;
+  /* DS 5-bosqich (2026-11-24): eski taxalluslar o'rniga (qiymat .sat dagi taxallus bilan bir xil) */
+  --color-sat-sunken:color-mix(in srgb, var(--color-sat-line) 60%, var(--color-sat-surface)); /* eski --fon-ikkinchi */
+  --color-sat-blue-subtle:var(--color-floor-sat-subtle);                                     /* eski --rang-asosiy-och */
+  --color-sat-blue-fill-hover:color-mix(in srgb, var(--color-sat-blue-fill) 80%, var(--color-sat-navy)); /* eski --rang-asosiy-toq */
+  --color-sat-blue-deep:color-mix(in srgb, var(--color-floor-sat-ui) 60%, var(--color-neutral-950));    /* eski --rang-asosiy-chuqur */
+  --color-sat-stage:var(--color-sat-navy);               /* eski --qora: navy sahna bloki */
+  --color-sat-stage-raised:var(--color-sat-navy-raised); /* eski --qora-sirt */
 
   /* COMPONENT · o'lcham va tipografiya (Sora 600 = --font-sat, faqat inglizcha matn) */
   --size-sat-plitka:64px; --size-sat-tabbar:56px;
@@ -478,6 +485,8 @@
   --color-sat-blue-text:var(--color-sat-sky);
   --color-sat-line:#1E3A5C;
   --color-sat-line-strong:var(--color-sat-line-on-navy);
+  --color-sat-stage:var(--color-sat-navy-raised);
+  --color-sat-stage-raised:var(--color-sat-navy-high);
 }
 @media (min-width: 720px){
   :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; --text-sat-raqam-size:40px; --text-sat-raqam-lh:44px; }

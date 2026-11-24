@@ -122,17 +122,17 @@ const obuna = yol('/uz/sat/hisob/obuna/');
 
 <style>
   .natija [hidden] { display: none !important; }
-  .natija { padding-top: var(--b-6); }
-  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
-  .karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-4); max-width: 640px; padding: var(--b-8) var(--b-6); border: 1.5px solid var(--matn); border-radius: var(--r-katta); background: var(--sirt); }
-  .belgi { display: inline-grid; place-items: center; inline-size: var(--b-14); block-size: var(--b-14); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-h3); font-weight: 800; }
-  .karta[data-holat='success'] .belgi { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .karta[data-holat='failed'] .belgi, .karta[data-holat='kutish'] .belgi { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
-  .xabar { display: flex; flex-direction: column; gap: var(--b-2); }
-  h1 { font-size: var(--matn-h3); }
+  .natija { padding-top: var(--space-6); }
+  .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
+  .karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); max-width: 640px; padding: var(--space-8) var(--space-6); border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg); background: var(--color-sat-surface); }
+  .belgi { display: inline-grid; place-items: center; inline-size: var(--space-14); block-size: var(--space-14); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-h3-size); font-weight: 800; }
+  .karta[data-holat='success'] .belgi { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
+  .karta[data-holat='failed'] .belgi, .karta[data-holat='kutish'] .belgi { background: var(--color-warning-subtle); color: var(--color-warning-text); }
+  .xabar { display: flex; flex-direction: column; gap: var(--space-2); }
+  h1 { font-size: var(--text-h3-size); }
   h1:focus { outline: none; }
-  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
-  .karta a:not(.tugma) { color: var(--rang-havola); }
-  .amallar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-2); }
+  .lead { font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); }
+  .karta a:not(.tugma) { color: var(--color-sat-blue-text); }
+  .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
   @media (max-width: 479.98px) { .amallar { flex-direction: column; align-self: stretch; } .amallar .tugma { width: 100%; } }
 </style>
