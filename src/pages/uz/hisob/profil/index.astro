@@ -143,7 +143,7 @@ import { yol } from '../../../../lib/yol';
       .eq('id', u.id)
       .maybeSingle();
     if (error || !data) {
-      return xabar($('profil-xato'), "Profil ma'lumotlarini yuklab bo'lmadi. Sahifani yangilab ko'ring.");
+      return xabar($('profil-xato'), "Profil maʼlumotlarini yuklab boʻlmadi. Sahifani yangilab koʻring.");
     }
     // display_name bo'sh bo'lsa, P12 dan oldingi user_metadata qiymati taklif qilinadi (saqlanganda jadvalga yoziladi).
     ism.value = String(data.display_name ?? u.user_metadata?.display_name ?? '');
@@ -176,11 +176,11 @@ import { yol } from '../../../../lib/yol';
     statistika.disabled = false;
     if (error || !data?.length) {
       statistika.checked = !yangi;
-      return xabar($('statistika-xato'), "Sozlamani saqlab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.");
+      return xabar($('statistika-xato'), "Sozlamani saqlab boʻlmadi. Internetni tekshirib, qayta urinib koʻring.");
     }
     xabar($('statistika-holat'), yangi
       ? 'Saqlandi. Statistika yoziladi.'
-      : "Saqlandi. Statistika endi yozilmaydi, avvalgi yozuvlar o'chirildi.");
+      : "Saqlandi. Statistika endi yozilmaydi, avvalgi yozuvlar oʻchirildi.");
   });
 
   // SAT ball: 400–1600, qadam 10 (src/lib/satMaqsad.ts, SAT sozlash sahifasi bilan bir xil qoida).
@@ -205,12 +205,12 @@ import { yol } from '../../../../lib/yol';
     sana.setAttribute('aria-describedby', tasvir);
   }
   function sanaXatoMatni(): string | null {
-    if (sana.validity.badInput) return "Sanani to'liq kiriting.";
+    if (sana.validity.badInput) return "Sanani toʻliq kiriting.";
     if (!sana.value || sana.value === saqlanganSana) return null;
     const x = sanaXatosi(sana.value, bugun);
-    if (x === 'otgan') return "Bu sana o'tib ketgan. Bugungi yoki keyingi sanani tanlang.";
+    if (x === 'otgan') return "Bu sana oʻtib ketgan. Bugungi yoki keyingi sanani tanlang.";
     if (x === 'uzoq') return 'Keyingi ikki yil ichidagi sanani tanlang.';
-    if (x) return "Sanani to'liq kiriting.";
+    if (x) return "Sanani toʻliq kiriting.";
     return null;
   }
 
@@ -247,7 +247,7 @@ import { yol } from '../../../../lib/yol';
     }
     // P32: server laqabni moderatsiya qiladi (private.nickname_allowed, profiles triggeri).
     if (error?.message === 'nickname_not_allowed') {
-      maydonXatosi(taxallus, "Bu taxallusni ishlatib bo'lmaydi. Boshqasini tanlang.");
+      maydonXatosi(taxallus, "Bu taxallusni ishlatib boʻlmaydi. Boshqasini tanlang.");
       return taxallus.focus();
     }
     if (error || !data?.length) return xabar($('profil-xato'), xatoMatni((error ?? new Error('profil')) as Error, 'profil'));
@@ -293,10 +293,10 @@ import { yol } from '../../../../lib/yol';
     yuklanish(eksport, false);
     if (!r.ok) {
       return xabar($('eksport-xato'), kodBilan(r.kod === 'network_error'
-        ? "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."
+        ? "Serverga ulanib boʻlmadi. Internetni tekshirib, qayta urinib koʻring."
         : r.kod === 'not_signed_in'
           ? "Sessiya tugagan. Sahifani yangilab, qayta kiring."
-          : "Ma'lumotni tayyorlab bo'lmadi. Birozdan keyin qayta urinib ko'ring.", r.kod));
+          : "Maʼlumotni tayyorlab boʻlmadi. Birozdan keyin qayta urinib koʻring.", r.kod));
     }
     const fayl = { ...r.data.malumot, brauzer: { localStorage: brauzerYozuvlari(localStorage), sessionStorage: brauzerYozuvlari(sessionStorage) } };
     const nomi = `tayanch-malumotlarim-${toshkentBugun()}.json`;
@@ -389,10 +389,10 @@ import { yol } from '../../../../lib/yol';
 
   const ochirishXatoMatni: Record<string, string> = {
     reauth_required: "Shaxsingizni qayta tasdiqlang: parolingizni kiriting yoki Google orqali qayta kiring.",
-    payment_in_progress: "Sizda tugallanmagan to'lov bor. Bir necha daqiqadan keyin qayta urinib ko'ring yoki Aloqa sahifasi orqali yozing.",
-    network_error: "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.",
+    payment_in_progress: "Sizda tugallanmagan toʻlov bor. Bir necha daqiqadan keyin qayta urinib koʻring yoki Aloqa sahifasi orqali yozing.",
+    network_error: "Serverga ulanib boʻlmadi. Internetni tekshirib, qayta urinib koʻring.",
     not_signed_in: "Sessiya tugagan. Sahifani yangilab, qayta kiring.",
-    delete_failed: "Hisob serverda o'chirilmadi. Birozdan keyin qayta urinib ko'ring yoki Aloqa sahifasi orqali yozing.",
+    delete_failed: "Hisob serverda oʻchirilmadi. Birozdan keyin qayta urinib koʻring yoki Aloqa sahifasi orqali yozing.",
   };
 
   tasdiq.addEventListener('submit', async (ev) => {
@@ -410,7 +410,7 @@ import { yol } from '../../../../lib/yol';
       if (error) {
         yuklanish(ha, false);
         const m = xatoMatni(error, 'kirish');
-        maydonXatosi(parol, kodBilan(m === "Email yoki parol noto'g'ri." ? "Parol noto'g'ri." : m, authXatoKodi(error)));
+        maydonXatosi(parol, kodBilan(m === "Email yoki parol notoʻgʻri." ? "Parol noto'g'ri." : m, authXatoKodi(error)));
         return parol.focus();
       }
     }
@@ -422,7 +422,7 @@ import { yol } from '../../../../lib/yol';
         return tasdiqEmail.focus();
       }
       if (r.kod === 'reauth_required') await kirishHolati();
-      return xabar($('ochirish-xato'), kodBilan(ochirishXatoMatni[r.kod] ?? "Hisob o'chirilmadi. Qayta urinib ko'ring.", r.kod));
+      return xabar($('ochirish-xato'), kodBilan(ochirishXatoMatni[r.kod] ?? "Hisob oʻchirilmadi. Qayta urinib koʻring.", r.kod));
     }
     await c.auth.signOut({ scope: 'local' }).catch(() => undefined);
     try { localStorage.removeItem(hisobSozlama.sessiyaKaliti); } catch { /* xotira yopiq bo'lsa ham davom */ }

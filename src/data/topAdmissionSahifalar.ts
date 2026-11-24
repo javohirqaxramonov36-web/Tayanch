@@ -33,14 +33,14 @@ export const taGuruhlar: TaGuruh[] = [
       { nomi: 'Ariza zinapoyasi', href: 'top-admission/qollanma/ariza-zinapoyasi/' },
       { nomi: 'Kurs: STEM profildan arizaga', href: 'top-admission/kurs/' },
       { nomi: 'Platformalar xaritasi', href: 'top-admission/platformalar/' },
-      { nomi: "Arzonroq o'qish yo'llari", href: 'top-admission/arzon-yollar/' },
+      { nomi: "Arzonroq oʻqish yoʻllari", href: 'top-admission/arzon-yollar/' },
       { nomi: 'Ochiq manbalar', href: 'top-admission/manbalar/' },
     ],
   },
   {
     nomi: 'Vositalar',
     bandlar: [
-      { nomi: "Topshirish yo'li", href: 'top-admission/vosita/topshirish-yoli/' },
+      { nomi: "Topshirish yoʻli", href: 'top-admission/vosita/topshirish-yoli/' },
       { nomi: 'Davlatlarni taqqoslash', href: 'top-admission/davlatlar/' },
       { nomi: 'Grantlar', href: 'top-admission/grantlar/' },
       { nomi: 'Menga mos universitet', href: 'top-admission/universitetlar/' },

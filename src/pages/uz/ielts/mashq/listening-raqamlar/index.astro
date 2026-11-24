@@ -241,11 +241,24 @@ const IK = {
     xabar.className = 'xabar';
     asosiyTugma.textContent = 'Tekshirish';
     hisob.textContent = `${i + 1} / ${navbat.length}`;
-    progressIchi.style.width = `${(i / navbat.length) * 100}%`;
+    progressIchi.style.transform = `scaleX(${i / navbat.length})`;
     ovozHolatiniKorsat();
     javobInput.focus();
   }
 
+  // DS: holat belgisi chiziqli inline SVG (currentColor), so'z yonida; emoji/belgi matni emas
+  function holatIkonka(togri: boolean) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2.5'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+    const p = document.createElementNS(ns, 'path');
+    p.setAttribute('d', togri ? 'M5 12.5l4.5 4.5L19 7.5' : 'M6 6l12 12M18 6L6 18');
+    svg.append(p);
+    const s = document.createElement('span');
+    s.className = 'x-belgi'; s.setAttribute('aria-hidden', 'true'); s.append(svg);
+    return s;
+  }
   function qism(teg: string, matn: string, sinf?: string, til?: string) {
     const el = document.createElement(teg);
     el.textContent = matn;
@@ -272,7 +285,7 @@ const IK = {
     const qatorlar: HTMLElement[] = [];
     const bosh = document.createElement('p');
     bosh.className = 'x-bosh';
-    const belgi = qism('span', togri ? '✓' : '✗', 'x-belgi');
+    const belgi = holatIkonka(togri);
     belgi.setAttribute('aria-hidden', 'true');
     bosh.append(belgi, qism('strong', togri ? "To'g'ri." : "Noto'g'ri."));
     qatorlar.push(bosh);
@@ -326,7 +339,7 @@ const IK = {
       }
       engYaxshilarniKorsat();
     }
-    progressIchi.style.width = '100%';
+    progressIchi.style.transform = 'scaleX(1)';
     mashqBolim.hidden = true;
     natijaBolim.hidden = false;
     $('natija-h').focus();
@@ -408,7 +421,8 @@ const IK = {
   .panel-ust .bolim-sarlavha { margin: 0; }
   .hisob { margin: 0; font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); font-variant-numeric: tabular-nums; }
   .progress { height: var(--space-2); border-radius: var(--radius-full); background: var(--color-ielts-tile); overflow: hidden; }
-  .progress span { display: block; height: 100%; width: 0; background: var(--color-ielts-accent-text); transition: width var(--duration-base) var(--ease-state); }
+  /* DS harakat: faqat transform (width emas). To'liq kenglik, scaleX bilan to'ladi */
+  .progress span { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left center; background: var(--color-ielts-accent-text); transition: transform var(--duration-base) var(--ease-state); }
 
   form { display: flex; flex-direction: column; gap: var(--space-3); }
   .tinglash-qator { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
@@ -435,6 +449,7 @@ const IK = {
     display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--radius-full);
     background: var(--color-ielts-text); color: var(--color-ielts-bg); font-weight: var(--font-weight-extrabold);
   }
+  .xabar :global(.x-belgi svg) { width: var(--size-icon-md); height: var(--size-icon-md); }
   .xabar :global(.x-soz) { font-size: var(--font-size-body-d); letter-spacing: 0.02em; }
   .xabar :global(.x-maslahat) { font-weight: var(--font-weight-semibold); }
   :global(.x-mano) { color: var(--color-ielts-text-muted); font-size: var(--text-small-size); }
