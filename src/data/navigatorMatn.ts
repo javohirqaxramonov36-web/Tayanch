@@ -3,7 +3,7 @@
 // umumiyMatn.ts dagi `Til` turidan foydalanadi.
 import type { Til } from './umumiyMatn.ts';
 import type { Maqsad } from './navigatorSahifalar.ts';
-import type { KunlikDaqiqa } from './yolXaritasiQoidalar.ts';
+import type { KunlikDaqiqa, Surat } from './yolXaritasiQoidalar.ts';
 
 export type MuddatJavob = '15d' | '1m' | '3m' | 'date' | 'unknown';
 
@@ -34,10 +34,11 @@ const uz = {
   muddatlar: {
     '15d': '15 kun',
     '1m': '1 oy',
-    '3m': '3 oy',
+    '3m': "3 oy yoki ko'proq",
     date: 'Aniq sana',
     unknown: 'Hali aniq emas',
   } as Record<MuddatJavob, string>,
+  muddatYordam: "6 oy yoki undan uzoq bo'lsa, \"Aniq sana\"ni tanlang: reja sanaga qarab tuziladi.",
   sanaYorliq: 'Imtihon yoki muddat sanasi',
   sanaKerak: 'Sanani tanlang.',
   sanaOtgan: "Sana bugundan oldin bo'lmasligi kerak. Bugungi yoki keyingi sanani tanlang.",
@@ -67,8 +68,11 @@ const uz = {
   holatHozir: 'Hozir',
   holatKeyin: 'Keyin',
   hammasiTezOrada: "Bu yo'nalishdagi sahifalar hali tayyorlanmoqda.",
+  /** Aniq sana bo'lmaganda natija chipida sur'at nomi */
+  suratNomi: { intensiv: 'Shoshilinch reja · 15 kun', oy: 'Bir oylik reja', uzoq: 'Uzoq muddatli reja', umumiy: 'Umumiy reja' } as Record<Surat, string>,
   qolganKun: (n: number) => (n === 0 ? 'Muddat bugun' : `Muddatgacha ${n} kun`),
   sanaOtibKetdi: "Belgilangan sana o'tib ketdi. Yo'l xaritasini qayta tuzing.",
+  muddatNomalumIzoh: "Muddat aniqlansa, rejani qayta tuzing: qadamlar sur'atga moslashadi.",
   umumiyIzoh: "Bu umumiy boshlang'ich reja. \"Yo'l xaritamni qayta tuzish\" tugmasi bilan 3 ta savolga javob bersangiz, reja sizga moslashadi.",
   asosiyMaqsad: (nom: string) => `Asosiy maqsad: ${nom}`,
   qoidaIzoh: "Reja oddiy qoidalar asosida tuziladi va faqat yo'nalish beradi. Natija kafolatlanmaydi.",

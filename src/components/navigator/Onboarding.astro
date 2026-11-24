@@ -51,8 +51,9 @@ const belgi = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
       </fieldset>
 
       <!-- 2-qadam: muddat -->
-      <fieldset class="onb-qadam" data-onb-qadam="1" aria-describedby="onb-hisob" hidden>
+      <fieldset class="onb-qadam" data-onb-qadam="1" aria-describedby="onb-hisob onb-izoh2" hidden>
         <legend><h2 class="onb-savol" tabindex="-1">{m.savol2}</h2></legend>
+        <p class="onb-izoh" id="onb-izoh2">{m.muddatYordam}</p>
         <div class="onb-variantlar">
           {muddatlar.map((v) => (
             <label class="variant">

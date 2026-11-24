@@ -30,6 +30,10 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'ta-topshirish-yoli', maqsad: 'top-admission', nomi: "Topshirish yo'lingizni tuzing", izoh: "Davlat va dastur bo'yicha umumiy qadamlar.", manzil: '/uz/top-admission/vosita/topshirish-yoli/' },
   { id: 'ta-zinapoya', maqsad: 'top-admission', nomi: 'Ariza zinapoyasi darsi', izoh: 'Ariza bosqichlarini tartib bilan mashq qiling.', manzil: '/uz/top-admission/qollanma/ariza-zinapoyasi/' },
   { id: 'ta-turkiye', maqsad: 'top-admission', nomi: 'Türkiye Bursları', izoh: "Yo'nalish sahifasi: shartlar va hujjatlar.", manzil: '/uz/top-admission/turkiye-burslari/' },
+  { id: 'ta-grantlar', maqsad: 'top-admission', nomi: 'Grantlar katalogi', izoh: "Davlat va daraja bo'yicha filtrlang, eng yaqin muddat birinchi.", manzil: '/uz/top-admission/grantlar/' },
+  { id: 'ta-davlatlar', maqsad: 'top-admission', nomi: 'Davlatlarni taqqoslang', izoh: "Xarajat, til talabi va grant imkoniyati yonma-yon.", manzil: '/uz/top-admission/davlatlar/' },
+  { id: 'ta-universitetlar', maqsad: 'top-admission', nomi: 'Menga mos universitet', izoh: "IELTS balingiz va byudjetingizni rasmiy talablar bilan solishtiring.", manzil: '/uz/top-admission/universitetlar/' },
+  { id: 'ta-kurs', maqsad: 'top-admission', nomi: 'Top Admission kursi', izoh: "Ariza tayyorlash darslari: hujjatlar, esse, tavsiyanoma.", manzil: '/uz/top-admission/kurs/' },
 
   // 3-qavat: SAT
   { id: 'sat-kirish', maqsad: 'sat', nomi: "SAT bo'limini ko'ring", izoh: "Bo'limda nima borligi va qayerdan boshlash.", manzil: '/uz/sat/' },
@@ -61,7 +65,12 @@ export const navigatorSahifalar: NavigatorSahifa[] = [
   { id: 'ielts-speaking', maqsad: 'ielts', nomi: "Speaking qo'llanmasi", izoh: "Uch qism va o'zingizni yozib eshitish.", manzil: '/uz/ielts/qollanma/speaking/' },
 
   // 5-qavat: EYUF
-  { id: 'eyuf-kirish', maqsad: 'eyuf', nomi: "EYUF bo'limi", izoh: 'Tanlov bosqichlari xaritasi.', manzil: '/uz/eyuf/', qurilmoqda: true },
+  { id: 'eyuf-kirish', maqsad: 'eyuf', nomi: "El-Yurt Umidi bo'limi", izoh: 'Tanlov bosqichlari: hujjat, test, suhbat.', manzil: '/uz/eyuf/' },
+  { id: 'eyuf-iq', maqsad: 'eyuf', nomi: 'IQ test', izoh: "Taymer bilan mashq va xatolar tahlili.", manzil: '/uz/eyuf/iq/' },
+  { id: 'eyuf-reja', maqsad: 'eyuf', nomi: 'Tayyorgarlik rejasi', izoh: "Holatingiz va kunlik ishlar.", manzil: '/uz/eyuf/reja/' },
+  { id: 'eyuf-mock', maqsad: 'eyuf', nomi: 'Test simulyatsiyasi', izoh: "Darajangizga mos bloklar va taymer.", manzil: '/uz/eyuf/mock/' },
+  { id: 'eyuf-suhbat', maqsad: 'eyuf', nomi: 'Suhbatga tayyorgarlik', izoh: "Savol kartalari va o'zingizni yozib eshitish.", manzil: '/uz/eyuf/suhbat/' },
+  { id: 'eyuf-kurslar', maqsad: 'eyuf', nomi: 'El-Yurt Umidi kurslari', izoh: "Hujjat va esse bo'yicha bepul kirish kurslari.", manzil: '/uz/eyuf/kurslar/' },
 ];
 
 /** id -> sahifa */
