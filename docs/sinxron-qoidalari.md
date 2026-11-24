@@ -30,6 +30,7 @@ Hamma SAT kaliti (va Top Admission shortlisti) `public.user_state` ga yoziladi (
 | `tayanch:sat-rasmiy-testlar` | `{ versiya: 1, testlar, xatolar }` (P11, `rasmiyTestlar.ts`) | `test` yoki `xato` + TAB + `id` | xuddi shu |
 | `tayanch:sat-afzallik` | `{ versiya: 1, rejim: 'practice' \| 'timed', kunlikDaqiqa: 15 \| 30 \| 45 \| 60 \| null }` (My SAT profile, `src/lib/sat/afzallik.ts`) | `afzallik` (bitta yozuv) | xuddi shu |
 | `tayanch:admission-shortlist` | `[{ id: slug }]`, yangisi birinchi, 200 tagacha (`src/lib/topAdmission/universitetMoslik.ts`) | `id` (universitet slug'i) | xuddi shu |
+| `tayanch:admission-grantlar` | `[{ id: slug }]`, yangisi birinchi, 200 tagacha (`src/lib/topAdmission/grantKatalog.ts`, 2026-11-24) | `id` (grant slug'i) | xuddi shu |
 | — | — | — | `tayanch:sat-import`: profil bayrog'i `{ versiya, migrated, birinchi, oxirgi, soni }` |
 
 `user_state.value` shakli: `{ versiya: 1, qiymat, t, o }`. `qiymat` brauzerdagi qiymatning o'zi, `t` har yozuvning oxirgi o'zgarish vaqti (ms), `o` o'chirilgan yozuvlar (tombstone, ms; har kalitda eng yangi 1000 tasi).

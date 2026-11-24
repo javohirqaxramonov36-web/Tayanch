@@ -14,6 +14,8 @@ export const SINXRON_KALITLAR = [
   'tayanch:sat-afzallik',
   // Top Admission shortlist (Admission D-seriya, Q4): [{ id: slug }], src/lib/topAdmission/universitetMoslik.ts
   'tayanch:admission-shortlist',
+  // Top Admission saqlangan grantlar (audit 2026-11-24): [{ id: slug }], src/lib/topAdmission/grantKatalog.ts
+  'tayanch:admission-grantlar',
 ] as const;
 // tayanch:sat-lugat bu yerda yo'q: P15 (PR #99) dan beri lug'at o'z jadvallarida (vocab_progress, vocab_import_local).
 export type SinxronKalit = (typeof SINXRON_KALITLAR)[number];
@@ -115,6 +117,8 @@ const SHAKLLAR: Record<SinxronKalit, Shakl> = {
   },
   // tayanch:admission-shortlist: [{ id: slug }], yangisi birinchi, 200 tagacha (SHORTLIST_MAKS)
   'tayanch:admission-shortlist': royxat(200),
+  // tayanch:admission-grantlar: [{ id: slug }], yangisi birinchi, 200 tagacha (shortlist bilan bir xil shakl)
+  'tayanch:admission-grantlar': royxat(200),
   // tayanch:sat-reja: bitta obyekt yoki yo'q → bitta yozuv "reja"
   'tayanch:sat-reja': {
     ajrat(q) {
