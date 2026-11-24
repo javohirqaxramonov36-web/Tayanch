@@ -735,6 +735,7 @@
   --header-menu-width: 420px;
   --header-language-width: 240px;
   --header-accent: #315BDD;
+  --header-on-accent: var(--color-neutral-0);
   --flag-blue: #0099B5;
   --flag-green: #1EB53A;
   --flag-red: #CE1126;
@@ -805,6 +806,8 @@
 
   /* COMPONENT · o'lcham va tipografiya (Barlow Condensed 700 = --font-display, JetBrains Mono = --font-mono) */
   --size-nav-node:20px; --size-nav-node-hozir:28px; --size-nav-burchak:12px;
+  /* Onboarding dialogi (Onboarding.astro): oyna kengligi, maqsad kartasi ustuni va balandligi, sana maydoni */
+  --size-nav-dialog:640px; --size-nav-maqsad-min:240px; --size-nav-maqsad-tanlov:88px; --size-nav-sana-max:260px;
   --text-nav-raqam-size:72px; --text-nav-raqam-lh:0.9; --text-nav-raqam-ls:-0.01em;
   --text-nav-sarlavha-size:28px; --text-nav-sarlavha-lh:1; --text-nav-sarlavha-ls:0.01em;
   --text-nav-hero-size:56px; --text-nav-hero-lh:0.95;
@@ -840,6 +843,9 @@ html:root[data-floor="1"]{
   --color-text-secondary:var(--color-nav-text-muted);
   --color-border:var(--color-nav-line);
   --color-border-strong:var(--color-nav-line-strong);
+  /* Ustki qator urg'usi (faol pill, Kirish strelkasi): 1-qavatda faqat laym fill, ustida nav-on-lime (ikkinchi urg'u yo'q) */
+  --header-accent:var(--color-nav-lime);
+  --header-on-accent:var(--color-nav-on-lime);
 }
 
 /* ==========================================================================

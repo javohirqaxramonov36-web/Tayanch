@@ -106,7 +106,7 @@ const belgi = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
 
 <style>
   .onb {
-    width: min(640px, calc(100vw - 2 * var(--b-4)));
+    width: min(var(--size-nav-dialog), calc(100vw - 2 * var(--b-4)));
     max-height: calc(100dvh - 2 * var(--b-6));
     padding: 0;
     border: none;
@@ -125,14 +125,14 @@ const belgi = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
   .onb-bosh-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
   .onb-nom { font-family: var(--font-display); font-weight: var(--font-weight-bold); font-size: var(--text-h3-size); line-height: var(--text-nav-sarlavha-lh); letter-spacing: var(--text-nav-sarlavha-ls); text-transform: uppercase; color: var(--color-nav-text); }
   .onb-otkaz {
-    min-height: 48px; padding: 0 var(--b-3); margin-right: calc(-1 * var(--b-3));
+    min-height: var(--size-control-md); padding: 0 var(--b-3); margin-right: calc(-1 * var(--b-3));
     border: none; background: none; color: var(--rang-havola);
     font: inherit; font-weight: 700; cursor: pointer; border-radius: var(--r-toliq);
   }
   @media (hover: hover) and (pointer: fine) { .onb-otkaz:hover { background: var(--fon-ikkinchi); } }
   /* Navigator mono yorlig'i (nav.css .nav-chip qoidasi): qadam hisobi */
   .onb-hisob { justify-self: start; width: fit-content; padding: var(--space-1) var(--space-2); border: var(--border-width-1) solid var(--color-nav-line-strong); border-radius: var(--radius-sm); color: var(--color-nav-text-muted); font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; }
-  .onb-progress { height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
+  .onb-progress { height: var(--space-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
   .onb-progress div { height: 100%; width: 33.33%; background: var(--rang-asosiy); border-radius: var(--r-toliq); }
 
   .onb-tana { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--b-3) var(--b-6) var(--b-5); }
@@ -142,52 +142,52 @@ const belgi = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
   .onb-qadam legend + * { clear: both; }
   .onb-savol { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
   .onb-savol:focus { outline: none; }
-  .onb-savol:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
+  .onb-savol:focus-visible { outline: var(--border-width-3) solid var(--rang-asosiy); outline-offset: var(--border-width-2); border-radius: var(--r-kichik); }
   .onb-izoh { color: var(--matn-ikkinchi); }
 
-  .onb-maqsadlar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--b-3); }
+  .onb-maqsadlar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--size-nav-maqsad-min), 1fr)); gap: var(--b-3); }
   .m-karta { display: flex; flex-direction: column; gap: var(--b-1); }
 
   /* Variant tugmasi (DESIGN.md): input + label, tanlangani ko'k chegara va belgi ikonkasi */
   .variant {
     position: relative; display: flex; align-items: center; gap: var(--b-3);
-    min-height: 56px; box-sizing: border-box; padding: var(--b-3) var(--b-4);
-    border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    min-height: var(--size-control-lg); box-sizing: border-box; padding: var(--b-3) var(--b-4);
+    border: var(--border-width-2) solid var(--chiziq-maydon); border-radius: var(--r-orta);
     background: var(--sirt); cursor: pointer;
   }
   @media (hover: hover) and (pointer: fine) { .variant:hover { background: var(--fon-ikkinchi); } }
-  .variant input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+  .variant input { position: absolute; opacity: 0; width: var(--border-width-1); height: var(--border-width-1); margin: 0; }
   .variant:has(input:checked) { border-color: var(--rang-asosiy); }
-  .variant:has(input:focus-visible) { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant:has(input:focus-visible) { outline: var(--border-width-3) solid var(--rang-asosiy); outline-offset: var(--border-width-2); }
   .v-belgi { margin-left: auto; flex: none; color: var(--rang-asosiy); visibility: hidden; }
   .variant:has(input:checked) .v-belgi { visibility: visible; }
-  .m-tanlov { align-items: flex-start; min-height: 88px; }
-  .m-ikonka { flex: none; color: var(--rang-asosiy); margin-top: 2px; }
-  .m-matn { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .m-tanlov { align-items: flex-start; min-height: var(--size-nav-maqsad-tanlov); }
+  .m-ikonka { flex: none; color: var(--rang-asosiy); margin-top: var(--border-width-2); }
+  .m-matn { display: flex; flex-direction: column; gap: var(--border-width-2); min-width: 0; }
   .m-nom { font-weight: 800; }
   .m-izoh, .v-izoh { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
 
   .m-asosiy {
     align-self: flex-start; display: inline-flex; align-items: center; gap: var(--b-2);
-    min-height: 44px; padding: 0 var(--b-3); border-radius: var(--r-toliq);
+    min-height: var(--size-touch-min); padding: 0 var(--b-3); border-radius: var(--r-toliq);
     font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); cursor: pointer;
   }
   .m-asosiy[hidden] { display: none; }
-  .m-asosiy input { width: 20px; height: 20px; margin: 0; accent-color: var(--rang-asosiy); }
+  .m-asosiy input { width: var(--size-icon-md); height: var(--size-icon-md); margin: 0; accent-color: var(--rang-asosiy); }
   .m-asosiy:has(input:checked) { color: var(--rang-havola); background: var(--sirt-ikkinchi); }
-  .m-asosiy input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .m-asosiy input:focus-visible { outline: var(--border-width-3) solid var(--rang-asosiy); outline-offset: var(--border-width-2); }
 
   .onb-variantlar { display: flex; flex-direction: column; gap: var(--b-2); }
   .onb-sana { display: flex; flex-direction: column; gap: var(--b-2); }
   .onb-sana[hidden] { display: none; }
   .onb-sana label { font-weight: 700; }
   .onb-sana input {
-    min-height: 48px; box-sizing: border-box; padding: 0 var(--b-3);
-    border: 2px solid var(--chiziq-maydon); border-radius: var(--r-orta);
+    min-height: var(--size-control-md); box-sizing: border-box; padding: 0 var(--b-3);
+    border: var(--border-width-2) solid var(--chiziq-maydon); border-radius: var(--r-orta);
     background: var(--sirt); color: var(--matn); font: inherit; font-size: var(--matn-asosiy);
-    max-width: 260px;
+    max-width: var(--size-nav-sana-max);
   }
-  .onb-sana input:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .onb-sana input:focus-visible { outline: var(--border-width-3) solid var(--rang-asosiy); outline-offset: var(--border-width-2); }
   .onb-xato {
     display: flex; align-items: flex-start; gap: var(--b-2);
     padding: var(--b-2) var(--b-3); border-radius: var(--r-kichik);
@@ -196,12 +196,12 @@ const belgi = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
   .onb-xato[hidden] { display: none; }
   .onb-xato svg { flex: none; }
 
-  .onb-past { padding: var(--b-3) var(--b-6) var(--b-5); border-top: 1px solid var(--chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
+  .onb-past { padding: var(--b-3) var(--b-6) var(--b-5); border-top: var(--border-width-1) solid var(--chiziq); display: flex; flex-direction: column; gap: var(--b-2); }
   .onb-yordam { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
   .onb-yordam[hidden] { display: none; }
   .onb-tugmalar { display: flex; justify-content: flex-end; gap: var(--b-2); }
   .onb-tugmalar [hidden] { display: none; }
-  .onb-tugmalar button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .onb-tugmalar button:disabled { opacity: var(--opacity-muted); cursor: not-allowed; }
 
   @media (max-width: 640px) {
     .onb {
