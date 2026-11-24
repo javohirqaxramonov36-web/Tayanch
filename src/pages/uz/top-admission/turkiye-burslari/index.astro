@@ -56,9 +56,9 @@ const bosqichlar = [
   { nomi: 'Natija', vaqt: 'avgust boshi' },
 ];
 const qoplanadi = [
-  "O'qish to'lovi",
+  "Oʻqish toʻlovi",
   'Yotoqxona (bakalavriat talabalari uchun)',
-  "Tibbiy sug'urta",
+  "Tibbiy sugʻurta",
   'Bir martalik aviachipta',
   "1 yillik bepul turk tili kursi",
 ];
@@ -70,14 +70,14 @@ const stipendiya = [
 const hujjatlar = [
   'Shaxsni tasdiqlovchi hujjat (ID karta yoki pasport)',
   "Oxirgi 1 yil ichida tushgan foto",
-  "Milliy imtihon natijasi (bo'lsa)",
+  "Milliy imtihon natijasi (boʻlsa)",
   'Diplom yoki vaqtinchalik bitiruv guvohnomasi',
   'Transkript',
   "Xalqaro imtihon natijasi (GRE, GMAT, SAT va boshqalar): tanlangan universitet yoki dastur talab qilsa",
   "Xalqaro til testi natijasi (TOEFL, DELF va boshqalar): tanlangan universitet yoki dastur talab qilsa",
 ];
 const tekshirilmagan = [
-  "2027-yil e'loni (rasmiy taqvimda yil yozilmagan)",
+  "2027-yil eʼloni (rasmiy taqvimda yil yozilmagan)",
   "Yosh chegarasi qaysi sanaga qarab hisoblanishi (TB02 da yozilmagan)",
   "Ariza 5 qadami: rasmiy sahifada faqat rasm sifatida berilgan",
   "Turk tili kursidan ozod qilish shartlari (TB04 va TB05 matni bir-biridan farq qiladi)",
@@ -130,16 +130,16 @@ const tekshirilmagan = [
           <div class="jadval-quti" tabindex="0" role="region" aria-label="Rasmiy minimal shartlar jadvali">
             <table>
               <caption class="sust kichik">Rasmiy minimal shartlar (TB02)</caption>
-              <thead><tr><th scope="col">Daraja</th><th scope="col">Minimal o'zlashtirish</th><th scope="col">Yosh</th></tr></thead>
+              <thead><tr><th scope="col">Daraja</th><th scope="col">Minimal oʻzlashtirish</th><th scope="col">Yosh</th></tr></thead>
               <tbody>
                 {shartlar.map((s) => <tr><th scope="row">{s.daraja}</th><td>{s.ball}</td><td>{s.yosh}</td></tr>)}
               </tbody>
             </table>
           </div>
           <ul class="royxat">
-            <li>Tibbiyot, stomatologiya va farmatsiya uchun minimal o'zlashtirish 90%.</li>
-            <li>Barcha davlat fuqarolari ariza bera oladi. Türkiye fuqarolari va Türkiye universitetida shu darajada o'qiyotganlar bera olmaydi.</li>
-            <li>Bitirganlar va joriy o'quv yili oxirida (avgustgacha) bitiradiganlar ariza bera oladi.</li>
+            <li>Tibbiyot, stomatologiya va farmatsiya uchun minimal oʻzlashtirish 90%.</li>
+            <li>Barcha davlat fuqarolari ariza bera oladi. Türkiye fuqarolari va Türkiye universitetida shu darajada oʻqiyotganlar bera olmaydi.</li>
+            <li>Bitirganlar va joriy oʻquv yili oxirida (avgustgacha) bitiradiganlar ariza bera oladi.</li>
           </ul>
           <p class="izoh">Yosh qaysi sanaga qarab hisoblanishi rasmiy sahifada yozilmagan.</p>
         </section>
@@ -165,7 +165,7 @@ const tekshirilmagan = [
                 </li>
               ))}
             </ol>
-            <p class="ikkinchi kichik">Natijadan keyin: avgustda dastlabki rasmiylashtirish, sentabrda Türkiye'ga kelish.</p>
+            <p class="ikkinchi kichik">Natijadan keyin: avgustda dastlabki rasmiylashtirish, sentabrda Türkiyeʼga kelish.</p>
           </div>
         </section>
 
@@ -178,7 +178,7 @@ const tekshirilmagan = [
           <dl class="stipendiya">
             {stipendiya.map((s) => <div><dt class="ustki">{s.daraja}</dt><dd>{s.summa}<span class="sust kichik"> / oy</span></dd></div>)}
           </dl>
-          <p class="ikkinchi kichik">Oylik stipendiya summasi {m('TB03').tekshirilganSana} dagi rasmiy sahifadan. Summa o'zgarishi mumkin: ariza oldidan rasmiy saytda qarang.</p>
+          <p class="ikkinchi kichik">Oylik stipendiya summasi {m('TB03').tekshirilganSana} dagi rasmiy sahifadan. Summa oʻzgarishi mumkin: ariza oldidan rasmiy saytda qarang.</p>
         </section>
 
         <section id="hujjat" class="bolim" aria-labelledby="hujjat-h">
@@ -203,7 +203,7 @@ const tekshirilmagan = [
             zaxiraMatn={`${chipta.korishokKatta} ${chipta.korishokMatn}`}
             manba={m('TB01')}
           >
-            <p class="adm-manba">Har yilgi taqvim, 2027 e'loni kutilmoqda</p>
+            <p class="adm-manba">Har yilgi taqvim, 2027 eʼloni kutilmoqda</p>
           </AdmMuddat>
           <p><a class="havola" href={yol('/uz/deadline/')}>Barcha muddatlar</a></p>
         </section>
@@ -215,8 +215,8 @@ const tekshirilmagan = [
           </div>
           <ul class="royxat">
             <li>GRE, GMAT, SAT kabi xalqaro imtihon va TOEFL, DELF kabi til testi faqat tanlangan universitet yoki dastur talab qilsa kerak.</li>
-            <li>Turkcha C1 sertifikati bo'lmagan grant oluvchilar (ingliz tilidagi dasturga joylashganlar ham) 1 yillik turk tili kursida o'qiydi va yil oxirigacha C1 sertifikatini olishi kerak (TB04).</li>
-            <li>Turk tili kursi dastur tilidan qat'i nazar hamma grant oluvchilarga bepul (TB05).</li>
+            <li>Turkcha C1 sertifikati boʻlmagan grant oluvchilar (ingliz tilidagi dasturga joylashganlar ham) 1 yillik turk tili kursida oʻqiydi va yil oxirigacha C1 sertifikatini olishi kerak (TB04).</li>
+            <li>Turk tili kursi dastur tilidan qatʼi nazar hamma grant oluvchilarga bepul (TB05).</li>
           </ul>
           <p class="izoh">Kursdan ozod qilish shartlari rasmiy sahifalarda aniq yozilmagan.</p>
         </section>
@@ -224,10 +224,10 @@ const tekshirilmagan = [
         <section class="keyingi" aria-labelledby="keyingi-h">
           <div class="keyingi-matn">
             <p class="adm-eyebrow">Keyingi qadam</p>
-            <p id="keyingi-h" class="keyingi-sarlavha">Bu yo'l sizga mosmi? 3 savolda tekshiring.</p>
+            <p id="keyingi-h" class="keyingi-sarlavha">Bu yoʻl sizga mosmi? 3 savolda tekshiring.</p>
             <a class="havola" href={zinapoya}>Ariza zinapoyasi: Türkiye Bursları bosqichma-bosqich</a>
           </div>
-          <a class="t-tugma adm-tugma--urgu katta-tugma" href={vosita}>Topshirish yo'li</a>
+          <a class="t-tugma adm-tugma--urgu adm-keng-tugma" href={vosita}>Topshirish yoʻli</a>
         </section>
       </div>
 
@@ -238,7 +238,7 @@ const tekshirilmagan = [
     </div>
 
     <div class="tb-oxir">
-      <p class="ikkinchi kichik"><strong class="qalin">Natija kafolatlanmaydi.</strong> Tayanch Türkiye Bursları (YTB) bilan bog'liq emas. Qabul yoki grant ehtimoli hisoblanmaydi.</p>
+      <p class="ikkinchi kichik"><strong class="qalin">Natija kafolatlanmaydi.</strong> Tayanch Türkiye Bursları (YTB) bilan bogʻliq emas. Qabul yoki grant ehtimoli hisoblanmaydi.</p>
     </div>
   </div>
   <SahifaOxiri manbalar={MANBALAR} tekshirilgan={sana} keyingiTekshiruv={keyingi} tekshirilmagan={tekshirilmagan} />
@@ -351,6 +351,6 @@ const tekshirilmagan = [
     .chiziq { width: var(--border-width-2); height: auto; flex: 1; min-height: var(--space-8); margin-bottom: calc(-1 * var(--space-3)); }
     .bosqichlar .ikkinchi { font-size: var(--text-small-size); }
     .keyingi { padding: var(--space-5); flex-direction: column; align-items: stretch; }
-    .katta-tugma { width: 100%; }
+    .adm-keng-tugma { width: 100%; }
   }
 </style>

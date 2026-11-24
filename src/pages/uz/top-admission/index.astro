@@ -70,8 +70,8 @@ const plitkalar = [
   { href: yol('/uz/top-admission/manbalar/'), nomi: 'Manbalar', ikonka: 'manba' },
 ] as const;
 const tekshirilmagan = [
-  "Türkiye Bursları 2027-yil e'loni (taqvimda yil yozilmagan)",
-  "Stipendium Hungaricum 2027/28 e'loni va muddati (hali chiqmagan)",
+  "Türkiye Bursları 2027-yil eʼloni (taqvimda yil yozilmagan)",
+  "Stipendium Hungaricum 2027/28 eʼloni va muddati (hali chiqmagan)",
 ];
 ---
 <BolimQobiq
@@ -89,11 +89,11 @@ const tekshirilmagan = [
     <QavatFoto bolim="top-admission" />
 
     <AdmHero id="ta-sarlavha" yorliq="Bo'lim kirishi" sarlavha="Top" urgu="Admission">
-      <p class="adm-hero-matn">Chet el universitetiga ariza yo'lini rasmiy manbalar bilan ko'rsatamiz. Natija kafolatlanmaydi.</p>
-      <p class="adm-hero-matn qisman">Bo'limda: <a href={yol('/uz/top-admission/grantlar/')}>grantlar katalogi</a>, <a href={yol('/uz/top-admission/davlatlar/')}>davlatlarni taqqoslash</a>, <a href={yol('/uz/top-admission/universitetlar/')}>universitet tanlash</a>, <a href={yol('/uz/top-admission/kurs/')}>16 darslik kurs</a> va <a href={yol('/uz/top-admission/manbalar/')}>ochiq manbalar</a>.</p>
+      <p class="adm-hero-matn">Chet el universitetiga ariza yoʻlini rasmiy manbalar bilan koʻrsatamiz. Natija kafolatlanmaydi.</p>
+      <p class="adm-hero-matn qisman">Boʻlimda: <a href={yol('/uz/top-admission/grantlar/')}>grantlar katalogi</a>, <a href={yol('/uz/top-admission/davlatlar/')}>davlatlarni taqqoslash</a>, <a href={yol('/uz/top-admission/universitetlar/')}>universitet tanlash</a>, <a href={yol('/uz/top-admission/kurs/')}>16 darslik kurs</a> va <a href={yol('/uz/top-admission/manbalar/')}>ochiq manbalar</a>.</p>
       <Fragment slot="tugmalar">
         <a class="t-tugma adm-tugma--urgu" href={vosita}>
-          Yo'limni topish
+          Yoʻlimni topish
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
         </a>
         <a class="t-tugma t-tugma--ikkinchi" href={yol('/uz/deadline/')}>Barcha muddatlar</a>
@@ -105,8 +105,8 @@ const tekshirilmagan = [
     <section class="vosita-karta adm-karta" aria-labelledby="vosita-sarlavha">
       <div class="vosita-matn">
         <p class="adm-eyebrow">Vosita · 3 savol</p>
-        <h2 id="vosita-sarlavha" class="adm-h2">Topshirish <span class="adm-urgu">yo'li</span></h2>
-        <p class="ikkinchi">Qaysi davlat, qaysi daraja, grant kerakmi. Javoblaringizga mos ariza yo'llari va ularning rasmiy manbalari chiqadi.</p>
+        <h2 id="vosita-sarlavha" class="adm-h2">Topshirish <span class="adm-urgu">yoʻli</span></h2>
+        <p class="ikkinchi">Qaysi davlat, qaysi daraja, grant kerakmi. Javoblaringizga mos ariza yoʻllari va ularning rasmiy manbalari chiqadi.</p>
         <ol class="savollar" data-kalit={KALIT}>
           {savollar.map((s) => (
             <li data-savol={s.k}>
@@ -117,8 +117,8 @@ const tekshirilmagan = [
           ))}
         </ol>
         <div class="vosita-past">
-          <a class="t-tugma katta-tugma" href={vosita}>
-            Yo'limni topish
+          <a class="t-tugma adm-keng-tugma" href={vosita}>
+            Yoʻlimni topish
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
           </a>
           <span class="sust kichik">Qabul ehtimoli hisoblanmaydi</span>
@@ -178,14 +178,14 @@ const tekshirilmagan = [
     </script>
 
     <section class="blok" aria-labelledby="yonalish-sarlavha">
-      <h2 id="yonalish-sarlavha" class="adm-h2">Yo'nalishlar</h2>
+      <h2 id="yonalish-sarlavha" class="adm-h2">Yoʻnalishlar</h2>
       <div class="yonalishlar">
         <article class="yonalish yonalish-katta adm-karta">
           <div class="yonalish-matn">
             <p class="yorliqlar"><span class="adm-chip">Rasmiy taqvim bor</span> <span class="adm-chip adm-chip--sust">UZ → TR</span></p>
             <h3>Türkiye Bursları</h3>
             <p class="ikkinchi">Turkiya hukumatining xalqaro talabalar uchun stipendiya dasturi. Umumiy ariza har yili 10-yanvar – 20-fevral.</p>
-            <p class="yonalish-past"><a class="havola" href={yol('/uz/top-admission/turkiye-burslari/')}>Yo'nalish sahifasi</a> <a class="havola" href={vosita}>Topshirish yo'lida ko'rish</a></p>
+            <p class="yonalish-past"><a class="havola" href={yol('/uz/top-admission/turkiye-burslari/')}>Yoʻnalish sahifasi</a> <a class="havola" href={vosita}>Topshirish yoʻlida koʻrish</a></p>
           </div>
           <AdmTekshirildi sana={m('TB01').tekshirilganSana} />
         </article>
@@ -194,10 +194,10 @@ const tekshirilmagan = [
           <h3>Stipendium Hungaricum</h3>
           <p class="fakt">
             <AdmTekshirildi sana={m('SH01').tekshirilganSana} />
-            <span>O'zbekiston hamkor davlatlar ro'yxatida</span>
+            <span>Oʻzbekiston hamkor davlatlar roʻyxatida</span>
           </p>
           {shGrant && <p class="yonalish-past"><a class="havola" href={yol('/uz/top-admission/grantlar/stipendium-hungaricum/')}>Grant sahifasi</a></p>}
-          <span class="yorliq yorliq-ogoh">2027/28 e'loni hali chiqmagan</span>
+          <span class="yorliq yorliq-ogoh">2027/28 eʼloni hali chiqmagan</span>
         </article>
       </div>
       {boshqaDavlatlar.length > 0 && (
@@ -233,36 +233,36 @@ const tekshirilmagan = [
             {c.izoh && <p class="adm-manba">{c.izoh}</p>}
             <a slot="havolalar" class="havola kalendar" href={yol(`/uz/top-admission/kalendar/${c.id}.ics`)} download={`${c.id}.ics`} aria-label={`Kalendarga qo'shish: ${c.ustki}, oxirgi kun ${c.korishokKatta}`}>
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4" /></svg>
-              Kalendarga qo'shish
+              Kalendarga qoʻshish
             </a>
           </AdmMuddat>
         ))}
       </div>
-      <p class="adm-manba" data-adm-bosh hidden>Hozircha yaqin muddat yo'q. Keyingi e'lonlar <a class="havola" href={yol('/uz/deadline/')}>Muddatlar</a> sahifasida.</p>
+      <p class="adm-manba" data-adm-bosh hidden>Hozircha yaqin muddat yoʻq. Keyingi eʼlonlar <a class="havola" href={yol('/uz/deadline/')}>Muddatlar</a> sahifasida.</p>
     </section>
 
     <section class="mening-yolim adm-karta" id="mening-yolim" aria-labelledby="mening-sarlavha" data-mening-yolim>
-      <h2 id="mening-sarlavha" class="adm-eyebrow">Mening yo'lim</h2>
+      <h2 id="mening-sarlavha" class="adm-eyebrow">Mening yoʻlim</h2>
       <div data-holat="bosh">
-        <p class="mening-asosiy">Hali yo'l tanlanmagan</p>
-        <p class="ikkinchi kichik">Topshirish yo'lida javob bersangiz, tanlovingiz shu yerda turadi. Faqat shu brauzerda.</p>
+        <p class="mening-asosiy">Hali yoʻl tanlanmagan</p>
+        <p class="ikkinchi kichik">Topshirish yoʻlida javob bersangiz, tanlovingiz shu yerda turadi. Faqat shu brauzerda.</p>
         <a class="havola" href={vosita}>3 savolga javob berish</a>
       </div>
       <div data-holat="bor" hidden>
         <p class="mening-asosiy" data-tanlov></p>
         <p class="ikkinchi kichik">Faqat shu brauzerda saqlangan. Qabul ehtimoli hisoblanmaydi.</p>
-        <a class="havola" href={vosita}>Yo'limni ochish</a>
+        <a class="havola" href={vosita}>Yoʻlimni ochish</a>
       </div>
     </section>
     <script type="application/json" id="ta-yol-malumot" set:html={JSON.stringify(yolMalumot)} />
 
     <section class="ishonch adm-karta" aria-labelledby="ishonch-sarlavha">
       <div class="ishonch-bosh">
-        <h2 id="ishonch-sarlavha" class="adm-eyebrow">Muallif yo'li</h2>
-        <a class="havola" href={yol('/uz/') + '#muallif-sarlavha'}>To'liq hikoya</a>
+        <h2 id="ishonch-sarlavha" class="adm-eyebrow">Muallif yoʻli</h2>
+        <a class="havola" href={yol('/uz/') + '#muallif-sarlavha'}>Toʻliq hikoya</a>
       </div>
       <p class="ishonch-son">{qabulXatlari.soni} ta qabul xati</p>
-      <p class="ikkinchi kichik">Hujjat bilan tasdiqlangan. Previewlarda shaxsiy ma'lumotlar yopilgan, original hujjat emas.</p>
+      <p class="ikkinchi kichik">Hujjat bilan tasdiqlangan. Previewlarda shaxsiy maʼlumotlar yopilgan, original hujjat emas.</p>
       <ul class="previewlar">
         {qabulXatlari.previewlar.map((p) => (
           <li>
@@ -377,7 +377,7 @@ const tekshirilmagan = [
   .yonalish-matn { display: grid; gap: var(--space-3); max-width: 46ch; }
   .yonalish-past { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
   .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .yorliq-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); align-self: flex-start; margin-top: auto; }
+  .yorliq-ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); align-self: flex-start; margin-top: auto; }
   .fakt { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); font-weight: var(--font-weight-semibold); font-size: var(--text-small-size); }
   .tez-orada {
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);
@@ -408,7 +408,7 @@ const tekshirilmagan = [
     .vosita-karta { padding: var(--space-5); gap: var(--space-4); }
     /* Telefonda 3D sahna yo'q: kichraytirilganda yozuvi o'qilmaydi */
     .sahna { display: none; }
-    .katta-tugma { width: 100%; }
+    .adm-keng-tugma { width: 100%; }
     .yonalishlar { grid-template-columns: 1fr; }
     .yonalish-katta { flex-direction: column; }
     .tez-orada { flex-direction: column; align-items: flex-start; }
