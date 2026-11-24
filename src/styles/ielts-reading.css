@@ -33,6 +33,11 @@
 .rt-holat { margin: auto; padding: var(--space-10) var(--space-5); max-width: 560px; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); text-align: center; line-height: 1.6; }
 .rt-holat[hidden], .rt-ish[hidden], .rt-ogoh[hidden], .rt-natija[hidden], .rt-passagelar[hidden], .rt-ogoh [hidden] { display: none; }
 .rt-holat p { margin: 0; }
+.rt-holat:has(.rt-skelet) { width: 100%; }
+.rt-skelet { width: 100%; display: flex; flex-direction: column; gap: var(--space-3); }
+.rt-skelet span { display: block; height: var(--space-3); border-radius: var(--radius-sm); background: var(--skeleton-base); }
+.rt-skelet span.qisqa { width: 60%; }
+.rt-skelet .rt-skelet-sarlavha { height: var(--space-5); width: 70%; margin-bottom: var(--space-3); }
 .rt-ogoh {
   flex: none; padding: var(--space-3) var(--space-6);
   background: var(--color-warning-subtle); color: var(--color-warning-text);
