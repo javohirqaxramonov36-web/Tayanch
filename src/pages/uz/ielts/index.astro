@@ -3,7 +3,7 @@
 import BolimQobiq from '../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../components/ManbaBlok.astro';
 import QavatFoto from '../../../components/QavatFoto.astro';
-import { qollanmalar, IKONKA } from '../../../data/ieltsSahifalar';
+import { konikmalar, konikmaQism } from '../../../data/ieltsSahifalar';
 import { hammaSavollar } from '../../../data/ieltsDarslar';
 import { manbalar } from '../../../data/manbalar';
 import { saytTestlari } from '../../../lib/ielts/reading/saytTestlari';
@@ -20,12 +20,16 @@ const reading = yol('/uz/ielts/mashq/reading/');
 const reja = yol('/uz/ielts/vosita/reja/');
 const mashq = yol('/uz/ielts/mashq/');
 const takrorlash = yol('/uz/ielts/vosita/takrorlash/');
-const bolimlar = [
-  { nomi: 'Listening', vaqt: 'Taxminan 30 daqiqa', holat: 'Imlo va diktant mashqlari', href: mashq, ikonka: IKONKA.listening },
-  { nomi: 'Reading', vaqt: "60 daqiqa (ko'chirish vaqti ichida)", holat: testlar.length ? 'Mashq testi ochiq' : 'Tez orada', href: testlar.length ? reading : undefined, ikonka: IKONKA.reading },
-  { nomi: 'Writing', vaqt: '60 daqiqa', holat: 'Task 2 mashqi ochiq', href: yol('/uz/ielts/mashq/writing/'), ikonka: IKONKA.writing },
-  { nomi: 'Speaking', vaqt: '11–14 daqiqa', holat: 'Mashq tez orada', href: undefined, ikonka: IKONKA.speaking },
-];
+// Har karta o'z ko'nikma sahifasiga olib boradi (2026-11-24, ko'nikma tuzilmasi).
+const bolimlar = konikmalar.map((k) => {
+  const darsSoni = k.darslar.filter((b) => b.qism).length;
+  const mashqSoni = k.mashqlar.filter((b) => b.qism).length;
+  return {
+    nomi: k.nomi, vaqt: k.vaqt, ikonka: k.ikonka,
+    href: yol(`/uz/ielts/${konikmaQism(k.id)}`),
+    holat: ["Qo'llanma", darsSoni && `${darsSoni} ta dars`, mashqSoni && `${mashqSoni} ta mashq`].filter(Boolean).join(', '),
+  };
+});
 const namunalar = [
   { nomi: 'IELTS.org', tavsif: 'Academic namuna topshiriqlari', manba: manba('IE03') },
   { nomi: 'IDP', tavsif: 'Bepul tanishuv testlari', manba: manba('ID01') },
@@ -59,7 +63,7 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
         </div>
       </div>
       <aside class="format" aria-labelledby="format-h">
-        <h2 id="format-h" class="ustki">Imtihon to'rt bo'limdan iborat</h2>
+        <h2 id="format-h" class="ustki">Imtihon to'rt bo'limdan iborat. Bo'limni tanlang</h2>
         <div class="konikmalar">
           {bolimlar.map((b) => {
             const Teg = b.href ? 'a' : 'div';
@@ -89,22 +93,6 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
         <p class="ikkinchi" data-reja-izoh>Imtihongacha qancha vaqt qolgani, kuniga necha soat bo'shligi va qaysi bo'lim qiyinligini tanla. 30 kunlik reja shulardan tuziladi.</p>
         <a class="tugma tugma-ikkinchi" href={reja} data-reja-havola>Rejani tuzish</a>
       </article>
-    </section>
-
-    <section class="bolim" aria-labelledby="qollanma-h">
-      <h2 id="qollanma-h">Qo'llanmalar</h2>
-      <div class="qollanmalar">
-        {qollanmalar.map((q) => {
-          const Teg = q.qism ? 'a' : 'div';
-          return <Teg class="karta-havola" href={q.qism ? yol(`/uz/ielts/${q.qism}`) : undefined}>
-            <article class="karta">
-              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={q.ikonka} />
-              <h3>{q.nomi}</h3><p class="kichik">{q.tavsif}</p>
-              <span class:list={['yorliq', { ochiq: !!q.qism }]}>{q.qism ? 'Qo‘llanmani ochish' : 'Tez orada'}</span>
-            </article>
-          </Teg>;
-        })}
-      </div>
     </section>
 
     <section class="bolim" aria-labelledby="rasmiy-h" id="rasmiy">

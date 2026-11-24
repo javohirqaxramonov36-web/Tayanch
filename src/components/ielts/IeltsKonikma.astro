@@ -1,0 +1,135 @@
+---
+// IELTS ko'nikma sahifasi (Listening, Reading, Writing, Speaking). 2026-11-24 muallif qarori:
+// IELTS ko'nikma bo'yicha tuziladi, har sahifada tartib: qo'llanma → darslar → mashqlar → natijalar.
+// Ma'lumot faqat ieltsSahifalar.ts dagi `konikmalar` dan; yangi mashq o'sha yerga yozilsa, bu yerda va menyuda o'zi chiqadi.
+import BolimQobiq from '../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../ManbaBlok.astro';
+import { konikmaI, konikmalar, konikmaQism, type IeltsBand, type KonikmaId } from '../../data/ieltsSahifalar';
+import { manbalar } from '../../data/manbalar';
+import { yol } from '../../lib/yol';
+
+interface Props { id: KonikmaId }
+const k = konikmaI(Astro.props.id);
+const ie01 = manbalar.find((m) => m.id === 'IE01')!;
+const ielts = (qism: string) => yol(`/uz/ielts/${qism}`);
+
+const bosqichlar: { id: string; nomi: string; izoh: string; bandlar: IeltsBand[] }[] = [
+  { id: 'qollanma', nomi: "Qo'llanma", izoh: 'Avval format, savol turlari va tuzoqlar bilan tanish.', bandlar: [k.qollanma] },
+  { id: 'darslar', nomi: 'Darslar', izoh: "Bitta savol turini qisqa interaktiv darsda mashq qil.", bandlar: k.darslar },
+  { id: 'mashq', nomi: 'Mashq', izoh: "O'rganganingni vaqt bilan sinab ko'r.", bandlar: [...k.mashqlar].sort((a, b) => Number(!a.qism) - Number(!b.qism)) },
+  { id: 'natija', nomi: 'Natijalar', izoh: "Ishlaganlaringni ko'r va xatolarni takrorla.", bandlar: k.natijalar },
+].filter((b) => b.bandlar.length > 0);
+
+const birinchiMashq = k.mashqlar.find((m) => m.qism);
+const boshqalar = konikmalar.filter((x) => x.id !== k.id);
+---
+<BolimQobiq
+  title={`${k.nomi} · IELTS`}
+  description={`IELTS ${k.nomi}: ${k.tavsif}`}
+  turi="qollanma"
+  bolim="ielts"
+  holat="chop-etilgan"
+>
+  <div class="ichki konikma-sahifa">
+    <header class="bosh">
+      <svg class="ikonka" aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={k.ikonka} />
+      <p class="ustki">IELTS · ko'nikma</p>
+      <h1>{k.nomi}</h1>
+      <p class="lead">{k.tavsif}</p>
+      <p class="kichik">Imtihonda: {k.vaqt}. IELTS Academic, manba <a href={ie01.havola}>ielts.org</a>.</p>
+      <div class="amallar">
+        <a class="tugma tugma-asosiy" href={ielts(k.qollanma.qism!)}>Qo'llanmadan boshlash</a>
+        {birinchiMashq && <a class="tugma tugma-ikkinchi" href={ielts(birinchiMashq.qism!)}>To'g'ridan mashqqa</a>}
+      </div>
+    </header>
+
+    <ol class="bosqichlar" role="list">
+      {bosqichlar.map((b, i) => (
+        <li class="bosqich" aria-labelledby={`b-${b.id}`}>
+          <p class="raqam" aria-hidden="true">{i + 1}</p>
+          <div class="bosqich-ichi">
+            <h2 id={`b-${b.id}`}>{b.nomi}</h2>
+            <p class="kichik">{b.izoh}</p>
+            <ul class="kartalar" role="list">
+              {b.bandlar.map((x) => (
+                <li>
+                  {x.qism ? (
+                    <a class="karta" href={ielts(x.qism)}>
+                      <svg class="ikonka" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} />
+                      <span class="karta-matn"><span class="karta-nom">{x.nomi}</span><span class="kichik">{x.tavsif}</span></span>
+                      <svg class="strelka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6" /></svg>
+                    </a>
+                  ) : (
+                    <p class="karta nofaol">
+                      <svg class="ikonka" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} />
+                      <span class="karta-matn"><span class="karta-nom">{x.nomi}</span><span class="kichik">{x.tavsif}</span></span>
+                      <span class="yorliq">Tez orada</span>
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <nav class="boshqalar" aria-labelledby="boshqa-h">
+      <h2 id="boshqa-h">Boshqa ko'nikmalar</h2>
+      <ul role="list">
+        {boshqalar.map((x) => <li><a href={ielts(konikmaQism(x.id))}>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} />{x.nomi}
+        </a></li>)}
+        <li><a href={ielts('vosita/reja/')}>30 kunlik reja</a></li>
+      </ul>
+    </nav>
+
+    <ManbaBlok manbalar={["IE01"]} tekshirilgan="2026-11-12" keyingiTekshiruv="2026-12-12" tekshirilmagan={[]} />
+  </div>
+</BolimQobiq>
+
+<style>
+  .konikma-sahifa { display: grid; gap: var(--space-8); padding-top: var(--space-4); }
+  .bosh { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-6); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-xl); background: var(--qavat-fon-shisha); box-shadow: var(--shadow-2); }
+  .bosh h1 { font-size: var(--text-h1-size); line-height: var(--text-h1-lh); letter-spacing: var(--text-h1-ls); }
+  .ustki { font-size: var(--text-caption-size); line-height: var(--text-caption-lh); font-weight: var(--text-caption-weight); color: var(--color-text-secondary); }
+  .lead { color: var(--color-text-secondary); max-width: var(--size-measure); }
+  .kichik { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
+  .ikonka { color: var(--color-link); flex: none; }
+  .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+  .tugma { min-height: var(--size-touch-min); }
+
+  .bosqichlar { display: grid; gap: var(--space-6); margin: 0; padding: 0; list-style: none; }
+  .bosqich { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-4); }
+  .raqam { display: grid; place-items: center; inline-size: var(--size-touch-min); block-size: var(--size-touch-min); margin: 0; border-radius: var(--radius-full); font-weight: var(--text-button-weight); font-variant-numeric: tabular-nums; color: var(--color-link); background: var(--color-surface-sunken); }
+  .bosqich-ichi { display: grid; gap: var(--space-2); min-width: 0; }
+  .bosqich h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .kartalar { display: grid; gap: var(--space-3); margin: var(--space-2) 0 0; padding: 0; list-style: none; }
+  .karta { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); margin: 0; padding: var(--space-4) var(--space-5); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: inherit; text-decoration: none; }
+  .karta-matn { display: grid; gap: var(--space-1); min-width: 0; }
+  .karta-nom { font-weight: var(--text-button-weight); color: var(--color-text-primary); }
+  a.karta .karta-nom { color: var(--color-link); }
+  .strelka { color: var(--color-text-secondary); }
+  .nofaol .ikonka { color: var(--color-text-secondary); }
+  .yorliq { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); font-size: var(--text-caption-size); line-height: var(--text-caption-lh); color: var(--color-text-secondary); background: var(--color-surface-sunken); white-space: nowrap; }
+  @media (hover: hover) { a.karta:hover { background: var(--color-surface-sunken); } }
+
+  .boshqalar { display: grid; gap: var(--space-3); }
+  .boshqalar h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .boshqalar ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  .boshqalar a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-touch-min); padding: 0 var(--space-4); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-full); color: var(--color-text-primary); font-weight: var(--text-button-weight); text-decoration: none; background: var(--color-surface); }
+  @media (hover: hover) { .boshqalar a:hover { background: var(--color-surface-sunken); } }
+
+  @media (min-width: 768px) {
+    .bosh { padding: var(--space-10); }
+    .kartalar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 767px) {
+    .amallar, .amallar .tugma { width: 100%; }
+    .bosqich { grid-template-columns: minmax(0, 1fr); }
+    .raqam { display: none; }
+    .karta { padding: var(--space-4); }
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .bosh { background: var(--color-surface); } }
+  @media (prefers-reduced-transparency: reduce) { .bosh { background: var(--color-surface); } }
+</style>

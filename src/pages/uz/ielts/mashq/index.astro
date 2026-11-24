@@ -1,6 +1,6 @@
 ---
-// IELTS practice landing: five cards, only Reading works. The other cards are visible but
-// disabled ("Tez orada"). Timings: IE01, IE02.
+// IELTS mashqlar katalogi: hamma ko'nikmalar mashqlari bir joyda. Ochiqlari tepada,
+// "Tez orada" kartalari pastda. Vaqtlar: IE01, IE02.
 import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../components/ManbaBlok.astro';
 import { mashqKartalar } from '../../../../data/ielts/mashqKartalar';
@@ -28,7 +28,8 @@ import { yol } from '../../../../lib/yol';
     <section aria-labelledby="mashq-h">
       <h2 id="mashq-h" class="ekranda-yoq">{MM.bolimlar}</h2>
       <ul class="kartalar">
-        {mashqKartalar.map((k) => (
+        {/* Ochiq mashqlar tepada, "tez orada"lari pastda (2026-11-24) */}
+        {[...mashqKartalar].sort((a, b) => Number(!a.qism) - Number(!b.qism)).map((k) => (
           <li>
             {k.qism ? (
               <a class="karta" href={yol(`/uz/ielts/${k.qism}`)}>

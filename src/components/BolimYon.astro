@@ -306,11 +306,9 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
 
   const ochiqPanel = () => d.querySelector<HTMLDetailsElement>('.ustki-qator details[open]');
   const yopish = document.getElementById('panel-yopish') as HTMLButtonElement;
-  let desktopOchuvchi: HTMLButtonElement | null = null;
   const panelniYop = (panel: HTMLDetailsElement) => {
     panel.open = false;
-    if (desktop.matches) desktopOchuvchi?.focus({ preventScroll: true });
-    else panel.querySelector('summary')?.focus({ preventScroll: true });
+    if (!desktop.matches) panel.querySelector('summary')?.focus({ preventScroll: true });
   };
 
   yopish.hidden = false;
@@ -319,10 +317,6 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
     if (panel) panelniYop(panel);
   });
   const menyuDetails = document.querySelector<HTMLDetailsElement>('.yon-orami')!;
-  document.addEventListener('tayanch:joriy-menyu', (event) => {
-    desktopOchuvchi = (event as CustomEvent<{ fokus: HTMLButtonElement }>).detail.fokus;
-    setTimeout(() => { menyuDetails.open = true; menyuDetails.querySelector<HTMLElement>('a[href]')?.focus(); }, 0);
-  });
   menyuDetails.addEventListener('toggle', () => { document.getElementById('panel-ochish')?.setAttribute('aria-expanded', String(menyuDetails.open)); });
   const ustki = document.querySelector<HTMLElement>('header.ustki-qator')!;
   ustki.addEventListener('keydown', (event) => {
