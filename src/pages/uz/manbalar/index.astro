@@ -14,7 +14,7 @@ import { manbalar } from '../../../data/manbalar';
 >
   <section class="ichki sahifa">
     <h1>Manba jurnali</h1>
-    <p class="ikkinchi">Saytda qoida, talab yoki muddat sifatida faqat <strong>rasmiy</strong> manba ishlatiladi: chiqaruvchi tashkilotning o'z sayti yoki rasmiy hujjat. Boshqa saytlar faqat "qo'shimcha o'qish" bo'lishi mumkin.</p>
+    <p class="ikkinchi">Saytda qoida, talab yoki muddat sifatida faqat <strong>rasmiy</strong> manba ishlatiladi: chiqaruvchi tashkilotning oʻz sayti yoki rasmiy hujjat. Boshqa saytlar faqat "qoʻshimcha oʻqish" boʻlishi mumkin.</p>
     {manbalar.length > 0 ? (
       <div class="jadval-orami">
         <table>
@@ -33,16 +33,18 @@ import { manbalar } from '../../../data/manbalar';
         </table>
       </div>
     ) : (
-      <p class="ikkinchi">Jurnal hozircha bo'sh.</p>
+      <p class="ikkinchi">Jurnal hozircha boʻsh.</p>
     )}
   </section>
 </Asosiy>
 
 <style>
   .sahifa { padding-block: var(--b-14); display: flex; flex-direction: column; gap: var(--b-6); }
-  .sahifa > p { max-width: 70ch; }
-  .jadval-orami { overflow-x: auto; background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-2) var(--b-4); }
-  table { border-collapse: collapse; width: 100%; font-size: 15px; }
-  th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--chiziq); vertical-align: top; }
+  .sahifa > p { max-width: var(--size-measure); }
+  /* Navigator sirti: nav-surface, satr chizig'i nav-line, sarlavha qatori ma'noli chiziq nav-line-strong */
+  .jadval-orami { overflow-x: auto; background: var(--color-nav-surface); color: var(--color-nav-text); border-radius: var(--radius-lg); padding: var(--space-2) var(--space-4); }
+  table { border-collapse: collapse; width: 100%; font-size: var(--text-small-size); }
+  th, td { text-align: left; padding: var(--space-3) var(--space-2); border-bottom: var(--border-width-1) solid var(--color-nav-line); vertical-align: top; }
+  th { color: var(--color-nav-text-muted); border-bottom-color: var(--color-nav-line-strong); }
   tr:last-child td { border-bottom: none; }
 </style>

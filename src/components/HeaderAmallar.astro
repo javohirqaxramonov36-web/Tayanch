@@ -1,7 +1,7 @@
 ---
 import { yol } from '../lib/yol';
 const kirish = `${yol('/uz/hisob/kirish/')}?keyin=${encodeURIComponent(Astro.url.pathname)}`;
-const tillar = [{ kod: 'uz', nomi: "O'zbekcha", faol: true }, { kod: 'en', nomi: 'English', faol: false }, { kod: 'ru', nomi: 'Русский', faol: false }];
+const tillar = [{ kod: 'uz', nomi: "Oʻzbekcha", faol: true }, { kod: 'en', nomi: 'English', faol: false }, { kod: 'ru', nomi: 'Русский', faol: false }];
 ---
 <div class="header-amallar" data-header-amallar>
   <slot />
@@ -28,11 +28,11 @@ const tillar = [{ kod: 'uz', nomi: "O'zbekcha", faol: true }, { kod: 'en', nomi:
   .header-amallar { display: flex; align-items: center; gap: var(--space-2); flex: none; }
   .til-orami { position: relative; }
   .til-tugma, .kirish-tugma { display: flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--size-touch-min); padding-inline: var(--space-3); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-full); background: var(--color-surface); color: var(--color-text-primary); font: inherit; font-size: var(--text-small-size); font-weight: 600; text-decoration: none; cursor: pointer; }
-  .kirish-oq { width: var(--space-7); height: var(--space-7); border-radius: var(--radius-full); background: var(--header-accent); color: var(--color-neutral-0); display: grid; place-items: center; }
+  .kirish-oq { width: var(--space-7); height: var(--space-7); border-radius: var(--radius-full); background: var(--header-accent); color: var(--header-on-accent); display: grid; place-items: center; }
   .til-panel { position: absolute; top: calc(100% + var(--space-2)); right: 0; min-width: var(--header-language-width); padding: var(--space-2); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: var(--shadow-2); z-index: var(--z-dropdown); }
   .til-panel button { display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: var(--size-touch-min); padding: var(--space-2); border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-text-secondary); font: inherit; font-size: var(--text-small-size); }
-  .til-panel button[aria-current] { background: var(--header-accent); color: var(--color-neutral-0); }
+  .til-panel button[aria-current] { background: var(--header-accent); color: var(--header-on-accent); }
   .til-panel button span { font-size: var(--text-caption-size); background: var(--color-surface-sunken); padding-inline: var(--space-2); border-radius: var(--radius-full); }
   @media (768px <= width < 1024px) { .til-tugma, .kirish-tugma { padding-inline: var(--space-2); } }
-  @media (width < 1024px) { .til-tugma > svg { display: none; } .kirish-tugma { background: var(--header-accent); color: var(--color-neutral-0); } .kirish-oq { display: none; } }
+  @media (width < 1024px) { .til-tugma > svg { display: none; } .kirish-tugma { background: var(--header-accent); color: var(--header-on-accent); } .kirish-oq { display: none; } }
 </style>

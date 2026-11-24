@@ -20,7 +20,7 @@ const royxat = korinadiganDeadlinelar({ bolim });
               <strong>{d.sana}{d.soat ? ` ${d.soat}` : ''}{d.vaqtMintaqasi ? ` (${d.vaqtMintaqasi})` : ''}</strong>
               <span class="yorliq" data-muddat-holat hidden></span>
             </div>
-            {!d.vaqtMintaqasi && <span class="kichik sust">Vaqt mintaqasi rasmiy manbada ko'rsatilmagan.</span>}
+            {!d.vaqtMintaqasi && <span class="kichik sust">Vaqt mintaqasi rasmiy manbada koʻrsatilmagan.</span>}
             <span>{d.dastur}: {d.bosqich}</span>
             {rasmiyManbalar(d.manbaIdlar).map((m) => (
               <span class="kichik sust">
@@ -32,8 +32,8 @@ const royxat = korinadiganDeadlinelar({ bolim });
           </li>;
         })}
       </ul>
-      {faqatKelajak && <p class="bosh" data-yaqin-yoq hidden>Hozircha tasdiqlangan yaqin muddat yo'q.</p>}
-      <details hidden><summary>O'tgan muddatlar</summary><ul class="royxat"></ul></details>
+      {faqatKelajak && <p class="bosh" data-yaqin-yoq hidden>Hozircha tasdiqlangan yaqin muddat yoʻq.</p>}
+      <details hidden><summary>Oʻtgan muddatlar</summary><ul class="royxat"></ul></details>
     </div>
     <script is:inline>
       (() => {
@@ -60,7 +60,7 @@ const royxat = korinadiganDeadlinelar({ bolim });
     </script>
   </>
 ) : (
-  <p class="bosh">Hozircha rasmiy manba bilan tasdiqlangan muddat yo'q.</p>
+  <p class="bosh">Hozircha rasmiy manba bilan tasdiqlangan muddat yoʻq.</p>
 )}
 
 <script>
