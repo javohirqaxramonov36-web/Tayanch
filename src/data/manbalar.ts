@@ -22,7 +22,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/practice-preparation/practice-tests/bluebook',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-04',
-    izoh: "Bluebook ilovasidagi to'liq practice testlar sahifasi. Bepulligi bu sahifada yozilmagan.",
+    izoh: "Bluebook ilovasidagi toʻliq practice testlar sahifasi. Bepulligi bu sahifada yozilmagan.",
   },
   {
     id: 'CB02',
@@ -31,7 +31,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/practice-preparation/studying-practicing',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-04',
-    izoh: "Rasmiy tayyorgarlik materiallari ro'yxati: Bluebook, Khan Academy, Question Bank va boshqalar.",
+    izoh: "Rasmiy tayyorgarlik materiallari roʻyxati: Bluebook, Khan Academy, Question Bank va boshqalar.",
   },
   {
     id: 'CB03',
@@ -40,7 +40,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/structure',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Reading and Writing: ikki modul, har biri 32 daqiqa, 54 savol, jami 64 daqiqa. Math: ikki modul, har biri 35 daqiqa, 44 savol, jami 70 daqiqa. Jami 98 savol, 134 daqiqa (2 soat 14 daqiqa). Bo'limlar orasida 10 daqiqalik tanaffus. Adaptiv: har bo'limning 2-moduli 1-moduldagi natijaga qarab qiyinroq yoki osonroq (2026-11-11 qayta tekshirildi).",
+    izoh: "Reading and Writing: ikki modul, har biri 32 daqiqa, 54 savol, jami 64 daqiqa. Math: ikki modul, har biri 35 daqiqa, 44 savol, jami 70 daqiqa. Jami 98 savol, 134 daqiqa (2 soat 14 daqiqa). Boʻlimlar orasida 10 daqiqalik tanaffus. Adaptiv: har boʻlimning 2-moduli 1-moduldagi natijaga qarab qiyinroq yoki osonroq (2026-11-11 qayta tekshirildi).",
   },
   {
     id: 'CB04',
@@ -49,7 +49,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/k12-educators/about/understand-scores-benchmarks/score-structure',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "SAT umumiy ball oralig'i 400–1600, bo'lim (Reading and Writing, Math) ballari 200–800. Ball qadami (masalan, 10) sahifada yozilmagan.",
+    izoh: "SAT umumiy ball oraligʻi 400–1600, boʻlim (Reading and Writing, Math) ballari 200–800. Ball qadami (masalan, 10) sahifada yozilmagan.",
   },
   {
     id: 'CB05',
@@ -58,7 +58,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/math/overview',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "Math to'rt yo'nalish: Algebra (13–15 savol), Advanced Math (13–15), Problem-Solving and Data Analysis (5–7), Geometry and Trigonometry (5–7). Mavzular ro'yxati bu sahifada yo'q.",
+    izoh: "Math toʻrt yoʻnalish: Algebra (13–15 savol), Advanced Math (13–15), Problem-Solving and Data Analysis (5–7), Geometry and Trigonometry (5–7). Mavzular roʻyxati bu sahifada yoʻq.",
   },
   {
     id: 'CB06',
@@ -67,7 +67,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/reading-writing',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "To'rt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 so'z (adabiyot, tarix/ijtimoiy fanlar, gumanitar, fan). Standard English Conventions: gap tuzilishi, qo'llanish va tinish belgilari. Har ikki modulda to'rt domenning hammasi bor; o'xshash skill savollari guruhlangan va osondan qiyinga boradi (2026-11-12, WebFetch xulosasi). Skill nomlari va domenlar bo'yicha savol soni bu sahifada yo'q.",
+    izoh: "Toʻrt domen: Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions. Har qisqa matn (yoki matn juftligi) bitta test savoli bilan keladi; matnlar 25–150 soʻz (adabiyot, tarix/ijtimoiy fanlar, gumanitar, fan). Standard English Conventions: gap tuzilishi, qoʻllanish va tinish belgilari. Har ikki modulda toʻrt domenning hammasi bor; oʻxshash skill savollari guruhlangan va osondan qiyinga boradi (2026-11-12, WebFetch xulosasi). Skill nomlari va domenlar boʻyicha savol soni bu sahifada yoʻq.",
   },
   {
     id: 'CB07',
@@ -76,7 +76,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "SAT yon panelidagi tashqi havola. Sahifa sarlavhasi \"The SAT – SAT Suite | College Board\" (2026-11-08, HTTP 200). Havola faqat matn bilan: College Board trademark qoidalariga ko'ra uchinchi tomon saytida logo (acorn) ishlatilmaydi (privacy.collegeboard.org/copyright-trademark/guidelines). Manzilni muallif tasdiqladi (2026-11-08).",
+    izoh: "SAT yon panelidagi tashqi havola. Sahifa sarlavhasi \"The SAT – SAT Suite | College Board\" (2026-11-08, HTTP 200). Havola faqat matn bilan: College Board trademark qoidalariga koʻra uchinchi tomon saytida logo (acorn) ishlatilmaydi (privacy.collegeboard.org/copyright-trademark/guidelines). Manzilni muallif tasdiqladi (2026-11-08).",
   },
   {
     id: 'CB08',
@@ -85,7 +85,7 @@ export const manbalar: Manba[] = [
     havola: 'https://privacy.collegeboard.org/copyright-trademark/guidelines',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "SAT sahifalari pastidagi savdo belgisi eslatmasi (SatEslatma) uchun. Belgi yonida ® yoki ™ qo'yiladi; belgi sifatdosh sifatida ishlatiladi, ko'plik va qaratqich shaklida emas. Eslatma: belgi egasi College Board ekani va u sayt bilan aloqador emasligi, uni ma'qullamasligi. Saytda: bosh sahifada va belgi ishlatilgan har ichki sahifada, sahifa pastida; \"Terms and Conditions\" yoki \"Legal Notice\" bo'limi yetarli emas. Logo (acorn) yozma litsenziyasiz ishlatilmaydi, havola faqat matn. Sahifada oxirgi yangilanish sanasi yo'q (2026-11-08). Qo'llanmada ® qoidasi faqat \"next to the mark\"; HTML <title>, brauzer tabi, alt matn va \"birinchi ishlatilish\" haqida qoida yo'q, \"meta tags\" faqat taqiqlar ro'yxatida (IMPROPER Use 3) tilga olinadi (2026-11-08; iqtiboslar brauzerda so'zma-so'z tekshirilmagan).",
+    izoh: "SAT sahifalari pastidagi savdo belgisi eslatmasi (SatEslatma) uchun. Belgi yonida ® yoki ™ qoʻyiladi; belgi sifatdosh sifatida ishlatiladi, koʻplik va qaratqich shaklida emas. Eslatma: belgi egasi College Board ekani va u sayt bilan aloqador emasligi, uni maʼqullamasligi. Saytda: bosh sahifada va belgi ishlatilgan har ichki sahifada, sahifa pastida; \"Terms and Conditions\" yoki \"Legal Notice\" boʻlimi yetarli emas. Logo (acorn) yozma litsenziyasiz ishlatilmaydi, havola faqat matn. Sahifada oxirgi yangilanish sanasi yoʻq (2026-11-08). Qoʻllanmada ® qoidasi faqat \"next to the mark\"; HTML <title>, brauzer tabi, alt matn va \"birinchi ishlatilish\" haqida qoida yoʻq, \"meta tags\" faqat taqiqlar roʻyxatida (IMPROPER Use 3) tilga olinadi (2026-11-08; iqtiboslar brauzerda soʻzma-soʻz tekshirilmagan).",
   },
   {
     id: 'CB09',
@@ -94,7 +94,7 @@ export const manbalar: Manba[] = [
     havola: 'https://privacy.collegeboard.org/copyright-trademark/college-board',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "\"SAT®\" ro'yxatdan o'tgan belgilar qatorida, \"Bluebook™\" boshqa belgilar qatorida (2026-11-08). SAT bo'limida Bluebook nomi ham uchraydi, shuning uchun eslatmada ikkalasi bor.",
+    izoh: "\"SAT®\" roʻyxatdan oʻtgan belgilar qatorida, \"Bluebook™\" boshqa belgilar qatorida (2026-11-08). SAT boʻlimida Bluebook nomi ham uchraydi, shuning uchun eslatmada ikkalasi bor.",
   },
   {
     id: 'CB10',
@@ -103,7 +103,7 @@ export const manbalar: Manba[] = [
     havola: 'https://privacy.collegeboard.org/request-form/instructions',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "Kontent siyosati (docs/kontent-siyosati.md) uchun. Sahifada: \"SAT test materials are NOT available for commercial* license\"; \"Reproduction of any official SAT test materials is not allowed in test prep and other commercial settings\"; commercial ta'rifiga test-prep sharoiti kiradi. Iqtiboslar sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q.",
+    izoh: "Kontent siyosati (docs/kontent-siyosati.md) uchun. Sahifada: \"SAT test materials are NOT available for commercial* license\"; \"Reproduction of any official SAT test materials is not allowed in test prep and other commercial settings\"; commercial taʼrifiga test-prep sharoiti kiradi. Iqtiboslar sahifa HTMLʼida soʻzma-soʻz tekshirildi (2026-11-08, HTTP 200). Sahifada oxirgi yangilanish sanasi yoʻq.",
   },
   {
     id: 'CB11',
@@ -112,7 +112,7 @@ export const manbalar: Manba[] = [
     havola: 'https://privacy.collegeboard.org/site-terms',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "Kontent siyosati uchun. 10-bo'lim: xizmatlar \"solely for your non-commercial use\", ularni pul ishlash yoki \"as part of any test prep or other business\" uchun ishlatib bo'lmaydi. 8-bo'lim: kontentni yozma ruxsatsiz tarqatish, yuklab olish, ko'paytirish, scrape yoki data-mine qilish taqiqlangan. \"non-commercial use\" va \"test prep\" iqtiboslari sahifa HTML'ida so'zma-so'z tekshirildi (2026-11-08, HTTP 200); 8-bo'lim iqtiboslari faqat WebFetch xulosasidan. Sahifada kuchga kirish sanasi topilmadi.",
+    izoh: "Kontent siyosati uchun. 10-boʻlim: xizmatlar \"solely for your non-commercial use\", ularni pul ishlash yoki \"as part of any test prep or other business\" uchun ishlatib boʻlmaydi. 8-boʻlim: kontentni yozma ruxsatsiz tarqatish, yuklab olish, koʻpaytirish, scrape yoki data-mine qilish taqiqlangan. \"non-commercial use\" va \"test prep\" iqtiboslari sahifa HTMLʼida soʻzma-soʻz tekshirildi (2026-11-08, HTTP 200); 8-boʻlim iqtiboslari faqat WebFetch xulosasidan. Sahifada kuchga kirish sanasi topilmadi.",
   },
   {
     id: 'CB12',
@@ -121,7 +121,7 @@ export const manbalar: Manba[] = [
     havola: 'https://qotd.collegeboard.org/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "College Board'ning kunlik rasmiy savol sahifasi (sahifa sarlavhasi: \"Official SAT Question of the Day – SAT Suite | College Board\"). Help Center \"What is Question of the Day?\" (satsuite.collegeboard.org/help-center/what-question-day) shu manzilga olib boradi. SAT kirishidagi Tayanch kun savoli (P10) pastida tashqi havola sifatida; Tayanch savoli emas. P16 resurslar xaritasi ham shu ID'ni ishlatadi. Bepulligi va savol almashish vaqti bu sahifalarda tekshirilmadi (tekshirish kerak).",
+    izoh: "College Boardʼning kunlik rasmiy savol sahifasi (sahifa sarlavhasi: \"Official SAT Question of the Day – SAT Suite | College Board\"). Help Center \"What is Question of the Day?\" (satsuite.collegeboard.org/help-center/what-question-day) shu manzilga olib boradi. SAT kirishidagi Tayanch kun savoli (P10) pastida tashqi havola sifatida; Tayanch savoli emas. P16 resurslar xaritasi ham shu IDʼni ishlatadi. Bepulligi va savol almashish vaqti bu sahifalarda tekshirilmadi (tekshirish kerak).",
   },
   {
     id: 'CB14',
@@ -130,7 +130,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/dates-deadlines',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "SAT maqsad va sana sozlashi uchun (src/data/satSanalar.ts). 2026–27 SAT Weekend sanalari va ro'yxat muddatlari; sahifada \"apply to all students—U.S. and international\". 2027–28 sanalari \"anticipated\", kiritilmagan. HTML'da so'zma-so'z tekshirildi (2026-11-11, HTTP 200). Sahifada oxirgi yangilanish sanasi yo'q. CB12 boshqa branch'larda band (sat-kalkulyator, sat-savol-format-import), CB13 ehtiyot uchun qoldirildi.",
+    izoh: "SAT maqsad va sana sozlashi uchun (src/data/satSanalar.ts). 2026–27 SAT Weekend sanalari va roʻyxat muddatlari; sahifada \"apply to all students—U.S. and international\". 2027–28 sanalari \"anticipated\", kiritilmagan. HTMLʼda soʻzma-soʻz tekshirildi (2026-11-11, HTTP 200). Sahifada oxirgi yangilanish sanasi yoʻq. CB12 boshqa branchʼlarda band (sat-kalkulyator, sat-savol-format-import), CB13 ehtiyot uchun qoldirildi.",
   },
   {
     id: 'CB40',
@@ -139,7 +139,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/higher-ed-professionals/test-validity/content-domains',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Original savollar taksonomiyasi (src/data/savolSxema.ts) uchun: R&W 4 domen (Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions) va 10 ko'nikma; Math 4 domen (Algebra, Advanced Math, Problem-Solving and Data Analysis, Geometry and Trigonometry) va 19 ko'nikma. Nomlar WebFetch xulosasidan (2026-11-09), sahifada sana yo'q. PSAT izohlari olib tashlangan, SAT nomi qolgan.",
+    izoh: "Original savollar taksonomiyasi (src/data/savolSxema.ts) uchun: R&W 4 domen (Information and Ideas, Craft and Structure, Expression of Ideas, Standard English Conventions) va 10 koʻnikma; Math 4 domen (Algebra, Advanced Math, Problem-Solving and Data Analysis, Geometry and Trigonometry) va 19 koʻnikma. Nomlar WebFetch xulosasidan (2026-11-09), sahifada sana yoʻq. PSAT izohlari olib tashlangan, SAT nomi qolgan.",
   },
   {
     id: 'IE01',
@@ -148,7 +148,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "Listening taxminan 30 daqiqa; Reading 60 daqiqa (ko'chirish vaqti ichida); Writing 60 daqiqa; Speaking 11–14 daqiqa; jami 2 soat 45 daqiqa.",
+    izoh: "Listening taxminan 30 daqiqa; Reading 60 daqiqa (koʻchirish vaqti ichida); Writing 60 daqiqa; Speaking 11–14 daqiqa; jami 2 soat 45 daqiqa.",
   },
   {
     id: 'IE02',
@@ -157,7 +157,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-reading',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-06',
-    izoh: "60 daqiqa, 40 savol, 3 bo'lim; matnlar jami 2150–2750 so'z. 11 savol turi; 2-tur \"Identifying information (True/False/Not given)\": False = da'vo matndagi ma'lumotga zid, Not given = na mos, na zid; mavzu bo'yicha o'z bilimingdan foydalanilmaydi. 5-tur \"Matching headings\": sarlavha paragraf yoki bo'limning asosiy fikrini umumlashtiradi, sarlavhalar paragraflardan ko'p, bitta sarlavha bir martadan ortiq ishlatilmaydi. Sahifa 2026-11-06 da qayta tekshirildi.",
+    izoh: "60 daqiqa, 40 savol, 3 boʻlim; matnlar jami 2150–2750 soʻz. 11 savol turi; 2-tur \"Identifying information (True/False/Not given)\": False = daʼvo matndagi maʼlumotga zid, Not given = na mos, na zid; mavzu boʻyicha oʻz bilimingdan foydalanilmaydi. 5-tur \"Matching headings\": sarlavha paragraf yoki boʻlimning asosiy fikrini umumlashtiradi, sarlavhalar paragraflardan koʻp, bitta sarlavha bir martadan ortiq ishlatilmaydi. Sahifa 2026-11-06 da qayta tekshirildi.",
   },
   {
     id: 'IE03',
@@ -166,7 +166,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/preparation-resources/sample-test-questions/academic-test',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "To'rt ko'nikma bo'yicha namuna topshiriqlar; Listening va Reading uchun javob kalitlari PDF. Sahifada bepulligi yozilmagan.",
+    izoh: "Toʻrt koʻnikma boʻyicha namuna topshiriqlar; Listening va Reading uchun javob kalitlari PDF. Sahifada bepulligi yozilmagan.",
   },
   {
     id: 'IE07',
@@ -175,7 +175,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-listening',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "Listening qo'llanmasi uchun. \"Approximately 30 minutes\", 40 savol, 4 qism: 1-qism ikki kishi suhbati va 2-qism bitta asosiy so'zlovchi (kundalik, ijtimoiy vaziyatlar), 3-qism ikki asosiy so'zlovchi suhbati va 4-qism bitta kishi akademik mavzuda (ta'lim va o'qish vaziyatlari). Yozuv \"once only\" eshitiladi. 6 savol turi: Multiple choice; Matching; Plan, map, diagram labelling; Form, note, table, flow chart completion; Sentence completion; Short-answer questions. So'z cheklovi masalan \"NO MORE THAN TWO WORDS AND/OR A NUMBER\": ortiq yozilsa ball yo'qoladi; \"they're\" kabi qisqartmalar so'ralmaydi; \"check-in\" kabi defisli so'z bitta hisoblanadi. Har to'g'ri javob 1 ball, natija butun va yarim bandlarda. Ko'chirish vaqti (qog'oz test) bu sahifada yo'q. Sahifada yangilanish sanasi yo'q (faqat ©2026). 2026-11-12 da o'qildi. IE05 (ielts-writing-task2) va IE06 (ielts-speaking) boshqa branch'larda band.",
+    izoh: "Listening qoʻllanmasi uchun. \"Approximately 30 minutes\", 40 savol, 4 qism: 1-qism ikki kishi suhbati va 2-qism bitta asosiy soʻzlovchi (kundalik, ijtimoiy vaziyatlar), 3-qism ikki asosiy soʻzlovchi suhbati va 4-qism bitta kishi akademik mavzuda (taʼlim va oʻqish vaziyatlari). Yozuv \"once only\" eshitiladi. 6 savol turi: Multiple choice; Matching; Plan, map, diagram labelling; Form, note, table, flow chart completion; Sentence completion; Short-answer questions. Soʻz cheklovi masalan \"NO MORE THAN TWO WORDS AND/OR A NUMBER\": ortiq yozilsa ball yoʻqoladi; \"they're\" kabi qisqartmalar soʻralmaydi; \"check-in\" kabi defisli soʻz bitta hisoblanadi. Har toʻgʻri javob 1 ball, natija butun va yarim bandlarda. Koʻchirish vaqti (qogʻoz test) bu sahifada yoʻq. Sahifada yangilanish sanasi yoʻq (faqat ©2026). 2026-11-12 da oʻqildi. IE05 (ielts-writing-task2) va IE06 (ielts-speaking) boshqa branchʼlarda band.",
   },
   {
     id: 'IE04',
@@ -184,7 +184,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-10',
-    izoh: "Listening va Reading: 40 savol, har to'g'ri javob 1 ball; xom ball 9 bandli shkalaga o'tkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yo'q. Kerakli ball test versiyasiga qarab biroz o'zgaradi.",
+    izoh: "Listening va Reading: 40 savol, har toʻgʻri javob 1 ball; xom ball 9 bandli shkalaga oʻtkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yoʻq. Kerakli ball test versiyasiga qarab biroz oʻzgaradi.",
   },
   {
     id: 'IE05',
@@ -193,7 +193,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-writing',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "Writing 60 daqiqa, 2 task, ikkalasi majburiy. Task 2: ko'rinish, dalil yoki muammo muhokamasi; kamida 250 so'z, 40 daqiqadan ko'p sarflamaslik tavsiya etiladi; akademik yoki yarim rasmiy/neytral uslub; misollar o'z tajribangdan bo'lishi mumkin. Task 2 Writing balliga Task 1 dan ikki baravar ko'p hissa qo'shadi. To'rt mezon: Task achievement/response, Coherence and cohesion, Lexical resource, Grammatical range and accuracy (har birining ta'rifi sahifada). Jazo: mavzuga aloqasiz yozish, eslatma yoki bullet ko'rinishida yozish, ko'chirilgan matn (qattiq jazo). 250 dan ko'p yozish jazolanmaydi, lekin tekshirishga vaqt qolmasligi mumkin. Tekshiriladigan ko'nikmalar: muammoga yechim taklif qilish, fikr bildirish va asoslash, dalil, fikr va oqibatlarni solishtirish, g'oya va dalilni baholash va e'tiroz bildirish.",
+    izoh: "Writing 60 daqiqa, 2 task, ikkalasi majburiy. Task 2: koʻrinish, dalil yoki muammo muhokamasi; kamida 250 soʻz, 40 daqiqadan koʻp sarflamaslik tavsiya etiladi; akademik yoki yarim rasmiy/neytral uslub; misollar oʻz tajribangdan boʻlishi mumkin. Task 2 Writing balliga Task 1 dan ikki baravar koʻp hissa qoʻshadi. Toʻrt mezon: Task achievement/response, Coherence and cohesion, Lexical resource, Grammatical range and accuracy (har birining taʼrifi sahifada). Jazo: mavzuga aloqasiz yozish, eslatma yoki bullet koʻrinishida yozish, koʻchirilgan matn (qattiq jazo). 250 dan koʻp yozish jazolanmaydi, lekin tekshirishga vaqt qolmasligi mumkin. Tekshiriladigan koʻnikmalar: muammoga yechim taklif qilish, fikr bildirish va asoslash, dalil, fikr va oqibatlarni solishtirish, gʻoya va dalilni baholash va eʼtiroz bildirish.",
   },
   {
     id: 'ID01',
@@ -211,7 +211,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-speaking',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "Imtihonchi bilan yuzma-yuz suhbat, yozib olinadi. 11–14 daqiqa, 3 qism. Part 1: tanishuv va tanish mavzular (uy, oila, ish, o'qish, qiziqishlar), 4–5 daqiqa. Part 2: kartochka (gapiriladigan bandlar va bitta jihatni tushuntirish), 1 daqiqa tayyorgarlik, qalam va qog'oz beriladi, 2 daqiqa gapirish, imtihonchi vaqt tugaganda to'xtatadi, keyin 1–2 savol bo'lishi mumkin; jami 3–4 daqiqa. Part 3: Part 2 mavzusiga bog'liq umumiyroq va chuqurroq muhokama, 4–5 daqiqa. To'rt mezon: Fluency and coherence, Lexical resource (so'zni bilmaganda boshqacha ifodalay olish ham), Grammatical range and accuracy, Pronunciation (ortiqcha kuchsiz tushuniladigan nutq).",
+    izoh: "Imtihonchi bilan yuzma-yuz suhbat, yozib olinadi. 11–14 daqiqa, 3 qism. Part 1: tanishuv va tanish mavzular (uy, oila, ish, oʻqish, qiziqishlar), 4–5 daqiqa. Part 2: kartochka (gapiriladigan bandlar va bitta jihatni tushuntirish), 1 daqiqa tayyorgarlik, qalam va qogʻoz beriladi, 2 daqiqa gapirish, imtihonchi vaqt tugaganda toʻxtatadi, keyin 1–2 savol boʻlishi mumkin; jami 3–4 daqiqa. Part 3: Part 2 mavzusiga bogʻliq umumiyroq va chuqurroq muhokama, 4–5 daqiqa. Toʻrt mezon: Fluency and coherence, Lexical resource (soʻzni bilmaganda boshqacha ifodalay olish ham), Grammatical range and accuracy, Pronunciation (ortiqcha kuchsiz tushuniladigan nutq).",
   },
   {
     id: 'ID02',
@@ -229,7 +229,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.idp.com/ghana/prepare/article-how-to-write-the-date-correctly',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "Harf va raqam diktanti uchun. Sahifada: \"For IELTS, you can use both date formats\" (britancha kun-oy, amerikancha oy-kun); Listening javobida sana bir necha to'g'ri ko'rinishda yozilishi mumkin (24th April, April 24, 24 April), raqam bilan ham (19/02 yoki 02/19). Maqola 28/06/2021, IDP Staff. Vaqt yozilishi (7.30 / 7:30) sahifada yo'q.",
+    izoh: "Harf va raqam diktanti uchun. Sahifada: \"For IELTS, you can use both date formats\" (britancha kun-oy, amerikancha oy-kun); Listening javobida sana bir necha toʻgʻri koʻrinishda yozilishi mumkin (24th April, April 24, 24 April), raqam bilan ham (19/02 yoki 02/19). Maqola 28/06/2021, IDP Staff. Vaqt yozilishi (7.30 / 7:30) sahifada yoʻq.",
   },
   {
     id: 'CA01',
@@ -238,7 +238,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.commonapp.org/static/653ded5d8d0d5d685e10ae814a7b2c85/Understanding-App-Fees-and-Waivers.pdf',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "\"Colleges may accept fee waivers from all students or U.S. students only.\" Counselor fee waiver huquqini tasdiqlashi so'raladi; tasdiq kutilayotganda ariza to'lovsiz yuborilishi mumkin.",
+    izoh: "\"Colleges may accept fee waivers from all students or U.S. students only.\" Counselor fee waiver huquqini tasdiqlashi soʻraladi; tasdiq kutilayotganda ariza toʻlovsiz yuborilishi mumkin.",
   },
   {
     id: 'CA02',
@@ -247,7 +247,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.commonapp.org/static/c89a50d357fb5d5e8e9ddb911ffed933/Resource_TR_International_ENG_2025.06.25_1.pdf',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "\"Students from over 200 countries use the Common App to apply to college each year\"; xalqaro talaba need-based Common App fee waiver olishi mumkin, u Profile bo'limida. Hujjat transfer (o'qishni ko'chiruvchi) arizachilar uchun resurs sifatida tayyorlangan.",
+    izoh: "\"Students from over 200 countries use the Common App to apply to college each year\"; xalqaro talaba need-based Common App fee waiver olishi mumkin, u Profile boʻlimida. Hujjat transfer (oʻqishni koʻchiruvchi) arizachilar uchun resurs sifatida tayyorlangan.",
   },
   {
     id: 'UC01',
@@ -265,7 +265,7 @@ export const manbalar: Manba[] = [
     havola: 'https://stipendiumhungaricum.hu/partners/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-05',
-    izoh: "Ro'yxatda Uzbekistan bor; yuboruvchi tashkilot: Ministry of Higher and Secondary Specialized Education (MHSSE). Ro'yxat sahifada JavaScript bilan yuklanadi.",
+    izoh: "Roʻyxatda Uzbekistan bor; yuboruvchi tashkilot: Ministry of Higher and Secondary Specialized Education (MHSSE). Roʻyxat sahifada JavaScript bilan yuklanadi.",
   },
   {
     id: 'EY01',
@@ -274,7 +274,7 @@ export const manbalar: Manba[] = [
     havola: 'https://t.me/elyurtumidifoundation/16705',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-04',
-    izoh: "Kanal o'zini jamg'armaning rasmiy kanali deb ataydi va el-yurt.uz ga havola beradi. Postda: bakalavriat 101, magistratura 158, doktorantura 31 kvota; hujjatlar el-yurt.uz/application orqali 15-noyabr 23:59 gacha. Vaqt mintaqasi yozilmagan.",
+    izoh: "Kanal oʻzini jamgʻarmaning rasmiy kanali deb ataydi va el-yurt.uz ga havola beradi. Postda: bakalavriat 101, magistratura 158, doktorantura 31 kvota; hujjatlar el-yurt.uz/application orqali 15-noyabr 23:59 gacha. Vaqt mintaqasi yozilmagan.",
   },
   {
     id: 'EY02',
@@ -283,7 +283,7 @@ export const manbalar: Manba[] = [
     havola: 'https://lex.uz/uz/docs/-7520218',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "10-band: g'oliblar ochiq tanlovda test sinovlari va suhbat orqali aniqlanadi; (d) suhbatlar yozib olinadi va kelgusi nomzodlar uchun maxsus platformada joylashtiriladi; (e) bakalavriat bo'yicha QS, magistratura va doktorantura bo'yicha THE reytingiga ko'ra: birinchi 100 talikdagi muassasaga tuition fee to'liq qoplanadigan grant bilan qabul qilinganlarga stipendiya tanlovsiz; birinchi 300 talikda shunday grant bilan qabul qilinganlarga xalqaro transport va turarjoy xarajatlari uchun stipendiya. 13-band: ishlab berish majburiyati (to'liq bandlik, uzluksiz): maqsadli stajirovka 2 yil, bakalavriat 5 yil, magistratura 3 yil, doktorantura 5 yil; shartnoma bajarilmasa sarflangan xarajatlarning ikki barobari qoplanadi. 13-b band PF-197 (29.10.2025) tahririda. Sahifaning 10, 13, 15-bandlari o'qildi.",
+    izoh: "10-band: gʻoliblar ochiq tanlovda test sinovlari va suhbat orqali aniqlanadi; (d) suhbatlar yozib olinadi va kelgusi nomzodlar uchun maxsus platformada joylashtiriladi; (e) bakalavriat boʻyicha QS, magistratura va doktorantura boʻyicha THE reytingiga koʻra: birinchi 100 talikdagi muassasaga tuition fee toʻliq qoplanadigan grant bilan qabul qilinganlarga stipendiya tanlovsiz; birinchi 300 talikda shunday grant bilan qabul qilinganlarga xalqaro transport va turarjoy xarajatlari uchun stipendiya. 13-band: ishlab berish majburiyati (toʻliq bandlik, uzluksiz): maqsadli stajirovka 2 yil, bakalavriat 5 yil, magistratura 3 yil, doktorantura 5 yil; shartnoma bajarilmasa sarflangan xarajatlarning ikki barobari qoplanadi. 13-b band PF-197 (29.10.2025) tahririda. Sahifaning 10, 13, 15-bandlari oʻqildi.",
   },
   {
     id: 'CH01',
@@ -292,7 +292,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.chevening.org/scholarships/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "\"fully-funded scholarship\"; Buyuk Britaniyada bir yillik magistratura. Nimalar qoplanishi bu sahifada ro'yxat qilinmagan. Uzbekistan sahifasida (chevening.org/scholarship/uzbekistan/) 2027-2028 arizalari yopilgan deb yozilgan.",
+    izoh: "\"fully-funded scholarship\"; Buyuk Britaniyada bir yillik magistratura. Nimalar qoplanishi bu sahifada roʻyxat qilinmagan. Uzbekistan sahifasida (chevening.org/scholarship/uzbekistan/) 2027-2028 arizalari yopilgan deb yozilgan.",
   },
   {
     id: 'CH02',
@@ -301,7 +301,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.chevening.org/resource-hub/scholar-support/returning-home/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "Stipendiya tugagach kamida ikki yil o'z davlatiga qaytish talab qilinadi.",
+    izoh: "Stipendiya tugagach kamida ikki yil oʻz davlatiga qaytish talab qilinadi.",
   },
   {
     id: 'DA01',
@@ -310,7 +310,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.daad.de/en/studying-in-germany/living-in-germany/finances/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "Davlat oliy ta'lim muassasalarida bakalavriat va ko'pchilik magistratura uchun odatda to'lov yo'q. Istisno: Baden-Württemberg EI dan tashqari fuqarolardan semestriga 1500 EUR oladi; Bavariya muassasalari EI/EEA dan tashqari talabalardan to'lov olishi mumkin; xususiy muassasalar qimmatroq. Semestr badali hamma talabaga majburiy, odatda 70–430 EUR. Stipendiyalar: daad.de/en/studying-in-germany/scholarships/ (DAAD stipendiya bazasi).",
+    izoh: "Davlat oliy taʼlim muassasalarida bakalavriat va koʻpchilik magistratura uchun odatda toʻlov yoʻq. Istisno: Baden-Württemberg EI dan tashqari fuqarolardan semestriga 1500 EUR oladi; Bavariya muassasalari EI/EEA dan tashqari talabalardan toʻlov olishi mumkin; xususiy muassasalar qimmatroq. Semestr badali hamma talabaga majburiy, odatda 70–430 EUR. Stipendiyalar: daad.de/en/studying-in-germany/scholarships/ (DAAD stipendiya bazasi).",
   },
   {
     id: 'LX01',
@@ -319,7 +319,7 @@ export const manbalar: Manba[] = [
     havola: 'https://lex.uz/uz/docs/-7726569',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-04',
-    izoh: "42-band: College Board SAT'da 1200 va undan yuqori ball sertifikati egalari sertifikat berilgan fan kirish imtihonlari tarkibida bo'lgan yo'nalishlarga qo'shimcha davlat granti asosida qabul qilinadi; sertifikat Agentlikka DI kod orqali yuboriladi. 10-band: ro'yxatdan o'tishning 1-bosqichi har yili 5–25-iyun. Sahifaning faqat birinchi qismi (1–72-band) o'qildi.",
+    izoh: "42-band: College Board SATʼda 1200 va undan yuqori ball sertifikati egalari sertifikat berilgan fan kirish imtihonlari tarkibida boʻlgan yoʻnalishlarga qoʻshimcha davlat granti asosida qabul qilinadi; sertifikat Agentlikka DI kod orqali yuboriladi. 10-band: roʻyxatdan oʻtishning 1-bosqichi har yili 5–25-iyun. Sahifaning faqat birinchi qismi (1–72-band) oʻqildi.",
   },
   {
     id: 'LX02',
@@ -328,7 +328,7 @@ export const manbalar: Manba[] = [
     havola: 'https://lex.uz/uz/docs/-4396419',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "21-modda: rozilik uning olinganligini tasdiqlash imkonini beruvchi har qanday shaklda beriladi; voyaga yetmagan subyektlar ma'lumotiga ishlov berish uchun ota-onalari (vasiylari, homiylari) yozma shaklda, shu jumladan elektron hujjat tarzida rozilik beradi; rozilik chaqirib olinishi mumkin. 17-modda: rozilik chaqirib olinganda ma'lumot yo'q qilinadi. 15-modda: teng himoya ta'minlovchi chet davlatlarga transchegaraviy uzatish. 27¹-modda (O'RQ-1125, 26.03.2026 tahriri): biometrik, genetik va telekom foydalanuvchilari ma'lumoti O'zbekistonda saqlanadi; boshqa ma'lumot chet elda saqlanishi mumkin, masalan davlat teng himoya ta'minlovchi deb tan olingan bo'lsa. 20-modda: davlat reyestrida ro'yxatdan o'tkazish faqat 27¹-moddaning 2-qismidagi bazalar uchun. 22, 30-modda: subyektning bilish va murojaat huquqi. Oxirgi o'zgarish sahifada: O'RQ-1174 (11.09.2026).",
+    izoh: "21-modda: rozilik uning olinganligini tasdiqlash imkonini beruvchi har qanday shaklda beriladi; voyaga yetmagan subyektlar maʼlumotiga ishlov berish uchun ota-onalari (vasiylari, homiylari) yozma shaklda, shu jumladan elektron hujjat tarzida rozilik beradi; rozilik chaqirib olinishi mumkin. 17-modda: rozilik chaqirib olinganda maʼlumot yoʻq qilinadi. 15-modda: teng himoya taʼminlovchi chet davlatlarga transchegaraviy uzatish. 27¹-modda (OʻRQ-1125, 26.03.2026 tahriri): biometrik, genetik va telekom foydalanuvchilari maʼlumoti Oʻzbekistonda saqlanadi; boshqa maʼlumot chet elda saqlanishi mumkin, masalan davlat teng himoya taʼminlovchi deb tan olingan boʻlsa. 20-modda: davlat reyestrida roʻyxatdan oʻtkazish faqat 27¹-moddaning 2-qismidagi bazalar uchun. 22, 30-modda: subyektning bilish va murojaat huquqi. Oxirgi oʻzgarish sahifada: OʻRQ-1174 (11.09.2026).",
   },
   {
     id: 'LX03',
@@ -337,7 +337,7 @@ export const manbalar: Manba[] = [
     havola: 'https://lex.uz/uz/docs/-111189',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Muomala layoqati fuqaro voyaga yetgach, ya'ni o'n sakkiz yoshga to'lgach to'la hajmda vujudga keladi (nikoh istisnosi bilan). Demak LX02 dagi \"voyaga yetmagan\" = 18 yoshgacha.",
+    izoh: "Muomala layoqati fuqaro voyaga yetgach, yaʼni oʻn sakkiz yoshga toʻlgach toʻla hajmda vujudga keladi (nikoh istisnosi bilan). Demak LX02 dagi \"voyaga yetmagan\" = 18 yoshgacha.",
   },
   {
     id: 'LX04',
@@ -346,7 +346,7 @@ export const manbalar: Manba[] = [
     havola: 'https://lex.uz/ru/docs/8369688',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Ilovadagi ro'yxatda 10-band: Germaniya Federativ Respublikasi (Supabase loyihasi Frankfurtda). 2-band AQSH yulduzcha bilan: faqat EU-US Data Privacy Framework kompaniyalari. Sahifa kirill yozuvida o'qildi.",
+    izoh: "Ilovadagi roʻyxatda 10-band: Germaniya Federativ Respublikasi (Supabase loyihasi Frankfurtda). 2-band AQSH yulduzcha bilan: faqat EU-US Data Privacy Framework kompaniyalari. Sahifa kirill yozuvida oʻqildi.",
   },
   {
     id: 'TB01',
@@ -355,7 +355,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.turkiyeburslari.gov.tr/calendar',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Umumiy ariza har yili 10-yanvar – 20-fevral; baholash mart–aprel, intervyu aprel–iyun, natija avgust boshi; dastlabki rasmiylashtirish avgust, Türkiye'ga kelish sentabr. Sahifadagi \"Application/Login\" havolasi tbbs.turkiyeburslari.gov.tr ga olib boradi (2026-11-09). Sahifada yil yozilmagan: 2027-yil e'loni chiqqach qayta tekshiriladi.",
+    izoh: "Umumiy ariza har yili 10-yanvar – 20-fevral; baholash mart–aprel, intervyu aprel–iyun, natija avgust boshi; dastlabki rasmiylashtirish avgust, Türkiyeʼga kelish sentabr. Sahifadagi \"Application/Login\" havolasi tbbs.turkiyeburslari.gov.tr ga olib boradi (2026-11-09). Sahifada yil yozilmagan: 2027-yil eʼloni chiqqach qayta tekshiriladi.",
   },
   {
     id: 'TB02',
@@ -364,7 +364,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.turkiyeburslari.gov.tr/scholarshipsprograms',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Minimal o'zlashtirish: bakalavr (associate va bachelor's) 70%, magistratura va doktorantura 75%, tibbiyot, stomatologiya, farmatsiya 90%. Yosh: bakalavr 21 dan kichik, magistratura 30 dan kichik, PhD 35 dan kichik. Hamma davlat fuqarolari ariza bera oladi; Türkiye fuqarolari (va fuqarolikni yo'qotganlar) hamda Türkiye universitetida shu darajada o'qiyotganlar bera olmaydi. Bitirgan yoki joriy o'quv yili oxirida (avgustgacha) bitiradiganlar bera oladi. Yosh qaysi sanaga qarab hisoblanishi yozilmagan.",
+    izoh: "Minimal oʻzlashtirish: bakalavr (associate va bachelor's) 70%, magistratura va doktorantura 75%, tibbiyot, stomatologiya, farmatsiya 90%. Yosh: bakalavr 21 dan kichik, magistratura 30 dan kichik, PhD 35 dan kichik. Hamma davlat fuqarolari ariza bera oladi; Türkiye fuqarolari (va fuqarolikni yoʻqotganlar) hamda Türkiye universitetida shu darajada oʻqiyotganlar bera olmaydi. Bitirgan yoki joriy oʻquv yili oxirida (avgustgacha) bitiradiganlar bera oladi. Yosh qaysi sanaga qarab hisoblanishi yozilmagan.",
   },
   {
     id: 'TB03',
@@ -373,7 +373,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.turkiyeburslari.gov.tr/whyturkiyescholarships',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Qoplanadi: o'qish to'lovi, bakalavrlar uchun yotoqxona, tibbiy sug'urta, bir martalik aviachipta, 1 yillik bepul turk tili kursi. Oylik stipendiya: bakalavr 6.500 TL, magistratura 9.500 TL, PhD 13.000 TL. Onlayn arizada (TBBS) 12 tagacha tanlov.",
+    izoh: "Qoplanadi: oʻqish toʻlovi, bakalavrlar uchun yotoqxona, tibbiy sugʻurta, bir martalik aviachipta, 1 yillik bepul turk tili kursi. Oylik stipendiya: bakalavr 6.500 TL, magistratura 9.500 TL, PhD 13.000 TL. Onlayn arizada (TBBS) 12 tagacha tanlov.",
   },
   {
     id: 'TB04',
@@ -382,7 +382,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.turkiyeburslari.gov.tr/applysteps',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "TBBS ga yuklanadi: shaxsni tasdiqlovchi hujjat yoki pasport, oxirgi 1 yildagi foto, milliy imtihon natijasi (bo'lsa), diplom yoki vaqtinchalik bitiruv guvohnomasi, transkript; xalqaro imtihon (GRE, GMAT, SAT va h.k.) va til testi (TOEFL, DELF va h.k.) natijalari tanlangan universitet yoki dastur talab qilsa; PhD uchun tadqiqot taklifi. C1 turkcha sertifikati bo'lmagan grant oluvchilar 1 yillik turk tili kursida o'qib, C1 olishi kerak. 5 qadamning o'zi sahifada faqat rasm sifatida.",
+    izoh: "TBBS ga yuklanadi: shaxsni tasdiqlovchi hujjat yoki pasport, oxirgi 1 yildagi foto, milliy imtihon natijasi (boʻlsa), diplom yoki vaqtinchalik bitiruv guvohnomasi, transkript; xalqaro imtihon (GRE, GMAT, SAT va h.k.) va til testi (TOEFL, DELF va h.k.) natijalari tanlangan universitet yoki dastur talab qilsa; PhD uchun tadqiqot taklifi. C1 turkcha sertifikati boʻlmagan grant oluvchilar 1 yillik turk tili kursida oʻqib, C1 olishi kerak. 5 qadamning oʻzi sahifada faqat rasm sifatida.",
   },
   {
     id: 'TB05',
@@ -391,7 +391,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.turkiyeburslari.gov.tr/turkisheducation',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "1 yillik bepul turk tili ta'limi dastur tilidan qat'i nazar hamma grant oluvchilarga beriladi; oxirida C1 sertifikati kutiladi. Ozod qilish shartlari bu sahifada yozilmagan (TB04: C1 sertifikati bo'lmaganlar uchun majburiy).",
+    izoh: "1 yillik bepul turk tili taʼlimi dastur tilidan qatʼi nazar hamma grant oluvchilarga beriladi; oxirida C1 sertifikati kutiladi. Ozod qilish shartlari bu sahifada yozilmagan (TB04: C1 sertifikati boʻlmaganlar uchun majburiy).",
   },
   {
     id: 'CO01',
@@ -400,7 +400,7 @@ export const manbalar: Manba[] = [
     havola: 'https://coalitionforcollegeaccess.org/2022-new-partnership',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-04',
-    izoh: "Ariza Scoir platformasi orqali; Scoir akkaunti talaba uchun bepul; eski platforma to'xtatilgan. Xalqaro talabalar haqida bu sahifa matnida aniq gap yo'q: alohida tekshirish kerak.",
+    izoh: "Ariza Scoir platformasi orqali; Scoir akkaunti talaba uchun bepul; eski platforma toʻxtatilgan. Xalqaro talabalar haqida bu sahifa matnida aniq gap yoʻq: alohida tekshirish kerak.",
   },
   // Texnik manbalar (hisob, to'lov, server; ADR docs/qarorlar/001-hisob-tolov-server.md).
   {
@@ -410,7 +410,7 @@ export const manbalar: Manba[] = [
     havola: 'https://supabase.com/docs/guides/api/api-keys',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "Publishable kalit (eski nomi anon) ochiq joyda (veb-sahifa, manba kodi) turishi mumkin. Secret kalit (eski nomi service_role) hamma RLS siyosatini chetlab o'tadi: faqat serverda, hech qachon brauzerda emas.",
+    izoh: "Publishable kalit (eski nomi anon) ochiq joyda (veb-sahifa, manba kodi) turishi mumkin. Secret kalit (eski nomi service_role) hamma RLS siyosatini chetlab oʻtadi: faqat serverda, hech qachon brauzerda emas.",
   },
   {
     id: 'SB02',
@@ -419,7 +419,7 @@ export const manbalar: Manba[] = [
     havola: 'https://supabase.com/docs/guides/functions/secrets',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "Production secret'lari Dashboard (Edge Function Secrets) yoki CLI orqali qo'yiladi: supabase secrets set. Lokal funksiyalar supabase/functions/.env ni o'qiydi, u Git'ga qo'shilmaydi. Secret nomi SUPABASE_ bilan boshlanmaydi.",
+    izoh: "Production secretʼlari Dashboard (Edge Function Secrets) yoki CLI orqali qoʻyiladi: supabase secrets set. Lokal funksiyalar supabase/functions/.env ni oʻqiydi, u Gitʼga qoʻshilmaydi. Secret nomi SUPABASE_ bilan boshlanmaydi.",
   },
   {
     id: 'SB03',
@@ -437,7 +437,7 @@ export const manbalar: Manba[] = [
     havola: 'https://supabase.com/docs/guides/auth/social-login/auth-google',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-08',
-    izoh: "Google'da Web application turidagi OAuth client (Client ID va Client Secret), Authorized JavaScript origins va Supabase callback URL kerak. Scope'lar: openid, userinfo.email, userinfo.profile. Client secret Supabase Dashboard'dagi Google provider sozlamasiga kiritiladi (lokalda environment variable orqali).",
+    izoh: "Googleʼda Web application turidagi OAuth client (Client ID va Client Secret), Authorized JavaScript origins va Supabase callback URL kerak. Scopeʼlar: openid, userinfo.email, userinfo.profile. Client secret Supabase Dashboardʼdagi Google provider sozlamasiga kiritiladi (lokalda environment variable orqali).",
   },
   {
     id: 'IP01',
@@ -446,7 +446,7 @@ export const manbalar: Manba[] = [
     havola: 'https://packagist.org/packages/inpayuz/inpay-php',
     tekshiruvDarajasi: 'rasmiy-parcha',
     tekshirilganSana: '2026-11-09',
-    izoh: "API v1 uchun SDK (GitHub: inpayuz/inpay-php, inpay-js, inpay-python, 2026-07-12). README: bitta inPAY shartnomasi orqali Click, Payme, UzCard/HUMO; webhook X-InPAY-Signature (HMAC-SHA256). Bu imzo v1 REST hujjatida (IP04) yo'q, shuning uchun Tayanch v2 (IP03) ni ishlatadi.",
+    izoh: "API v1 uchun SDK (GitHub: inpayuz/inpay-php, inpay-js, inpay-python, 2026-07-12). README: bitta inPAY shartnomasi orqali Click, Payme, UzCard/HUMO; webhook X-InPAY-Signature (HMAC-SHA256). Bu imzo v1 REST hujjatida (IP04) yoʻq, shuning uchun Tayanch v2 (IP03) ni ishlatadi.",
   },
   {
     id: 'IP02',
@@ -455,7 +455,7 @@ export const manbalar: Manba[] = [
     havola: 'https://pypi.org/project/inpay-python/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-10',
-    izoh: "1.0.1 manba kodi (webhook.py, models.py, client.py) o'qildi: API v1 uchun (/api/v1/create/, /api/v1/transactions/). Webhook X-InPAY-Signature = hex(HMAC-SHA256(xom tana, webhook secret)), ixtiyoriy 'sha256=' prefiksi, vaqt tamg'asi yo'q, hmac.compare_digest; tana maydonlari event, order_id, amount, status ('success' = to'langan), payment_method. Tayanch v2 (IP03) ni ishlatadi, bu format qo'llanmaydi.",
+    izoh: "1.0.1 manba kodi (webhook.py, models.py, client.py) oʻqildi: API v1 uchun (/api/v1/create/, /api/v1/transactions/). Webhook X-InPAY-Signature = hex(HMAC-SHA256(xom tana, webhook secret)), ixtiyoriy 'sha256=' prefiksi, vaqt tamgʻasi yoʻq, hmac.compare_digest; tana maydonlari event, order_id, amount, status ('success' = toʻlangan), payment_method. Tayanch v2 (IP03) ni ishlatadi, bu format qoʻllanmaydi.",
   },
   {
     id: 'IP03',
@@ -464,7 +464,7 @@ export const manbalar: Manba[] = [
     havola: 'https://inpay.uz/api/v2/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Tayanch ishlatadigan API. POST /payments/ (summa butun so'm, kamida 1000; Idempotency-Key 24 soat), checkout_url. Kalitlar sk_test_ (sinov, simulyator va test kartalar) va sk_live_; v1 kaliti v2'da ishlamaydi. Webhook: payment.succeeded/failed/canceled va subscription.*, X-Inpay-Signature t=…,v1=… = HMAC-SHA256(\"{t}.{xom tana}\", whsec_…), 5 daqiqa; 2xx bo'lmasa 8 martagacha qayta yuboriladi, takror kelishi mumkin (evt_ id). Obunalar (avto to'lov) bo'limi bor. return_url/webhook_url domeni kassaga biriktirilgan yoki oq ro'yxatda bo'lishi kerak.",
+    izoh: "Tayanch ishlatadigan API. POST /payments/ (summa butun soʻm, kamida 1000; Idempotency-Key 24 soat), checkout_url. Kalitlar sk_test_ (sinov, simulyator va test kartalar) va sk_live_; v1 kaliti v2'da ishlamaydi. Webhook: payment.succeeded/failed/canceled va subscription.*, X-Inpay-Signature t=…,v1=… = HMAC-SHA256(\"{t}.{xom tana}\", whsec_…), 5 daqiqa; 2xx boʻlmasa 8 martagacha qayta yuboriladi, takror kelishi mumkin (evt_ id). Obunalar (avto toʻlov) boʻlimi bor. return_url/webhook_url domeni kassaga biriktirilgan yoki oq roʻyxatda boʻlishi kerak.",
   },
   {
     id: 'IP04',
@@ -482,7 +482,7 @@ export const manbalar: Manba[] = [
     havola: 'https://college.harvard.edu/admissions/apply/application-requirements',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "SAT yoki ACT talab qilinadi, xalqaro va mahalliy abituriyent uchun bir xil. Test imkonsiz bo'lgan istisno holda AP, IB, GCSE/A-Level yoki milliy bitiruv imtihoni natijasi qabul qilinadi. Restrictive Early Action 1-noyabr, Regular Decision 1-yanvar. Minimal ball yo'q.",
+    izoh: "SAT yoki ACT talab qilinadi, xalqaro va mahalliy abituriyent uchun bir xil. Test imkonsiz boʻlgan istisno holda AP, IB, GCSE/A-Level yoki milliy bitiruv imtihoni natijasi qabul qilinadi. Restrictive Early Action 1-noyabr, Regular Decision 1-yanvar. Minimal ball yoʻq.",
   },
   {
     id: 'NY01',
@@ -500,7 +500,7 @@ export const manbalar: Manba[] = [
     havola: 'https://iso.metu.edu.tr/en/application-requirements',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "SAT asosiy ariza hujjati bo'la oladigan imtihonlar qatorida (TR-YÖS, QUDURAT, TQDK va boshqalar bilan), natija 2 yil amal qiladi. Talabni bajarish qabulni kafolatlamaydi. Minimal ball odtu_iso_requirements.pdf da: tekshirilmagan.",
+    izoh: "SAT asosiy ariza hujjati boʻla oladigan imtihonlar qatorida (TR-YÖS, QUDURAT, TQDK va boshqalar bilan), natija 2 yil amal qiladi. Talabni bajarish qabulni kafolatlamaydi. Minimal ball odtu_iso_requirements.pdf da: tekshirilmagan.",
   },
   {
     id: 'KY01',
@@ -509,7 +509,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-09',
-    izoh: "Appendix 1: kamida bitta standart test natijasi majburiy; SAT \"A. International Tests\" ro'yxatida, faqat 2026-11-07 gacha topshirilgan test hisoblanadi. Engineering: matematika + fizika + kimyo natijasi. Minimal ball yo'q (FAQ). Ariza muddati 2026-12-03, 17:00 JST (iup.kyoto-u.ac.jp/apply/).",
+    izoh: "Appendix 1: kamida bitta standart test natijasi majburiy; SAT \"A. International Tests\" roʻyxatida, faqat 2026-11-07 gacha topshirilgan test hisoblanadi. Engineering: matematika + fizika + kimyo natijasi. Minimal ball yoʻq (FAQ). Ariza muddati 2026-12-03, 17:00 JST (iup.kyoto-u.ac.jp/apply/).",
   },
   // ---------- P16: "Where to start" yo'l xaritasi va bepul resurslar xaritasi (2026-11-11) ----------
   // ID'lar CB20 dan: CB12–CB14 parallel branch'larda band. Matnlar sahifa HTML'idan (curl, HTTP 200) o'qildi.
@@ -520,7 +520,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/practice',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Rasmiy mashq resurslari markazi (eski /sat/practice-preparation manzillari shu yerga yo'naltiriladi). Sahifada: \"find your free practice resources here\"; \"Take a free, full-length practice test on Bluebook\"; Schoolhouse.world: \"free, live, small-group tutoring sessions led by trained peer tutors\"; Khan Academy: \"free lessons and quizzes\"; Question of the Day havolasi qotd.collegeboard.org; My Practice: Student Question Bank, natijalar va Tailored Practice.",
+    izoh: "Rasmiy mashq resurslari markazi (eski /sat/practice-preparation manzillari shu yerga yoʻnaltiriladi). Sahifada: \"find your free practice resources here\"; \"Take a free, full-length practice test on Bluebook\"; Schoolhouse.world: \"free, live, small-group tutoring sessions led by trained peer tutors\"; Khan Academy: \"free lessons and quizzes\"; Question of the Day havolasi qotd.collegeboard.org; My Practice: Student Question Bank, natijalar va Tailored Practice.",
   },
   {
     id: 'CB21',
@@ -529,7 +529,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/practice/practice-tests/bluebook',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Bluebook bosh sahifasida \"Practice and Prepare\". To'liq testlar haqiqiy test kabi vaqtli (bo'limdan bo'limga vaqt tugamasdan o'tish mumkin) va baholanadi; natija My Practice'da, savollarni ko'rib chiqish va Khan Academy orqali mashq. Tailored Practice, Student Question Bank (filtr: bo'lim, domen, skill, qiyinlik), Schoolhouse.world: 4 haftalik jonli kichik guruh mashg'ulotlari. Testlar soni bu sahifada yozilmagan.",
+    izoh: "Bluebook bosh sahifasida \"Practice and Prepare\". Toʻliq testlar haqiqiy test kabi vaqtli (boʻlimdan boʻlimga vaqt tugamasdan oʻtish mumkin) va baholanadi; natija My Practiceʼda, savollarni koʻrib chiqish va Khan Academy orqali mashq. Tailored Practice, Student Question Bank (filtr: boʻlim, domen, skill, qiyinlik), Schoolhouse.world: 4 haftalik jonli kichik guruh mashgʻulotlari. Testlar soni bu sahifada yozilmagan.",
   },
   {
     id: 'CB22',
@@ -538,7 +538,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/practice/practice-tests/paper',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "PDF testlar bepul yuklab olinadi (\"for free\"), nonadaptive; har to'plamda test, baholash qo'llanmasi va javob tushuntirishlari. Faqat qog'oz akkomodatsiyasi bilan topshiradiganlarga tavsiya qilinadi; Bluebook'da topshiradiganlarga kamida bitta adaptiv testni ilovada topshirish tavsiya qilinadi. Sahifada SAT to'plamlari 4–11 ro'yxatda (2026-11-11). Tayanch PDF'larni ko'chirmaydi, faqat sahifaga havola.",
+    izoh: "PDF testlar bepul yuklab olinadi (\"for free\"), nonadaptive; har toʻplamda test, baholash qoʻllanmasi va javob tushuntirishlari. Faqat qogʻoz akkomodatsiyasi bilan topshiradiganlarga tavsiya qilinadi; Bluebookʼda topshiradiganlarga kamida bitta adaptiv testni ilovada topshirish tavsiya qilinadi. Sahifada SAT toʻplamlari 4–11 roʻyxatda (2026-11-11). Tayanch PDFʼlarni koʻchirmaydi, faqat sahifaga havola.",
   },
   {
     id: 'CB23',
@@ -547,7 +547,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/practice/student-question-bank',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "\"thousands of official practice questions\"; filtr: assessment, test, domen, skill, qiyinlik. Kirish: My Practice'ga maktab sign-in ticket yoki shaxsiy College Board student account bilan. Bank manzili: mypractice.collegeboard.org/questionbank/search (HTTP 200).",
+    izoh: "\"thousands of official practice questions\"; filtr: assessment, test, domen, skill, qiyinlik. Kirish: My Practiceʼga maktab sign-in ticket yoki shaxsiy College Board student account bilan. Bank manzili: mypractice.collegeboard.org/questionbank/search (HTTP 200).",
   },
   {
     id: 'CB24',
@@ -556,7 +556,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/practice/khan-academy',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Official SAT Prep on Khan Academy College Board bilan hamkorlikda; \"Best of all, it's free!\". Bluebook practice testidan keyin My Practice'dagi \"Practice on Khan Academy\" tugmasi o'sha testning har savoli tushuntirilgan kursni ochadi. Har skill 3 darajada: Foundations, Medium, Advanced. Course Challenge: qaysi skilldan boshlashni aniqlash uchun qisqa test.",
+    izoh: "Official SAT Prep on Khan Academy College Board bilan hamkorlikda; \"Best of all, it's free!\". Bluebook practice testidan keyin My Practiceʼdagi \"Practice on Khan Academy\" tugmasi oʻsha testning har savoli tushuntirilgan kursni ochadi. Har skill 3 darajada: Foundations, Medium, Advanced. Course Challenge: qaysi skilldan boshlashni aniqlash uchun qisqa test.",
   },
   {
     id: 'CB25',
@@ -565,7 +565,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/practice/bluebook',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Kamida bitta practice testni test kunidagidek bir o'tirishda topshirish tavsiya qilinadi, lekin Bluebook'da testni to'xtatib, keyin davom etish mumkin. My Practice: Score Details'da har savol, berilgan javob va to'g'ri javob; Review: tushuntirish. Xato savollar va ulardagi qonuniyatni kuzatib, Student Question Bank'da shu skilllarni mashq qilish tavsiya qilinadi.",
+    izoh: "Kamida bitta practice testni test kunidagidek bir oʻtirishda topshirish tavsiya qilinadi, lekin Bluebookʼda testni toʻxtatib, keyin davom etish mumkin. My Practice: Score Detailsʼda har savol, berilgan javob va toʻgʻri javob; Review: tushuntirish. Xato savollar va ulardagi qonuniyatni kuzatib, Student Question Bankʼda shu skilllarni mashq qilish tavsiya qilinadi.",
   },
   {
     id: 'CB26',
@@ -574,7 +574,7 @@ export const manbalar: Manba[] = [
     havola: 'https://bluebook.collegeboard.org/students/tools',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "\"On the SAT, PSAT-related assessments, and certain AP Exams, you'll have access to a Desmos calculator.\" (WebFetch xulosasi orqali, 2026-11-11). Graphing/scientific rejimlari va practice testlarda bor-yo'qligi bu sahifada yozilmagan. Sahifa matni (curl, 2026-11-11): Testing Timer \"You can hide it until 5 minutes remain, then you'll get an alert.\"; Mark for Review \"flag any question you want to come back to\"; Question Menu \"See which questions you skipped or marked for review and navigate to any question in the section.\"; Option Eliminator.",
+    izoh: "\"On the SAT, PSAT-related assessments, and certain AP Exams, you'll have access to a Desmos calculator.\" (WebFetch xulosasi orqali, 2026-11-11). Graphing/scientific rejimlari va practice testlarda bor-yoʻqligi bu sahifada yozilmagan. Sahifa matni (curl, 2026-11-11): Testing Timer \"You can hide it until 5 minutes remain, then you'll get an alert.\"; Mark for Review \"flag any question you want to come back to\"; Question Menu \"See which questions you skipped or marked for review and navigate to any question in the section.\"; Option Eliminator.",
   },
   {
     id: 'CB27',
@@ -583,7 +583,7 @@ export const manbalar: Manba[] = [
     havola: 'https://research.collegeboard.org/media/pdf/DigitalSATPracticeTests_052025.pdf',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "May 2025, mualliflar Chang, Akbayin-Sahin, Howell. 2025-yil bitiruvchilari (SAT va oldingi yilda PSAT topshirganlar). Bluebook'da 1, 2 va 3+ to'liq practice test topshirganlar hech topshirmagan o'xshash o'quvchilardan taxminan 25, 45 va 60 ball yuqori olgan. 4-izoh: \"Estimates are not causal.\" O'sha paytda 8 ta SAT Suite practice testi bo'lgan (SAT 1–6, PSAT 8/9, PSAT/NMSQT): bu hozirgi son emas. PDF matni macOS PDFKit bilan o'qildi.",
+    izoh: "May 2025, mualliflar Chang, Akbayin-Sahin, Howell. 2025-yil bitiruvchilari (SAT va oldingi yilda PSAT topshirganlar). Bluebookʼda 1, 2 va 3+ toʻliq practice test topshirganlar hech topshirmagan oʻxshash oʻquvchilardan taxminan 25, 45 va 60 ball yuqori olgan. 4-izoh: \"Estimates are not causal.\" Oʻsha paytda 8 ta SAT Suite practice testi boʻlgan (SAT 1–6, PSAT 8/9, PSAT/NMSQT): bu hozirgi son emas. PDF matni macOS PDFKit bilan oʻqildi.",
   },
   {
     id: 'CB28',
@@ -610,7 +610,7 @@ export const manbalar: Manba[] = [
     havola: 'https://blog.collegeboard.org/what-digital-sat-adaptive-testing',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "College Board rasmiy blogi (rasm yo'li 2023-08, nashr sanasi sahifada yo'q). \"The questions you're given in the second module depend on how you performed on the first module.\" Modul ichida savollar orasida oldinga-orqaga o'tish, keyingi savollarni ko'rish va belgilab qaytish mumkin. \"Remember: there's no penalty for guessing. It's better to answer every question the best you can.\"",
+    izoh: "College Board rasmiy blogi (rasm yoʻli 2023-08, nashr sanasi sahifada yoʻq). \"The questions you're given in the second module depend on how you performed on the first module.\" Modul ichida savollar orasida oldinga-orqaga oʻtish, keyingi savollarni koʻrish va belgilab qaytish mumkin. \"Remember: there's no penalty for guessing. It's better to answer every question the best you can.\"",
   },
   {
     id: 'CB31',
@@ -628,7 +628,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/scores/sending-sat-scores/additional/score-choice',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Qaysi ballarni yuborishni tanlash: SAT uchun test sanasi bo'yicha. \"some colleges and scholarship programs require you to send all your scores\". Tekin ball yuborishlarga (weekend ro'yxatda tanlanganlar va maktabdagi test) Score Choice qo'llanmaydi.",
+    izoh: "Qaysi ballarni yuborishni tanlash: SAT uchun test sanasi boʻyicha. \"some colleges and scholarship programs require you to send all your scores\". Tekin ball yuborishlarga (weekend roʻyxatda tanlanganlar va maktabdagi test) Score Choice qoʻllanmaydi.",
   },
   {
     id: 'CB33',
@@ -637,7 +637,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/scores/sending-sat-scores/weekend',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Har weekend ro'yxatda ballni 4 tagacha tashkilotga tekin yuborish; qabul qiluvchini ro'yxatda yoki testgacha belgilash, testdan keyin 9 kun ichida ishlatish yoki o'zgartirish; keyin to'lov (summa bu sahifada tekshirilmadi).",
+    izoh: "Har weekend roʻyxatda ballni 4 tagacha tashkilotga tekin yuborish; qabul qiluvchini roʻyxatda yoki testgacha belgilash, testdan keyin 9 kun ichida ishlatish yoki oʻzgartirish; keyin toʻlov (summa bu sahifada tekshirilmadi).",
   },
   {
     id: 'CB34',
@@ -646,7 +646,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/dates-deadlines',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Sanalar AQSh va xalqaro o'quvchilar uchun bir xil. 2026-27: Oct. 3, Nov. 7, Dec. 5 (2026), March 6, May 1, June 5 (2027), ro'yxat va kech ro'yxat muddatlari bilan; muddatlar 11:59 p.m. ET. Kech ro'yxat butun dunyoda, qo'shimcha to'lov bilan. 2027-28 sanalari \"Anticipated\". PR #95 (sat-maqsad-sana) shu sahifani CB14 deb qo'shadi: ikkalasi merge bo'lsa bittasiga birlashtiriladi.",
+    izoh: "Sanalar AQSh va xalqaro oʻquvchilar uchun bir xil. 2026-27: Oct. 3, Nov. 7, Dec. 5 (2026), March 6, May 1, June 5 (2027), roʻyxat va kech roʻyxat muddatlari bilan; muddatlar 11:59 p.m. ET. Kech roʻyxat butun dunyoda, qoʻshimcha toʻlov bilan. 2027-28 sanalari \"Anticipated\". PR #95 (sat-maqsad-sana) shu sahifani CB14 deb qoʻshadi: ikkalasi merge boʻlsa bittasiga birlashtiriladi.",
   },
   {
     id: 'CB35',
@@ -655,7 +655,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/scores/score-release-dates',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Weekend testlarining o'quvchi uchun ball chiqish sanalari (masalan Dec. 5, 2026 -> Dec. 18, 2026). \"Most scores from weekend tests are released 2–4 weeks after test day.\"",
+    izoh: "Weekend testlarining oʻquvchi uchun ball chiqish sanalari (masalan Dec. 5, 2026 -> Dec. 18, 2026). \"Most scores from weekend tests are released 2–4 weeks after test day.\"",
   },
   {
     id: 'KA01',
@@ -664,7 +664,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.khanacademy.org/test-prep/digital-sat',
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
-    izoh: "HTTP 200, lekin sahifa bot tekshiruvini ko'rsatdi: mazmuni o'qilmadi. Bepulligi va College Board bilan hamkorlik CB24 da tasdiqlangan.",
+    izoh: "HTTP 200, lekin sahifa bot tekshiruvini koʻrsatdi: mazmuni oʻqilmadi. Bepulligi va College Board bilan hamkorlik CB24 da tasdiqlangan.",
   },
   {
     id: 'SW01',
@@ -673,7 +673,7 @@ export const manbalar: Manba[] = [
     havola: 'https://schoolhouse.world/sat-bootcamp',
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
-    izoh: "Sahifada: \"Free Official SAT® Tutoring\", Zoom'da; test sanasidan kamida 4+ hafta oldin yozilish tavsiya qilinadi. Bepulligi va College Board ro'yxatida borligi CB20, CB21 da tasdiqlangan. Sahifadagi o'quvchi sharhlari Tayanch'ga ko'chirilmaydi.",
+    izoh: "Sahifada: \"Free Official SAT® Tutoring\", Zoomʼda; test sanasidan kamida 4+ hafta oldin yozilish tavsiya qilinadi. Bepulligi va College Board roʻyxatida borligi CB20, CB21 da tasdiqlangan. Sahifadagi oʻquvchi sharhlari Tayanchʼga koʻchirilmaydi.",
   },
   {
     id: 'DS01',
@@ -682,7 +682,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.desmos.com/calculator',
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
-    izoh: "Sahifa sarlavhasi \"Desmos | Graphing Calculator\" (HTTP 200). Narx sahifa HTML'ida yozilmagan: tekshirish kerak. SAT'da Desmos borligi CB26 da.",
+    izoh: "Sahifa sarlavhasi \"Desmos | Graphing Calculator\" (HTTP 200). Narx sahifa HTMLʼida yozilmagan: tekshirish kerak. SATʼda Desmos borligi CB26 da.",
   },
   {
     id: 'DS02',
@@ -691,7 +691,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.desmos.com/api-terms',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-11',
-    izoh: "Version 1.0, July 11, 2025 (sahifa JavaScript bilan yuklanadi, brauzerda o'qildi). §2a: bepul Trial faqat shaxsiy notijorat foydalanish yoki 90 kunlik ichki sinov; production ilova tijoriy foydalanish. §3a: tijoriy foydalanishdan oldin pullik reja yoki Commercial Addendum. §5b-iii: Desmos brendingini yashirish mumkin emas. §5c: API kaliti maxfiy saqlanadi. Tayanch API ishlatmaydi, faqat desmos.com/calculator ga havola (docs/qarorlar/003-desmos.md).",
+    izoh: "Version 1.0, July 11, 2025 (sahifa JavaScript bilan yuklanadi, brauzerda oʻqildi). §2a: bepul Trial faqat shaxsiy notijorat foydalanish yoki 90 kunlik ichki sinov; production ilova tijoriy foydalanish. §3a: tijoriy foydalanishdan oldin pullik reja yoki Commercial Addendum. §5b-iii: Desmos brendingini yashirish mumkin emas. §5c: API kaliti maxfiy saqlanadi. Tayanch API ishlatmaydi, faqat desmos.com/calculator ga havola (docs/qarorlar/003-desmos.md).",
   },
   {
     id: 'PR01',
@@ -700,7 +700,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.princetonreview.com/college/free-sat-practice-test',
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
-    izoh: "Rasmiy emas (College Board emas). Sahifada (brauzerda, 2026-11-11): to'liq practice test va darhol score report, \"Register Free\" (ro'yxatdan o'tish kerak); pullik kurslar va bepul sinov muddati ham reklama qilinadi. Sifati tekshirilmagan.",
+    izoh: "Rasmiy emas (College Board emas). Sahifada (brauzerda, 2026-11-11): toʻliq practice test va darhol score report, \"Register Free\" (roʻyxatdan oʻtish kerak); pullik kurslar va bepul sinov muddati ham reklama qilinadi. Sifati tekshirilmagan.",
   },
   {
     id: 'KP01',
@@ -727,7 +727,7 @@ export const manbalar: Manba[] = [
     havola: 'https://blog.google/products-and-platforms/products/education/practice-sat-gemini/',
     tekshiruvDarajasi: 'tekshirilmagan',
     tekshirilganSana: '2026-11-11',
-    izoh: "Rasmiy emas (College Board emas). Google blogi, 2026-01-21: \"partnering with The Princeton Review to bring full-length, no-cost practice SATs\" Gemini ilovasida. Gemini AI izohlari xato bo'lishi mumkin. Sifati tekshirilmagan.",
+    izoh: "Rasmiy emas (College Board emas). Google blogi, 2026-01-21: \"partnering with The Princeton Review to bring full-length, no-cost practice SATs\" Gemini ilovasida. Gemini AI izohlari xato boʻlishi mumkin. Sifati tekshirilmagan.",
   },
   {
     id: 'BC01',
@@ -736,7 +736,7 @@ export const manbalar: Manba[] = [
     havola: 'https://takeielts.britishcouncil.org/prepare/ielts-free-practice-mock-tests',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "IELTS Academic, General Training va UKVI uchun to'rt ko'nikma bo'yicha mashq testlari; sahifada \"completely free to use\" va o'tgan imtihonlardagi haqiqiy savollar ishlatilgani yozilgan. Kompyuter formati bilan tanishish testi ham bor. Eski manzil (/take-ielts/prepare/free-ielts-english-practice-tests) shu sahifaga yo'naltiriladi.",
+    izoh: "IELTS Academic, General Training va UKVI uchun toʻrt koʻnikma boʻyicha mashq testlari; sahifada \"completely free to use\" va oʻtgan imtihonlardagi haqiqiy savollar ishlatilgani yozilgan. Kompyuter formati bilan tanishish testi ham bor. Eski manzil (/take-ielts/prepare/free-ielts-english-practice-tests) shu sahifaga yoʻnaltiriladi.",
   },
   {
     id: 'IE08',
@@ -745,7 +745,7 @@ export const manbalar: Manba[] = [
     havola: 'https://ielts.org/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "Sahifa ostida: \"IELTS is jointly owned by the British Council; IDP IELTS; and Cambridge University Press & Assessment\"; IELTS nomi va logolari ro'yxatdan o'tgan savdo belgisi, IELTS Partners tomonidan himoyalanadi.",
+    izoh: "Sahifa ostida: \"IELTS is jointly owned by the British Council; IDP IELTS; and Cambridge University Press & Assessment\"; IELTS nomi va logolari roʻyxatdan oʻtgan savdo belgisi, IELTS Partners tomonidan himoyalanadi.",
   },
   // P30 (mock imtihon). CB30–CB35 va CB40 boshqa branch'larda band. Matnlar WebFetch xulosasidan (2026-11-12).
   {
@@ -755,7 +755,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/k12-educators/about/alignment/reading',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "SAT R&W: har modulda \"25 operational questions and 2 pretest questions\", modul 32 daqiqa. Soha ulushi: Information and Ideas ≈26%, Craft and Structure ≈28%, Expression of Ideas ≈20%, Standard English Conventions ≈26%. Sohalar bo'yicha savol soni sahifada yozilmagan. Tayanch mocki: pretestsiz, modulda 27 savol hisoblanadi.",
+    izoh: "SAT R&W: har modulda \"25 operational questions and 2 pretest questions\", modul 32 daqiqa. Soha ulushi: Information and Ideas ≈26%, Craft and Structure ≈28%, Expression of Ideas ≈20%, Standard English Conventions ≈26%. Sohalar boʻyicha savol soni sahifada yozilmagan. Tayanch mocki: pretestsiz, modulda 27 savol hisoblanadi.",
   },
   {
     id: 'CB42',
@@ -764,7 +764,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/k12-educators/about/alignment/math',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "SAT Math: har modulda 20 operational + 2 pretest = 22 savol, modul 35 daqiqa. Soha ulushi: Algebra ≈35%, Advanced Math ≈35%, Problem-Solving and Data Analysis ≈15%, Geometry and Trigonometry ≈15%. Ko'p tanlovli va talaba kiritadigan javoblar ulushi yozilmagan.",
+    izoh: "SAT Math: har modulda 20 operational + 2 pretest = 22 savol, modul 35 daqiqa. Soha ulushi: Algebra ≈35%, Advanced Math ≈35%, Problem-Solving and Data Analysis ≈15%, Geometry and Trigonometry ≈15%. Koʻp tanlovli va talaba kiritadigan javoblar ulushi yozilmagan.",
   },
   {
     id: 'CB43',
@@ -773,7 +773,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/sat/whats-on-the-test/math/overview',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-12',
-    izoh: "Sohalar bo'yicha savol soni: Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7; \"Questions from all four categories appear in each test module.\" Pretest soni bu sahifada yo'q.",
+    izoh: "Sohalar boʻyicha savol soni: Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7; \"Questions from all four categories appear in each test module.\" Pretest soni bu sahifada yoʻq.",
   },
   {
     id: 'CB44',
@@ -782,7 +782,7 @@ export const manbalar: Manba[] = [
     havola: 'https://satsuite.collegeboard.org/media/pdf/english-sat-test-directions-bb.pdf#page=7',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-13',
-    izoh: "SPR: musbat uchun 5, manfiy uchun minus bilan 6 belgi. Bitta javob kiritiladi. Sig'magan kasr o'nlikka aylantiriladi, sig'magan o'nlik kesiladi yoki yaxlitlanadi. Aralash son kasr yoki o'nlikka aylantiriladi. Oxirgi nuqta, manfiy nol va aynan yarimdagi yaxlitlash qoidasi ko'rsatilmagan.",
+    izoh: "SPR: musbat uchun 5, manfiy uchun minus bilan 6 belgi. Bitta javob kiritiladi. Sigʻmagan kasr oʻnlikka aylantiriladi, sigʻmagan oʻnlik kesiladi yoki yaxlitlanadi. Aralash son kasr yoki oʻnlikka aylantiriladi. Oxirgi nuqta, manfiy nol va aynan yarimdagi yaxlitlash qoidasi koʻrsatilmagan.",
   },
   // Platformalar xaritasi (Top Admission, 2026-11-19): yordamchi saytlar.
   {
@@ -792,7 +792,7 @@ export const manbalar: Manba[] = [
     havola: 'https://cssprofile.collegeboard.org/international-students',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "\"Many colleges provide institutional financial aid to international students\"; kollej xalqaro talabadan CSS Profile qabul qilishini ishtirokchi muassasalar ro'yxatida tekshirish kerak. Daromad o'z valyutasida kiritiladi. Xalqaro talaba uchun to'lov va fee waiver bu sahifada yozilmagan.",
+    izoh: "\"Many colleges provide institutional financial aid to international students\"; kollej xalqaro talabadan CSS Profile qabul qilishini ishtirokchi muassasalar roʻyxatida tekshirish kerak. Daromad oʻz valyutasida kiritiladi. Xalqaro talaba uchun toʻlov va fee waiver bu sahifada yozilmagan.",
   },
   {
     id: 'BF01',
@@ -801,7 +801,7 @@ export const manbalar: Manba[] = [
     havola: 'https://bigfuture.collegeboard.org/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "College Search va Scholarship Search bo'limlari bor. Sayt to'liq bepulligi bu sahifada aniq yozilmagan.",
+    izoh: "College Search va Scholarship Search boʻlimlari bor. Sayt toʻliq bepulligi bu sahifada aniq yozilmagan.",
   },
   {
     id: 'ID04',
@@ -810,7 +810,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.idp.com/uzbekistan/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "Sahifada \"FREE counselling for students & parents\"; yo'nalishlar: Buyuk Britaniya, Avstraliya, Kanada, AQSH, Yangi Zelandiya, Irlandiya; IDP IELTS hammuallifi (co-owner); ariza va viza bo'yicha yordam. Universitetlar IDP'ga haq to'lashi bu sahifada yozilmagan.",
+    izoh: "Sahifada \"FREE counselling for students & parents\"; yoʻnalishlar: Buyuk Britaniya, Avstraliya, Kanada, AQSH, Yangi Zelandiya, Irlandiya; IDP IELTS hammuallifi (co-owner); ariza va viza boʻyicha yordam. Universitetlar IDPʼga haq toʻlashi bu sahifada yozilmagan.",
   },
   {
     id: 'KI01',
@@ -819,7 +819,7 @@ export const manbalar: Manba[] = [
     havola: 'https://www.kaplanpathways.com/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "Degree preparation (pathway course) va degree admission xizmati; yo'nalishlar AQSH, Kanada, Buyuk Britaniya, Avstraliya va Yangi Zelandiya; bakalavriat, magistratura, ingliz tili va doktorantura tayyorlovi. Narx va xizmat bepulligi bu sahifada yozilmagan.",
+    izoh: "Degree preparation (pathway course) va degree admission xizmati; yoʻnalishlar AQSH, Kanada, Buyuk Britaniya, Avstraliya va Yangi Zelandiya; bakalavriat, magistratura, ingliz tili va doktorantura tayyorlovi. Narx va xizmat bepulligi bu sahifada yozilmagan.",
   },
   {
     id: 'GR01',
@@ -828,7 +828,7 @@ export const manbalar: Manba[] = [
     havola: 'https://grantlar.uz/',
     tekshiruvDarajasi: 'rasmiy',
     tekshirilganSana: '2026-11-19',
-    izoh: "O'zbekcha grant e'lonlari sayti (o'zi haqida: \"bepul ta'lim olish uchun grant topishda yordam beradi\"). Bakalavriat, magistratura, doktorantura grantlari, tanlovlar, davlat va soha filtri. E'lonlar kirmasdan ko'rinadi; pullik \"Premium obuna\" bor, tarkibi va narxi bosh sahifada yozilmagan. Mustaqil sayt: e'lonni grant beruvchining rasmiy sahifasida tekshirish kerak.",
+    izoh: "Oʻzbekcha grant eʼlonlari sayti (oʻzi haqida: \"bepul taʼlim olish uchun grant topishda yordam beradi\"). Bakalavriat, magistratura, doktorantura grantlari, tanlovlar, davlat va soha filtri. Eʼlonlar kirmasdan koʻrinadi; pullik \"Premium obuna\" bor, tarkibi va narxi bosh sahifada yozilmagan. Mustaqil sayt: eʼlonni grant beruvchining rasmiy sahifasida tekshirish kerak.",
   },
 ];
 

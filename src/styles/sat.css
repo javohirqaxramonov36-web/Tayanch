@@ -37,6 +37,12 @@
 }
 
 /* ---------- Sarlavha va yorliq ---------- */
+/* DS 5-bosqich (2026-11-24): .sat ichidagi inglizcha sarlavhalar Sora 600. Sora'da ʻ/ʼ yo'q, shuning uchun
+   lang="uz" qism (lug'at tarjimasi va h.k.) Onest'da qoladi. Raqam ustunlari tabular-nums bilan. */
+.sat :is(h1, h2, h3):not(:lang(uz)) {
+  font-family: var(--font-sat);
+  font-weight: var(--font-weight-semibold);
+}
 .sat-sarlavha {
   margin: 0;
   font-family: var(--font-sat);
@@ -269,3 +275,6 @@
 
 /* Token sohasi foni yo'q: qobig'i hali eski sahifa (Lug'at SatFokus ichida, SatFokus 5c da o'tadi) */
 .sat.sat--fonsiz { background: transparent; }
+
+/* Xavfli amal (o'chirish va h.k.): ikkinchi kapsula, matn xato rangida */
+.sat .t-tugma.sat-xavf { color: var(--color-error-text); }

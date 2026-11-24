@@ -14,7 +14,7 @@ import '../../styles/eyuf.css';
     </div>
     <div class="iq-davom iq-panel" data-davom hidden>
       <p data-davom-matn></p>
-      <button type="button" class="tugma tugma-asosiy" data-davom-et>Davom ettirish</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-davom-et>Davom ettirish</button>
     </div>
     <div class="iq-sozlama">
       <label for="iq-daqiqa">Test vaqti, daqiqa</label>
@@ -38,8 +38,8 @@ import '../../styles/eyuf.css';
         <span class="iq-boshlash">Boshlash <span aria-hidden="true">↗</span></span>
       </button>
     </div>
-    <p class="iq-izoh">Har yangi tasdiqlangan to‘g‘ri javob +{TOGRI_XP} lokal XP beradi. Qayta yechish XP bermaydi. Combo — testdagi ketma-ket to‘g‘ri javoblar. Natija va XP shu brauzerda saqlanadi.</p>
-    <noscript><p class="iq-xabar">Testni ishlash uchun brauzerda JavaScript’ni yoqing.</p></noscript>
+    <p class="iq-izoh">Har yangi tasdiqlangan toʻgʻri javob +{TOGRI_XP} lokal XP beradi. Qayta yechish XP bermaydi. Combo — testdagi ketma-ket toʻgʻri javoblar. Natija va XP shu brauzerda saqlanadi.</p>
+    <noscript><p class="iq-xabar">Testni ishlash uchun brauzerda JavaScriptʼni yoqing.</p></noscript>
   </section>
 
   <section class="eyuf-panel-zich iq-ekran" data-test-ekran aria-labelledby="iq-savol-h" hidden>
@@ -60,12 +60,12 @@ import '../../styles/eyuf.css';
       <p class="iq-sr" data-javob-xabar aria-live="polite"></p>
     </div>
     <div class="iq-boshqaruv">
-      <button type="button" class="tugma tugma-ikkinchi" data-oldingi>Oldingi</button>
-      <button type="button" class="tugma tugma-asosiy" data-keyingi>Keyingi</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-oldingi>Oldingi</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-keyingi>Keyingi</button>
     </div>
     <div class="iq-boshqaruv">
-      <button type="button" class="tugma tugma-matn" data-tanlashga>Test tanlash</button>
-      <button type="button" class="tugma tugma-ikkinchi" data-yakunla>Testni yakunlash</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-tanlashga>Test tanlash</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-yakunla>Testni yakunlash</button>
     </div>
   </section>
 
@@ -77,7 +77,7 @@ import '../../styles/eyuf.css';
       <p data-natija-izoh></p>
       <p class="iq-xabar" data-natija-ogoh hidden></p>
       <ul class="iq-metrlar">
-        <li><span>To‘g‘ri javob</span><strong data-togri>0</strong></li>
+        <li><span>Toʻgʻri javob</span><strong data-togri>0</strong></li>
         <li><span>Xato yoki javobsiz</span><strong data-xato-son>0</strong></li>
         <li><span>Eng uzun combo</span><strong data-combo>0</strong></li>
         <li><span>Lokal XP</span><strong data-xp>+0</strong></li>
@@ -85,9 +85,9 @@ import '../../styles/eyuf.css';
       <p class="iq-kichik">Tayyorgarlik natijasi. 61 ballik mezon bilan taqqoslanadi. Ball har savolga teng ulushda hisoblanadi.</p>
     </EyufTayyorlik>
     <div class="iq-natija-amallar">
-      <button type="button" class="tugma tugma-asosiy" data-qayta>Xatolarni qayta yechish</button>
-      <button type="button" class="tugma tugma-ikkinchi" data-ulash>Natijani ulashish</button>
-      <button type="button" class="tugma tugma-matn" data-boshqa>Boshqa test tanlash</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-qayta>Xatolarni qayta yechish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-ulash>Natijani ulashish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-boshqa>Boshqa test tanlash</button>
     </div>
     <p data-nusxa-xabar role="status"></p>
     <div data-nusxa-oram hidden>
@@ -95,7 +95,7 @@ import '../../styles/eyuf.css';
       <textarea id="iq-nusxa" rows="4" readonly></textarea>
     </div>
     <h3>Xatolar va tekshirilayotgan savollar</h3>
-    <p data-xatosiz hidden>Barcha javoblaringiz to‘g‘ri. Boshqa test bilan davom etishingiz mumkin.</p>
+    <p data-xatosiz hidden>Barcha javoblaringiz toʻgʻri. Boshqa test bilan davom etishingiz mumkin.</p>
     <ul class="iq-tahlil" data-tahlil></ul>
   </section>
 
@@ -103,13 +103,13 @@ import '../../styles/eyuf.css';
     <h2 id="iq-tasdiq-h">Testni yakunlaysizmi?</h2>
     <p data-tasdiq-matn></p>
     <div class="iq-boshqaruv">
-      <button type="button" class="tugma tugma-ikkinchi" data-bekor>Ortga</button>
-      <button type="button" class="tugma tugma-asosiy" data-tasdiqla>Yakunlash</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-bekor>Ortga</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-tasdiqla>Yakunlash</button>
     </div>
   </dialog>
   <dialog class="iq-dialog iq-zoom" data-zoom aria-labelledby="iq-zoom-h">
-    <div class="iq-sarlavha"><h2 id="iq-zoom-h">Savol rasmi</h2><button type="button" class="tugma tugma-ikkinchi" data-zoom-yop>Yopish</button></div>
-    <p class="iq-kichik">Rasmni yon va pastga surib ko‘ring. Esc bilan yopiladi.</p>
+    <div class="iq-sarlavha"><h2 id="iq-zoom-h">Savol rasmi</h2><button type="button" class="t-tugma t-tugma--ikkinchi" data-zoom-yop>Yopish</button></div>
+    <p class="iq-kichik">Rasmni yon va pastga surib koʻring. Esc bilan yopiladi.</p>
     <div class="iq-zoom-rasmlar" data-zoom-rasmlar></div>
   </dialog>
 </div>
@@ -172,7 +172,7 @@ import '../../styles/eyuf.css';
   .iq-variantlar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-2); }
   .iq-variant { font-family: var(--font-eyuf); font-size: var(--text-h3-size); font-weight: var(--font-weight-semibold); }
   .iq-variant[aria-pressed="true"] { background: var(--color-eyuf-accent); color: var(--color-eyuf-on-accent); border-color: var(--color-eyuf-accent); }
-  .iq-boshqaruv .tugma { flex: 1; padding-inline: var(--space-2); }
+  .iq-boshqaruv .t-tugma { flex: 1; padding-inline: var(--space-2); }
   .iq-chegara { font-weight: var(--font-weight-semibold); color: var(--color-eyuf-accent-text); }
   .iq-metrlar strong { font-family: var(--font-eyuf); font-size: var(--text-h3-size); font-weight: var(--font-weight-semibold); color: var(--color-eyuf-text); }
   .iq-natija-amallar { display: grid; gap: var(--space-3); }

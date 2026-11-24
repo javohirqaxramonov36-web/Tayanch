@@ -64,17 +64,17 @@ const X = (v: number) => 20 + 19 * v;
     </div>
     <p class="sr" id="stat-tavsif" aria-live="polite"></p>
     <div class="sahna-tugmalar">
-      <button type="button" class="kichik-tugma" id="s-chetga">Outlier point</button>
-      <button type="button" class="kichik-tugma" id="s-qosh">Add a point</button>
-      <button type="button" class="kichik-tugma" id="s-ayir">Remove a point</button>
-      <button type="button" class="kichik-tugma" id="s-tikla">Reset the sample</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="s-chetga">Outlier point</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="s-qosh">Add a point</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="s-ayir">Remove a point</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="s-tikla">Reset the sample</button>
     </div>
     <p class="sahna-izoh">Drag a point, or select it with Tab and move it with the arrow keys. Blue line and triangle: mean. Black dashed line and diamond: median. Gray area with dashed edges: mean ± standard deviation.</p>
   </div>
 
   <div slot="animatsiya">
     <p>The largest point slowly moves to 20. Watch: the mean (blue) follows it, the median (black) stays in place, and the gray area widens.</p>
-    <div class="segment"><button type="button" class="katta asosiy" id="anim-boshla">Show</button></div>
+    <div class="segment"><button type="button" class="t-tugma sat-tugma--kok" id="anim-boshla">Show</button></div>
     <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Press the button.</span></div>
   </div>
 
@@ -226,23 +226,23 @@ const X = (v: number) => 20 + 19 * v;
 </script>
 
 <style is:global>
-  .dars .stat-quti { padding-top: var(--b-3); }
-  .dars .stat-namuna { position: absolute; top: var(--b-3); right: var(--b-3); }
+  .dars .stat-quti { padding-top: var(--space-3); }
+  .dars .stat-namuna { position: absolute; top: var(--space-3); right: var(--space-3); }
   .dars .stat-quti svg { touch-action: pan-y; }
-  .dars .s-oq { stroke: var(--matn); stroke-width: 2; }
-  .dars .s-chiziqcha { stroke: var(--matn-sust); stroke-width: 1.5; }
-  .dars .s-raqam { fill: var(--matn-ikkinchi); font-size: 13px; font-weight: 700; font-family: var(--shrift); }
-  .dars .s-sigma { fill: var(--sirt-ikkinchi); }
+  .dars .s-oq { stroke: var(--color-sat-text); stroke-width: 2; }
+  .dars .s-chiziqcha { stroke: var(--color-sat-text-muted); stroke-width: 1.5; }
+  .dars .s-raqam { fill: var(--color-sat-text-muted); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); font-family: var(--shrift); }
+  .dars .s-sigma { fill: var(--color-sat-line); }
   /* Soha fondan 3:1 ajralmaydi (WCAG 1.4.11): chegaralari --matn-sust uzuq chiziq bilan (5,8:1) */
-  .dars .s-sigma-chegara { stroke: var(--matn-sust); stroke-width: 1.5; stroke-dasharray: 3 4; }
-  .dars .s-ortacha { stroke: var(--rang-havola); stroke-width: 3; }
-  .dars .s-ortacha-belgi { fill: var(--rang-havola); }
-  .dars .s-mediana { stroke: var(--matn); stroke-width: 2.5; stroke-dasharray: 7 5; }
-  .dars .s-mediana-belgi { fill: var(--matn); }
-  .dars .s-yozuv { fill: var(--matn); font-size: 13px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--fon-ikkinchi); stroke-width: 4px; }
+  .dars .s-sigma-chegara { stroke: var(--color-sat-text-muted); stroke-width: 1.5; stroke-dasharray: 3 4; }
+  .dars .s-ortacha { stroke: var(--color-sat-blue-text); stroke-width: 3; }
+  .dars .s-ortacha-belgi { fill: var(--color-sat-blue-text); }
+  .dars .s-mediana { stroke: var(--color-sat-text); stroke-width: 2.5; stroke-dasharray: 7 5; }
+  .dars .s-mediana-belgi { fill: var(--color-sat-text); }
+  .dars .s-yozuv { fill: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); font-family: var(--shrift); paint-order: stroke; stroke: var(--color-sat-sunken); stroke-width: 4px; }
   .dars .s-nuqta { cursor: grab; outline: none; }
-  .dars .s-doira { fill: var(--fon); stroke: var(--matn); stroke-width: 3; }
-  @media (hover: hover) and (pointer: fine) { .dars .s-nuqta:hover .s-doira { stroke: var(--rang-havola); } }
-  .dars .s-nuqta:focus-visible .s-doira { stroke: var(--rang-asosiy); stroke-width: 5; }
+  .dars .s-doira { fill: var(--color-sat-surface); stroke: var(--color-sat-text); stroke-width: 3; }
+  @media (hover: hover) and (pointer: fine) { .dars .s-nuqta:hover .s-doira { stroke: var(--color-sat-blue-text); } }
+  .dars .s-nuqta:focus-visible .s-doira { stroke: var(--color-sat-blue-fill); stroke-width: 5; }
   .dars .s-hit { fill: transparent; }
 </style>

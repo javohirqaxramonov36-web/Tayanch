@@ -13,6 +13,7 @@ import { yol } from '../../../../lib/yol';
 const qoshilish = yol('/uz/sat/guruh/qoshilish/');
 ---
 <BolimQobiq
+  sahifaSinfi="sat t-fon"
   title="Groups · SAT"
   description="Join your teacher's group and choose what they can see. Teachers on the group plan can follow their students' practice."
   turi="vosita"
@@ -35,7 +36,7 @@ const qoshilish = yol('/uz/sat/guruh/qoshilish/');
     <section class="bolak" aria-labelledby="azo-h" data-ichi hidden>
       <div class="bolak-bosh">
         <h2 id="azo-h">{M.azoSarlavha}</h2>
-        <a class="tugma tugma-ikkinchi" href={qoshilish}>{M.qoshilishHavola}</a>
+        <a class="t-tugma t-tugma--ikkinchi" href={qoshilish}>{M.qoshilishHavola}</a>
       </div>
       <p class="izoh" id="azo-bosh" hidden>{M.azoBosh}</p>
       <ul class="kartalar" id="azo-royxat"></ul>
@@ -60,7 +61,7 @@ const qoshilish = yol('/uz/sat/guruh/qoshilish/');
           <p class="xato" id="y-ustoz-xato" hidden></p>
         </div>
         <p class="alert" role="alert" id="yarat-xato" hidden></p>
-        <div class="tugmalar"><button type="submit" class="tugma tugma-asosiy" id="y-tugma">{M.yarat}</button></div>
+        <div class="tugmalar"><button type="submit" class="t-tugma sat-tugma--kok" id="y-tugma">{M.yarat}</button></div>
       </form>
 
       <p class="izoh" id="oq-bosh" hidden>{M.oqituvchiBosh}</p>
@@ -101,15 +102,15 @@ const qoshilish = yol('/uz/sat/guruh/qoshilish/');
         </fieldset>
         <p class="alert" role="alert" data-xato hidden></p>
         <div class="tugmalar">
-          <button type="submit" class="tugma tugma-asosiy" data-saqlash>{M.ruxsatSaqlash}</button>
-          <button type="button" class="tugma tugma-ikkinchi" data-chiq>{M.chiqish}</button>
+          <button type="submit" class="t-tugma sat-tugma--kok" data-saqlash>{M.ruxsatSaqlash}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-chiq>{M.chiqish}</button>
         </div>
       </form>
       <div class="tasdiq" data-tasdiq hidden>
         <p tabindex="-1" data-tasdiq-savol></p>
         <div class="tugmalar">
-          <button type="button" class="tugma tugma-xavf" data-tasdiq-ha></button>
-          <button type="button" class="tugma tugma-ikkinchi" data-tasdiq-yoq>{M.bekor}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi sat-xavf" data-tasdiq-ha></button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-tasdiq-yoq>{M.bekor}</button>
         </div>
       </div>
     </li>
@@ -126,22 +127,22 @@ const qoshilish = yol('/uz/sat/guruh/qoshilish/');
         <p class="kod-nom">{M.kod}</p>
         <p class="kod" data-kod></p>
         <div class="tugmalar">
-          <button type="button" class="tugma tugma-ikkinchi" data-nusxa-kod>{M.kodNusxa}</button>
-          <button type="button" class="tugma tugma-ikkinchi" data-nusxa-havola>{M.havolaNusxa}</button>
-          <button type="button" class="tugma tugma-ikkinchi" data-kod-yangi aria-describedby="">{M.kodYangi}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-nusxa-kod>{M.kodNusxa}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-nusxa-havola>{M.havolaNusxa}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-kod-yangi aria-describedby="">{M.kodYangi}</button>
         </div>
         <p class="izoh" data-kod-izoh>{M.kodYangiIzoh}</p>
       </div>
       <div class="tugmalar">
-        <button type="button" class="tugma tugma-asosiy" aria-expanded="false" data-natija-tugma>{M.natijaKorsat}</button>
-        <button type="button" class="tugma tugma-ikkinchi" data-arxivla>{M.arxivla}</button>
-        <button type="button" class="tugma tugma-ikkinchi" data-ochir>{M.ochir}</button>
+        <button type="button" class="t-tugma sat-tugma--kok" aria-expanded="false" data-natija-tugma>{M.natijaKorsat}</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-arxivla>{M.arxivla}</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-ochir>{M.ochir}</button>
       </div>
       <div class="tasdiq" data-tasdiq hidden>
         <p tabindex="-1" data-tasdiq-savol></p>
         <div class="tugmalar">
-          <button type="button" class="tugma tugma-xavf" data-tasdiq-ha></button>
-          <button type="button" class="tugma tugma-ikkinchi" data-tasdiq-yoq>{M.bekor}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi sat-xavf" data-tasdiq-ha></button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-tasdiq-yoq>{M.bekor}</button>
         </div>
       </div>
       <p class="alert" role="alert" data-xato hidden></p>
@@ -347,7 +348,7 @@ const qoshilish = yol('/uz/sat/guruh/qoshilish/');
           katak(tr, M.ustunMavzu, ul);
         }
       } else katak(tr, M.ustunMavzu, M.ulashilmagan, true);
-      const chiqar = Object.assign(document.createElement('button'), { type: 'button', className: 'tugma tugma-ikkinchi tugma-kichik', textContent: M.chiqar });
+      const chiqar = Object.assign(document.createElement('button'), { type: 'button', className: 't-tugma t-tugma--ikkinchi tugma-kichik', textContent: M.chiqar });
       chiqar.setAttribute('aria-label', `${M.chiqar}: ${a.name}`);
       chiqar.addEventListener('click', () => tasdiqla(karta, chiqar, M.chiqarSavol(a.name), M.chiqarTasdiq, async () => {
         await api.azoniChiqar(g.id, a.id);

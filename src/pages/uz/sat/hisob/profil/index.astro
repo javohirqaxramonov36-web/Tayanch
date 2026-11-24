@@ -23,6 +23,7 @@ const h = {
 };
 ---
 <BolimQobiq
+  sahifaSinfi="sat t-fon"
   title="My SAT profile · SAT"
   description="Your SAT goal and test date, study preferences, saved work and plan in one place."
   turi="vosita"
@@ -47,10 +48,10 @@ const h = {
       <section class="blok" aria-labelledby="maqsad-h" data-blok="profil">
         <div class="blok-bosh">
           <h2 id="maqsad-h">Goal and test date</h2>
-          <a class="tugma tugma-ikkinchi kichik-tugma" href={h.maqsad} data-maqsad-havola>Edit</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={h.maqsad} data-maqsad-havola>Edit</a>
         </div>
         <p class="ikkinchi" data-yuklanish>Loading…</p>
-        <div class="xato-qator" data-xato hidden><p>Couldn't load your goal.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="profil">Retry</button></div>
+        <div class="xato-qator" data-xato hidden><p>Couldn't load your goal.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="profil">Retry</button></div>
         <div data-tayyor hidden>
           <p class="ikkinchi" data-maqsad-bosh hidden>You haven't set a goal yet. A target score and test date put a countdown on the SAT home page.</p>
           <dl class="sonlar" data-maqsad-sonlar>
@@ -103,7 +104,7 @@ const h = {
               <span class="qator-qiymat" data-yuklanish>Loading…</span>
               <span class="qator-qiymat" data-tayyor hidden data-daftar></span>
             </a>
-            <div class="xato-qator" data-xato hidden><p>Couldn't load question bank mistakes.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="daftar">Retry</button></div>
+            <div class="xato-qator" data-xato hidden><p>Couldn't load question bank mistakes.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="daftar">Retry</button></div>
           </li>
           <li data-blok="lugat">
             <a class="qator" href={h.lugat}>
@@ -111,7 +112,7 @@ const h = {
               <span class="qator-qiymat" data-yuklanish>Loading…</span>
               <span class="qator-qiymat" data-tayyor hidden data-lugat></span>
             </a>
-            <div class="xato-qator" data-xato hidden><p>Couldn't load your words.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="lugat">Retry</button></div>
+            <div class="xato-qator" data-xato hidden><p>Couldn't load your words.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="lugat">Retry</button></div>
           </li>
           <li>
             <a class="qator" href={h.testlar}>
@@ -132,10 +133,10 @@ const h = {
       <section class="blok" aria-labelledby="tarif-h" data-blok="tarif">
         <div class="blok-bosh">
           <h2 id="tarif-h">Plan</h2>
-          <a class="tugma tugma-ikkinchi kichik-tugma" href={h.obuna}>Subscription</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={h.obuna}>Subscription</a>
         </div>
         <p class="ikkinchi" data-yuklanish>Loading…</p>
-        <div class="xato-qator" data-xato hidden><p>Couldn't load your plan.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="tarif">Retry</button></div>
+        <div class="xato-qator" data-xato hidden><p>Couldn't load your plan.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="tarif">Retry</button></div>
         <div data-tayyor hidden>
           <p class="tarif-nom" data-tarif-nom></p>
           <p class="ikkinchi kichik" data-tarif-izoh></p>
@@ -335,62 +336,61 @@ const h = {
 
 <style>
   .profil [hidden] { display: none !important; }
-  .profil { display: flex; flex-direction: column; gap: var(--b-8); }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
-  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  .pill { padding: var(--b-1) var(--b-3); border-radius: var(--r-toliq); font-size: var(--matn-mayda); font-weight: 700; }
-  .pill-chiziq { border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); }
-  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
-  .kichik { font-size: var(--matn-kichik); }
-  .ikkinchi { color: var(--matn-ikkinchi); }
-  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); }
-  .holat-matn { color: var(--matn-ikkinchi); }
+  .profil { display: flex; flex-direction: column; gap: var(--space-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .pill-chiziq { border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); }
+  .lead { font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); max-width: 62ch; }
+  .kichik { font-size: var(--text-small-size); }
+  .ikkinchi { color: var(--color-sat-text-muted); }
+  .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
+  .holat-matn { color: var(--color-sat-text-muted); }
 
   /* Kompyuterda ikki ustun, telefonda bitta. */
-  .tor:not([hidden]) { display: grid; gap: var(--b-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .tor:not([hidden]) { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
   .tor > * { min-width: 0; }
   @media (min-width: 880px) { .tor:not([hidden]) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-  .blok { display: flex; flex-direction: column; gap: var(--b-4); padding: var(--b-6); border: 1px solid var(--chiziq); border-radius: var(--r-katta); background: var(--sirt); }
-  @media (max-width: 640px) { .blok { padding: var(--b-5) var(--b-4); } }
-  .blok h2 { font-size: var(--matn-h3); }
+  .blok { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); border: 1px solid var(--color-sat-line); border-radius: var(--radius-lg); background: var(--color-sat-surface); }
+  @media (max-width: 640px) { .blok { padding: var(--space-5) var(--space-4); } }
+  .blok h2 { font-size: var(--text-h3-size); }
   .blok h2:focus { outline: none; }
-  .blok-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; }
-  .kichik-tugma { min-height: var(--size-touch-min); }
+  .blok-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
 
-  .xato-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); flex-wrap: wrap; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); font-size: var(--matn-kichik); }
+  .xato-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-sat-sunken); font-size: var(--text-small-size); }
 
-  .sonlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: var(--b-3); margin: 0; }
-  .sonlar > div { display: flex; flex-direction: column; gap: var(--b-1); padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
-  .sonlar dt { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
-  .sonlar dd { margin: 0; font-size: var(--matn-katta); font-weight: 800; font-variant-numeric: tabular-nums; }
-  .sonlar dd[data-m="sana"] { font-size: var(--matn-asosiy); }
+  .sonlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: var(--space-3); margin: 0; }
+  .sonlar > div { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-sat-sunken); }
+  .sonlar dt { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
+  .sonlar dd { margin: 0; font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .sonlar dd[data-m="sana"] { font-size: var(--text-body-size); }
 
-  .tanlov { border: 0; margin: 0; padding: 0; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .tanlov legend { padding: 0; font-weight: 700; }
-  .variantlar { display: grid; gap: var(--b-2); }
+  .tanlov { border: 0; margin: 0; padding: 0; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .tanlov legend { padding: 0; font-weight: var(--font-weight-bold); }
+  .variantlar { display: grid; gap: var(--space-2); }
   .variantlar.kunlik-qator { grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
   .variant.ixcham b { white-space: nowrap; }
   .variant { position: relative; display: block; }
   .variant input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-  .variant span { display: flex; flex-direction: column; gap: var(--b-1); min-height: var(--size-touch-min); padding: var(--b-3) var(--b-4); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-orta); }
-  .variant.ixcham span { align-items: center; justify-content: center; padding: var(--b-2) var(--b-3); }
-  .variant small { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .variant input:checked + span { border-color: var(--matn); background: var(--fon-ikkinchi); }
-  .variant input:focus-visible + span { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; }
+  .variant span { display: flex; flex-direction: column; gap: var(--space-1); min-height: var(--size-touch-min); padding: var(--space-3) var(--space-4); border: 1.5px solid var(--color-sat-line-strong); border-radius: var(--radius-md); }
+  .variant.ixcham span { align-items: center; justify-content: center; padding: var(--space-2) var(--space-3); }
+  .variant small { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
+  .variant input:checked + span { border-color: var(--color-sat-text); background: var(--color-sat-sunken); }
+  .variant input:focus-visible + span { outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px; }
   .saqlandi:empty { display: none; }
-  .saqlandi { color: var(--matn-ikkinchi); }
+  .saqlandi { color: var(--color-sat-text-muted); }
 
   .royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-  .royxat > li { border-bottom: 1px solid var(--chiziq); }
+  .royxat > li { border-bottom: 1px solid var(--color-sat-line); }
   .royxat > li:last-child { border-bottom: 0; }
-  .qator { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); min-height: var(--size-touch-min); padding: var(--b-3) 0; color: inherit; text-decoration: none; }
+  .qator { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: var(--size-touch-min); padding: var(--space-3) 0; color: inherit; text-decoration: none; }
   .qator:hover .qator-nom { text-decoration: underline; }
-  .qator:focus-visible { outline: 3px solid var(--rang-asosiy); outline-offset: 2px; border-radius: var(--r-kichik); }
-  .qator-nom { font-weight: 700; flex: none; }
-  .qator-qiymat { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); text-align: right; }
-  .royxat .xato-qator { margin-bottom: var(--b-3); }
+  .qator:focus-visible { outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .qator-nom { font-weight: var(--font-weight-bold); flex: none; }
+  .qator-qiymat { color: var(--color-sat-text-muted); font-size: var(--text-small-size); text-align: right; }
+  .royxat .xato-qator { margin-bottom: var(--space-3); }
 
-  .tarif-nom { font-size: var(--matn-h3); font-weight: 800; }
+  .tarif-nom { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
 </style>

@@ -54,7 +54,7 @@ function savolHtml(q: SavolNatija, tushuntirishTili: string): string {
 <div><dt>${RM.sizning}</dt><dd>${sizning}</dd></div>
 <div><dt>${RM.togriJavob}</dt><dd><span lang="en">${qoch(q.togriJavob)}</span></dd></div>
 <div><dt>${RM.tushuntirish}</dt><dd><span lang="${tushuntirishTili}">${qoch(q.explanation)}</span></dd></div>
-<div><dt>${RM.dalil} (${qoch(RM.paragraf(q.evidence.paragraph))})</dt><dd><blockquote lang="en">${qoch(q.evidence.quote)}</blockquote><button type="button" class="tugma tugma-ikkinchi" data-kor="${q.number}">${RM.matndaKor}</button></dd></div>
+<div><dt>${RM.dalil} (${qoch(RM.paragraf(q.evidence.paragraph))})</dt><dd><blockquote lang="en">${qoch(q.evidence.quote)}</blockquote><button type="button" class="t-tugma t-tugma--ikkinchi" data-kor="${q.number}">${RM.matndaKor}</button></dd></div>
 </dl>
 </div>
 </details></li>`;
@@ -114,7 +114,7 @@ ${xabarlar.map((x) => `<p class="rn-xabar">${qoch(x)}</p>`).join('')}
 <section aria-labelledby="rn-tahlil-h"><h2 id="rn-tahlil-h">${RM.tahlil}</h2>${tahlilHtml(u, baho)}</section>
 <section aria-labelledby="rn-qadam-h"><h2 id="rn-qadam-h">${RM.keyingiQadam}</h2>
 <a class="rn-qadam" href="${qoch(yol(tavsiya.manzil))}"><strong>${qoch(tavsiya.sarlavha)}</strong><span>${qoch(tavsiya.izoh)}</span>${IK.ong}</a>
-${tavsiya.zaifTur ? `<div class="rn-amal"><a class="tugma tugma-ikkinchi" href="${qoch(boshlash)}">${RM.yangiTest}</a></div>` : ''}
+${tavsiya.zaifTur ? `<div class="rn-amal"><a class="t-tugma t-tugma--ikkinchi" href="${qoch(boshlash)}">${RM.yangiTest}</a></div>` : ''}
 </section>
 ${
   baho

@@ -27,21 +27,21 @@ const IK = {
       <p class="ustki-kok">Mashq · Listening</p>
       <h1>Listening: imlo mashqi</h1>
       <p class="lead">
-        So'zni tinglang va yozing. IELTS Listening va Reading'da imlo xatosi bo'lgan javob noto'g'ri hisoblanadi.
+        Soʻzni tinglang va yozing. IELTS Listening va Readingʻda imlo xatosi boʻlgan javob notoʻgʻri hisoblanadi.
         Britancha (<span lang="en">centre</span>) va amerikancha (<span lang="en">center</span>) yozilish ikkalasi ham qabul qilinadi, faqat bittasiga izchil amal qiling.
       </p>
       <p class="eslatma">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.info} />
-        <span><strong>Namuna.</strong> So'zlarni Tayanch tanlagan. Ovozni brauzeringiz o'qiydi, bu haqiqiy IELTS audiosi emas.</span>
+        <span><strong>Namuna.</strong> Soʻzlarni Tayanch tanlagan. Ovozni brauzeringiz oʻqiydi, bu haqiqiy IELTS audiosi emas.</span>
       </p>
     </header>
 
     <p id="ovoz-yoq" class="ogoh" role="status" hidden>
-      Brauzeringizda inglizcha ovoz topilmadi. Shuning uchun so'z o'rniga uning o'zbekcha ma'nosi ko'rsatiladi.
+      Brauzeringizda inglizcha ovoz topilmadi. Shuning uchun soʻz oʻrniga uning oʻzbekcha maʼnosi koʻrsatiladi.
     </p>
 
     <section id="toplamlar" aria-labelledby="toplam-h">
-      <h2 id="toplam-h" class="bolim-sarlavha">To'plamni tanlang</h2>
+      <h2 id="toplam-h" class="bolim-sarlavha">Toʻplamni tanlang</h2>
       <ul class="toplam-royxat">
         {imloToplamlar.map((t) => (
           <li>
@@ -51,7 +51,7 @@ const IK = {
                 <span class="t-tavsif">{t.tavsif}</span>
               </span>
               <span class="t-meta">
-                <span>{t.sozlar.length} ta so'z</span>
+                <span>{t.sozlar.length} ta soʻz</span>
                 <span class="t-eng" data-eng={t.id}></span>
               </span>
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.oq} />
@@ -70,14 +70,14 @@ const IK = {
 
       <form id="imlo-forma" novalidate autocomplete="off">
         <div class="tinglash-qator">
-          <button type="button" class="tugma tugma-ikkinchi" id="tinglash">
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="tinglash">
             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.tinglash} />
             <span id="tinglash-matn">Tinglash</span>
           </button>
           <p class="ovozsiz-sorov" id="ovozsiz-sorov" hidden></p>
         </div>
 
-        <label for="javob" class="javob-yorliq">Eshitgan so'zingizni yozing</label>
+        <label for="javob" class="javob-yorliq">Eshitgan soʻzingizni yozing</label>
         <input
           id="javob"
           name="javob"
@@ -93,8 +93,8 @@ const IK = {
         <div id="xabar" class="xabar" role="status" aria-live="polite"></div>
 
         <div class="amallar">
-          <button type="submit" class="tugma tugma-asosiy" id="asosiy-tugma">Tekshirish</button>
-          <button type="button" class="tugma tugma-ikkinchi" id="toplamga-qaytish">To'plamlar ro'yxatiga</button>
+          <button type="submit" class="t-tugma ielts-tugma--urgu" id="asosiy-tugma">Tekshirish</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="toplamga-qaytish">Toʻplamlar roʻyxatiga</button>
         </div>
       </form>
     </section>
@@ -103,13 +103,13 @@ const IK = {
       <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Natija</h2>
       <p class="natija-son" id="natija-son"></p>
       <div id="xatolar-blok" hidden>
-        <h3 class="kichik-sarlavha">Xato yozilgan so'zlar</h3>
+        <h3 class="kichik-sarlavha">Xato yozilgan soʻzlar</h3>
         <ul id="xatolar" class="xatolar"></ul>
       </div>
       <div class="amallar">
-        <button type="button" class="tugma tugma-asosiy" id="xatolarni-qayta">Xatolarni qayta mashq qilish</button>
-        <button type="button" class="tugma tugma-ikkinchi" id="qaytadan">To'plamni qaytadan boshlash</button>
-        <button type="button" class="tugma tugma-ikkinchi" id="boshqa">Boshqa to'plam</button>
+        <button type="button" class="t-tugma ielts-tugma--urgu" id="xatolarni-qayta">Xatolarni qayta mashq qilish</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="qaytadan">Toʻplamni qaytadan boshlash</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="boshqa">Boshqa toʻplam</button>
       </div>
     </section>
 
@@ -222,6 +222,19 @@ const IK = {
     javobInput.focus();
   }
 
+  // DS: holat belgisi chiziqli inline SVG (currentColor), so'z yonida; emoji/belgi matni emas
+  function holatIkonka(togri: boolean) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2.5'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+    const p = document.createElementNS(ns, 'path');
+    p.setAttribute('d', togri ? 'M5 12.5l4.5 4.5L19 7.5' : 'M6 6l12 12M18 6L6 18');
+    svg.append(p);
+    const s = document.createElement('span');
+    s.className = 'x-belgi'; s.setAttribute('aria-hidden', 'true'); s.append(svg);
+    return s;
+  }
   function qism(teg: string, matn: string, sinf?: string, til?: string) {
     const el = document.createElement(teg);
     el.textContent = matn;
@@ -250,7 +263,7 @@ const IK = {
     const qatorlar: HTMLElement[] = [];
     const bosh = document.createElement('p');
     bosh.className = 'x-bosh';
-    bosh.append(qism('span', togri ? '✓' : '✗', 'x-belgi'), qism('strong', togri ? "To'g'ri." : "Noto'g'ri."));
+    bosh.append(holatIkonka(togri), qism('strong', togri ? "To'g'ri." : "Noto'g'ri."));
     // Belgi ekran o'quvchiga o'qilmaydi: matn o'zi yetarli.
     (bosh.firstChild as HTMLElement).setAttribute('aria-hidden', 'true');
     qatorlar.push(bosh);
@@ -340,85 +353,84 @@ const IK = {
 </script>
 
 <style>
-  .imlo { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-8); max-width: var(--size-measure); }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .imlo { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-8); max-width: var(--size-measure); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .bosh p { margin: 0; }
-  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; }
-  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-h1-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); }
+  .lead { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
   .eslatma, .ogoh {
-    align-self: flex-start; margin: 0; padding: var(--b-2) var(--b-4); border-radius: var(--r-yon);
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
-    display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-kichik); font-weight: 500; line-height: 1.5;
+    align-self: flex-start; margin: 0; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
+    background: var(--color-warning-subtle); color: var(--color-warning-text);
+    display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); line-height: 1.5;
   }
   .eslatma svg { flex: none; }
   .ogoh[hidden], .panel[hidden], section[hidden] { display: none; }
 
-  .bolim-sarlavha { margin: 0 0 var(--b-4); font-size: var(--matn-h3); font-weight: 800; }
-  .kichik-sarlavha { margin: 0 0 var(--b-2); font-size: var(--matn-asosiy); font-weight: 800; }
+  .bolim-sarlavha { margin: 0 0 var(--space-4); font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
+  .kichik-sarlavha { margin: 0 0 var(--space-2); font-size: var(--text-body-size); font-weight: var(--font-weight-extrabold); }
 
   /* To'plamlar: ro'yxat qatorlari (bir xil kartalar qatori emas) */
-  .toplam-royxat { list-style: none; margin: 0; padding: var(--b-2); display: flex; flex-direction: column; gap: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-katta); }
+  .toplam-royxat { list-style: none; margin: 0; padding: var(--space-2); display: flex; flex-direction: column; gap: var(--space-1); background: var(--color-ielts-tile); border-radius: var(--radius-lg); }
   .toplam {
-    width: 100%; min-height: var(--control-height-lg); padding: var(--b-3) var(--b-4); border: 0; border-radius: var(--r-orta);
-    background: transparent; color: var(--matn); font: inherit; text-align: left; cursor: pointer;
-    display: flex; align-items: center; gap: var(--b-4);
+    width: 100%; min-height: var(--control-height-lg); padding: var(--space-3) var(--space-4); border: 0; border-radius: var(--radius-md);
+    background: transparent; color: var(--color-ielts-text); font: inherit; text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: var(--space-4);
   }
-  @media (hover: hover) and (pointer: fine) { .toplam:hover { background: var(--sirt); } }
-  .t-matn { flex: 1; display: flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
-  .t-nom { font-weight: 800; }
-  .t-tavsif { font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .t-meta { display: flex; flex-direction: column; align-items: flex-end; gap: var(--b-1); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); white-space: nowrap; }
-  .t-eng { font-weight: 700; color: var(--matn); }
-  .toplam svg { flex: none; color: var(--matn-ikkinchi); }
+  @media (hover: hover) and (pointer: fine) { .toplam:hover { background: var(--color-ielts-surface); } }
+  .t-matn { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .t-nom { font-weight: var(--font-weight-extrabold); }
+  .t-tavsif { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
+  .t-meta { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-1); font-size: var(--text-small-size); color: var(--color-ielts-text-muted); white-space: nowrap; }
+  .t-eng { font-weight: var(--font-weight-bold); color: var(--color-ielts-text); }
+  .toplam svg { flex: none; color: var(--color-ielts-text-muted); }
 
   /* Mashq paneli */
-  .panel { padding: var(--b-6); border-radius: var(--r-katta); background: var(--sirt); box-shadow: var(--soya); display: flex; flex-direction: column; gap: var(--b-4); }
-  .panel-ust { display: flex; align-items: baseline; justify-content: space-between; gap: var(--b-4); }
+  .panel { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-ielts-surface); box-shadow: var(--shadow-glass); display: flex; flex-direction: column; gap: var(--space-4); }
+  .panel-ust { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
   .panel-ust .bolim-sarlavha { margin: 0; }
-  .hisob { margin: 0; font-weight: 700; color: var(--matn-ikkinchi); font-variant-numeric: tabular-nums; }
-  .progress { height: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .progress span { display: block; height: 100%; width: 0; background: var(--rang-asosiy); }
+  .hisob { margin: 0; font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); font-variant-numeric: tabular-nums; }
+  .progress { height: var(--space-2); border-radius: var(--radius-full); background: var(--color-ielts-tile); overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--color-ielts-accent-text); }
 
-  form { display: flex; flex-direction: column; gap: var(--b-3); }
-  .tinglash-qator { display: flex; align-items: center; gap: var(--b-4); flex-wrap: wrap; }
-  .tinglash-qator .tugma[hidden] { display: none; }
-  .ovozsiz-sorov { margin: 0; font-size: var(--matn-katta); font-weight: 700; }
-  .javob-yorliq { font-weight: 700; margin-top: var(--b-2); }
+  form { display: flex; flex-direction: column; gap: var(--space-3); }
+  .tinglash-qator { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+  .ovozsiz-sorov { margin: 0; font-size: var(--font-size-body-d); font-weight: var(--font-weight-bold); }
+  .javob-yorliq { font-weight: var(--font-weight-bold); margin-top: var(--space-2); }
   #javob {
-    min-height: var(--control-height-lg); padding: 0 var(--b-4); border: var(--border-width-2) solid var(--matn-sust); border-radius: var(--r-orta);
-    background: var(--fon); color: var(--matn); font: inherit; font-size: var(--matn-katta); font-weight: 600;
+    min-height: var(--control-height-lg); padding: 0 var(--space-4); border: var(--border-width-2) solid var(--color-ielts-text-muted); border-radius: var(--radius-md);
+    background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; font-size: var(--font-size-body-d); font-weight: var(--font-weight-semibold);
   }
-  #javob:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); border-color: var(--matn); }
-  #javob[readonly] { background: var(--fon-ikkinchi); }
+  #javob:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); border-color: var(--color-ielts-text); }
+  #javob[readonly] { background: var(--color-ielts-tile); }
 
   .xabar:empty { display: none; }
-  .xabar { padding: var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); display: flex; flex-direction: column; gap: var(--b-1); line-height: 1.5; }
+  .xabar { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); display: flex; flex-direction: column; gap: var(--space-1); line-height: 1.5; }
   .xabar :global(p) { margin: 0; }
-  .xabar-ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); }
-  .xabar :global(.x-bosh) { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-katta); }
+  .xabar-ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); }
+  .xabar :global(.x-bosh) { display: flex; align-items: center; gap: var(--space-2); font-size: var(--font-size-body-d); }
   .xabar :global(.x-belgi) {
-    display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--r-toliq);
-    background: var(--matn); color: var(--fon); font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--radius-full);
+    background: var(--color-ielts-text); color: var(--color-ielts-bg); font-weight: var(--font-weight-extrabold);
   }
-  .xabar :global(.x-soz) { font-size: var(--matn-katta); letter-spacing: 0.02em; }
-  .xabar :global(.x-maslahat) { font-weight: 600; }
-  :global(.x-mano) { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
-  :global(.x-xato) { color: var(--matn-ikkinchi); }
+  .xabar :global(.x-belgi svg) { width: var(--size-icon-md); height: var(--size-icon-md); }
+  .xabar :global(.x-soz) { font-size: var(--font-size-body-d); letter-spacing: 0.02em; }
+  .xabar :global(.x-maslahat) { font-weight: var(--font-weight-semibold); }
+  :global(.x-mano) { color: var(--color-ielts-text-muted); font-size: var(--text-small-size); }
+  :global(.x-xato) { color: var(--color-ielts-text-muted); }
 
-  .amallar { display: flex; flex-wrap: wrap; gap: var(--b-3); margin-top: var(--b-2); }
-  .amallar .tugma[hidden] { display: none; }
+  .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
 
-  .natija-son { margin: 0; font-size: var(--matn-h3); font-weight: 800; }
+  .natija-son { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
   #natija-h:focus { outline: none; }
-  .xatolar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .xatolar :global(li) { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); }
+  .xatolar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .xatolar :global(li) { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); }
 
   @media (max-width: 640px) {
-    .imlo { padding-top: var(--b-6); gap: var(--b-6); }
-    h1 { font-size: var(--matn-h2); }
-    .panel { padding: var(--b-4); }
-    .toplam { padding: var(--b-3); gap: var(--b-3); }
-    .amallar .tugma { flex: 1 1 100%; }
+    .imlo { padding-top: var(--space-6); gap: var(--space-6); }
+    h1 { font-size: var(--text-h2-size); }
+    .panel { padding: var(--space-4); }
+    .toplam { padding: var(--space-3); gap: var(--space-3); }
+    .amallar .t-tugma { flex: 1 1 100%; }
   }
 </style>

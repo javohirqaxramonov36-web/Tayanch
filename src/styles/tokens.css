@@ -391,6 +391,7 @@
   --color-floor-sat-glow:color-mix(in srgb, var(--color-floor-sat-500) 60%, transparent);
   --color-floor-ielts-glow:color-mix(in srgb, var(--color-floor-ielts-500) 60%, transparent);
   --color-floor-eyuf-glow:color-mix(in srgb, var(--color-floor-eyuf-500) 60%, transparent);
+  --color-floor-ai-glow:color-mix(in srgb, var(--color-floor-ai-500) 55%, transparent); /* bosh sahifa AI Academy kartasi */
 
   /* SEMANTIC · shisha (yorug') */
   --color-glass-bg:color-mix(in srgb, var(--color-neutral-0) 52%, transparent);
@@ -457,6 +458,13 @@
   --color-sat-blue-text:var(--color-floor-sat-700);
   --color-sat-line:#D3DCE8;
   --color-sat-line-strong:#6F819A;
+  /* DS 5-bosqich (2026-11-24): eski taxalluslar o'rniga (qiymat .sat dagi taxallus bilan bir xil) */
+  --color-sat-sunken:color-mix(in srgb, var(--color-sat-line) 60%, var(--color-sat-surface)); /* eski --fon-ikkinchi */
+  --color-sat-blue-subtle:var(--color-floor-sat-subtle);                                     /* eski --rang-asosiy-och */
+  --color-sat-blue-fill-hover:color-mix(in srgb, var(--color-sat-blue-fill) 80%, var(--color-sat-navy)); /* eski --rang-asosiy-toq */
+  --color-sat-blue-deep:color-mix(in srgb, var(--color-floor-sat-ui) 60%, var(--color-neutral-950));    /* eski --rang-asosiy-chuqur */
+  --color-sat-stage:var(--color-sat-navy);               /* eski --qora: navy sahna bloki */
+  --color-sat-stage-raised:var(--color-sat-navy-raised); /* eski --qora-sirt */
 
   /* COMPONENT · o'lcham va tipografiya (Sora 600 = --font-sat, faqat inglizcha matn) */
   --size-sat-plitka:64px; --size-sat-tabbar:56px;
@@ -478,6 +486,8 @@
   --color-sat-blue-text:var(--color-sat-sky);
   --color-sat-line:#1E3A5C;
   --color-sat-line-strong:var(--color-sat-line-on-navy);
+  --color-sat-stage:var(--color-sat-navy-raised);
+  --color-sat-stage-raised:var(--color-sat-navy-high);
 }
 @media (min-width: 720px){
   :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; --text-sat-raqam-size:40px; --text-sat-raqam-lh:44px; }
@@ -514,6 +524,8 @@
   --color-ielts-halo:rgb(39 96 222 / 0.4);              /* halqa motivi: bezak */
   --color-ielts-line:#D3DBEA;                           /* bezak chizig'i */
   --color-ielts-line-strong:#74819A;                    /* ma'noli chegara (chip, maydon) */
+  --color-ielts-surface:var(--color-neutral-0);          /* glass-strong ning noshaffof zaxirasi: maydon, karta */
+  --color-ielts-bg-deep:color-mix(in srgb, var(--color-ielts-dawn) 92%, var(--color-ielts-ink));
 
   /* COMPONENT · tipografiya (Lexend 600 = --font-ielts, oddiy harflar) */
   --text-ielts-hero-size:32px; --text-ielts-hero-lh:40px; --text-ielts-hero-ls:-0.02em;
@@ -537,6 +549,8 @@
   --color-ielts-halo:rgb(80 140 255 / 0.75);
   --color-ielts-line:#1F2E50;
   --color-ielts-line-strong:#62739A;
+  --color-ielts-surface:#111D3A;
+  --color-ielts-bg-deep:color-mix(in srgb, var(--color-ielts-night) 70%, var(--color-neutral-950));
 }
 @media (min-width: 481px){
   :root{ --text-ielts-hero-size:40px; --text-ielts-hero-lh:48px; }
@@ -815,6 +829,11 @@
   --text-nav-kod-size:13px; --text-nav-kod-lh:20px;
   /* Qora sahnadagi nur dog'i: nav-on-stage nur markazida 4.5:1 dan past tushmasligi uchun xiraroq */
   --fon-nur-opacity-nav:0.5; --fon-nur-opacity-past-nav:0.35;
+  /* Bosh sahifa CTA'lari (2026-11-24, muallif brifi): karta ko'tarilishi va strelka siljishi (reduced motion'da 0),
+     cheksiz bezak harakatlari (faqat transform/opacity, ekrandan chiqsa to'xtaydi, reduced motion'da yo'q) */
+  --nav-karta-kotarilish:calc(-6px * var(--motion-distance)); --nav-strelka-siljish:calc(5px * var(--motion-distance));
+  --nav-puls-davomi:2.2s; --nav-puls-masshtab:1.14; --nav-marquee-davomi:24s; --nav-nur-davomi:6s; --nav-nur-masshtab:1.15;
+  --size-nav-panel-min:320px; --size-nav-nuqta:12px;
 }
 :root[data-mavzu='qorongi']{
   --color-nav-bg:var(--color-nav-stage);
@@ -882,7 +901,7 @@ html:root[data-floor="1"]{
   --text-eyuf-hero-size:34px; --text-eyuf-hero-lh:40px; --text-eyuf-hero-ls:-0.01em;
   --text-eyuf-h1-size:30px; --text-eyuf-h1-lh:36px;
   --text-eyuf-h2-size:26px; --text-eyuf-h2-lh:32px;
-  --text-eyuf-raqam-size:40px; --text-eyuf-raqam-lh:44px;
+  --text-eyuf-raqam-size:40px; --text-eyuf-raqam-lh:44px; --text-eyuf-yorliq-ls:0.14em;
   --size-eyuf-doira:44px; --size-eyuf-qator:64px; --size-eyuf-halqa:140px; --size-eyuf-halqa-qalinlik:14px;
 }
 :root[data-mavzu='qorongi']{

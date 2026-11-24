@@ -21,12 +21,12 @@ export const KURS_HOLATI_YORLIQ: Record<KursHolati, string> = {
 export const eyufKurslar: EyufKurs[] = [
   {
     slug: 'nega-chet-elda',
-    nomi: "Nega chet elda o'qish kerak",
-    tavsif: "Ta'lim sifati, karyera, shaxsiy rivojlanish va grantlar orqali arzon yoki bepul o'qish yo'llari. Faqat rasmiy manbali faktlar.",
+    nomi: "Nega chet elda oʻqish kerak",
+    tavsif: "Taʼlim sifati, karyera, shaxsiy rivojlanish va grantlar orqali arzon yoki bepul oʻqish yoʻllari. Faqat rasmiy manbali faktlar.",
     holat: 'tayyor',
     bepul: true,
     bolimlar: [
-      "Ta'lim sifati va xalqaro tan olinish",
+      "Taʼlim sifati va xalqaro tan olinish",
       'Karyera imkoniyatlari',
       'Shaxsiy rivojlanish',
       'Moliyaviy imkoniyatlar: grant va stipendiyalar',
@@ -35,15 +35,15 @@ export const eyufKurslar: EyufKurs[] = [
   },
   {
     slug: 'el-yurt-umidi',
-    nomi: "El-Yurt Umidi'ni yutaylik",
-    tavsif: "El-Yurt Umidi davlat granti bo'yicha suhbatga tayyorgarlik kursi — tez orada to'liq material qo'shiladi",
+    nomi: "El-Yurt Umidiʼni yutaylik",
+    tavsif: "El-Yurt Umidi davlat granti boʻyicha suhbatga tayyorgarlik kursi — tez orada toʻliq material qoʻshiladi",
     holat: 'skelet',
     bepul: true,
     bolimlar: [
       'Suhbatga tayyorgarlik',
       'Bridge texnikasi',
-      "Tez-tez so'raladigan savollar",
-      "Muvaffaqiyatli case'lar",
+      "Tez-tez soʻraladigan savollar",
+      "Muvaffaqiyatli caseʼlar",
     ],
   },
 ];

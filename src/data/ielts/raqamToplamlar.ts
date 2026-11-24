@@ -89,8 +89,8 @@ export const raqamToplamlar: RaqamToplam[] = [
   },
   {
     id: 'narx-olcham',
-    nomi: "Narx va o'lchamlar",
-    tavsif: "Funt, pens, metr va og'irlik",
+    nomi: "Narx va oʻlchamlar",
+    tavsif: "Funt, pens, metr va ogʻirlik",
     klaviatura: 'decimal',
     savollar: [
       { aytiladi: ['A single ticket costs fifteen pounds.'], kontekst: 'Bilet narxi', oldin: '£', javob: { tur: 'son', qiymat: 15 }, qoida: 'fifTEEN (15) da urg\'u oxirida, FIFty (50) da boshida.' },
@@ -98,8 +98,8 @@ export const raqamToplamlar: RaqamToplam[] = [
       { aytiladi: ['Lunch is twelve pounds fifty.'], kontekst: 'Tushlik narxi', oldin: '£', javob: { tur: 'son', qiymat: 12.5 }, qoida: '"twelve pounds fifty" = 12.50.' },
       { aytiladi: ['A coffee is eighty-five pence.'], kontekst: 'Qahva narxi', keyin: 'p', javob: { tur: 'son', qiymat: 85 }, qoida: 'pence (p) = pens.' },
       { aytiladi: ['The table is two point seven five metres long.'], kontekst: 'Stol uzunligi', keyin: 'm', javob: { tur: 'son', qiymat: 2.75 }, qoida: '"point" o\'nli nuqtani bildiradi: 2.75.' },
-      { aytiladi: ['The path is one and a half kilometres.'], kontekst: "Yo'l uzunligi", keyin: 'km', javob: { tur: 'son', qiymat: 1.5 }, qoida: '"one and a half" = 1.5.' },
-      { aytiladi: ['The fee for the year is fifteen hundred pounds.'], kontekst: "Yillik to'lov", oldin: '£', javob: { tur: 'son', qiymat: 1500 }, qoida: '"fifteen hundred" = 1500.' },
+      { aytiladi: ['The path is one and a half kilometres.'], kontekst: "Yoʻl uzunligi", keyin: 'km', javob: { tur: 'son', qiymat: 1.5 }, qoida: '"one and a half" = 1.5.' },
+      { aytiladi: ['The fee for the year is fifteen hundred pounds.'], kontekst: "Yillik toʻlov", oldin: '£', javob: { tur: 'son', qiymat: 1500 }, qoida: '"fifteen hundred" = 1500.' },
       { aytiladi: ['The flat is three hundred and forty square metres.'], kontekst: 'Kvartira maydoni', keyin: 'm²', javob: { tur: 'son', qiymat: 340 }, qoida: '"three hundred and forty" = 340: "and" yozilmaydi.' },
       { aytiladi: ['You need two hundred and fifty grams of flour.'], kontekst: 'Un miqdori', keyin: 'g', javob: { tur: 'son', qiymat: 250 }, qoida: '"two hundred and fifty" = 250.' },
       { aytiladi: ['The book is on sale for nineteen ninety-nine.'], kontekst: 'Kitob narxi', oldin: '£', javob: { tur: 'son', qiymat: 19.99 }, qoida: 'Narxda ikki son ketma-ket aytilsa: funt va pens, 19.99.' },
