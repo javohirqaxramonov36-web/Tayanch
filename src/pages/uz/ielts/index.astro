@@ -46,24 +46,24 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
     <QavatFoto bolim="ielts" />
     <section class="hero" aria-labelledby="ielts-h">
       <div class="hero-matn">
-        <p class="ustki">IELTS bo'limi · mustaqil tayyorgarlik</p>
-        <h1 id="ielts-h">IELTS'ga o'zing tayyorlan, reja bilan.</h1>
-        <p class="lead" data-tanishuv>Har bo'lim uchun qo'llanma, mustaqil mashq va kunma-kun reja. Bepul, ro'yxatdan o'tmasdan, telefonda ham.</p>
+        <p class="ustki">IELTS boʻlimi · mustaqil tayyorgarlik</p>
+        <h1 id="ielts-h">IELTSʼga oʻzing tayyorlan, reja bilan.</h1>
+        <p class="lead" data-tanishuv>Har boʻlim uchun qoʻllanma, mustaqil mashq va kunma-kun reja. Bepul, roʻyxatdan oʻtmasdan, telefonda ham.</p>
         <article class="davom" aria-labelledby="davom-h" data-davom hidden>
           <p class="ustki">Davom etish</p>
           <h2 id="davom-h"></h2>
           <p class="davom-vaqt" data-davom-vaqt></p>
           <p class="kichik" data-davom-javob hidden></p>
-          <p class="kichik">Sahifani yopsangiz ham vaqt to'xtamaydi.</p>
-          <a class="tugma tugma-asosiy" href={yol('/uz/ielts/mashq/reading/test/')} data-davom-havola>Davom etish</a>
+          <p class="kichik">Sahifani yopsangiz ham vaqt toʻxtamaydi.</p>
+          <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/mashq/reading/test/')} data-davom-havola>Davom etish</a>
         </article>
         <div class="amallar">
-          {testlar.length > 0 && <a class="tugma tugma-asosiy" href={reading} data-yangi-test>Bepul Reading testi</a>}
-          <a class="tugma tugma-ikkinchi" href={mashq}>Mashqlar katalogi</a>
+          {testlar.length > 0 && <a class="t-tugma ielts-tugma--urgu" href={reading} data-yangi-test>Bepul Reading testi</a>}
+          <a class="t-tugma t-tugma--ikkinchi" href={mashq}>Mashqlar katalogi</a>
         </div>
       </div>
       <aside class="format" aria-labelledby="format-h">
-        <h2 id="format-h" class="ustki">Imtihon to'rt bo'limdan iborat. Bo'limni tanlang</h2>
+        <h2 id="format-h" class="ustki">Imtihon toʻrt boʻlimdan iborat. Boʻlimni tanlang</h2>
         <div class="konikmalar">
           {bolimlar.map((b) => {
             const Teg = b.href ? 'a' : 'div';
@@ -83,15 +83,15 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
     <section class="holat-va-reja" aria-label="Holat va keyingi vazifa">
       <article class="karta" data-holat hidden aria-labelledby="holat-h">
         <h2 id="holat-h">Mening holatim</h2>
-        <p class="kichik">Faqat shu brauzerdagi ma'lumot.</p>
+        <p class="kichik">Faqat shu brauzerdagi maʼlumot.</p>
         <dl class="statistika" data-statistika></dl>
-        <a class="tugma tugma-ikkinchi" href={takrorlash}>Xatolarni takrorlash</a>
-        <p class="kichik">Band taxminiy va faqat to'liq 40 savollik mock uchun ko'rsatiladi.</p>
+        <a class="t-tugma t-tugma--ikkinchi" href={takrorlash}>Xatolarni takrorlash</a>
+        <p class="kichik">Band taxminiy va faqat toʻliq 40 savollik mock uchun koʻrsatiladi.</p>
       </article>
       <article class="karta" aria-labelledby="keyingi-h">
         <h2 id="keyingi-h">Keyingi vazifa</h2>
-        <p class="ikkinchi" data-reja-izoh>Imtihongacha qancha vaqt qolgani, kuniga necha soat bo'shligi va qaysi bo'lim qiyinligini tanla. 30 kunlik reja shulardan tuziladi.</p>
-        <a class="tugma tugma-ikkinchi" href={reja} data-reja-havola>Rejani tuzish</a>
+        <p class="ikkinchi" data-reja-izoh>Imtihongacha qancha vaqt qolgani, kuniga necha soat boʻshligi va qaysi boʻlim qiyinligini tanla. 30 kunlik reja shulardan tuziladi.</p>
+        <a class="t-tugma t-tugma--ikkinchi" href={reja} data-reja-havola>Rejani tuzish</a>
       </article>
     </section>
 
@@ -105,8 +105,8 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
       </div>
     </section>
     <footer class="eslatma">
-      <p>IELTS British Council, IDP IELTS va Cambridge University Press & Assessment'ning birgalikdagi mulki va ro'yxatdan o'tgan savdo belgisi (<a href={manba('IE08').havola}>ielts.org</a>). Tayanch ular bilan bog'liq emas, mashqlar rasmiy IELTS materiali emas.</p>
-      <p>Natija kafolatlanmaydi. Band taxminiy va faqat to'liq 40 savollik mock uchun ko'rsatiladi.</p>
+      <p>IELTS British Council, IDP IELTS va Cambridge University Press & Assessmentʼning birgalikdagi mulki va roʻyxatdan oʻtgan savdo belgisi (<a href={manba('IE08').havola}>ielts.org</a>). Tayanch ular bilan bogʻliq emas, mashqlar rasmiy IELTS materiali emas.</p>
+      <p>Natija kafolatlanmaydi. Band taxminiy va faqat toʻliq 40 savollik mock uchun koʻrsatiladi.</p>
     </footer>
     <ManbaBlok manbalar={['IE01', 'IE03', 'ID01', 'BC01', 'IE08']} tekshirilgan="2026-11-12" keyingiTekshiruv="2026-12-12" tekshirilmagan={["IELTS.org namunalari bepulligi sahifada yozilmagan."]} />
   </div>
@@ -248,7 +248,6 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
   .lead, .ikkinchi { color: var(--color-text-secondary); max-width: var(--size-measure); }
   .kichik { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
   .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
-  .tugma { min-height: var(--size-touch-min); }
   .format { gap: var(--space-3); }
   .konikmalar { width: 100%; }
   .konikma-havola { display: block; text-decoration: none; border-radius: var(--radius-md); }
@@ -263,7 +262,7 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
   .davom-vaqt { font-size: var(--text-h3-size); font-weight: var(--text-h3-weight); font-variant-numeric: tabular-nums; }
   .holat-va-reja { display: grid; gap: var(--space-5); }
   .karta { padding: var(--space-6); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: var(--shadow-1); }
-  .karta .tugma { margin-top: auto; }
+  .karta .t-tugma { margin-top: auto; }
   .karta-havola { display: flex; min-width: 0; text-decoration: none; border-radius: var(--radius-lg); }
   .karta-havola .karta { width: 100%; }
   .karta h3 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
@@ -285,7 +284,7 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
   @media (max-width: 767px) {
     .hero:has([data-davom]:not([hidden])) { padding: var(--space-4); }
     .hero:has([data-davom]:not([hidden])) .hero-matn { gap: var(--space-3); }
-    .amallar, .amallar .tugma, .davom .tugma { width: 100%; }
+    .amallar, .amallar .t-tugma, .davom .t-tugma { width: 100%; }
     .strelka { display: none; }
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .hero { background: var(--color-surface); } }

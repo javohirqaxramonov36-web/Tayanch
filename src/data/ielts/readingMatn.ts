@@ -7,7 +7,7 @@ export const TUR_NOMI: Record<SavolTuriNomi, string> = {
   tfng: 'True / False / Not Given',
   mcq: 'Multiple choice',
   'matching-headings': 'Matching headings',
-  'gap-fill': "Bo'sh joyni to'ldirish",
+  'gap-fill': "Boʻsh joyni toʻldirish",
 };
 
 export const RM = {
@@ -23,11 +23,11 @@ export const RM = {
 
   // Test screen
   yuklanmoqda: 'Test yuklanmoqda…',
-  yuklashXato: "Testni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.",
+  yuklashXato: "Testni yuklab boʻlmadi. Internetni tekshirib, qayta urinib koʻring.",
   qaytaUrin: 'Qayta urinish',
-  faolYoq: "Faol test yo'q. Yangi testni boshlash sahifasidan boshlang.",
+  faolYoq: "Faol test yoʻq. Yangi testni boshlash sahifasidan boshlang.",
   boshlashSahifasi: 'Boshlash sahifasiga',
-  testYoq: "Testlar hali qo'shilmagan. Yangi testlar tez orada.",
+  testYoq: "Testlar hali qoʻshilmagan. Yangi testlar tez orada.",
   qolganVaqt: 'Qolgan vaqt',
   vaqtElon: (daq: number) => `${daq} daqiqa qoldi.`,
   vaqtTugadi: 'Vaqt tugadi. Javoblaringiz tekshirilmoqda.',
@@ -40,7 +40,7 @@ export const RM = {
   passageTanlov: 'Passage tanlash',
   savollarPaneli: 'Savollar paneli',
   panelTugma: (berilgan: number, jami: number) => `Savollar: ${berilgan}/${jami}`,
-  panelOch: "Savollar ro'yxatini ochish",
+  panelOch: "Savollar roʻyxatini ochish",
   raqamHolat: (n: number, berilgan: boolean, belgi: boolean) =>
     `${n}-savol, ${berilgan ? 'javob berilgan' : 'javob berilmagan'}${belgi ? ', belgilangan' : ''}`,
   belgila: (n: string) => `${n}-savolni qayta ko'rish uchun belgilash`,
@@ -53,19 +53,19 @@ export const RM = {
   yakunSarlavha: 'Testni yakunlaysizmi?',
   yakunJavobsiz: (n: number) => (n === 0 ? 'Hamma savolga javob berilgan.' : `Javobsiz savollar: ${n} ta.`),
   yakunBelgi: (n: number) => (n === 0 ? "Belgilangan savol yo'q." : `Belgilangan savollar: ${n} ta.`),
-  yakunIzoh: "Yakunlagandan keyin javoblarni o'zgartirib bo'lmaydi.",
+  yakunIzoh: "Yakunlagandan keyin javoblarni oʻzgartirib boʻlmaydi.",
   yakunHa: 'Ha, yakunlash',
   yakunYoq: 'Testga qaytish',
 
   // Storage and second-tab warnings
   xotiraYoq:
-    "Brauzer xotirasi o'chirilgan yoki to'lgan. Test davom etadi, lekin sahifani yangilasangiz yoki yopsangiz javoblar va natija saqlanmaydi.",
-  natijaSaqlanmadi: "Natija brauzerda saqlanmadi. U faqat shu sahifa ochiq turganda ko'rinadi.",
+    "Brauzer xotirasi oʻchirilgan yoki toʻlgan. Test davom etadi, lekin sahifani yangilasangiz yoki yopsangiz javoblar va natija saqlanmaydi.",
+  natijaSaqlanmadi: "Natija brauzerda saqlanmadi. U faqat shu sahifa ochiq turganda koʻrinadi.",
   boshqaTab: "Bu test boshqa tabda ochiq. Javoblar aralashmasligi uchun bir vaqtda faqat bitta tabda ishlang.",
   shuTabda: 'Shu tabda davom ettirish',
-  faqatOqish: "Bu tabda javoblarni o'zgartirib bo'lmaydi.",
+  faqatOqish: "Bu tabda javoblarni oʻzgartirib boʻlmaydi.",
   boshqaTabdaYakun: 'Test boshqa tabda yakunlandi.',
-  natijagaOt: "Natijani ko'rish",
+  natijagaOt: "Natijani koʻrish",
 
   // Start page
   boshla: 'Yangi test boshlash',
@@ -80,21 +80,21 @@ export const RM = {
 
   // Result
   natijaSarlavha: 'Reading natijasi',
-  xomBall: "To'g'ri javoblar",
+  xomBall: "Toʻgʻri javoblar",
   taxminiyBand: 'Taxminiy band',
   bandPast: '2.0 dan past',
   bandIzoh:
-    "Band taxminiy. Rasmiy manbada (ielts.org, IE04) Academic Reading uchun faqat to'rtta namunaviy nuqta bor: 15 → 5, 23 → 6, 30 → 7, 35 → 8. Qolgan chegaralar Tayanch taxmini. Haqiqiy testda chegara test versiyasiga qarab biroz o'zgaradi.",
+    "Band taxminiy. Rasmiy manbada (ielts.org, IE04) Academic Reading uchun faqat toʻrtta namunaviy nuqta bor: 15 → 5, 23 → 6, 30 → 7, 35 → 8. Qolgan chegaralar Tayanch taxmini. Haqiqiy testda chegara test versiyasiga qarab biroz oʻzgaradi.",
   sarflangan: 'Sarflangan vaqt',
   daqiqa: (n: number) => `${n} daqiqa`,
   avtoYakun: 'Vaqt tugagani uchun test avtomatik yakunlandi.',
-  turlar: "Savol turlari bo'yicha aniqlik",
+  turlar: "Savol turlari boʻyicha aniqlik",
   tahlil: 'Xatolar tahlili',
   tahlilZaif: (tur: string, t: number, j: number) => `Eng ko'p xato: ${tur} (${t}/${j} to'g'ri).`,
   tahlilJavobsiz: (n: number) => `${n} ta savol javobsiz qolgan. Javobsiz savol uchun ball olinmaydi, shuning uchun vaqt tugashidan oldin hammasini to'ldiring.`,
   tahlilPassage: (n: number, t: number, j: number) => `Passage ${n}: ${t}/${j} to'g'ri.`,
   tahlilYaxshi: "Hamma savol turida natija 60% dan yuqori.",
-  tahlilXatoYoq: "Xato yo'q.",
+  tahlilXatoYoq: "Xato yoʻq.",
   keyingiQadam: 'Keyingi qadam',
   savollar: 'Savollar va tushuntirish',
   filtrHammasi: 'Hammasi',
@@ -102,28 +102,28 @@ export const RM = {
   togri: "To'g'ri",
   xato: 'Xato',
   sizning: 'Sizning javobingiz',
-  togriJavob: "To'g'ri javob",
+  togriJavob: "Toʻgʻri javob",
   tushuntirish: 'Tushuntirish',
   dalil: 'Matndagi dalil',
-  matndaKor: "Matnda ko'rish",
+  matndaKor: "Matnda koʻrish",
   paragraf: (p: string) => `${p}-paragraf`,
   yopish: 'Yopish',
   yangiTest: 'Yangi test boshlash',
-  natijaYoq: "Bu urinish topilmadi. U boshqa brauzerda ishlangan yoki brauzer ma'lumotlari tozalangan bo'lishi mumkin.",
+  natijaYoq: "Bu urinish topilmadi. U boshqa brauzerda ishlangan yoki brauzer maʼlumotlari tozalangan boʻlishi mumkin.",
   natijaYuklanmoqda: 'Natija yuklanmoqda…',
-  testTopilmadi: "Bu urinishning testi saytda topilmadi, shuning uchun savollar bo'yicha tahlilni ko'rsatib bo'lmaydi.",
-  testXato: "Test matnini yuklab bo'lmadi, shuning uchun savollar bo'yicha tahlil ko'rinmayapti. Internetni tekshirib, sahifani yangilang.",
+  testTopilmadi: "Bu urinishning testi saytda topilmadi, shuning uchun savollar boʻyicha tahlilni koʻrsatib boʻlmaydi.",
+  testXato: "Test matnini yuklab boʻlmadi, shuning uchun savollar boʻyicha tahlil koʻrinmayapti. Internetni tekshirib, sahifani yangilang.",
   holatTogri: "To'g'ri",
   holatXato: 'Xato',
   holatBosh: 'Javobsiz',
   filtr: "Savollarni saralash",
-  xatoQolmadi: "Xato yoki javobsiz savol yo'q.",
+  xatoQolmadi: "Xato yoki javobsiz savol yoʻq.",
   ulush: (t: number, j: number) => `${t}/${j} to'g'ri`,
 
   // Question blocks on the test screen
   guruhNomi: (oraliq: string, kop: boolean) => (kop ? `${oraliq}-savollar` : `${oraliq}-savol`),
   savolNomi: (n: string) => `${n}-savol.`,
-  sarlavhalarRoyxati: "Sarlavhalar ro'yxati",
+  sarlavhalarRoyxati: "Sarlavhalar roʻyxati",
   faolTestYoq: "Boshlangan testingiz saytda topilmadi, shuning uchun u bekor qilindi. Yangi testni boshlashingiz mumkin.",
   testNomi: 'IELTS Reading test',
   ustki: 'IELTS · Reading',
@@ -157,12 +157,12 @@ export const MM = {
   ],
   ogohSarlavha: 'Boshlashdan oldin',
   ogoh: 'Test boshlangandan keyin 60 daqiqa vaqtingiz bor. Tayyorlaning va tinch joyda o\'tiring.',
-  ogohVaqt: "Sahifani yopsangiz ham vaqt to'xtamaydi: qaytib ochsangiz, javoblar va qolgan vaqt tiklanadi.",
+  ogohVaqt: "Sahifani yopsangiz ham vaqt toʻxtamaydi: qaytib ochsangiz, javoblar va qolgan vaqt tiklanadi.",
   imkoniyatSarlavha: 'Testda nima bor',
   imkoniyatlar: [
-    { nomi: 'Turli savol turlari', matn: "True / False / Not Given, Multiple choice, Matching headings va bo'sh joyni to'ldirish." },
-    { nomi: 'Avtomatik tekshirish', matn: "Yakunlaganingizda har savolga to'g'ri javob, qisqa tushuntirish va matndagi dalil ko'rsatiladi." },
-    { nomi: 'Band score', matn: "40 dan nechta to'g'ri topganingizga qarab taxminiy Academic Reading band hisoblanadi." },
+    { nomi: 'Turli savol turlari', matn: "True / False / Not Given, Multiple choice, Matching headings va boʻsh joyni toʻldirish." },
+    { nomi: 'Avtomatik tekshirish', matn: "Yakunlaganingizda har savolga toʻgʻri javob, qisqa tushuntirish va matndagi dalil koʻrsatiladi." },
+    { nomi: 'Band score', matn: "40 dan nechta toʻgʻri topganingizga qarab taxminiy Academic Reading band hisoblanadi." },
   ],
 } as const;
 
@@ -170,22 +170,22 @@ export const MM = {
 export const TAVSIYA = {
   tfng: {
     sarlavha: 'Reading darsi: True / False / Not Given',
-    izoh: "Oxirgi testda bu savol turida xato ko'p bo'ldi.",
+    izoh: "Oxirgi testda bu savol turida xato koʻp boʻldi.",
     manzil: '/uz/ielts/qollanma/reading/tfng/',
   },
   'matching-headings': {
     sarlavha: 'Reading darsi: Matching headings',
-    izoh: "Oxirgi testda bu savol turida xato ko'p bo'ldi.",
+    izoh: "Oxirgi testda bu savol turida xato koʻp boʻldi.",
     manzil: '/uz/ielts/qollanma/reading/sarlavhalar/',
   },
   mcq: {
-    sarlavha: "Reading qo'llanmasini takrorlang",
-    izoh: "Oxirgi testda Multiple choice savollarida xato ko'p bo'ldi.",
+    sarlavha: "Reading qoʻllanmasini takrorlang",
+    izoh: "Oxirgi testda Multiple choice savollarida xato koʻp boʻldi.",
     manzil: '/uz/ielts/qollanma/reading/',
   },
   'gap-fill': {
-    sarlavha: "Reading qo'llanmasini takrorlang",
-    izoh: "Oxirgi testda bo'sh joyni to'ldirish savollarida xato ko'p bo'ldi.",
+    sarlavha: "Reading qoʻllanmasini takrorlang",
+    izoh: "Oxirgi testda boʻsh joyni toʻldirish savollarida xato koʻp boʻldi.",
     manzil: '/uz/ielts/qollanma/reading/',
   },
   yangi: {

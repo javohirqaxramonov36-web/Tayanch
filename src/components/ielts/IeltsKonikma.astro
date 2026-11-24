@@ -16,8 +16,8 @@ const ielts = (qism: string) => yol(`/uz/ielts/${qism}`);
 const bosqichlar: { id: string; nomi: string; izoh: string; bandlar: IeltsBand[] }[] = [
   { id: 'qollanma', nomi: "Qo'llanma", izoh: 'Avval format, savol turlari va tuzoqlar bilan tanish.', bandlar: [k.qollanma] },
   { id: 'darslar', nomi: 'Darslar', izoh: "Bitta savol turini qisqa interaktiv darsda mashq qil.", bandlar: k.darslar },
-  { id: 'mashq', nomi: 'Mashq', izoh: "O'rganganingni vaqt bilan sinab ko'r.", bandlar: [...k.mashqlar].sort((a, b) => Number(!a.qism) - Number(!b.qism)) },
-  { id: 'natija', nomi: 'Natijalar', izoh: "Ishlaganlaringni ko'r va xatolarni takrorla.", bandlar: k.natijalar },
+  { id: 'mashq', nomi: 'Mashq', izoh: "Oʻrganganingni vaqt bilan sinab koʻr.", bandlar: [...k.mashqlar].sort((a, b) => Number(!a.qism) - Number(!b.qism)) },
+  { id: 'natija', nomi: 'Natijalar', izoh: "Ishlaganlaringni koʻr va xatolarni takrorla.", bandlar: k.natijalar },
 ].filter((b) => b.bandlar.length > 0);
 
 const birinchiMashq = k.mashqlar.find((m) => m.qism);
@@ -33,13 +33,13 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
   <div class="ichki konikma-sahifa">
     <header class="bosh">
       <svg class="ikonka" aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={k.ikonka} />
-      <p class="ustki">IELTS · ko'nikma</p>
+      <p class="ustki">IELTS · koʻnikma</p>
       <h1>{k.nomi}</h1>
       <p class="lead">{k.tavsif}</p>
       <p class="kichik">Imtihonda: {k.vaqt}. IELTS Academic, manba <a href={ie01.havola}>ielts.org</a>.</p>
       <div class="amallar">
-        <a class="tugma tugma-asosiy" href={ielts(k.qollanma.qism!)}>Qo'llanmadan boshlash</a>
-        {birinchiMashq && <a class="tugma tugma-ikkinchi" href={ielts(birinchiMashq.qism!)}>To'g'ridan mashqqa</a>}
+        <a class="t-tugma ielts-tugma--urgu" href={ielts(k.qollanma.qism!)}>Qoʻllanmadan boshlash</a>
+        {birinchiMashq && <a class="t-tugma t-tugma--ikkinchi" href={ielts(birinchiMashq.qism!)}>Toʻgʻridan mashqqa</a>}
       </div>
     </header>
 
@@ -75,7 +75,7 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
     </ol>
 
     <nav class="boshqalar" aria-labelledby="boshqa-h">
-      <h2 id="boshqa-h">Boshqa ko'nikmalar</h2>
+      <h2 id="boshqa-h">Boshqa koʻnikmalar</h2>
       <ul role="list">
         {boshqalar.map((x) => <li><a href={ielts(konikmaQism(x.id))}>
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} />{x.nomi}
@@ -97,7 +97,6 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
   .kichik { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
   .ikonka { color: var(--color-link); flex: none; }
   .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
-  .tugma { min-height: var(--size-touch-min); }
 
   .bosqichlar { display: grid; gap: var(--space-6); margin: 0; padding: 0; list-style: none; }
   .bosqich { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-4); }
@@ -125,7 +124,7 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
     .kartalar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 767px) {
-    .amallar, .amallar .tugma { width: 100%; }
+    .amallar, .amallar .t-tugma { width: 100%; }
     .bosqich { grid-template-columns: minmax(0, 1fr); }
     .raqam { display: none; }
     .karta { padding: var(--space-4); }

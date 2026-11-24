@@ -1,13 +1,48 @@
 /* 4-qavat IELTS mini-DS (ADR 005, PR 8, 2026-11-23). Manba: Claude Design artifakti, versiya 15,
    components/bundle.css "4 · IELTS" bloki (.ielts, .ielts-shisha, .ielts-shisha--zich).
    Tokenlar tokens.css ("4-qavat IELTS mini-DS"), qoidalar DESIGN.md "4-qavat IELTS".
-   Hozircha hech bir sahifa ishlatmaydi: IELTS sahifalari o'z PR'ida yoqadi.
+   2026-11-24 (DS 4-bosqich): qavat qatlami html[data-floor="4"] da poydevor tokenlarini ielts-* ga o'tkazadi
+   (EYUF qatlami kabi), shuning uchun mavjud IELTS sahifalari, testlar va formalar ielts palitrasini oladi.
+   Sarlavhalar Lexend 600.
    Saytga moslash:
    - DS dagi .ielts → .ielts-qobiq: /uz/ielts/ kirishida "ielts" klassi allaqachon bor (sahifa
      ichidagi stil), umumiy .ielts u sahifani o'zgartirib yuborardi.
    - .ielts-shisha / .ielts-shisha--zich → .ielts-glass / .ielts-glass-strong (token nomlari bilan bir xil).
    - Uzun matn, forma, test va savol faqat .ielts-glass-strong da. Ichma-ich blur yo'q.
    - Zaxira: backdrop-filter yo'q, prefers-reduced-transparency, prefers-contrast: more. */
+
+/* ---------- Qavat qatlami: poydevor tokenlari → ielts-* (faqat 4-qavat sahifasida) ---------- */
+html:root[data-floor="4"] {
+  --nur: var(--color-floor-ielts-glow);
+  --color-bg: var(--color-ielts-bg);
+  --color-bg-deep: var(--color-ielts-bg-deep);
+  --color-surface: var(--color-ielts-surface);
+  --color-surface-sunken: var(--color-ielts-tile);
+  --color-border: var(--color-ielts-line);
+  --color-border-strong: var(--color-ielts-line-strong);
+  --chiziq-maydon: var(--color-ielts-line-strong);
+  --color-text-primary: var(--color-ielts-text);
+  --color-text-secondary: var(--color-ielts-text-muted);
+  --color-link: var(--color-ielts-accent-text);
+  --color-focus-ring: var(--color-ielts-accent-text);
+  --color-action-primary-bg: var(--color-ielts-accent);
+  --color-action-primary-text: var(--color-ielts-on-accent);
+  --btn-primary-bg: var(--color-ielts-accent);
+  --btn-primary-text: var(--color-ielts-on-accent);
+  --color-action-primary-bg-hover: color-mix(in srgb, var(--color-ielts-accent) 85%, var(--color-ielts-ink));
+  --btn-primary-bg-hover: color-mix(in srgb, var(--color-ielts-accent) 85%, var(--color-ielts-ink));
+  --btn-primary-bg-pressed: color-mix(in srgb, var(--color-ielts-accent) 75%, var(--color-ielts-ink));
+  --color-glass-bg: var(--color-ielts-glass);
+  --color-glass-bg-strong: var(--color-ielts-glass-strong);
+  --color-glass-border: var(--color-ielts-glass-border);
+  --floor-text: var(--color-ielts-accent-text);
+  --floor-subtle: var(--color-ielts-tile);
+}
+/* Sarlavhalar: Lexend 600, oddiy harflar (matn Onest qoladi) */
+html[data-floor="4"] main :is(h1, h2, h3) {
+  font-family: var(--font-ielts);
+  font-weight: var(--font-weight-semibold);
+}
 
 /* ---------- Qavat qobig'i: fon, matn, qavat nuri (.t-fon bilan birga ishlatsa bo'ladi) ---------- */
 .ielts-qobiq {
@@ -45,5 +80,26 @@
     background: var(--color-ielts-glass-strong);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+}
+
+/* ---------- Asosiy tugma: elektr ko'k fill (ielts-accent), ustida doim on-accent oq. Ikkinchisi poydevor .t-tugma--ikkinchi ---------- */
+.t-tugma.ielts-tugma--urgu {
+  background: linear-gradient(180deg, var(--color-glass-highlight), transparent 55%) top / 100% 50% no-repeat, var(--color-ielts-accent);
+  color: var(--color-ielts-on-accent);
+}
+/* Ikkinchi tugma matni zich shishada (DS matn qoidasi): ostidagi kontentdan qat'i nazar o'qiladi, ichma-ich blur yo'q */
+html[data-floor="4"] main .t-tugma--ikkinchi {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--color-ielts-glass-strong);
+  border-color: var(--color-ielts-line-strong);
+  color: var(--color-ielts-text);
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .t-tugma.ielts-tugma--urgu,
+  .t-tugma.ielts-tugma--urgu:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--color-ielts-accent);
+    color: var(--color-ielts-on-accent);
   }
 }
