@@ -78,7 +78,7 @@ const obuna = yol('/uz/sat/hisob/obuna/');
     raqamEl.hidden = !(paymentId && (h === 'kutish' || h === 'failed'));
     if (paymentId) raqamEl.textContent = `Payment reference: ${paymentId}. Keep it if you contact us.`;
     obunaHavola.textContent = h === 'success' ? 'Go to your plan' : 'Back to Subscription';
-    obunaHavola.className = `tugma ${h === 'kutish' ? 'tugma-ikkinchi' : 'tugma-asosiy'}`;
+    obunaHavola.className = `t-tugma ${h === 'kutish' ? 't-tugma--ikkinchi' : 'sat-tugma--kok'}`;
   }
 
   async function sora(paymentId: string) {
