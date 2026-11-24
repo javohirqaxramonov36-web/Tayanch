@@ -13,8 +13,10 @@ interface Props {
   format?: (qiymat: Fakt['qiymat']) => string;
   /** Jadval uchun: fakt yo'q bo'lsa uzun matn o'rniga "—" (ekran o'quvchiga "ma'lumot tekshirilmoqda"). */
   qisqa?: boolean;
+  /** Manba va sana karta ostida bitta qatorda ko'rsatilganda (umumiyManba): fakt yonida takrorlanmaydi. */
+  metasiz?: boolean;
 }
-const { fakt, birlik, format, qisqa } = Astro.props;
+const { fakt, birlik, format, qisqa, metasiz } = Astro.props;
 const korinadi = faktKorinadimi(fakt);
 const eskirgan = korinadi && faktEskirganmi(fakt);
 const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatni(fakt.qiymat)) : '';
@@ -22,11 +24,13 @@ const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatn
 {korinadi && fakt ? (
   <span class="fakt">
     <span class="fakt-qiymat">{qiymat}{birlik && <> {birlik}</>}</span>
-    <span class="fakt-meta">
-      <a href={fakt.source_url} rel="noopener">Manba</a>
-      <span>tekshirilgan <time datetime={fakt.tekshirilgan_sana}>{sanaMatni(fakt.tekshirilgan_sana)}</time></span>
-      {eskirgan && <span class="fakt-belgi">qayta tekshirilmoqda</span>}
-    </span>
+    {(!metasiz || eskirgan) && (
+      <span class="fakt-meta">
+        {!metasiz && <a href={fakt.source_url} rel="noopener">Manba</a>}
+        {!metasiz && <span>tekshirilgan <time datetime={fakt.tekshirilgan_sana}>{sanaMatni(fakt.tekshirilgan_sana)}</time></span>}
+        {eskirgan && <span class="fakt-belgi">qayta tekshirilmoqda</span>}
+      </span>
+    )}
   </span>
 ) : qisqa ? (
   <span class="fakt fakt-yoq fakt-qisqa"><span aria-hidden="true">—</span><span class="fakt-sr">Ma'lumot tekshirilmoqda</span></span>

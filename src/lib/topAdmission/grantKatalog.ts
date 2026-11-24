@@ -186,3 +186,36 @@ export function almashtir<T extends string>(royxat: readonly T[], qiymat: T, tar
   const yangi = royxat.includes(qiymat) ? royxat.filter((x) => x !== qiymat) : [...royxat, qiymat];
   return tartib.filter((x) => yangi.includes(x));
 }
+
+// ---------- Kartani ixchamlash (audit 2026-11-24) ----------
+
+/**
+ * Kartadagi ko'rinadigan faktlarning manbasi va tekshirilgan sanasi bir xil bo'lsa, shu juftlik
+ * (karta ostida bir marta ko'rsatiladi). Kamida ikkita ko'rinadigan fakt bo'lishi va hammasi mos kelishi shart;
+ * aks holda null (har fakt yonida o'z manbasi qoladi). Ko'rinmaydigan fakt ("Ma'lumot tekshirilmoqda") hisobga olinmaydi.
+ */
+export function umumiyManba(faktlar: readonly (Fakt | null | undefined)[]): { source_url: string; tekshirilgan_sana: string } | null {
+  const kor = faktlar.filter((f): f is Fakt => faktKorinadimi(f) && !!f?.source_url && !!f?.tekshirilgan_sana);
+  if (kor.length < 2) return null;
+  const [b] = kor;
+  return kor.every((f) => f.source_url === b.source_url && f.tekshirilgan_sana === b.tekshirilgan_sana)
+    ? { source_url: b.source_url!, tekshirilgan_sana: b.tekshirilgan_sana! }
+    : null;
+}
+
+/** Shu kundan kam qolgan muddat "shoshilinch" rangida ko'rsatiladi. */
+export const SHOSHILINCH_KUN = 14;
+
+/** Aniq sana uchun qolgan kun belgisi (bugun Toshkent sanasi). O'tgan yoki sanasiz bo'lsa null. */
+export function qolganKunBelgisi(sana: string | null, bugun: string): { kun: number; matn: string; shoshilinch: boolean } | null {
+  if (!sana || !sanaTogri(sana)) return null;
+  const kun = kunFarqi(bugun, sana);
+  if (kun < 0) return null;
+  return { kun, matn: kun === 0 ? 'Bugun tugaydi' : `${kun} kun qoldi`, shoshilinch: kun < SHOSHILINCH_KUN };
+}
+
+/** Katalogda birinchi ko'rsatiladigan va "Yana ko'rsatish" har bosilganda qo'shiladigan kartalar soni. */
+export const KORSATISH_QADAMI = 20;
+
+/** Saqlangan grantlar: [{ id: slug }], yangisi birinchi, 200 tagacha (universitet shortlisti bilan bir xil shakl). */
+export const GRANT_SAQLASH_KALIT = 'tayanch:admission-grantlar';
