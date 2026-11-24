@@ -50,7 +50,7 @@ import { yol } from '../../../../../lib/yol';
     </section>
 
     <div class="pastki">
-      <button type="button" class="matn-tugma" id="otkazish">Skip</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="otkazish">Skip</button>
       <button type="button" class="t-tugma sat-tugma--kok" id="tekshir" disabled>Check</button>
       <button type="button" class="t-tugma" id="keyingi" hidden>Next question</button>
     </div>
@@ -62,7 +62,7 @@ import { yol } from '../../../../../lib/yol';
     <p class="tugadi-matn" id="tugadi-matn"></p>
     <div class="tugadi-tugmalar">
       <a class="t-tugma sat-tugma--kok" href={yol('/uz/sat/vosita/natijalar/')}>See results</a>
-      <button type="button" class="katta ikkinchi" id="qayta">Start over</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Start over</button>
     </div>
   </section>
 </SatFokus>
@@ -226,7 +226,7 @@ import { yol } from '../../../../../lib/yol';
     min-height: var(--size-touch-min); padding: 0 var(--space-3);
     border: var(--border-width-1) solid transparent; border-radius: var(--radius-full);
     background: transparent; color: var(--color-sat-text-muted);
-    font: inherit; font-weight: var(--font-weight-semibold); font-size: var(--matn-kichik);
+    font: inherit; font-weight: var(--font-weight-semibold); font-size: var(--text-small-size);
     display: flex; align-items: center; gap: var(--space-2); cursor: pointer;
   }
   .bayroq svg { color: var(--color-sat-blue-text); }
@@ -252,7 +252,7 @@ import { yol } from '../../../../../lib/yol';
     min-height: var(--size-touch-min); padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
     border-radius: var(--radius-lg);
     background: transparent; border: var(--border-width-1) solid var(--color-sat-line-strong);
-    font-size: var(--matn-asosiy); font-weight: var(--font-weight-medium); font-variant-numeric: tabular-nums;
+    font-size: var(--text-body-size); font-weight: var(--font-weight-medium); font-variant-numeric: tabular-nums;
     display: flex; align-items: center; gap: var(--space-3);
     cursor: pointer;
   }
@@ -263,7 +263,7 @@ import { yol } from '../../../../../lib/yol';
     width: 36px; height: 36px; flex: none; border-radius: var(--radius-full);
     display: grid; place-items: center;
     border: var(--border-width-1) solid var(--color-sat-line-strong);
-    font-family: var(--font-sat); font-size: var(--matn-kichik); font-weight: var(--font-weight-semibold); line-height: 1;
+    font-family: var(--font-sat); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); line-height: 1;
     background: transparent; color: var(--color-sat-text);
   }
   .v-matn { flex: 1; }
@@ -313,7 +313,7 @@ import { yol } from '../../../../../lib/yol';
   @media (max-width: 640px) {
     .savol-karta, .tugadi { padding: var(--space-5) var(--space-4); }
     .izoh { padding: var(--space-4); }
-    #savol { font-size: var(--matn-asosiy); }
-    .parcha { padding: var(--space-3) var(--space-4); font-size: var(--matn-asosiy); }
+    #savol { font-size: var(--text-body-size); }
+    .parcha { padding: var(--space-3) var(--space-4); font-size: var(--text-body-size); }
   }
 </style>
