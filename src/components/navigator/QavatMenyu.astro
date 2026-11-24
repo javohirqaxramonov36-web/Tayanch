@@ -27,15 +27,15 @@ const ielts = (q?: string) => (q ? `/uz/ielts/${q}` : undefined);
 
 const PANELLAR: Record<string, Panel> = {
   navigator: {
-    til: 'uz', tavsif: "Qaysi bo'limdan boshlashni bilmasangiz, yo'lingizni shu yerda tanlang.", otish: 'Bosh sahifa', tezOrada: 'Tez orada',
+    til: 'uz', tavsif: "Qaysi boʻlimdan boshlashni bilmasangiz, yoʻlingizni shu yerda tanlang.", otish: 'Bosh sahifa', tezOrada: 'Tez orada',
     ustunlar: [
-      { nomi: 'Boshlash', bandlar: [{ nomi: "Yo'limni tanlash", href: '/uz/yol-tanlash/?boshlash=1' }, { nomi: "Yo'nalishlar", href: '/uz/#qavatlar' }] },
-      { nomi: "Ma'lumot", bandlar: [{ nomi: 'Muddatlar', href: '/uz/deadline/' }, { nomi: 'Manbalar', href: '/uz/manbalar/' }, { nomi: 'Aloqa', href: '/uz/aloqa/' }] },
-      { nomi: 'Hisob', bandlar: [{ nomi: 'Kirish', href: '/uz/hisob/kirish/' }, { nomi: "Ro'yxatdan o'tish", href: '/uz/hisob/royxat/' }] },
+      { nomi: 'Boshlash', bandlar: [{ nomi: "Yoʻlimni tanlash", href: '/uz/yol-tanlash/?boshlash=1' }, { nomi: "Yoʻnalishlar", href: '/uz/#qavatlar' }] },
+      { nomi: "Maʼlumot", bandlar: [{ nomi: 'Muddatlar', href: '/uz/deadline/' }, { nomi: 'Manbalar', href: '/uz/manbalar/' }, { nomi: 'Aloqa', href: '/uz/aloqa/' }] },
+      { nomi: 'Hisob', bandlar: [{ nomi: 'Kirish', href: '/uz/hisob/kirish/' }, { nomi: "Roʻyxatdan oʻtish", href: '/uz/hisob/royxat/' }] },
     ],
   },
   'top-admission': {
-    til: 'uz', tavsif: tavsifI('top-admission'), otish: "Top Admission'ga o'tish", tezOrada: 'Tez orada',
+    til: 'uz', tavsif: tavsifI('top-admission'), otish: "Top Admissionʼga oʻtish", tezOrada: 'Tez orada',
     ustunlar: taGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: b.href && `/uz/${b.href}` })) })),
   },
   sat: {
@@ -46,11 +46,11 @@ const PANELLAR: Record<string, Panel> = {
       .flatMap((g) => g.qismlar.map((q) => ({ nomi: q.nomi ?? g.nomi, bandlar: q.sahifalar.map((s) => ({ nomi: s.nomi, href: `/uz/sat/${s.qism}` })) }))),
   },
   ielts: {
-    til: 'uz', tavsif: tavsifI('ielts'), otish: "IELTS'ga o'tish", tezOrada: 'Tez orada',
+    til: 'uz', tavsif: tavsifI('ielts'), otish: "IELTSʼga oʻtish", tezOrada: 'Tez orada',
     ustunlar: ieltsGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: ielts(b.qism) })) })),
   },
   eyuf: {
-    til: 'uz', tavsif: tavsifI('eyuf'), otish: "El-Yurt Umidi'ga o'tish", tezOrada: 'Tez orada',
+    til: 'uz', tavsif: tavsifI('eyuf'), otish: "El-Yurt Umidiʼga oʻtish", tezOrada: 'Tez orada',
     ustunlar: eyufGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: b.href && `/uz/${b.href}` })) })),
   },
   // Kurslar aiAcademy.ts dan: ochiq kurs havola, tez-oradagisi "Tez orada" belgisi bilan. "Barcha kurslar" = qavat kirish sahifasi.

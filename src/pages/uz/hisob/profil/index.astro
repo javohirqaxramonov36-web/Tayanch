@@ -22,13 +22,13 @@ import { yol } from '../../../../lib/yol';
       </section>
 
       <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="profil-sarlavha">
-        <h2 id="profil-sarlavha">Ma'lumotlaringiz</h2>
+        <h2 id="profil-sarlavha">Maʼlumotlaringiz</h2>
         <form class="hisob-forma" id="profil-forma" novalidate aria-labelledby="profil-sarlavha">
           <p class="hisob-alert" id="profil-xato" role="alert" hidden></p>
           <p class="hisob-holat" id="profil-holat" role="status" hidden></p>
           <Maydon id="profil-ism" nomi="Ism" autocomplete="name" maxlength={60} izoh="Saytda sizga shu ism bilan murojaat qilamiz." />
           <Maydon id="profil-taxallus" nomi="Taxallus" autocomplete="nickname" maxlength={20} ixtiyoriy izoh="Reytinglarda ko'rinadi. 3 dan 20 tagacha lotin harfi, raqam yoki pastki chiziq (_)." />
-          <Maydon id="profil-ball" nomi="SAT maqsad ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} step={10} ixtiyoriy izoh={`${satBall.min} dan ${satBall.max} gacha, 10 lik qadam bilan (SAT umumiy ball oralig'i).`} />
+          <Maydon id="profil-ball" nomi="SAT maqsad ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} step={10} ixtiyoriy izoh={`${satBall.min} dan ${satBall.max} gacha, 10 lik qadam bilan (SAT umumiy ball oraligʻi).`} />
           <Maydon id="profil-joriy" nomi="SAT: hozirgi eng yaxshi ball" turi="number" autocomplete="off" min={satBall.min} max={satBall.max} step={10} ixtiyoriy izoh="Rasmiy SAT yoki to'liq mashq testidan. Hali bo'lmasa, bo'sh qoldiring." />
           <Maydon id="profil-sana" nomi="Imtihon sanasi" turi="date" autocomplete="off" ixtiyoriy izoh="Qaysi kuni imtihon topshirmoqchisiz." />
           <p class="hisob-ogoh" id="profil-sana-otgan" hidden></p>
@@ -38,14 +38,14 @@ import { yol } from '../../../../lib/yol';
 
       <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="statistika-sarlavha">
         <h2 id="statistika-sarlavha">Foydalanish statistikasi</h2>
-        <p class="hisob-sust">Sayt qanday ishlatilayotganini bilish uchun Tayanch bir nechta hodisani yozadi: ro'yxatdan o'tish, mashq sessiyasini boshlash va tugatish, kun savoliga javob, tariflar sahifasini ochish. Savol matni, javobingiz, email va IP manzil yozilmaydi. Batafsil: <a href={yol('/uz/maxfiylik/#statistika')}>Maxfiylik siyosati</a>.</p>
+        <p class="hisob-sust">Sayt qanday ishlatilayotganini bilish uchun Tayanch bir nechta hodisani yozadi: roʻyxatdan oʻtish, mashq sessiyasini boshlash va tugatish, kun savoliga javob, tariflar sahifasini ochish. Savol matni, javobingiz, email va IP manzil yozilmaydi. Batafsil: <a href={yol('/uz/maxfiylik/#statistika')}>Maxfiylik siyosati</a>.</p>
         <p class="hisob-alert" id="statistika-xato" role="alert" hidden></p>
         <div class="hisob-belgi-blok">
           <div class="hisob-belgi">
             <input type="checkbox" id="statistika-belgi" aria-describedby="statistika-izoh" disabled />
             <label for="statistika-belgi">Foydalanish statistikasini ulashish</label>
           </div>
-          <p class="hisob-sust" id="statistika-izoh">O'chirsangiz, avvalgi yozuvlar ham o'chiriladi. To'lov yozuvlari to'lov hisobi uchun qoladi.</p>
+          <p class="hisob-sust" id="statistika-izoh">Oʻchirsangiz, avvalgi yozuvlar ham oʻchiriladi. Toʻlov yozuvlari toʻlov hisobi uchun qoladi.</p>
         </div>
         <p class="hisob-holat" id="statistika-holat" role="status" hidden></p>
       </section>
@@ -57,31 +57,31 @@ import { yol } from '../../../../lib/yol';
       </section>
 
       <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="eksport-sarlavha">
-        <h2 id="eksport-sarlavha">Ma'lumotlaringiz nusxasi</h2>
-        <p class="hisob-sust">Serverdagi hamma ma'lumotingiz (hisob, profil, savol-javob tarixi, obuna va to'lovlar) va shu brauzerdagi Tayanch yozuvlari bitta JSON faylga yuklanadi. Sessiya kaliti faylga kirmaydi.</p>
+        <h2 id="eksport-sarlavha">Maʼlumotlaringiz nusxasi</h2>
+        <p class="hisob-sust">Serverdagi hamma maʼlumotingiz (hisob, profil, savol-javob tarixi, obuna va toʻlovlar) va shu brauzerdagi Tayanch yozuvlari bitta JSON faylga yuklanadi. Sessiya kaliti faylga kirmaydi.</p>
         <p class="hisob-alert" id="eksport-xato" role="alert" hidden></p>
         <p class="hisob-holat" id="eksport-holat" role="status" hidden></p>
-        <button type="button" class="tugma tugma-ikkinchi" id="eksport-tugma">Ma'lumotlarimni yuklab olish (JSON)</button>
+        <button type="button" class="tugma tugma-ikkinchi" id="eksport-tugma">Maʼlumotlarimni yuklab olish (JSON)</button>
       </section>
 
       <section class="hisob-karta t-shisha t-shisha--zich" aria-labelledby="ochirish-sarlavha">
-        <h2 id="ochirish-sarlavha">Hisobni o'chirish</h2>
-        <p class="hisob-sust">Hisobingiz, profil, savol-javob tarixi va obunangiz serverdan butunlay o'chiriladi. Faol obuna ham tugaydi: pulni qaytarishni xohlasangiz, avval <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>ni o'qing. To'lov yozuvlari hisobdan uzilgan holda saqlanadi (<a href={yol('/uz/maxfiylik/#ochirish')}>Maxfiylik siyosati</a>). Shu brauzerdagi natijalar qoladi.</p>
-        <button type="button" class="tugma tugma-ikkinchi" id="ochirish-tugma" aria-expanded="false" aria-controls="ochirish-tasdiq">Hisobni o'chirish</button>
+        <h2 id="ochirish-sarlavha">Hisobni oʻchirish</h2>
+        <p class="hisob-sust">Hisobingiz, profil, savol-javob tarixi va obunangiz serverdan butunlay oʻchiriladi. Faol obuna ham tugaydi: pulni qaytarishni xohlasangiz, avval <a href={yol('/uz/qaytarish/')}>Qaytarish siyosati</a>ni oʻqing. Toʻlov yozuvlari hisobdan uzilgan holda saqlanadi (<a href={yol('/uz/maxfiylik/#ochirish')}>Maxfiylik siyosati</a>). Shu brauzerdagi natijalar qoladi.</p>
+        <button type="button" class="tugma tugma-ikkinchi" id="ochirish-tugma" aria-expanded="false" aria-controls="ochirish-tasdiq">Hisobni oʻchirish</button>
         <form class="ochirish-tasdiq hisob-forma" id="ochirish-tasdiq" novalidate aria-labelledby="ochirish-savol" hidden>
-          <p id="ochirish-savol" tabindex="-1"><strong>Rostdan ham o'chirasizmi?</strong> Buni qaytarib bo'lmaydi.</p>
+          <p id="ochirish-savol" tabindex="-1"><strong>Rostdan ham oʻchirasizmi?</strong> Buni qaytarib boʻlmaydi.</p>
           <p class="hisob-alert" id="ochirish-xato" role="alert" hidden></p>
           <div id="ochirish-parol-qadam" hidden>
             <ParolMaydon id="ochirish-parol" nomi="Parolingiz" autocomplete="current-password" izoh="Shaxsingizni tasdiqlash uchun." />
           </div>
-          <p class="hisob-sust" id="ochirish-yangi" hidden>Siz yaqinda kirgansiz, shuning uchun parol so'ralmaydi.</p>
+          <p class="hisob-sust" id="ochirish-yangi" hidden>Siz yaqinda kirgansiz, shuning uchun parol soʻralmaydi.</p>
           <div class="ochirish-google" id="ochirish-google-qadam" hidden>
             <p class="hisob-sust" id="ochirish-google-matn">Shaxsingizni tasdiqlash uchun Google orqali qayta kiring. Keyin shu sahifaga qaytasiz.</p>
             <button type="button" class="tugma tugma-ikkinchi" id="ochirish-google">Google orqali qayta kirish</button>
           </div>
           <Maydon id="ochirish-email" nomi="Tasdiqlash uchun emailingizni yozing" turi="email" autocomplete="off" izoh="Hisobingiz emaili, yuqorida ko'rsatilgandek." />
           <div class="ochirish-tugmalar">
-            <button type="submit" class="tugma tugma-asosiy" id="ochirish-ha" disabled>Ha, hisobni o'chirish</button>
+            <button type="submit" class="tugma tugma-asosiy" id="ochirish-ha" disabled>Ha, hisobni oʻchirish</button>
             <button type="button" class="tugma tugma-ikkinchi" id="ochirish-yoq">Bekor qilish</button>
           </div>
         </form>

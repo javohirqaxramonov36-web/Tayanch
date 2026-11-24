@@ -39,7 +39,7 @@ const LOGO_NOM = bolim === 'sat' ? 'SAT®' : bolim && bolim !== 'eyuf' && bolim 
 const b = (qism: string) => yol(bolim ? `/uz/${bolim}/${qism}` : '/uz/');
 const umumiy = [
   { path: '/uz/', uz: 'Bosh sahifa', en: 'Home' },
-  { path: '/uz/#qavatlar', uz: "Yo'nalishlar", en: 'Directions' },
+  { path: '/uz/#qavatlar', uz: "Yoʻnalishlar", en: 'Directions' },
   { path: '/uz/deadline/', uz: 'Muddatlar', en: 'Deadlines' },
   { path: '/uz/manbalar/', uz: 'Manbalar', en: 'Sources' },
   { path: '/uz/yol-tanlash/?boshlash=1', uz: 'Boshlash', en: 'Get started' },
@@ -122,7 +122,7 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
       <li>
         <a href={b('')} aria-current={joriymi(b('')) ? 'page' : undefined}>
           <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>
-          {bolim === 'top-admission' ? "Bo'lim haqida" : bolim === 'sat' ? 'Today' : M.haqida(NOM)}
+          {bolim === 'top-admission' ? "Boʻlim haqida" : bolim === 'sat' ? 'Today' : M.haqida(NOM)}
         </a>
       </li>
       {bolim === 'sat' && kursOchiq && <li><a href={kursHavola()} aria-current={joriymi(kursHavola()) ? 'page' : undefined}>

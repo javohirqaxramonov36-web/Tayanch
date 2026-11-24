@@ -3,13 +3,13 @@ import { bepulImkoniyatlar } from '../data/boshSahifa';
 import { yol } from '../lib/yol';
 ---
 <section class="home-pricing" aria-labelledby="tarif-h">
-  <p class="nav-chip tarif-label">Tariflar</p><h2 id="tarif-h" class="nav-nom">O'zingizga mos tarifni tanlang</h2>
+  <p class="nav-chip tarif-label">Tariflar</p><h2 id="tarif-h" class="nav-nom">Oʻzingizga mos tarifni tanlang</h2>
   <div class="tarif-cards">
     <article class="tarif-card"><h3>Bepul</h3><p class="tarif-price">0 so'm</p>
       <ul>{bepulImkoniyatlar.map((x) => <li>{x}</li>)}</ul>
       <a class="t-tugma t-tugma--ikkinchi tarif-tugma" href={yol('/uz/#qavatlar')}>Bepul boshlash</a>
     </article>
-    <article class="tarif-card pro"><p class="tarif-strip">Tavsiya etamiz</p><h3>Pro</h3><p class="tarif-scope">SAT bo'limi uchun</p>
+    <article class="tarif-card pro"><p class="tarif-strip">Tavsiya etamiz</p><h3>Pro</h3><p class="tarif-scope">SAT boʻlimi uchun</p>
       <p class="tarif-price" data-home-price>Narx yuklanmoqda…</p>
       <p class="tarif-day" data-home-day></p>
       <ul data-home-features><li>Bepul tarifdagi barcha imkoniyatlar</li></ul>

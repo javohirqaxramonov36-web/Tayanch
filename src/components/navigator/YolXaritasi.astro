@@ -15,7 +15,7 @@ import { qoidalar, UMUMIY_REJA } from '../../data/yolXaritasiQoidalar';
 import { faylManzili, nomalumIdlar, tayyorlikniBelgila } from '../../lib/navigator/yolXaritasi';
 
 const nomalum = nomalumIdlar(qoidalar, UMUMIY_REJA, navigatorSahifalar);
-if (nomalum.length) throw new Error(`yolXaritasiQoidalar: noma'lum sahifa ID: ${nomalum.join(', ')}`);
+if (nomalum.length) throw new Error(`yolXaritasiQoidalar: nomaʼlum sahifa ID: ${nomalum.join(', ')}`);
 
 // Build loyiha ildizidan ishga tushadi (statik sayt): sahifa fayllari ro'yxati shu yerdan olinadi.
 const fayllar = globSync('src/pages/**/index.astro', { cwd: process.cwd() }).map((f) => '/' + f.split(sep).join('/'));

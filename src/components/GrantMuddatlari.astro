@@ -29,7 +29,7 @@ const qatorlar = (await getCollection('grantlar'))
 ---
 <section class="grant-muddat" aria-labelledby="grant-muddat-h">
   <h2 id="grant-muddat-h">Grant muddatlari</h2>
-  <p class="sust">Grantlar katalogidan: faqat aniq sanasi rasmiy sahifada tekshirilgan grantlar, eng yaqini birinchi. O'tgan muddatlar ro'yxatdan o'zi chiqib ketadi. Sana universitet yoki dastur vaqt mintaqasida bo'lishi mumkin: rasmiy sahifada tekshiring.</p>
+  <p class="sust">Grantlar katalogidan: faqat aniq sanasi rasmiy sahifada tekshirilgan grantlar, eng yaqini birinchi. Oʻtgan muddatlar roʻyxatdan oʻzi chiqib ketadi. Sana universitet yoki dastur vaqt mintaqasida boʻlishi mumkin: rasmiy sahifada tekshiring.</p>
   {qatorlar.length > 0 ? (
     <ul class="grant-royxat" data-grant-muddatlar>
       {qatorlar.map(({ g, sana, chegara, davlatNom, katalog }) => (
@@ -42,13 +42,13 @@ const qatorlar = (await getCollection('grantlar'))
           <span class="kichik sust">{davlatNom} · {TUR_MATNI[g.turi]} · {DARAJA_MATNI[g.daraja]}</span>
           <span class="kichik sust">
             {g.deadline.source_url && <><a href={g.deadline.source_url}>Rasmiy manba</a> ({new URL(g.deadline.source_url).hostname}) · </>}
-            Tekshirilgan: {sanaMatni(g.deadline.tekshirilgan_sana)} · <a href={katalog}>Katalogda ko'rish</a>
+            Tekshirilgan: {sanaMatni(g.deadline.tekshirilgan_sana)} · <a href={katalog}>Katalogda koʻrish</a>
           </span>
         </li>
       ))}
     </ul>
   ) : null}
-  <p class="grant-bosh" data-grant-bosh hidden={qatorlar.length > 0}>Hozircha aniq sanali yaqin grant muddati yo'q. <a href={yol('/uz/top-admission/grantlar/')}>Grantlar katalogi</a></p>
+  <p class="grant-bosh" data-grant-bosh hidden={qatorlar.length > 0}>Hozircha aniq sanali yaqin grant muddati yoʻq. <a href={yol('/uz/top-admission/grantlar/')}>Grantlar katalogi</a></p>
 </section>
 
 <script>

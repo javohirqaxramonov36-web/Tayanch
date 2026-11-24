@@ -20,8 +20,8 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
   manbalar={['IP03']}
   tekshirilmagan={[
     "inPAY merchant shartnomasi oferta tili va majburiy bandlarini talab qiladimi: hali tasdiqlanmagan",
-    "Oferta qaysi tilda yuridik kuchga ega (o'zbek, rus, ingliz): hali aniqlanmagan",
-    "Fuqarolik kodeksi va \"Iste'molchilarning huquqlarini himoya qilish to'g'risida\"gi Qonundagi tegishli moddalar hali ko‘rsatilmagan",
+    "Oferta qaysi tilda yuridik kuchga ega (oʻzbek, rus, ingliz): hali aniqlanmagan",
+    "Fuqarolik kodeksi va \"Isteʼmolchilarning huquqlarini himoya qilish toʻgʻrisida\"gi Qonundagi tegishli moddalar hali ko‘rsatilmagan",
     "Raqamli xizmat uchun elektron chek yoki hisob-faktura talabi: hali aniqlanmagan",
   ]}
 >
@@ -33,30 +33,30 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
         ? <> {sotuvchi.nomi}, STIR {sotuvchi.stir}, manzil: {sotuvchi.manzil}.</>
         : <> yuridik nomi, STIR va manzili hali e’lon qilinmagan.</>}
     </p>
-    <p>Xaridor: tarifni to'lagan, Tayanch hisobiga ega foydalanuvchi.</p>
+    <p>Xaridor: tarifni toʻlagan, Tayanch hisobiga ega foydalanuvchi.</p>
 
     <h2>2. Oferta qanday qabul qilinadi</h2>
-    <p>Tarif sahifasida to'lovni tugatsangiz, shu ofertani to'liq qabul qilgan bo'lasiz. Oferta qabul qilingan vaqt: to'lov muvaffaqiyatli o'tgan vaqt.</p>
+    <p>Tarif sahifasida toʻlovni tugatsangiz, shu ofertani toʻliq qabul qilgan boʻlasiz. Oferta qabul qilingan vaqt: toʻlov muvaffaqiyatli oʻtgan vaqt.</p>
 
     <h2>3. Xizmat</h2>
     <ul>
-      <li>Xizmat: Tayanch saytining SAT bo'limidagi pullik tarif imkoniyatlaridan (masalan, savol kvotasi va kengaytirilgan natijalar) tanlangan muddat davomida foydalanish.</li>
-      <li>Tarif tarkibi, narxi va muddati to'lovdan oldin <a href={yol('/uz/sat/hisob/obuna/')}>tarif sahifasida</a> ko'rsatiladi. To'lov qilingan paytdagi ko'rsatilgan shartlar amal qiladi.</li>
-      <li>Xizmat to'lov tasdiqlangandan keyin hisobingizda avtomatik yoqiladi.</li>
-      <li>Obuna faqat SAT bo'limiga tegishli va boshqa bo'limlarni ochmaydi.</li>
+      <li>Xizmat: Tayanch saytining SAT boʻlimidagi pullik tarif imkoniyatlaridan (masalan, savol kvotasi va kengaytirilgan natijalar) tanlangan muddat davomida foydalanish.</li>
+      <li>Tarif tarkibi, narxi va muddati toʻlovdan oldin <a href={yol('/uz/sat/hisob/obuna/')}>tarif sahifasida</a> koʻrsatiladi. Toʻlov qilingan paytdagi koʻrsatilgan shartlar amal qiladi.</li>
+      <li>Xizmat toʻlov tasdiqlangandan keyin hisobingizda avtomatik yoqiladi.</li>
+      <li>Obuna faqat SAT boʻlimiga tegishli va boshqa boʻlimlarni ochmaydi.</li>
       <li>Tayanch ball, qabul yoki grant olishni kafolatlamaydi.</li>
     </ul>
 
-    <h2>4. To'lov</h2>
+    <h2>4. Toʻlov</h2>
     <ul>
-      <li>To'lov so'mda, inPAY orqali Click yoki Payme bilan qilinadi. Karta ma'lumotini Tayanch ko'rmaydi.</li>
-      <li>Avtomatik takroriy to'lov hozircha yo'q: muddat tugagach, xohlasangiz yangi to'lov qilasiz.</li>
+      <li>Toʻlov soʻmda, inPAY orqali Click yoki Payme bilan qilinadi. Karta maʼlumotini Tayanch koʻrmaydi.</li>
+      <li>Avtomatik takroriy toʻlov hozircha yoʻq: muddat tugagach, xohlasangiz yangi toʻlov qilasiz.</li>
       <li>
         {voyagaYetmaganTolov === null
-          ? <>18 yoshgacha bo'lganlar uchun xarid qoidasi hali belgilanmagan.</>
+          ? <>18 yoshgacha boʻlganlar uchun xarid qoidasi hali belgilanmagan.</>
           : voyagaYetmaganTolov === 'faqat-18'
-            ? <>Xaridor 18 yoshga to'lgan bo'lishi kerak.</>
-            : <>18 yoshgacha bo'lsangiz, to'lovni ota-ona yoki vasiy roziligi bilan va ularning to'lov vositasidan qilasiz.</>}
+            ? <>Xaridor 18 yoshga toʻlgan boʻlishi kerak.</>
+            : <>18 yoshgacha boʻlsangiz, toʻlovni ota-ona yoki vasiy roziligi bilan va ularning toʻlov vositasidan qilasiz.</>}
       </li>
     </ul>
 
@@ -65,14 +65,14 @@ const { sotuvchi, voyagaYetmaganTolov } = huquqiyOchiq;
 
     <h2>6. Taraflarning majburiyatlari</h2>
     <ul>
-      <li>Sotuvchi: to'langan muddat davomida tarif imkoniyatlarini taqdim etadi, shaxsiy ma'lumotni <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a> bo'yicha himoya qiladi.</li>
+      <li>Sotuvchi: toʻlangan muddat davomida tarif imkoniyatlarini taqdim etadi, shaxsiy maʼlumotni <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a> boʻyicha himoya qiladi.</li>
       <li>Xaridor: <a href={yol('/uz/shartlar/')}>Foydalanish shartlari</a>ga amal qiladi, hisobini boshqalarga bermaydi va pullik materiallarni tarqatmaydi.</li>
     </ul>
 
     <h2>7. Nizolar</h2>
-    <p>Nizolar avval muzokara yo'li bilan hal qilinadi: <a href={yol('/uz/aloqa/')}>Aloqa</a>. Hal bo'lmasa, O'zbekiston Respublikasi qonunchiligiga muvofiq ko'riladi. Aniq tartib: hali e’lon qilinmagan.</p>
+    <p>Nizolar avval muzokara yoʻli bilan hal qilinadi: <a href={yol('/uz/aloqa/')}>Aloqa</a>. Hal boʻlmasa, Oʻzbekiston Respublikasi qonunchiligiga muvofiq koʻriladi. Aniq tartib: hali e’lon qilinmagan.</p>
 
-    <h2>8. O'zgarishlar</h2>
-    <p>Oferta o'zgarsa, yangi sana shu sahifa boshida yoziladi. Avval to'langan muddat to'lov paytidagi shartlar bilan tugaydi.</p>
+    <h2>8. Oʻzgarishlar</h2>
+    <p>Oferta oʻzgarsa, yangi sana shu sahifa boshida yoziladi. Avval toʻlangan muddat toʻlov paytidagi shartlar bilan tugaydi.</p>
   </HuquqiyMatn>
 </Asosiy>
