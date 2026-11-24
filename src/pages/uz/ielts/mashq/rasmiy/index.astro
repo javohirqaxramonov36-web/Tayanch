@@ -1,0 +1,170 @@
+---
+// IELTS rasmiy bepul mashqlar: British Council, IDP va ielts.org resurslariga yo'l ko'rsatkich (2026-11-24).
+// Savol va testlar ko'chirilmaydi, faqat havola. Har fakt manbalar.ts dagi ID bilan (IE03, IE09–IE14).
+// Statik sahifa: localStorage yo'q. Tartib Tayanch tavsiyasi.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { manbalar } from '../../../../../data/manbalar';
+import { yol } from '../../../../../lib/yol';
+
+const m = (id: string) => manbalar.find((x) => x.id === id)!;
+
+interface Resurs {
+  id: string;
+  nomi: string;
+  kim: string;
+  nima: string;
+  narx: string;
+  tur: string;
+}
+
+const resurslar: Resurs[] = [
+  {
+    id: 'IE11', nomi: 'Bepul mashq testlari', kim: 'British Council',
+    nima: "Listening, Reading, Writing va Speaking bo‘yicha alohida mashq testlari, javob kaliti bilan. Savollar o‘tgan IELTS imtihonlaridan.",
+    narx: "Bepul", tur: 'Academic, General Training, UKVI',
+  },
+  {
+    id: 'IE12', nomi: 'Familiarisation test (kompyuterda)', kim: 'British Council',
+    nima: "Kompyuterdagi IELTS ekranida to‘rt ko‘nikmaning namuna versiyasi. Listening va Reading natijasi chiqadi, Writing va Speaking baholanmaydi.",
+    narx: 'Bepul', tur: 'Academic, General Training',
+  },
+  {
+    id: 'IE13', nomi: 'IELTS Ready', kim: 'British Council',
+    nima: "2 ta to‘liq mock test (Reading va Listening balli, model javoblar), 25 daqiqalik qisqa mock, Speaking va Listening qisqa kurslari.",
+    narx: "Bepul, akkaunt ochish kerak", tur: 'Sahifada ko‘rsatilmagan',
+  },
+  {
+    id: 'IE03', nomi: 'Namuna savollar (Academic)', kim: 'ielts.org',
+    nima: "Har ko‘nikma bo‘yicha namuna topshiriqlar. Listening va Reading javob kaliti PDF, Writing namuna javoblari band bilan.",
+    narx: "Sahifada yozilmagan", tur: 'Academic',
+  },
+  {
+    id: 'IE09', nomi: 'Namuna savollar (General Training)', kim: 'ielts.org',
+    nima: "General Training Reading va Writing namuna topshiriqlari, javob kaliti va baholangan namuna javoblar bilan.",
+    narx: "Sahifada yozilmagan", tur: 'General Training',
+  },
+  {
+    id: 'IE14', nomi: 'Tayyorgarlik materiallari', kim: 'IDP IELTS',
+    nima: "Mashq testlari javoblari bilan, podkast, video va maqolalar. Ko‘nikma va test turi bo‘yicha filtr bor.",
+    narx: "Sahifada yozilmagan", tur: 'Academic, General Training',
+  },
+  {
+    id: 'IE10', nomi: 'Trial Test (yuzma-yuz)', kim: 'ielts.org',
+    nima: "Rasmiy markazda vaqtli sinov testi: Listening, Reading, Writing. Rasmiy imtihonchi baholaydi, natija 13 kunda, lekin u rasmiy natija emas.",
+    narx: 'Bepul', tur: 'Academic, General Training',
+  },
+];
+
+const tartib = [
+  ["Test turini aniqla", "Universitetga Academic, ish yoki migratsiyaga ko‘pincha General Training kerak bo‘ladi. Talabni o‘qimoqchi bo‘lgan joyingdan tekshir."],
+  ["Bitta familiarisation test", "Kompyuterda topshirsang, ekran va vositalarga avvaldan o‘rgan. Listening va Reading natijasi boshlang‘ich nuqta bo‘ladi."],
+  ["Zaif ko‘nikmani mashq qil", "British Council mashq testlarini ko‘nikma bo‘yicha ishla, xatolarni Tayanch darslari va mini-mashqlari bilan tuzat."],
+  ["Imtihondan oldin to‘liq mock", "IELTS Ready'dagi 2 ta to‘liq mockni oraliq bilan ishla: biri o‘rtada, biri imtihondan 1–2 hafta oldin."],
+];
+---
+<BolimQobiq
+  title="Rasmiy bepul testlar · IELTS"
+  description="IELTS'ga bepul rasmiy mashqlar: British Council mashq testlari va familiarisation test, IELTS Ready, IDP materiallari, ielts.org namuna savollari. Havolalar va tavsiya qilingan tartib."
+  turi="mashq"
+  bolim="ielts"
+  holat="chop-etilgan"
+  yol={['Mashq']}
+>
+  <div class="ichki rasmiy">
+    <header class="bosh">
+      <p class="ustki">IELTS · Mashq</p>
+      <h1>Rasmiy bepul testlar</h1>
+      <p class="lead">IELTS egalari (British Council, IDP va Cambridge) bepul mashq testlari berishadi. Bu sahifada ular qayerda ekani, nimasi bepul va qaysi tartibda ishlash kerakligi bor.</p>
+      <p class="eslatma" role="note">Testlar rasmiy saytlarda ochiladi. Tayanch ularning savollarini ko‘chirmaydi va ular bilan bog‘liq emas.</p>
+    </header>
+
+    <section aria-labelledby="resurs-h">
+      <h2 id="resurs-h">Qayerda nima bor</h2>
+      <ul class="kartalar">
+        {resurslar.map((r) => (
+          <li class="karta">
+            <p class="k-kim">{r.kim}</p>
+            <h3 class="k-nom">{r.nomi}</h3>
+            <p class="k-nima">{r.nima}</p>
+            <dl class="k-malumot">
+              <div><dt>Narx</dt><dd>{r.narx}</dd></div>
+              <div><dt>Test turi</dt><dd>{r.tur}</dd></div>
+            </dl>
+            <a class="k-havola" href={m(r.id).havola} rel="noopener">
+              Rasmiy saytda ochish<span class="ekranda-yoq">: {r.nomi}, {r.kim}</span>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9" /></svg>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="tartib-h">
+      <h2 id="tartib-h">Qaysi tartibda ishlash</h2>
+      <p class="ikkinchi">Bu Tayanch tavsiyasi, rasmiy reja emas.</p>
+      <ol class="tartib">
+        {tartib.map(([nom, matn]) => (
+          <li><strong>{nom}.</strong> {matn}</li>
+        ))}
+      </ol>
+      <p class="ikkinchi">Kunma-kun reja kerak bo‘lsa: <a href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja</a>. Tayanch mashqlari: <a href={yol('/uz/ielts/mashq/')}>barcha mashqlar</a>.</p>
+    </section>
+
+    <ManbaBlok
+      manbalar={['IE11', 'IE12', 'IE13', 'IE03', 'IE09', 'IE14', 'IE10']}
+      tekshirilgan="2026-11-24"
+      keyingiTekshiruv="2026-12-24"
+      tekshirilmagan={[
+        "ielts.org namuna savollari va IDP materiallari sahifasida bepulligi alohida yozilmagan.",
+        "IELTS Ready'da qaysi test turi (Academic yoki General Training) borligi sahifada ko‘rsatilmagan.",
+        "Trial Test o‘tkaziladigan markaz O‘zbekistonda borligi tekshirilmagan.",
+        "Ishlash tartibi Tayanch tavsiyasi.",
+      ]}
+    />
+  </div>
+</BolimQobiq>
+
+<style>
+  .rasmiy { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
+  .bosh p, section p { margin: 0; }
+  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
+  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .eslatma {
+    align-self: flex-start; padding: var(--b-2) var(--b-4); border-radius: var(--r-yon);
+    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
+    font-size: var(--matn-kichik); font-weight: 700; line-height: 1.4;
+  }
+  section { display: flex; flex-direction: column; gap: var(--b-4); }
+  .ikkinchi { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); line-height: 1.5; }
+
+  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .karta {
+    padding: var(--b-6); border-radius: var(--r-katta); border: 1.5px solid var(--chiziq-kuchli); background: var(--fon);
+    display: flex; flex-direction: column; gap: var(--b-2);
+  }
+  .k-kim { font-size: var(--matn-mayda); font-weight: 700; color: var(--matn-ikkinchi); }
+  .k-nom { margin: 0; font-size: var(--matn-h3); font-weight: 800; line-height: 1.2; }
+  .k-nima { font-size: var(--matn-kichik); line-height: 1.5; color: var(--matn-ikkinchi); }
+  .k-malumot { margin: var(--b-2) 0 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-6); font-size: var(--matn-kichik); }
+  .k-malumot div { display: flex; flex-direction: column; }
+  .k-malumot dt { font-size: var(--matn-mayda); color: var(--matn-sust); }
+  .k-malumot dd { margin: 0; font-weight: 700; }
+  .k-havola {
+    margin-top: auto; padding-top: var(--b-3); min-height: 44px; align-self: flex-start;
+    display: inline-flex; align-items: center; gap: var(--b-1); font-weight: 800; color: var(--rang-havola);
+  }
+
+  .tartib { margin: 0; padding-left: var(--b-6); display: flex; flex-direction: column; gap: var(--b-3); line-height: 1.6; max-width: 70ch; }
+
+  @media (max-width: 900px) {
+    .kartalar { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .rasmiy { padding-top: var(--b-6); gap: var(--b-8); }
+    h1 { font-size: 32px; }
+    .karta { padding: var(--b-5); }
+  }
+</style>

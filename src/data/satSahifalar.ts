@@ -369,7 +369,16 @@ const s = (qism: string) => {
 };
 
 export const satYonGuruhlar: SatYonGuruh[] = [
-  { nomi: 'Practice', qismlar: [{ sahifalar: ['mashq/bank/', 'mashq/mock/', 'mashq/test/', 'mashq/lugat/'].map(s) }] },
+  {
+    nomi: 'Practice',
+    qismlar: [{
+      sahifalar: [
+        ...['mashq/bank/', 'mashq/mock/', 'mashq/test/', 'mashq/lugat/'].map(s),
+        // 2026-11-24: rasmiy bepul resurslar xaritasi "Where to start" sahifasida (CB20–CB29); Practice'dan ham topilsin.
+        { ...s('qollanma/qayerdan-boshlash/'), qism: 'qollanma/qayerdan-boshlash/#resurs-h', nomi: 'Official free practice' },
+      ],
+    }],
+  },
   {
     nomi: 'Learn',
     qismlar: [

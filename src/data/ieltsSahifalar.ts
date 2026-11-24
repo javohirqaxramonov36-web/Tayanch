@@ -132,6 +132,7 @@ export const ieltsGuruhlar: { nomi: string; bandlar: IeltsBand[] }[] = [
   { nomi: 'Reja va takrorlash', bandlar: [
     ...vositalar,
     band('Barcha mashqlar', "Hamma ko'nikmalar mashqlari bir joyda", IKONKA.namuna, 'mashq/'),
+    band('Rasmiy bepul testlar', 'British Council, IDP va ielts.org mashqlari', IKONKA.general, 'mashq/rasmiy/'),
     asos,
   ] },
 ];
