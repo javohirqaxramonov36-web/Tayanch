@@ -14,7 +14,7 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
     <EyufHero id="eyuf-sahifa-h" yorliq="5-qavat · El-Yurt Umidi" sarlavha={title} matn={description} ixcham />
     <nav class="eyuf-tabs" aria-label="EYUF tayyorgarlik"><a href={yol('/uz/eyuf/')}>EYUF</a>{links.map(([name, path]) => <a href={yol(path)} aria-current={Astro.url.pathname === path ? 'page' : undefined}>{name}</a>)}</nav>
     <slot />
-    <footer class="eyuf-panel eyuf-small"><p>Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p><p>Manba reyestri yangilangan sana — {sourceRegistry.as_of}. Har manbaning davri alohida qayd etiladi. Joriy tanlov uchun rasmiy e’lonni tekshiring. <a href="https://el-yurt.uz/candidates" target="_blank" rel="noopener noreferrer">Jamg‘arma sayti (yangi oynada)</a></p><button type="button" class="tugma tugma-ikkinchi" data-eyuf-tozala>EYUF ma’lumotlarimni o‘chirish</button><p data-eyuf-tozalash-xabar role="status"></p></footer>
+    <footer class="eyuf-panel eyuf-small"><p>Tayanch El-yurt umidi jamgʻarmasining rasmiy platformasi emas.</p><p>Manba reyestri yangilangan sana — {sourceRegistry.as_of}. Har manbaning davri alohida qayd etiladi. Joriy tanlov uchun rasmiy eʼlonni tekshiring. <a href="https://el-yurt.uz/candidates" target="_blank" rel="noopener noreferrer">Jamgʻarma sayti (yangi oynada)</a></p><button type="button" class="t-tugma t-tugma--ikkinchi" data-eyuf-tozala>EYUF maʼlumotlarimni oʻchirish</button><p data-eyuf-tozalash-xabar role="status"></p></footer>
   </div><QavatFoto bolim="eyuf" />
 </BolimQobiq>
 <style is:global>
