@@ -2,7 +2,20 @@ Tayanch — 5 qavatli bino: 1 Navigator, 2 Top Admission, 3 SAT prep, 4 IELTS pr
 
 **Repodagi nusxa (2026-11-24):** manba Claude Design artifakti https://claude.ai/artifact/MSiB7vTDiz7ri565yM2iwt dan nusxa; bundan keyin manba shu papka (`docs/design-system/`). Saytga moslashtirilgan farqlar: qorong'i `nav-line-strong` #828282, `adm-line-strong` #8A7A6F (3:1 kontrast), shrift yuklash `@fontsource`.
 
-**Holat (2026-11-18):** poydevor (Liquid Glass) va 5 qavatning hammasi qoralama sifatida tayyor, ochiq dizayn savollari yopilgan (muallif qarorlari 2026-11-18, "Qarorlar" bo'limi). Saytga (`tokens.css`, `DESIGN.md`) hali o'tkazilmagan: bu keyingi bosqich.
+**Holat (2026-11-24):** poydevor va 5 qavat mini-DS'i saytga o'tkazildi (stacked PR'lar, merge kutilmoqda; merge'gacha saytda eski ko'rinish):
+
+| Qavat | Saytga o'tdi | PR | Izoh |
+| --- | --- | --- | --- |
+| 1 Navigator | 2026-11-24 | #241 (merge qilingan) | laym urg'u, ʻ/ʼ, nav-* tokenlar |
+| 5 EYUF | 2026-11-24 | #242 | `.t-tugma` (`eyuf-tugma--urgu`), `.eyuf-variant`, eyuf-* tokenlar, ʻ/ʼ |
+| 2 Top Admission | 2026-11-24 | #244 | qo'llanma va Topshirish yo'li `.adm` da, eski taxalluslar → adm-*, `adm-tugma--urgu` |
+| 4 IELTS | 2026-11-24 | #245 | `html[data-floor="4"]` qavat qatlami, Lexend, `ielts-tugma--urgu`; Codex band fayllari (`mashq/index.astro`, `ieltsSahifalar.ts`, `mashqKartalar.ts`) hali eski |
+| 3 SAT | 2026-11-24 | #246 | hamma sahifa `.sat` qobig'ida, taxalluslar → sat-* (pikselma-piksel isbot), Sora, `SatSavol` |
+| Umumiy tozalash | 2026-11-24 | 6-bosqich PR | ✓/✗ → SVG, width → transform, chap chiziq va dekorativ gradient olindi, Pro kartasi kontrasti |
+
+6-qavat AI Academy DS'da yo'q, tegilmagan (qaror kutilmoqda). Eski `.tugma` (`global.css`) hali 1-qavat hisob sahifalari va umumiy `SatSinxron`, `Suhbatdosh`, `Onboarding`, `404` da ishlatiladi.
+
+**Holat (2026-11-18):** poydevor (Liquid Glass) va 5 qavatning hammasi qoralama sifatida tayyor, ochiq dizayn savollari yopilgan (muallif qarorlari 2026-11-18, "Qarorlar" bo'limi).
 
 ## Bino qoidasi: nima umumiy, nima qavatniki
 

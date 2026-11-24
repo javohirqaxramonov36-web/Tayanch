@@ -241,7 +241,8 @@ import { yol } from '../../../../../lib/yol';
   /* R&W matni (passage): savoldan oldin, alohida sirtda; bo'sh joy chizig'i (______) o'qilishi uchun keng qator oralig'i */
   .parcha {
     margin: 0; max-width: var(--size-measure); padding: var(--space-4) var(--space-5);
-    border-left: var(--border-width-2) solid var(--color-sat-blue); background: transparent; color: var(--color-sat-text);
+    /* DS taqiqi: chap rangli chiziq yo'q. Passage alohida tekis sirtda, to'liq ingichka chegara bilan */
+    border: var(--border-width-1) solid var(--color-sat-line); border-radius: var(--radius-md); background: var(--color-sat-sunken); color: var(--color-sat-text);
     font-size: var(--font-size-body-d); line-height: var(--line-height-body-d);
   }
   .parcha[hidden] { display: none; }

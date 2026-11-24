@@ -332,12 +332,11 @@ const kalitlar = Object.keys(SAVOLLAR) as (keyof typeof SAVOLLAR)[];
   }
   .yollar :global(.yuz.old) { transition: transform var(--harakat-tez) var(--harakat-egri); }
   @media (hover: hover) and (pointer: fine) { .yollar :global(.karta:not(.ochiq):hover .yuz.old) { box-shadow: 6px 6px 0 var(--color-adm-text); } }
-  /* Orqa yuz: pasport sahifasi (20px katakli fon, maket) */
+  /* Orqa yuz: pasport sahifasi (tekis sirt) */
   .yollar :global(.yuz.orqa) {
     transform: rotateY(180deg); position: absolute; inset: 0; overflow: auto;
     background-color: var(--color-adm-sunken);
-    background-image: linear-gradient(var(--color-adm-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-adm-line) 1px, transparent 1px);
-    background-size: 20px 20px;
+    /* DS taqiqi: dekorativ gradient yo'q (katak foni olib tashlandi), pasport sahifasi tekis sirtda */
   }
   .yollar :global(.pasport-bosh) { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); border-bottom: 1.5px solid var(--color-adm-text); padding-bottom: var(--space-2); }
   .yollar :global(.kod) { font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); letter-spacing: .06em; color: var(--color-link); white-space: nowrap; }

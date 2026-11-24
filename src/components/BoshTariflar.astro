@@ -5,7 +5,7 @@ import { yol } from '../lib/yol';
 <section class="home-pricing" aria-labelledby="tarif-h">
   <p class="nav-chip tarif-label">Tariflar</p><h2 id="tarif-h" class="nav-nom">Oʻzingizga mos tarifni tanlang</h2>
   <div class="tarif-cards">
-    <article class="tarif-card"><h3>Bepul</h3><p class="tarif-price">0 so'm</p>
+    <article class="tarif-card"><h3>Bepul</h3><p class="tarif-price">0 soʻm</p>
       <ul>{bepulImkoniyatlar.map((x) => <li>{x}</li>)}</ul>
       <a class="t-tugma t-tugma--ikkinchi tarif-tugma" href={yol('/uz/#qavatlar')}>Bepul boshlash</a>
     </article>
@@ -29,25 +29,25 @@ import { yol } from '../lib/yol';
   let tayyor = false;
   async function narxniOl() {
     const c = hisobMijoz();
-    if (!c) { narxYuklanmadi(); holat.textContent = 'Tarif ma’lumoti hozircha yuklanmadi.'; return; }
+    if (!c) { narxYuklanmadi(); holat.textContent = 'Tarif maʼlumoti hozircha yuklanmadi.'; return; }
     try {
       const { data, error } = await c.from('plans').select('price_uzs, period_days, features').eq('bolim', 'sat').eq('code', 'pro').eq('is_active', true).maybeSingle();
       if (error || !data || !Number.isSafeInteger(data.price_uzs) || data.price_uzs <= 0 || !Number.isInteger(data.period_days) || data.period_days <= 0) throw new Error('Tarif');
-      document.querySelector('[data-home-price]')!.textContent = `${son(data.price_uzs)} so'm / ${data.period_days} kun`;
-      document.querySelector('[data-home-day]')!.textContent = `≈ ${son(Math.round(data.price_uzs / data.period_days))} so'm / kun`;
+      document.querySelector('[data-home-price]')!.textContent = `${son(data.price_uzs)} soʻm / ${data.period_days} kun`;
+      document.querySelector('[data-home-day]')!.textContent = `≈ ${son(Math.round(data.price_uzs / data.period_days))} soʻm / kun`;
       const royxat = document.querySelector('[data-home-features]')!;
       const imkoniyatlar = ['Bepul tarifdagi barcha imkoniyatlar'];
       if (bayroqlar(data.features).has('analytics_extended')) imkoniyatlar.push('SAT kengaytirilgan analitikasi — qiyinlik va vaqt tahlili');
       royxat.replaceChildren(...imkoniyatlar.map((matn) => { const li = document.createElement('li'); li.textContent = matn; return li; }));
       tayyor = true;
       tugma.disabled = false;
-      holat.textContent = 'Bir martalik to’lov. Avtomatik yangilanmaydi.';
-    } catch { narxYuklanmadi(); holat.textContent = 'Tarif ma’lumoti yuklanmadi. Sahifani yangilab, qayta urinib ko’ring.'; }
+      holat.textContent = 'Bir martalik toʻlov. Avtomatik yangilanmaydi.';
+    } catch { narxYuklanmadi(); holat.textContent = 'Tarif maʼlumoti yuklanmadi. Sahifani yangilab, qayta urinib koʻring.'; }
   }
   function narxYuklanmadi() {
     const havola = document.createElement('a');
     havola.href = yol('/uz/sat/hisob/obuna/');
-    havola.textContent = 'Narxni Subscription sahifasida ko’ring';
+    havola.textContent = 'Narxni Obuna sahifasida koʻring';
     document.querySelector<HTMLElement>('[data-home-price]')!.replaceChildren(havola);
   }
   async function tolov() {
@@ -67,7 +67,7 @@ import { yol } from '../lib/yol';
       if (!r.ok || !r.data.checkout_url?.startsWith('https://')) throw new Error('Tolov');
       tolovniEsla(r.data.payment_id);
       location.assign(r.data.checkout_url);
-    } catch { holat.textContent = 'To’lovni ochib bo’lmadi. Qaytadan urinib ko’ring.'; }
+    } catch { holat.textContent = 'Toʻlovni ochib boʻlmadi. Qaytadan urinib koʻring.'; }
     finally { tugma.disabled = false; tugma.removeAttribute('aria-busy'); }
   }
   tugma.addEventListener('click', () => void tolov());
@@ -95,5 +95,7 @@ import { yol } from '../lib/yol';
   .tarif-day, .tarif-status, .tarif-scope { color: var(--color-text-secondary); font-size: var(--text-small-size); }
   .tarif-card ul { margin: 0 0 var(--space-4); padding-left: var(--space-5); display: grid; gap: var(--space-3); }
   .tarif-tugma { width: 100%; margin-top: auto; }
+  /* Narx yuklanmaguncha (yoki yuklanmasa) o'chiq: matn o'qilsin (yorug'da avval 2.2:1 edi) */
+  .tarif-tugma:disabled { border-color: var(--color-border-strong); color: var(--color-text-secondary); }
   @media (width < 768px) { .tarif-cards { grid-template-columns: 1fr; } .tarif-card { padding: var(--space-6); } }
 </style>
