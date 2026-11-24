@@ -48,10 +48,10 @@ const h = {
       <section class="blok" aria-labelledby="maqsad-h" data-blok="profil">
         <div class="blok-bosh">
           <h2 id="maqsad-h">Goal and test date</h2>
-          <a class="tugma tugma-ikkinchi kichik-tugma" href={h.maqsad} data-maqsad-havola>Edit</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={h.maqsad} data-maqsad-havola>Edit</a>
         </div>
         <p class="ikkinchi" data-yuklanish>Loading…</p>
-        <div class="xato-qator" data-xato hidden><p>Couldn't load your goal.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="profil">Retry</button></div>
+        <div class="xato-qator" data-xato hidden><p>Couldn't load your goal.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="profil">Retry</button></div>
         <div data-tayyor hidden>
           <p class="ikkinchi" data-maqsad-bosh hidden>You haven't set a goal yet. A target score and test date put a countdown on the SAT home page.</p>
           <dl class="sonlar" data-maqsad-sonlar>
@@ -104,7 +104,7 @@ const h = {
               <span class="qator-qiymat" data-yuklanish>Loading…</span>
               <span class="qator-qiymat" data-tayyor hidden data-daftar></span>
             </a>
-            <div class="xato-qator" data-xato hidden><p>Couldn't load question bank mistakes.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="daftar">Retry</button></div>
+            <div class="xato-qator" data-xato hidden><p>Couldn't load question bank mistakes.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="daftar">Retry</button></div>
           </li>
           <li data-blok="lugat">
             <a class="qator" href={h.lugat}>
@@ -112,7 +112,7 @@ const h = {
               <span class="qator-qiymat" data-yuklanish>Loading…</span>
               <span class="qator-qiymat" data-tayyor hidden data-lugat></span>
             </a>
-            <div class="xato-qator" data-xato hidden><p>Couldn't load your words.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="lugat">Retry</button></div>
+            <div class="xato-qator" data-xato hidden><p>Couldn't load your words.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="lugat">Retry</button></div>
           </li>
           <li>
             <a class="qator" href={h.testlar}>
@@ -133,10 +133,10 @@ const h = {
       <section class="blok" aria-labelledby="tarif-h" data-blok="tarif">
         <div class="blok-bosh">
           <h2 id="tarif-h">Plan</h2>
-          <a class="tugma tugma-ikkinchi kichik-tugma" href={h.obuna}>Subscription</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={h.obuna}>Subscription</a>
         </div>
         <p class="ikkinchi" data-yuklanish>Loading…</p>
-        <div class="xato-qator" data-xato hidden><p>Couldn't load your plan.</p><button type="button" class="tugma tugma-ikkinchi kichik-tugma" data-qayta="tarif">Retry</button></div>
+        <div class="xato-qator" data-xato hidden><p>Couldn't load your plan.</p><button type="button" class="t-tugma t-tugma--ikkinchi" data-qayta="tarif">Retry</button></div>
         <div data-tayyor hidden>
           <p class="tarif-nom" data-tarif-nom></p>
           <p class="ikkinchi kichik" data-tarif-izoh></p>
@@ -339,8 +339,8 @@ const h = {
   .profil { display: flex; flex-direction: column; gap: var(--space-8); }
   .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
-  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 700; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
   .pill-chiziq { border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); }
   .lead { font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); max-width: 62ch; }
   .kichik { font-size: var(--text-small-size); }
@@ -358,18 +358,17 @@ const h = {
   .blok h2 { font-size: var(--text-h3-size); }
   .blok h2:focus { outline: none; }
   .blok-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
-  .kichik-tugma { min-height: var(--size-touch-min); }
 
   .xato-qator { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-sat-sunken); font-size: var(--text-small-size); }
 
   .sonlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: var(--space-3); margin: 0; }
   .sonlar > div { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-sat-sunken); }
-  .sonlar dt { font-size: var(--text-caption-size); font-weight: 700; color: var(--color-sat-text-muted); }
-  .sonlar dd { margin: 0; font-size: var(--font-size-body-d); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .sonlar dt { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
+  .sonlar dd { margin: 0; font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
   .sonlar dd[data-m="sana"] { font-size: var(--text-body-size); }
 
   .tanlov { border: 0; margin: 0; padding: 0; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--space-2); }
-  .tanlov legend { padding: 0; font-weight: 700; }
+  .tanlov legend { padding: 0; font-weight: var(--font-weight-bold); }
   .variantlar { display: grid; gap: var(--space-2); }
   .variantlar.kunlik-qator { grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
   .variant.ixcham b { white-space: nowrap; }
@@ -389,9 +388,9 @@ const h = {
   .qator { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: var(--size-touch-min); padding: var(--space-3) 0; color: inherit; text-decoration: none; }
   .qator:hover .qator-nom { text-decoration: underline; }
   .qator:focus-visible { outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px; border-radius: var(--radius-sm); }
-  .qator-nom { font-weight: 700; flex: none; }
+  .qator-nom { font-weight: var(--font-weight-bold); flex: none; }
   .qator-qiymat { color: var(--color-sat-text-muted); font-size: var(--text-small-size); text-align: right; }
   .royxat .xato-qator { margin-bottom: var(--space-3); }
 
-  .tarif-nom { font-size: var(--text-h3-size); font-weight: 800; }
+  .tarif-nom { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
 </style>

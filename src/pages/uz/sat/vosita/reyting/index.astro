@@ -34,7 +34,7 @@ import { yol } from '../../../../../lib/yol';
     <section class="panel" data-mehmon hidden aria-labelledby="mehmon-sarlavha">
       <h2 id="mehmon-sarlavha" class="h3">Sign in to see the leaderboard</h2>
       <p>XP is counted from answers saved to your account. Without an account, nothing is counted or shown.</p>
-      <a class="tugma tugma-asosiy" data-kirish href={yol('/uz/hisob/kirish/')}>Sign in</a>
+      <a class="t-tugma sat-tugma--kok" data-kirish href={yol('/uz/hisob/kirish/')}>Sign in</a>
     </section>
 
     <p class="xato" role="alert" data-xato hidden></p>
@@ -61,14 +61,14 @@ import { yol } from '../../../../../lib/yol';
         <p class="ogoh" data-yashirin hidden>A moderator has hidden your nickname from the leaderboard. Your XP is not affected.</p>
         <p class="ogoh" data-laqab-yomon hidden>Your nickname cannot be shown. Choose a different one to appear on the leaderboard.</p>
         <div class="tugmalar" data-azo-tugmalar>
-          <button type="button" class="tugma tugma-ikkinchi" data-tahrir aria-expanded="false" aria-controls="qoshil-forma">Change nickname or country</button>
-          <button type="button" class="tugma tugma-ikkinchi" data-chiq>Leave the leaderboard</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-tahrir aria-expanded="false" aria-controls="qoshil-forma">Change nickname or country</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-chiq>Leave the leaderboard</button>
         </div>
         <div class="tasdiq" data-chiq-tasdiq hidden role="group" aria-labelledby="chiq-savol">
           <p id="chiq-savol"><strong>Leave the leaderboard?</strong> You disappear from it right away. Your XP stays in your account, and you can join again later.</p>
           <div class="tugmalar">
-            <button type="button" class="tugma tugma-asosiy" data-chiq-ha>Leave</button>
-            <button type="button" class="tugma tugma-ikkinchi" data-chiq-yoq>Stay</button>
+            <button type="button" class="t-tugma sat-tugma--kok" data-chiq-ha>Leave</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" data-chiq-yoq>Stay</button>
           </div>
         </div>
       </section>
@@ -95,8 +95,8 @@ import { yol } from '../../../../../lib/yol';
           <span>Show my country next to my nickname and let me see a leaderboard for my country</span>
         </label>
         <div class="tugmalar">
-          <button type="submit" class="tugma tugma-asosiy" data-yubor>Join the leaderboard</button>
-          <button type="button" class="tugma tugma-ikkinchi" data-bekor hidden>Cancel</button>
+          <button type="submit" class="t-tugma sat-tugma--kok" data-yubor>Join the leaderboard</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-bekor hidden>Cancel</button>
         </div>
       </form>
 
@@ -439,42 +439,41 @@ import { yol } from '../../../../../lib/yol';
   .reyting { display: flex; flex-direction: column; gap: var(--space-8); }
   .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
-  .pill { padding: 4px 12px; border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 700; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
   .pill-chiziq { border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); }
   .lead { font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); max-width: 62ch; }
   .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
   .holat-matn { color: var(--color-sat-text-muted); }
-  .xato { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 700; }
+  .xato { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-bold); }
   [data-ichi]:not([hidden]) { display: flex; flex-direction: column; gap: var(--space-8); }
-  .kichik-sarlavha { font-size: var(--text-small-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
+  .kichik-sarlavha { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
   .h3 { font-size: var(--text-h3-size); }
   .kichik { font-size: var(--text-small-size); }
   .ikkinchi { color: var(--color-sat-text-muted); }
 
   .panel { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); border: 1.5px solid var(--color-sat-line-strong); border-radius: var(--radius-md); background: var(--color-sat-surface); }
   .panel p { max-width: 62ch; }
-  .panel > .tugma { align-self: flex-start; }
+  .panel > .t-tugma { align-self: flex-start; }
   .xp { background: var(--color-sat-sunken); border: 0; }
   .xp-son { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: 0; }
   .xp-son dt { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
-  .xp-son dd { margin: 0; font-size: var(--text-h3-size); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .xp-son dd { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
 
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
   .tasdiq { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-sat-sunken); }
-  .tugma:disabled { cursor: progress; }
 
   .forma .maydon { display: flex; flex-direction: column; gap: var(--space-1); }
-  .forma label { font-weight: 700; }
+  .forma label { font-weight: var(--font-weight-bold); }
   .forma input[type='text'], .forma select {
     min-height: 48px; padding: 0 var(--space-4); border: 2px solid var(--color-sat-line-strong); border-radius: var(--radius-md);
-    background: var(--color-sat-surface); color: var(--color-sat-text); font: inherit; font-size: 17px; max-width: 24rem; width: 100%;
+    background: var(--color-sat-surface); color: var(--color-sat-text); font: inherit; font-size: var(--text-body-size); max-width: 24rem; width: 100%;
   }
   .forma input[aria-invalid='true'] { border-color: var(--input-error-border); }
   .forma input:focus-visible, .forma select:focus-visible, .belgi-qator input:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .maydon-xato { font-weight: 700; color: var(--input-error-text); }
+  .maydon-xato { font-weight: var(--font-weight-bold); color: var(--input-error-text); }
   .belgi-qator { display: flex; align-items: flex-start; gap: var(--space-3); font-weight: 400 !important; max-width: 62ch; }
-  .belgi-qator input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; }
+  .belgi-qator input { width: 22px; height: 22px; margin: var(--space-1) 0 0; flex: none; }
   .belgi-qator:has(input:disabled) { color: var(--color-sat-text-muted); }
 
   .jadval-blok { display: flex; flex-direction: column; gap: var(--space-4); }
@@ -485,24 +484,24 @@ import { yol } from '../../../../../lib/yol';
   .segment-variant { position: relative; }
   .segment-variant input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
   .segment-variant input:disabled { cursor: not-allowed; }
-  .segment-variant span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-5); border-radius: var(--radius-full); font-weight: 700; color: var(--color-sat-text-muted); }
+  .segment-variant span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-5); border-radius: var(--radius-full); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
   .segment-variant input:checked + span { background: var(--color-sat-surface); color: var(--color-sat-text); box-shadow: var(--shadow-2); }
   .segment-variant input:disabled + span { color: var(--color-sat-text-muted); }
   .segment-variant input:focus-visible + span { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
 
   .jadval-xabar:empty { display: none; }
-  .jadval-xabar { font-weight: 700; }
+  .jadval-xabar { font-weight: var(--font-weight-bold); }
   /* Jadval: neytral ranglar; o'z qatori qalin yozuv, "You" yorlig'i va chegara bilan (rang ma'no tashimaydi). */
   .jadval { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-  .jadval caption { text-align: left; font-weight: 700; padding-bottom: var(--space-3); color: var(--color-sat-text-muted); }
+  .jadval caption { text-align: left; font-weight: var(--font-weight-bold); padding-bottom: var(--space-3); color: var(--color-sat-text-muted); }
   .jadval th[scope='col'] { text-align: left; font-size: var(--text-small-size); color: var(--color-sat-text-muted); padding: var(--space-2) var(--space-3); border-bottom: 1.5px solid var(--color-sat-line-strong); }
-  .jadval :global(td), .jadval :global(th[scope='row']) { padding: var(--space-3); border-bottom: 1px solid var(--color-sat-line); text-align: left; font-weight: 400; overflow-wrap: anywhere; }
+  .jadval :global(td), .jadval :global(th[scope='row']) { padding: var(--space-3); border-bottom: 1px solid var(--color-sat-line); text-align: left; font-weight: var(--font-weight-regular); overflow-wrap: anywhere; }
   .jadval .son, .jadval :global(.son) { text-align: right; width: 5.5em; white-space: nowrap; }
   .jadval :global(tr.men) { background: var(--color-sat-sunken); }
-  .jadval :global(tr.men td), .jadval :global(tr.men th) { font-weight: 800; }
+  .jadval :global(tr.men td), .jadval :global(tr.men th) { font-weight: var(--font-weight-extrabold); }
   .jadval :global(tr.ajratgich td), .jadval :global(tr.ajratgich th) { border-top: 2px dashed var(--color-sat-line-strong); }
-  .jadval :global(.yorliq) { padding: 2px 8px; border-radius: var(--radius-full); border: 1.5px solid var(--color-sat-text); font-size: var(--text-caption-size); font-weight: 700; white-space: nowrap; }
-  .jadval :global(.mamlakat) { font-size: var(--text-caption-size); color: var(--color-sat-text-muted); font-weight: 700; letter-spacing: 0.04em; }
+  .jadval :global(.yorliq) { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); border: 1.5px solid var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); white-space: nowrap; }
+  .jadval :global(.mamlakat) { font-size: var(--text-caption-size); color: var(--color-sat-text-muted); font-weight: var(--font-weight-bold); letter-spacing: 0.04em; }
   @media (max-width: 480px) {
     .xp-son dd { font-size: var(--font-size-body-d); }
     .jadval .son, .jadval :global(.son) { width: 3.5em; }
@@ -513,6 +512,6 @@ import { yol } from '../../../../../lib/yol';
   .qoida-jadval { width: 100%; max-width: 40rem; border-collapse: collapse; }
   .qoida-jadval th { text-align: left; font-size: var(--text-small-size); color: var(--color-sat-text-muted); padding: var(--space-2) var(--space-3); border-bottom: 1.5px solid var(--color-sat-line-strong); }
   .qoida-jadval td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-sat-line); }
-  .qoida-jadval .son { text-align: right; white-space: nowrap; font-weight: 700; }
+  .qoida-jadval .son { text-align: right; white-space: nowrap; font-weight: var(--font-weight-bold); }
   .qoida ul { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); color: var(--color-sat-text-muted); max-width: 70ch; }
 </style>

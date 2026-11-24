@@ -3,7 +3,7 @@
 // Komponent: src/lib/sat/savolKorsatkich.ts. Bu sahifa uning "ota"si: holatni xotirada saqlaydi (localStorage yo'q),
 // hodisalarni qabul qilib yangila() ni chaqiradi. Namuna savollar: src/data/satSavolNamuna.ts ("Sample").
 import SatFokus from '../../../../../layouts/SatFokus.astro';
-import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
+import SatSavol from '../../../../../components/sat/SatSavol.astro';
 import { namunaSavollar } from '../../../../../data/satSavolNamuna';
 import { namunaSahifa } from '../../../../../data/satSahifalar';
 import uchburchak from '../../../../../assets/sat/namuna-uchburchak.svg?url';
@@ -21,7 +21,7 @@ const malumot = namunaSavollar.map((n) => ({
   nomi={sahifa.nomi}
   yol={['Tools']}
 >
-  <SavolUslub />
+  <SatSavol />
   <script type="application/json" id="namuna-data" set:html={JSON.stringify(malumot).replace(/</g, "\\u003c")} />
 
   <div class="namuna">
@@ -54,9 +54,9 @@ const malumot = namunaSavollar.map((n) => ({
     <div id="savol-joy"></div>
 
     <div class="pastki">
-      <button type="button" class="ikkinchi-tugma" id="oldingi">Previous</button>
-      <button type="button" class="asosiy-tugma" id="tekshir" disabled>Check answer</button>
-      <button type="button" class="ikkinchi-tugma" id="keyingi">Next</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldingi">Previous</button>
+      <button type="button" class="t-tugma sat-tugma--kok" id="tekshir" disabled>Check answer</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="keyingi">Next</button>
     </div>
 
     <details class="jurnal">
@@ -193,51 +193,50 @@ const malumot = namunaSavollar.map((n) => ({
   .namuna-bosh { display: flex; flex-direction: column; gap: var(--space-3); max-width: 62ch; }
   .pill-namuna {
     align-self: flex-start; margin: 0;
-    padding: 4px 12px; border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
     border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted);
-    font-size: var(--text-caption-size); font-weight: 700;
+    font-size: var(--text-caption-size); font-weight: var(--font-weight-bold);
   }
-  h1 { margin: 0; font-size: var(--text-h2-size); font-weight: 800; line-height: 1.2; }
+  h1 { margin: 0; font-size: var(--text-h2-size); font-weight: var(--font-weight-extrabold); line-height: 1.2; }
   .kirish { margin: 0; font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); }
 
   .boshqaruv { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4); }
   .rejim { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
-  .rejim legend { font-weight: 700; margin-bottom: var(--space-2); padding: 0; }
+  .rejim legend { font-weight: var(--font-weight-bold); margin-bottom: var(--space-2); padding: 0; }
   .rejim label { min-height: 48px; display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; }
   .rejim input { width: 20px; height: 20px; accent-color: var(--color-sat-blue-fill); margin: 0; }
   .savol-nav ol { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-2); }
   .nav-tugma {
     width: 48px; height: 48px; border-radius: var(--radius-full);
     border: 1.5px solid var(--color-sat-line-strong); background: var(--color-sat-surface); color: var(--color-sat-text);
-    font: inherit; font-weight: 800; cursor: pointer;
+    font: inherit; font-weight: var(--font-weight-extrabold); cursor: pointer;
   }
   .nav-tugma[aria-current] { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .nav-tugma.belgilangan { border-style: dashed; border-width: 2px; }
-  .turi { margin: 0; font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
+  .turi { margin: 0; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
 
   .pastki { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .asosiy-tugma { margin-left: auto; }
-  .asosiy-tugma[hidden] { display: none; }
-  .asosiy-tugma[hidden] + .ikkinchi-tugma { margin-left: auto; }
-  .nav-tugma:focus-visible, .asosiy-tugma:focus-visible, .ikkinchi-tugma:focus-visible, .jurnal summary:focus-visible {
+  .t-tugma.sat-tugma--kok { margin-left: auto; }
+  .t-tugma.sat-tugma--kok[hidden] + .t-tugma { margin-left: auto; }
+  .nav-tugma:focus-visible, .jurnal summary:focus-visible {
     outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px;
   }
 
   .jurnal { border: 1px solid var(--color-sat-line); border-radius: var(--radius-md); padding: 0 var(--space-4); background: var(--color-sat-surface); }
-  .jurnal summary { min-height: 48px; display: flex; align-items: center; font-weight: 700; cursor: pointer; }
+  .jurnal summary { min-height: 48px; display: flex; align-items: center; font-weight: var(--font-weight-bold); cursor: pointer; }
   .jurnal-izoh { margin: 0 0 var(--space-2); font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
   .jurnal ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); font-family: ui-monospace, monospace; font-size: var(--text-small-size); }
 
-  .klaviatura h2 { margin: 0 0 var(--space-2); font-size: var(--font-size-body-d); font-weight: 800; }
+  .klaviatura h2 { margin: 0 0 var(--space-2); font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); }
   .klaviatura ul { margin: 0; padding-left: var(--space-5); color: var(--color-sat-text-muted); display: flex; flex-direction: column; gap: var(--space-1); }
   kbd {
-    padding: 1px 6px; border-radius: var(--radius-sm); border: 1px solid var(--color-sat-line-strong);
-    font: inherit; font-size: var(--text-small-size); font-weight: 700; color: var(--color-sat-text); background: var(--color-sat-surface);
+    padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); border: 1px solid var(--color-sat-line-strong);
+    font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text); background: var(--color-sat-surface);
   }
 
   @media (max-width: 640px) {
     .pastki > * { flex: 1 1 0; }
-    .pastki .asosiy-tugma { order: -1; flex: 1 1 100%; margin-left: 0; }
-    .pastki .ikkinchi-tugma { margin-left: 0; }
+    .pastki .t-tugma.sat-tugma--kok { order: -1; flex: 1 1 100%; margin-left: 0; }
+    .pastki .t-tugma { margin-left: 0; }
   }
 </style>

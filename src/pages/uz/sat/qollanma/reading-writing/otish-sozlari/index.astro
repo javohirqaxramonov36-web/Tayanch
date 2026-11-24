@@ -74,14 +74,14 @@ const misollar = [
       </div>
     </div>
     <p class="sahna-izoh" id="otish-holat" aria-live="polite"></p>
-    <div class="segment otish-boshqaruv"><button type="button" class="kichik-tugma" id="otish-keyingi">Next example</button></div>
+    <div class="segment otish-boshqaruv"><button type="button" class="t-tugma t-tugma--ikkinchi" id="otish-keyingi">Next example</button></div>
     <script type="application/json" id="otish-data" set:html={JSON.stringify({ munosabatlar, misollar })} />
   </div>
 
   <div slot="animatsiya">
     <p>The blank in the scene is filled in, and the table marks the relationship for this pair with a blue border. Use "Next example" to see each of the four relationships.</p>
     <div class="formula"><span class="kichik ikkinchi">Why this relationship</span><span class="f-qiymat rw-qoida" id="otish-sabab">{misollar[0].sabab}</span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
+    <div class="segment"><button type="button" class="t-tugma sat-tugma--kok" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
@@ -98,7 +98,7 @@ const misollar = [
       <p><b>Task.</b> Read the two sentences in the scene and choose their relationship from the table. With a keyboard: press Tab to enter the table, move with the arrow keys, press Enter to choose.</p>
       <p class="vazifa-holat" id="otish-sinab-holat" aria-live="polite">Nothing chosen yet.</p>
     </div>
-    <div class="segment"><button type="button" class="kichik-tugma" id="otish-qayta">Try again</button></div>
+    <div class="segment"><button type="button" class="t-tugma t-tugma--ikkinchi" id="otish-qayta">Try again</button></div>
   </div>
 </DarsQolip>
 
@@ -184,14 +184,14 @@ const misollar = [
   .rw-quti { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
   .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
   .otish-matn { font-size: var(--font-size-body-d); line-height: 1.6; }
-  .otish-joy { font-weight: 800; color: var(--color-sat-text-muted); }
+  .otish-joy { font-weight: var(--font-weight-extrabold); color: var(--color-sat-text-muted); }
   .otish-joy.toldi { color: var(--color-sat-blue-text); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
-  .mun-sozlar { display: block; font-size: var(--text-small-size); color: var(--color-sat-text-muted); font-weight: 500; }
+  .mun-sozlar { display: block; font-size: var(--text-small-size); color: var(--color-sat-text-muted); font-weight: var(--font-weight-medium); }
   .otish-boshqaruv { margin-top: var(--space-2); }
-  .dars .rw-qoida { font-size: var(--text-body-size); font-weight: 600; line-height: 1.5; }
+  .dars .rw-qoida { font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); line-height: 1.5; }
   .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
   .rw-qoidalar div { background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
-  .rw-qoidalar dt { font-weight: 800; }
+  .rw-qoidalar dt { font-weight: var(--font-weight-extrabold); }
   .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--color-sat-text-muted); }
-  .dars[data-modul='rw-otish'] .s-matn { font-size: var(--font-size-body-d); font-weight: 500; line-height: 1.6; }
+  .dars[data-modul='rw-otish'] .s-matn { font-size: var(--font-size-body-d); font-weight: var(--font-weight-medium); line-height: 1.6; }
 </style>

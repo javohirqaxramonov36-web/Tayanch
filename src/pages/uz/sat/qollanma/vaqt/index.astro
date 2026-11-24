@@ -98,10 +98,10 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
         ))}
       </ul>
       <div class="tugmalar">
-        <button type="button" class="tugma tugma-matn" id="rt-qayta">Start over</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="rt-qayta">Start over</button>
         <span class="tasdiq" id="rt-tasdiq" hidden>This clears your check marks.
-          <button type="button" class="tugma tugma-matn" id="rt-ha">Yes, clear</button>
-          <button type="button" class="tugma tugma-matn" id="rt-yoq">Cancel</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="rt-ha">Yes, clear</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="rt-yoq">Cancel</button>
         </span>
       </div>
       <p class="kichik ikkinchi" id="rt-saqlash">Saved only in this browser.</p>
@@ -192,20 +192,20 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
   .vr { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-10); }
   .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
-  .pill { padding: 4px 12px; border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: 700; white-space: nowrap; }
-  .pill-chiziq { background: transparent; border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); padding: 2.5px 10.5px; }
-  h1 { font-size: var(--text-h1-size); line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); padding: var(--space-1) var(--space-3); }
+  h1 { font-size: var(--text-h1-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-sarlavha); }
   h2 { font-size: var(--text-h2-size); }
-  h3 { font-size: var(--text-h3-size); font-weight: 800; margin-top: var(--space-4); }
+  h3 { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); margin-top: var(--space-4); }
   .lead { font-size: var(--font-size-body-d); line-height: 1.6; color: var(--color-sat-text-muted); max-width: 62ch; }
   .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); line-height: 1.6; }
-  a { color: var(--color-sat-blue-text); font-weight: 700; }
+  a { color: var(--color-sat-blue-text); font-weight: var(--font-weight-bold); }
   .ikkinchi { color: var(--color-sat-text-muted); }
 
   .yorliq-rasmiy, .yorliq-tavsiya {
-    display: inline-block; padding: 1px 10px; border-radius: var(--radius-full);
-    font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.02em;
+    display: inline-block; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full);
+    font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.02em;
   }
   .yorliq-rasmiy { border: 1.5px solid var(--color-sat-blue-text); color: var(--color-sat-blue-text); }
   .yorliq-tavsiya { background: var(--color-sat-line); color: var(--color-sat-text); }
@@ -217,10 +217,10 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
 
   .jadval { width: 100%; border-collapse: collapse; font-size: var(--text-small-size); line-height: 1.5; font-variant-numeric: tabular-nums; }
   .jadval th, .jadval td { text-align: left; vertical-align: top; padding: var(--space-3); border-bottom: 1px solid var(--color-sat-line); }
-  .jadval thead th { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); border-bottom: 1.5px solid var(--color-sat-text); }
-  .jadval tbody th { font-weight: 800; }
+  .jadval thead th { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); border-bottom: 1.5px solid var(--color-sat-text); }
+  .jadval tbody th { font-weight: var(--font-weight-extrabold); }
   .otgan-qator th, .otgan-qator td { color: var(--color-sat-text-muted); }
-  .otgan { font-weight: 700; }
+  .otgan { font-weight: var(--font-weight-bold); }
   .otgan[hidden] { display: none; }
 
   .royxat { display: flex; flex-direction: column; gap: var(--space-5); }
@@ -231,14 +231,14 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
   .bandlar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
   .band { border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-md); padding: var(--space-3) var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); }
   .b-bosh { display: flex; align-items: flex-start; gap: var(--space-3); }
-  .b-bosh input { width: 24px; height: 24px; margin: 10px 0 0; flex: none; accent-color: var(--color-sat-blue-fill); cursor: pointer; }
+  .b-bosh input { width: 24px; height: 24px; margin: var(--space-2) 0 0; flex: none; accent-color: var(--color-sat-blue-fill); cursor: pointer; }
   .b-bosh input:focus-visible { outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px; }
-  .b-bosh label { display: flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: 700; line-height: 1.5; }
+  .b-bosh label { display: flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: var(--font-weight-bold); line-height: 1.5; }
   .bajarilgan .b-bosh label { color: var(--color-sat-text-muted); text-decoration: line-through; }
   .b-qosh { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-4); margin: 0; padding-left: calc(24px + var(--space-3)); }
   .b-qosh a { min-height: 44px; display: inline-flex; align-items: center; }
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-weight: 700; }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); }
   .tasdiq[hidden] { display: none; }
 
   @media (max-width: 760px) {
@@ -246,11 +246,11 @@ const muallifBosh = [VAQT_MUALLIF.boshlash, VAQT_MUALLIF.qachon].filter((b) => b
     .jadval, .jadval tbody, .jadval tr, .jadval th, .jadval td { display: block; width: 100%; }
     .jadval tr { border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-md); padding: var(--space-2) var(--space-4); margin-bottom: var(--space-3); }
     .jadval th, .jadval td { border: 0; padding: var(--space-2) 0; }
-    .jadval td::before { content: attr(data-l); display: block; font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
+    .jadval td::before { content: attr(data-l); display: block; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
     .jadval tbody th { font-size: var(--font-size-body-d); }
   }
   @media (max-width: 640px) {
-    .vr { padding-top: 28px; gap: var(--space-8); }
+    .vr { padding-top: var(--space-7); gap: var(--space-8); }
     .band { padding: var(--space-3) var(--space-4); }
     .b-qosh { padding-left: 0; }
   }

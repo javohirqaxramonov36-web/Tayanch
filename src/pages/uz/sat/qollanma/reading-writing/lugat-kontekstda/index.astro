@@ -97,7 +97,7 @@ const sinovlar = sinovShablonlar.map((x) => {
   <div slot="animatsiya">
     <p>In the scene, "{ikkiMano.soz}" has a different meaning in each of the two sentences. The word is the same; the words around it choose the meaning.</p>
     <div class="formula"><span class="kichik ikkinchi">Key idea</span><span class="f-qiymat rw-qoida">Choose the meaning the sentence calls for, not the first meaning in the dictionary.</span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
+    <div class="segment"><button type="button" class="t-tugma sat-tugma--kok" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
@@ -115,15 +115,15 @@ const sinovlar = sinovShablonlar.map((x) => {
       <p class="vazifa-holat" id="lug-sinab-holat" aria-live="polite">Nothing marked yet.</p>
     </div>
     <div class="segment">
-      <button type="button" class="kichik-tugma" id="lug-qayta">Try again</button>
-      <button type="button" class="kichik-tugma" id="lug-keyingi">Next example</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="lug-qayta">Try again</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="lug-keyingi">Next example</button>
     </div>
   </div>
 
   <section slot="xulosa-oxiri" class="lug-blok" aria-labelledby="lug-blok-h">
     <h3 id="lug-blok-h">Your vocabulary cards</h3>
     <p id="lug-blok-matn" data-jami={kartalar.length} data-sozlar={JSON.stringify(kartalar.map((k) => k.soz))}>The status of your vocabulary cards is read from this browser.</p>
-    <a class="matn-tugma kok-tugma" href={yol('/uz/sat/mashq/lugat/')}>Go to the vocabulary cards</a>
+    <a class="t-tugma t-tugma--ikkinchi kok-tugma" href={yol('/uz/sat/mashq/lugat/')}>Go to the vocabulary cards</a>
   </section>
 </DarsQolip>
 
@@ -206,7 +206,7 @@ const sinovlar = sinovShablonlar.map((x) => {
 <style is:global>
   .rw-quti { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
   .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
-  .dars .rw-qoida { font-size: var(--text-body-size); font-weight: 600; line-height: 1.5; }
+  .dars .rw-qoida { font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); line-height: 1.5; }
   .rw-qoidalar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
   .rw-qoidalar li { background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); line-height: 1.5; }
   .lug-misol { display: flex; flex-direction: column; gap: var(--space-3); }
@@ -214,10 +214,10 @@ const sinovlar = sinovShablonlar.map((x) => {
   .lug-gap { font-size: var(--font-size-body-d); line-height: 1.6; }
   .lug-soz { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
   .lug-izoh { color: var(--color-sat-text-muted); line-height: 1.5; }
-  .dars .bolak.lug-maqsad { font-weight: 800; border-bottom: 3px solid var(--color-sat-text); }
+  .dars .bolak.lug-maqsad { font-weight: var(--font-weight-extrabold); border-bottom: 3px solid var(--color-sat-text); }
   .lug-blok { margin-top: var(--space-5); border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
   .lug-blok h3 { margin: 0; }
   .lug-misol[hidden], .lug-sinov[hidden], .dars .lug-gap-bolaklar[hidden] { display: none; }
   .lug-blok a { display: inline-flex; align-items: center; padding: 0; text-decoration: underline; text-underline-offset: 4px; }
-  .dars[data-modul='rw-lugat'] .s-matn { font-size: var(--font-size-body-d); font-weight: 500; line-height: 1.6; }
+  .dars[data-modul='rw-lugat'] .s-matn { font-size: var(--font-size-body-d); font-weight: var(--font-weight-medium); line-height: 1.6; }
 </style>

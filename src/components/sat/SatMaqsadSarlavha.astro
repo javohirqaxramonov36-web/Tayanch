@@ -15,8 +15,8 @@ import { yol } from '../../lib/yol';
       <p class="ms-izoh">{M.taklifMatn}</p>
     </div>
     <div class="ms-tugmalar">
-      <a class="tugma tugma-asosiy" href={yol('/uz/sat/hisob/maqsad/')}>{M.boshlash}</a>
-      <button type="button" class="tugma tugma-ikkinchi" data-ms-keyinroq>{M.keyinroq}</button>
+      <a class="t-tugma sat-tugma--kok" href={yol('/uz/sat/hisob/maqsad/')}>{M.boshlash}</a>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-ms-keyinroq>{M.keyinroq}</button>
     </div>
   </div>
   <div class="ms-bor" data-ms-bor hidden>
@@ -40,16 +40,16 @@ import { yol } from '../../lib/yol';
   .ms:focus-visible { outline: none; box-shadow: var(--focus-ring); }
   .ms-taklif, .ms-bor { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
   .ms-matn { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
-  .ms-asosiy { font-size: var(--font-size-body-d); font-weight: 800; line-height: 1.3; }
+  .ms-asosiy { font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); line-height: 1.3; }
   .ms-asosiy :global(.ms-son) { font-variant-numeric: tabular-nums; }
   .ms-asosiy :global(.ms-nuqta) { color: var(--color-text-secondary); }
   .ms-izoh { font-size: var(--text-small-size); color: var(--color-text-secondary); line-height: 1.5; }
   .ms-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
   .ms-havolalar { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
-  .ms-havolalar :global(a) { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: 700; }
-  .ms-xato { font-weight: 700; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); }
+  .ms-havolalar :global(a) { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: var(--font-weight-bold); }
+  .ms-xato { font-weight: var(--font-weight-bold); color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); }
   @media (max-width: 36rem) {
-    .ms-tugmalar, .ms-tugmalar .tugma { width: 100%; }
+    .ms-tugmalar { width: 100%; } .ms-tugmalar .t-tugma { width: 100%; }
   }
 </style>
 

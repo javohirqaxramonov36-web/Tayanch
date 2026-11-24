@@ -7,7 +7,7 @@ import { kursTavsiyaYollari } from '../../../../../../lib/sat/kursKatalog';
 // Server: supabase/migrations/20261113012418_mock_imtihon.sql. Sof mantiq: src/lib/sat/mock.ts.
 // Dev mock: src/lib/sat/mockImtihonMock.ts (?mock=..., faqat DEV).
 import SatFokus from '../../../../../../layouts/SatFokus.astro';
-import SavolUslub from '../../../../../../components/sat/SavolUslub.astro';
+import SatSavol from '../../../../../../components/sat/SatSavol.astro';
 import MockUslub from '../../../../../../components/sat/MockUslub.astro';
 import ManbaBlok from '../../../../../../components/ManbaBlok.astro';
 import DesmosHavola from '../../../../../../components/sat/DesmosHavola.astro';
@@ -46,7 +46,7 @@ const IK = {
     </button>
   </div>
 
-  <SavolUslub />
+  <SatSavol />
   <MockUslub />
   <div class="mk mk-imtihon" data-kurs={JSON.stringify(kursTavsiyaYollari())} id="mk" data-kirish-url={kirishUrl} data-hisob-url={yol('/uz/hisob/kirish/')}>
     {import.meta.env.DEV && <p class="mk-pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
@@ -59,8 +59,8 @@ const IK = {
       <h1 id="xabar-h" class="mk-karta-h" tabindex="-1"></h1>
       <p id="xabar-matn" class="mk-matn"></p>
       <div class="mk-amal">
-        <button type="button" class="mk-tugma" id="xabar-qayta" hidden>Try again</button>
-        <a class="mk-tugma" id="xabar-havola" hidden></a>
+        <button type="button" class="t-tugma sat-tugma--kok" id="xabar-qayta" hidden>Try again</button>
+        <a class="t-tugma sat-tugma--kok" id="xabar-havola" hidden></a>
       </div>
     </section>
 
@@ -74,8 +74,8 @@ const IK = {
         <li>When time runs out, the module is submitted with the answers you saved.</li>
       </ul>
       <div class="mk-amal">
-        <button type="button" class="mk-tugma" id="modul-boshla">Start module</button>
-        <button type="button" class="mk-tugma2" id="toxtat-och" aria-haspopup="dialog">Stop the mock test</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="modul-boshla">Start module</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="toxtat-och" aria-haspopup="dialog">Stop the mock test</button>
       </div>
     </section>
 
@@ -84,9 +84,9 @@ const IK = {
       <p class="mk-saqlash" id="saqlash" role="status"></p>
       <div id="savol-joy"></div>
       <div class="mk-pastki">
-        <button type="button" class="mk-tugma2" id="oldingi">Back</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldingi">Back</button>
         <span class="mk-joy" id="joy"></span>
-        <button type="button" class="mk-tugma" id="keyingi">Next</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="keyingi">Next</button>
       </div>
     </section>
 
@@ -96,7 +96,7 @@ const IK = {
       <p class="mk-tanaffus-vaqt" id="tanaffus-vaqt" aria-hidden="true">10:00</p>
       <p class="mk-matn" id="tanaffus-matn">Stand up, drink some water and rest your eyes. Math starts only when you press the button, so you can also continue early.</p>
       <div class="mk-amal">
-        <button type="button" class="mk-tugma" id="tanaffus-davom">Resume testing</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="tanaffus-davom">Resume testing</button>
       </div>
     </section>
 
@@ -104,7 +104,7 @@ const IK = {
       <h1 id="topshirish-h" class="mk-karta-h" tabindex="-1">Submitting the module…</h1>
       <p id="topshirish-matn" class="mk-matn" role="status"></p>
       <div class="mk-amal">
-        <button type="button" class="mk-tugma" id="topshirish-qayta" hidden>Try again</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="topshirish-qayta" hidden>Try again</button>
       </div>
     </section>
 
@@ -135,8 +135,8 @@ const IK = {
       </ul>
       <p class="mk-ogoh" id="xarita-ogoh"></p>
       <div class="mk-dialog-amal">
-        <button type="button" class="mk-tugma2" id="xarita-qayt">Back to questions</button>
-        <button type="button" class="mk-tugma" id="modul-topshir">Submit module</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="xarita-qayt">Back to questions</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="modul-topshir">Submit module</button>
       </div>
     </div>
   </dialog>
@@ -146,8 +146,8 @@ const IK = {
       <div class="mk-dialog-bosh"><h2 id="toxtat-h">Stop this mock test?</h2></div>
       <p class="mk-matn">Answers from modules you already finished stay in your history, and wrong ones are in your redo list. A stopped test gets no score, and you can't continue it later.</p>
       <div class="mk-dialog-amal">
-        <button type="button" class="mk-tugma2" id="toxtat-yoq">Keep going</button>
-        <button type="button" class="mk-tugma" id="toxtat-ha">Stop the test</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="toxtat-yoq">Keep going</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="toxtat-ha">Stop the test</button>
       </div>
     </div>
   </dialog>
@@ -769,7 +769,7 @@ const IK = {
     if (otkazilgan.length) quti.append(savolBolimi('otkaz-h', `No answer (${otkazilgan.length})`, "Questions you left empty are not in your redo list. Add the ones you want to practice.", otkazilgan, 'otkaz', true));
 
     const amal = el('div', 'mk-amal');
-    const a = el('a', 'mk-tugma', 'Back to mock tests');
+    const a = el('a', 't-tugma sat-tugma--kok', 'Back to mock tests');
     a.href = KIRISH + (qidiruv ? `?${qidiruv.slice(1)}` : '');
     amal.append(a);
     quti.append(amal);

@@ -20,8 +20,8 @@ import TolovUsullari from './TolovUsullari.astro';
       <ul class="td-royxat" data-td-royxat></ul>
     </section>
     <div class="td-amal">
-      <button type="button" class="tugma tugma-ikkinchi" data-td-yop>Maybe later</button>
-      <a class="tugma tugma-asosiy" href={yol('/uz/sat/hisob/obuna/')} data-td-rejalar>See plans</a>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-td-yop>Maybe later</button>
+      <a class="t-tugma sat-tugma--kok" href={yol('/uz/sat/hisob/obuna/')} data-td-rejalar>See plans</a>
     </div>
     <TolovUsullari />
   </div>
@@ -52,13 +52,12 @@ import TolovUsullari from './TolovUsullari.astro';
   .td-yop:hover { background: var(--color-sat-line); color: var(--color-sat-text); }
   .td-yop:focus-visible { outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px; }
   .td-tarif { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-sat-sunken); }
-  .td-tarif-h { font-size: var(--text-small-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
+  .td-tarif-h { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
   .td-royxat { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-small-size); }
-  .td-royxat :global(b) { font-weight: 700; }
+  .td-royxat :global(b) { font-weight: var(--font-weight-bold); }
   .td-amal { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-3); }
   @media (max-width: 480px) {
     .td-ichi { padding: var(--space-5); }
     .td-amal { flex-direction: column-reverse; }
-    .td-amal .tugma { inline-size: 100%; justify-content: center; }
   }
 </style>

@@ -246,8 +246,8 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
 <style>
   .sat-kirish { padding-block: var(--space-14) 0; display: flex; flex-direction: column; gap: var(--space-14); color: var(--color-sat-text); }
 
-  .pill { padding: 4px 12px; border-radius: var(--radius-full); background: var(--color-sat-bg); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: 700; }
-  .pill-kichik { padding: 3px 10px; font-size: 12px; color: var(--color-sat-text-muted); white-space: nowrap; }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-sat-bg); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .pill-kichik { padding: var(--space-1) var(--space-2); font-size: var(--text-caption-size); color: var(--color-sat-text-muted); white-space: nowrap; }
   .sat-yorliq { color: var(--color-sat-text-muted); }
 
   /* Hero: navy sahna (sat.css .sat-sahna + poydevor .t-fon). Sahnada matn faqat sat-on-navy;
@@ -257,7 +257,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .hero-matn { flex: 3 1 420px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-5); }
   .hero h1 { font-size: var(--text-sat-hero-size); line-height: var(--text-sat-hero-lh); letter-spacing: var(--text-sat-hero-ls); }
   .kok { color: var(--color-sat-sky); }
-  .lead { font-size: 19px; line-height: 1.6; color: var(--color-sat-on-navy); max-width: 58ch; }
+  .lead { font-size: var(--text-h3-size); line-height: 1.6; color: var(--color-sat-on-navy); max-width: 58ch; }
   .lead-telefon { display: none; }
   .cta { display: flex; flex-wrap: wrap; gap: var(--space-3); padding-top: var(--space-1); }
   .hero-plitka { display: flex; flex-direction: column; gap: var(--space-4); }
@@ -279,7 +279,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     border-radius: var(--radius-md); padding: var(--space-4);
     display: flex; align-items: center; gap: var(--space-4);
   }
-  .tuzilma-matn { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .tuzilma-matn { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
   /* Modul vaqt chizig'i (bezak, aria-hidden: ma'lumot yuqoridagi matnda). Rang sat-blue: grafik, matn emas */
   .modul-chiziq { display: flex; gap: var(--space-1); width: calc(var(--ulush) * 100%); margin-top: var(--space-2); }
   .modul { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
@@ -291,7 +291,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   }
   .tuzilma[data-kutish] .modul::before { transform: scaleX(0); }
   .modul-nom { font-size: var(--text-caption-size); line-height: var(--text-caption-lh); color: var(--color-sat-on-navy-muted); }
-  .tuzilma strong { font-family: var(--font-sat); font-weight: var(--font-weight-semibold); font-size: 17px; }
+  .tuzilma strong { font-family: var(--font-sat); font-weight: var(--font-weight-semibold); font-size: var(--text-body-size); }
   .tuzilma-belgi {
     flex: none; width: 40px; height: 40px; border-radius: var(--radius-full);
     background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill);
@@ -336,11 +336,11 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill);
     display: grid; place-items: center;
   }
-  .qadam-yorliq { font-size: var(--text-caption-size); font-weight: 700; color: var(--color-sat-blue-text); }
+  .qadam-yorliq { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-sat-blue-text); }
   .qadam-matn { display: flex; flex-direction: column; gap: var(--space-1); }
-  .qadam-nom { font-family: var(--font-sat); font-size: 20px; font-weight: var(--font-weight-semibold); }
-  .qadam-tavsif { font-size: 15px; line-height: 1.55; color: var(--color-sat-text-muted); }
-  .qadam-havola { align-self: center; font-weight: 700; font-size: 15px; white-space: nowrap; color: var(--color-sat-blue-text); text-decoration: underline; text-underline-offset: 0.15em; }
+  .qadam-nom { font-family: var(--font-sat); font-size: var(--text-h3-size); font-weight: var(--font-weight-semibold); }
+  .qadam-tavsif { font-size: var(--text-small-size); line-height: 1.55; color: var(--color-sat-text-muted); }
+  .qadam-havola { align-self: center; font-weight: var(--font-weight-bold); font-size: var(--text-small-size); white-space: nowrap; color: var(--color-sat-blue-text); text-decoration: underline; text-underline-offset: 0.15em; }
   @media (hover: hover) and (pointer: fine) { .qadam:hover .qadam-havola { text-decoration-thickness: var(--border-width-2); } }
   .qadam-strelka { display: none; align-self: center; color: var(--color-sat-text-muted); }
 
@@ -358,7 +358,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .holat {
     display: inline-flex; align-items: center; gap: var(--space-1);
     padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
-    font-size: var(--text-caption-size); font-weight: 800; white-space: nowrap;
+    font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); white-space: nowrap;
   }
   .holat-required { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .holat-accepted { background: var(--color-sat-surface); color: var(--color-sat-text); border: var(--border-width-1) solid var(--color-sat-line-strong); }
@@ -367,7 +367,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .qayerda-ochish { display: none; }
   .qayerda-matn { font-size: var(--text-body-size); line-height: 1.55; color: var(--color-sat-text-muted); }
   .qayerda-manba { margin-top: auto; font-size: var(--text-caption-size); color: var(--color-sat-text-muted); }
-  .qayerda-manba a { color: var(--color-sat-blue-text); font-weight: 700; display: inline-flex; align-items: center; min-height: 44px; }
+  .qayerda-manba a { color: var(--color-sat-blue-text); font-weight: var(--font-weight-bold); display: inline-flex; align-items: center; min-height: 44px; }
   .qayerda-izoh { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
 
   /* Barcha sahifalar */
@@ -377,19 +377,19 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .guruh ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
   .guruh a {
     background: var(--color-sat-surface); border-radius: var(--radius-md);
-    padding: 14px 16px; min-height: 52px;
+    padding: var(--space-4) var(--space-4); min-height: 52px;
     display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
     text-decoration: none; color: var(--color-sat-text);
   }
   @media (hover: hover) and (pointer: fine) { .guruh a:hover .s-nom { color: var(--color-sat-blue-text); text-decoration: underline; } }
-  .s-nom { font-weight: 700; }
+  .s-nom { font-weight: var(--font-weight-bold); }
 
   /* Pastki qator */
   .pastki {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4);
     border-top: var(--border-width-1) solid var(--color-sat-line); padding-top: var(--space-8);
   }
-  .telegram { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .telegram { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); }
   .eslatma { font-size: var(--text-small-size); color: var(--color-sat-text-muted); max-width: 60ch; }
 
   /* Kirgan o'quvchi (SatKirganBelgi <html data-sat-kirgan> qo'yadi): kirish sahifasining tanishtiruv qismi yashirinadi,
@@ -412,9 +412,9 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
 
   /* Telefon ekrani */
   @media (max-width: 640px) {
-    .sat-kirish { padding-top: 28px; gap: var(--space-10); }
+    .sat-kirish { padding-top: var(--space-7); gap: var(--space-10); }
     .lead { display: none; }
-    .lead-telefon { display: block; font-size: 17px; }
+    .lead-telefon { display: block; font-size: var(--text-body-size); }
     .sahifalar, .pastki { display: none; }
     /* Telefon tartibi. Tartib berilmagan bola (order 0) sahnadan yuqoriga chiqadi: Zina va kun savoli ham shu yerda.
        Sahna ichida: matn, plitkalar, tuzilma. */
@@ -448,7 +448,7 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     .qadam { column-gap: var(--space-4); }
     .qadam-matn { align-self: center; }
     .qadam-yorliq, .qadam-tavsif, .qadam-havola { display: none; }
-    .qadam-nom { font-size: 16px; }
+    .qadam-nom { font-size: var(--text-body-size); }
     .qadam-strelka { display: block; }
   }
 </style>

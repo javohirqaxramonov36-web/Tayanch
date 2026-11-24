@@ -69,7 +69,7 @@ const misollar = [
   <div slot="animatsiya">
     <p>In the sentence in the scene, the part with the error is shown with a dashed underline and a line through it, and the revision with a blue background. Switch topics to see five typical mistakes.</p>
     <div class="formula"><span class="kichik ikkinchi">Rule</span><span class="f-qiymat rw-qoida" id="rw-qoida"></span></div>
-    <div class="segment"><button type="button" class="katta asosiy" data-qadamga="sinab">I'll find it myself</button></div>
+    <div class="segment"><button type="button" class="t-tugma sat-tugma--kok" data-qadamga="sinab">I'll find it myself</button></div>
   </div>
 
   <div slot="formula">
@@ -87,7 +87,7 @@ const misollar = [
       <p><b>Task.</b> Tap the word or punctuation mark with the error in the sentence in the scene. With a keyboard: press Tab to enter the sentence, move with the arrow keys, press Enter to mark.</p>
       <p class="vazifa-holat" id="rw-sinab-holat" aria-live="polite">Nothing marked yet.</p>
     </div>
-    <div class="segment"><button type="button" class="kichik-tugma" id="rw-keyingi-misol">Next example</button></div>
+    <div class="segment"><button type="button" class="t-tugma t-tugma--ikkinchi" id="rw-keyingi-misol">Next example</button></div>
   </div>
 </DarsQolip>
 
@@ -176,11 +176,11 @@ const misollar = [
   .rw-namuna { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
   .rw-tuzatilgan { border-top: 1px solid var(--color-sat-line); padding-top: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
   .rw-tuzatilgan[hidden] { display: none; }
-  .rw-tuzatilgan-matn { font-size: 18px; line-height: 1.6; }
-  .rw-tuzatilgan-matn mark { background: var(--color-sat-blue-subtle); color: var(--color-sat-text); font-weight: 800; padding: 0 4px; border-radius: var(--radius-sm); border-bottom: 3px solid var(--color-sat-blue-fill); }
-  .dars .rw-qoida { font-size: 16px; font-weight: 600; line-height: 1.5; }
+  .rw-tuzatilgan-matn { font-size: var(--text-h3-size); line-height: 1.6; }
+  .rw-tuzatilgan-matn mark { background: var(--color-sat-blue-subtle); color: var(--color-sat-text); font-weight: var(--font-weight-extrabold); padding: 0 var(--space-1); border-radius: var(--radius-sm); border-bottom: 3px solid var(--color-sat-blue-fill); }
+  .dars .rw-qoida { font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); line-height: 1.5; }
   .rw-qoidalar { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); }
   .rw-qoidalar div { background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
-  .rw-qoidalar dt { font-weight: 800; }
+  .rw-qoidalar dt { font-weight: var(--font-weight-extrabold); }
   .rw-qoidalar dd { margin: 0; line-height: 1.5; color: var(--color-sat-text-muted); }
 </style>

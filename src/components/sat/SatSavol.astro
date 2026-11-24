@@ -1,12 +1,22 @@
 ---
-// Savol ko'rsatkichi (P06) uslubi: src/lib/sat/savolKorsatkich.ts DOM'i uchun.
-// Komponent ishlatiladigan sahifaga bir marta qo'yiladi. Qiymatlar faqat tokens.css dan.
+// SatSavol (DS qavat-3-sat.md "Tuzilma"): SAT savol ekrani komponenti. Savol, passage va natija zich shishada,
+// A–D variantlari harf doirasida (Sora), holat so'z bilan. DOM'ni src/lib/sat/savolKorsatkich.ts quradi; komponent
+// uni joylashtiradigan konteynerni (ixtiyoriy `id`) va uslubni beradi. Sahifaga bir marta qo'yiladi.
+// 2026-11-24: oldingi nomi SavolUslub (faqat uslub edi). Qiymatlar faqat tokens.css dan.
 // DS PR 5c (ADR 005, 2026-11-23): artifakt v15 `SatSavol` ko'rinishi. Savol, passage va natija
 // faqat zich shishada (`sat-glass-strong`), variant harfi doirada (Sora), tanlangan harf `sat-blue-fill`.
 // Ichma-ich blur yo'q: variantlar, maydonlar va tugmalar tekis. Shisha ustida (masalan /uz/sat/ foto foni
 // zich shishasi ichida) iste'molchi panelni qattiq kartaga o'tkazadi (KunSavoli).
 // To'g'ri / xato faqat rang bilan emas: ikonka, chiziq turi, to'lgan harf va yashirin matn bilan ham.
+interface Props {
+  /** Berilsa, savolKorsatkich uchun bo'sh konteyner (.sk) shu id bilan chiqadi */
+  id?: string;
+  /** Konteynerga qo'shimcha klass */
+  class?: string;
+}
+const { id, class: klass } = Astro.props;
 ---
+{id && <div id={id} class:list={['sk', klass]}><slot /></div>}
 <style is:global>
   .sk { container-type: inline-size; color: var(--color-sat-text); }
   .sk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -176,7 +186,7 @@
     display: flex; align-items: flex-start; gap: var(--space-2);
   }
   .sk-spr-xato[hidden], .sk-korinish[hidden] { display: none; }
-  .sk-spr-xato svg { flex: none; width: 18px; height: 18px; margin-top: 1px; }
+  .sk-spr-xato svg { flex: none; width: 18px; height: 18px; margin-top: var(--space-1); }
   .sk-korinish { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
   .sk-korinish-qiymat { font-size: var(--font-size-body-d); color: var(--color-sat-text); }
 

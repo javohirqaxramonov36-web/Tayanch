@@ -89,11 +89,11 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
       <p class="xato-xabar" id="r-xato" role="alert" hidden></p>
       <p class="kichik ikkinchi" id="kvota" hidden></p>
       <div class="tugmalar">
-        <button type="submit" class="tugma tugma-asosiy" id="tuz">Make my plan</button>
+        <button type="submit" class="t-tugma sat-tugma--kok" id="tuz">Make my plan</button>
         <span class="tasdiq" id="qayta-tasdiq" hidden>
           <span id="qayta-matn">A new plan replaces your current plan and its check marks.</span>
-          <button type="button" class="tugma tugma-matn" id="qayta-ha">Replace plan</button>
-          <button type="button" class="tugma tugma-matn" id="qayta-yoq">Cancel</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta-ha">Replace plan</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta-yoq">Cancel</button>
         </span>
       </div>
     </form>
@@ -103,10 +103,10 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
       <p class="kichik ikkinchi">Made with the earlier version of this planner and saved in this browser. It stays until you delete it. If you have no newer plan, its settings fill in the form.</p>
       <dl class="qiymatlar" id="eski-xulosa"></dl>
       <div class="tugmalar">
-        <button type="button" class="tugma tugma-matn" id="eski-ochir">Delete previous plan</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="eski-ochir">Delete previous plan</button>
         <span class="tasdiq" id="eski-tasdiq" hidden>Delete the previous plan from this browser?
-          <button type="button" class="tugma tugma-matn" id="eski-ha">Yes, delete</button>
-          <button type="button" class="tugma tugma-matn" id="eski-yoq">Cancel</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="eski-ha">Yes, delete</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="eski-yoq">Cancel</button>
         </span>
       </div>
     </section>
@@ -126,20 +126,20 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
         </div>
         <div class="kochir" id="kochir-blok" hidden>
           <p class="kichik" id="otkazilgan-matn"></p>
-          <button type="button" class="tugma tugma-ikkinchi" id="kochir">Move missed tasks</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="kochir">Move missed tasks</button>
         </div>
         <p class="kichik natija-xabar" id="kochir-natija" aria-live="polite"></p>
         <div class="hisobga" id="hisobga" hidden>
           <p class="kichik">This plan is saved only in this browser.</p>
-          <button type="button" class="tugma tugma-ikkinchi" id="hisobga-saqla">Save this plan to your account</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="hisobga-saqla">Save this plan to your account</button>
         </div>
       </div>
       <ol class="haftalar" id="haftalar"></ol>
       <div class="tugmalar">
-        <button type="button" class="tugma tugma-matn" id="ochir">Delete plan</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="ochir">Delete plan</button>
         <span class="tasdiq" id="ochir-tasdiq" hidden><span id="ochir-matn">Delete this plan and its check marks?</span>
-          <button type="button" class="tugma tugma-matn" id="ochir-ha">Yes, delete</button>
-          <button type="button" class="tugma tugma-matn" id="ochir-yoq">Cancel</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="ochir-ha">Yes, delete</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="ochir-yoq">Cancel</button>
         </span>
       </div>
       <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite"></p>
@@ -757,58 +757,58 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
   .reja [hidden] { display: none !important; }
   .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
-  .pill { padding: 4px 12px; border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: 700; white-space: nowrap; }
-  .pill-chiziq { background: transparent; border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); padding: 2.5px 10.5px; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); padding: var(--space-1) var(--space-3); }
   .pill-joriy { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
-  h2 { font-size: 32px; }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--text-h1-size); }
   h2:focus { outline: none; }
-  .kichik-h, .forma-h { font-size: var(--font-size-body-d); font-weight: 800; }
-  .lead { font-size: 18px; line-height: 1.6; color: var(--color-sat-text-muted); max-width: 62ch; }
+  .kichik-h, .forma-h { font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); }
+  .lead { font-size: var(--text-h3-size); line-height: 1.6; color: var(--color-sat-text-muted); max-width: 62ch; }
   .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); line-height: 1.6; }
-  .holat-qator { font-weight: 600; color: var(--color-sat-text-muted); }
-  .holat-qator a, .izoh-qator a, #r-profil-izoh a { color: var(--color-sat-blue-text); font-weight: 700; }
+  .holat-qator { font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .holat-qator a, .izoh-qator a, #r-profil-izoh a { color: var(--color-sat-blue-text); font-weight: var(--font-weight-bold); }
   .yuklanmoqda { color: var(--color-sat-text-muted); }
 
   .forma { border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
   .maydon { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
-  .maydon > label:first-child, .maydon legend { font-weight: 800; font-size: 17px; padding: 0; margin-bottom: var(--space-1); }
-  .ixtiyoriy { font-weight: 600; color: var(--color-sat-text-muted); }
+  .maydon > label:first-child, .maydon legend { font-weight: var(--font-weight-extrabold); font-size: var(--text-body-size); padding: 0; margin-bottom: var(--space-1); }
+  .ixtiyoriy { font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
   .forma input[type='date'], .forma input[type='number'] {
     min-height: 48px; padding: 0 var(--space-4); border: 2px solid var(--color-sat-line-strong); border-radius: var(--radius-md);
-    background: var(--color-sat-surface); color: var(--color-sat-text); font: inherit; font-size: 17px; max-width: 100%; width: 260px;
+    background: var(--color-sat-surface); color: var(--color-sat-text); font: inherit; font-size: var(--text-body-size); max-width: 100%; width: 260px;
   }
   .forma input[type='date']:disabled { opacity: 0.55; }
   .forma input:focus-visible, .chip:focus-visible, .havola-tugma:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .check-qator { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; font-weight: 600; cursor: pointer; align-self: flex-start; }
+  .check-qator { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; font-weight: var(--font-weight-semibold); cursor: pointer; align-self: flex-start; }
   .check-qator input, .vazifa input { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--color-sat-blue-fill); }
   .soat-qator { display: flex; align-items: center; gap: var(--space-4); max-width: 480px; }
   .soat-qator input[type='range'] { flex: 1; min-width: 0; height: 44px; accent-color: var(--color-sat-blue-fill); }
-  .soat-son { min-width: 5ch; font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .soat-son { min-width: 5ch; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
 
   .zaif { gap: var(--space-3); }
-  .taklif-izoh { font-size: var(--text-small-size); font-weight: 700; color: var(--color-sat-text); background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); }
+  .taklif-izoh { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text); background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); }
   .zaif-bolim { display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-2); }
-  .zaif-h { font-size: 17px; font-weight: 800; }
+  .zaif-h { font-size: var(--text-body-size); font-weight: var(--font-weight-extrabold); }
   .zaif-domen { display: flex; flex-direction: column; gap: var(--space-2); }
-  .domen-nom { font-size: var(--text-small-size); font-weight: 700; color: var(--color-sat-text-muted); }
+  .domen-nom { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
   .chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .chip {
-    min-height: 44px; padding: var(--space-2) 14px; border-radius: var(--radius-full); text-align: left;
+    min-height: 44px; padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); text-align: left;
     display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--space-2);
-    font: inherit; font-weight: 700; font-size: var(--text-small-size); line-height: 1.3; cursor: pointer;
+    font: inherit; font-weight: var(--font-weight-bold); font-size: var(--text-small-size); line-height: 1.3; cursor: pointer;
     background: var(--color-sat-surface); color: var(--color-sat-text); border: 2px solid var(--color-sat-line-strong);
   }
   @media (hover: hover) and (pointer: fine) { .chip:hover:not(:disabled) { border-color: var(--color-sat-blue-fill); } }
   .chip[aria-pressed='true'] { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); border-color: var(--color-sat-blue-fill); }
   .chip:disabled { cursor: not-allowed; color: var(--color-sat-text-muted); border-style: dashed; }
-  .taklif-belgi { font-size: var(--text-caption-size); font-weight: 800; padding: 1px 8px; border-radius: var(--radius-full); border: 1.5px solid currentColor; }
+  .taklif-belgi { font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); border: 1.5px solid currentColor; }
 
-  .xato-xabar { font-weight: 700; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .xato-xabar { font-weight: var(--font-weight-bold); color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
   .tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .havola-tugma { border: 0; padding: 0; background: none; color: var(--color-sat-blue-text); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; min-height: 24px; }
-  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-weight: 700; }
+  .havola-tugma { border: 0; padding: 0; background: none; color: var(--color-sat-blue-text); font: inherit; font-weight: var(--font-weight-bold); text-decoration: underline; cursor: pointer; min-height: 24px; }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); }
 
   .eski { border: 1.5px dashed var(--color-sat-line-strong); border-radius: var(--radius-lg); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
 
@@ -817,44 +817,44 @@ const BOLIMLAR: { kalit: SavolBolim; nomi: string }[] = [
   .qiymatlar { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-2); }
   .qiymatlar :global(div) { background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); }
   .qiymatlar :global(dt) { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
-  .qiymatlar :global(dd) { margin: 0; font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .izoh-qator { font-weight: 600; }
+  .qiymatlar :global(dd) { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .izoh-qator { font-weight: var(--font-weight-semibold); }
   .progress-qator { display: flex; flex-direction: column; gap: var(--space-2); max-width: 420px; }
   .progress { height: 8px; border-radius: var(--radius-full); background: var(--color-sat-line); overflow: hidden; }
   .progress span { display: block; height: 100%; width: 0; background: var(--color-sat-blue-fill); }
   .kochir, .hisobga { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
   .natija-xabar:empty { display: none; }
-  .natija-xabar { font-weight: 700; }
+  .natija-xabar { font-weight: var(--font-weight-bold); }
 
   .haftalar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
   .haftalar :global(details) { border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-md); }
   .haftalar :global(summary) { min-height: 56px; padding: var(--space-3) var(--space-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); cursor: pointer; list-style: none; }
   .haftalar :global(summary::-webkit-details-marker) { display: none; }
   .haftalar :global(summary:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--radius-md); }
-  .haftalar :global(.h-raqam) { width: 32px; height: 32px; flex: none; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); font-weight: 800; font-size: var(--text-small-size); }
-  .haftalar :global(.h-nom) { font-weight: 800; }
-  .haftalar :global(.h-sana) { color: var(--color-sat-text-muted); font-weight: 600; flex: 1 1 140px; min-width: 0; }
+  .haftalar :global(.h-raqam) { width: 32px; height: 32px; flex: none; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); font-weight: var(--font-weight-extrabold); font-size: var(--text-small-size); }
+  .haftalar :global(.h-nom) { font-weight: var(--font-weight-extrabold); }
+  .haftalar :global(.h-sana) { color: var(--color-sat-text-muted); font-weight: var(--font-weight-semibold); flex: 1 1 140px; min-width: 0; }
   .haftalar :global(.h-hisob) { font-variant-numeric: tabular-nums; }
   .haftalar :global(.kunlar) { list-style: none; margin: 0; padding: 0 var(--space-4) var(--space-3); display: flex; flex-direction: column; }
   .haftalar :global(.kun) { border-top: 1px solid var(--color-sat-line); padding-block: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
-  .haftalar :global(.kun-nom) { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: var(--space-2); }
-  .haftalar :global(.bugun-belgi) { font-size: var(--text-caption-size); padding: 1px 8px; border-radius: var(--radius-full); background: var(--color-sat-text); color: var(--color-sat-surface); }
-  .haftalar :global(.kun-izoh) { color: var(--color-sat-text-muted); font-size: 15px; }
-  .haftalar :global(.kun-imtihon .kun-izoh) { color: var(--color-sat-text); font-weight: 700; }
+  .haftalar :global(.kun-nom) { font-weight: var(--font-weight-extrabold); font-size: var(--text-small-size); display: flex; align-items: center; gap: var(--space-2); }
+  .haftalar :global(.bugun-belgi) { font-size: var(--text-caption-size); padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); background: var(--color-sat-text); color: var(--color-sat-surface); }
+  .haftalar :global(.kun-izoh) { color: var(--color-sat-text-muted); font-size: var(--text-small-size); }
+  .haftalar :global(.kun-imtihon .kun-izoh) { color: var(--color-sat-text); font-weight: var(--font-weight-bold); }
   .haftalar :global(.vazifalar) { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
   .haftalar :global(.vazifa) { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--space-3); }
   .haftalar :global(.check) { flex: 1 1 280px; min-width: 0; display: flex; align-items: flex-start; gap: var(--space-3); min-height: 44px; padding: var(--space-2) 0; cursor: pointer; }
-  .haftalar :global(.v-matn) { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .haftalar :global(.v-matn) { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
   .haftalar :global(.v-nom) { line-height: 1.4; }
   .haftalar :global(.v-vaqt) { font-size: var(--text-small-size); color: var(--color-sat-text-muted); font-variant-numeric: tabular-nums; }
   .haftalar :global(.check input:checked + .v-matn .v-nom) { color: var(--color-sat-text-muted); text-decoration: line-through; }
-  .haftalar :global(.v-havola) { color: var(--color-sat-blue-text); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; padding-left: 34px; }
+  .haftalar :global(.v-havola) { color: var(--color-sat-blue-text); font-weight: var(--font-weight-bold); min-height: 44px; display: inline-flex; align-items: center; padding-left: var(--space-8); }
 
   @media (max-width: 640px) {
-    .reja { padding-top: 28px; gap: var(--space-6); }
-    h1 { font-size: 34px; }
-    h2 { font-size: 26px; }
-    .lead { font-size: 17px; }
+    .reja { padding-top: var(--space-7); gap: var(--space-6); }
+    h1 { font-size: var(--text-h1-size); }
+    h2 { font-size: var(--text-h2-size); }
+    .lead { font-size: var(--text-body-size); }
     .forma { padding: var(--space-5); }
     .forma input[type='date'], .forma input[type='number'] { width: 100%; }
     .tugma-asosiy { width: 100%; }

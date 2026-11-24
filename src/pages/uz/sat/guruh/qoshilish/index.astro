@@ -39,7 +39,7 @@ const guruhlar = yol('/uz/sat/guruh/');
           spellcheck="false" maxlength="12" required aria-describedby="q-kod-izoh q-kod-xato" />
         <p class="xato" id="q-kod-xato" hidden></p>
       </div>
-      <div class="tugmalar"><button type="submit" class="tugma tugma-asosiy" id="q-top">{M.qTop}</button></div>
+      <div class="tugmalar"><button type="submit" class="t-tugma sat-tugma--kok" id="q-top">{M.qTop}</button></div>
     </form>
 
     <section class="karta" id="rozilik" aria-labelledby="r-h" hidden>
@@ -90,18 +90,18 @@ const guruhlar = yol('/uz/sat/guruh/');
         </fieldset>
         <p class="alert" role="alert" id="r-xato" hidden></p>
         <div class="tugmalar">
-          <button type="submit" class="tugma tugma-asosiy" id="r-qoshil">{M.qQoshil}</button>
+          <button type="submit" class="t-tugma sat-tugma--kok" id="r-qoshil">{M.qQoshil}</button>
         </div>
       </form>
       <div class="tugmalar">
-        <a class="tugma tugma-asosiy" id="r-guruhlarga" href={guruhlar} hidden>{M.qGuruhlarga}</a>
-        <button type="button" class="tugma tugma-ikkinchi" id="r-boshqa">{M.qBoshqaKod}</button>
+        <a class="t-tugma sat-tugma--kok" id="r-guruhlarga" href={guruhlar} hidden>{M.qGuruhlarga}</a>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="r-boshqa">{M.qBoshqaKod}</button>
       </div>
     </section>
 
     <section class="karta" id="tayyor" aria-labelledby="t-xabar" hidden>
       <p class="holat" role="status" id="t-xabar" tabindex="-1"></p>
-      <div class="tugmalar"><a class="tugma tugma-asosiy" href={guruhlar}>{M.qGuruhlarga}</a></div>
+      <div class="tugmalar"><a class="t-tugma sat-tugma--kok" href={guruhlar}>{M.qGuruhlarga}</a></div>
     </section>
   </div>
 </BolimQobiq>
@@ -109,8 +109,8 @@ const guruhlar = yol('/uz/sat/guruh/');
 <style>
   .malumot { margin: 0; display: grid; gap: var(--space-3); }
   .malumot div { display: flex; flex-direction: column; gap: var(--space-1); }
-  .malumot dt { font-size: var(--text-caption-size); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-secondary); }
-  .malumot dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  .malumot dt { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-secondary); }
+  .malumot dd { margin: 0; font-weight: var(--font-weight-bold); overflow-wrap: anywhere; }
   .kod-kirit { font-family: var(--font-family-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .xatolar:focus { outline: none; box-shadow: var(--focus-ring); }
   .xatolar ul { margin: var(--space-2) 0 0; padding-left: var(--space-5); }

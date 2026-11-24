@@ -112,12 +112,12 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
     border: var(--border-width-1) solid var(--color-sat-line-strong);
   }
   @media (hover: hover) and (pointer: fine) { .fokus-bosh .yopish:hover { border-color: var(--color-sat-blue); } }
-  .fokus-bosh .sarlavha { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .fokus-bosh .sarlavha { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
   .fokus-bosh .ustki {
     font-size: var(--text-caption-size); line-height: var(--text-caption-lh);
     font-weight: var(--font-weight-semibold); letter-spacing: 0.04em; color: var(--color-sat-text-muted);
   }
-  .fokus-bosh .nomi { font-family: var(--font-sat); font-size: 17px; font-weight: var(--font-weight-semibold); }
+  .fokus-bosh .nomi { font-family: var(--font-sat); font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); }
   .fokus-bosh .jarayon { flex: 1 1 240px; display: flex; align-items: center; gap: var(--space-3); max-width: 520px; margin-left: auto; }
   .fokus-bosh .progress { flex: 1; height: 8px; border-radius: var(--radius-full); background: var(--color-sat-line); overflow: hidden; }
   .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--color-sat-blue-fill); border-radius: var(--radius-full); }

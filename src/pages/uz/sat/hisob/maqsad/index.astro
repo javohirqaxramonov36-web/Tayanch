@@ -102,8 +102,8 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
 
       <p class="holat" id="maqsad-holat" role="status" hidden></p>
       <div class="tugmalar">
-        <button type="submit" class="tugma tugma-asosiy" id="m-saqlash">{M.saqlash}</button>
-        <button type="button" class="tugma tugma-ikkinchi" id="m-otkazish">{M.otkazish}</button>
+        <button type="submit" class="t-tugma sat-tugma--kok" id="m-saqlash">{M.saqlash}</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="m-otkazish">{M.otkazish}</button>
       </div>
     </form>
 
@@ -121,8 +121,8 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
   .maqsad { display: flex; flex-direction: column; gap: var(--space-8); }
   .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
   .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-  .ustki-kok { font-size: var(--text-caption-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
-  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 700; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
   .pill-chiziq { border: var(--border-width-1) dashed var(--color-text-secondary); color: var(--color-text-secondary); }
   .lead { font-size: var(--font-size-body-d); color: var(--color-text-secondary); max-width: var(--size-measure); }
   .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
@@ -130,8 +130,8 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
 
   .forma { display: flex; flex-direction: column; gap: var(--space-6); max-width: var(--size-measure); }
   .maydon { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
-  .maydon label, .guruh legend { font-weight: 700; }
-  .ixtiyoriy { font-weight: 500; color: var(--color-text-secondary); }
+  .maydon label, .guruh legend { font-weight: var(--font-weight-bold); }
+  .ixtiyoriy { font-weight: var(--font-weight-medium); color: var(--color-text-secondary); }
   .izoh { font-size: var(--text-small-size); color: var(--color-text-secondary); line-height: 1.5; }
   .kirit {
     width: 100%; min-height: var(--size-control-md); padding: 0 var(--space-4);
@@ -141,7 +141,7 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
   .kirit:focus-visible { outline: none; border-color: var(--input-border-focus); box-shadow: var(--focus-ring); }
   .kirit[aria-invalid='true'] { border-color: var(--color-warning-text); }
   .kirit:disabled { background: var(--color-surface-sunken); color: var(--color-text-secondary); }
-  .xato { font-size: var(--text-small-size); font-weight: 700; color: var(--color-warning-text); line-height: 1.5; }
+  .xato { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-warning-text); line-height: 1.5; }
   .xato::before { content: '! '; }
 
   .guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-3); }
@@ -157,22 +157,22 @@ const tekshirilmagan = ['Whether every official date is offered at test centers 
   .variant input { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); margin: 0; accent-color: var(--color-sat-blue-fill); cursor: pointer; }
   .variant input:focus-visible { outline: none; }
   .variant-matn { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
-  .variant-nom { font-weight: 700; }
+  .variant-nom { font-weight: var(--font-weight-bold); }
   .variant-izoh { font-size: var(--text-small-size); color: var(--color-text-secondary); line-height: 1.5; }
   .ichki-maydon { padding: 0 0 var(--space-2) var(--space-4); }
   .tekshirilmoqda { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
-  .otgan-eslatma { background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 700; line-height: 1.5; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
+  .otgan-eslatma { background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-bold); line-height: 1.5; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
   .manba-izoh { font-size: var(--text-small-size); color: var(--color-text-secondary); line-height: 1.5; }
   .manba-izoh a, .tekshirilmoqda a { color: var(--color-link); }
 
-  .alert { font-weight: 700; line-height: 1.5; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .alert { font-weight: var(--font-weight-bold); line-height: 1.5; color: var(--color-warning-text); background: var(--color-warning-subtle); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
   .xatolar:focus { outline: none; box-shadow: var(--focus-ring); }
   .xatolar ul { margin: var(--space-2) 0 0; padding-left: var(--space-5); }
   .xatolar a { color: inherit; }
-  .holat { font-weight: 700; line-height: 1.5; color: var(--color-text-primary); background: var(--color-surface-sunken); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); }
+  .holat { font-weight: var(--font-weight-bold); line-height: 1.5; color: var(--color-text-primary); background: var(--color-surface-sunken); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); }
   .tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
   @media (max-width: 36rem) {
-    .tugmalar .tugma { width: 100%; }
+    .tugmalar .t-tugma { width: 100%; }
   }
 </style>
 

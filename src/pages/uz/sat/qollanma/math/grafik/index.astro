@@ -73,13 +73,13 @@ const Y = (y: number) => 210 - 20 * y;
     </div>
     <p class="sr" id="grafik-tavsif" aria-live="polite"></p>
     <p class="sahna-izoh" id="grafik-izoh"></p>
-    <button type="button" class="kichik-tugma grafik-qaytar" id="grafik-qaytar">Reset</button>
+    <button type="button" class="t-tugma t-tugma--ikkinchi grafik-qaytar" id="grafik-qaytar">Reset</button>
   </div>
 
   <div slot="animatsiya">
     <p id="anim-matn"></p>
     <div class="segment">
-      <button type="button" class="katta asosiy" id="anim-boshla">Show</button>
+      <button type="button" class="t-tugma sat-tugma--kok" id="anim-boshla">Show</button>
     </div>
     <div class="formula"><span class="f-qiymat" id="anim-holat" aria-live="polite">Press the button.</span></div>
   </div>
@@ -361,14 +361,14 @@ const Y = (y: number) => 210 - 20 * y;
   .dars .grafik-quti svg { touch-action: pan-y; }
   .dars .g-panjara line { stroke: var(--color-sat-line-strong); stroke-width: 1; }
   .dars .g-oqlar line { stroke: var(--color-sat-text-muted); stroke-width: 1.5; }
-  .dars .g-raqamlar text { fill: var(--color-sat-text-muted); font-size: 11px; font-weight: 600; font-family: var(--shrift); }
+  .dars .g-raqamlar text { fill: var(--color-sat-text-muted); font-size: var(--text-caption-size); font-weight: var(--font-weight-semibold); font-family: var(--shrift); }
   .dars .g-egri1 { fill: none; stroke: var(--color-sat-blue-text); stroke-width: 3.5; }
   .dars .g-egri2 { fill: none; stroke: var(--color-sat-text); stroke-width: 3; stroke-dasharray: 9 6; }
   .dars .g-qiyalik { fill: none; stroke: var(--color-sat-text-muted); stroke-width: 2; stroke-dasharray: 4 3; }
   .dars .g-sim { stroke: var(--color-sat-text-muted); stroke-width: 2; stroke-dasharray: 6 5; }
   .dars .g-nuqta { fill: var(--color-sat-surface); stroke: var(--color-sat-text); stroke-width: 2.5; }
   .dars .g-nuqta.g-ikkinchi { fill: var(--color-sat-text); }
-  .dars .g-yozuv { fill: var(--color-sat-text); font-size: 13px; font-weight: 800; font-family: var(--shrift); paint-order: stroke; stroke: var(--color-sat-sunken); stroke-width: 4px; }
+  .dars .g-yozuv { fill: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); font-family: var(--shrift); paint-order: stroke; stroke: var(--color-sat-sunken); stroke-width: 4px; }
   .dars .g-tutqich circle:not(.g-hit) { fill: var(--color-sat-blue-fill); stroke: var(--color-sat-surface); stroke-width: 3; }
   .dars .g-tutqich.g-t2 circle:not(.g-hit) { fill: var(--color-sat-text); }
   .dars .g-hit { fill: transparent; }

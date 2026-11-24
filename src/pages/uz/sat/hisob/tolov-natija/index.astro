@@ -35,8 +35,8 @@ const obuna = yol('/uz/sat/hisob/obuna/');
         </p>
       )}
       <div class="amallar">
-        <button type="button" class="tugma tugma-asosiy" data-qayta hidden>Check again</button>
-        <a class="tugma tugma-ikkinchi" href={obuna} data-obuna>Back to Subscription</a>
+        <button type="button" class="t-tugma sat-tugma--kok" data-qayta hidden>Check again</button>
+        <a class="t-tugma t-tugma--ikkinchi" href={obuna} data-obuna>Back to Subscription</a>
       </div>
     </section>
   </div>
@@ -125,14 +125,14 @@ const obuna = yol('/uz/sat/hisob/obuna/');
   .natija { padding-top: var(--space-6); }
   .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
   .karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); max-width: 640px; padding: var(--space-8) var(--space-6); border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg); background: var(--color-sat-surface); }
-  .belgi { display: inline-grid; place-items: center; inline-size: var(--space-14); block-size: var(--space-14); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-h3-size); font-weight: 800; }
+  .belgi { display: inline-grid; place-items: center; inline-size: var(--space-14); block-size: var(--space-14); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
   .karta[data-holat='success'] .belgi { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .karta[data-holat='failed'] .belgi, .karta[data-holat='kutish'] .belgi { background: var(--color-warning-subtle); color: var(--color-warning-text); }
   .xabar { display: flex; flex-direction: column; gap: var(--space-2); }
   h1 { font-size: var(--text-h3-size); }
   h1:focus { outline: none; }
   .lead { font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); }
-  .karta a:not(.tugma) { color: var(--color-sat-blue-text); }
+  .karta a:not(.t-tugma) { color: var(--color-sat-blue-text); }
   .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
-  @media (max-width: 479.98px) { .amallar { flex-direction: column; align-self: stretch; } .amallar .tugma { width: 100%; } }
+  @media (max-width: 479.98px) { .amallar { flex-direction: column; align-self: stretch; } .amallar .t-tugma { width: 100%; } }
 </style>
