@@ -42,7 +42,7 @@ const qayerda: { manba: string; nomi: string; davlat: string; holat: SatHolat; m
   { manba: 'HV01', nomi: 'Harvard College', davlat: 'USA', holat: 'Required', matn: 'The SAT or ACT is required, for international applicants too. Only if neither test is accessible does Harvard accept other results, such as A-Levels, IB or a national exam.' },
   { manba: 'NY01', nomi: 'NYU Abu Dhabi', davlat: 'UAE', holat: 'Optional', matn: 'Test-optional through the 2027–2028 application cycle. Scores you choose to send are still reviewed.' },
   { manba: 'MT01', nomi: 'METU', davlat: 'Türkiye', holat: 'Accepted', matn: 'The SAT is one of the exams you can apply with, alongside TR-YÖS and others. Scores are valid for two years.' },
-  { manba: 'KY01', nomi: 'Kyoto University iUP', davlat: 'Japan', holat: 'Accepted', matn: 'At least one standardized test is mandatory, and the SAT is on the list. For October 2027 entry, only tests taken by November 7, 2026 count. Engineering also needs physics and chemistry results, which the SAT does not cover.' },
+  { manba: 'KY01', nomi: 'Kyoto University iUP', davlat: 'Japan', holat: 'Accepted', matn: 'At least one standardized test is mandatory, and the SAT is on the list. Each intake sets its own deadline for test dates. Engineering also needs physics and chemistry results, which the SAT does not cover.' },
 ];
 const qayerdaQatorlar = qayerda.map((q) => ({ ...q, m: manbalar.find((m) => m.id === q.manba && m.tekshiruvDarajasi === 'rasmiy')! }));
 if (qayerdaQatorlar.some((q) => !q.m)) throw new Error('SAT kirish: "Where the SAT counts" manbasi topilmadi yoki rasmiy emas');
@@ -237,7 +237,6 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
 
 
     <section class="pastki" aria-label="Contact and note">
-      <p class="telegram">Telegram channel <span class="pill pill-kichik">coming soon</span></p>
       <p class="eslatma">Results are not guaranteed.</p>
     </section>
   </div>
@@ -389,7 +388,6 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4);
     border-top: var(--border-width-1) solid var(--color-sat-line); padding-top: var(--space-8);
   }
-  .telegram { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); }
   .eslatma { font-size: var(--text-small-size); color: var(--color-sat-text-muted); max-width: 60ch; }
 
   /* Kirgan o'quvchi (SatKirganBelgi <html data-sat-kirgan> qo'yadi): kirish sahifasining tanishtiruv qismi yashirinadi,

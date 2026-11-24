@@ -3,7 +3,7 @@
 // (saytga ishlamaydigan tugma va raqamsiz "faol" da'vosi chiqmasin).
 export const telegram = {
   /** Kanal: https://t.me/... */
-  kanal: '',
+  kanal: 'https://t.me/tayanch_go',
   /** Savol-javob guruhi: https://t.me/... */
   guruh: '',
   /** Kanaldagi faol talabalar soni: faqat haqiqiy raqam, manba bilan */

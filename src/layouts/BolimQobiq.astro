@@ -40,8 +40,6 @@ const { title, description, holat, bolim = 'sat', yol: bandlar = [], ota, sahifa
 // Til bo'limdan: SAT inglizcha (CLAUDE.md), qolganlari o'zbekcha.
 const til = Astro.props.til ?? bolimTili(bolim);
 const sahifaNomi = title.split(' · ')[0];
-// "Beta — in development" yozuvi Top Admission'da ko'rsatilmaydi (muallif qarori, 2026-11-21).
-const beta = bolim !== 'top-admission';
 ---
 <!doctype html>
 <html lang={til} data-floor={joriyQavat(Astro.url.pathname)}>
@@ -57,7 +55,6 @@ const beta = bolim !== 'top-admission';
         <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={sahifaNomi} ota={ota} /></div>
         <slot />
         {telegramKorinadi('kanal') && <div class="ichki telegram-qator"><TelegramTugma turi="kanal" matn={matn[til].yon.telegramKanal} yangiTab={matn[til].yon.yangiTab} /></div>}
-        {beta && <p class="ichki beta-holat" lang={til}>{til === 'en' ? 'Beta — in development' : 'Beta — ishlab chiqilmoqda'}</p>}
       </main>
       {bolim === 'sat' && <SatEslatma />}
       {bolim === 'sat' && <SatSinxron />}
@@ -72,7 +69,6 @@ const beta = bolim !== 'top-admission';
   .bolim-qobiq .kontent-ustun.t-fon { min-height: 100dvh; }
   .bolim-qobiq .kontent-ustun .ichki { max-width: 960px; padding-inline: var(--b-4); padding-bottom: var(--b-16); }
   .bolim-qobiq .kontent-ustun .telegram-qator { padding-bottom: 0; }
-  .bolim-qobiq .kontent-ustun .beta-holat { margin: 0; padding-block: var(--b-4) var(--b-6); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
 
   @media (min-width: 1024px) {
     .bolim-qobiq .kontent-ustun .ichki { padding-inline: var(--b-10); max-width: calc(960px + 2 * var(--b-10)); }
