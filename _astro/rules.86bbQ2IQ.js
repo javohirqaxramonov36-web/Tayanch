@@ -1,0 +1,1 @@
+var e={as_of:`2026-11-20`,source:`S01`,url:`https://lex.uz/docs/-7520218`,bachelor_max_age:30,master_min_age:22,master_max_age:40,master_min_work_years:1,ielts:{bachelor:6,master:7},sat:1300,percentile:75,top100:100,top300:300,top20:20,partial_grant_percent:50,test_questions:40,test_minutes:60,test_pass_score:61};export{e as t};
