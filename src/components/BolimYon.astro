@@ -6,7 +6,7 @@ import { kursHavola, kursOchiq } from '../lib/sat/kursKatalog';
 //   Esc yopadi, fokus panel ichida aylanadi, qolgan sahifa inert bo'ladi, aria-expanded yangilanadi.
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satYonGuruhlar } from '../data/satSahifalar';
-import { qollanmalar, asos, vositalar, mashqlar as ieltsMashqlar, darslar as ieltsDarslar } from '../data/ieltsSahifalar';
+import { ieltsGuruhlar } from '../data/ieltsSahifalar';
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import { eyufGuruhlar } from '../data/eyufSahifalar';
 import QavatMenyu from './navigator/QavatMenyu.astro';
@@ -84,12 +84,7 @@ const hisobBand = Boolean(PUBLIC_SUPABASE_URL && PUBLIC_SUPABASE_ANON_KEY);
 const hisobKirish = `${yol('/uz/hisob/kirish/')}?keyin=${encodeURIComponent(joriy)}`;
 const hisobProfil = yol('/uz/hisob/profil/');
 const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/, '');
-const ieltsGuruhlar = [
-  { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
-  { nomi: 'Reading darslari', bandlar: ieltsDarslar },
-  { nomi: 'Mashq', bandlar: ieltsMashqlar },
-  { nomi: 'Vositalar', bandlar: vositalar },
-];
+
 ---
 <header class="ustki-qator nav-shisha" data-bolim={bolim} lang="uz">
   <a class="logo" href={yol('/')}>
@@ -311,11 +306,9 @@ const ieltsGuruhlar = [
 
   const ochiqPanel = () => d.querySelector<HTMLDetailsElement>('.ustki-qator details[open]');
   const yopish = document.getElementById('panel-yopish') as HTMLButtonElement;
-  let desktopOchuvchi: HTMLButtonElement | null = null;
   const panelniYop = (panel: HTMLDetailsElement) => {
     panel.open = false;
-    if (desktop.matches) desktopOchuvchi?.focus({ preventScroll: true });
-    else panel.querySelector('summary')?.focus({ preventScroll: true });
+    if (!desktop.matches) panel.querySelector('summary')?.focus({ preventScroll: true });
   };
 
   yopish.hidden = false;
@@ -324,10 +317,6 @@ const ieltsGuruhlar = [
     if (panel) panelniYop(panel);
   });
   const menyuDetails = document.querySelector<HTMLDetailsElement>('.yon-orami')!;
-  document.addEventListener('tayanch:joriy-menyu', (event) => {
-    desktopOchuvchi = (event as CustomEvent<{ fokus: HTMLButtonElement }>).detail.fokus;
-    setTimeout(() => { menyuDetails.open = true; menyuDetails.querySelector<HTMLElement>('a[href]')?.focus(); }, 0);
-  });
   menyuDetails.addEventListener('toggle', () => { document.getElementById('panel-ochish')?.setAttribute('aria-expanded', String(menyuDetails.open)); });
   const ustki = document.querySelector<HTMLElement>('header.ustki-qator')!;
   ustki.addEventListener('keydown', (event) => {

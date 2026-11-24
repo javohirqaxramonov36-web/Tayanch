@@ -40,10 +40,11 @@ export const darslar: IeltsBand[] = [
   { nomi: 'Matching headings', tavsif: 'Paragrafning asosiy fikriga sarlavha tanlash', qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
 ];
 
-/** Mashq testlari (hozircha faqat Reading ishlaydi) */
+/** Mavjud mashqlar. To‘liq Listening va Speaking testlari keyingi bosqichda. */
 export const mashqlar: IeltsBand[] = [
-  { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
+  { nomi: 'Mashq testlari', tavsif: "Reading, Listening mini-mashqlari va Writing Task 2", qism: 'mashq/', ikonka: IKONKA.namuna },
   { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+  { nomi: 'Writing Task 2 mashqi', tavsif: 'Insho yozish va saqlangan ishni davom ettirish', qism: 'mashq/writing/', ikonka: IKONKA.writing },
   { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
   { nomi: 'Harf va raqam diktanti', tavsif: 'Ism, telefon, sana va narxni tinglab yozish', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
 ];
@@ -51,6 +52,88 @@ export const mashqlar: IeltsBand[] = [
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
   { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
+];
+
+/** Ko'nikma sahifalari (2026-11-24, muallif qarori: IELTS ko'nikma bo'yicha tuziladi).
+ *  Har ko'nikma: qo'llanma → darslar → mashqlar → natijalar. Vaqt IE01 (ielts.org) dan, bosh sahifa bilan bir xil. */
+export type KonikmaId = 'listening' | 'reading' | 'writing' | 'speaking';
+export interface Konikma {
+  id: KonikmaId;
+  nomi: string;
+  ikonka: string;
+  vaqt: string;
+  /** Bir gap: bu sahifada nima bor */
+  tavsif: string;
+  qollanma: IeltsBand;
+  darslar: IeltsBand[];
+  mashqlar: IeltsBand[];
+  natijalar: IeltsBand[];
+}
+
+const band = (nomi: string, tavsif: string, ikonka: string, qism?: string): IeltsBand => ({ nomi, tavsif, ikonka, qism });
+
+export const konikmalar: Konikma[] = [
+  {
+    id: 'listening', nomi: 'Listening', ikonka: IKONKA.listening, vaqt: 'Taxminan 30 daqiqa',
+    tavsif: "Savol turlari va imlo tuzoqlari, keyin tinglab yozish mashqlari.",
+    qollanma: band("Listening qo'llanmasi", qollanmalar[0].tavsif, IKONKA.listening, 'qollanma/listening/'),
+    darslar: [],
+    mashqlar: [
+      band('Listening imlo', "So'zni tinglab, to'g'ri yozish", IKONKA.listening, 'mashq/listening-imlo/'),
+      band('Harf va raqam diktanti', 'Ism, telefon, sana va narxni tinglab yozish', IKONKA.listening, 'mashq/listening-raqamlar/'),
+      band('Listening mock', "To'liq Listening testi", IKONKA.namuna),
+    ],
+    natijalar: [],
+  },
+  {
+    id: 'reading', nomi: 'Reading', ikonka: IKONKA.reading, vaqt: "60 daqiqa (ko'chirish vaqti ichida)",
+    tavsif: "Dalilni topishni o'rgan, savol turlarini darsda mashq qil, keyin to'liq testni ishla.",
+    qollanma: band("Reading qo'llanmasi", qollanmalar[1].tavsif, IKONKA.reading, 'qollanma/reading/'),
+    darslar,
+    mashqlar: [band('Reading testi', '60 daqiqa, 40 savol, taxminiy band', IKONKA.reading, 'mashq/reading/')],
+    natijalar: [
+      band('Reading natijalari', 'Shu brauzerda saqlangan urinishlar', IKONKA.tahlil, 'mashq/reading/#rb-tarix-h'),
+      band('Xatolarni takrorlash', 'Darslar va testlardagi xatolar, oraliq bilan', IKONKA.takror, 'vosita/takrorlash/'),
+    ],
+  },
+  {
+    id: 'writing', nomi: 'Writing', ikonka: IKONKA.writing, vaqt: '60 daqiqa',
+    tavsif: "Task 2 mezonlari va insho tuzilmasi, keyin vaqt bilan insho yozish.",
+    qollanma: band("Task 2 qo'llanmasi", qollanmalar[2].tavsif, IKONKA.writing, 'qollanma/writing-task-2/'),
+    darslar: [],
+    mashqlar: [band('Task 2 insho mashqi', 'Insho yozish va saqlangan ishni davom ettirish', IKONKA.writing, 'mashq/writing/')],
+    natijalar: [],
+  },
+  {
+    id: 'speaking', nomi: 'Speaking', ikonka: IKONKA.speaking, vaqt: '11–14 daqiqa',
+    tavsif: "Uch qism qanday o'tadi va o'zingni yozib eshitib tekshirish.",
+    qollanma: band("Speaking qo'llanmasi", qollanmalar[3].tavsif, IKONKA.speaking, 'qollanma/speaking/'),
+    darslar: [],
+    mashqlar: [band('Gapirish mashqi', "Part 1–3 savollariga vaqt bilan javob, o'zingni yozib eshitish", IKONKA.speaking, 'qollanma/speaking/#mashq')],
+    natijalar: [],
+  },
+];
+
+export const konikmaI = (id: KonikmaId) => konikmalar.find((k) => k.id === id)!;
+/** Ko'nikma sahifasi manzili (/uz/ielts/ dan keyingi qism) */
+export const konikmaQism = (id: KonikmaId) => `${id}/`;
+
+/** Barcha IELTS menyulari (ustki menyu, telefon paneli) shu ro'yxatdan: ko'nikma bo'yicha. */
+export const ieltsGuruhlar: { nomi: string; bandlar: IeltsBand[] }[] = [
+  ...konikmalar.map((k) => ({
+    nomi: k.nomi,
+    bandlar: [
+      band(`${k.nomi} sahifasi`, k.tavsif, k.ikonka, konikmaQism(k.id)),
+      { ...k.qollanma, nomi: "Qo'llanma" },
+      ...k.darslar.map((d) => ({ ...d, nomi: `Dars: ${d.nomi}` })),
+      ...k.mashqlar,
+    ],
+  })),
+  { nomi: 'Reja va takrorlash', bandlar: [
+    ...vositalar,
+    band('Barcha mashqlar', "Hamma ko'nikmalar mashqlari bir joyda", IKONKA.namuna, 'mashq/'),
+    asos,
+  ] },
 ];
 
 export const KALIT_IELTS_REJA = 'tayanch:ielts-reja';

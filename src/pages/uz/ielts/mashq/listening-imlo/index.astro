@@ -5,6 +5,7 @@
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import { imloToplamlar } from '../../../../../data/ielts/imloToplamlar';
+import { yol } from '../../../../../lib/yol';
 
 const IK = {
   tinglash: '<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
@@ -17,6 +18,8 @@ const IK = {
   description="IELTS Listening uchun imlo mashqi: so'zni tinglang va to'g'ri yozing. Kunlar, pul, o'qish, joylar va kundalik hayot mavzulari."
   turi="mashq"
   bolim="ielts"
+  yol={['Listening']}
+  ota={yol('/uz/ielts/listening/')}
   holat="chop-etilgan"
 >
   <div class="ichki imlo">

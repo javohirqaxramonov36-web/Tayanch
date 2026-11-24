@@ -6,6 +6,7 @@
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import { raqamToplamlar } from '../../../../../data/ielts/raqamToplamlar';
+import { yol } from '../../../../../lib/yol';
 
 const IK = {
   tinglash: '<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
@@ -18,6 +19,8 @@ const IK = {
   description="IELTS Listening Part 1 uchun mashq: harflab aytilgan ismlar, telefon raqamlari, sana, vaqt va narxni tinglab yozing."
   turi="mashq"
   bolim="ielts"
+  yol={['Listening']}
+  ota={yol('/uz/ielts/listening/')}
   holat="chop-etilgan"
 >
   <div class="ichki raqam">

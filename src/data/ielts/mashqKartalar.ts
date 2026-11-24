@@ -1,5 +1,5 @@
-// Cards of the IELTS practice landing page. Reading and Writing (Task 2) work; the other cards are shown
-// disabled with a "Tez orada" badge. Timings: IE01, IE02 (src/data/manbalar.ts).
+// Mavjud mini-mashqlar va to‘liq testlar alohida ko‘rsatiladi.
+// To‘liq Listening, Speaking va birlashtirilgan mock hali ochilmagan. Vaqtlar: IE01, IE02.
 import { IKONKA } from '../ieltsSahifalar.ts';
 
 export interface MashqKarta {
@@ -15,7 +15,9 @@ export interface MashqKarta {
 export const mashqKartalar: MashqKarta[] = [
   { nomi: 'Full Mock Test', vaqt: '2 soat 45 daqiqa', tarkib: "4 bo'lim", tavsif: "To'rt bo'lim bitta testda.", ikonka: IKONKA.namuna },
   { nomi: 'Reading', vaqt: '60 daqiqa', tarkib: '40 savol', tavsif: '3 ta matn, avtomatik tekshirish va taxminiy band.', qism: 'mashq/reading/', ikonka: IKONKA.reading },
-  { nomi: 'Listening', vaqt: 'taxminan 30 daqiqa', tarkib: '40 savol', tavsif: 'Audio bilan ishlash mashqi.', ikonka: IKONKA.listening },
-  { nomi: 'Writing', vaqt: '40 daqiqa', tarkib: 'Task 2', tavsif: 'Insho yozing, AI taxminiy band va maslahat beradi.', qism: 'mashq/writing/', ikonka: IKONKA.writing },
-  { nomi: 'Speaking', vaqt: '11–14 daqiqa', tarkib: '3 part', tavsif: "Og'zaki javob mashqi.", ikonka: IKONKA.speaking },
+  { nomi: 'Listening imlo', vaqt: '', tarkib: 'Mini-mashq', tavsif: 'So‘zni tinglab, to‘g‘ri yozish.', qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
+  { nomi: 'Harf va raqam diktanti', vaqt: '', tarkib: 'Mini-mashq', tavsif: 'Ism, telefon, sana va narxni tinglab yozish.', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
+  { nomi: 'Listening mock', vaqt: 'taxminan 30 daqiqa', tarkib: '40 savol', tavsif: 'To‘liq Listening testi.', ikonka: IKONKA.listening },
+  { nomi: 'Writing Task 2', vaqt: 'tavsiya: 40 daqiqa', tarkib: "Writing bo'limi jami 60 daqiqa", tavsif: 'Task 2 inshosini yozish va saqlash.', qism: 'mashq/writing/', ikonka: IKONKA.writing },
+  { nomi: 'Speaking', vaqt: '11–14 daqiqa', tarkib: '3 part', tavsif: "Part 1–3 savollariga vaqt bilan og'zaki javob, o'zingni yozib eshitish.", qism: 'qollanma/speaking/#mashq', ikonka: IKONKA.speaking },
 ];
