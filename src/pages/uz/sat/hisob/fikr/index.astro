@@ -14,6 +14,7 @@ const sahifa = satSahifalar.find((s) => s.qism === 'hisob/fikr/');
 if (!sahifa) throw new Error('SAT fikr: satSahifalar yozuvi topilmadi');
 ---
 <BolimQobiq
+  sahifaSinfi="sat t-fon"
   title="Send feedback · SAT"
   description={sahifa.tavsif}
   turi="vosita"

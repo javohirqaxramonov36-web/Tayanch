@@ -14,6 +14,8 @@ import TelegramTugma from '../components/TelegramTugma.astro';
 import { telegramKorinadi } from '../data/telegram';
 import type { BolimSlug } from '../data/bolimlar';
 import { bolimTili, matn } from '../data/umumiyMatn';
+// 3-qavat qobig'i (.sat, sahifaSinfi="sat t-fon"): selektorlar .sat bilan cheklangan, boshqa qavatga ta'sir qilmaydi
+import '../styles/sat.css';
 
 export interface Props {
   title: string;
