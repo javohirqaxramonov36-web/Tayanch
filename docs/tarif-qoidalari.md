@@ -1,6 +1,6 @@
 # Tarif qoidalari (SAT, P19)
 
-Holat: 2026-11-24. Manba: jonli `plans` jadvali va migratsiyalar `20261111090000_tariflar_p19.sql`, `20261111120000_analitika.sql`, `20261111210000_kvota_p19.sql`, `20261124120000_tarif_max_narx.sql` (Max narxi; qo'llash muallifda).
+Holat: 2026-11-24. Manba: jonli `plans` jadvali va migratsiyalar `20261111090000_tariflar_p19.sql`, `20261111120000_analitika.sql`, `20261111210000_kvota_p19.sql`, `20261124120000_tarif_max_narx.sql` (Max narxi; jonli bazaga 2026-11-24 da qo'llangan).
 Raqamlarni faqat muallif beradi. Ular kodga emas, `public.plans` qatoriga yoziladi (pastdagi "Qiymatni o'zgartirish" bo'limi).
 
 ## Tariflar
