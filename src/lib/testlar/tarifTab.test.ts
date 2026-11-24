@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { keyingiTab } from '../tarifTab.ts';
-import { tarifKartalar, taqqosGuruhlar, NARX_JOY } from '../../data/tariflar.ts';
+import { tarifKartalar, taqqosGuruhlar, NARX_YOQ, PRO_NARX } from '../../data/tariflar.ts';
 
 test('keyingiTab: strelkalar aylanadi, Home/End chetga', () => {
   assert.equal(keyingiTab(0, 'ArrowRight', 3), 1);
@@ -13,10 +13,19 @@ test('keyingiTab: strelkalar aylanadi, Home/End chetga', () => {
   assert.equal(keyingiTab(0, 'ArrowRight', 0), null);
 });
 
-test('tariflar: bitta tavsiya, pullik narx faqat joy egasi', () => {
+test('tariflar: bitta tavsiya, Pro narxi docs jadvalidan, Max belgilanmagan', () => {
   assert.equal(tarifKartalar.filter((k) => k.tavsiya).length, 1);
-  for (const k of tarifKartalar.filter((k) => k.kod !== 'free')) assert.equal(k.narx, NARX_JOY);
-  assert.doesNotMatch(JSON.stringify(tarifKartalar), /\d{2}\s?\d{3}/);
+  const pro = tarifKartalar.find((k) => k.kod === 'pro')!;
+  assert.equal(pro.narx, PRO_NARX);
+  assert.equal(PRO_NARX, '59 000 soʻm');
+  assert.doesNotMatch(JSON.stringify(pro), /\/oy/);
+  assert.equal(tarifKartalar.find((k) => k.kod === 'max')!.narx, NARX_YOQ);
+});
+
+test('taqqoslash: Max bepul va Pro qatorlarini takrorlaydi', () => {
+  for (const g of taqqosGuruhlar) for (const q of g.qatorlar) {
+    if (q.qiymat.free === true || q.qiymat.pro === true) assert.equal(q.qiymat.max, true, q.nomi);
+  }
 });
 
 test('taqqoslash: har qatorda uchala tarif', () => {

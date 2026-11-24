@@ -3,8 +3,8 @@
 // Tuzilma: 3 karta (bittasi "Tavsiya etiladi", qora sahnada laym bilan), "X dagi hamma narsa, plus…" ro'yxati,
 // ostida taqqoslash jadvali. Telefonda (<768px) jadval bitta ustun, tepasida tariflar tablari
 // (WAI-ARIA tabs: ←/→, Home/End, standart Pro). JS bo'lmasa tablar yashirin, jadval gorizontal suriladi.
-// Narx joy egasi (src/data/tariflar.ts). Faqat nav-* va poydevor tokenlari.
-import { tarifKartalar, taqqosGuruhlar, tarifFaq, type Katak } from '../data/tariflar';
+// Narx src/data/tariflar.ts dan (Max: belgilanmagan). Faqat nav-* va poydevor tokenlari.
+import { tarifKartalar, taqqosGuruhlar, tarifFaq, NARX_YOQ, type Katak } from '../data/tariflar';
 import { yol } from '../lib/yol';
 
 interface Props { id?: string; sarlavhaDarajasi?: 2 | 3 }
@@ -21,7 +21,8 @@ const katakMatn = (k: Katak) => (k === true ? 'Bor' : k === false ? 'Yoʻq' : k)
         {k.tavsiya && <p class="nav-chip nav-chip--laym tt-tavsiya">Tavsiya etiladi</p>}
         <Hk id={`${id}-${k.kod}-nom`} class="tt-nom">{k.nomi}</Hk>
         <p class="tt-tavsif">{k.tavsif}</p>
-        <p class="tt-narx">{k.narx}{k.kod !== 'free' && <span class="tt-sr"> (narx bu yerda koʻrsatilmagan)</span>}</p>
+        <p class="tt-narx">{k.narx === NARX_YOQ ? <><span aria-hidden="true">{k.narx}</span><span class="tt-sr">Narx hali belgilanmagan</span></> : k.narx}</p>
+        {k.narxIzoh && <p class="tt-narx-izoh">{k.narxIzoh}</p>}
         {k.cta
           ? <a class:list={['t-tugma tt-tugma', { 't-tugma--ikkinchi': !k.tavsiya }]} href={yol(k.cta.href)}>{k.cta.matn}</a>
           : <p class="tt-tez">{k.ctaIzoh}</p>}
@@ -134,8 +135,9 @@ const katakMatn = (k: Katak) => (k === true ? 'Bor' : k === false ? 'Yoʻq' : k)
   .tt-karta--tavsiya { background: var(--color-nav-stage); color: var(--color-nav-on-stage); border: var(--border-width-2) solid var(--color-nav-lime); }
   .tt-tavsiya { position: absolute; top: calc(var(--space-3) * -1 - var(--border-width-2)); left: var(--space-8); }
   .tt-nom { margin: 0; font-family: var(--font-display); font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); letter-spacing: var(--text-nav-sarlavha-ls); text-transform: uppercase; }
-  .tt-tavsif, .tt-izoh, .tt-asos { color: var(--color-nav-text-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
-  .tt-karta--tavsiya :is(.tt-tavsif, .tt-izoh, .tt-asos) { color: var(--color-nav-on-stage-muted); }
+  .tt-tavsif, .tt-izoh, .tt-asos, .tt-narx-izoh { color: var(--color-nav-text-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .tt-karta--tavsiya :is(.tt-tavsif, .tt-izoh, .tt-asos, .tt-narx-izoh) { color: var(--color-nav-on-stage-muted); }
+  .tt-narx-izoh { margin-top: calc(var(--space-3) * -1); }
   .tt-narx { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
   .tt-tugma { width: 100%; }
   .tt-tez { display: grid; place-items: center; min-height: var(--btn-glass-height); border: var(--border-width-1) dashed var(--color-nav-line-strong); border-radius: var(--radius-full); color: var(--color-nav-text-muted); font-weight: var(--font-weight-semibold); }

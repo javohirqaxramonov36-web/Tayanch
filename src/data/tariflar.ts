@@ -1,8 +1,9 @@
 // 1-qavat · Tariflar bo'limi (BoshTariflar, /uz/hisob/obunalar/). Matn o'zbekcha.
-// Narx bu yerda YO'Q: kartada "— soʻm/oy" joy egasi turadi, haqiqiy narx faqat bazada (plans) va
-// SAT Subscription sahifasida (/uz/sat/hisob/obuna/). Imkoniyatlar docs/tarif-qoidalari.md jadvalidan
-// (2026-11-11 holati): Free va Pro'da kvotalar hozircha cheklovsiz, Pro farqi kengaytirilgan analitika,
-// Max faol emas ("Tez orada"), AI Tutor hamma tarifda yopiq. Jadval o'zgarsa, shu fayl ham yangilanadi.
+// Pro narxi docs/tarif-qoidalari.md jadvalidan (plans.price_uzs 59 000, period_days 30, bir martalik; jonli
+// 2026-11-11 dan). Bazada narx o'zgarsa, PRO_NARX ham qo'lda yangilanadi (muallif qarori, 2026-11-24).
+// Imkoniyatlar shu jadvaldan: Free va Pro'da kvotalar hozircha cheklovsiz, Pro farqi kengaytirilgan analitika
+// (/uz/sat/vosita/natijalar/: qiyinlik bo'yicha aniqlik va bir savolga ketgan vaqt), Max faol emas
+// ("Tez orada", narxi belgilanmagan), AI Tutor hamma tarifda yopiq. Jadval o'zgarsa, shu fayl ham yangilanadi.
 
 export type TarifKod = 'free' | 'pro' | 'max';
 
@@ -11,6 +12,8 @@ export interface TarifKarta {
   nomi: string;
   tavsif: string;
   narx: string;
+  /** Narx ostidagi qisqa izoh (davr). */
+  narxIzoh?: string;
   /** "X dagi hamma narsa, plus…" qatori. Bepulda yo'q. */
   asos?: string;
   imkoniyatlar: string[];
@@ -19,7 +22,9 @@ export interface TarifKarta {
   ctaIzoh?: string;
 }
 
-export const NARX_JOY = '— soʻm/oy';
+/** Narxi hali belgilanmagan tarif (Max). */
+export const NARX_YOQ = '—';
+export const PRO_NARX = '59 000 soʻm';
 
 export const tarifKartalar: TarifKarta[] = [
   {
@@ -40,18 +45,23 @@ export const tarifKartalar: TarifKarta[] = [
     kod: 'pro',
     nomi: 'Pro',
     tavsif: 'SAT boʻlimi uchun.',
-    narx: NARX_JOY,
+    narx: PRO_NARX,
+    narxIzoh: '30 kunga',
     asos: 'Bepuldagi hamma narsa, plus:',
-    imkoniyatlar: ['SAT kengaytirilgan analitikasi: qiyinlik va vaqt tahlili'],
+    imkoniyatlar: [
+      'SAT natijalarida Easy, Medium va Hard savollar boʻyicha aniqlik',
+      'Har qiyinlikda bir savolga ketgan oʻrtacha vaqt',
+      'Qaysi qiyinlikda vaqt yoki xato koʻpayishini koʻrasiz',
+    ],
     tavsiya: true,
     cta: { matn: 'Pro tarifini koʻrish', href: '/uz/sat/hisob/obuna/' },
-    ctaIzoh: 'Bir martalik toʻlov, avtomatik yangilanmaydi.',
+    ctaIzoh: 'Bir martalik toʻlov, avtomatik yangilanmaydi. Mashq bepulda ham cheklovsiz; Pro analitikani ochadi va loyihani qoʻllab-quvvatlaydi.',
   },
   {
     kod: 'max',
     nomi: 'Max',
     tavsif: 'SAT boʻlimi uchun.',
-    narx: NARX_JOY,
+    narx: NARX_YOQ,
     asos: 'Proʼdagi hamma narsa, plus:',
     imkoniyatlar: ['Qoʻshimcha imkoniyatlar hali belgilanmagan'],
     cta: null,
@@ -64,29 +74,29 @@ export type Katak = boolean | string;
 export interface TaqqosQator { nomi: string; qiymat: Record<TarifKod, Katak> }
 export interface TaqqosGuruh { nomi: string; qatorlar: TaqqosQator[] }
 
-const CHEKLOVSIZ = 'Hozircha cheklovsiz';
 const TEZ = 'Tez orada';
-const hamma = (q: Katak): Record<TarifKod, Katak> => ({ free: q, pro: q, max: TEZ });
+// Max "Pro'dagi hamma narsa, plus": bepul va Pro'dagi qatorlar Max'da ham bor; faqat yangi imkoniyat "Tez orada".
+const hamma = (q: Katak): Record<TarifKod, Katak> => ({ free: q, pro: q, max: q });
 
 export const taqqosGuruhlar: TaqqosGuruh[] = [
   {
     nomi: 'SAT',
     qatorlar: [
       { nomi: 'Interaktiv darslar va xato daftari', qiymat: hamma(true) },
-      { nomi: 'Savol banki va mashq sessiyasi', qiymat: hamma(CHEKLOVSIZ) },
-      { nomi: 'Mock imtihon', qiymat: hamma(CHEKLOVSIZ) },
-      { nomi: 'Haftalik reja', qiymat: hamma(CHEKLOVSIZ) },
-      { nomi: 'Lugʻat kartalari', qiymat: hamma(CHEKLOVSIZ) },
-      { nomi: 'Kengaytirilgan analitika', qiymat: { free: false, pro: true, max: TEZ } },
+      { nomi: 'Savol banki va mashq sessiyasi', qiymat: hamma(true) },
+      { nomi: 'Mock imtihon', qiymat: hamma(true) },
+      { nomi: 'Haftalik reja', qiymat: hamma(true) },
+      { nomi: 'Lugʻat kartalari', qiymat: hamma(true) },
+      { nomi: 'Kengaytirilgan analitika', qiymat: { free: false, pro: true, max: true } },
       { nomi: 'AI Tutor', qiymat: { free: TEZ, pro: TEZ, max: TEZ } },
     ],
   },
   {
     nomi: 'Boshqa qavatlar (hammasi bepul)',
     qatorlar: [
-      { nomi: 'IELTS Reading testlari', qiymat: { free: true, pro: true, max: true } },
-      { nomi: 'Top Admission qoʻllanmalari', qiymat: { free: true, pro: true, max: true } },
-      { nomi: 'El-Yurt Umidi IQ mashqlari', qiymat: { free: true, pro: true, max: true } },
+      { nomi: 'IELTS Reading testlari', qiymat: hamma(true) },
+      { nomi: 'Top Admission qoʻllanmalari', qiymat: hamma(true) },
+      { nomi: 'El-Yurt Umidi IQ mashqlari', qiymat: hamma(true) },
     ],
   },
 ];
