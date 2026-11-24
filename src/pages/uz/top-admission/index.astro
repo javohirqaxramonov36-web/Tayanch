@@ -40,6 +40,7 @@ const boshqaDavlatlar = [
   { kod: 'UZ → KR', nomi: 'Janubiy Koreya', slug: 'janubiy-koreya' },
   { kod: 'UZ → JP', nomi: 'Yaponiya', slug: 'yaponiya' },
   { kod: 'UZ → AU', nomi: 'Avstraliya', slug: 'avstraliya' },
+  { kod: 'UZ → CN', nomi: 'Xitoy', slug: 'xitoy' },
 ]
   .map((d) => ({ ...d, soni: grantSoni(d.slug), href: yol(`/uz/top-admission/grantlar/?d=${d.slug}`) }))
   .filter((d) => d.soni > 0);
