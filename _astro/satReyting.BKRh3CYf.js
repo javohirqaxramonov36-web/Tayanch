@@ -1,0 +1,1 @@
+var e={javob:2,togri:3,takror:4,kunSavoli:5,kunSavoliTogri:5,kunlikChegara:300,minSoniya:3};`${e.javob}`,`${e.togri}`,`${e.takror}`,`${e.kunSavoli}`,`${e.kunSavoliTogri}`,`${e.minSoniya}`,`${e.kunlikChegara}`;var t=RegExp(`^[A-Za-z0-9_]{3,20}$`),n=`tayanch:sat-reyting`;export{n,e as r,t};
