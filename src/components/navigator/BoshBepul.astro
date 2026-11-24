@@ -1,0 +1,36 @@
+---
+// Bosh sahifa "Bepul · 0 soʻm" bloki (CTA brifi, 2026-11-24): chapda bepul qismlar, o'ngda hero paneliga
+// olib boruvchi tugma (QavatTanlash skripti [data-qavat-tanlash] ni ushlaydi). Izoh faqat haqiqat:
+// pul faqat SAT Pro'da inPAY orqali olinadi, bepul qismlarda to'lov kartasi so'ralmaydi.
+import { bepulImkoniyatlar } from '../../data/boshSahifa';
+---
+<section class="bb nav-sahna" aria-labelledby="bb-h">
+  <div class="bb-chap">
+    <p class="bb-yorliq">Bepul · 0 soʻm</p>
+    <h2 id="bb-h" class="nav-nom bb-sarlavha">Hamma qavatning bepul qismi ochiq</h2>
+    <ul class="bb-royxat">{bepulImkoniyatlar.map((x) => <li>{x}</li>)}</ul>
+  </div>
+  <div class="bb-ong">
+    <a class="t-tugma bb-tugma" href="#qavat-tanlash" data-qavat-tanlash>
+      Bepul qavatni tanlash
+      <svg class="bb-strelka" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </a>
+    <p class="bb-izoh">Toʻlov kartasi soʻralmaydi.</p>
+  </div>
+</section>
+<style>
+  .bb { display: flex; flex-wrap: wrap; gap: var(--space-8); align-items: center; justify-content: space-between; }
+  .bb-chap { flex: 1 1 var(--size-nav-panel-min); display: grid; gap: var(--space-4); min-width: 0; }
+  .bb-ong { flex: 0 1 var(--size-nav-panel-min); display: grid; gap: var(--space-3); min-width: 0; }
+  .bb-yorliq { margin: 0; font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; color: var(--color-nav-lime); }
+  .bb-sarlavha { color: var(--color-nav-on-stage); }
+  .bb-royxat { margin: 0; padding-left: var(--space-5); display: grid; gap: var(--space-2); color: var(--color-nav-on-stage-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .bb-tugma { width: 100%; }
+  .bb-izoh { margin: 0; text-align: center; color: var(--color-nav-on-stage-muted); font-size: var(--text-caption-size); line-height: var(--text-small-lh); }
+  .bb-strelka { transition: transform var(--duration-base) var(--ease-state); }
+  @media (hover: hover) and (pointer: fine) { .bb-tugma:hover .bb-strelka { transform: translateX(var(--nav-strelka-siljish)); } }
+  .bb-tugma:focus-visible .bb-strelka { transform: translateX(var(--nav-strelka-siljish)); }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .bb-tugma { background: var(--color-action-primary-bg); color: var(--color-action-primary-text); border-color: var(--color-nav-line-on-stage); box-shadow: none; }
+  }
+</style>
