@@ -81,14 +81,14 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
     <header class="gk-bosh">
       <p class="adm-eyebrow">Vosita</p>
       <h1 class="adm-h1">Grantlar katalogi</h1>
-      <p class="gk-matn">Davlat grantlari va universitetlarning xalqaro talabalarga beradigan yordami bir joyda. Turi, davlat va daraja bo'yicha filtrlang. Ro'yxat deadline bo'yicha: eng yaqini birinchi.</p>
+      <p class="gk-matn">Davlat grantlari va universitetlarning xalqaro talabalarga beradigan yordami bir joyda. Turi, davlat va daraja boʻyicha filtrlang. Roʻyxat deadline boʻyicha: eng yaqini birinchi.</p>
       <p class="gk-ogoh" role="note">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 3l9.5 17h-19z" /><path d="M12 10v4" /><path d="M12 17.5v.01" />
         </svg>
-        <span>Grant shartlari har yili o'zgaradi. Topshirishdan oldin rasmiy sahifani tekshiring.</span>
+        <span>Grant shartlari har yili oʻzgaradi. Topshirishdan oldin rasmiy sahifani tekshiring.</span>
       </p>
-      <p class="gk-matn gk-sust">Faqat rasmiy manbada tekshirilgan fakt ko'rsatiladi, yonida manba va tekshirilgan sana. Qolganlari o'rniga "Ma'lumot tekshirilmoqda" yoziladi.</p>
+      <p class="gk-matn gk-sust">Faqat rasmiy manbada tekshirilgan fakt koʻrsatiladi, yonida manba va tekshirilgan sana. Qolganlari oʻrniga "Maʼlumot tekshirilmoqda" yoziladi.</p>
     </header>
 
     {boshHolat ? (
@@ -97,12 +97,12 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
           <path d="M22 10L12 5 2 10l10 5 10-5z" /><path d="M6 12v5c3 2 9 2 12 0v-5" />
         </svg>
         <h2 id="gk-bosh-sarlavha">Grantlar rasmiy manbada tekshirilmoqda</h2>
-        <p class="gk-matn">Har bir grant dasturning yoki universitetning rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan grant yo'q, shuning uchun filtr ochilmagan.</p>
+        <p class="gk-matn">Har bir grant dasturning yoki universitetning rasmiy sahifasidan olinadi va tekshirilgandan keyingina shu yerda chiqadi. Hozircha tasdiqlangan grant yoʻq, shuning uchun filtr ochilmagan.</p>
         <p class="gk-bosh-yol">Hozircha shulardan boshlang:</p>
         <div class="gk-tugmalar">
-          <a class="tugma tugma-ikkinchi" href={turkiye}>Türkiye Bursları</a>
-          <a class="tugma tugma-ikkinchi" href={davlatlarSahifa}>Davlatlarni taqqoslash</a>
-          <a class="tugma tugma-ikkinchi" href={vosita}>Topshirish yo'li</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={turkiye}>Türkiye Bursları</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={davlatlarSahifa}>Davlatlarni taqqoslash</a>
+          <a class="t-tugma t-tugma--ikkinchi" href={vosita}>Topshirish yoʻli</a>
         </div>
       </section>
     ) : (
@@ -132,22 +132,22 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
             <p class="gk-ustki" id="gk-qoplash-sarlavha">Qoplash</p>
             {toliqBor && (
               <div class="gk-chiplar" role="group" aria-labelledby="gk-qoplash-sarlavha">
-                <button type="button" class="gk-chip" data-toliq aria-pressed="false">To'liq qoplaydi</button>
+                <button type="button" class="gk-chip" data-toliq aria-pressed="false">Toʻliq qoplaydi</button>
               </div>
             )}
             <p class="gk-kichik gk-sust">
               {toliqBor
-                ? "\"To'liq qoplaydi\" faqat rasmiy sahifada aniq yozilgan va tekshirilgan grantlarda."
-                : "\"To'liq qoplaydi\" filtri rasmiy sahifada aniq yozilgan va tekshirilgan grant paydo bo'lganda ochiladi."}
+                ? "\"Toʻliq qoplaydi\" faqat rasmiy sahifada aniq yozilgan va tekshirilgan grantlarda."
+                : "\"Toʻliq qoplaydi\" filtri rasmiy sahifada aniq yozilgan va tekshirilgan grant paydo boʻlganda ochiladi."}
             </p>
           </div>
           <div class="gk-guruh">
-            <p class="gk-ustki" id="gk-royxat-sarlavha">Mening ro'yxatim</p>
+            <p class="gk-ustki" id="gk-royxat-sarlavha">Mening roʻyxatim</p>
             <div class="gk-chiplar" role="group" aria-labelledby="gk-royxat-sarlavha">
               <button type="button" class="gk-chip" data-faqat-saqlangan aria-pressed="false">Saqlanganlar <span data-saqlangan-soni>(0)</span></button>
             </div>
             <p class="gk-kichik gk-sust" data-sinxron-matn role="status">Saqlanganlar shu brauzerda turadi.</p>
-            <button type="button" class="tugma tugma-ikkinchi gk-sinxron-tugma" data-sinxron-tugma hidden>Hisobga saqlash</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi gk-sinxron-tugma" data-sinxron-tugma hidden>Hisobga saqlash</button>
           </div>
           <p class="gk-kichik" aria-live="polite" data-soni></p>
         </div>
@@ -164,7 +164,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
                 <span class="yorliq">{davlatNom}</span>
                 <span class="yorliq">{TUR_MATNI[g.turi]}</span>
                 <span class="yorliq">{DARAJA_MATNI[g.daraja]}</span>
-                {xulosa.toliq && <span class="gk-belgi gk-belgi-toliq">To'liq qoplaydi</span>}
+                {xulosa.toliq && <span class="gk-belgi gk-belgi-toliq">Toʻliq qoplaydi</span>}
               </p>
               {univNom && <p class="gk-kichik gk-sust gk-univ">{univNom}</p>}
               <dl class="gk-maydonlar">
@@ -177,7 +177,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
                 </div>
                 {xulosa.toliq && g.toliq_qoplaydi && (
                   <div>
-                    <dt>To'liq qoplaydi</dt>
+                    <dt>Toʻliq qoplaydi</dt>
                     <dd><Fakt fakt={g.toliq_qoplaydi} metasiz={!!manba} /></dd>
                   </div>
                 )}
@@ -201,7 +201,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
                       <dd><Fakt fakt={g.tadqiqot.talablar} metasiz={!!manba} /></dd>
                     </div>
                     <div>
-                      <dt>O'zingiz hisoblang</dt>
+                      <dt>Oʻzingiz hisoblang</dt>
                       <dd><Fakt fakt={g.tadqiqot.qoladigan_xarajat} metasiz={!!manba} /></dd>
                     </div>
                     <div>
@@ -228,16 +228,16 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
           ))}
         </ul>
 
-        <button type="button" class="tugma tugma-ikkinchi gk-yana" data-yana hidden></button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi gk-yana" data-yana hidden></button>
 
         <div class="gk-bosh-filtr" hidden data-bosh-filtr>
-          <p data-bosh-matn>Bu filtrlarga mos grant yo'q. Ko'p grantlar hali tekshirilmoqda, shuning uchun ro'yxat to'liq emas.</p>
-          <button type="button" class="tugma tugma-ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
+          <p data-bosh-matn>Bu filtrlarga mos grant yoʻq. Koʻp grantlar hali tekshirilmoqda, shuning uchun roʻyxat toʻliq emas.</p>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-filtr-tozala>Filtrlarni tozalash</button>
         </div>
       </>
     )}
 
-    <p class="gk-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="gk-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida xavfsizlik, narx va boshqa mezonlar bo'yicha solishtiring.</p>
+    <p class="gk-matn">Qaysi davlat sizga mosligini bilmasangiz, <a class="gk-havola" href={davlatlarSahifa}>Davlatlarni taqqoslash</a> sahifasida xavfsizlik, narx va boshqa mezonlar boʻyicha solishtiring.</p>
   </div>
 </BolimQobiq>
 
@@ -444,16 +444,16 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-matn { max-width: 62ch; margin: 0; }
   .gk-sust { color: var(--color-text-secondary); }
   .gk-kichik { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); }
-  .gk-havola { color: var(--color-link); font-weight: 700; }
+  .gk-havola { color: var(--color-link); font-weight: var(--font-weight-bold); }
   .gk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   [hidden] { display: none !important; }
 
   .gk-ogoh {
     max-width: 62ch; margin: 0; display: flex; align-items: flex-start; gap: var(--space-2);
     padding: var(--space-3) var(--space-4); border-radius: var(--card-radius);
-    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: 600;
+    background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-semibold);
   }
-  .gk-ogoh svg { flex: none; margin-top: 2px; }
+  .gk-ogoh svg { flex: none; margin-top: var(--space-1); }
 
   /* Asboblar: filtrlar */
   .gk-asboblar { display: grid; gap: var(--space-5); }
@@ -462,7 +462,7 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-chip {
     min-height: var(--size-touch-min); padding: 0 var(--space-4); border-radius: var(--radius-full);
     border: var(--border-width-1) solid var(--color-adm-line-strong); background: var(--color-adm-surface); color: var(--color-adm-text);
-    font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer; text-align: left;
+    font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); cursor: pointer; text-align: left;
     transition: transform var(--duration-fast) var(--ease-state);
   }
   .gk-chip:active { transform: var(--bosilish); }
@@ -480,27 +480,27 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-yorliqlar { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
   .gk-belgi {
     display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
-    border-radius: var(--badge-radius); font-size: var(--text-caption-size); font-weight: 600;
+    border-radius: var(--badge-radius); font-size: var(--text-caption-size); font-weight: var(--font-weight-semibold);
   }
   .gk-belgi-otgan { background: var(--color-warning-subtle); color: var(--color-warning-text); max-width: 100%; padding-block: var(--space-1); }
-  .gk-belgi-toliq { background: var(--floor-subtle); color: var(--color-text-primary); border: 1px solid var(--floor-ui); }
+  .gk-belgi-toliq { background: var(--color-adm-accent-subtle); color: var(--color-text-primary); border: 1px solid var(--color-adm-accent-text); }
   .gk-maydonlar { margin: 0; display: grid; gap: var(--space-3); }
   .gk-maydonlar > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
-  .gk-maydonlar dt { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
+  .gk-maydonlar dt { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-text-secondary); }
   .gk-maydonlar dd { margin: 0; min-width: 0; display: grid; gap: var(--space-1); }
   .gk-izoh { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-text-secondary); }
   .gk-batafsil { border-top: 1px solid var(--color-border); padding-top: var(--space-2); }
   .gk-batafsil > summary {
     min-height: var(--size-touch-min); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
     cursor: pointer; list-style: none;
-    font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-primary);
+    font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-text-primary);
   }
   .gk-batafsil > summary::-webkit-details-marker { display: none; }
   /* Chevron: yopiqda o'ngga, ochiqda pastga (faqat transform, 150ms; reduced-motion'da burilish darhol) */
   .gk-chevron { flex: none; color: var(--color-text-secondary); transition: transform var(--duration-fast) var(--ease-state); }
   .gk-batafsil[open] > summary .gk-chevron { transform: rotate(90deg); }
   @media (prefers-reduced-motion: reduce) { .gk-chevron { transition: none; } }
-  .gk-batafsil > summary:focus-visible { outline: 2px solid var(--floor-ui); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .gk-batafsil > summary:focus-visible { outline: 2px solid var(--color-adm-accent-text); outline-offset: 2px; border-radius: var(--radius-sm); }
   .gk-batafsil[open] > .gk-maydonlar { margin-top: var(--space-2); }
   .gk-univ { margin-top: calc(-1 * var(--space-2)); }
   .gk-qolgan { justify-self: start; background: var(--color-surface-sunken); color: var(--color-text-secondary); }
@@ -510,21 +510,21 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
   .gk-saqlash {
     display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-touch-min); padding: 0 var(--space-3);
     margin-left: auto; border: 1px solid var(--color-border-strong); border-radius: var(--radius-full);
-    background: transparent; color: var(--color-text-primary); font: inherit; font-size: var(--text-small-size); font-weight: 700; cursor: pointer;
+    background: transparent; color: var(--color-text-primary); font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); cursor: pointer;
   }
-  .gk-saqlash[aria-pressed="true"] { background: var(--floor-subtle); border-color: var(--floor-ui); }
+  .gk-saqlash[aria-pressed="true"] { background: var(--color-adm-accent-subtle); border-color: var(--color-adm-accent-text); }
   .gk-saqlash[aria-pressed="true"] svg { fill: currentColor; }
-  .gk-saqlash:focus-visible { outline: 2px solid var(--floor-ui); outline-offset: 2px; }
+  .gk-saqlash:focus-visible { outline: 2px solid var(--color-adm-accent-text); outline-offset: 2px; }
   .gk-karta-nom:focus { outline: none; }
-  .gk-karta-nom:focus-visible { outline: 2px solid var(--floor-ui); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .gk-karta-nom:focus-visible { outline: 2px solid var(--color-adm-accent-text); outline-offset: 2px; border-radius: var(--radius-sm); }
   .gk-yana { justify-self: center; }
   .gk-sinxron-tugma { justify-self: start; }
   .gk-havolalar { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding-top: var(--space-2); }
   .gk-havolalar .gk-havola { min-height: var(--size-touch-min); display: inline-flex; align-items: center; }
   .gk-ichki {
     display: inline-flex; align-items: center; min-height: var(--size-touch-min); padding: 0 var(--space-3);
-    border: 1.5px solid var(--floor-ui); border-radius: var(--radius-full);
-    color: var(--color-text-primary); font-size: var(--text-small-size); font-weight: 700; text-decoration: none;
+    border: 1.5px solid var(--color-adm-accent-text); border-radius: var(--radius-full);
+    color: var(--color-text-primary); font-size: var(--text-small-size); font-weight: var(--font-weight-bold); text-decoration: none;
   }
 
   .gk-bosh-filtr { display: grid; gap: var(--space-3); justify-items: start; padding: var(--card-pad); border: 1px dashed var(--color-border-strong); border-radius: var(--card-radius); }
@@ -536,13 +536,13 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
     background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); box-shadow: var(--card-shadow);
   }
   .gk-bosh-holat h2 { margin: 0; }
-  .gk-bosh-ikonka { color: var(--floor-ui); }
+  .gk-bosh-ikonka { color: var(--color-adm-accent-text); }
   .gk-bosh-yol { margin: var(--space-3) 0 0; }
   .gk-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
   @media (hover: hover) and (pointer: fine) {
     .gk-chip:hover { border-color: var(--color-text-primary); }
-    .gk-ichki:hover { background: var(--floor-subtle); }
+    .gk-ichki:hover { background: var(--color-adm-accent-subtle); }
   }
   @media (max-width: 760px) {
     .gk-chiplar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: var(--space-1); }
@@ -550,9 +550,9 @@ const vosita = yol('/uz/top-admission/vosita/topshirish-yoli/');
     .gk-kartalar { grid-template-columns: 1fr; }
     .gk-maydonlar > div { grid-template-columns: 1fr; gap: var(--space-1); }
     .gk-tugmalar { display: grid; width: 100%; }
-    .gk-tugmalar .tugma { width: 100%; }
+    .gk-tugmalar .t-tugma { width: 100%; }
     .gk-yana { justify-self: stretch; width: 100%; }
     .gk-saqlash { margin-left: 0; }
   }
-  @media (hover: hover) and (pointer: fine) { .gk-saqlash:hover { border-color: var(--floor-ui); } }
+  @media (hover: hover) and (pointer: fine) { .gk-saqlash:hover { border-color: var(--color-adm-accent-text); } }
 </style>
