@@ -5,6 +5,8 @@ import { navigatorSahifalar, MAQSADLAR } from '../../../data/navigatorSahifalar.
 import { qoidalar, UMUMIY_REJA, QADAMLAR_SONI, type Surat, type KunlikDaqiqa } from '../../../data/yolXaritasiQoidalar.ts';
 import { yolXaritasiTuz, nomalumIdlar, qoidaQadamlari, tayyorlikniBelgila, faylManzili } from '../yolXaritasi.ts';
 import type { YolProfil } from '../profil.ts';
+import { existsSync } from 'node:fs';
+import { navigatorMatni } from '../../../data/navigatorMatn.ts';
 
 const hammaTayyor = tayyorlikniBelgila(navigatorSahifalar, new Set(navigatorSahifalar.map((s) => s.manzil!).filter(Boolean)));
 const opts = { qoidalar, sahifalar: hammaTayyor, umumiyReja: UMUMIY_REJA };
@@ -69,7 +71,7 @@ test('skipped or unknown -> default starter plan', () => {
 });
 
 test('pages without a file or flagged "coming soon" are not linked', () => {
-  const sahifalar = tayyorlikniBelgila(navigatorSahifalar, new Set(['/uz/sat/mashq/test/', '/uz/eyuf/']));
+  const sahifalar = tayyorlikniBelgila(navigatorSahifalar, new Set(['/uz/sat/mashq/test/', '/uz/eyuf/', '/uz/eyuf/iq/']));
   const q = yolXaritasiTuz(p({ dailyMinutes: 60 }), 'intensiv', { ...opts, sahifalar });
   const test1 = q.find((x) => x.id === 'sat-test')!;
   const strategiya = q.find((x) => x.id === 'sat-strategiya')!;
@@ -77,7 +79,10 @@ test('pages without a file or flagged "coming soon" are not linked', () => {
   assert.equal(test1.manzil, '/uz/sat/mashq/test/');
   assert.equal(strategiya.tayyor, false);
   assert.equal(strategiya.manzil, null);
-  assert.equal(sahifalar.find((s) => s.id === 'eyuf-kirish')!.tayyor, false);
+  // EYUF bo'limi tayyor (2026-11-24): fayli bor va "qurilmoqda" belgisi yo'q. Fayli yo'q qadam esa tayyor emas.
+  assert.equal(sahifalar.find((s) => s.id === 'eyuf-kirish')!.tayyor, true);
+  assert.equal(sahifalar.find((s) => s.id === 'eyuf-iq')!.tayyor, true);
+  assert.equal(sahifalar.find((s) => s.id === 'eyuf-mock')!.tayyor, false);
   assert.equal(sahifalar.find((s) => s.id === 'ielts-listening')!.tayyor, false);
 });
 
@@ -85,4 +90,25 @@ test('page file path -> route', () => {
   assert.equal(faylManzili('/src/pages/uz/sat/mashq/test/index.astro'), '/uz/sat/mashq/test/');
   assert.equal(faylManzili('/src/pages/uz/index.astro'), '/uz/');
   assert.equal(faylManzili('/src/pages/uz/sat/[...qism].astro'), null);
+});
+
+test('every linked step points to an existing page file', () => {
+  const yoq = navigatorSahifalar
+    .filter((s) => s.manzil && !s.qurilmoqda)
+    .filter((s) => !existsSync(new URL(`../../../pages${s.manzil}index.astro`, import.meta.url)))
+    .map((s) => s.id);
+  assert.deepEqual(yoq, []);
+});
+
+test('Top Admission and EYUF roadmaps no longer start with a generic section tour', () => {
+  for (const maqsad of ['top-admission', 'eyuf'] as const) {
+    for (const surat of ['intensiv', 'oy', 'uzoq'] as Surat[]) {
+      const birinchi = yolXaritasiTuz(p({ goals: [maqsad], primaryGoal: maqsad }), surat, opts)[0];
+      assert.notEqual(birinchi.id, maqsad === 'eyuf' ? 'eyuf-kirish' : 'ta-kirish', `${maqsad}/${surat}`);
+    }
+  }
+});
+
+test('every pace has a label for the result chip', () => {
+  for (const surat of SURATLAR) assert.ok(navigatorMatni().suratNomi[surat]);
 });

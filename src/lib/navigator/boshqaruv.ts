@@ -325,8 +325,10 @@ export function navigatorniIshgaTushir(): void {
 
     const muddat = $('[data-yol-muddat]', blok!);
     const kun = holat.qolgan !== null && !holat.otgan ? holat.qolgan : null;
-    muddat.hidden = kun === null;
-    muddat.textContent = kun !== null ? m.qolganKun(kun) : '';
+    // Aniq sana bo'lsa qolgan kun, aks holda (o'tkazib yubormagan bo'lsa) sur'at nomi: vaqt har doim ko'rinadi.
+    const suratMatn = !profil.skipped && !holat.otgan && holat.qolgan === null ? m.suratNomi[holat.surat] : '';
+    muddat.hidden = kun === null && !suratMatn;
+    muddat.textContent = kun !== null ? m.qolganKun(kun) : suratMatn;
 
     // Next step card: override (other modules) > first ready roadmap step.
     const keyingi = tanlaKeyingiQadam(qadamlar, oqiKeyingiQadam(ombor, hozir));
@@ -373,7 +375,8 @@ export function navigatorniIshgaTushir(): void {
     ogoh.hidden = !holat.otgan;
     ogoh.textContent = holat.otgan ? m.sanaOtibKetdi : '';
 
-    const izohlar = [profil.skipped ? m.umumiyIzoh : '', m.qoidaIzoh].filter(Boolean);
+    const nomalum = !profil.skipped && profil.timeLeft === 'unknown';
+    const izohlar = [profil.skipped ? m.umumiyIzoh : '', nomalum ? m.muddatNomalumIzoh : '', m.qoidaIzoh].filter(Boolean);
     $('[data-yol-izoh]', blok!).textContent = izohlar.join(' ');
     $('[data-yol-saqlanmadi]', blok!).hidden = ombor.doimiy;
   }

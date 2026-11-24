@@ -25,7 +25,7 @@ export const QADAMLAR_SONI: Record<KunlikDaqiqa, number> = { 15: 3, 30: 4, 60: 4
 export const STANDART_KUNLIK: KunlikDaqiqa = 30;
 
 /** Onboarding o'tkazib yuborilganda: har ochiq qavatdan bittadan qadam va muddatlar */
-export const UMUMIY_REJA: string[] = ['sat-kirish', 'ielts-kirish', 'ta-topshirish-yoli', 'umumiy-muddatlar'];
+export const UMUMIY_REJA: string[] = ['ta-topshirish-yoli', 'sat-kirish', 'ielts-kirish', 'eyuf-kirish', 'umumiy-muddatlar'];
 
 const q = (maqsad: Maqsad, surat: Surat, kunlik: KunlikDaqiqa | '*', qadamlar: string[]): Qoida => ({ maqsad, surat, kunlik, qadamlar });
 
@@ -52,13 +52,13 @@ export const qoidalar: Qoida[] = [
   q('ielts',         'uzoq',     '*', ['ielts-reja', 'ielts-reading', 'ielts-listening', 'ielts-speaking', 'ielts-tfng']),
   q('ielts',         'umumiy',   '*', ['ielts-kirish', 'ielts-reja', 'ielts-reading', 'ielts-tfng', 'ielts-sarlavhalar']),
 
-  q('top-admission', 'intensiv', '*', ['umumiy-muddatlar', 'ta-topshirish-yoli', 'ta-zinapoya', 'umumiy-manbalar', 'ta-turkiye']),
-  q('top-admission', 'oy',       '*', ['ta-topshirish-yoli', 'umumiy-muddatlar', 'ta-zinapoya', 'ta-turkiye', 'umumiy-manbalar']),
-  q('top-admission', 'uzoq',     '*', ['ta-kirish', 'ta-topshirish-yoli', 'ta-zinapoya', 'ta-turkiye', 'umumiy-muddatlar']),
-  q('top-admission', 'umumiy',   '*', ['ta-kirish', 'ta-topshirish-yoli', 'umumiy-muddatlar', 'ta-zinapoya', 'umumiy-manbalar']),
+  q('top-admission', 'intensiv', '*', ['umumiy-muddatlar', 'ta-grantlar', 'ta-topshirish-yoli', 'ta-kurs', 'umumiy-manbalar']),
+  q('top-admission', 'oy',       '*', ['ta-grantlar', 'ta-topshirish-yoli', 'umumiy-muddatlar', 'ta-kurs', 'ta-zinapoya']),
+  q('top-admission', 'uzoq',     '*', ['ta-davlatlar', 'ta-universitetlar', 'ta-grantlar', 'ta-kurs', 'umumiy-muddatlar']),
+  q('top-admission', 'umumiy',   '*', ['ta-topshirish-yoli', 'ta-davlatlar', 'ta-grantlar', 'ta-kurs', 'umumiy-muddatlar']),
 
-  q('eyuf',          'intensiv', '*', ['umumiy-muddatlar', 'umumiy-manbalar', 'eyuf-kirish']),
-  q('eyuf',          'oy',       '*', ['umumiy-muddatlar', 'eyuf-kirish', 'umumiy-manbalar']),
-  q('eyuf',          'uzoq',     '*', ['umumiy-muddatlar', 'eyuf-kirish', 'umumiy-manbalar']),
-  q('eyuf',          'umumiy',   '*', ['umumiy-muddatlar', 'eyuf-kirish', 'umumiy-manbalar']),
+  q('eyuf',          'intensiv', '*', ['umumiy-muddatlar', 'eyuf-iq', 'eyuf-mock', 'eyuf-suhbat', 'eyuf-kirish']),
+  q('eyuf',          'oy',       '*', ['eyuf-reja', 'eyuf-iq', 'eyuf-mock', 'eyuf-suhbat', 'umumiy-muddatlar']),
+  q('eyuf',          'uzoq',     '*', ['eyuf-reja', 'eyuf-kurslar', 'eyuf-iq', 'eyuf-suhbat', 'umumiy-muddatlar']),
+  q('eyuf',          'umumiy',   '*', ['eyuf-kirish', 'eyuf-reja', 'eyuf-iq', 'eyuf-kurslar', 'umumiy-muddatlar']),
 ];
