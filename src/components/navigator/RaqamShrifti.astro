@@ -1,0 +1,17 @@
+---
+// Bosh sahifa qavat kartalari raqami har qavat o'z shriftida (DS qarori: 03 Sora, 04 Lexend, 05 Playfair Display).
+// Faqat raqamlar (unicode-range U+0030-0039) va faqat latin fayl: brauzer faylni karta chizilganda yuklaydi,
+// preload yo'q, font-display: swap (LCP va CLS ga ta'sir qilmasligi uchun). Fayllar QavatShrifti bilan bir xil.
+import sora600 from '/node_modules/@fontsource/sora/files/sora-latin-600-normal.woff2?url';
+import lexend600 from '/node_modules/@fontsource/lexend/files/lexend-latin-600-normal.woff2?url';
+import playfair from '/node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2?url';
+
+const RAQAM = 'U+0030-0039';
+const yuzlar = [
+  { oila: 'Sora', vazn: '600', url: sora600, tur: 'woff2' },
+  { oila: 'Lexend', vazn: '600', url: lexend600, tur: 'woff2' },
+  { oila: 'Playfair Display', vazn: '400 900', url: playfair, tur: 'woff2-variations' },
+];
+const css = yuzlar.map((y) => `@font-face{font-family:'${y.oila}';font-style:normal;font-weight:${y.vazn};font-display:swap;src:url(${y.url}) format('${y.tur}');unicode-range:${RAQAM}}`).join('');
+---
+<style is:inline set:html={css} />
