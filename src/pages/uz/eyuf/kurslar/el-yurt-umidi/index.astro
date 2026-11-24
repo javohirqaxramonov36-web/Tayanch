@@ -1,5 +1,5 @@
 ---
-// 5-qavat · EYUF · Kurs: "El-Yurt Umidi'ni yutaylik" (SKELET, 2026-11-19).
+// 5-qavat · EYUF · Kurs: "El-Yurt Umidiʼni yutaylik" (SKELET, 2026-11-19).
 // Muallif qarori: hozircha faqat sarlavha, tavsif va bo'lim sarlavhalari. Matnni muallif keyin alohida yuklaydi.
 // Bu yerga to'liq matn yoki fakt yozilmasin. Bo'lim sarlavhalari: src/data/eyufKurslar.ts.
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
@@ -12,7 +12,7 @@ import '../../../../../styles/eyuf.css';
 const kurs = eyufKurs('el-yurt-umidi');
 const sana = '2026-11-19';
 const keyingi = '2026-12-19';
-const tekshirilmagan = ["Kurs to'ldirilmagan: material muallifdan kutilmoqda."];
+const tekshirilmagan = ["Kurs toʻldirilmagan: material muallifdan kutilmoqda."];
 const idlar = ['suhbat', 'bridge', 'savollar', 'caselar'];
 ---
 <BolimQobiq
@@ -28,16 +28,16 @@ const idlar = ['suhbat', 'bridge', 'savollar', 'caselar'];
 >
   <article class="ichki kurs">
     <EyufHero id="kurs-h" yorliq={`Bepul kurs · ${KURS_HOLATI_YORLIQ[kurs.holat]}`} sarlavha={kurs.nomi} matn={kurs.tavsif} ixcham>
-      <p class="holat" role="status">TO'LDIRILMAGAN — material keyinroq qo'shiladi</p>
+      <p class="holat" role="status">TOʻLDIRILMAGAN — material keyinroq qoʻshiladi</p>
     </EyufHero>
 
     <ol class="bolimlar" role="list">
       {kurs.bolimlar.map((nom, i) => (
         <li>
           <section id={idlar[i]} class="bolim" aria-labelledby={`${idlar[i]}-h`}>
-            <p class="ustki">{i + 1}-bo'lim</p>
+            <p class="ustki">{i + 1}-boʻlim</p>
             <h2 id={`${idlar[i]}-h`}>{nom}</h2>
-            <p class="bosh-joy">Material keyinroq qo'shiladi.</p>
+            <p class="bosh-joy">Material keyinroq qoʻshiladi.</p>
           </section>
         </li>
       ))}
@@ -46,21 +46,20 @@ const idlar = ['suhbat', 'bridge', 'savollar', 'caselar'];
     <p><a class="orqaga" href={yol('/uz/eyuf/kurslar/')}>Barcha kurslar</a></p>
   </article>
   <SahifaOxiri tekshirilgan={sana} keyingiTekshiruv={keyingi} tekshirilmagan={tekshirilmagan} />
-<p class="ichki">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+<p class="ichki">Tayanch El-yurt umidi jamgʻarmasining rasmiy platformasi emas.</p>
 </BolimQobiq>
 
 <style>
-  .kurs { display: grid; gap: var(--b-8); padding-block: var(--b-6); max-width: 72ch; }
-  .bosh { display: grid; gap: var(--b-3); }
-  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
-  .yorliq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  h2 { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
-  .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
-  .holat { justify-self: start; color: var(--color-eyuf-text); padding: var(--b-2) var(--b-4); border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); font-weight: 800; font-size: var(--matn-mayda); letter-spacing: .04em; }
-  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
-  .bolimlar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-4); }
-  .bolim { border: 1.5px dashed var(--chiziq-kuchli); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); display: grid; gap: var(--b-2); }
-  .bosh-joy { color: var(--matn-sust); }
-  .orqaga { display: inline-flex; align-items: center; min-height: 44px; color: var(--rang-havola); font-weight: 700; }
-  a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .kurs { display: grid; gap: var(--space-8); padding-block: var(--space-6); max-width: 72ch; }
+  .bosh { display: grid; gap: var(--space-3); }
+  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .yorliq { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-eyuf-tile); color: var(--color-eyuf-text-muted); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+    .tavsif { font-size: var(--font-size-body-d); color: var(--color-eyuf-text-muted); }
+  .holat { justify-self: start; color: var(--color-eyuf-text); padding: var(--space-2) var(--space-4); border: var(--border-width-1) dashed var(--color-eyuf-line-strong); border-radius: var(--radius-lg); font-weight: var(--font-weight-extrabold); font-size: var(--text-caption-size); letter-spacing: var(--text-caption-ls); }
+  .ustki { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: var(--text-eyuf-yorliq-ls); text-transform: uppercase; color: var(--color-eyuf-text-muted); }
+  .bolimlar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+  .bolim { border: var(--border-width-1) dashed var(--color-eyuf-line-strong); border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6); display: grid; gap: var(--space-2); }
+  .bosh-joy { color: var(--color-eyuf-text-muted); }
+  .orqaga { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: var(--font-weight-bold); }
+  a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
 </style>

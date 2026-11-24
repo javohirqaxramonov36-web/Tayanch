@@ -13,14 +13,14 @@ import '../../../styles/eyuf.css';
 
 // Qator izohi va ikonkasi: izohlar shu sahifalarning o'z tavsifidan (EyufSahifa description).
 const qatorMalumot: Record<string, { ikonka: EyufIkonkaNomi; meta: string }> = {
-  'eyuf/tayyorgarlik/': { ikonka: 'hujjat', meta: 'Birinchi kurs: har darsda shaxsiy ish varag‘i' },
-  'eyuf/reja/': { ikonka: 'reja', meta: 'Holatingiz, tayyorgarlik yo‘li va kunlik ishlar' },
+  'eyuf/tayyorgarlik/': { ikonka: 'hujjat', meta: 'Birinchi kurs: har darsda shaxsiy ish varagʻi' },
+  'eyuf/reja/': { ikonka: 'reja', meta: 'Holatingiz, tayyorgarlik yoʻli va kunlik ishlar' },
   'eyuf/kurslar/': { ikonka: 'kurs', meta: 'Kirish kurslari, bepul' },
-  'eyuf/iq/': { ikonka: 'iq', meta: 'Besh test to‘plami va aralash 20 savol, taymer va xatolar tahlili' },
-  'eyuf/trenajyor/': { ikonka: 'trenajyor', meta: 'Tur bo‘yicha mashq, sprint va oraliq takrorlash' },
+  'eyuf/iq/': { ikonka: 'iq', meta: 'Besh test toʻplami va aralash 20 savol, taymer va xatolar tahlili' },
+  'eyuf/trenajyor/': { ikonka: 'trenajyor', meta: 'Tur boʻyicha mashq, sprint va oraliq takrorlash' },
   'eyuf/mock/': { ikonka: 'mock', meta: 'Darajangizga mos ikki blok va taymer' },
   'eyuf/suhbat/': { ikonka: 'suhbat', meta: 'Savol kartalari, ovoz yozuvi va mezonlar' },
-  'eyuf/soha/': { ikonka: 'soha', meta: 'Daraja va mutaxassislik bo‘yicha treklar' },
+  'eyuf/soha/': { ikonka: 'soha', meta: 'Daraja va mutaxassislik boʻyicha treklar' },
   'eyuf/hududlar/': { ikonka: 'hudud', meta: 'Hududiy dalillar va sanali islohotlar' },
   'eyuf/natija/': { ikonka: 'natija', meta: 'Hujjatlar, majburiyatlar va B reja' },
 };
@@ -61,7 +61,7 @@ const kurslar = [
         <a class="t-tugma t-tugma--ikkinchi" href={yol('/uz/eyuf/reja/')}>Tayyorgarlik rejasi</a>
       </Fragment>
       <div slot="pastki" class="eyuf-kirish-yol">
-        <h2 id="eyuf-yol-h" class="eyuf-kirish-yol-h">Tayyorgarlik yo‘li</h2>
+        <h2 id="eyuf-yol-h" class="eyuf-kirish-yol-h">Tayyorgarlik yoʻli</h2>
         <EyufBosqich bosqichlar={kurslar} yorliq="Tayyorgarlik yo‘li: to‘rt kurs" />
       </div>
     </EyufHero>
@@ -69,7 +69,7 @@ const kurslar = [
     <div class="eyuf-guruhlar">
       {guruhlar.map((g, i) => <EyufRoyxat id={`eyuf-g-${i}`} sarlavha={g.nomi} qatorlar={g.qatorlar} />)}
     </div>
-    <p class="eyuf-kirish-eslatma">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+    <p class="eyuf-kirish-eslatma">Tayanch El-yurt umidi jamgʻarmasining rasmiy platformasi emas.</p>
   </div>
   <QavatFoto bolim="eyuf" />
 </BolimQobiq>
