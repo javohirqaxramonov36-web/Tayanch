@@ -60,14 +60,13 @@ const vaqtlar = [60, 90, 120];
 </EyufSahifa>
 
 <script>
-  import { suhbatSavollari } from '../../../../data/eyuf/suhbatMashqi';
+  import { suhbatSavollari, suhbatBandi, suhbatBandlari, SUHBAT_QADAM } from '../../../../data/eyuf/suhbatMashqi';
   import { markDone, isDone, registerItems } from '../../../../lib/progress';
-  import { progressBandlar, suhbatBandi, SUHBAT_QADAM } from '../../../../data/progressBandlar';
 
   const root = document.querySelector<HTMLElement>('#suhbat-mashqi')!;
   const $ = <T extends HTMLElement = HTMLElement>(s: string) => root.querySelector<T>(s)!;
 
-  registerItems(5, progressBandlar.eyuf ?? []);
+  registerItems(5, suhbatBandlari);
 
   // --- Progress: oldin yozilgan eng katta suhbat-N dan davom etadi
   let asos = 0;

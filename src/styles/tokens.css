@@ -834,6 +834,11 @@
   --nav-karta-kotarilish:calc(-6px * var(--motion-distance)); --nav-strelka-siljish:calc(5px * var(--motion-distance));
   --nav-puls-davomi:2.2s; --nav-puls-masshtab:1.14; --nav-marquee-davomi:24s; --nav-nur-davomi:6s; --nav-nur-masshtab:1.15;
   --size-nav-panel-min:320px; --size-nav-nuqta:12px;
+  /* Bino chiroqlari (BinoChiroqlari.astro, 2026-11-25): qora sahnada, ikkala mavzuda bir xil.
+     Yonib turgan deraza iliq sariq: nav-stage (#181818) ustida 12.4:1; o'chiq deraza nav-stage-raised + nav-line-on-stage. */
+  --color-nav-chiroq:#FFC94D;
+  --color-nav-chiroq-nur:color-mix(in srgb, var(--color-nav-chiroq) 55%, transparent);
+  --size-nav-deraza-w:16px; --size-nav-deraza-h:22px; --size-nav-bino:440px; --nav-chiroq-masshtab:0.6;
 }
 :root[data-mavzu='qorongi']{
   --color-nav-bg:var(--color-nav-stage);

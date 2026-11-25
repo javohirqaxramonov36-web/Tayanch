@@ -1,13 +1,15 @@
-// Qavatlar bo'yicha progress bandlari (itemId) ro'yxati: src/lib/progress.ts bilan ishlatiladi.
-// Sahifa o'z bandlarini registerItems(qavat, ro'yxat) bilan e'lon qiladi, shunda getFloorProgress jami sonni biladi.
-// Yangi band qo'shilsa, shu yerga yoziladi.
+// Bino chiroqlari uchun har qavat vazifalari ro'yxati (itemId'lar). Progress moduli (src/lib/progress.ts) jami (total)ni
+// faqat sahifalar registerItems bilan e'lon qilgan bandlardan biladi; bosh sahifa shu ro'yxatni e'lon qiladi.
+// Yangi vazifa turi qo'shilsa, shu yerga qo'shiladi. Top Admission "chamadon-<yo'nalish id>",
+// EYUF "suhbat-<N>" (har 5 ta tugagan Suhbat mashqi = bitta band, /uz/eyuf/suhbat-mashqi/).
 import type { ProgressQavat } from '../lib/progress';
+import { YOLLAR } from './topshirishYoli';
+import { suhbatBandlari } from './eyuf/suhbatMashqi';
 
-/** EYUF Suhbat mashqi: har 5 ta tugagan mashq = bitta band (suhbat-1 = 5 mashq, suhbat-10 = 50 mashq). */
-export const SUHBAT_BAND_SONI = 10;
-export const SUHBAT_QADAM = 5;
-export const suhbatBandi = (n: number) => `suhbat-${n}`;
-
-export const progressBandlar: Partial<Record<ProgressQavat, string[]>> = {
-  eyuf: Array.from({ length: SUHBAT_BAND_SONI }, (_, i) => suhbatBandi(i + 1)),
+export const QAVAT_BANDLARI: Record<ProgressQavat, string[]> = {
+  navigator: [],
+  'top-admission': Object.keys(YOLLAR).map((id) => `chamadon-${id}`),
+  sat: [],
+  ielts: [],
+  eyuf: suhbatBandlari,
 };

@@ -10,6 +10,12 @@ export interface SuhbatSavol {
   namuna?: boolean;
 }
 
+/** Progress: har SUHBAT_QADAM ta tugagan mashq = bitta band (suhbat-1 = 5 mashq, suhbat-10 = 50 mashq). */
+export const SUHBAT_QADAM = 5;
+export const SUHBAT_BAND_SONI = 10;
+export const suhbatBandi = (n: number) => `suhbat-${n}`;
+export const suhbatBandlari = Array.from({ length: SUHBAT_BAND_SONI }, (_, i) => suhbatBandi(i + 1));
+
 export const suhbatSavollari: SuhbatSavol[] = [
   { id: 'namuna-1', savol: 'NAMUNA: bu yerga 1-savol matni yoziladi.', mavzu: 'NAMUNA', namuna: true },
   { id: 'namuna-2', savol: 'NAMUNA: bu yerga 2-savol matni yoziladi.', mavzu: 'NAMUNA', namuna: true },
