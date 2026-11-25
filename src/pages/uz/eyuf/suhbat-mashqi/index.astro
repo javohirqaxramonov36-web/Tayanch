@@ -1,0 +1,288 @@
+---
+// EYUF Suhbat mashqi (2026-11-25). Tasodifiy savol + taymer (60/90/120 s) + ixtiyoriy ovoz yozuvi.
+// Savollar: src/data/eyuf/suhbatMashqi.ts (muallif yozadi). Vosita javobni tekshirmaydi.
+// Saqlash: faqat progress moduli (tayanch:progress:v1) orqali, har 5 ta tugagan mashqda markDone(5, "suhbat-N").
+// Ovoz yozuvi faqat xotirada (Blob), serverga va localStorage'ga yozilmaydi; sahifadan chiqilganda yo'qoladi.
+import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
+import { suhbatSavollari } from '../../../../data/eyuf/suhbatMashqi';
+const vaqtlar = [60, 90, 120];
+---
+<EyufSahifa title="Suhbat mashqi" description="Tasodifiy savol oling, vaqt belgilang va ovoz chiqarib javob bering.">
+  <div id="suhbat-mashqi" class="sm">
+    <section class="eyuf-panel" aria-labelledby="sm-sozlama-h">
+      <h2 id="sm-sozlama-h">Mashqni boshlang</h2>
+      <fieldset data-vaqtlar>
+        <legend>Javob vaqti</legend>
+        <div class="sm-vaqtlar">
+          {vaqtlar.map((s) => (
+            <label class="eyuf-check"><input type="radio" name="sm-vaqt" value={s} checked={s === 90} />{s} soniya</label>
+          ))}
+        </div>
+      </fieldset>
+      <div class="eyuf-actions">
+        <button type="button" class="t-tugma eyuf-tugma--urgu" data-olish disabled={suhbatSavollari.length === 0}>Savol olish</button>
+      </div>
+      {suhbatSavollari.length === 0 && <p>Savollar hali qoʻshilmagan.</p>}
+      <p class="eyuf-small" data-hisob role="status">Bu sessiyada tugagan mashqlar: 0. Har 5 ta mashq progressingizga yoziladi.</p>
+    </section>
+
+    <section class="eyuf-panel" data-karta hidden aria-labelledby="sm-savol-h">
+      <p class="sm-mavzu"><span data-mavzu></span> <span class="eyuf-namuna" data-namuna hidden>Namuna</span></p>
+      <h2 id="sm-savol-h" data-savol tabindex="-1"></h2>
+      <div class="sm-taymer" data-taymer>
+        <span class="sm-raqam" data-raqam aria-hidden="true">1:30</span>
+        <span class="eyuf-small" data-taymer-holat>Tayyor boʻlsangiz, boshlang.</span>
+      </div>
+      <p class="sr-only" aria-live="polite" data-elon></p>
+      <div class="eyuf-actions">
+        <button type="button" class="t-tugma eyuf-tugma--urgu" data-boshlash>Boshlash</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-pauza hidden>Toʻxtatish</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-tugatdim hidden>Tugatdim</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" data-keyingi hidden>Keyingi savol</button>
+      </div>
+    </section>
+
+    <section class="eyuf-panel" aria-labelledby="sm-ovoz-h">
+      <h2 id="sm-ovoz-h">Ovoz yozish (ixtiyoriy)</h2>
+      <p><strong>Yozuv faqat shu sahifada turadi. Sahifadan chiqsangiz oʻchadi.</strong> U hech qayerga yuborilmaydi va saqlanmaydi.</p>
+      <p data-ovoz-yoq hidden>Bu brauzerda ovoz yozish ishlamaydi.</p>
+      <div data-ovoz-bor>
+        <div class="eyuf-actions">
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-yozish>Ovoz yozish</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-yozish-stop hidden>Yozishni toʻxtatish</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-yozuv-ochir hidden>Yozuvni oʻchirish</button>
+        </div>
+        <p data-ovoz-holat role="status"></p>
+        <audio data-audio controls hidden></audio>
+      </div>
+    </section>
+  </div>
+</EyufSahifa>
+
+<script>
+  import { suhbatSavollari, suhbatBandi, suhbatBandlari, SUHBAT_QADAM } from '../../../../data/eyuf/suhbatMashqi';
+  import { markDone, isDone, registerItems } from '../../../../lib/progress';
+
+  const root = document.querySelector<HTMLElement>('#suhbat-mashqi')!;
+  const $ = <T extends HTMLElement = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+
+  registerItems(5, suhbatBandlari);
+
+  // --- Progress: oldin yozilgan eng katta suhbat-N dan davom etadi
+  let asos = 0;
+  while (isDone(5, suhbatBandi(asos + 1))) asos++;
+  let tugagan = 0;
+  const hisobYoz = () => {
+    $('[data-hisob]').textContent = `Bu sessiyada tugagan mashqlar: ${tugagan}. Har ${SUHBAT_QADAM} ta mashq progressingizga yoziladi.`;
+  };
+
+  // --- Savol
+  let oldingi: string | null = null;
+  function tasodifiy() {
+    const tanlov = suhbatSavollari.length > 1 ? suhbatSavollari.filter((s) => s.id !== oldingi) : suhbatSavollari;
+    const s = tanlov[Math.floor(Math.random() * tanlov.length)];
+    oldingi = s.id;
+    return s;
+  }
+
+  // --- Taymer
+  const vaqtTanlov = () => Number(root.querySelector<HTMLInputElement>('input[name="sm-vaqt"]:checked')?.value ?? 90);
+  type Holat = 'tayyor' | 'ishlayapti' | 'pauza' | 'tugadi';
+  let holat: Holat = 'tayyor';
+  let qoldi = 90; // soniya, pauza va tayyor holatida
+  let tugash = 0; // ms, ishlayotganda
+  let tik: ReturnType<typeof setInterval> | null = null;
+  let aytilgan = new Set<number>();
+
+  const raqam = $('[data-raqam]');
+  const taymer = $('[data-taymer]');
+  const elon = (m: string) => { $('[data-elon]').textContent = m; };
+  const korinish = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+  function chiz(s: number) {
+    raqam.textContent = korinish(s);
+    taymer.toggleAttribute('data-oxirgi', holat !== 'tayyor' && s <= 10 && s > 0);
+    taymer.toggleAttribute('data-tugadi', holat === 'tugadi');
+  }
+
+  function tugmalar() {
+    $('[data-boshlash]').hidden = holat !== 'tayyor';
+    $('[data-pauza]').hidden = !(holat === 'ishlayapti' || holat === 'pauza');
+    $('[data-pauza]').textContent = holat === 'pauza' ? 'Davom ettirish' : 'Toʻxtatish';
+    $('[data-tugatdim]').hidden = !(holat === 'ishlayapti' || holat === 'pauza');
+    $('[data-keyingi]').hidden = holat !== 'tugadi';
+    $('[data-taymer-holat]').textContent =
+      holat === 'tayyor' ? 'Tayyor boʻlsangiz, boshlang.' :
+      holat === 'ishlayapti' ? 'Javob bering.' :
+      holat === 'pauza' ? 'Toʻxtatildi.' : 'Mashq tugadi.';
+    root.querySelectorAll<HTMLInputElement>('input[name="sm-vaqt"]').forEach((i) => { i.disabled = holat === 'ishlayapti' || holat === 'pauza'; });
+  }
+
+  const tikTo = () => { if (tik) { clearInterval(tik); tik = null; } };
+
+  function yangila() {
+    const s = Math.max(0, Math.ceil((tugash - Date.now()) / 1000));
+    // Fon tabda interval sekinlashsa ham chegara o'tkazib yuborilmaydi (<=), har chegara bir marta aytiladi.
+    const chegara = [10, 30].find((c) => s > 0 && s <= c && !aytilgan.has(c));
+    if (chegara) { [10, 30].filter((c) => c >= chegara).forEach((c) => aytilgan.add(c)); elon(`${s} soniya qoldi`); }
+    if (s <= 0) { tugat(); return; }
+    chiz(s);
+  }
+
+  function boshla() {
+    holat = 'ishlayapti';
+    tugash = Date.now() + qoldi * 1000;
+    tikTo();
+    tik = setInterval(yangila, 250);
+    tugmalar();
+    yangila();
+  }
+
+  function pauza() {
+    if (holat === 'ishlayapti') {
+      qoldi = Math.max(1, Math.ceil((tugash - Date.now()) / 1000));
+      tikTo();
+      holat = 'pauza';
+      tugmalar();
+      chiz(qoldi);
+    } else if (holat === 'pauza') boshla();
+  }
+
+  function tugat() {
+    if (holat !== 'ishlayapti' && holat !== 'pauza') return;
+    tikTo();
+    holat = 'tugadi';
+    tugagan++;
+    let xabar = 'Mashq tugadi.';
+    if (tugagan % SUHBAT_QADAM === 0) {
+      markDone(5, suhbatBandi(asos + tugagan / SUHBAT_QADAM));
+      xabar += ` ${tugagan} ta mashq progressingizga yozildi.`;
+    }
+    chiz(0);
+    tugmalar();
+    hisobYoz();
+    elon(xabar);
+    $<HTMLButtonElement>('[data-keyingi]').focus();
+  }
+
+  function savolOl() {
+    tikTo();
+    const s = tasodifiy();
+    $('[data-savol]').textContent = s.savol;
+    $('[data-mavzu]').textContent = `Mavzu: ${s.mavzu}`;
+    $('[data-namuna]').hidden = !s.namuna;
+    $('[data-karta]').hidden = false;
+    holat = 'tayyor';
+    qoldi = vaqtTanlov();
+    aytilgan = new Set();
+    elon('');
+    tugmalar();
+    chiz(qoldi);
+    $('[data-savol]').focus();
+  }
+
+  root.querySelectorAll<HTMLInputElement>('input[name="sm-vaqt"]').forEach((i) =>
+    i.addEventListener('change', () => { if (holat === 'tayyor') { qoldi = vaqtTanlov(); chiz(qoldi); } }),
+  );
+  $('[data-olish]').addEventListener('click', savolOl);
+  $('[data-keyingi]').addEventListener('click', savolOl);
+  $('[data-boshlash]').addEventListener('click', boshla);
+  $('[data-pauza]').addEventListener('click', pauza);
+  $('[data-tugatdim]').addEventListener('click', tugat);
+
+  // --- Ovoz yozish (faqat xotirada)
+  const qollaydi = typeof window.MediaRecorder !== 'undefined' && !!navigator.mediaDevices?.getUserMedia;
+  const yozishB = $<HTMLButtonElement>('[data-yozish]');
+  const stopB = $<HTMLButtonElement>('[data-yozish-stop]');
+  const ochirB = $<HTMLButtonElement>('[data-yozuv-ochir]');
+  const audio = $<HTMLAudioElement>('[data-audio]');
+  const ovozHolat = (m: string) => { $('[data-ovoz-holat]').textContent = m; };
+  let recorder: MediaRecorder | null = null;
+  let oqim: MediaStream | null = null;
+  let url: string | null = null;
+
+  const oqimYop = () => { oqim?.getTracks().forEach((t) => t.stop()); oqim = null; };
+  function yozuvOchir(xabar = true) {
+    if (url) URL.revokeObjectURL(url);
+    url = null;
+    audio.removeAttribute('src');
+    audio.load();
+    audio.hidden = true;
+    ochirB.hidden = true;
+    if (xabar) ovozHolat('Yozuv oʻchirildi.');
+  }
+
+  if (!qollaydi) {
+    $('[data-ovoz-bor]').hidden = true;
+    $('[data-ovoz-yoq]').hidden = false;
+  } else {
+    yozishB.addEventListener('click', async () => {
+      yozishB.disabled = true;
+      try {
+        oqim = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch {
+        yozishB.disabled = false;
+        ovozHolat('Mikrofonga ruxsat berilmadi. Ovozsiz mashq qilishingiz mumkin.');
+        return;
+      }
+      let rec: MediaRecorder;
+      try {
+        rec = new MediaRecorder(oqim);
+      } catch {
+        oqimYop();
+        $('[data-ovoz-bor]').hidden = true;
+        $('[data-ovoz-yoq]').hidden = false;
+        return;
+      }
+      const bolaklar: Blob[] = [];
+      rec.addEventListener('dataavailable', (e) => { if (e.data.size) bolaklar.push(e.data); });
+      rec.addEventListener('stop', () => {
+        oqimYop();
+        recorder = null;
+        yozishB.hidden = false;
+        yozishB.disabled = false;
+        stopB.hidden = true;
+        if (!bolaklar.length) { ovozHolat('Yozuv boʻsh chiqdi.'); return; }
+        yozuvOchir(false);
+        url = URL.createObjectURL(new Blob(bolaklar, { type: rec.mimeType || 'audio/webm' }));
+        audio.src = url;
+        audio.hidden = false;
+        ochirB.hidden = false;
+        ovozHolat('Yozuv tayyor. Pastda qayta eshitishingiz mumkin.');
+        yozishB.focus();
+      });
+      recorder = rec;
+      rec.start();
+      yozishB.hidden = true;
+      stopB.hidden = false;
+      stopB.focus();
+      ovozHolat('Yozilyapti…');
+    });
+    stopB.addEventListener('click', () => { if (recorder && recorder.state !== 'inactive') recorder.stop(); });
+    ochirB.addEventListener('click', () => { yozuvOchir(); yozishB.focus(); });
+  }
+
+  // Sahifadan chiqilganda: mikrofon yopiladi, yozuv xotiradan o'chadi.
+  window.addEventListener('pagehide', () => {
+    tikTo();
+    if (recorder && recorder.state !== 'inactive') { try { recorder.stop(); } catch { /* yopilmoqda */ } }
+    oqimYop();
+    if (url) URL.revokeObjectURL(url);
+    url = null;
+  });
+</script>
+
+<style>
+  .sm { display: grid; gap: var(--space-6); }
+  .sm-vaqtlar { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+  .sm input[type='radio'] { flex-shrink: 0; margin-top: var(--space-1); width: var(--space-5); height: var(--space-5); accent-color: var(--color-eyuf-accent); }
+  .sm-mavzu { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); color: var(--color-eyuf-text-muted); font-size: var(--text-small-size); }
+  .sm h2[data-savol] { margin: 0; }
+  .sm-taymer { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-5); border: var(--border-width-1) solid var(--color-eyuf-line); border-radius: var(--radius-lg); background: var(--color-eyuf-surface); }
+  .sm-raqam { font-family: var(--font-eyuf); font-size: var(--text-eyuf-hero-size); line-height: 1; font-weight: var(--font-weight-bold); font-variant-numeric: tabular-nums lining-nums; color: var(--color-eyuf-text); }
+  .sm-taymer[data-oxirgi] { border-color: var(--color-warning-ui); background: var(--color-warning-subtle); }
+  .sm-taymer[data-oxirgi] .sm-raqam,
+  .sm-taymer[data-oxirgi] .eyuf-small { color: var(--color-warning-text); }
+  .sm-taymer[data-tugadi] .sm-raqam { color: var(--color-eyuf-text-muted); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>

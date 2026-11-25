@@ -23,6 +23,7 @@ export const eyufGuruhlar: TaGuruh[] = [
     nomi: 'Suhbat',
     bandlar: [
       { nomi: 'Suhbatga tayyorgarlik', href: 'eyuf/suhbat/' },
+      { nomi: 'Suhbat mashqi', href: 'eyuf/suhbat-mashqi/' },
       { nomi: 'Soha treklari', href: 'eyuf/soha/' },
       { nomi: 'Hududlar', href: 'eyuf/hududlar/' },
     ],
