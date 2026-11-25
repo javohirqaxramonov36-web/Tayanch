@@ -15,6 +15,7 @@ export interface MashqKarta {
 export const mashqKartalar: MashqKarta[] = [
   { nomi: 'Full Mock Test', vaqt: '2 soat 45 daqiqa', tarkib: "4 bo'lim", tavsif: "To'rt bo'lim bitta testda.", ikonka: IKONKA.namuna },
   { nomi: 'Reading', vaqt: '60 daqiqa', tarkib: '40 savol', tavsif: '3 ta matn, avtomatik tekshirish va taxminiy band.', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+  { nomi: 'True / False / Not Given', vaqt: '', tarkib: 'Mini-mashq', tavsif: 'Gapni matnga solishtirib, kartani suring yoki tugmani bosing.', qism: 'mashq/tfng/', ikonka: IKONKA.reading },
   { nomi: 'Listening imlo', vaqt: '', tarkib: 'Mini-mashq', tavsif: 'So‘zni tinglab, to‘g‘ri yozish.', qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
   { nomi: 'Harf va raqam diktanti', vaqt: '', tarkib: 'Mini-mashq', tavsif: 'Ism, telefon, sana va narxni tinglab yozish.', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
   { nomi: 'Listening mock', vaqt: 'taxminan 30 daqiqa', tarkib: '40 savol', tavsif: 'To‘liq Listening testi.', ikonka: IKONKA.listening },
