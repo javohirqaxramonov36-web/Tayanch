@@ -5,7 +5,7 @@
 // Esc yopadi va fokusni tugmaga qaytaradi; ←/→ qavatlar orasida, ↓ panelni ochib birinchi havolaga o'tadi.
 // Tashqariga bosish, fokus chiqib ketishi yoki sichqoncha ketishi yopadi. Hech narsa saqlanmaydi.
 // SAT paneli inglizcha (lang="en"), qolganlari o'zbekcha.
-import { qavatlar } from '../../data/qavatlar';
+import { qavatlar, joriyQavat } from '../../data/qavatlar';
 import { bolimlar } from '../../data/bolimlar';
 import { satYonGuruhlar } from '../../data/satSahifalar';
 import { ieltsGuruhlar } from '../../data/ieltsSahifalar';
@@ -21,6 +21,7 @@ interface Panel { tavsif: string; otish: string; tezOrada: string; ustunlar: Ust
 const { mobil = false } = Astro.props as { mobil?: boolean };
 const prefiks = mobil ? 'mobil' : 'ustki';
 const aktiv = Astro.url.pathname;
+const joriyRaqam = joriyQavat(aktiv);
 const nom = (slug: string, nomi: string) => slug === 'navigator' ? 'Bosh sahifa' : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
 const tavsifI = (slug: string) => bolimlar.find((b) => b.slug === slug)?.tavsif ?? '';
 const ielts = (q?: string) => (q ? `/uz/ielts/${q}` : undefined);
@@ -61,15 +62,19 @@ const PANELLAR: Record<string, Panel> = {
 };
 ---
 <nav class:list={['qm', { mobil }]} aria-label="Bo'limlar" data-qm lang="uz">
+  {/* Lift raqam displeyi (2026-11-25): joriy qavat raqami. Boshqa qavatga olib boruvchi havola bosilganda raqam
+      yuqoriga siljib yangisiga almashadi (--lift-davom), keyin sahifa ochiladi. Reduced motion'da darhol o'tadi.
+      Bezak: aria-hidden, joriy qavat tabdagi aria-current/faol bilan bildiriladi. */}
+  <div class="qm-displey" aria-hidden="true" data-qm-displey data-qavat={joriyRaqam} data-qm-joriy={joriyRaqam}><span>{joriyRaqam}</span></div>
   <ul class="qm-tablar" role="list">
     {qavatlar.map((q) => (
       <li>
-        {q.slug === 'navigator' ? <a class="qm-tab" href={yol('/uz/')} aria-current={aktiv === yol('/uz/') ? 'page' : undefined}>Bosh sahifa</a> : <>
+        {q.slug === 'navigator' ? <a class="qm-tab" data-qm-qavat={q.raqam} href={yol('/uz/')} aria-current={aktiv === yol('/uz/') ? 'page' : undefined}>Bosh sahifa</a> : <>
           <button type="button" class:list={['qm-tab', { faol: aktiv.startsWith(yol(q.manzil)) }]} aria-expanded="false" aria-controls={`${prefiks}-${q.slug}`} data-qm-tab>
             {nom(q.slug, q.nomi)}
             <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg>
           </button>
-          <div class="qm-panel" id={`${prefiks}-${q.slug}`} data-qm-panel>
+          <div class="qm-panel" id={`${prefiks}-${q.slug}`} data-qm-panel data-qm-qavat={q.raqam}>
             <div class="qm-ichki">
               <a class="qm-otish" href={yol(q.manzil)}>{PANELLAR[q.slug].otish} →</a>
               <div class="qm-ustunlar" lang={PANELLAR[q.slug].til}>
@@ -89,6 +94,55 @@ const PANELLAR: Record<string, Panel> = {
 </nav>
 
 <script>
+  // Lift: boshqa qavat havolasi bosilganda hamma displeylarda raqam almashadi, so'ng sahifa ochiladi.
+  const displeylar = () => [...document.querySelectorAll<HTMLElement>('[data-qm-displey]')];
+  // --lift-davom calc() bo'lgani uchun span'ning hisoblangan transition-duration'idan o'qiladi (masalan "0.3s").
+  const davomi = (el: HTMLElement) => {
+    const s = el.querySelector('span');
+    return s ? (parseFloat(getComputedStyle(s).transitionDuration) || 0) * 1000 : 0;
+  };
+  let ketyapti = false;
+
+  function raqamQoy(el: HTMLElement, raqam: string, animatsiya: boolean) {
+    const eski = [...el.children] as HTMLElement[];
+    // Klon: Astro scoped CSS atributi (data-astro-cid-*) yangi span'da ham bo'lsin.
+    const yangi = (eski[0]?.cloneNode() as HTMLElement | undefined) ?? document.createElement('span');
+    yangi.className = '';
+    yangi.textContent = raqam;
+    if (!animatsiya) { el.replaceChildren(yangi); return; }
+    yangi.className = 'pastda';
+    el.append(yangi);
+    yangi.getBoundingClientRect(); // boshlang'ich holat chizilsin, keyin transition ishlaydi
+    eski.forEach((s) => s.classList.add('tepada'));
+    yangi.classList.remove('pastda');
+  }
+
+  function liftBilanOt(e: MouseEvent) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target instanceof Element ? e.target.closest<HTMLAnchorElement>('a[href]') : null;
+    const manzil = a?.closest<HTMLElement>('[data-qm-qavat]')?.dataset.qmQavat;
+    if (!a || !manzil || (a.target && a.target !== '_self')) return;
+    const els = displeylar();
+    if (!els.length || els[0].dataset.qavat === manzil) return;
+    const ms = davomi(els[0]);
+    els.forEach((el) => { raqamQoy(el, manzil, ms > 0); el.dataset.qavat = manzil; });
+    if (ms <= 0) return; // reduced motion: brauzer havolani odatdagidek ochadi
+    e.preventDefault();
+    if (ketyapti) return;
+    ketyapti = true;
+    window.setTimeout(() => { location.href = a.href; }, ms);
+  }
+
+  // Orqaga qaytilganda (bfcache) displey joriy qavatga qaytadi.
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    ketyapti = false;
+    displeylar().forEach((el) => {
+      const joriy = el.closest('[data-qm]')?.querySelector<HTMLElement>('[data-qm-joriy]')?.dataset.qmJoriy;
+      if (joriy) { raqamQoy(el, joriy, false); el.dataset.qavat = joriy; }
+    });
+  });
+
   document.querySelectorAll<HTMLElement>('[data-qm]').forEach((nav) => {
     const tablar = [...nav.querySelectorAll<HTMLButtonElement>('[data-qm-tab]')];
     const panelI = (t: HTMLButtonElement) => document.getElementById(t.getAttribute('aria-controls')!)!;
@@ -161,6 +215,7 @@ const PANELLAR: Record<string, Panel> = {
     nav.addEventListener('click', (e) => {
       if (e.target instanceof Element && e.target.closest('.qm-panel a[href]')) yop();
     });
+    nav.addEventListener('click', liftBilanOt);
     // Yon panel ochilsa, mega menyu yopiladi
     document.querySelectorAll<HTMLDetailsElement>('header details').forEach((d) => {
       d.addEventListener('toggle', () => { if (d.open) yop(); });
@@ -169,7 +224,11 @@ const PANELLAR: Record<string, Panel> = {
 </script>
 
 <style>
-  .qm { min-width: 0; }
+  .qm { min-width: 0; display: flex; align-items: center; gap: var(--space-2); --lift-davom: calc(var(--duration-base) * 1.5); /* 300ms; reduced motion'da 0 */ }
+  .qm-displey { position: relative; flex: none; width: var(--space-10); height: var(--size-touch-min); overflow: hidden; border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); color: var(--color-text-primary); font-family: var(--font-family-mono); font-size: var(--text-body-size); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .qm-displey span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform var(--lift-davom) var(--ease-state), opacity var(--lift-davom) var(--ease-state); }
+  .qm-displey .tepada { transform: translateY(calc(-100% * var(--motion-distance))); opacity: 0; }
+  .qm-displey .pastda { transform: translateY(calc(100% * var(--motion-distance))); opacity: 0; }
   .qm-tablar { display: flex; list-style: none; margin: 0; padding: var(--header-pill-pad); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-full); background: var(--color-surface); }
   .qm-tab { display: flex; align-items: center; justify-content: center; gap: var(--space-1); min-height: var(--size-touch-min); padding: 0 var(--space-3); font: inherit; font-size: var(--text-small-size); font-weight: 600; white-space: nowrap; border: 0; border-radius: var(--radius-full); color: var(--color-text-secondary); background: transparent; text-decoration: none; cursor: pointer; }
   .qm-tab.faol, .qm-tab[aria-current='page'] { background: var(--header-accent); color: var(--header-on-accent); }
@@ -185,6 +244,8 @@ const PANELLAR: Record<string, Panel> = {
   .qm-royxat a { color: var(--color-text-primary); text-decoration: none; }
   .qm-royxat a:hover { text-decoration: underline; }
   .qm-tez { color: var(--color-text-secondary); }
+  .mobil { flex-direction: column; align-items: stretch; }
+  .mobil .qm-displey { margin-inline: var(--space-4); }
   .mobil .qm-tablar { flex-direction: column; border: 0; border-radius: 0; padding: 0; }
   .mobil .qm-tab { justify-content: space-between; width: 100%; padding-inline: var(--space-4); }
   .mobil .qm-panel { position: static; border: 0; box-shadow: none; max-height: none; }
