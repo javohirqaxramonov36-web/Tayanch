@@ -3,7 +3,7 @@
 // Hero qora sahnada (.nav-sahna + .t-fon laym nuri): chapda sarlavha va "3 savol" havolasi, o'ngda
 // (telefonda matn ostida) doim ko'rinadigan qavat tanlash paneli QavatTanlash (CTA brifi, 2026-11-24).
 // Qavat kartalari: butun karta bitta <a>, aniq fe'l, raqam har qavat shriftida va rangida, hover'da qavat nuri.
-// Oxirida "Bepul · 0 soʻm" bloki, marquee va laym yakuniy banner (BoshBepul, BoshYakun).
+// Kartalardan keyin "Bino chiroqlari" (BinoChiroqlari, progress moduli). Oxirida "Bepul · 0 soʻm" bloki, marquee va laym yakuniy banner (BoshBepul, BoshYakun).
 import onestLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
 import onestSymbols from '@fontsource-variable/onest/files/onest-symbols-wght-normal.woff2?url';
 import Asosiy from '../../layouts/Asosiy.astro';
@@ -14,6 +14,7 @@ import NavYorliq from '../../components/navigator/NavYorliq.astro';
 import QavatTanlash from '../../components/navigator/QavatTanlash.astro';
 import BoshBepul from '../../components/navigator/BoshBepul.astro';
 import BoshYakun from '../../components/navigator/BoshYakun.astro';
+import BinoChiroqlari from '../../components/navigator/BinoChiroqlari.astro';
 import RaqamShrifti from '../../components/navigator/RaqamShrifti.astro';
 import { boshKartalar } from '../../data/boshSahifa';
 import { qavatlar } from '../../data/qavatlar';
@@ -46,6 +47,7 @@ const qavat = (slug: string) => qavatlar.find((q) => q.slug === slug);
         </li>)}
       </ul>
     </section>
+    <BinoChiroqlari />
     <BoshBepul />
     <section class="home-deadlines" aria-labelledby="home-muddat">
       <h2 id="home-muddat" class="nav-nom">Yaqin muddatlar</h2>
