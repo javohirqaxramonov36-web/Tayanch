@@ -1,0 +1,252 @@
+---
+// IELTS ball kalkulyatori: Listening, Reading (Academic / General Training) va umumiy band.
+// Rasmiy: har test uchun 4 namunaviy nuqta va umumiy band yaxlitlash qoidasi (IE04). Qolgan chegaralar taxminiy.
+// Hech narsa saqlanmaydi (localStorage yo'q), hisob ham kerak emas.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import ManbaBlok from '../../../../../components/ManbaBlok.astro';
+import { IKONKA } from '../../../../../data/ieltsSahifalar';
+import { yol } from '../../../../../lib/yol';
+
+const bandlar = Array.from({ length: 19 }, (_, i) => (i * 0.5).toFixed(1));
+const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
+---
+<BolimQobiq
+  title="Ball kalkulyatori · IELTS"
+  description="IELTS Listening va Reading to'g'ri javoblar sonini bandga aylantiring va to'rt ko'nikmadan umumiy bandni rasmiy yaxlitlash qoidasi bilan hisoblang."
+  turi="vosita"
+  yol={["Vositalar"]}
+  bolim="ielts"
+  holat="chop-etilgan"
+>
+  <div class="ichki kalk">
+    <header class="bosh">
+      <p class="ustki-kok">Vosita</p>
+      <h1>IELTS ball kalkulyatori</h1>
+      <p class="izoh-m">Toʻgʻri javoblar sonini bandga aylantiring yoki toʻrt koʻnikmadan umumiy bandni hisoblang. Hisob ham, email ham kerak emas, hech narsa saqlanmaydi.</p>
+    </header>
+
+    <div class="tablar" role="tablist" aria-label="Kalkulyator turi">
+      <button type="button" role="tab" id="tab-listening" aria-controls="panel-listening" aria-selected="true">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Listening
+      </button>
+      <button type="button" role="tab" id="tab-reading" aria-controls="panel-reading" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reading} />Reading
+      </button>
+      <button type="button" role="tab" id="tab-umumiy" aria-controls="panel-umumiy" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.kalkulyator} />Umumiy band
+      </button>
+    </div>
+
+    {(['listening', 'reading'] as const).map((tur) => (
+      <section class="panel" role="tabpanel" id={`panel-${tur}`} aria-labelledby={`tab-${tur}`} hidden={tur !== 'listening'} data-xom={tur}>
+        {tur === 'reading' && (
+          <fieldset class="format">
+            <legend>Format</legend>
+            <label><input type="radio" name="reading-format" value="academic" checked /> Academic</label>
+            <label><input type="radio" name="reading-format" value="general" /> General Training</label>
+          </fieldset>
+        )}
+        <div class="maydon">
+          <label for={`xom-${tur}`}>Toʻgʻri javoblar soni (40 dan)</label>
+          <div class="son-qator">
+            <button type="button" class="t-tugma t-tugma--ikkinchi qadam" data-qadam="-1" aria-label="Bittaga kamaytirish">−</button>
+            <input id={`xom-${tur}`} type="text" inputmode="numeric" autocomplete="off" value="30" aria-describedby={`xato-${tur}`} />
+            <button type="button" class="t-tugma t-tugma--ikkinchi qadam" data-qadam="1" aria-label="Bittaga oshirish">+</button>
+          </div>
+          <p class="xato" id={`xato-${tur}`} hidden></p>
+        </div>
+        <div class="natija" aria-live="polite">
+          <p class="n-ustki">Band</p>
+          <p class="n-band" data-band>—</p>
+          <p class="yorliq" data-yorliq></p>
+          <p class="izoh" data-oraliq></p>
+        </div>
+      </section>
+    ))}
+
+    <section class="panel" role="tabpanel" id="panel-umumiy" aria-labelledby="tab-umumiy" hidden>
+      <div class="tortlik">
+        {konikmalar.map((k) => (
+          <div class="maydon">
+            <label for={`u-${k}`}>{k}</label>
+            <select id={`u-${k}`} data-umumiy>
+              <option value="">Tanlang</option>
+              {bandlar.map((b) => <option value={b}>{b}</option>)}
+            </select>
+          </div>
+        ))}
+      </div>
+      <div class="natija" aria-live="polite">
+        <p class="n-ustki">Umumiy band</p>
+        <p class="n-band" id="u-band">—</p>
+        <p class="izoh" id="u-izoh">Toʻrtta koʻnikmani tanlang.</p>
+      </div>
+    </section>
+
+    <div class="tushuntirish">
+      <h2>Qanday hisoblanadi</h2>
+      <p>Listening va Reading’da 40 ta savol bor, har toʻgʻri javob 1 ball. ielts.org har test uchun faqat 4 ta namunaviy nuqtani eʼlon qiladi (masalan, Academic Reading’da 30 ta toʻgʻri javob = band 7). Qolgan chegaralar taxminiy: aniq chegara test versiyasiga qarab biroz oʻzgaradi. Natijada “Rasmiy nuqta” yoki “Taxminiy” deb yozilgani shundan.</p>
+      <p>Umumiy band toʻrt koʻnikma oʻrtachasi, eng yaqin yarim bandga yaxlitlanadi. Oʻrtacha .25 bilan tugasa keyingi yarim bandga (6.25 → 6.5), .75 bilan tugasa keyingi butun bandga (6.75 → 7.0) koʻtariladi. Bu qoida rasmiy.</p>
+      <p class="izoh">Mashq qilish uchun: <a href={yol('/uz/ielts/mashq/')}>IELTS mashqlari</a>, <a href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja</a>.</p>
+    </div>
+
+    <ManbaBlok manbalar={["IE04"]} tekshirilgan="2026-11-25" keyingiTekshiruv="2026-12-25" tekshirilmagan={["Listening va General Training Reading oraliq chegaralari (rasmiy manbada yoʻq, Tayanch taxmini)"]} />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { sonMatn, umumiyBand, xomBand, xomTekshir, type TestTuri } from '../../../../../lib/ielts/kalkulyator/hisob';
+
+  // Tablar: ←/→, Home/End
+  const tablar = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+  function tanla(t: HTMLButtonElement, fokus = true) {
+    for (const x of tablar) {
+      const faol = x === t;
+      x.setAttribute('aria-selected', String(faol));
+      x.tabIndex = faol ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')!)!.hidden = !faol;
+    }
+    if (fokus) t.focus();
+  }
+  tablar.forEach((t, i) => {
+    t.addEventListener('click', () => tanla(t, false));
+    t.addEventListener('keydown', (e) => {
+      const yon: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tablar.length - 1 };
+      if (!(e.key in yon)) return;
+      e.preventDefault();
+      tanla(tablar[(yon[e.key] + tablar.length) % tablar.length]);
+    });
+  });
+
+  // Listening va Reading
+  for (const panel of document.querySelectorAll<HTMLElement>('[data-xom]')) {
+    const input = panel.querySelector<HTMLInputElement>('input[inputmode]')!;
+    const xato = panel.querySelector<HTMLElement>('.xato')!;
+    const bandEl = panel.querySelector<HTMLElement>('[data-band]')!;
+    const yorliq = panel.querySelector<HTMLElement>('[data-yorliq]')!;
+    const oraliq = panel.querySelector<HTMLElement>('[data-oraliq]')!;
+    const tur = (): TestTuri => panel.dataset.xom === 'listening'
+      ? 'listening'
+      : (panel.querySelector<HTMLInputElement>('input[name="reading-format"]:checked')!.value as TestTuri);
+
+    function yangila() {
+      const t = xomTekshir(input.value);
+      if ('xato' in t) {
+        xato.textContent = t.xato;
+        xato.hidden = false;
+        input.setAttribute('aria-invalid', 'true');
+        bandEl.textContent = '—';
+        yorliq.textContent = '';
+        yorliq.className = 'yorliq';
+        oraliq.textContent = '';
+        return;
+      }
+      xato.hidden = true;
+      input.removeAttribute('aria-invalid');
+      const n = xomBand(t.son, tur());
+      bandEl.textContent = n.band === null ? '2.5 dan past' : sonMatn(n.band);
+      yorliq.textContent = n.rasmiy ? 'Rasmiy nuqta' : 'Taxminiy';
+      yorliq.className = n.rasmiy ? 'yorliq yorliq--rasmiy' : 'yorliq';
+      oraliq.textContent = n.dan === n.gacha
+        ? `Bu band uchun taxminiy chegara: ${n.dan} ta toʻgʻri javob.`
+        : `Bu band uchun taxminiy oraliq: ${n.dan}–${n.gacha} ta toʻgʻri javob.`;
+    }
+    function qadam(d: number) {
+      const t = xomTekshir(input.value);
+      const joriy = 'son' in t ? t.son : 0;
+      input.value = String(Math.min(40, Math.max(0, joriy + d)));
+      yangila();
+    }
+    input.addEventListener('input', yangila);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); qadam(e.key === 'ArrowUp' ? 1 : -1); }
+    });
+    panel.querySelectorAll<HTMLButtonElement>('[data-qadam]').forEach((b) => b.addEventListener('click', () => qadam(Number(b.dataset.qadam))));
+    panel.querySelectorAll('input[name="reading-format"]').forEach((r) => r.addEventListener('change', yangila));
+    yangila();
+  }
+
+  // Umumiy band
+  const tanlovlar = [...document.querySelectorAll<HTMLSelectElement>('[data-umumiy]')];
+  const uBand = document.getElementById('u-band')!;
+  const uIzoh = document.getElementById('u-izoh')!;
+  const qoidaMatn = { pastga: 'eng yaqin yarim bandga pastga yaxlitlandi', yarimga: 'keyingi yarim bandga yaxlitlandi', butunga: 'keyingi butun bandga yaxlitlandi' };
+  function umumiy() {
+    if (tanlovlar.some((s) => s.value === '')) {
+      uBand.textContent = '—';
+      const qolgan = tanlovlar.filter((s) => s.value === '').length;
+      uIzoh.textContent = qolgan === 4 ? 'Toʻrtta koʻnikmani tanlang.' : `Yana ${qolgan} ta koʻnikmani tanlang.`;
+      return;
+    }
+    const n = umumiyBand(tanlovlar.map((s) => Number(s.value)));
+    uBand.textContent = sonMatn(n.band);
+    uIzoh.textContent = n.ortacha === n.band
+      ? `Oʻrtacha ${sonMatn(n.ortacha)}: yaxlitlash kerak emas.`
+      : `Oʻrtacha ${sonMatn(n.ortacha)} → ${sonMatn(n.band)}: ${qoidaMatn[n.qoida]}.`;
+  }
+  tanlovlar.forEach((s) => s.addEventListener('change', umumiy));
+</script>
+
+<style>
+  .kalk { padding-top: calc(2 * var(--space-6)); display: flex; flex-direction: column; gap: var(--space-6); max-width: calc(760px + 2 * var(--space-10)) !important; }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-3); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); }
+  h2 { font-size: var(--text-h2-size); line-height: 1.2; font-weight: var(--font-weight-extrabold); }
+  .izoh-m { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
+  .izoh { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); line-height: 1.5; }
+  .izoh a { color: var(--color-link); font-weight: var(--font-weight-bold); }
+
+  .tablar { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+  .tablar button {
+    display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4);
+    border-radius: var(--radius-full); border: 1.5px solid var(--color-ielts-line); background: var(--color-ielts-bg);
+    color: var(--color-ielts-text); font: inherit; font-weight: var(--font-weight-bold); cursor: pointer;
+  }
+  @media (hover: hover) and (pointer: fine) { .tablar button:hover { border-color: var(--color-ielts-text); } }
+  .tablar button[aria-selected='true'] { background: var(--color-ielts-tile); border-color: var(--color-ielts-accent-text); color: var(--color-link); }
+  .tablar svg { flex: none; }
+
+  .panel { background: var(--color-ielts-bg); border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); box-shadow: var(--shadow-glass); padding: var(--space-8); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
+  .panel[hidden] { display: none; }
+  .format { grid-column: 1 / -1; border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .format legend { font-weight: var(--font-weight-bold); margin-bottom: var(--space-2); }
+  .format label { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4); border: 1.5px solid var(--color-ielts-line); border-radius: var(--radius-md); cursor: pointer; font-weight: var(--font-weight-bold); }
+  .format label:has(input:checked) { background: var(--color-ielts-tile); border-color: var(--color-ielts-accent-text); }
+  .format label:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .format input { accent-color: var(--color-ielts-accent-text); width: 18px; height: 18px; margin: 0; }
+
+  .maydon { display: flex; flex-direction: column; gap: var(--space-2); }
+  .maydon label { font-weight: var(--font-weight-bold); }
+  .son-qator { display: flex; gap: var(--space-2); align-items: stretch; }
+  .qadam { min-width: 48px; min-height: 48px; padding: 0; justify-content: center; font-size: var(--text-h3-size); }
+  .son-qator input, .maydon select {
+    min-height: 48px; border-radius: var(--radius-md); border: 1.5px solid var(--chiziq-maydon); background: var(--color-ielts-bg);
+    color: var(--color-ielts-text); font: inherit; font-size: var(--text-body-size); padding: 0 var(--space-3);
+  }
+  .son-qator .qadam { flex: none; }
+  .son-qator input { width: 5.5em; min-width: 0; text-align: center; font-weight: var(--font-weight-bold); font-variant-numeric: tabular-nums; }
+  .son-qator input[aria-invalid='true'] { border-color: var(--color-error-ui); }
+  .xato { color: var(--color-error-text); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); }
+  .xato[hidden] { display: none; }
+
+  .natija { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-ielts-tile); }
+  .n-ustki { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ielts-text-muted); }
+  .n-band { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .yorliq { align-self: flex-start; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); padding: 2px var(--space-2); border-radius: var(--radius-full); border: 1px solid var(--color-ielts-line-strong); color: var(--color-ielts-text-muted); }
+  .yorliq:empty { display: none; }
+  .yorliq--rasmiy { border-color: var(--color-ielts-accent-text); color: var(--color-link); }
+
+  .tortlik { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  #panel-umumiy { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+
+  .tushuntirish { display: flex; flex-direction: column; gap: var(--space-3); }
+  .tushuntirish p { line-height: 1.6; max-width: 70ch; }
+
+  @media (max-width: 640px) {
+    .kalk { padding-top: var(--space-6); }
+    .panel, #panel-umumiy { grid-template-columns: minmax(0, 1fr); padding: var(--space-5); }
+    .tablar button { flex: 1 1 auto; justify-content: center; }
+    .son-qator input { flex: 1; width: auto; }
+  }
+</style>
