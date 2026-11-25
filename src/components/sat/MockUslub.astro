@@ -104,6 +104,13 @@
   }
   .mk-namuna-katak.javobli { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); }
   .mk-namuna-katak.flag { border: 0; }
+  .mk-kbd {
+    display: inline-block; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm);
+    border: 1px solid var(--color-sat-line-strong); background: var(--color-sat-sunken); color: var(--color-sat-text);
+    font: inherit; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); white-space: nowrap;
+  }
+  /* Telefonda jismoniy klaviatura yo'q: yorliqlar tugmasi faqat 768px dan keng ekranda */
+  @media (max-width: 767.98px) { .mk-amallar .mk-yorliq-och { display: none; } }
   .mk-dialog-amal { display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: flex-end; }
 
   /* Tanaffus */

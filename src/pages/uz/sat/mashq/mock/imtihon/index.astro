@@ -13,6 +13,7 @@ import ManbaBlok from '../../../../../../components/ManbaBlok.astro';
 import DesmosHavola from '../../../../../../components/sat/DesmosHavola.astro';
 import { ichkiSahifa } from '../../../../../../data/satSahifalar';
 import { yol } from '../../../../../../lib/yol';
+import { YORLIQLAR, yorliqYozuv, ariaYorliq } from '../../../../../../lib/sat/mockYorliq';
 
 const sahifa = ichkiSahifa('mashq/mock/imtihon/');
 const kirishUrl = yol('/uz/sat/mashq/mock/');
@@ -20,6 +21,7 @@ const IK = {
   xarita: ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'],
   soat: ['M12 7v5l3 2', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
   yop: ['M6 6l12 12M18 6L6 18'],
+  klaviatura: ['M3 6h18v12H3z', 'M7 10h.01M11 10h.01M15 10h.01M7 14h10'],
 };
 ---
 <SatFokus
@@ -40,9 +42,13 @@ const IK = {
     </div>
     <button type="button" class="mk-kichik" id="taymer-yashir" aria-pressed="false" aria-controls="taymer" hidden>Hide timer</button>
     <DesmosHavola id="desmos" hidden />
-    <button type="button" class="mk-kichik" id="xarita-och" aria-haspopup="dialog" hidden>
+    <button type="button" class="mk-kichik" id="xarita-och" aria-haspopup="dialog" aria-keyshortcuts={ariaYorliq('G')} hidden>
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.xarita.map((d) => <path d={d} />)}</svg>
       Questions
+    </button>
+    <button type="button" class="mk-kichik mk-yorliq-och" id="yorliq-och" aria-haspopup="dialog" aria-keyshortcuts="F1" hidden>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{IK.klaviatura.map((d) => <path d={d} />)}</svg>
+      Shortcuts
     </button>
   </div>
 
@@ -84,9 +90,9 @@ const IK = {
       <p class="mk-saqlash" id="saqlash" role="status"></p>
       <div id="savol-joy"></div>
       <div class="mk-pastki">
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldingi">Back</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldingi" aria-keyshortcuts={ariaYorliq('B')}>Back</button>
         <span class="mk-joy" id="joy"></span>
-        <button type="button" class="t-tugma sat-tugma--kok" id="keyingi">Next</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="keyingi" aria-keyshortcuts={ariaYorliq('X')}>Next</button>
       </div>
     </section>
 
@@ -152,6 +158,31 @@ const IK = {
     </div>
   </dialog>
 
+  <dialog class="mk-dialog" id="yorliqlar" aria-labelledby="yorliqlar-h">
+    <div class="mk-dialog-ichi">
+      <div class="mk-dialog-bosh">
+        <h2 id="yorliqlar-h">Keyboard shortcuts</h2>
+        <button type="button" class="mk-yopish" id="yorliqlar-yop" aria-label="Close">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">{IK.yop.map((d) => <path d={d} />)}</svg>
+        </button>
+      </div>
+      <p class="mk-matn">The same shortcuts as in the Bluebook™ app, so you practice the habits you will use on test day.</p>
+      <div class="mk-jadval-quti">
+        <table class="mk-jadval">
+          <thead><tr><th scope="col">Action</th><th scope="col">Shortcut</th></tr></thead>
+          <tbody>
+            {YORLIQLAR.map((y) => (
+              <tr>
+                <th scope="row">{y.amal}</th>
+                <td>{y.harf ? <kbd class="mk-kbd" data-harf={y.harf}>{yorliqYozuv(y.harf, false)}</kbd> : <kbd class="mk-kbd">{y.tugma}</kbd>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </dialog>
+
   <div class="mk-sr" id="taymer-elon" aria-live="assertive" aria-atomic="true"></div>
   <div class="mk-sr" id="elon" aria-live="polite" aria-atomic="true"></div>
 </SatFokus>
@@ -163,6 +194,7 @@ const IK = {
   import { BOSH_HOLAT, type SavolHolati } from '../../../../../../lib/sat/savolTuri';
   import { sprTekshir } from '../../../../../../lib/sat/sprFormat';
   import { xavfsizMatn } from '../../../../../../lib/sat/xavfsizMatn';
+  import { yorliqAniqla, yorliqYozuv, macmi } from '../../../../../../lib/sat/mockYorliq';
   import { komponentSavoli, togriMatn, chegaraOtildi, vaqtMatni, davomiylikMatni, keyingiUrinishMs, idTogrimi, SABABLAR, type ServerSavol } from '../../../../../../lib/sat/sessiya';
   import {
     MOCK_KALIT, mockMahalliyTekshir, modulgaMosla, javoblarniBirlashtir, navbatBolagi, navbatdanOl, mockXarita, mockXaritaYorliq,
@@ -223,6 +255,8 @@ const IK = {
     }
     const ishda = e === 'savol';
     $('xarita-och').hidden = !ishda;
+    $('yorliq-och').hidden = !ishda;
+    if (!ishda) yorliqYop(false);
     $('taymer-yashir').hidden = !ishda;
     $('taymer').hidden = !ishda || $('taymer-yashir').getAttribute('aria-pressed') === 'true';
     $('desmos').hidden = !(ishda && joriySavol()?.section === 'math');
@@ -617,6 +651,44 @@ const IK = {
     const d = $<HTMLDialogElement>('toxtat');
     if (d.open) d.close();
   }
+  // ---------- Klaviatura yorliqlari (Bluebook bilan bir xil; sof mantiq lib/sat/mockYorliq.ts) ----------
+  const MAC = macmi((navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform || navigator.platform || '');
+  if (MAC) document.querySelectorAll<HTMLElement>('#yorliqlar kbd[data-harf]').forEach((k) => { k.textContent = yorliqYozuv(k.dataset.harf!, true); });
+  let yorliqQaytish: HTMLElement | null = null;
+  function yorliqOch() {
+    const d = $<HTMLDialogElement>('yorliqlar');
+    if (d.open) return;
+    yorliqQaytish = document.activeElement as HTMLElement | null;
+    d.showModal();
+    $('yorliqlar-yop').focus();
+  }
+  function yorliqYop(fokusQaytar = true) {
+    const d = $<HTMLDialogElement>('yorliqlar');
+    if (!d.open) return;
+    d.close();
+    if (fokusQaytar) yorliqQaytish?.focus();
+  }
+  function tugmaBos(i: string) {
+    const b = $<HTMLButtonElement>(i);
+    if (!b.hidden && !b.disabled && !b.closest('[hidden]')) b.click();
+  }
+  function yorliqTugma(e: KeyboardEvent) {
+    if (e.repeat || e.isComposing) return;
+    const amal = yorliqAniqla(e, MAC);
+    if (!amal || ekran !== 'savol') return;
+    if ($<HTMLDialogElement>('toxtat').open) return;
+    e.preventDefault();
+    if ($<HTMLDialogElement>('yorliqlar').open) {
+      if (amal === 'yorliqlar') yorliqYop();
+      return;
+    }
+    const xarita = $<HTMLDialogElement>('xarita').open;
+    if (amal === 'yorliqlar') { if (!xarita) yorliqOch(); return; }
+    if (amal === 'xarita') { if (xarita) xaritaYop(); else tugmaBos('xarita-och'); return; }
+    if (xarita) return;
+    tugmaBos(amal === 'keyingi' ? 'keyingi' : 'oldingi');
+  }
+
   async function toxtat() {
     const t = $<HTMLButtonElement>('toxtat-ha');
     t.setAttribute('aria-busy', 'true');
@@ -893,6 +965,10 @@ const IK = {
   $('topshirish-qayta').addEventListener('click', () => void topshir(false));
   $('taymer-yashir').addEventListener('click', () => taymerYashir($('taymer-yashir').getAttribute('aria-pressed') !== 'true'));
   $('toxtat-och').addEventListener('click', toxtatOch);
+  $('yorliq-och').addEventListener('click', yorliqOch);
+  $('yorliqlar-yop').addEventListener('click', () => yorliqYop());
+  $<HTMLDialogElement>('yorliqlar').addEventListener('cancel', (e) => { e.preventDefault(); yorliqYop(); });
+  document.addEventListener('keydown', yorliqTugma);
   $('toxtat-yoq').addEventListener('click', toxtatYop);
   $<HTMLDialogElement>('toxtat').addEventListener('cancel', (e) => { e.preventDefault(); toxtatYop(); });
   $('toxtat-ha').addEventListener('click', () => void toxtat());
