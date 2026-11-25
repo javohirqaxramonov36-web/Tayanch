@@ -18,6 +18,7 @@ export const IKONKA = {
   reja: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   takror: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>',
   namuna: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6"/>',
+  kalkulyator: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8"/>',
   tahlil: '<path d="M11 3a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM21 21l-4.3-4.3"/>',
 } as const;
 
@@ -52,6 +53,7 @@ export const mashqlar: IeltsBand[] = [
 export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
   { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
+  { nomi: 'Ball kalkulyatori', tavsif: "Listening, Reading va umumiy band", qism: 'vosita/kalkulyator/', ikonka: IKONKA.kalkulyator },
 ];
 
 /** Ko'nikma sahifalari (2026-11-24, muallif qarori: IELTS ko'nikma bo'yicha tuziladi).

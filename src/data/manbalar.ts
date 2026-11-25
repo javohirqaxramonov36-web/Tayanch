@@ -183,8 +183,8 @@ export const manbalar: Manba[] = [
     tashkilot: 'IELTS (ielts.org)',
     havola: 'https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail',
     tekshiruvDarajasi: 'rasmiy',
-    tekshirilganSana: '2026-11-10',
-    izoh: "Listening va Reading: 40 savol, har toʻgʻri javob 1 ball; xom ball 9 bandli shkalaga oʻtkaziladi, natija butun va yarim bandlarda. Academic Reading uchun sahifada faqat 4 ta namunaviy nuqta bor: band 5 = 15, band 6 = 23, band 7 = 30, band 8 = 35 (40 dan). Boshqa bandlar va yarim bandlar chegarasi sahifada yoʻq. Kerakli ball test versiyasiga qarab biroz oʻzgaradi.",
+    tekshirilganSana: '2026-11-25',
+    izoh: "Listening va Reading: 40 savol, har toʻgʻri javob 1 ball; xom ball 9 bandli shkalaga oʻtkaziladi, natija butun va yarim bandlarda. Sahifada har test uchun faqat 4 ta namunaviy nuqta bor (40 dan): Listening band 5 = 16, 6 = 23, 7 = 30, 8 = 35; Academic Reading band 5 = 15, 6 = 23, 7 = 30, 8 = 35; General Training Reading band 4 = 15, 5 = 23, 6 = 30, 7 = 35. Boshqa bandlar va yarim bandlar chegarasi sahifada yoʻq; kerakli ball test versiyasiga qarab biroz oʻzgaradi. Umumiy band: toʻrt boʻlim oʻrtachasi eng yaqin yarim bandga; .25 bilan tugasa keyingi yarim bandga, .75 bilan tugasa keyingi butun bandga koʻtariladi (misollar: 6.25 → 6.5, 3.875 → 4.0, 6.125 → 6.0). 2026-11-25 da qayta oʻqildi, sahifada yangilanish sanasi yoʻq.",
   },
   {
     id: 'IE05',
