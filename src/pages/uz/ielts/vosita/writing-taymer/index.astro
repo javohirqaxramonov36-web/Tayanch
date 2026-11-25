@@ -179,7 +179,7 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
   }
 
   function tekshirBelgi() {
-    if (sozChiz() && joriy().sarflanganMs <= limitMs() && joriy().sarflanganMs > 0) {
+    if (sozChiz() && ishlayapti && joriy().sarflanganMs <= limitMs()) {
       if (markDone(4, sozla().itemId)) {
         elon.textContent = `Minimal ${sozla().minSoz} soʻzga vaqt ichida yetdingiz. Progressda belgilandi.`;
         holatChiz();
