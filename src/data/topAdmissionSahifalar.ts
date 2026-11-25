@@ -41,6 +41,7 @@ export const taGuruhlar: TaGuruh[] = [
     nomi: 'Vositalar',
     bandlar: [
       { nomi: "Topshirish yoʻli", href: 'top-admission/vosita/topshirish-yoli/' },
+      { nomi: 'Hujjat chamadoni', href: 'top-admission/vosita/hujjat-chamadoni/' },
       { nomi: 'Davlatlarni taqqoslash', href: 'top-admission/davlatlar/' },
       { nomi: 'Grantlar', href: 'top-admission/grantlar/' },
       { nomi: 'Menga mos universitet', href: 'top-admission/universitetlar/' },
