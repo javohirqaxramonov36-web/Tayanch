@@ -2,7 +2,7 @@
 import { kursHavola, kursOchiq } from '../lib/sat/kursKatalog';
 // Bo'lim yon paneli (sidebar): SAT, IELTS yoki Top Admission (maket "LiftSidebar").
 // >= 768px: bo‘limlar ustki qatorda, joriy bo‘lim menyusi o‘ngda ochiladi.
-// < 768px: bo‘limlar va joriy bo‘lim sahifalari hamburger menyusida.
+// < 768px: bo‘limlar sarlavha ostidagi chiplarda (BolimChiplar), hamburgerda faqat joriy bo‘lim sahifalari (2026-11-27).
 //   Esc yopadi, fokus panel ichida aylanadi, qolgan sahifa inert bo'ladi, aria-expanded yangilanadi.
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satYonGuruhlar } from '../data/satSahifalar';
@@ -10,6 +10,7 @@ import { ieltsGuruhlar } from '../data/ieltsSahifalar';
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import { eyufGuruhlar } from '../data/eyufSahifalar';
 import QavatMenyu from './navigator/QavatMenyu.astro';
+import BolimChiplar from './navigator/BolimChiplar.astro';
 import KirishDialog from './hisob/KirishDialog.astro';
 import HeaderAmallar from './HeaderAmallar.astro';
 import Suhbatdosh from './Suhbatdosh.astro';
@@ -116,7 +117,6 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
       <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
       </div>
-  <div class="mobile-nav"><QavatMenyu mobil /></div>
   <nav class="yon-nav yon-matn" id="bolim-yon-nav" aria-label={M.navigatsiya(NOM)}>
     {bolim && <ul class="royxat">
       <li>
@@ -266,6 +266,7 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
   </div>
     </div>
   </details>
+  <BolimChiplar />
 
 </header>
 <KirishDialog />
@@ -573,7 +574,6 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
   .ustki-qator { display: flex; min-height: var(--header-height); height: auto; gap: var(--space-3); padding: var(--space-2) max(var(--space-8), calc((100% - var(--header-max)) / 2)); background: var(--color-surface); }
   .ustki-qator > .logo { width: var(--header-logo); flex-shrink: 0; }
   .desktop-nav { margin-inline: auto; min-width: 0; }
-  .mobile-nav { display: none; }
   .yon-orami > summary { display: none; }
   @media (width >= 768px) { .yon-orami { position: absolute; inset: 100% var(--space-8) auto auto; width: var(--header-menu-width); } .yon-orami .yon { position: static; width: 100%; } }
   @media (width < 1024px) {
@@ -586,7 +586,7 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
     .ustki-qator > .logo { margin-right: auto; width: var(--header-logo-mobile); }
     .desktop-nav { display: none; }
     .yon-orami > summary { display: inline-flex; }
-    .mobile-nav { display: block; padding: var(--space-3); }
+    .ustki-qator { flex-wrap: wrap; row-gap: 0; }
     .yon { overflow-y: auto; width: min(var(--header-menu-width), calc(100% - var(--space-4))); }
     .yon-nav { flex: none; overflow: visible; border-top: var(--border-width-1) solid var(--color-border); }
     .yon-bosh { display: none; }
