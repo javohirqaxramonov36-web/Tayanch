@@ -20,6 +20,7 @@ export const IKONKA = {
   namuna: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6"/>',
   kalkulyator: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8"/>',
   tahlil: '<path d="M11 3a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM21 21l-4.3-4.3"/>',
+  taymer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/>',
 } as const;
 
 export const qollanmalar: IeltsBand[] = [
@@ -54,6 +55,7 @@ export const vositalar: IeltsBand[] = [
   { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
   { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
   { nomi: 'Ball kalkulyatori', tavsif: "Listening, Reading va umumiy band", qism: 'vosita/kalkulyator/', ikonka: IKONKA.kalkulyator },
+  { nomi: 'Writing taymeri', tavsif: "Task 1 va Task 2: vaqt va so'z hisoblagichi", qism: 'vosita/writing-taymer/', ikonka: IKONKA.taymer },
 ];
 
 /** Ko'nikma sahifalari (2026-11-24, muallif qarori: IELTS ko'nikma bo'yicha tuziladi).
