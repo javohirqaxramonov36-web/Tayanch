@@ -9,7 +9,7 @@ export function kirishDialogniUla() {
   let keyin = location.pathname + location.search + location.hash;
   let ochuvchi: HTMLElement | null = null;
   let band = false;
-  function xabar() { xato.hidden = false; xato.textContent = "Kirishda xatolik. Qaytadan urinib ko'ring."; }
+  function xabar() { xato.hidden = false; xato.textContent = dialog!.dataset.xatoMatn ?? "Kirishda xatolik. Qaytadan urinib ko'ring."; }
   function bandQoy(qiymat: boolean) {
     band = qiymat;
     google.disabled = qiymat || !hisobSozlangan();

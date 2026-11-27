@@ -71,7 +71,7 @@ export const manbalar: Manba[] = [
   },
   {
     id: 'CB07',
-    nomi: 'The SAT (SAT Suite bosh sahifasi)',
+    nomi: 'The SAT (SAT Suite home page)',
     tashkilot: 'College Board',
     havola: 'https://satsuite.collegeboard.org/sat',
     tekshiruvDarajasi: 'rasmiy',
