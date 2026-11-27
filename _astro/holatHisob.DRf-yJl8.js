@@ -1,0 +1,1 @@
+import"./client.Qp9JqLRK.js";import"./hisobSozlama.4R8bbNcx.js";import"./holat.CnQmD5n4.js";import"./preload-helper.DHhhL8Zf.js";async function e(){}export{e as t};

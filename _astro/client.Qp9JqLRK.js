@@ -1,0 +1,1 @@
+var e=`https://uvwejvjrsswssgydwevm.supabase.co`;export{e as t};
