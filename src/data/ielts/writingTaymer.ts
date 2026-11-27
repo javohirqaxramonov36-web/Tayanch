@@ -18,7 +18,7 @@ export const WRITING_TAYMER: Record<TaymerRejim, TaymerSozlama> = {
   task2: { id: 'task2', nomi: 'Task 2', daqiqa: 40, minSoz: 250, itemId: 'writing-task2' },
 };
 
-export const WRITING_TAYMER_MANBA = 'Manba: ielts.org — tekshirish kerak';
+export const WRITING_TAYMER_MANBA = 'Source: ielts.org (to be checked)';
 
 /** Qoralama faqat shu brauzerda: { rejim, task1: { matn, sarflanganMs }, task2: {...} } */
 export const KALIT_WRITING_TAYMER = 'tayanch:ielts-writing-taymer:v1';

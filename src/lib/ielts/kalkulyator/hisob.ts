@@ -22,10 +22,10 @@ export interface XomNatija {
 /** Kiritilgan matn → 0..40 butun son, yoki xato matni. */
 export function xomTekshir(matn: string): { son: number } | { xato: string } {
   const t = matn.trim();
-  if (t === '') return { xato: '0 dan 40 gacha son kiriting.' };
-  if (!/^-?\d+$/.test(t)) return { xato: 'Faqat butun son kiriting (masalan, 27).' };
+  if (t === '') return { xato: 'Enter a number from 0 to 40.' };
+  if (!/^-?\d+$/.test(t)) return { xato: 'Enter a whole number only (for example, 27).' };
   const son = Number(t);
-  if (son < 0 || son > 40) return { xato: "Son 0 dan 40 gacha boʻlishi kerak." };
+  if (son < 0 || son > 40) return { xato: 'The number must be from 0 to 40.' };
   return { son };
 }
 

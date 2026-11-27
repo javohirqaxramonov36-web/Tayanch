@@ -11,21 +11,21 @@ const bandlar = Array.from({ length: 19 }, (_, i) => (i * 0.5).toFixed(1));
 const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
 ---
 <BolimQobiq
-  title="Ball kalkulyatori · IELTS"
-  description="IELTS Listening va Reading to'g'ri javoblar sonini bandga aylantiring va to'rt ko'nikmadan umumiy bandni rasmiy yaxlitlash qoidasi bilan hisoblang."
+  title="Score calculator · IELTS"
+  description="Convert IELTS Listening and Reading correct answers into a band, and work out your overall band from the four skills with the official rounding rule."
   turi="vosita"
-  yol={["Vositalar"]}
+  yol={["Tools"]}
   bolim="ielts"
   holat="chop-etilgan"
 >
   <div class="ichki kalk">
     <header class="bosh">
-      <p class="ustki-kok">Vosita</p>
-      <h1>IELTS ball kalkulyatori</h1>
-      <p class="izoh-m">Toʻgʻri javoblar sonini bandga aylantiring yoki toʻrt koʻnikmadan umumiy bandni hisoblang. Hisob ham, email ham kerak emas, hech narsa saqlanmaydi.</p>
+      <p class="ustki-kok">Tool</p>
+      <h1>IELTS score calculator</h1>
+      <p class="izoh-m">Convert your number of correct answers into a band, or work out your overall band from the four skills. No account or email needed, and nothing is saved.</p>
     </header>
 
-    <div class="tablar" role="tablist" aria-label="Kalkulyator turi">
+    <div class="tablar" role="tablist" aria-label="Calculator type">
       <button type="button" role="tab" id="tab-listening" aria-controls="panel-listening" aria-selected="true">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Listening
       </button>
@@ -33,7 +33,7 @@ const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reading} />Reading
       </button>
       <button type="button" role="tab" id="tab-umumiy" aria-controls="panel-umumiy" aria-selected="false" tabindex="-1">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.kalkulyator} />Umumiy band
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.kalkulyator} />Overall band
       </button>
     </div>
 
@@ -47,11 +47,11 @@ const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
           </fieldset>
         )}
         <div class="maydon">
-          <label for={`xom-${tur}`}>Toʻgʻri javoblar soni (40 dan)</label>
+          <label for={`xom-${tur}`}>Number of correct answers (out of 40)</label>
           <div class="son-qator">
-            <button type="button" class="t-tugma t-tugma--ikkinchi qadam" data-qadam="-1" aria-label="Bittaga kamaytirish">−</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi qadam" data-qadam="-1" aria-label="Decrease by one">−</button>
             <input id={`xom-${tur}`} type="text" inputmode="numeric" autocomplete="off" value="30" aria-describedby={`xato-${tur}`} />
-            <button type="button" class="t-tugma t-tugma--ikkinchi qadam" data-qadam="1" aria-label="Bittaga oshirish">+</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi qadam" data-qadam="1" aria-label="Increase by one">+</button>
           </div>
           <p class="xato" id={`xato-${tur}`} hidden></p>
         </div>
@@ -70,27 +70,27 @@ const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
           <div class="maydon">
             <label for={`u-${k}`}>{k}</label>
             <select id={`u-${k}`} data-umumiy>
-              <option value="">Tanlang</option>
+              <option value="">Choose</option>
               {bandlar.map((b) => <option value={b}>{b}</option>)}
             </select>
           </div>
         ))}
       </div>
       <div class="natija" aria-live="polite">
-        <p class="n-ustki">Umumiy band</p>
+        <p class="n-ustki">Overall band</p>
         <p class="n-band" id="u-band">—</p>
-        <p class="izoh" id="u-izoh">Toʻrtta koʻnikmani tanlang.</p>
+        <p class="izoh" id="u-izoh">Choose all four skills.</p>
       </div>
     </section>
 
     <div class="tushuntirish">
-      <h2>Qanday hisoblanadi</h2>
-      <p>Listening va Reading’da 40 ta savol bor, har toʻgʻri javob 1 ball. ielts.org har test uchun faqat 4 ta namunaviy nuqtani eʼlon qiladi (masalan, Academic Reading’da 30 ta toʻgʻri javob = band 7). Qolgan chegaralar taxminiy: aniq chegara test versiyasiga qarab biroz oʻzgaradi. Natijada “Rasmiy nuqta” yoki “Taxminiy” deb yozilgani shundan.</p>
-      <p>Umumiy band toʻrt koʻnikma oʻrtachasi, eng yaqin yarim bandga yaxlitlanadi. Oʻrtacha .25 bilan tugasa keyingi yarim bandga (6.25 → 6.5), .75 bilan tugasa keyingi butun bandga (6.75 → 7.0) koʻtariladi. Bu qoida rasmiy.</p>
-      <p class="izoh">Mashq qilish uchun: <a href={yol('/uz/ielts/mashq/')}>IELTS mashqlari</a>, <a href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja</a>.</p>
+      <h2>How it is calculated</h2>
+      <p>Listening and Reading each have 40 questions, with 1 mark for each correct answer. For each test, ielts.org publishes only 4 sample points (for example, 30 correct answers in Academic Reading = band 7). The other boundaries are estimates: the exact boundary shifts a little with the test version. That is why a result is labelled “Official point” or “Estimate”.</p>
+      <p>The overall band is the average of the four skills, rounded to the nearest half band. An average ending in .25 goes up to the next half band (6.25 → 6.5), and one ending in .75 goes up to the next whole band (6.75 → 7.0). This rule is official.</p>
+      <p class="izoh">To practise: <a href={yol('/uz/ielts/mashq/')}>IELTS practice</a>, <a href={yol('/uz/ielts/vosita/reja/')}>30-day plan</a>.</p>
     </div>
 
-    <ManbaBlok manbalar={["IE04"]} tekshirilgan="2026-11-25" keyingiTekshiruv="2026-12-25" tekshirilmagan={["Listening va General Training Reading oraliq chegaralari (rasmiy manbada yoʻq, Tayanch taxmini)"]} />
+    <ManbaBlok manbalar={["IE04"]} tekshirilgan="2026-11-25" keyingiTekshiruv="2026-12-25" tekshirilmagan={["The in-between boundaries for Listening and General Training Reading (not in the official source; Tayanch estimate)"]} />
   </div>
 </BolimQobiq>
 
@@ -144,12 +144,12 @@ const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
       xato.hidden = true;
       input.removeAttribute('aria-invalid');
       const n = xomBand(t.son, tur());
-      bandEl.textContent = n.band === null ? '2.5 dan past' : sonMatn(n.band);
-      yorliq.textContent = n.rasmiy ? 'Rasmiy nuqta' : 'Taxminiy';
+      bandEl.textContent = n.band === null ? 'below 2.5' : sonMatn(n.band);
+      yorliq.textContent = n.rasmiy ? 'Official point' : 'Estimate';
       yorliq.className = n.rasmiy ? 'yorliq yorliq--rasmiy' : 'yorliq';
       oraliq.textContent = n.dan === n.gacha
-        ? `Bu band uchun taxminiy chegara: ${n.dan} ta toʻgʻri javob.`
-        : `Bu band uchun taxminiy oraliq: ${n.dan}–${n.gacha} ta toʻgʻri javob.`;
+        ? `Estimated boundary for this band: ${n.dan} correct answers.`
+        : `Estimated range for this band: ${n.dan}–${n.gacha} correct answers.`;
     }
     function qadam(d: number) {
       const t = xomTekshir(input.value);
@@ -170,19 +170,19 @@ const konikmalar = ['Listening', 'Reading', 'Writing', 'Speaking'];
   const tanlovlar = [...document.querySelectorAll<HTMLSelectElement>('[data-umumiy]')];
   const uBand = document.getElementById('u-band')!;
   const uIzoh = document.getElementById('u-izoh')!;
-  const qoidaMatn = { pastga: 'eng yaqin yarim bandga pastga yaxlitlandi', yarimga: 'keyingi yarim bandga yaxlitlandi', butunga: 'keyingi butun bandga yaxlitlandi' };
+  const qoidaMatn = { pastga: 'rounded down to the nearest half band', yarimga: 'rounded up to the next half band', butunga: 'rounded up to the next whole band' };
   function umumiy() {
     if (tanlovlar.some((s) => s.value === '')) {
       uBand.textContent = '—';
       const qolgan = tanlovlar.filter((s) => s.value === '').length;
-      uIzoh.textContent = qolgan === 4 ? 'Toʻrtta koʻnikmani tanlang.' : `Yana ${qolgan} ta koʻnikmani tanlang.`;
+      uIzoh.textContent = qolgan === 4 ? 'Choose all four skills.' : `Choose ${qolgan} more ${qolgan === 1 ? 'skill' : 'skills'}.`;
       return;
     }
     const n = umumiyBand(tanlovlar.map((s) => Number(s.value)));
     uBand.textContent = sonMatn(n.band);
     uIzoh.textContent = n.ortacha === n.band
-      ? `Oʻrtacha ${sonMatn(n.ortacha)}: yaxlitlash kerak emas.`
-      : `Oʻrtacha ${sonMatn(n.ortacha)} → ${sonMatn(n.band)}: ${qoidaMatn[n.qoida]}.`;
+      ? `Average ${sonMatn(n.ortacha)}: no rounding needed.`
+      : `Average ${sonMatn(n.ortacha)} → ${sonMatn(n.band)}: ${qoidaMatn[n.qoida]}.`;
   }
   tanlovlar.forEach((s) => s.addEventListener('change', umumiy));
 </script>

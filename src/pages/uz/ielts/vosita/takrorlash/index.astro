@@ -16,8 +16,8 @@ const darsQism: Record<DarsModul, string> = {
 };
 // Dars sahifalaridagi savolKorsatma bilan bir xil.
 const korsatma: Record<DarsModul, string> = {
-  'ir-tfng': "Parchani oʻqing. Daʼvo matndagi maʼlumotga mos kelsa True, zid boʻlsa False, matnda bu haqda maʼlumot boʻlmasa Not Given.",
-  'ir-sarlavha': "Paragrafni oʻqing va uning asosiy fikrini eng yaxshi umumlashtiradigan sarlavhani tanlang.",
+  'ir-tfng': 'Read the passage. If the statement agrees with the information in the text, choose True; if it contradicts it, False; if the text gives no information about it, Not Given.',
+  'ir-sarlavha': 'Read the paragraph and choose the heading that best sums up its main idea.',
 };
 const darslar = (Object.keys(darsQism) as DarsModul[]).map((m) => ({ modul: m, nomi: modulNomi[m], href: yol(`/uz/ielts/${darsQism[m]}`) }));
 const readingTest = yol('/uz/ielts/mashq/reading/');
@@ -34,38 +34,38 @@ const malumot = {
 };
 ---
 <BolimQobiq
-  title="Takrorlash · IELTS"
-  description="Darslar va Reading testlarida xato qilingan savollarni oraliq bilan takrorlash: 1, 3, 7 va 14 kundan keyin. Ma'lumot faqat shu brauzerda saqlanadi."
+  title="Review · IELTS"
+  description="Review the questions you got wrong in lessons and Reading tests, spaced out: after 1, 3, 7 and 14 days. Data is saved only in this browser."
   turi="vosita"
-  yol={['Vositalar']}
+  yol={['Tools']}
   bolim="ielts"
   holat="chop-etilgan"
 >
   <div class="ichki takror">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Vosita</span><span class="pill pill-chiziq">Qoralama</span></p>
-      <h1>Xatolarni takrorlash</h1>
-      <p class="lead">Darslarda va Reading testlarida xato qilgan savollaring shu yerga tushadi va oraliq bilan qaytadi: ertaga, keyin 3, 7 va 14 kundan soʻng. Toʻgʻri yechsang, savol keyingi qutiga oʻtadi; xato qilsang, boshiga qaytadi.</p>
+      <p class="pill-qator"><span class="ustki-kok">Tool</span><span class="pill pill-chiziq">Draft</span></p>
+      <h1>Review your mistakes</h1>
+      <p class="lead">Questions you got wrong in lessons and Reading tests land here and come back at spaced intervals: tomorrow, then after 3, 7 and 14 days. If you get one right, it moves to the next box; if you get it wrong, it goes back to the start.</p>
     </header>
 
-    <p class="kichik ikkinchi">Savollar Tayanch uchun yozilgan namuna, rasmiy IELTS materiali emas. Oraliqlar Tayanch tanlovi.</p>
+    <p class="kichik ikkinchi">The questions are samples written for Tayanch, not official IELTS material. The intervals are Tayanch's choice.</p>
 
     <section class="royxat" id="royxat" aria-labelledby="royxat-h">
-      <h2 id="royxat-h" tabindex="-1">Bugungi takrorlash</h2>
+      <h2 id="royxat-h" tabindex="-1">Today's review</h2>
       <dl class="qiymatlar">
-        <div><dt>Bugun</dt><dd id="son-bugun">0</dd></div>
-        <div><dt>Keyinroq</dt><dd id="son-keyin">0</dd></div>
-        <div><dt>Oʻzlashtirildi</dt><dd id="son-ozl">0</dd></div>
+        <div><dt>Today</dt><dd id="son-bugun">0</dd></div>
+        <div><dt>Later</dt><dd id="son-keyin">0</dd></div>
+        <div><dt>Mastered</dt><dd id="son-ozl">0</dd></div>
       </dl>
       <p class="holat-matn" id="holat-matn"></p>
       <p class="kichik ikkinchi" id="yuklash-holat" aria-live="polite" hidden></p>
       <div class="tugmalar">
-        <button type="button" class="t-tugma ielts-tugma--urgu" id="boshla" hidden>Takrorlashni boshlash</button>
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldin" hidden>Keyingilarini hozir takrorlash</button>
+        <button type="button" class="t-tugma ielts-tugma--urgu" id="boshla" hidden>Start review</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldin" hidden>Review the later ones now</button>
       </div>
 
       <div class="darslar" id="darslar" hidden>
-        <h3>Xatolar qayerdan keladi</h3>
+        <h3>Where mistakes come from</h3>
         <ul>
           {darslar.map((d) => <li><a href={d.href}>{d.nomi}</a></li>)}
           <li><a href={readingTest}>Reading test</a></li>
@@ -73,18 +73,18 @@ const malumot = {
       </div>
 
       <details class="guruh" id="g-keyin" hidden>
-        <summary>Keyinroq takrorlanadi (<span id="g-keyin-son">0</span>)</summary>
+        <summary>Due later (<span id="g-keyin-son">0</span>)</summary>
         <ul class="g-royxat" id="g-keyin-royxat"></ul>
       </details>
       <details class="guruh" id="g-ozl" hidden>
-        <summary>Oʻzlashtirildi (<span id="g-ozl-son">0</span>)</summary>
+        <summary>Mastered (<span id="g-ozl-son">0</span>)</summary>
         <ul class="g-royxat" id="g-ozl-royxat"></ul>
       </details>
     </section>
 
     <section class="sessiya" id="sessiya" aria-labelledby="sessiya-h" hidden>
       <div class="s-bosh">
-        <h2 id="sessiya-h">Takrorlash</h2>
+        <h2 id="sessiya-h">Review</h2>
         <p class="kichik ikkinchi" id="s-hisob" aria-live="polite"></p>
       </div>
       <form class="savol-karta" id="karta" novalidate>
@@ -99,30 +99,30 @@ const malumot = {
             <p class="izoh-sarlavha" id="izoh-sarlavha"></p>
             <p class="izoh-xato" id="izoh-xato"></p>
             <p class="izoh-keyingi" id="izoh-keyingi"></p>
-            <p><b>Yechim.</b> <span id="izoh-yechim"></span></p>
-            <p class="izoh-dalil" id="izoh-dalil-qator" hidden><b>Matndagi dalil.</b> <q id="izoh-dalil" lang="en"></q></p>
+            <p><b>Solution.</b> <span id="izoh-yechim"></span></p>
+            <p class="izoh-dalil" id="izoh-dalil-qator" hidden><b>Evidence in the text.</b> <q id="izoh-dalil" lang="en"></q></p>
           </div>
           <div class="s-tugmalar">
-            <a class="t-tugma t-tugma--ikkinchi kok-tugma" id="s-manba" href="#">Darsga oʻtish</a>
-            <button type="submit" class="t-tugma ielts-tugma--urgu" id="tekshir" disabled>Tekshirish</button>
-            <button type="button" class="t-tugma" id="keyingi" hidden>Keyingi</button>
+            <a class="t-tugma t-tugma--ikkinchi kok-tugma" id="s-manba" href="#">Go to the lesson</a>
+            <button type="submit" class="t-tugma ielts-tugma--urgu" id="tekshir" disabled>Check</button>
+            <button type="button" class="t-tugma" id="keyingi" hidden>Next</button>
           </div>
         </fieldset>
       </form>
       <div class="yakun" id="yakun" hidden>
         <p class="yakun-matn" id="yakun-matn" tabindex="-1"></p>
-        <button type="button" class="t-tugma ielts-tugma--urgu" id="qaytish">Roʻyxatga qaytish</button>
+        <button type="button" class="t-tugma ielts-tugma--urgu" id="qaytish">Back to the list</button>
       </div>
-      <button type="button" class="t-tugma t-tugma--ikkinchi" id="toxtat">Takrorlashni toʻxtatish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="toxtat">Stop reviewing</button>
     </section>
 
     <div class="tozalash">
-      <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">Takrorlash tarixini oʻchirish</button>
-      <span class="tasdiq" id="tasdiq" hidden>Qutilar va sanalar oʻchirilsinmi? Darslardagi xato daftari va test natijalari qoladi.
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">Ha, oʻchirish</button>
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">Bekor qilish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">Delete review history</button>
+      <span class="tasdiq" id="tasdiq" hidden>Delete the boxes and dates? Your lesson mistake log and test results will stay.
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">Yes, delete</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">Cancel</button>
       </span>
-      <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite">Takrorlash holati faqat shu brauzerda saqlanadi.</p>
+      <p class="kichik ikkinchi" id="saqlash-holat" aria-live="polite">Your review progress is saved only in this browser.</p>
     </div>
 
     <ManbaBlok
@@ -130,9 +130,9 @@ const malumot = {
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Takrorlash oraliqlari (1, 3, 7, 14 kun) Tayanch tanlovi, rasmiy tavsiya emas.",
-        "Savollar Tayanch uchun yozilgan namuna; muallif hali tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-        "Test savolida faqat dalil turgan paragraf ko'rsatiladi, butun matn emas.",
+        "The review intervals (1, 3, 7, 14 days) are Tayanch's choice, not an official recommendation.",
+        "The questions are samples written for Tayanch; those the author has not checked yet are marked \"unchecked\".",
+        "For a test question, only the paragraph with the evidence is shown, not the whole text.",
       ]}
     />
   </div>
@@ -155,7 +155,7 @@ const malumot = {
   }
   const BOLIM = 'ielts';
   const HARF = 'ABCDEFGH';
-  const OYLAR = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+  const OYLAR = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
   const M = JSON.parse($('takror-malumot').textContent || '{}') as {
     savollar: D[]; darslar: Record<string, { nomi: string; href: string }>; readingTest: string;
@@ -163,7 +163,8 @@ const malumot = {
   const dars = new Map(M.savollar.map((s) => [s.id, s]));
   let testJoy = new Map<string, TestSavolJoyi>();
   let testXato: TestXato[] = [];
-  const sanaMatn = (s: string) => { const [, m, d] = s.split('-').map(Number); return `${d}-${OYLAR[m - 1]}`; };
+  const QIYINLIK: Record<string, string> = { oson: 'easy', "o'rta": 'medium', qiyin: 'hard' };
+  const sanaMatn = (s: string) => { const [, m, d] = s.split('-').map(Number); return `${d} ${OYLAR[m - 1]}`; };
   const qisqa = (t: string) => (t.length > 80 ? `${t.slice(0, 77)}…` : t);
   const mavjud = () => new Set([...dars.keys(), ...testJoy.keys()]);
 
@@ -181,8 +182,8 @@ const malumot = {
 
   const saqlashHolati = (ok: boolean) => {
     $('saqlash-holat').textContent = ok
-      ? 'Takrorlash holati faqat shu brauzerda saqlanadi.'
-      : "Brauzer saqlashga ruxsat bermadi: sahifa yopilsa, takrorlash holati yo'qoladi.";
+      ? 'Your review progress is saved only in this browser.'
+      : 'The browser did not allow saving: if you close the page, your review progress will be lost.';
   };
 
   const nomi = (id: string) => {
@@ -190,7 +191,7 @@ const malumot = {
     if (d) return `${M.darslar[d.modul]?.nomi ?? d.modul} · ${d.mavzu}`;
     const t = testJoy.get(id)!;
     const r = savolRaqamlari(t.savol);
-    return `${t.test.title} · Passage ${t.passageTartib + 1} · ${r.join('–')}-savol`;
+    return `${t.test.title} · Passage ${t.passageTartib + 1} · Question ${r.join('–')}`;
   };
 
   // ---------- Ro'yxat ----------
@@ -212,14 +213,14 @@ const malumot = {
     $('son-ozl').textContent = String(g.ozlashtirildi.length);
     const bosh = g.bugun.length + g.keyinroq.length + g.ozlashtirildi.length === 0;
     $('holat-matn').textContent = bosh
-      ? "Xatolar yo'q. Darslar va Reading testida xato qilgan savollaring shu yerga tushadi va ertasi kuni takrorlanadi."
+      ? 'No mistakes. Questions you get wrong in lessons and the Reading test land here and come back the next day.'
       : g.bugun.length > 0
-        ? `Bugun ${g.bugun.length} ta savolni takrorlaysan.`
+        ? `You have ${g.bugun.length} ${g.bugun.length === 1 ? 'question' : 'questions'} to review today.`
         : g.keyinroq.length > 0
-          ? `Bugun takrorlash yo'q. Keyingisi: ${sanaMatn(k.savollar[g.keyinroq[0]].keyingi)}.`
-          : "Hamma xatolar o'zlashtirildi. Yangi xatolar darslar va testlardan keladi.";
+          ? `Nothing to review today. Next: ${sanaMatn(k.savollar[g.keyinroq[0]].keyingi)}.`
+          : 'All mistakes mastered. New ones will come from lessons and tests.';
     $<HTMLButtonElement>('boshla').hidden = g.bugun.length === 0;
-    $<HTMLButtonElement>('boshla').textContent = `Takrorlashni boshlash (${g.bugun.length})`;
+    $<HTMLButtonElement>('boshla').textContent = `Start review (${g.bugun.length})`;
     $<HTMLButtonElement>('oldin').hidden = !(g.bugun.length === 0 && g.keyinroq.length > 0);
     $('darslar').hidden = !(bosh || (g.bugun.length === 0 && g.keyinroq.length === 0));
 
@@ -238,7 +239,7 @@ const malumot = {
     if (idlar.length === 0) return;
     const holatEl = $('yuklash-holat');
     holatEl.hidden = false;
-    holatEl.textContent = 'Reading test xatolari yuklanmoqda…';
+    holatEl.textContent = 'Loading Reading test mistakes…';
     const testlar = new Map<string, ReadingTest>();
     let xatoBor = false;
     await Promise.all(idlar.map(async (id) => {
@@ -248,7 +249,7 @@ const malumot = {
     }));
     testJoy = testSavollari(testlar);
     testXato = testXatolari(urinishlar, testlar);
-    if (xatoBor) holatEl.textContent = "Ba'zi Reading test savollari yuklanmadi (internet aloqasini tekshiring). Ular keyingi safar chiqadi.";
+    if (xatoBor) holatEl.textContent = "Some Reading test questions didn't load (check your internet connection). They will appear next time.";
     else holatEl.hidden = true;
     if (!$('sessiya').hidden) { sinxKutilmoqda = true; return; }
     holat = sinxronla(BOLIM, mavjud(), testXato);
@@ -294,13 +295,13 @@ const malumot = {
     const d = dars.get(id);
     const t = testJoy.get(id);
     $('s-hisob').textContent = `${joriy + 1} / ${navbat.length}`;
-    $('s-legend').textContent = `${navbat.length} ta savoldan ${joriy + 1}-savol`;
+    $('s-legend').textContent = `Question ${joriy + 1} of ${navbat.length}`;
     const mavzu = document.createElement('span'); mavzu.className = 'kichik ikkinchi'; mavzu.textContent = nomi(id);
     const n = $('nazorat');
     const manba = $<HTMLAnchorElement>('s-manba');
 
     if (d) {
-      $('s-meta').replaceChildren(pill('Namuna'), pill(d.qiyinlik), mavzu, ...(d.verified ? [] : [pill('tekshirilmagan', 'pill pill-ogoh')]));
+      $('s-meta').replaceChildren(pill('Sample'), pill(QIYINLIK[d.qiyinlik] ?? d.qiyinlik), mavzu, ...(d.verified ? [] : [pill('unchecked', 'pill pill-ogoh')]));
       $('s-korsatma').textContent = d.korsatma;
       $('s-korsatma').removeAttribute('lang');
       parchaQoy(d.parcha ? d.parcha.split(/\n\n+/).map((text) => ({ text })) : []);
@@ -318,7 +319,7 @@ const malumot = {
         return l;
       }));
       n.replaceChildren(g);
-      manba.textContent = "Darsga o'tish";
+      manba.textContent = 'Go to the lesson';
       manba.href = M.darslar[d.modul]?.href ?? '#';
     } else if (t) {
       $('s-meta').replaceChildren(pill('Namuna'), pill(t.passage.difficulty), mavzu);
@@ -327,14 +328,14 @@ const malumot = {
       parchaQoy(t.paragraf ? [t.paragraf] : []);
       $('s-matn').textContent = t.savol.prompt;
       n.innerHTML = savolTuri(t.guruh.type).render({ savol: t.savol, guruh: t.guruh, javob: undefined, matnId: 's-matn' });
-      manba.textContent = 'Reading testiga';
+      manba.textContent = 'Go to the Reading test';
       manba.href = M.readingTest;
     }
     $('izoh').hidden = true;
     $<HTMLButtonElement>('tekshir').hidden = false;
     $<HTMLButtonElement>('tekshir').disabled = true;
     $<HTMLButtonElement>('keyingi').hidden = true;
-    $<HTMLButtonElement>('keyingi').textContent = joriy < navbat.length - 1 ? 'Keyingi' : 'Yakunlash';
+    $<HTMLButtonElement>('keyingi').textContent = joriy < navbat.length - 1 ? 'Next' : 'Finish';
     $('s-matn').focus({ preventScroll: true });
     $('sessiya').scrollIntoView({ block: 'start', behavior: 'auto' });
   }
@@ -382,8 +383,8 @@ const malumot = {
       const labellar = n.querySelectorAll('.variant');
       labellar[d.togri]?.classList.add('togri');
       if (!togrimi) labellar[j]?.classList.add('xato');
-      sarlavha = togrimi ? "To'g'ri." : `Xato. To'g'ri javob: ${HARF[d.togri]}) ${d.variantlar[d.togri]}`;
-      xatoIzoh = !togrimi && d.xatolar[j] ? `Tipik xato: ${d.xatolar[j]}.` : '';
+      sarlavha = togrimi ? 'Correct.' : `Wrong. Correct answer: ${HARF[d.togri]}) ${d.variantlar[d.togri]}`;
+      xatoIzoh = !togrimi && d.xatolar[j] ? `Common mistake: ${d.xatolar[j]}.` : '';
       yechim = d.yechim;
       ok1 = javobniYoz(BOLIM, d.modul, d.id, togrimi, qisqa(d.variantlar[j] ?? ''));
     } else if (t) {
@@ -397,7 +398,7 @@ const malumot = {
         if (togriIdlar.includes(x.value)) l?.classList.add('togri');
         else if (x.checked) l?.classList.add('xato');
       });
-      sarlavha = togrimi ? "To'g'ri." : `Xato. To'g'ri javob: ${togriJavob}`;
+      sarlavha = togrimi ? 'Correct.' : `Wrong. Correct answer: ${togriJavob}`;
       yechim = t.savol.explanation;
       dalil = t.savol.evidence?.quote ?? '';
       $('izoh-yechim').lang = t.test.explanationLang ?? 'en';
@@ -416,10 +417,10 @@ const malumot = {
     $('izoh-sarlavha').textContent = sarlavha;
     $('izoh-xato').textContent = xatoIzoh;
     $('izoh-keyingi').textContent = yangi.quti === 5
-      ? "O'zlashtirildi: bu savol boshqa takrorlanmaydi."
+      ? 'Mastered: this question will not come back.'
       : togrimi
-        ? `${yangi.quti}-quti. Keyingi takrorlash: ${sanaMatn(yangi.keyingi)}.`
-        : `1-qutiga qaytdi. Keyingi takrorlash: ${sanaMatn(yangi.keyingi)}.`;
+        ? `Box ${yangi.quti}. Next review: ${sanaMatn(yangi.keyingi)}.`
+        : `Back to box 1. Next review: ${sanaMatn(yangi.keyingi)}.`;
     $('izoh-yechim').textContent = yechim;
     $('izoh-dalil').textContent = dalil;
     $('izoh-dalil-qator').hidden = !dalil;
@@ -437,7 +438,7 @@ const malumot = {
     $('yakun').hidden = false;
     $('s-hisob').textContent = '';
     const g = guruhla(korinadigan(), bugun());
-    $('yakun-matn').textContent = `${navbat.length} tadan ${togriSoni} tasi to'g'ri. ${g.bugun.length > 0 ? `Bugun yana ${g.bugun.length} ta qoldi.` : 'Bugungi takrorlash tugadi.'}`;
+    $('yakun-matn').textContent = `${togriSoni} of ${navbat.length} correct. ${g.bugun.length > 0 ? `${g.bugun.length} more left today.` : "Today's review is done."}`;
     $('yakun-matn').focus();
   });
 
@@ -462,7 +463,7 @@ const malumot = {
     holat = sinxronla(BOLIM, mavjud(), testXato);
     $('tasdiq').hidden = true; tozala.hidden = false;
     if (!$('sessiya').hidden) royxatgaQayt(); else royxatniChiz();
-    $('saqlash-holat').textContent = "Takrorlash tarixi o'chirildi. Xatolar yana 1-qutidan boshlanadi.";
+    $('saqlash-holat').textContent = 'Review history deleted. Mistakes start again from box 1.';
     tozala.focus();
   });
 

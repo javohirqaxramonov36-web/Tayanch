@@ -13,27 +13,27 @@ const boshlangich = WRITING_TAYMER.task1;
 const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
 ---
 <BolimQobiq
-  title="Writing taymeri · IELTS"
-  description="IELTS Writing Task 1 va Task 2 uchun taymer va jonli soʻz hisoblagichi. Matn faqat shu qurilmada saqlanadi."
+  title="Writing timer · IELTS"
+  description="A timer and live word counter for IELTS Writing Task 1 and Task 2. Your text is saved only on this device."
   turi="vosita"
-  yol={["Vositalar"]}
+  yol={["Tools"]}
   bolim="ielts"
   holat="chop-etilgan"
 >
   <div class="ichki wt">
     <header class="bosh">
-      <p class="ustki-kok">Vosita</p>
-      <h1>Writing taymeri</h1>
-      <p class="izoh-m">Rejimni tanlang va yozishni boshlang: vaqt birinchi harfdan hisoblanadi. Vaqt tugasa ogohlantirish chiqadi, lekin yozishni davom ettirishingiz mumkin.</p>
+      <p class="ustki-kok">Tool</p>
+      <h1>Writing timer</h1>
+      <p class="izoh-m">Choose a mode and start writing: the clock starts with your first letter. When time is up you get a warning, but you can keep writing.</p>
     </header>
 
     <fieldset class="format">
-      <legend>Rejim</legend>
+      <legend>Mode</legend>
       {rejimlar.map((r) => (
         <label>
           <input type="radio" name="wt-rejim" value={r.id} checked={r.id === boshlangich.id} />
           <span>{r.nomi}</span>
-          <span class="f-izoh">{r.daqiqa} daqiqa · kamida {r.minSoz} soʻz</span>
+          <span class="f-izoh">{r.daqiqa} minutes · at least {r.minSoz} words</span>
         </label>
       ))}
     </fieldset>
@@ -42,39 +42,39 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
     <section class="panel" aria-labelledby="wt-matn-yorliq">
       <div class="holat-qator">
         <div class="hisob" data-wt-vaqt-blok>
-          <p class="n-ustki" id="wt-vaqt-yorliq">Qolgan vaqt</p>
+          <p class="n-ustki" id="wt-vaqt-yorliq">Time left</p>
           <p class="n-son" data-wt-vaqt aria-labelledby="wt-vaqt-yorliq">{mmss(boshlangich.daqiqa)}</p>
         </div>
         <div class="hisob" data-wt-soz-blok>
-          <p class="n-ustki" id="wt-soz-yorliq">Soʻzlar</p>
+          <p class="n-ustki" id="wt-soz-yorliq">Words</p>
           <p class="n-son"><span data-wt-soz>0</span> <span class="n-min">/ <span data-wt-min>{boshlangich.minSoz}</span></span></p>
-          <p class="yorliq" data-wt-soz-izoh>Minimalgacha {boshlangich.minSoz} soʻz</p>
+          <p class="yorliq" data-wt-soz-izoh>{boshlangich.minSoz} words to the minimum</p>
         </div>
         <div class="tugmalar">
-          <button type="button" class="t-tugma t-tugma--ikkinchi" data-wt-pauza disabled>Pauza</button>
-          <button type="button" class="t-tugma t-tugma--ikkinchi" data-wt-tozalash>Tozalash</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-wt-pauza disabled>Pause</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-wt-tozalash>Clear</button>
         </div>
       </div>
 
       <div class="ogoh" data-wt-ogoh role="status" hidden>
-        <strong>Vaqt tugadi.</strong> Yozishni davom ettirishingiz mumkin, ortiqcha vaqt alohida koʻrsatiladi.
+        <strong>Time is up.</strong> You can keep writing; the extra time is shown separately.
       </div>
 
-      <label class="maydon-yorliq" for="wt-matn" id="wt-matn-yorliq">Matningiz (<span data-wt-nom>{boshlangich.nomi}</span>)</label>
+      <label class="maydon-yorliq" for="wt-matn" id="wt-matn-yorliq">Your text (<span data-wt-nom>{boshlangich.nomi}</span>)</label>
       <textarea id="wt-matn" data-wt-matn rows="16" spellcheck="true" lang="en" autocomplete="off" aria-describedby="wt-maxfiy wt-holat-izoh"></textarea>
-      <p class="izoh" id="wt-holat-izoh" data-wt-holat>Yozishni boshlang: taymer birinchi harfdan ishga tushadi.</p>
+      <p class="izoh" id="wt-holat-izoh" data-wt-holat>Start writing: the timer starts with your first letter.</p>
       <p class="maxfiy" id="wt-maxfiy">
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-        Matningiz faqat shu qurilmada, hech qayerga yuborilmaydi.
+        Your text stays on this device only and is not sent anywhere.
       </p>
       <p class="sr-only" aria-live="polite" data-wt-elon></p>
     </section>
 
     <div class="tushuntirish">
-      <h2>Qanday ishlaydi</h2>
-      <p>Har rejimning matni va sarflangan vaqti alohida saqlanadi: Task 1 dan Task 2 ga oʻtsangiz, Task 1 taymeri toʻxtaydi va qaytganingizda davom etadi. Sahifa qayta ochilsa, taymer pauzada turadi, yozishni davom ettirganingizda yana ishlaydi.</p>
-      <p>Minimal soʻz soniga vaqt ichida yetsangiz, bu mashq IELTS qavatidagi progressingizda belgilanadi.</p>
-      <p class="izoh">Mezonlar va insho tuzilmasi: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Task 2 qoʻllanmasi</a>, <a href={yol('/uz/ielts/writing/')}>Writing sahifasi</a>.</p>
+      <h2>How it works</h2>
+      <p>Each mode keeps its own text and time used: if you switch from Task 1 to Task 2, the Task 1 timer stops and continues when you come back. If you reopen the page, the timer is paused and starts again when you continue writing.</p>
+      <p>If you reach the minimum word count within the time, this practice is marked in your progress on the IELTS floor.</p>
+      <p class="izoh">Criteria and essay structure: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Task 2 guide</a>, <a href={yol('/uz/ielts/writing/')}>Writing page</a>.</p>
     </div>
   </div>
 </BolimQobiq>
@@ -148,7 +148,7 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
   function vaqtChiz() {
     const qolgan = limitMs() - joriy().sarflanganMs;
     const tugadi = qolgan <= 0;
-    vaqtYorliq.textContent = tugadi ? 'Ortiqcha vaqt' : 'Qolgan vaqt';
+    vaqtYorliq.textContent = tugadi ? 'Extra time' : 'Time left';
     vaqtEl.textContent = tugadi ? `+${vaqtMatn(-qolgan)}` : vaqtMatn(Math.ceil(qolgan / 1000) * 1000);
     vaqtBlok.classList.toggle('tugadi', tugadi);
     ogoh.hidden = !tugadi;
@@ -161,27 +161,27 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
     minEl.textContent = String(min);
     const yetdi = n >= min;
     sozBlok.classList.toggle('yetdi', yetdi);
-    sozIzoh.textContent = yetdi ? 'Minimalga yetdi' : `Minimalgacha ${min - n} soʻz`;
+    sozIzoh.textContent = yetdi ? 'Minimum reached' : `${min - n} ${min - n === 1 ? 'word' : 'words'} to the minimum`;
     return yetdi;
   }
 
   function holatChiz() {
     const s = joriy().sarflanganMs;
     pauzaBtn.disabled = s === 0 && !ishlayapti;
-    pauzaBtn.textContent = ishlayapti || s === 0 ? 'Pauza' : 'Davom etish';
+    pauzaBtn.textContent = ishlayapti || s === 0 ? 'Pause' : 'Resume';
     pauzaBtn.setAttribute('aria-pressed', String(!ishlayapti && s > 0));
-    const belgi = isDone(4, sozla().itemId) ? ' Bu rejim progressda belgilangan.' : '';
+    const belgi = isDone(4, sozla().itemId) ? ' This mode is marked in your progress.' : '';
     holatEl.textContent = ishlayapti
-      ? `Taymer ishlayapti.${belgi}`
+      ? `The timer is running.${belgi}`
       : s === 0
-        ? `Yozishni boshlang: taymer birinchi harfdan ishga tushadi.${belgi}`
-        : `Pauza. Yozishni davom ettirsangiz yoki “Davom etish”ni bossangiz, taymer yana ishlaydi.${belgi}`;
+        ? `Start writing: the timer starts with your first letter.${belgi}`
+        : `Paused. Keep writing or press “Resume” and the timer starts again.${belgi}`;
   }
 
   function tekshirBelgi() {
     if (sozChiz() && ishlayapti && joriy().sarflanganMs <= limitMs()) {
       if (markDone(4, sozla().itemId)) {
-        elon.textContent = `Minimal ${sozla().minSoz} soʻzga vaqt ichida yetdingiz. Progressda belgilandi.`;
+        elon.textContent = `You reached the minimum of ${sozla().minSoz} words within the time. Marked in your progress.`;
         holatChiz();
       }
     }
@@ -193,7 +193,7 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
     joriy().sarflanganMs += hozir - oxirgiTik;
     oxirgiTik = hozir;
     if (oldin < limitMs() && joriy().sarflanganMs >= limitMs()) {
-      elon.textContent = 'Vaqt tugadi. Yozishni davom ettirishingiz mumkin.';
+      elon.textContent = 'Time is up. You can keep writing.';
     }
     vaqtChiz();
     if (hozir - saqlashVaqti > 2000) { saqlashVaqti = hozir; saqla(); }
@@ -228,7 +228,7 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
 
   function tozaQaytar() {
     window.clearTimeout(tozaTasdiqId);
-    tozaBtn.textContent = 'Tozalash';
+    tozaBtn.textContent = 'Clear';
     delete tozaBtn.dataset.tasdiq;
   }
 
@@ -240,16 +240,16 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
   });
 
   pauzaBtn.addEventListener('click', () => {
-    if (ishlayapti) { toxtat(); elon.textContent = 'Taymer pauzada.'; }
-    else if (joriy().sarflanganMs > 0) { boshla(); elon.textContent = 'Taymer davom etyapti.'; matnEl.focus(); }
+    if (ishlayapti) { toxtat(); elon.textContent = 'Timer paused.'; }
+    else if (joriy().sarflanganMs > 0) { boshla(); elon.textContent = 'Timer resumed.'; matnEl.focus(); }
   });
 
   // Tozalash ikki bosqichli: birinchi bosish soʻraydi, 4 soniya ichida ikkinchisi tozalaydi.
   tozaBtn.addEventListener('click', () => {
     if (!tozaBtn.dataset.tasdiq) {
       tozaBtn.dataset.tasdiq = '1';
-      tozaBtn.textContent = 'Ha, tozalash';
-      elon.textContent = `${sozla().nomi} matni va vaqti oʻchiriladi. Tasdiqlash uchun yana bosing.`;
+      tozaBtn.textContent = 'Yes, clear';
+      elon.textContent = `The ${sozla().nomi} text and time will be deleted. Press again to confirm.`;
       tozaTasdiqId = window.setTimeout(tozaQaytar, 4000);
       return;
     }
@@ -259,7 +259,7 @@ const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
     matnEl.value = '';
     saqla();
     vaqtChiz(); sozChiz(); holatChiz();
-    elon.textContent = `${sozla().nomi} tozalandi.`;
+    elon.textContent = `${sozla().nomi} cleared.`;
     matnEl.focus();
   });
   tozaBtn.addEventListener('blur', tozaQaytar);
