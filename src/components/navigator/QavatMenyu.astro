@@ -6,7 +6,7 @@
 // Esc yopadi va fokusni ▾ ga qaytaradi; ←/→ ▾ tugmalari orasida, ↓ ro'yxatni ochib birinchi havolaga o'tadi.
 // Telefonda (< 768px) bu menyu yashirin, o'rniga BolimChiplar.
 // Tashqariga bosish, fokus chiqib ketishi yoki sichqoncha ketishi yopadi. Hech narsa saqlanmaydi.
-// SAT paneli inglizcha (lang="en"), qolganlari o'zbekcha.
+// SAT va IELTS panellari inglizcha (lang="en"), qolganlari o'zbekcha.
 import { qavatlar, joriyQavat } from '../../data/qavatlar';
 import { bolimlar } from '../../data/bolimlar';
 import { satYonGuruhlar } from '../../data/satSahifalar';
@@ -34,8 +34,9 @@ const qisqa = (p: Panel) => {
 const aktiv = Astro.url.pathname;
 // SAT sahifalarida menyu qobig'i inglizcha. Boshqa qavat ro'yxatlari o'zbekcha sahifalarga olib boradi, lang="uz" bilan qoladi.
 const EN = yolTili(aktiv) === 'en';
-const hammasi = (slug: string) => slug === 'sat' ? 'All SAT pages' : EN ? 'All pages in this section' : "Boʻlimning hamma sahifalari";
+const hammasi = (slug: string) => slug === 'sat' ? 'All SAT pages' : slug === 'ielts' ? 'All IELTS pages' : EN ? 'All pages in this section' : "Boʻlimning hamma sahifalari";
 const hammasiTil = (p: Panel) => (EN ? 'en' : p.til);
+// O'zbekcha sahifada inglizcha panel havolasi ("All IELTS pages") lang="en" bilan qoladi.
 const joriyRaqam = joriyQavat(aktiv);
 const nom = (slug: string, nomi: string) => slug === 'navigator' ? (EN ? 'Home' : 'Bosh sahifa') : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
 const tavsifI = (slug: string) => bolimlar.find((b) => b.slug === slug)?.tavsif ?? '';
@@ -62,7 +63,7 @@ const PANELLAR: Record<string, Panel> = {
       .flatMap((g) => g.qismlar.map((q) => ({ nomi: q.nomi ?? g.nomi, bandlar: q.sahifalar.map((s) => ({ nomi: s.nomi, href: `/uz/sat/${s.qism}` })) }))),
   },
   ielts: {
-    til: 'uz', tavsif: tavsifI('ielts'), otish: "IELTSʼga oʻtish", tezOrada: 'Tez orada',
+    til: 'en', tavsif: 'IELTS: Listening, Reading, Writing and Speaking.', otish: 'Open IELTS prep', tezOrada: 'Coming soon',
     ustunlar: ieltsGuruhlar.map((g) => ({ nomi: g.nomi, bandlar: g.bandlar.map((b) => ({ nomi: b.nomi, href: ielts(b.qism) })) })),
   },
   eyuf: {

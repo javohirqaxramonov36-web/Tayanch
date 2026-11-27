@@ -27,43 +27,43 @@ const bolimlar = konikmalar.map((k) => {
   return {
     nomi: k.nomi, vaqt: k.vaqt, ikonka: k.ikonka,
     href: yol(`/uz/ielts/${konikmaQism(k.id)}`),
-    holat: ["Qo'llanma", darsSoni && `${darsSoni} ta dars`, mashqSoni && `${mashqSoni} ta mashq`].filter(Boolean).join(', '),
+    holat: ['Guide', darsSoni && `${darsSoni} ${darsSoni === 1 ? 'lesson' : 'lessons'}`, mashqSoni && `${mashqSoni} ${mashqSoni === 1 ? 'drill' : 'drills'}`].filter(Boolean).join(', '),
   };
 });
 const namunalar = [
-  { nomi: 'IELTS.org', tavsif: 'Academic namuna topshiriqlari', manba: manba('IE03') },
-  { nomi: 'IDP', tavsif: 'Bepul tanishuv testlari', manba: manba('ID01') },
-  { nomi: 'British Council', tavsif: 'Mashq testlari, kompyuter formati', manba: manba('BC01') },
+  { nomi: 'IELTS.org', tavsif: 'Academic sample tasks', manba: manba('IE03') },
+  { nomi: 'IDP', tavsif: 'Free familiarisation tests', manba: manba('ID01') },
+  { nomi: 'British Council', tavsif: 'Practice tests, computer format', manba: manba('BC01') },
 ];
 const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
 ---
 <BolimQobiq
   title="IELTS"
-  description="IELTS'ga mustaqil tayyorgarlik: qo'llanmalar, Reading va Writing mashqlari, Listening mini-mashqlari va 30 kunlik reja."
+  description="Independent IELTS prep: guides, Reading and Writing practice, short Listening drills and a 30-day plan."
   turi="bolim-kirishi" bolim="ielts" holat="chop-etilgan"
 >
   <div class="ichki ielts" data-ielts-bosh={JSON.stringify(malumot)}>
     <QavatFoto bolim="ielts" />
     <section class="hero" aria-labelledby="ielts-h">
       <div class="hero-matn">
-        <p class="ustki">IELTS boʻlimi · mustaqil tayyorgarlik</p>
-        <h1 id="ielts-h">IELTSʼga oʻzing tayyorlan, reja bilan.</h1>
-        <p class="lead" data-tanishuv>Har boʻlim uchun qoʻllanma, mustaqil mashq va kunma-kun reja. Bepul, roʻyxatdan oʻtmasdan, telefonda ham.</p>
+        <p class="ustki">IELTS section · independent prep</p>
+        <h1 id="ielts-h">Prepare for IELTS on your own, with a plan.</h1>
+        <p class="lead" data-tanishuv>A guide for each section, self-study practice and a day-by-day plan. Free, no sign-up, works on your phone too.</p>
         <article class="davom" aria-labelledby="davom-h" data-davom hidden>
-          <p class="ustki">Davom etish</p>
+          <p class="ustki">Continue</p>
           <h2 id="davom-h"></h2>
           <p class="davom-vaqt" data-davom-vaqt></p>
           <p class="kichik" data-davom-javob hidden></p>
-          <p class="kichik">Sahifani yopsangiz ham vaqt toʻxtamaydi.</p>
-          <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/mashq/reading/test/')} data-davom-havola>Davom etish</a>
+          <p class="kichik">The timer keeps running even if you close the page.</p>
+          <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/mashq/reading/test/')} data-davom-havola>Continue</a>
         </article>
         <div class="amallar">
-          {testlar.length > 0 && <a class="t-tugma ielts-tugma--urgu" href={reading} data-yangi-test>Bepul Reading testi</a>}
-          <a class="t-tugma t-tugma--ikkinchi" href={mashq}>Mashqlar katalogi</a>
+          {testlar.length > 0 && <a class="t-tugma ielts-tugma--urgu" href={reading} data-yangi-test>Free Reading test</a>}
+          <a class="t-tugma t-tugma--ikkinchi" href={mashq}>Practice catalogue</a>
         </div>
       </div>
       <aside class="format" aria-labelledby="format-h">
-        <h2 id="format-h" class="ustki">Imtihon toʻrt boʻlimdan iborat. Boʻlimni tanlang</h2>
+        <h2 id="format-h" class="ustki">The test has four sections. Choose one</h2>
         <div class="konikmalar">
           {bolimlar.map((b) => {
             const Teg = b.href ? 'a' : 'div';
@@ -76,28 +76,28 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
             </Teg>;
           })}
         </div>
-        <p class="kichik">IELTS Academic. Manba <a href={manba('IE01').havola}>ielts.org</a>, tekshirilgan {manba('IE01').tekshirilganSana}.</p>
+        <p class="kichik">IELTS Academic. Source: <a href={manba('IE01').havola}>ielts.org</a>, checked {manba('IE01').tekshirilganSana}.</p>
       </aside>
     </section>
 
-    <section class="holat-va-reja" aria-label="Holat va keyingi vazifa">
+    <section class="holat-va-reja" aria-label="Status and next task">
       <article class="karta" data-holat hidden aria-labelledby="holat-h">
-        <h2 id="holat-h">Mening holatim</h2>
-        <p class="kichik">Faqat shu brauzerdagi maʼlumot.</p>
+        <h2 id="holat-h">My progress</h2>
+        <p class="kichik">Data from this browser only.</p>
         <dl class="statistika" data-statistika></dl>
-        <a class="t-tugma t-tugma--ikkinchi" href={takrorlash}>Xatolarni takrorlash</a>
-        <p class="kichik">Band taxminiy va faqat toʻliq 40 savollik mock uchun koʻrsatiladi.</p>
+        <a class="t-tugma t-tugma--ikkinchi" href={takrorlash}>Review mistakes</a>
+        <p class="kichik">The band is an estimate and is shown only for a full 40-question mock.</p>
       </article>
       <article class="karta" aria-labelledby="keyingi-h">
-        <h2 id="keyingi-h">Keyingi vazifa</h2>
-        <p class="ikkinchi" data-reja-izoh>Imtihongacha qancha vaqt qolgani, kuniga necha soat boʻshligi va qaysi boʻlim qiyinligini tanla. 30 kunlik reja shulardan tuziladi.</p>
-        <a class="t-tugma t-tugma--ikkinchi" href={reja} data-reja-havola>Rejani tuzish</a>
+        <h2 id="keyingi-h">Next task</h2>
+        <p class="ikkinchi" data-reja-izoh>Choose how long you have until the test, how many hours a day you are free and which section is hardest. Your 30-day plan is built from these.</p>
+        <a class="t-tugma t-tugma--ikkinchi" href={reja} data-reja-havola>Build my plan</a>
       </article>
     </section>
 
     <section class="bolim" aria-labelledby="rasmiy-h" id="rasmiy">
-      <h2 id="rasmiy-h">Rasmiy mashq namunalari</h2>
-      <p class="ikkinchi">Havolalar tashqi saytda, yangi oynada ochiladi.</p>
+      <h2 id="rasmiy-h">Official practice samples</h2>
+      <p class="ikkinchi">Links go to external sites and open in a new window.</p>
       <div class="manbalar">
         {namunalar.map((n) => <a class="karta-havola" href={n.manba.havola} target="_blank" rel="noopener">
           <article class="karta"><h3>{n.nomi}</h3><p class="kichik">{n.tavsif}</p><span class="kichik">{new URL(n.manba.havola).hostname}</span></article>
@@ -105,10 +105,10 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
       </div>
     </section>
     <footer class="eslatma">
-      <p>IELTS British Council, IDP IELTS va Cambridge University Press & Assessmentʼning birgalikdagi mulki va roʻyxatdan oʻtgan savdo belgisi (<a href={manba('IE08').havola}>ielts.org</a>). Tayanch ular bilan bogʻliq emas, mashqlar rasmiy IELTS materiali emas.</p>
-      <p>Natija kafolatlanmaydi. Band taxminiy va faqat toʻliq 40 savollik mock uchun koʻrsatiladi.</p>
+      <p>IELTS is jointly owned by the British Council, IDP IELTS and Cambridge University Press & Assessment and is a registered trademark (<a href={manba('IE08').havola}>ielts.org</a>). Tayanch is not affiliated with them; these practice materials are not official IELTS material.</p>
+      <p>Results are not guaranteed. The band is an estimate and is shown only for a full 40-question mock.</p>
     </footer>
-    <ManbaBlok manbalar={['IE01', 'IE03', 'ID01', 'BC01', 'IE08']} tekshirilgan="2026-11-12" keyingiTekshiruv="2026-12-12" tekshirilmagan={["IELTS.org namunalari bepulligi sahifada yozilmagan."]} />
+    <ManbaBlok manbalar={['IE01', 'IE03', 'ID01', 'BC01', 'IE08']} tekshirilgan="2026-11-12" keyingiTekshiruv="2026-12-12" tekshirilmagan={["The IELTS.org page does not say whether its samples are free."]} />
   </div>
 </BolimQobiq>
 
@@ -141,8 +141,8 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
     window.clearTimeout(taymer);
     if (!faol) return;
     const ms = qolganMs(faol.deadline, Date.now());
-    top('davom-vaqt').textContent = ms > 0 ? `${vaqtMatn(ms)} qoldi` : 'Vaqt tugagan';
-    top('davom-havola').textContent = ms > 0 ? 'Davom etish' : 'Urinishni ochish';
+    top('davom-vaqt').textContent = ms > 0 ? `${vaqtMatn(ms)} left` : 'Time is up';
+    top('davom-havola').textContent = ms > 0 ? 'Continue' : 'Open attempt';
     if (ms > 0 && !document.hidden) taymer = window.setTimeout(vaqtniYangila, Math.min(ms, 1000));
   }
 
@@ -163,10 +163,10 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
 
     const reja = json(KALIT_IELTS_REJA);
     const rejaBor = obyekt(reja) && obyekt(reja.javob) && typeof reja.javob.qiyin === 'string' && reja.javob.qiyin.length > 0;
-    top('reja-havola').textContent = rejaBor ? 'Bugungi kunni ochish' : 'Rejani tuzish';
+    top('reja-havola').textContent = rejaBor ? "Open today's tasks" : 'Build my plan';
     top('reja-izoh').textContent = rejaBor
-      ? 'Saqlangan 30 kunlik rejangni ochib, bugungi mashqni davom ettir.'
-      : "Imtihongacha qancha vaqt qolgani, kuniga necha soat bo'shligi va qaysi bo'lim qiyinligini tanla. 30 kunlik reja shulardan tuziladi.";
+      ? "Open your saved 30-day plan and continue today's practice."
+      : 'Choose how long you have until the test, how many hours a day you are free and which section is hardest. Your 30-day plan is built from these.';
 
     const statistika = top('statistika');
     statistika.replaceChildren();
@@ -180,15 +180,15 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
       dd.append(matn); div.append(dt, dd); statistika.append(div);
     };
     if (tarix.length) {
-      qator('Ishlangan Reading testlari', String(tarix.length));
+      qator('Reading tests taken', String(tarix.length));
       const oxirgi = tarix[tarix.length - 1];
       const saqlanganJami = Object.values(oxirgi.perTypeStats).reduce((soni, stat) => {
         return soni + (stat && Number.isSafeInteger(stat.jami) && stat.jami > 0 ? stat.jami : 0);
       }, 0);
       const jami = saqlanganJami || M.testlar.find((t) => t.id === oxirgi.testId)?.jami;
-      const natija = jami ? `${oxirgi.raw}/${jami}` : `${oxirgi.raw} ta to'g'ri javob`;
-      const band = jami === 40 ? ` · taxminiy band ${bandMatn(oxirgi.band, '2.0 dan past')}` : '';
-      qator('Oxirgi Reading natijasi', natija + band, `${yol(READING_YOL.natija)}?urinish=${encodeURIComponent(oxirgi.id)}`);
+      const natija = jami ? `${oxirgi.raw}/${jami}` : `${oxirgi.raw} correct`;
+      const band = jami === 40 ? ` · estimated band ${bandMatn(oxirgi.band, 'below 2.0')}` : '';
+      qator('Latest Reading result', natija + band, `${yol(READING_YOL.natija)}?urinish=${encodeURIComponent(oxirgi.id)}`);
     }
     const progress = json(darsKalitlari('ielts').progress);
     const togri = new Set<string>();
@@ -198,11 +198,11 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
         for (const [id, javob] of Object.entries(modul)) if (javob === 'togri' && M.darsIdlar.includes(id)) togri.add(id);
       }
     }
-    if (togri.size) qator('Reading darslari', `${togri.size}/${M.darsIdlar.length} mashq to'g'ri`);
+    if (togri.size) qator('Reading lessons', `${togri.size}/${M.darsIdlar.length} drills correct`);
     const takror = json('tayanch:ielts-takrorlash');
     if (obyekt(takror) && takror.versiya === 1 && obyekt(takror.savollar)) {
       const kutmoqda = Object.values(takror.savollar).filter((x) => obyekt(x) && typeof x.quti === 'number' && Number.isInteger(x.quti) && x.quti >= 1 && x.quti < 5).length;
-      if (kutmoqda) qator('Saqlangan takrorlashlar', String(kutmoqda));
+      if (kutmoqda) qator('Saved for review', String(kutmoqda));
     }
     top('holat').hidden = statistika.children.length === 0;
 
@@ -216,16 +216,16 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
       ]);
       const test = await yuklaTest(urinish.testId);
       if (versiya !== yangilanish) return;
-      let matn = "Saqlangan javoblar test ichida ko'rinadi.";
+      let matn = 'Your saved answers are shown inside the test.';
       if (typeof test !== 'string') {
         const baho = baholash(test, urinish.answers);
-        matn = `${baho.jami - baho.javobsiz}/${baho.jami} savolga javob berilgan`;
+        matn = `${baho.jami - baho.javobsiz}/${baho.jami} questions answered`;
       }
       top('davom-javob').textContent = matn;
       top('davom-javob').hidden = false;
     } catch {
       if (versiya !== yangilanish) return;
-      top('davom-javob').textContent = "Saqlangan javoblar test ichida ko'rinadi.";
+      top('davom-javob').textContent = 'Your saved answers are shown inside the test.';
       top('davom-javob').hidden = false;
     }
   }

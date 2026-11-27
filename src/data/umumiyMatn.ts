@@ -1,4 +1,4 @@
-// Umumiy komponentlar matni: o'zbekcha (1, 2, 4, 5-qavat) va inglizcha (3-qavat SAT, CLAUDE.md qoidasi).
+// Umumiy komponentlar matni: o'zbekcha (1, 2, 5, 6-qavat) va inglizcha (3-qavat SAT, 4-qavat IELTS; muallif qarori 2026-11-27).
 // `uz` qiymatlari avvalgi matn bilan harfma-harf bir xil: boshqa qavatlar HTML'i o'zgarmasligi kerak.
 // Inglizcha matnni muallif tekshiradi.
 import type { Bolim, BolimSlug } from './bolimlar';
@@ -6,11 +6,11 @@ import type { Qiyinlik } from './darsTurlar';
 
 export type Til = 'uz' | 'en';
 
-/** Bo'lim tili: SAT inglizcha, qolganlari o'zbekcha */
-export const bolimTili = (bolim: BolimSlug | 'umumiy'): Til => (bolim === 'sat' ? 'en' : 'uz');
+/** Bo'lim tili: SAT va IELTS inglizcha, qolganlari o'zbekcha */
+export const bolimTili = (bolim: BolimSlug | 'umumiy'): Til => (bolim === 'sat' || bolim === 'ielts' ? 'en' : 'uz');
 
-/** Sahifa manzilidan til (base bilan ham ishlaydi): /uz/sat/... -> en */
-export const yolTili = (pathname: string): Til => (/\/uz\/sat(\/|$)/.test(pathname) ? 'en' : 'uz');
+/** Sahifa manzilidan til (base bilan ham ishlaydi): /uz/sat/..., /uz/ielts/... -> en */
+export const yolTili = (pathname: string): Til => (/\/uz\/(sat|ielts)(\/|$)/.test(pathname) ? 'en' : 'uz');
 
 const uz = {
   otish: "Asosiy matnga oʻtish",
