@@ -1,8 +1,10 @@
 ---
 // Umumiy headerdagi qavatlar menyusi (6-qavat AI Academy 2026-11-19 da qo'shilgan) (mega menyu). Faqat /uz/ da (muallif qarori, 2026-11-19).
 // Yon panel (BolimYon) o'zgarmaydi. Havolalar yon panel ma'lumotidan olinadi, qo'lda takrorlanmaydi.
-// Xatti-harakat: qavat tugmasi bosilsa (sichqonchada hover ham) uning paneli ochiladi, bir vaqtda bittasi.
-// Esc yopadi va fokusni tugmaga qaytaradi; ←/→ qavatlar orasida, ↓ panelni ochib birinchi havolaga o'tadi.
+// Xatti-harakat (2026-11-27, bolim-otish): qavat NOMI havola, bosilsa darhol bo'lim sahifasi ochiladi.
+// Yonidagi ▾ tugmasi (sichqonchada hover ham) qisqa ro'yxatni ochadi: 6 tagacha asosiy sahifa + "hammasi →", bir vaqtda bittasi.
+// Esc yopadi va fokusni ▾ ga qaytaradi; ←/→ ▾ tugmalari orasida, ↓ ro'yxatni ochib birinchi havolaga o'tadi.
+// Telefonda (< 768px) bu menyu yashirin, o'rniga BolimChiplar.
 // Tashqariga bosish, fokus chiqib ketishi yoki sichqoncha ketishi yopadi. Hech narsa saqlanmaydi.
 // SAT paneli inglizcha (lang="en"), qolganlari o'zbekcha.
 import { qavatlar, joriyQavat } from '../../data/qavatlar';
@@ -18,8 +20,17 @@ interface Band { nomi: string; href?: string }
 interface Ustun { nomi: string; bandlar: Band[] }
 interface Panel { tavsif: string; otish: string; tezOrada: string; ustunlar: Ustun[]; til: 'uz' | 'en' }
 
-const { mobil = false } = Astro.props as { mobil?: boolean };
-const prefiks = mobil ? 'mobil' : 'ustki';
+const prefiks = 'ustki';
+// Qisqa ro'yxat: har ustundan navbat bilan birinchi ochiq sahifa, jami 6 tagacha (keng ko'rinish, bitta guruhga to'lib qolmaydi).
+const QISQA = 6;
+const qisqa = (p: Panel) => {
+  const ustunlar = p.ustunlar.map((u) => u.bandlar.filter((b) => b.href));
+  const natija: Band[] = [];
+  for (let i = 0; natija.length < QISQA && ustunlar.some((u) => u.length > i); i++)
+    for (const u of ustunlar) if (u[i] && natija.length < QISQA) natija.push(u[i]);
+  return natija;
+};
+const hammasi = (slug: string) => slug === 'sat' ? 'All SAT pages' : "Boʻlimning hamma sahifalari";
 const aktiv = Astro.url.pathname;
 const joriyRaqam = joriyQavat(aktiv);
 const nom = (slug: string, nomi: string) => slug === 'navigator' ? 'Bosh sahifa' : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
@@ -61,35 +72,32 @@ const PANELLAR: Record<string, Panel> = {
   },
 };
 ---
-<nav class:list={['qm', { mobil }]} aria-label="Bo'limlar" data-qm lang="uz">
+<nav class="qm" aria-label="Boʻlimlar" data-qm lang="uz">
   {/* Lift raqam displeyi (2026-11-25): joriy qavat raqami. Boshqa qavatga olib boruvchi havola bosilganda raqam
       yuqoriga siljib yangisiga almashadi (--lift-davom), keyin sahifa ochiladi. Reduced motion'da darhol o'tadi.
       Bezak: aria-hidden, joriy qavat tabdagi aria-current/faol bilan bildiriladi. */}
   <div class="qm-displey" aria-hidden="true" data-qm-displey data-qavat={joriyRaqam} data-qm-joriy={joriyRaqam}><span>{joriyRaqam}</span></div>
   <ul class="qm-tablar" role="list">
-    {qavatlar.map((q) => (
-      <li>
-        {q.slug === 'navigator' ? <a class="qm-tab" data-qm-qavat={q.raqam} href={yol('/uz/')} aria-current={aktiv === yol('/uz/') ? 'page' : undefined}>Bosh sahifa</a> : <>
-          <button type="button" class:list={['qm-tab', { faol: aktiv.startsWith(yol(q.manzil)) }]} aria-expanded="false" aria-controls={`${prefiks}-${q.slug}`} data-qm-tab>
-            {nom(q.slug, q.nomi)}
+    {qavatlar.map((q) => {
+      const ism = nom(q.slug, q.nomi);
+      const bosh = yol(q.manzil);
+      const shu = q.slug === 'navigator' ? aktiv === yol('/uz/') : aktiv.startsWith(bosh);
+      const p = PANELLAR[q.slug];
+      return <li class="qm-juft" data-qm-juft>
+        <a class:list={['qm-tab', { faol: shu, 'qm-tab--juft': q.slug !== 'navigator' }]} data-qm-qavat={q.raqam} href={bosh} aria-current={aktiv === bosh ? 'page' : undefined}>{ism}</a>
+        {q.slug !== 'navigator' && <>
+          <button type="button" class:list={['qm-och', { faol: shu }]} aria-expanded="false" aria-controls={`${prefiks}-${q.slug}`} aria-label={`${ism}: asosiy sahifalar`} data-qm-tab>
             <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg>
           </button>
           <div class="qm-panel" id={`${prefiks}-${q.slug}`} data-qm-panel data-qm-qavat={q.raqam}>
-            <div class="qm-ichki">
-              <a class="qm-otish" href={yol(q.manzil)}>{PANELLAR[q.slug].otish} →</a>
-              <div class="qm-ustunlar" lang={PANELLAR[q.slug].til}>
-                {PANELLAR[q.slug].ustunlar.map((u) => <div>
-                  <p class="qm-ustun-nom">{u.nomi}</p>
-                  <ul class="qm-royxat" role="list">
-                    {u.bandlar.map((b) => <li>{b.href ? <a href={yol(b.href)}>{b.nomi}</a> : <span class="qm-tez">{b.nomi} · {PANELLAR[q.slug].tezOrada}</span>}</li>)}
-                  </ul>
-                </div>)}
-              </div>
-            </div>
+            <ul class="qm-royxat" role="list" lang={p.til}>
+              {qisqa(p).map((b) => <li><a href={yol(b.href!)}>{b.nomi}</a></li>)}
+            </ul>
+            <a class="qm-otish" href={bosh} lang={p.til}>{hammasi(q.slug)} →</a>
           </div>
         </>}
-      </li>
-    ))}
+      </li>;
+    })}
   </ul>
 </nav>
 
@@ -176,8 +184,8 @@ const PANELLAR: Record<string, Panel> = {
         if (ochiq === t && performance.now() - hoverVaqt > 500) yop();
         else och(t);
       });
-      t.addEventListener('mouseenter', () => {
-        if (nav.classList.contains('mobil') || !sichqoncha.matches || ochiq === t) return;
+      t.closest('[data-qm-juft]')?.addEventListener('mouseenter', () => {
+        if (!sichqoncha.matches || ochiq === t) return;
         hoverVaqt = performance.now();
         och(t);
       });
@@ -202,7 +210,7 @@ const PANELLAR: Record<string, Panel> = {
       if (e.key === 'Escape' && ochiq) { e.preventDefault(); yop(true); }
     });
     nav.addEventListener('mouseleave', () => {
-      if (nav.classList.contains('mobil') || !sichqoncha.matches) return;
+      if (!sichqoncha.matches) return;
       kechikish = window.setTimeout(() => yop(), 200);
     });
     nav.addEventListener('mouseenter', () => clearTimeout(kechikish));
@@ -230,26 +238,23 @@ const PANELLAR: Record<string, Panel> = {
   .qm-displey .tepada { transform: translateY(calc(-100% * var(--motion-distance))); opacity: 0; }
   .qm-displey .pastda { transform: translateY(calc(100% * var(--motion-distance))); opacity: 0; }
   .qm-tablar { display: flex; list-style: none; margin: 0; padding: var(--header-pill-pad); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-full); background: var(--color-surface); }
-  .qm-tab { display: flex; align-items: center; justify-content: center; gap: var(--space-1); min-height: var(--size-touch-min); padding: 0 var(--space-3); font: inherit; font-size: var(--text-small-size); font-weight: 600; white-space: nowrap; border: 0; border-radius: var(--radius-full); color: var(--color-text-secondary); background: transparent; text-decoration: none; cursor: pointer; }
-  .qm-tab.faol, .qm-tab[aria-current='page'] { background: var(--header-accent); color: var(--header-on-accent); }
-  .qm-tab[aria-expanded='true'] { outline: var(--border-width-2) solid var(--color-link); outline-offset: calc(-1 * var(--border-width-2)); }
-  .qm-panel { display: none; position: absolute; inset: 100% var(--space-8) auto; max-height: calc(100dvh - var(--space-16) * 2); overflow: auto; background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); }
+  .qm-juft { position: relative; display: flex; align-items: stretch; border-radius: var(--radius-full); }
+  .qm-tab, .qm-och { display: flex; align-items: center; justify-content: center; min-height: var(--size-touch-min); font: inherit; font-size: var(--text-small-size); font-weight: 600; white-space: nowrap; border: 0; color: var(--color-text-secondary); background: transparent; text-decoration: none; cursor: pointer; }
+  .qm-tab { padding: 0 var(--space-3); border-radius: var(--radius-full); }
+  .qm-tab--juft { padding-right: var(--space-1); border-start-end-radius: 0; border-end-end-radius: 0; }
+  .qm-och { padding: 0 var(--space-2) 0 var(--space-1); border-start-end-radius: var(--radius-full); border-end-end-radius: var(--radius-full); }
+  .qm-och svg { transition: transform var(--duration-fast) var(--ease-state); }
+  .qm-och[aria-expanded='true'] svg { transform: rotate(180deg); }
+  @media (hover: hover) and (pointer: fine) { .qm-tab:hover, .qm-och:hover { color: var(--color-text-primary); } }
+  .qm-tab.faol, .qm-och.faol, .qm-tab[aria-current='page'] { background: var(--header-accent); color: var(--header-on-accent); }
+  .qm-och[aria-expanded='true'] { outline: var(--border-width-2) solid var(--color-link); outline-offset: calc(-1 * var(--border-width-2)); }
+  .qm-panel { display: none; position: absolute; inset: calc(100% + var(--space-2)) auto auto 0; z-index: 1; min-width: calc(var(--space-16) * 4); padding: var(--space-3); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); }
+  .qm-juft:nth-last-child(-n + 2) .qm-panel { inset-inline: auto 0; }
   .qm-panel.ochiq { display: block; }
-  .qm-ichki { padding: var(--space-6); }
-  .qm-otish { display: inline-flex; min-height: var(--size-touch-min); align-items: center; font-weight: 700; color: var(--color-link); }
-  .qm-ustunlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--header-column-min), 1fr)); gap: var(--space-6); }
-  .qm-ustun-nom { font-size: var(--text-small-size); font-weight: 700; color: var(--color-text-secondary); }
   .qm-royxat { list-style: none; padding: 0; margin: 0; }
-  .qm-royxat a, .qm-tez { display: flex; align-items: center; min-height: var(--size-touch-min); font-size: var(--text-small-size); }
-  .qm-royxat a { color: var(--color-text-primary); text-decoration: none; }
-  .qm-royxat a:hover { text-decoration: underline; }
-  .qm-tez { color: var(--color-text-secondary); }
-  .mobil { flex-direction: column; align-items: stretch; }
-  .mobil .qm-displey { margin-inline: var(--space-4); }
-  .mobil .qm-tablar { flex-direction: column; border: 0; border-radius: 0; padding: 0; }
-  .mobil .qm-tab { justify-content: space-between; width: 100%; padding-inline: var(--space-4); }
-  .mobil .qm-panel { position: static; border: 0; box-shadow: none; max-height: none; }
-  .mobil .qm-ichki { padding: var(--space-2) var(--space-4); }
-  .mobil .qm-ustunlar { grid-template-columns: 1fr; gap: var(--space-2); }
-  @media (768px <= width < 1280px) { .qm-tab { padding-inline: var(--space-1); font-size: var(--text-caption-size); } }
+  .qm-royxat a, .qm-otish { display: flex; align-items: center; min-height: var(--size-touch-min); padding-inline: var(--space-3); border-radius: var(--radius-md); font-size: var(--text-small-size); white-space: nowrap; text-decoration: none; }
+  .qm-royxat a { color: var(--color-text-primary); }
+  @media (hover: hover) and (pointer: fine) { .qm-royxat a:hover, .qm-otish:hover { background: var(--color-surface-sunken); } }
+  .qm-otish { margin-top: var(--space-2); border-top: var(--border-width-1) solid var(--color-border); border-radius: 0 0 var(--radius-md) var(--radius-md); font-weight: 700; color: var(--color-link); }
+  @media (768px <= width < 1280px) { .qm-tab, .qm-och { font-size: var(--text-caption-size); } .qm-tab { padding-inline: var(--space-1); } .qm-tab--juft { padding-right: 0; } .qm-och { padding-inline: 0 var(--space-1); } }
 </style>
