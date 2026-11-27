@@ -1,0 +1,97 @@
+---
+import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
+import { darsSavollari } from '../../../../../../data/ieltsDarslar';
+import { yol } from '../../../../../../lib/yol';
+
+const iboralar = [
+  { ibora: 'balanced diet', mano: 'eating food from a range of food groups', uz: 'muvozanatli ovqatlanish' },
+  { ibora: 'cut down on', mano: 'to reduce how much of something you have', uz: 'kamaytirmoq' },
+  { ibora: 'home-cooked meal', mano: 'a meal prepared at home', uz: 'uyda tayyorlangan taom' },
+  { ibora: 'skip breakfast', mano: 'not to eat breakfast', uz: 'nonushta qilmaslik' },
+  { ibora: 'food waste', mano: 'food that is thrown away uneaten', uz: 'ovqat isrofi' },
+];
+---
+<DarsQolip
+  bolim="ielts"
+  modul="iv-ovqatlanish"
+  savollar={darsSavollari['iv-ovqatlanish']}
+  yolBandlari={['Guides', 'Vocabulary']}
+  darsTuri="Vocabulary lesson"
+  imtihon="IELTS"
+  manbalar={[]}
+  tekshirilgan="2026-11-22"
+  keyingiTekshiruv="After the author's review"
+  title="Food collocations · IELTS"
+  description="Tell apart the meanings of five English phrases about food in context. A rule, an example and five original sample exercises."
+  yonalish="Vocabulary"
+  sarlavha="Natural phrases about food"
+  lead="Don't stop at knowing a single word: understand it together with the words around it. You see five phrases in examples and choose the meaning that fits the context."
+  qadamNomlari={['Example', 'Rule', 'Try it']}
+  savolTili="en"
+  savolKorsatma="Read the sentence and choose the meaning of the phrase that fits the context."
+  katalogYoli="/uz/ielts/"
+  takrorlashHref={yol('/uz/ielts/vosita/takrorlash/')}
+  keyingi={{ nomi: 'Review mistakes', href: yol('/uz/ielts/vosita/takrorlash/'), turi: 'qadam' }}
+  maqsadlar={[
+    'Tell apart the meanings of five phrases in context.',
+    'Avoid adding information to a phrase that the text does not give.',
+    'Understand your mistakes from the answer explanations and practise again.',
+  ]}
+  xulosa={[
+    'Read a phrase together with the sentence around it.',
+    'Reducing an amount does not mean stopping completely.',
+    'Where food is cooked does not tell you where it comes from.',
+    'Check that the text supports any extra information in an option.',
+    'Practise the phrases you got wrong and make your own new sentence.',
+  ]}
+  tekshirilmagan={[
+    'The examples and exercises are an AI draft written independently for Tayanch. The English text, translations and answers are awaiting the author\'s review.',
+    'The lesson topic was chosen from a catalogue of materials the author has confirmed permission to use.',
+  ]}
+>
+  <section slot="sahna" class="lugat-sahna" aria-labelledby="iboralar-h">
+    <p class="pill">Sample</p>
+    <h2 id="iboralar-h">Words that go together</h2>
+    <dl class="iboralar">
+      {iboralar.map(({ ibora, mano, uz }) => (
+        <div><dt>{ibora}</dt><dd>{mano}</dd><dd class="uz">Uzbek: <span lang="uz">{uz}</span></dd></div>
+      ))}
+    </dl>
+  </section>
+
+  <div slot="animatsiya" class="qadam-matn">
+    <p class="pill">Sample</p>
+    <p>Amina now cooks dinner at home three evenings a week. She is <strong>cutting down on</strong> takeaway meals.</p>
+    <p>Amina is ordering takeaway less often. The sentence does not say she has stopped completely.</p>
+    <button type="button" class="katta asosiy" data-qadamga="formula">See the rule</button>
+  </div>
+
+  <div slot="formula" class="qadam-matn">
+    <p>Find the phrase first, then check its meaning in the whole sentence.</p>
+    <p><em>Cut down on</em> reduces an amount. Changing the place or the time does not in itself mean less.</p>
+    <p><em>Home-cooked</em> tells you where a meal was prepared. To conclude anything about ingredients or the recipe, you need other information.</p>
+    <button type="button" class="katta asosiy" data-qadamga="sinab">Try it</button>
+  </div>
+
+  <div slot="sinab" class="qadam-matn">
+    <p>In the five exercises below, choose the meaning of the phrase that fits the context. Read the explanation after each answer.</p>
+    <p>At the end, make your own sentence with one of the phrases and say it aloud.</p>
+    <a class="katta asosiy" href="#mashqlar">Go to the exercises</a>
+  </div>
+</DarsQolip>
+
+<style>
+  .lugat-sahna, .qadam-matn {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .lugat-sahna { padding: var(--space-5); }
+  .lugat-sahna h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .lugat-sahna .pill, .qadam-matn .pill { align-self: flex-start; }
+  .iboralar { display: grid; gap: var(--space-4); margin: 0; }
+  .iboralar > div { border-bottom: var(--border-width-1) solid var(--color-border); padding-bottom: var(--space-4); }
+  .iboralar dt { font-weight: var(--font-weight-semibold); }
+  .iboralar dd { margin: var(--space-1) 0 0; color: var(--color-text-secondary); }
+  .iboralar dd.uz { font-size: var(--text-small-size); }
+</style>

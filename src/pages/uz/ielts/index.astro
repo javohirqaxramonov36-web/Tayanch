@@ -198,7 +198,7 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
         for (const [id, javob] of Object.entries(modul)) if (javob === 'togri' && M.darsIdlar.includes(id)) togri.add(id);
       }
     }
-    if (togri.size) qator('Reading lessons', `${togri.size}/${M.darsIdlar.length} drills correct`);
+    if (togri.size) qator('Lessons', `${togri.size}/${M.darsIdlar.length} drills correct`);
     const takror = json('tayanch:ielts-takrorlash');
     if (obyekt(takror) && takror.versiya === 1 && obyekt(takror.savollar)) {
       const kutmoqda = Object.values(takror.savollar).filter((x) => obyekt(x) && typeof x.quti === 'number' && Number.isInteger(x.quti) && x.quti >= 1 && x.quti < 5).length;

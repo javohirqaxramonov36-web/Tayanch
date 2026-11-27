@@ -5,10 +5,11 @@
 import type { DarsSavol as UmumiySavol } from '../darsTurlar';
 
 export type { Qiyinlik, Variant } from '../darsTurlar';
-export type DarsModul = 'ir-tfng' | 'ir-sarlavha';
+export type DarsModul = 'ir-tfng' | 'ir-sarlavha' | 'iv-ovqatlanish';
 export type DarsSavol = UmumiySavol<DarsModul>;
 
 export const modulNomi: Record<DarsModul, string> = {
+  'iv-ovqatlanish': 'Food collocations',
   'ir-tfng': 'True / False / Not Given',
   'ir-sarlavha': 'Matching headings',
 };

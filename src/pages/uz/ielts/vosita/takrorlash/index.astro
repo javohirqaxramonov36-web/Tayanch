@@ -13,11 +13,13 @@ import '../../../../../styles/ielts-reading.css';
 const darsQism: Record<DarsModul, string> = {
   'ir-tfng': 'qollanma/reading/tfng/',
   'ir-sarlavha': 'qollanma/reading/sarlavhalar/',
+  'iv-ovqatlanish': 'qollanma/lugat/ovqatlanish/',
 };
 // Dars sahifalaridagi savolKorsatma bilan bir xil.
 const korsatma: Record<DarsModul, string> = {
   'ir-tfng': 'Read the passage. If the statement agrees with the information in the text, choose True; if it contradicts it, False; if the text gives no information about it, Not Given.',
   'ir-sarlavha': 'Read the paragraph and choose the heading that best sums up its main idea.',
+  'iv-ovqatlanish': 'Read the sentence and choose the meaning of the phrase that fits the context.',
 };
 const darslar = (Object.keys(darsQism) as DarsModul[]).map((m) => ({ modul: m, nomi: modulNomi[m], href: yol(`/uz/ielts/${darsQism[m]}`) }));
 const readingTest = yol('/uz/ielts/mashq/reading/');

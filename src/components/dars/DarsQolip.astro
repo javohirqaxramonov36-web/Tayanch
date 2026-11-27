@@ -43,6 +43,8 @@ interface Props {
   qadamNomlari?: [string, string, string];
   /** Ixtiyoriy: savol matni va variantlar tili (R&W: 'en'). Bo'lmasa sahifa tili. */
   savolTili?: string;
+  /** Berilsa, dars oxiridagi qo‘llanmaga qaytish yo‘li. */
+  katalogYoli?: string;
   /** Ixtiyoriy: oddiy A–D savolda matn ustidagi ko'rsatma (o'zbekcha), masalan "Bo'sh joyga mos so'zni tanlang." */
   savolKorsatma?: string;
   /** Ixtiyoriy: bo'limning takrorlash sahifasi (yol() bilan), Xato daftari blokida havola bo'lib chiqadi */
@@ -58,9 +60,9 @@ const {
 const til = bolimTili(bolim);
 const M = matn[til].dars;
 const keyingiNomi = keyingi && (keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi));
-const katalog = bolim === 'ielts' ? '/uz/ielts/qollanma/reading/'
+const katalog = Astro.props.katalogYoli ?? (bolim === 'ielts' ? '/uz/ielts/qollanma/reading/'
   : bolim === 'sat' && Astro.url.pathname.includes('/reading-writing/') ? '/uz/sat/qollanma/reading-writing/'
-  : bolim === 'sat' ? '/uz/sat/qollanma/qayerdan-boshlash/' : null;
+  : bolim === 'sat' ? '/uz/sat/qollanma/qayerdan-boshlash/' : null);
 const qadamNomlari = Astro.props.qadamNomlari ?? M.qadamNomlari;
 // Indekslash: hamma darslar chop etilgan (SAT, IELTS: muallif 2026-11-18; Top Admission: 2026-11-21, "Qoralama" yorlig'i ham olingan).
 const HARF = 'ABCD';

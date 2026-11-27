@@ -5,6 +5,7 @@
 // Sarlavha: paragrafning majburiy qismlari (har biri matndagi belgi ibora bilan) va har sarlavha qamrovi jadvali.
 //   Qoida: sarlavha hamma majburiy qismni qamrasa va matnda yo'q fikr qo'shmasa, mos. Faqat bitta sarlavha o'tishi shart.
 // Fayl node bilan to'g'ridan-to'g'ri ishlaydi: qiymat importlari .ts kengaytmasi bilan.
+import { ivOvqatlanishSavollar } from './iv-ovqatlanish.ts';
 import { irTfngSavollar } from './ir-tfng.ts';
 import { irSarlavhaSavollar } from './ir-sarlavha.ts';
 import type { BolimTekshiruv, Natija } from '../tekshiruvTurlar.ts';
@@ -111,17 +112,61 @@ function sarlavha(id: string): Natija {
   return { qiymat: otgan[0].matn, usul };
 }
 
+// ---------- Lug‘at ----------
+// Lug‘aviy ma’no va rad etilgan uch talqin savoldagi togri indeksidan mustaqil.
+const ovqatlanishTekshiruv = {
+  "1": {
+    "ibora": "balanced diet",
+    "javob": "She includes a variety of food types in her meals.",
+    "rad": "Bir xil ovqat xilma-xillikka zid. Vaqt va narx iborada ifodalanmaydi."
+  },
+  "2": {
+    "ibora": "cut down on",
+    "javob": "Having fewer sugary drinks than before.",
+    "rad": "Do‘kon va vaqt miqdorni kamaytirmaydi. Kattaroq idish kamayishni bildirmaydi."
+  },
+  "3": {
+    "ibora": "home-cooked meal",
+    "javob": "The meal was prepared in their home.",
+    "rad": "Bog‘da yetishtirish, tuz tarkibi va retseptning yangiligi tayyorlash joyini bildirmaydi."
+  },
+  "4": {
+    "ibora": "skipped breakfast",
+    "javob": "She did not eat breakfast.",
+    "rad": "Erta yoki avtobusda nonushta qilish skip ma’nosiga zid. Boshqaga tayyorlash aytilmagan."
+  },
+  "5": {
+    "ibora": "reduce food waste",
+    "javob": "To throw away less uneaten food.",
+    "rad": "Mijoz buyurtmasi, sabzavotli menyu va tushlik vaqti isrof qilingan ovqat miqdori emas."
+  }
+} as const;
+
+function ovqatlanish(id: string): Natija {
+  const raqam = id.slice('iv-ovqatlanish-'.length) as keyof typeof ovqatlanishTekshiruv;
+  const qoida = ovqatlanishTekshiruv[raqam];
+  const savol = ivOvqatlanishSavollar.find((s) => s.id === id)!;
+  const moslar = savol.variantlar.filter((v) => v.matn === qoida.javob);
+  return {
+    qiymat: savol.matn.includes(qoida.ibora) && moslar.length === 1
+      ? qoida.javob : 'FARQ: ibora yoki yagona ma’no mos emas',
+    usul: `${qoida.ibora} → ${qoida.javob} ${qoida.rad}`,
+  };
+}
+
 const ikkinchiUsul: Record<string, () => Natija> = Object.fromEntries([
+  ...ivOvqatlanishSavollar.map((s) => [s.id, () => ovqatlanish(s.id)] as const),
   ...irTfngSavollar.map((s) => [s.id, () => tfng(s.id)] as const),
   ...irSarlavhaSavollar.map((s) => [s.id, () => sarlavha(s.id)] as const),
 ]);
 
 export const tekshiruv: BolimTekshiruv = {
   bolim: 'ielts',
-  sarlavha: 'IELTS darslari (Reading)',
-  savollar: [...irTfngSavollar, ...irSarlavhaSavollar],
+  sarlavha: 'IELTS darslari (Reading va lug‘at)',
+  savollar: [...irTfngSavollar, ...irSarlavhaSavollar, ...ivOvqatlanishSavollar],
   ikkinchiUsul,
   izoh: [
+    "Ovqatlanish lug‘ati (iv-ovqatlanish): kontekstdagi ibora borligi, lug‘aviy ma’noga mos yagona variant va qolgan uch talqinning rad sabablari mustaqil jadvalda tekshiriladi. Muallif ko‘rigi kutilmoqda.",
     "Sonli hisob yo'q. True / False / Not Given (ir-tfng): parchaning har gapi da'voga nisbatan alohida baholanadi (mos, zid yoki aloqasiz), mos va zid gaplarda dalil ibora gap ichida borligi tekshiriladi. Qoida IE02 dagi ta'rifdan: zid gap bo'lsa False, faqat mos gap bo'lsa True, hech biri bo'lmasa Not Given.",
     "Matching headings (ir-sarlavha): har paragrafning majburiy qismlari belgi ibora bilan beriladi (ibora parchada borligi tekshiriladi). Sarlavha hamma majburiy qismni qamrasa va matnda yo'q fikr qo'shmasa mos; qoidadan faqat bitta sarlavha o'tishi shart.",
   ],
