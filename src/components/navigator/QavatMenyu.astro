@@ -15,6 +15,7 @@ import { taGuruhlar } from '../../data/topAdmissionSahifalar';
 import { eyufGuruhlar } from '../../data/eyufSahifalar';
 import { aiKurslar, aiKursManzili } from '../../data/aiAcademy';
 import { yol } from '../../lib/yol';
+import { yolTili } from '../../data/umumiyMatn';
 
 interface Band { nomi: string; href?: string }
 interface Ustun { nomi: string; bandlar: Band[] }
@@ -30,10 +31,13 @@ const qisqa = (p: Panel) => {
     for (const u of ustunlar) if (u[i] && natija.length < QISQA) natija.push(u[i]);
   return natija;
 };
-const hammasi = (slug: string) => slug === 'sat' ? 'All SAT pages' : "Boʻlimning hamma sahifalari";
 const aktiv = Astro.url.pathname;
+// SAT sahifalarida menyu qobig'i inglizcha. Boshqa qavat ro'yxatlari o'zbekcha sahifalarga olib boradi, lang="uz" bilan qoladi.
+const EN = yolTili(aktiv) === 'en';
+const hammasi = (slug: string) => slug === 'sat' ? 'All SAT pages' : EN ? 'All pages in this section' : "Boʻlimning hamma sahifalari";
+const hammasiTil = (p: Panel) => (EN ? 'en' : p.til);
 const joriyRaqam = joriyQavat(aktiv);
-const nom = (slug: string, nomi: string) => slug === 'navigator' ? 'Bosh sahifa' : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
+const nom = (slug: string, nomi: string) => slug === 'navigator' ? (EN ? 'Home' : 'Bosh sahifa') : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
 const tavsifI = (slug: string) => bolimlar.find((b) => b.slug === slug)?.tavsif ?? '';
 const ielts = (q?: string) => (q ? `/uz/ielts/${q}` : undefined);
 
@@ -72,7 +76,7 @@ const PANELLAR: Record<string, Panel> = {
   },
 };
 ---
-<nav class="qm" aria-label="Boʻlimlar" data-qm lang="uz">
+<nav class="qm" aria-label={EN ? 'Sections' : 'Boʻlimlar'} data-qm lang={EN ? 'en' : 'uz'}>
   {/* Lift raqam displeyi (2026-11-25): joriy qavat raqami. Boshqa qavatga olib boruvchi havola bosilganda raqam
       yuqoriga siljib yangisiga almashadi (--lift-davom), keyin sahifa ochiladi. Reduced motion'da darhol o'tadi.
       Bezak: aria-hidden, joriy qavat tabdagi aria-current/faol bilan bildiriladi. */}
@@ -86,14 +90,14 @@ const PANELLAR: Record<string, Panel> = {
       return <li class="qm-juft" data-qm-juft>
         <a class:list={['qm-tab', { faol: shu, 'qm-tab--juft': q.slug !== 'navigator' }]} data-qm-qavat={q.raqam} href={bosh} aria-current={aktiv === bosh ? 'page' : undefined}>{ism}</a>
         {q.slug !== 'navigator' && <>
-          <button type="button" class:list={['qm-och', { faol: shu }]} aria-expanded="false" aria-controls={`${prefiks}-${q.slug}`} aria-label={`${ism}: asosiy sahifalar`} data-qm-tab>
+          <button type="button" class:list={['qm-och', { faol: shu }]} aria-expanded="false" aria-controls={`${prefiks}-${q.slug}`} aria-label={EN ? `${ism}: main pages` : `${ism}: asosiy sahifalar`} data-qm-tab>
             <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg>
           </button>
           <div class="qm-panel" id={`${prefiks}-${q.slug}`} data-qm-panel data-qm-qavat={q.raqam}>
             <ul class="qm-royxat" role="list" lang={p.til}>
               {qisqa(p).map((b) => <li><a href={yol(b.href!)}>{b.nomi}</a></li>)}
             </ul>
-            <a class="qm-otish" href={bosh} lang={p.til}>{hammasi(q.slug)} →</a>
+            <a class="qm-otish" href={bosh} lang={hammasiTil(p)}>{hammasi(q.slug)} →</a>
           </div>
         </>}
       </li>;

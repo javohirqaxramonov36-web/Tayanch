@@ -6,11 +6,13 @@
 // >= 768px da yashirin: u yerda QavatMenyu.
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
+import { yolTili } from '../../data/umumiyMatn';
 
 const aktiv = Astro.url.pathname;
-const nom = (slug: string, nomi: string) => slug === 'navigator' ? 'Bosh sahifa' : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
+const EN = yolTili(aktiv) === 'en';
+const nom = (slug: string, nomi: string) => slug === 'navigator' ? (EN ? 'Home' : 'Bosh sahifa') : slug === 'sat' ? 'SAT' : slug === 'ielts' ? 'IELTS' : slug === 'eyuf' ? 'El-Yurt Umidi' : nomi;
 ---
-<nav class="bc" aria-label="Boʻlimlar" lang="uz" data-bc>
+<nav class="bc" aria-label={EN ? 'Sections' : 'Boʻlimlar'} lang={EN ? 'en' : 'uz'} data-bc>
   <ul class="bc-royxat" role="list">
     {qavatlar.map((q) => {
       const bosh = yol(q.manzil);
