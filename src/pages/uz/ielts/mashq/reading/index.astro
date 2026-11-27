@@ -1,29 +1,17 @@
 ---
-// IELTS Reading test: start page. Format numbers: IE02. The attempt count, the "continue"
-// state and the history come from the browser (src/lib/ielts/reading/ekran/boshlash.ts).
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import '../../../../../styles/ielts-reading.css';
-import { MM, RM } from '../../../../../data/ielts/readingMatn';
 import { saytTestlari } from '../../../../../lib/ielts/reading/saytTestlari';
 import { yol } from '../../../../../lib/yol';
 
-const testSoni = (await saytTestlari()).length;
-const IK = {
-  soat: '<path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 7v5l3 2"/>',
-  savol: '<path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
-  matn: '<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
-  urinish: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>',
-};
-const imkonIkonka = [
-  '<path d="M4 6h16M4 12h16M4 18h10"/>',
-  '<path d="M5 12l5 5L20 7"/>',
-  '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-];
+const barchaTestlar = await saytTestlari();
+const yuklanganTestlar = barchaTestlar.filter((test) => test.source?.kind === 'uploaded');
+const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
 ---
 <BolimQobiq
   title="Reading test · IELTS"
-  description="A Reading practice test in the IELTS format: 3 passages, 40 questions, 60 minutes, automatic marking and an estimated band."
+  description="IELTS Reading practice. Choose a mock and start the test."
   turi="mashq"
   yol={['Reading']}
   ota={yol('/uz/ielts/reading/')}
@@ -32,148 +20,63 @@ const imkonIkonka = [
 >
   <div class="ichki rb" id="rb">
     <header class="bosh">
-      <p class="ustki-kok">{MM.ustki}</p>
-      <h1>{MM.readingSarlavha}</h1>
-      <p class="lead">{MM.readingLead}</p>
-      <p class="eslatma">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 8v5M12 16.5v.5" /></svg>
-        {RM.eslatma}
-      </p>
+      <h1>IELTS Reading</h1>
+      <p class="format">60 minutes · 40 questions · 3 passages</p>
     </header>
 
-    <section class="boshla" aria-label={RM.boshla}>
-      {testSoni > 0 ? (
-        <a class="t-tugma ielts-tugma--urgu" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1`}>{RM.boshla}</a>
-      ) : (
+    <section class="boshla" aria-label="Choose a mock">
+      {testlar.length > 0 ? (
         <>
-          <p class="boshla-izoh">Reading tests are being prepared. For now, you can start with these lessons.</p>
-          <ul class="boshla-darslar">
-            <li><a href={yol('/uz/ielts/qollanma/reading/tfng/')}>True / False / Not Given</a></li>
-            <li><a href={yol('/uz/ielts/qollanma/reading/sarlavhalar/')}>Matching headings</a></li>
-          </ul>
+          <label for="rb-test">Choose a mock</label>
+          <select id="rb-test">
+            {testlar.map((test) => (
+              <option value={test.testId}>{test.title}</option>
+            ))}
+          </select>
+          <a class="t-tugma ielts-tugma--urgu" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1&test=${encodeURIComponent(testlar[0].testId)}`}>Start</a>
+          <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
         </>
-      )}
-      {testSoni > 0 && <p class="boshla-izoh">{testSoni === 1 ? RM.bittaTest : RM.tasodif}</p>}
-      <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
+      ) : <p>Mocks are being prepared.</p>}
     </section>
 
-    <dl class="format">
-      <div><dt><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.soat} />{MM.statVaqt}</dt><dd>{MM.statVaqtQiymat}</dd></div>
-      <div><dt><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.savol} />{MM.statSavol}</dt><dd>{MM.statSavolQiymat}</dd></div>
-      <div><dt><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.matn} />{MM.statMatn}</dt><dd>{MM.statMatnQiymat}</dd></div>
-      <div><dt><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.urinish} />{MM.statUrinish}</dt><dd id="rb-son">0</dd></div>
-    </dl>
-
-    <div class="juft">
-      <section class="kul" aria-labelledby="rb-daraja-h">
-        <h2 id="rb-daraja-h">{MM.passageSarlavha}</h2>
-        <ul class="darajalar">
-          {MM.passagelar.map((p) => (
-            <li><strong>{p.nomi}</strong><span>{p.daraja}</span></li>
-          ))}
-        </ul>
-      </section>
-      <section class="ogoh" aria-labelledby="rb-ogoh-h">
-        <h2 id="rb-ogoh-h">{MM.ogohSarlavha}</h2>
-        <p>{MM.ogoh}</p>
-        <p>{MM.ogohVaqt}</p>
-      </section>
-    </div>
-
-    <section class="imkon" aria-labelledby="rb-imkon-h">
-      <h2 id="rb-imkon-h">{MM.imkoniyatSarlavha}</h2>
-      <ul class="uchlik">
-        {MM.imkoniyatlar.map((x, i) => (
-          <li class="kul">
-            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={imkonIkonka[i]} />
-            <h3>{x.nomi}</h3>
-            <p>{x.matn}</p>
-          </li>
-        ))}
-      </ul>
+    <section class="tarix" id="rb-tarix-oram" aria-labelledby="rb-tarix-h">
+      <h2 id="rb-tarix-h">Recent results</h2>
+      <div id="rb-tarix"></div>
     </section>
 
-    <section class="tarix" aria-labelledby="rb-tarix-h">
-      <h2 id="rb-tarix-h">{RM.tarixSarlavha}</h2>
-      <div id="rb-tarix"><p class="rn-bosh-xabar">{RM.tarixBosh}</p></div>
-    </section>
-
-    <ManbaBlok
-      manbalar={['IE02', 'IE04']}
-      tekshirilgan="2026-11-10"
-      keyingiTekshiruv="2026-12-10"
-      tekshirilmagan={[
-        "The band is an estimate: the official source gives only four points (15 → 5, 23 → 6, 30 → 7, 35 → 8); the other boundaries are a Tayanch estimate.",
-        "The passage levels (Easy–Medium, Medium, Medium–Hard) were set by Tayanch; the official source has no such levels.",
-        "The questions and passages are practice material written for Tayanch, not official IELTS material.",
-      ]}
-    />
+    <details class="manba-izoh">
+      <summary>Sources and notes</summary>
+      <p>Practice tests in the IELTS format.</p>
+      <ManbaBlok
+        manbalar={['IE02', 'IE04']}
+        tekshirilgan="2026-11-10"
+        keyingiTekshiruv="2026-12-10"
+        tekshirilmagan={[
+          'The band is an estimate. The official source gives four reference points; the values in between are a Tayanch estimate.',
+          'Uploaded mocks use the answer key from their source.',
+        ]}
+      />
+    </details>
   </div>
 </BolimQobiq>
 
 <script>
-  import { ishgaTushirBoshlash } from '../../../../../lib/ielts/reading/ekran/boshlash.ts';
+  import { ishgaTushirBoshlash } from '../../../../../lib/ielts/reading/ekran/boshlash';
   ishgaTushirBoshlash();
 </script>
 
 <style>
-  .rb { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-10); max-width: calc(912px + 2 * var(--space-10)) !important; }
-  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
-  .bosh p, .boshla p, .ogoh p, .kul p { margin: 0; }
-  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
-  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: -0.5px; }
-  h2 { font-size: var(--text-h2-size); line-height: 1.2; font-weight: var(--font-weight-extrabold); }
-  .lead { font-size: var(--font-size-body-d); line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
-  .eslatma {
-    align-self: flex-start; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
-    background: var(--color-warning-subtle); color: var(--color-warning-text);
-    display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-small-size); font-weight: var(--font-weight-bold); line-height: 1.4;
-  }
-  .eslatma svg { flex: none; }
-
-  .boshla { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
-  .boshla-izoh { color: var(--color-ielts-text-muted); line-height: 1.5; }
-  .boshla-davom { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); color: var(--color-ielts-text); font-weight: var(--font-weight-bold); line-height: 1.5; }
-  .boshla-davom[hidden] { display: none; }
-
-  .format { margin: 0; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
-  .format > div { padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
-  .format > div + div { border-left: 1px solid var(--color-ielts-line); }
-  .format dt { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ielts-text-muted); }
-  .format dt svg { flex: none; color: var(--color-link); }
-  .format dd { margin: 0; font-size: var(--text-h2-size); font-weight: var(--font-weight-extrabold); }
-
-  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
-  .kul { background: var(--color-ielts-tile); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
-  .kul > svg { color: var(--color-link); }
-  .kul h2, .ogoh h2 { font-size: var(--text-h3-size); }
-  .kul h3 { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
-  .kul p { line-height: 1.6; color: var(--color-ielts-text-muted); }
-  .darajalar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-  .darajalar li { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-  .darajalar li + li { border-top: 1px solid var(--color-ielts-line); }
-  .darajalar span { font-weight: var(--font-weight-semibold); color: var(--color-ielts-text-muted); }
-  .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); }
-  .ogoh p { line-height: 1.6; font-weight: var(--font-weight-semibold); }
-
-  .imkon, .tarix { display: flex; flex-direction: column; gap: var(--space-5); }
-  .uchlik { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
-
-  @media (max-width: 900px) {
-    .uchlik, .juft { grid-template-columns: minmax(0, 1fr); }
-  }
-  @media (max-width: 760px) {
-    .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .format > div:nth-child(3) { border-left: 0; }
-    .format > div:nth-child(n + 3) { border-top: 1px solid var(--color-ielts-line); }
-  }
-  @media (max-width: 640px) {
-    .rb { padding-top: var(--space-6); gap: var(--space-8); }
-    h1 { font-size: var(--text-h1-size); }
-    h2 { font-size: var(--text-h2-size); }
-    .boshla { align-items: stretch; }
-    .format > div { padding: var(--space-4); }
-    .format dd { font-size: var(--text-h3-size); }
-    .kul, .ogoh { padding: var(--space-5); }
-  }
+  .rb { display: flex; flex-direction: column; gap: var(--space-8); padding-block: var(--space-8); }
+  .bosh { display: grid; gap: var(--space-3); }
+  .format { color: var(--color-text-secondary); margin: 0; }
+  .boshla { display: grid; gap: var(--space-4); }
+  .boshla label { font-weight: var(--font-weight-semibold); }
+  .boshla select { width: 100%; min-width: 0; min-height: var(--size-touch-min); padding: var(--space-3); border: var(--border-width-1) solid var(--input-border); border-radius: var(--radius-md); background: var(--input-bg); color: var(--input-text); font: inherit; }
+  .boshla select:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  .boshla-davom { margin: 0; color: var(--color-text-secondary); }
+  .tarix { display: grid; gap: var(--space-4); }
+  .tarix h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .manba-izoh { border-top: var(--border-width-1) solid var(--color-border); padding-top: var(--space-4); }
+  .manba-izoh summary { display: list-item; min-height: var(--size-touch-min); padding-block: var(--space-3); cursor: pointer; color: var(--color-text-secondary); }
+  .manba-izoh[open] > p { margin-block: var(--space-4); }
 </style>

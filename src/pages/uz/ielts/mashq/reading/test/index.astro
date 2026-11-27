@@ -7,7 +7,9 @@ import { RM } from '../../../../../../data/ielts/readingMatn';
 import { saytTestlari } from '../../../../../../lib/ielts/reading/saytTestlari';
 import { yol } from '../../../../../../lib/yol';
 
-const testIdlar = (await saytTestlari()).map((t) => t.testId);
+const testlar = await saytTestlari();
+const yuklangan = testlar.filter((test) => test.source?.kind === 'uploaded');
+const testIdlar = (yuklangan.length > 0 ? yuklangan : testlar).map((test) => test.testId);
 ---
 <IeltsFokus
   title="Reading test · IELTS"

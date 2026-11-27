@@ -2,6 +2,8 @@
 // project root is always right, whatever directory the build was started from.
 // The fixture in tests/fixtures/ielts/ is added only when IELTS_FIXTURE=1 (local preview):
 // a normal build never loads it, so it cannot reach production.
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import type { ReadingTest } from './sxema.ts';
 import { tekshirManbalar, type TestManba } from './testlarTekshir.ts';
 
@@ -17,6 +19,13 @@ async function oqi(fayllar: Record<string, () => Promise<string>>, fx: boolean):
 /** Valid tests of the site. Throws on any invalid test, which fails `astro build`. */
 export async function saytTestlari(): Promise<ReadingTest[]> {
   const manbalar = await oqi(haqiqiy, false);
+  const mockPapka = process.env.TAYANCH_IELTS_MOCK_DIR;
+  if (mockPapka) {
+    const fayllar = (await readdir(mockPapka)).filter((f) => f.endsWith('.json')).sort();
+    for (const fayl of fayllar) {
+      manbalar.push({ fayl, fixture: false, matn: await readFile(join(mockPapka, fayl), 'utf8') });
+    }
+  }
   if (process.env.IELTS_FIXTURE === '1') manbalar.push(...(await oqi(fixture, true)));
   const { testlar, xatolar } = tekshirManbalar(manbalar);
   if (xatolar.length > 0) {

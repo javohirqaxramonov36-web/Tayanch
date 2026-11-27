@@ -56,6 +56,14 @@ Matn va savollar faqat original (`docs/kontent-siyosati.md`). Ekranda test
 | `passages[].paragraphs[]` | `label` (passage ichida takrorlanmaydi) va `text`. |
 | `passages[].groups[]` | Bir turdagi savollar guruhi: `type`, `instructions`, `questions`. |
 
+## AI muallifligi va ko‘rik
+
+Yangi AI test va savol yozuvlarida `drafted_by: "ai"`, `reviewed: false` bo‘ladi. Muallif ko‘rigidan keyin `reviewed` o‘zgartiriladi. `drafted_by` qiymati `ai` yoki `human`, `reviewed` boolean bo‘lishi kerak. Maydonlar birga beriladi. Eski fayllar va fixture ikkala maydonsiz ham o‘qiladi. Hozirgi to‘rt testning AI muallifligi `docs/ielts-reading-0N-tekshiruv.md`larda qayd etilgan, barcha savollari ko‘rik kutilayotgan deb belgilandi.
+
+Reading boshlash sahifasida aniq test yoki tasodifiy tanlov bor. `?boshla=1&test=<testId>` aniq testni boshlaydi. Faol urinish mavjud bo‘lsa davom ettiriladi. Noma’lum test identifikatori bilan yangi urinish yaratilmaydi. Tugash vaqti saqlangan `deadline` timestampidan hisoblanadi, vaqt tugaganda avtomatik yakunlanadi. Har matn kiritish va variant tanlash hodisasi darhol saqlanadi. Deadline o‘tganidan keyingi javob qabul qilinmaydi.
+
+Telegram mocklari importidan oldin matn originalligi yoki ochiq litsenziyasi va javob kaliti tekshiriladi. Tashqi saytda erkin ochilishi ochiq litsenziya isboti hisoblanmaydi. Muallifning 2026-11-22 qo‘shimcha sharti.
+
 ## Savol turlari
 
 Hamma savolda majburiy: `prompt`, `answer`, `explanation`, `evidence`.
@@ -159,3 +167,12 @@ Tarix `localStorage` da, kalit `tayanch:ielts-reading-urinishlar:v1`, faqat
 `answers` kaliti savolning birinchi raqami. `band: null` = "2.0 dan past". `syncedAt` server
 sinxroni (Supabase) qo'shilguncha `null`. Davom etayotgan urinish alohida kalitda:
 `tayanch:ielts-reading-faol:v1`; bitta tab qulfi: `tayanch:ielts-reading-qulf:v1`.
+
+
+## Yuklangan mocklar
+
+`TAYANCH_IELTS_MOCK_DIR` berilganda Astro build shu tashqi papkadagi JSON mocklarni ham `tekshirManbalar` orqali tekshiradi. Xarid qilingan manba fayllari repodan tashqarida saqlanadi. Hozirgi import joyi `~/Tayanch/02-kontent/telegram-saralash-2026-11-22/mocklar/reading/`. Birinchi ikki mock `telegram-reading-01` va `telegram-reading-02`, har biri40savol. Lokal sinov uchun shu katalog bilan build qayta quriladi. Oddiy CI buildda bu lokal papka avtomatik mavjud bo‘lmaydi, jonli nashr uchun alohida kontent tarqatish yo‘li kerak.
+
+Import qilingan testda `source.kind=uploaded`, `source.file`, `source.rights=user-authorized` va `source.answerKeyReviewed=false` saqlanadi. Bu muallifning foydalanish ruxsati haqidagi tasdig‘ini qayd qiladi, ochiq litsenziya da’vosi emas. Savol matni va javob kaliti manbadan saqlanadi. Matching Information/Features paragraf yoki manba variantli MCQ, Note/Summary Completion gap-fill ko‘rinishida ishlaydi. Manbadagi qayta ishlatiladigan javoblar cheklanmaydi.
+
+Aniq dalil iqtibosi matnda topilmasa import qilingan savolda `evidence=null` beriladi. Natijada tekshirilmagan dalil deb ko‘rsatiladi, matnni belgilash tugmasi chiqmaydi. Qolgan testlarda evidence majburiyligicha qoladi. Javob kaliti va izohlarning mustaqil muallif ko‘rigi kutilmoqda. Katalogdagi AI va tasodifiy tanlov yorliqlari muallif so‘rovi bilan olib tashlandi, oldingi testlarning metadata va saqlangan urinishlari o‘qiladi.

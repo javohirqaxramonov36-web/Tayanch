@@ -9,7 +9,6 @@ import { yol } from '../../../yol.ts';
 import { urinishOmbori } from '../ombor.ts';
 import { QULF_KALIT, QULF_YURAK_MS, qulfBoshat, qulfEgasi, qulfOl } from '../qulf.ts';
 import { savolKaliti, savolRaqamlari, type Guruh, type ReadingTest, type Savol } from '../sxema.ts';
-import { tanlaTest } from '../tanlash.ts';
 import { elonDaqiqa, qolganMs, vaqtMatn } from '../taymer.ts';
 import { savolTuri } from '../turlar/registr.ts';
 import { qoch } from '../turlar/tur.ts';
@@ -27,7 +26,6 @@ interface Joy {
 const BAYROQ =
   '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></svg>';
 const KAM_VAQT_MS = 5 * 60_000;
-const YOZISH_KECHIKISH_MS = 400;
 
 export function ishgaTushirTest(): void {
   const ildiz = document.getElementById('rt');
@@ -78,7 +76,6 @@ export function ishgaTushirTest(): void {
   let oldingiMs: number | null = null;
   let soat: number | undefined;
   let oxirgiYurak = 0;
-  let kutilgan: { kalit: string; maydon: HTMLInputElement; taymer: number } | null = null;
 
   // ---------- Messages ----------
 
@@ -304,17 +301,13 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
 
   // ---------- Answers and flags ----------
 
-  function yozKutilgan(): void {
-    if (!kutilgan) return;
-    const { kalit, maydon, taymer } = kutilgan;
-    window.clearTimeout(taymer);
-    kutilgan = null;
-    javobQoy(kalit, maydon.value);
-  }
-
   function javobQoy(kalit: string, xom: unknown): void {
     const joy = joylar.get(kalit);
     if (!joy || !yozishMumkin()) return;
+    if (avtoYakunKerak(faol, Date.now())) {
+      yakun(true);
+      return;
+    }
     const javob = savolTuri(joy.guruh.type).normalize(xom, joy.savol, joy.guruh);
     if (javob === undefined) delete faol.answers[kalit];
     else faol.answers[kalit] = javob;
@@ -333,7 +326,6 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
 
   function passageQoy(i: number, fokus: boolean): void {
     if (i < 0 || i >= test.passages.length) return;
-    yozKutilgan();
     passage = i;
     chizPassage();
     if (fokus) {
@@ -349,7 +341,6 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
     const joy = kalit ? joylar.get(kalit) : undefined;
     if (!kalit || !joy) return;
     if (joy.passage !== passage) {
-      yozKutilgan();
       passage = joy.passage;
       chizPassage();
     }
@@ -400,7 +391,6 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
 
   function yakunSora(): void {
     if (tugadi || passiv) return;
-    yozKutilgan();
     let javobsiz = 0;
     for (const [kalit, joy] of joylar) {
       javobsiz += savolTuri(joy.guruh.type).berilgan(joy.savol, faol.answers[kalit]).filter((b) => !b).length;
@@ -412,7 +402,6 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
 
   function yakun(avto: boolean): void {
     if (tugadi) return;
-    yozKutilgan();
     tugadi = true;
     window.clearInterval(soat);
     if (yakunDialog.open) yakunDialog.close();
@@ -481,21 +470,16 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
           return;
         }
         javobQoy(kalit, tanlangan.map((i) => i.value));
-      } else if (t.type === 'text') {
-        yozKutilgan();
-        javobQoy(kalit, t.value);
       } else {
         javobQoy(kalit, t.value);
       }
     });
 
-    // Text answers are saved shortly after typing stops, and at once on blur or page hide.
+    // Persist each text input immediately, including deletion and partial answers.
     savolPanel.addEventListener('input', (e) => {
       const t = e.target;
       if (!(t instanceof HTMLInputElement) || t.type !== 'text' || !t.dataset.savol) return;
-      if (kutilgan && kutilgan.maydon !== t) yozKutilgan();
-      if (kutilgan) window.clearTimeout(kutilgan.taymer);
-      kutilgan = { kalit: t.dataset.savol, maydon: t, taymer: window.setTimeout(yozKutilgan, YOZISH_KECHIKISH_MS) };
+      javobQoy(t.dataset.savol, t.value);
     });
 
     savolPanel.addEventListener('click', (e) => {
@@ -550,11 +534,9 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
 
     window.addEventListener('storage', () => tekshirHolat());
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') yozKutilgan();
-      else tik();
+      if (document.visibilityState === 'visible') tik();
     });
     window.addEventListener('pagehide', () => {
-      yozKutilgan();
       // Release the lock so a reload of this tab is not mistaken for a second tab.
       if (!tugadi && !passiv && saqlanadi) qulfBoshat(ombor, tabId, Date.now());
     });
@@ -577,15 +559,19 @@ ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], mat
     } catch {
       idlar = [];
     }
-    const boshlashSoralgan = new URLSearchParams(location.search).has('boshla');
+    const parametrlar = new URLSearchParams(location.search);
+    const boshlashSoralgan = parametrlar.has('boshla');
+    const soralganTest = parametrlar.get('test');
 
     let f = repo.faol();
     let t: ReadingTest | null = null;
     if (!f) {
       if (!boshlashSoralgan) return holatXabar(RM.faolYoq, 'boshlash');
       if (idlar.length === 0) return holatXabar(RM.testYoq, 'boshlash');
-      const tarix = repo.urinishlar();
-      const tanlangan = tanlaTest(idlar, tarix.length > 0 ? tarix[tarix.length - 1].testId : null);
+      if (soralganTest !== null && !idlar.includes(soralganTest)) {
+        return holatXabar(RM.mockYoq, 'boshlash');
+      }
+      const tanlangan = soralganTest ?? idlar[0];
       const yuklangan = tanlangan ? await yuklaTest(tanlangan) : 'yoq';
       if (typeof yuklangan === 'string') return holatXabar(RM.yuklashXato, 'qayta');
       t = yuklangan;
