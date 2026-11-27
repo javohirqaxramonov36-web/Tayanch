@@ -198,7 +198,7 @@ export function ishgaTushirTest(): void {
     const belgili = faol.flags.includes(kalit);
     return `<div class="savol" id="savol-${qoch(kalit)}">
 <div class="savol-bosh"><span class="savol-raqam" aria-hidden="true">${qoch(yorliq)}</span>
-<p class="savol-matn" id="${qoch(matnId)}" lang="en"><span class="ekranda-yoq" lang="uz">${qoch(RM.savolNomi(yorliq))} </span>${qoch(s.prompt)}</p>
+<p class="savol-matn" id="${qoch(matnId)}" lang="en"><span class="ekranda-yoq">${qoch(RM.savolNomi(yorliq))} </span>${qoch(s.prompt)}</p>
 <button type="button" class="belgi-tugma" data-belgi="${qoch(kalit)}" aria-pressed="${belgili}" aria-label="${qoch(RM.belgila(yorliq))}">${BAYROQ}</button></div>
 ${savolTuri(g.type).render({ savol: s, guruh: g, javob: faol.answers[kalit], matnId })}
 </div>`;

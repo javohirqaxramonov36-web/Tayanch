@@ -7,8 +7,8 @@ import '../../../../../../styles/ielts-reading.css';
 import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 ---
 <BolimQobiq
-  title="Reading natijasi · IELTS"
-  description="IELTS Reading mashq testi natijasi: to'g'ri javoblar, taxminiy band, savol turlari bo'yicha aniqlik va tushuntirishlar."
+  title="Reading result · IELTS"
+  description="IELTS Reading practice test result: correct answers, estimated band, accuracy by question type and explanations."
   turi="mashq"
   yol={['Reading', 'Reading test']}
   bolim="ielts"
@@ -23,7 +23,7 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 
     <div class="rn" id="rn">
       <p class="rn-bosh-xabar" role="status">{RM.natijaYuklanmoqda}</p>
-      <noscript><p class="rn-bosh-xabar">Natijani koʻrish uchun brauzerda JavaScript yoqilgan boʻlishi kerak.</p></noscript>
+      <noscript><p class="rn-bosh-xabar">JavaScript must be turned on in your browser to see the result.</p></noscript>
     </div>
 
     <ManbaBlok
@@ -31,8 +31,8 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
       tekshirilgan="2026-11-10"
       keyingiTekshiruv="2026-12-10"
       tekshirilmagan={[
-        "Band jadvalida rasmiy manbada faqat to'rtta nuqta bor (15 → 5, 23 → 6, 30 → 7, 35 → 8). Qolgan chegaralar Tayanch taxmini.",
-        "Savollar va matnlar Tayanch uchun yozilgan mashq, rasmiy IELTS materiali emas.",
+        "The official source gives only four points in the band table (15 → 5, 23 → 6, 30 → 7, 35 → 8). The other boundaries are a Tayanch estimate.",
+        "The questions and passages are practice material written for Tayanch, not official IELTS material.",
       ]}
     />
   </div>
