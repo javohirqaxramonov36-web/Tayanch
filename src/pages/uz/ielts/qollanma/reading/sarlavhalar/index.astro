@@ -191,7 +191,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
     g.tugmalar[NAMUNA].classList.add('ir-togri');
     p.asosiy.forEach((j) => g.tugmalar[NAMUNA].querySelector(`[data-gap="${j}"]`)!.classList.add('ir-asosiy'));
     sTugmalar[p.togri].classList.add('ir-togri');
-    $('ir-holat').textContent = `${p.harf} paragraf: sarlavha ${RIM[p.togri]}, «${sarlavhalar[p.togri]}». ${p.izoh}`;
+    $('ir-holat').textContent = `Paragraph ${p.harf}: heading ${RIM[p.togri]}, “${sarlavhalar[p.togri]}”. ${p.izoh}`;
   }
   function chizSinov() {
     tozala();
@@ -213,7 +213,7 @@ const RIM = ['i', 'ii', 'iii', 'iv'];
   sTugmalar.forEach((t, j) => t.addEventListener('click', () => {
     if (qadam !== 'sinab') return;
     const k = g.tanlangan();
-    if (k < 0 || k === NAMUNA) { holat.textContent = 'Avval B yoki C paragrafni tanlang.'; holat.dataset.ok = ''; return; }
+    if (k < 0 || k === NAMUNA) { holat.textContent = 'First choose paragraph B or C.'; holat.dataset.ok = ''; return; }
     if (tekshirildi) { g.tugmalar.forEach((t, i) => { if (i !== NAMUNA) t.classList.remove('ir-togri', 'ir-xato'); }); tekshirildi = false; }
     juft = juft.map((x) => (x === j ? -1 : x));
     juft[k] = j;

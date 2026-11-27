@@ -233,7 +233,7 @@ const IK = {
     birlikOldin.hidden = !s.oldin;
     birlikKeyin.textContent = s.keyin ?? '';
     birlikKeyin.hidden = !s.keyin;
-    javobInput.setAttribute('aria-label', `${s.kontekst}${s.oldin ? `, ${s.oldin} bilan` : ''}${s.keyin ? `, ${s.keyin} bilan` : ''}`);
+    javobInput.setAttribute('aria-label', `${s.kontekst}${s.oldin ? `, in ${s.oldin}` : ''}${s.keyin ? `, in ${s.keyin}` : ''}`);
     javobInput.value = '';
     javobInput.readOnly = false;
     javobInput.removeAttribute('aria-invalid');
