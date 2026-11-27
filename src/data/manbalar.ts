@@ -740,7 +740,7 @@ export const manbalar: Manba[] = [
   },
   {
     id: 'IE08',
-    nomi: 'IELTS: egalik va savdo belgisi (ielts.org sahifa osti)',
+    nomi: 'IELTS: ownership and trademark (ielts.org page footer)',
     tashkilot: 'IELTS (ielts.org)',
     havola: 'https://ielts.org/',
     tekshiruvDarajasi: 'rasmiy',

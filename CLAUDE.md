@@ -1,6 +1,6 @@
 # Tayanch: ish qoidalari
 
-Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha. SAT bo'limining (3-qavat) HAMMA sahifa matni inglizcha (ilova va qo'llanma sahifalari); sahifa yo'llari (URL) va kod nomlari o'zbekcha lotin konventsiya bo'yicha qoladi. Inglizcha matnni muallif tekshiradi. Boshqa qavatlar matni o'zbekcha.
+Til: javoblar o'zbekcha (lotin), qisqa. Kod va fayl nomlari o'z holicha. SAT (3-qavat) va IELTS (4-qavat, muallif qarori 2026-11-27) bo'limlarining HAMMA sahifa matni inglizcha (ilova va qo'llanma sahifalari; o'zbekcha faqat so'z tarjimasi, "Uzbek:" yorlig'i va `lang="uz"` bilan); sahifa yo'llari (URL) va kod nomlari o'zbekcha lotin konventsiya bo'yicha qoladi. Til `yolTili`/`bolimTili` (`src/data/umumiyMatn.ts`) dan. Inglizcha matnni muallif tekshiradi. Boshqa qavatlar matni o'zbekcha.
 
 ## Joriy holat (2026-11-17)
 Yangi sessiyada avval `HANDOFF.md` ni o'qi: nima qurilgan, nima qurilmagan, qarorlar, ochiq savollar, nomlash va texnik eslatmalar.

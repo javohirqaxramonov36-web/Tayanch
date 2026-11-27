@@ -14,10 +14,10 @@ const ie01 = manbalar.find((m) => m.id === 'IE01')!;
 const ielts = (qism: string) => yol(`/uz/ielts/${qism}`);
 
 const bosqichlar: { id: string; nomi: string; izoh: string; bandlar: IeltsBand[] }[] = [
-  { id: 'qollanma', nomi: "Qo'llanma", izoh: 'Avval format, savol turlari va tuzoqlar bilan tanish.', bandlar: [k.qollanma] },
-  { id: 'darslar', nomi: 'Darslar', izoh: "Bitta savol turini qisqa interaktiv darsda mashq qil.", bandlar: k.darslar },
-  { id: 'mashq', nomi: 'Mashq', izoh: "Oʻrganganingni vaqt bilan sinab koʻr.", bandlar: [...k.mashqlar].sort((a, b) => Number(!a.qism) - Number(!b.qism)) },
-  { id: 'natija', nomi: 'Natijalar', izoh: "Ishlaganlaringni koʻr va xatolarni takrorla.", bandlar: k.natijalar },
+  { id: 'qollanma', nomi: 'Guide', izoh: 'Start with the format, question types and common traps.', bandlar: [k.qollanma] },
+  { id: 'darslar', nomi: 'Lessons', izoh: 'Practise one question type in a short interactive lesson.', bandlar: k.darslar },
+  { id: 'mashq', nomi: 'Practice', izoh: 'Test what you have learned, against the clock.', bandlar: [...k.mashqlar].sort((a, b) => Number(!a.qism) - Number(!b.qism)) },
+  { id: 'natija', nomi: 'Results', izoh: 'See your work and review your mistakes.', bandlar: k.natijalar },
 ].filter((b) => b.bandlar.length > 0);
 
 const birinchiMashq = k.mashqlar.find((m) => m.qism);
@@ -33,13 +33,13 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
   <div class="ichki konikma-sahifa">
     <header class="bosh">
       <svg class="ikonka" aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={k.ikonka} />
-      <p class="ustki">IELTS · koʻnikma</p>
+      <p class="ustki">IELTS · skill</p>
       <h1>{k.nomi}</h1>
       <p class="lead">{k.tavsif}</p>
-      <p class="kichik">Imtihonda: {k.vaqt}. IELTS Academic, manba <a href={ie01.havola}>ielts.org</a>.</p>
+      <p class="kichik">In the test: {k.vaqt}. IELTS Academic, source: <a href={ie01.havola}>ielts.org</a>.</p>
       <div class="amallar">
-        <a class="t-tugma ielts-tugma--urgu" href={ielts(k.qollanma.qism!)}>Qoʻllanmadan boshlash</a>
-        {birinchiMashq && <a class="t-tugma t-tugma--ikkinchi" href={ielts(birinchiMashq.qism!)}>Toʻgʻridan mashqqa</a>}
+        <a class="t-tugma ielts-tugma--urgu" href={ielts(k.qollanma.qism!)}>Start with the guide</a>
+        {birinchiMashq && <a class="t-tugma t-tugma--ikkinchi" href={ielts(birinchiMashq.qism!)}>Go straight to practice</a>}
       </div>
     </header>
 
@@ -63,7 +63,7 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
                     <p class="karta nofaol">
                       <svg class="ikonka" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} />
                       <span class="karta-matn"><span class="karta-nom">{x.nomi}</span><span class="kichik">{x.tavsif}</span></span>
-                      <span class="yorliq">Tez orada</span>
+                      <span class="yorliq">Coming soon</span>
                     </p>
                   )}
                 </li>
@@ -75,12 +75,12 @@ const boshqalar = konikmalar.filter((x) => x.id !== k.id);
     </ol>
 
     <nav class="boshqalar" aria-labelledby="boshqa-h">
-      <h2 id="boshqa-h">Boshqa koʻnikmalar</h2>
+      <h2 id="boshqa-h">Other skills</h2>
       <ul role="list">
         {boshqalar.map((x) => <li><a href={ielts(konikmaQism(x.id))}>
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={x.ikonka} />{x.nomi}
         </a></li>)}
-        <li><a href={ielts('vosita/reja/')}>30 kunlik reja</a></li>
+        <li><a href={ielts('vosita/reja/')}>30-day plan</a></li>
       </ul>
     </nav>
 

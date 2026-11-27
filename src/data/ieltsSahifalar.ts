@@ -1,5 +1,6 @@
 // IELTS bo'limining sahifalari va yon panel guruhlari.
 // Dizayn: Tayanch-IELTS-dizayn.md. "tez-orada" bandlar havola emas: kulrang ikonka va yorliq bilan matn.
+// Matn inglizcha (muallif qarori 2026-11-27: IELTS to'liq inglizcha); inglizcha matnni muallif tekshiradi.
 
 export interface IeltsBand {
   nomi: string;
@@ -24,38 +25,38 @@ export const IKONKA = {
 } as const;
 
 export const qollanmalar: IeltsBand[] = [
-  { nomi: 'Listening', tavsif: "Savol turlari, oldindan o'qish, imlo tuzoqlari", qism: 'qollanma/listening/', ikonka: IKONKA.listening },
+  { nomi: 'Listening', tavsif: 'Question types, reading ahead, spelling traps', qism: 'qollanma/listening/', ikonka: IKONKA.listening },
   { nomi: 'Reading', tavsif: 'Skimming, scanning, True/False/Not Given', qism: 'qollanma/reading/', ikonka: IKONKA.reading },
-  { nomi: 'Writing Task 2', tavsif: "Mezonlar, insho tuzilmasi va o'zini tekshirish", qism: 'qollanma/writing-task-2/', ikonka: IKONKA.writing },
-  { nomi: 'Speaking', tavsif: "Uch qism va o'zingni yozib eshitish", qism: 'qollanma/speaking/', ikonka: IKONKA.speaking },
+  { nomi: 'Writing Task 2', tavsif: 'Criteria, essay structure and self-check', qism: 'qollanma/writing-task-2/', ikonka: IKONKA.writing },
+  { nomi: 'Speaking', tavsif: 'The three parts, and recording yourself', qism: 'qollanma/speaking/', ikonka: IKONKA.speaking },
 ];
 
 export const asos: IeltsBand = {
   nomi: 'General English',
-  tavsif: "B1 darajasidan B2'ga: grammatika va lug'at, IELTS'dan oldin.",
+  tavsif: 'From B1 to B2: grammar and vocabulary before IELTS.',
   ikonka: IKONKA.general,
 };
 
 /** Interaktiv darslar (standart: docs/interaktiv-dars-standarti.md) */
 export const darslar: IeltsBand[] = [
-  { nomi: 'True / False / Not Given', tavsif: "Dalil gapni topib, mos, zid yoki yo'qligini ajratish", qism: 'qollanma/reading/tfng/', ikonka: IKONKA.tahlil },
-  { nomi: 'Matching headings', tavsif: 'Paragrafning asosiy fikriga sarlavha tanlash', qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
+  { nomi: 'True / False / Not Given', tavsif: 'Find the evidence sentence and decide: agrees, contradicts or not there', qism: 'qollanma/reading/tfng/', ikonka: IKONKA.tahlil },
+  { nomi: 'Matching headings', tavsif: "Choose a heading for each paragraph's main idea", qism: 'qollanma/reading/sarlavhalar/', ikonka: IKONKA.namuna },
 ];
 
-/** Mavjud mashqlar. To‘liq Listening va Speaking testlari keyingi bosqichda. */
+/** Mavjud mashqlar. To'liq Listening va Speaking testlari keyingi bosqichda. */
 export const mashqlar: IeltsBand[] = [
-  { nomi: 'Mashq testlari', tavsif: "Reading, Listening mini-mashqlari va Writing Task 2", qism: 'mashq/', ikonka: IKONKA.namuna },
-  { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
-  { nomi: 'Writing Task 2 mashqi', tavsif: 'Insho yozish va saqlangan ishni davom ettirish', qism: 'mashq/writing/', ikonka: IKONKA.writing },
-  { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
-  { nomi: 'Harf va raqam diktanti', tavsif: 'Ism, telefon, sana va narxni tinglab yozish', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
+  { nomi: 'Practice tests', tavsif: 'Reading, short Listening drills and Writing Task 2', qism: 'mashq/', ikonka: IKONKA.namuna },
+  { nomi: 'Reading test', tavsif: '60 minutes, 40 questions, estimated band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
+  { nomi: 'Writing Task 2 practice', tavsif: 'Write an essay and continue saved work', qism: 'mashq/writing/', ikonka: IKONKA.writing },
+  { nomi: 'Listening spelling', tavsif: 'Listen to a word and spell it correctly', qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
+  { nomi: 'Letters and numbers dictation', tavsif: 'Listen and write names, phone numbers, dates and prices', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
 ];
 
 export const vositalar: IeltsBand[] = [
-  { nomi: '30 kunlik reja', tavsif: "Uch savol asosida kunma-kun reja", qism: 'vosita/reja/', ikonka: IKONKA.reja },
-  { nomi: 'Takrorlash', tavsif: 'Darslar va testlardagi xatolar, oraliq bilan', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
-  { nomi: 'Ball kalkulyatori', tavsif: "Listening, Reading va umumiy band", qism: 'vosita/kalkulyator/', ikonka: IKONKA.kalkulyator },
-  { nomi: 'Writing taymeri', tavsif: "Task 1 va Task 2: vaqt va so'z hisoblagichi", qism: 'vosita/writing-taymer/', ikonka: IKONKA.taymer },
+  { nomi: '30-day plan', tavsif: 'A day-by-day plan from three questions', qism: 'vosita/reja/', ikonka: IKONKA.reja },
+  { nomi: 'Review', tavsif: 'Mistakes from lessons and tests, spaced out', qism: 'vosita/takrorlash/', ikonka: IKONKA.takror },
+  { nomi: 'Score calculator', tavsif: 'Listening, Reading and overall band', qism: 'vosita/kalkulyator/', ikonka: IKONKA.kalkulyator },
+  { nomi: 'Writing timer', tavsif: 'Task 1 and Task 2: time and word counter', qism: 'vosita/writing-taymer/', ikonka: IKONKA.taymer },
 ];
 
 /** Ko'nikma sahifalari (2026-11-24, muallif qarori: IELTS ko'nikma bo'yicha tuziladi).
@@ -78,45 +79,45 @@ const band = (nomi: string, tavsif: string, ikonka: string, qism?: string): Ielt
 
 export const konikmalar: Konikma[] = [
   {
-    id: 'listening', nomi: 'Listening', ikonka: IKONKA.listening, vaqt: 'Taxminan 30 daqiqa',
-    tavsif: "Savol turlari va imlo tuzoqlari, keyin tinglab yozish mashqlari.",
-    qollanma: band("Listening qo'llanmasi", qollanmalar[0].tavsif, IKONKA.listening, 'qollanma/listening/'),
+    id: 'listening', nomi: 'Listening', ikonka: IKONKA.listening, vaqt: 'About 30 minutes',
+    tavsif: 'Question types and spelling traps, then listen-and-write drills.',
+    qollanma: band('Listening guide', qollanmalar[0].tavsif, IKONKA.listening, 'qollanma/listening/'),
     darslar: [],
     mashqlar: [
-      band('Listening imlo', "So'zni tinglab, to'g'ri yozish", IKONKA.listening, 'mashq/listening-imlo/'),
-      band('Harf va raqam diktanti', 'Ism, telefon, sana va narxni tinglab yozish', IKONKA.listening, 'mashq/listening-raqamlar/'),
-      band('Listening mock', "To'liq Listening testi", IKONKA.namuna),
+      band('Listening spelling', 'Listen to a word and spell it correctly', IKONKA.listening, 'mashq/listening-imlo/'),
+      band('Letters and numbers dictation', 'Listen and write names, phone numbers, dates and prices', IKONKA.listening, 'mashq/listening-raqamlar/'),
+      band('Listening mock', 'A full Listening test', IKONKA.namuna),
     ],
     natijalar: [],
   },
   {
-    id: 'reading', nomi: 'Reading', ikonka: IKONKA.reading, vaqt: "60 daqiqa (ko'chirish vaqti ichida)",
-    tavsif: "Dalilni topishni o'rgan, savol turlarini darsda mashq qil, keyin to'liq testni ishla.",
-    qollanma: band("Reading qo'llanmasi", qollanmalar[1].tavsif, IKONKA.reading, 'qollanma/reading/'),
+    id: 'reading', nomi: 'Reading', ikonka: IKONKA.reading, vaqt: '60 minutes (including transfer time)',
+    tavsif: 'Learn to find the evidence, practise question types in lessons, then take a full test.',
+    qollanma: band('Reading guide', qollanmalar[1].tavsif, IKONKA.reading, 'qollanma/reading/'),
     darslar,
     mashqlar: [
-      band('Reading testi', '60 daqiqa, 40 savol, taxminiy band', IKONKA.reading, 'mashq/reading/'),
-      band('True / False / Not Given', 'Kartani surib javob berish, har gapdan keyin izoh', IKONKA.tahlil, 'mashq/tfng/'),
+      band('Reading test', '60 minutes, 40 questions, estimated band', IKONKA.reading, 'mashq/reading/'),
+      band('True / False / Not Given', 'Swipe a card to answer, with an explanation after each statement', IKONKA.tahlil, 'mashq/tfng/'),
     ],
     natijalar: [
-      band('Reading natijalari', 'Shu brauzerda saqlangan urinishlar', IKONKA.tahlil, 'mashq/reading/#rb-tarix-h'),
-      band('Xatolarni takrorlash', 'Darslar va testlardagi xatolar, oraliq bilan', IKONKA.takror, 'vosita/takrorlash/'),
+      band('Reading results', 'Attempts saved in this browser', IKONKA.tahlil, 'mashq/reading/#rb-tarix-h'),
+      band('Review mistakes', 'Mistakes from lessons and tests, spaced out', IKONKA.takror, 'vosita/takrorlash/'),
     ],
   },
   {
-    id: 'writing', nomi: 'Writing', ikonka: IKONKA.writing, vaqt: '60 daqiqa',
-    tavsif: "Task 2 mezonlari va insho tuzilmasi, keyin vaqt bilan insho yozish.",
-    qollanma: band("Task 2 qo'llanmasi", qollanmalar[2].tavsif, IKONKA.writing, 'qollanma/writing-task-2/'),
+    id: 'writing', nomi: 'Writing', ikonka: IKONKA.writing, vaqt: '60 minutes',
+    tavsif: 'Task 2 criteria and essay structure, then timed essay writing.',
+    qollanma: band('Task 2 guide', qollanmalar[2].tavsif, IKONKA.writing, 'qollanma/writing-task-2/'),
     darslar: [],
-    mashqlar: [band('Task 2 insho mashqi', 'Insho yozish va saqlangan ishni davom ettirish', IKONKA.writing, 'mashq/writing/')],
+    mashqlar: [band('Task 2 essay practice', 'Write an essay and continue saved work', IKONKA.writing, 'mashq/writing/')],
     natijalar: [],
   },
   {
-    id: 'speaking', nomi: 'Speaking', ikonka: IKONKA.speaking, vaqt: '11–14 daqiqa',
-    tavsif: "Uch qism qanday o'tadi va o'zingni yozib eshitib tekshirish.",
-    qollanma: band("Speaking qo'llanmasi", qollanmalar[3].tavsif, IKONKA.speaking, 'qollanma/speaking/'),
+    id: 'speaking', nomi: 'Speaking', ikonka: IKONKA.speaking, vaqt: '11–14 minutes',
+    tavsif: 'How the three parts work, and checking yourself by recording.',
+    qollanma: band('Speaking guide', qollanmalar[3].tavsif, IKONKA.speaking, 'qollanma/speaking/'),
     darslar: [],
-    mashqlar: [band('Gapirish mashqi', "Part 1–3 savollariga vaqt bilan javob, o'zingni yozib eshitish", IKONKA.speaking, 'qollanma/speaking/#mashq')],
+    mashqlar: [band('Speaking practice', 'Timed answers to Part 1–3 questions, then listen to your recording', IKONKA.speaking, 'qollanma/speaking/#mashq')],
     natijalar: [],
   },
 ];
@@ -130,15 +131,15 @@ export const ieltsGuruhlar: { nomi: string; bandlar: IeltsBand[] }[] = [
   ...konikmalar.map((k) => ({
     nomi: k.nomi,
     bandlar: [
-      band(`${k.nomi} sahifasi`, k.tavsif, k.ikonka, konikmaQism(k.id)),
-      { ...k.qollanma, nomi: "Qo'llanma" },
-      ...k.darslar.map((d) => ({ ...d, nomi: `Dars: ${d.nomi}` })),
+      band(`${k.nomi} page`, k.tavsif, k.ikonka, konikmaQism(k.id)),
+      { ...k.qollanma, nomi: 'Guide' },
+      ...k.darslar.map((d) => ({ ...d, nomi: `Lesson: ${d.nomi}` })),
       ...k.mashqlar,
     ],
   })),
-  { nomi: 'Reja va takrorlash', bandlar: [
+  { nomi: 'Plan and review', bandlar: [
     ...vositalar,
-    band('Barcha mashqlar', "Hamma ko'nikmalar mashqlari bir joyda", IKONKA.namuna, 'mashq/'),
+    band('All practice', 'Practice for every skill in one place', IKONKA.namuna, 'mashq/'),
     asos,
   ] },
 ];

@@ -4,6 +4,8 @@ import { yol } from '../../lib/yol';
 import { yolTili } from '../../data/umumiyMatn';
 // SAT sahifalarida (yolTili = en) matn inglizcha; kirish sahifalarining o'zi 1-qavatda, o'zbekcha.
 const en = yolTili(Astro.url.pathname) === 'en';
+// Inglizcha huquqiy sahifalar faqat SAT'da bor; IELTS'da o'zbekcha umumiy sahifalarga "(in Uzbek)" belgisi bilan.
+const sat = /\/uz\/sat(\/|$)/.test(Astro.url.pathname);
 const T = en
   ? { yop: 'Close', sarlavha: 'Sign in to your account', izoh: 'Your progress, deadlines and test results are saved. Sign in with Google or with email and password.', google: 'Continue with Google', yoki: 'or', email: 'Sign in with email and password', xato: 'Sign-in failed. Please try again.' }
   : { yop: 'Yopish', sarlavha: 'Hisobingizga kiring', izoh: 'Progressingiz, deadlineʼlaringiz va test natijalaringiz saqlanadi. Google yoki email va parol orqali kiring.', google: 'Google orqali kirish', yoki: 'yoki', email: 'Email va parol orqali kirish', xato: "Kirishda xatolik. Qaytadan urinib ko'ring." };
@@ -24,7 +26,9 @@ const T = en
   <a class="dialog-provider email-provider" href={yol('/uz/hisob/kirish/')} data-parol-kirish>{T.email}</a>
   <p class="dialog-error" role="alert" data-kirish-xato hidden></p>
   {en
-    ? <p class="dialog-small dialog-terms">By continuing, you agree to the <a href={yol('/uz/sat/huquqiy/shartlar/')}>Terms of Use</a> and the <a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>.</p>
+    ? sat
+      ? <p class="dialog-small dialog-terms">By continuing, you agree to the <a href={yol('/uz/sat/huquqiy/shartlar/')}>Terms of Use</a> and the <a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>.</p>
+      : <p class="dialog-small dialog-terms">By continuing, you agree to the <a href={yol('/uz/shartlar/')} hreflang="uz">Terms of Use</a> and the <a href={yol('/uz/maxfiylik/')} hreflang="uz">Privacy Policy</a> (in Uzbek).</p>
     : <p class="dialog-small dialog-terms">Davom etish orqali <a href={yol('/uz/shartlar/')}>Foydalanish shartlari</a> va <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>ga rozilik bildirasiz.</p>}
 </dialog>
 <script>

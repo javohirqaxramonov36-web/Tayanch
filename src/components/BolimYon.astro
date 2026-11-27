@@ -172,7 +172,7 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
                 <p class="nofaol">
                   <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={s.ikonka} />
                   <span class="nofaol-nom">{s.nomi}</span>
-                  <span class="yorliq-tez">tez orada</span>
+                  <span class="yorliq-tez">{M.tezOrada}</span>
                 </p>
               )}
             </li>
@@ -257,10 +257,10 @@ const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/
       </ul>
     )}
     {bolim === 'ielts' && (
-      <p class="past-tugma past-nofaol" title="Telegram kanal: tez orada">
+      <p class="past-tugma past-nofaol" title="Telegram channel: coming soon">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" /></svg>
-        <span class="yon-matn nofaol-nom">Telegram kanal</span>
-        <span class="yon-matn yorliq-tez">tez orada</span>
+        <span class="yon-matn nofaol-nom">Telegram channel</span>
+        <span class="yon-matn yorliq-tez">{M.tezOrada}</span>
       </p>
     )}
   </div>

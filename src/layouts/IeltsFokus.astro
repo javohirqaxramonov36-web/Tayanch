@@ -22,12 +22,12 @@ export interface Props {
 const { title, description, ustki, nomi, chiqish, chiqishNomi } = Astro.props;
 ---
 <!doctype html>
-<html lang="uz">
+<html lang="en">
   <head>
     <BoshQism title={title} description={description} holat="qoralama" />
   </head>
   <body class="ielts-fokus">
-    <a class="otish" href="#asosiy">{matn.uz.otish}</a>
+    <a class="otish" href="#asosiy">{matn.en.otish}</a>
     <BolimYon bolim="ielts" />
     <section class="if-bosh" aria-labelledby="if-nomi">
       <a class="if-yopish" href={chiqish} aria-label={chiqishNomi}>
@@ -41,10 +41,10 @@ const { title, description, ustki, nomi, chiqish, chiqishNomi } = Astro.props;
       <slot name="amal" />
     </section>
     <main id="asosiy" class="if-asosiy">
-      <div class="if-yol"><QavatYoli bandlar={['Mashq']} sahifaNomi={nomi} ota={chiqish} /></div>
+      <div class="if-yol"><QavatYoli bandlar={['Practice']} sahifaNomi={nomi} ota={chiqish} /></div>
       <noscript>
         <section class="if-bosh-holat ds-karta">
-          <p>Test ishlashi uchun brauzerda JavaScript yoqilgan boʻlishi kerak.</p>
+          <p>JavaScript must be turned on in your browser to take the test.</p>
           <a class="t-tugma ielts-tugma--urgu" href={chiqish}>{RM.boshlashSahifasi}</a>
         </section>
       </noscript>
