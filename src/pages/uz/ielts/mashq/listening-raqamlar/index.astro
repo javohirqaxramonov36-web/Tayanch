@@ -15,8 +15,8 @@ const IK = {
 };
 ---
 <BolimQobiq
-  title="Harf va raqam diktanti · IELTS"
-  description="IELTS Listening Part 1 uchun mashq: harflab aytilgan ismlar, telefon raqamlari, sana, vaqt va narxni tinglab yozing."
+  title="Letters and numbers dictation · IELTS"
+  description="Practice for IELTS Listening Part 1: listen and write spelled-out names, phone numbers, dates, times and prices."
   turi="mashq"
   bolim="ielts"
   yol={['Listening']}
@@ -25,24 +25,24 @@ const IK = {
 >
   <div class="ichki raqam">
     <header class="bosh">
-      <p class="ustki-kok">Mashq · Listening</p>
-      <h1>Harf va raqam diktanti</h1>
+      <p class="ustki-kok">Practice · Listening</p>
+      <h1>Letters and numbers dictation</h1>
       <p class="lead">
-        IELTS Listeningʻning birinchi qismida koʻpincha ism harflab aytiladi, telefon raqami, sana yoki narx soʻraladi.
-        Tinglang va eshitganingizni yozing. Sanani <span lang="en">12 March</span> yoki <span lang="en">March 12</span> koʻrinishida yozish mumkin.
+        In Part 1 of IELTS Listening, a name is often spelled out, or a phone number, date or price is asked for.
+        Listen and write what you hear. You can write a date as 12 March or March 12.
       </p>
       <p class="eslatma">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.info} />
-        <span><strong>Namuna.</strong> Ismlar, raqamlar va gaplarni Tayanch yozgan. Ovozni brauzeringiz oʻqiydi, bu haqiqiy IELTS audiosi emas.</span>
+        <span><strong>Sample.</strong> The names, numbers and sentences were written by Tayanch. Your browser reads them aloud; this is not real IELTS audio.</span>
       </p>
     </header>
 
     <p id="ovoz-yoq" class="ogoh" role="status" hidden>
-      Brauzeringizda inglizcha ovoz topilmadi. Shuning uchun aytiladigan gap matn boʻlib koʻrsatiladi: uni raqam yoki harflarga aylantirib yozing.
+      No English voice was found in your browser, so the spoken sentence is shown as text: write it as numbers or letters.
     </p>
 
     <section id="toplamlar" aria-labelledby="toplam-h">
-      <h2 id="toplam-h" class="bolim-sarlavha">Toʻplamni tanlang</h2>
+      <h2 id="toplam-h" class="bolim-sarlavha">Choose a set</h2>
       <ul class="toplam-royxat">
         {raqamToplamlar.map((t) => (
           <li>
@@ -52,7 +52,7 @@ const IK = {
                 <span class="t-tavsif">{t.tavsif}</span>
               </span>
               <span class="t-meta">
-                <span>{t.savollar.length} ta savol</span>
+                <span>{t.savollar.length} {t.savollar.length === 1 ? 'question' : 'questions'}</span>
                 <span class="t-eng" data-eng={t.id}></span>
               </span>
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.oq} />
@@ -73,12 +73,12 @@ const IK = {
         <div class="tinglash-qator">
           <button type="button" class="t-tugma t-tugma--ikkinchi" id="tinglash">
             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.tinglash} />
-            <span id="tinglash-matn">Tinglash</span>
+            <span id="tinglash-matn">Listen</span>
           </button>
           <p class="ovozsiz-sorov" id="ovozsiz-sorov" lang="en" hidden></p>
         </div>
 
-        <label for="javob" class="javob-yorliq" id="javob-yorliq">Javob</label>
+        <label for="javob" class="javob-yorliq" id="javob-yorliq">Answer</label>
         <div class="maydon">
           <span class="birlik" id="birlik-oldin" aria-hidden="true" hidden></span>
           <input
@@ -98,23 +98,23 @@ const IK = {
         <div id="xabar" class="xabar" role="status" aria-live="polite"></div>
 
         <div class="amallar">
-          <button type="submit" class="t-tugma ielts-tugma--urgu" id="asosiy-tugma">Tekshirish</button>
-          <button type="button" class="t-tugma t-tugma--ikkinchi" id="toplamga-qaytish">Toʻplamlar roʻyxatiga</button>
+          <button type="submit" class="t-tugma ielts-tugma--urgu" id="asosiy-tugma">Check</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="toplamga-qaytish">Back to the sets</button>
         </div>
       </form>
     </section>
 
     <section id="natija" class="panel" aria-labelledby="natija-h" hidden>
-      <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Natija</h2>
+      <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Result</h2>
       <p class="natija-son" id="natija-son"></p>
       <div id="xatolar-blok" hidden>
-        <h3 class="kichik-sarlavha">Xato javoblar</h3>
+        <h3 class="kichik-sarlavha">Wrong answers</h3>
         <ul id="xatolar" class="xatolar"></ul>
       </div>
       <div class="amallar">
-        <button type="button" class="t-tugma ielts-tugma--urgu" id="xatolarni-qayta">Xatolarni qayta mashq qilish</button>
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="qaytadan">Toʻplamni qaytadan boshlash</button>
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="boshqa">Boshqa toʻplam</button>
+        <button type="button" class="t-tugma ielts-tugma--urgu" id="xatolarni-qayta">Practise the mistakes again</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="qaytadan">Start the set again</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="boshqa">Another set</button>
       </div>
     </section>
 
@@ -123,10 +123,10 @@ const IK = {
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Ism, raqam va gaplarni Tayanch yozgan: IELTS'da aynan shular chiqishi kafolatlanmaydi.",
-        "Talaffuzni brauzer ovozi beradi, u qurilmaga qarab farq qiladi va haqiqiy IELTS audiosi emas.",
-        "Vaqtni 7.30 yoki 7:30 ko'rinishida yozish qabul qilinishi rasmiy manbada alohida tekshirilmagan.",
-        "O'zbekcha izoh va qoidalar muallif tekshiruvida.",
+        "The names, numbers and sentences were written by Tayanch: there is no guarantee these exact items appear in IELTS.",
+        "The pronunciation comes from the browser voice; it varies by device and is not real IELTS audio.",
+        "Whether writing a time as 7.30 or 7:30 is accepted has not been checked separately against an official source.",
+        "The explanations and rules are under review by the author.",
       ]}
     />
   </div>
@@ -177,7 +177,7 @@ const IK = {
     const s = oqi();
     document.querySelectorAll<HTMLElement>('[data-eng]').forEach((el) => {
       const r = s.toplamlar[el.dataset.eng ?? ''];
-      el.textContent = r ? `Eng yaxshi: ${r.eng}/${r.jami}` : '';
+      el.textContent = r ? `Best: ${r.eng}/${r.jami}` : '';
     });
   }
 
@@ -203,7 +203,7 @@ const IK = {
     if (ovozsiz || !navbat.length) return;
     ovoz.gapir(navbat[i].aytiladi, tinglashSoni > 0);
     tinglashSoni++;
-    tinglashMatn.textContent = 'Yana tinglash (sekinroq)';
+    tinglashMatn.textContent = 'Listen again (slower)';
   }
 
   /** To'g'ri javob birligi bilan: £12.50, 2.75 m */
@@ -215,7 +215,7 @@ const IK = {
 
   function boshla(t: RaqamToplam, savollar: RaqamSavol[], toliqMi: boolean) {
     toplam = t; navbat = savollar; i = 0; javoblar = []; toliq = toliqMi;
-    sarlavha.textContent = toliqMi ? t.nomi : `${t.nomi}: xatolar`;
+    sarlavha.textContent = toliqMi ? t.nomi : `${t.nomi}: mistakes`;
     // Telefonda mos klaviatura; ismlarda avtotuzatish va bosh harf o'chiq (atributlar HTML'da).
     javobInput.inputMode = t.klaviatura;
     toplamBolim.hidden = true; natijaBolim.hidden = true; mashqBolim.hidden = false;
@@ -227,7 +227,7 @@ const IK = {
     const s = navbat[i];
     tekshirildi = false;
     tinglashSoni = 0;
-    tinglashMatn.textContent = 'Tinglash';
+    tinglashMatn.textContent = 'Listen';
     javobYorliq.textContent = s.kontekst;
     birlikOldin.textContent = s.oldin ?? '';
     birlikOldin.hidden = !s.oldin;
@@ -239,7 +239,7 @@ const IK = {
     javobInput.removeAttribute('aria-invalid');
     xabar.replaceChildren();
     xabar.className = 'xabar';
-    asosiyTugma.textContent = 'Tekshirish';
+    asosiyTugma.textContent = 'Check';
     hisob.textContent = `${i + 1} / ${navbat.length}`;
     progressIchi.style.transform = `scaleX(${i / navbat.length})`;
     ovozHolatiniKorsat();
@@ -270,7 +270,7 @@ const IK = {
   function tekshir() {
     const yozgan = javobInput.value;
     if (!yozgan.trim()) {
-      xabar.replaceChildren(qism('p', 'Avval javobni yozing.'));
+      xabar.replaceChildren(qism('p', 'Type your answer first.'));
       xabar.className = 'xabar xabar-ogoh';
       javobInput.focus();
       return;
@@ -287,42 +287,42 @@ const IK = {
     bosh.className = 'x-bosh';
     const belgi = holatIkonka(togri);
     belgi.setAttribute('aria-hidden', 'true');
-    bosh.append(belgi, qism('strong', togri ? "To'g'ri." : "Noto'g'ri."));
+    bosh.append(belgi, qism('strong', togri ? 'Correct.' : 'Not quite.'));
     qatorlar.push(bosh);
 
     const javobQator = document.createElement('p');
-    javobQator.append(qism('span', "To'g'ri javob: "), qism('strong', korinish(s), 'x-soz', 'en'));
+    javobQator.append(qism('span', 'Correct answer: '), qism('strong', korinish(s), 'x-soz', 'en'));
     qatorlar.push(javobQator);
     if (!togri) {
       const siz = document.createElement('p');
-      siz.append(qism('span', 'Siz yozdingiz: '), qism('s', yozgan.trim(), 'x-xato', 'en'));
+      siz.append(qism('span', 'You wrote: '), qism('s', yozgan.trim(), 'x-xato', 'en'));
       qatorlar.push(siz);
       if (s.qoida) qatorlar.push(qism('p', s.qoida, 'x-maslahat'));
     }
     if (!ovozsiz) {
       const eshitildi = document.createElement('p');
       eshitildi.className = 'x-mano';
-      eshitildi.append(qism('span', 'Aytilgan gap: '), qism('span', s.aytiladi.join(' '), undefined, 'en'));
+      eshitildi.append(qism('span', 'What was said: '), qism('span', s.aytiladi.join(' '), undefined, 'en'));
       qatorlar.push(eshitildi);
     }
 
     xabar.replaceChildren(...qatorlar);
     xabar.className = togri ? 'xabar xabar-togri' : 'xabar xabar-xato';
-    asosiyTugma.textContent = i === navbat.length - 1 ? "Natijani ko'rish" : 'Keyingi savol';
+    asosiyTugma.textContent = i === navbat.length - 1 ? 'See the result' : 'Next question';
   }
 
   function natijaniKorsat() {
     ovoz.toxtat();
     const togriSoni = javoblar.filter((j) => j.togri).length;
     const xatolar = javoblar.filter((j) => !j.togri);
-    natijaSon.textContent = `${javoblar.length} tadan ${togriSoni} ta to'g'ri.`;
+    natijaSon.textContent = `${togriSoni} of ${javoblar.length} correct.`;
     xatolarRoyxat.replaceChildren(...xatolar.map((j) => {
       const li = document.createElement('li');
       const oq = qism('span', ' → ');
       oq.setAttribute('aria-hidden', 'true');
       li.append(
         qism('span', `${j.savol.kontekst}: `, 'x-mano'),
-        qism('s', j.yozgan, 'x-xato', 'en'), oq, qism('span', ", to'g'risi: ", 'ekranda-yoq'),
+        qism('s', j.yozgan, 'x-xato', 'en'), oq, qism('span', ', correct: ', 'ekranda-yoq'),
         qism('strong', korinish(j.savol), undefined, 'en'),
       );
       return li;

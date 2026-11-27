@@ -14,10 +14,10 @@ export const CHEGARA = {
 } as const;
 
 export const MEZONLAR = [
-  { kalit: 'task_response', nomi: 'Task Response', izoh: 'Savolga javob' },
-  { kalit: 'coherence_cohesion', nomi: 'Coherence and Cohesion', izoh: "Izchillik va bog'lanish" },
-  { kalit: 'lexical_resource', nomi: 'Lexical Resource', izoh: "So'z boyligi" },
-  { kalit: 'grammatical_range_accuracy', nomi: 'Grammatical Range and Accuracy', izoh: 'Grammatika' },
+  { kalit: 'task_response', nomi: 'Task Response', izoh: 'Answering the question' },
+  { kalit: 'coherence_cohesion', nomi: 'Coherence and Cohesion', izoh: 'Organisation and linking' },
+  { kalit: 'lexical_resource', nomi: 'Lexical Resource', izoh: 'Vocabulary' },
+  { kalit: 'grammatical_range_accuracy', nomi: 'Grammatical Range and Accuracy', izoh: 'Grammar' },
 ] as const;
 
 export type MezonKalit = (typeof MEZONLAR)[number]['kalit'];
@@ -74,33 +74,33 @@ export function tekshir(savol: string, insho: string): TekshiruvXato | null {
 }
 
 export const TEKSHIRUV_MATNI: Record<TekshiruvXato, string> = {
-  savol_yoq: 'Avval mavzuni tanlang yoki o\'z savolingizni yozing.',
-  savol_qisqa: `Savol juda qisqa: kamida ${CHEGARA.savolMin} belgi yozing.`,
-  kam: `Baholash uchun kamida ${CHEGARA.sozMin} so'z kerak.`,
-  kop: `Insho juda uzun: ko'pi bilan ${CHEGARA.sozMax} so'z.`,
+  savol_yoq: 'First choose a topic or type your own question.',
+  savol_qisqa: `The question is too short: write at least ${CHEGARA.savolMin} characters.`,
+  kam: `At least ${CHEGARA.sozMin} words are needed for assessment.`,
+  kop: `The essay is too long: ${CHEGARA.sozMax} words at most.`,
 };
 
 /** So'z sanog'i ostidagi izoh. */
 export function sanoqIzohi(n: number): string {
-  if (n > CHEGARA.sozMax) return `${CHEGARA.sozMax} so'zdan ko'p: qisqartiring.`;
-  if (n >= CHEGARA.sozTavsiya) return "Talab bajarildi: kamida 250 so'z.";
-  if (n >= CHEGARA.sozMin) return `Yana ${CHEGARA.sozTavsiya - n} so'z. 250 dan kam bo'lsa, Task Response bali odatda pasayadi.`;
-  return `IELTS Task 2 da kamida ${CHEGARA.sozTavsiya} so'z kerak.`;
+  if (n > CHEGARA.sozMax) return `More than ${CHEGARA.sozMax} words: please shorten it.`;
+  if (n >= CHEGARA.sozTavsiya) return 'Requirement met: at least 250 words.';
+  if (n >= CHEGARA.sozMin) return `${CHEGARA.sozTavsiya - n} more words. Under 250, the Task Response score usually drops.`;
+  return `IELTS Task 2 needs at least ${CHEGARA.sozTavsiya} words.`;
 }
 
-/** Server xato kodlari -> o'zbekcha xabar. */
+/** Server xato kodlari -> inglizcha xabar (2026-11-27). */
 export function xatoMatni(kod: string, qoshimcha: { daily_limit?: number | null; retry_after?: number | null } = {}): string {
   switch (kod) {
     case 'not_signed_in':
-      return 'Baholash uchun hisobga kiring.';
+      return 'Sign in to get your essay assessed.';
     case 'quota_exceeded':
       return qoshimcha.daily_limit
-        ? `Bugungi ${qoshimcha.daily_limit} ta bepul tekshiruv tugadi. Ertaga (Toshkent vaqti bilan yarim tundan keyin) yana baholash mumkin.`
-        : 'Bugungi bepul tekshiruvlar tugadi. Ertaga yana baholash mumkin.';
+        ? `You have used today's ${qoshimcha.daily_limit} free assessments. You can get more tomorrow (after midnight, Tashkent time).`
+        : "You have used today's free assessments. You can get more tomorrow.";
     case 'rate_limited':
-      return `Juda tez yuborildi. ${qoshimcha.retry_after ?? 5} soniyadan keyin qayta urinib ko'ring.`;
+      return `Sent too quickly. Try again in ${qoshimcha.retry_after ?? 5} seconds.`;
     case 'ai_paused':
-      return "AI baholash hozir vaqtincha o'chiq. Inshongiz saqlanib qoladi, keyinroq urinib ko'ring.";
+      return 'AI assessment is temporarily off. Your essay stays saved; try again later.';
     case 'essay_too_short':
       return TEKSHIRUV_MATNI.kam;
     case 'essay_too_long':
@@ -109,14 +109,14 @@ export function xatoMatni(kod: string, qoshimcha: { daily_limit?: number | null;
     case 'invalid_prompt':
       return TEKSHIRUV_MATNI.savol_qisqa;
     case 'cannot_assess':
-      return "Bu matnni baholab bo'lmadi. Insho savolga javob ekanini tekshirib, qayta yuboring.";
+      return "This text couldn't be assessed. Check that the essay answers the question, then send it again.";
     case 'assessment_failed':
     case 'ai_unavailable':
-      return "Baholash hozir chiqmadi. Bu urinish limitdan sanalmadi: birozdan keyin qayta yuboring.";
+      return "The assessment didn't come through. This attempt was not counted against your limit: send it again in a moment.";
     case 'network_error':
-      return "Internet aloqasi uzildi. Inshongiz saqlangan: aloqa tiklangach qayta yuboring.";
+      return 'The internet connection dropped. Your essay is saved: send it again once you are back online.';
     default:
-      return "Xatolik yuz berdi. Inshongiz saqlangan: birozdan keyin qayta urinib ko'ring.";
+      return 'Something went wrong. Your essay is saved: try again in a moment.';
   }
 }
 

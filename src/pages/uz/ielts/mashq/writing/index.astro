@@ -14,8 +14,8 @@ const IK = {
 };
 ---
 <BolimQobiq
-  title="Writing Task 2 baholash · IELTS"
-  description="IELTS Writing Task 2 inshosini yozing: AI to'rt mezon bo'yicha taxminiy band va har mezonga bitta maslahat beradi."
+  title="Writing Task 2 assessment · IELTS"
+  description="Write an IELTS Writing Task 2 essay: AI gives an estimated band on the four criteria and one tip for each criterion."
   turi="mashq"
   bolim="ielts"
   yol={['Writing']}
@@ -24,24 +24,24 @@ const IK = {
 >
   <div class="ichki writing">
     <header class="bosh">
-      <p class="ustki-kok">Mashq · Writing</p>
-      <h1>Writing Task 2 baholash</h1>
+      <p class="ustki-kok">Practice · Writing</p>
+      <h1>Writing Task 2 assessment</h1>
       <p class="lead">
-        Mavzuni tanlang va inshoni yozing. AI uni IELTSʼning toʻrt mezoni boʻyicha baholaydi, har mezonga izoh va bitta maslahat beradi.
-        Haqiqiy imtihonda Task 2 uchun kamida 250 soʻz kerak va unga 40 daqiqadan koʻp sarflamaslik tavsiya etiladi.
+        Choose a topic and write your essay. AI assesses it on the four IELTS criteria and gives a comment and one tip for each.
+        In the real test, Task 2 needs at least 250 words, and you are advised to spend no more than 40 minutes on it.
       </p>
       <p class="eslatma">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.info} />
-        <span><strong>Taxminiy baho.</strong> Uni AI qoʻyadi, bu rasmiy IELTS natijasi emas. Izohlar inglizcha.</span>
+        <span><strong>Estimated score.</strong> It is given by AI and is not an official IELTS result.</span>
       </p>
       <p class="hisob-holat" id="hisob-holat" role="status"></p>
     </header>
 
     <form id="forma" class="panel" novalidate aria-labelledby="yozish-h">
-      <h2 id="yozish-h" class="bolim-sarlavha">Inshoni yozing</h2>
+      <h2 id="yozish-h" class="bolim-sarlavha">Write your essay</h2>
 
       <fieldset class="mavzular">
-        <legend class="kichik-sarlavha">1. Mavzu <span class="pill-namuna">Namuna</span></legend>
+        <legend class="kichik-sarlavha">1. Topic <span class="pill-namuna">Sample</span></legend>
         {writingMavzular.map((m) => (
           <label class="mavzu">
             <input type="radio" name="mavzu" value={m.id} />
@@ -53,28 +53,28 @@ const IK = {
         ))}
         <label class="mavzu">
           <input type="radio" name="mavzu" value="oz" />
-          <span class="m-matn"><span class="m-tur">Oʻz savolim</span><span class="m-izoh">Kitob yoki darsdagi savolni koʻchirib yozing.</span></span>
+          <span class="m-matn"><span class="m-tur">My own question</span><span class="m-izoh">Type in a question from a book or a class.</span></span>
         </label>
         <div class="oz-savol" id="oz-savol-blok" hidden>
-          <label for="oz-savol" class="yorliq">Savol matni (inglizcha)</label>
+          <label for="oz-savol" class="yorliq">Question text (in English)</label>
           <textarea id="oz-savol" rows="3" maxlength="600" lang="en" spellcheck="false"></textarea>
         </div>
       </fieldset>
 
       <div class="insho-blok">
-        <label for="insho" class="kichik-sarlavha">2. Insho</label>
+        <label for="insho" class="kichik-sarlavha">2. Essay</label>
         <textarea id="insho" rows="16" lang="en" spellcheck="false" autocomplete="off" autocapitalize="sentences" aria-describedby="sanoq-izoh"></textarea>
         <p class="sanoq" aria-live="off">
-          <strong id="sanoq">0 soʻz</strong>
+          <strong id="sanoq">0 words</strong>
           <span id="sanoq-izoh"></span>
         </p>
-        <p class="mayda">Imlo tekshiruvi oʻchirilgan: imtihonda ham u yoʻq. Qoralama shu brauzerda avtomatik saqlanadi.</p>
+        <p class="mayda">Spell check is off: there is none in the test either. Your draft is saved automatically in this browser.</p>
       </div>
 
       <p class="xabar xabar-ogoh" id="forma-xato" role="alert"></p>
 
       <div class="amallar">
-        <button type="submit" class="t-tugma t-tugma--ikkinchi" id="yubor">Baholash</button>
+        <button type="submit" class="t-tugma t-tugma--ikkinchi" id="yubor">Assess</button>
         <p class="qoldi" id="qoldi"></p>
       </div>
     </form>
@@ -82,8 +82,8 @@ const IK = {
     <section id="natija" class="panel" aria-labelledby="natija-h" hidden>
       <div class="natija-bosh">
         <div>
-          <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Taxminiy band</h2>
-          <p class="mayda">Task 2 boʻyicha, toʻrt mezon oʻrtachasi. Rasmiy IELTS natijasi emas.</p>
+          <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Estimated band</h2>
+          <p class="mayda">For Task 2: the average of the four criteria. Not an official IELTS result.</p>
         </div>
         <p class="band-katta" id="band-katta"></p>
       </div>
@@ -91,19 +91,19 @@ const IK = {
       <p class="xulosa" id="xulosa" lang="en"></p>
       <ul class="mezonlar" id="mezonlar"></ul>
       <div class="amallar">
-        <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Qayta yozish</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Write again</button>
       </div>
     </section>
 
     <section id="tarix" aria-labelledby="tarix-h" hidden>
-      <h2 id="tarix-h" class="bolim-sarlavha">Oldingi natijalar</h2>
-      <p class="mayda">Oxirgi 5 ta. Insholar hisobingizda saqlanadi, istalganini oʻchirishingiz mumkin.</p>
+      <h2 id="tarix-h" class="bolim-sarlavha">Previous results</h2>
+      <p class="mayda">The last 5. Essays are saved in your account, and you can delete any of them.</p>
       <ul class="tarix-royxat" id="tarix-royxat"></ul>
     </section>
 
     <p class="mayda">
-      Insho mezonlari va tuzilmasi: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Writing Task 2 qoʻllanmasi</a>.
-      Insho baholash uchun Anthropic (AQSh) xizmatiga yuboriladi: <a href={yol('/uz/maxfiylik/#ielts-writing')}>Maxfiylik</a>.
+      Essay criteria and structure: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Writing Task 2 guide</a>.
+      Your essay is sent to Anthropic (USA) for assessment: <a href={yol('/uz/maxfiylik/#ielts-writing')} hreflang="uz">Privacy policy</a> (in Uzbek).
     </p>
 
     <ManbaBlok
@@ -111,10 +111,10 @@ const IK = {
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Baho AI tomonidan qo'yiladi va taxminiy: rasmiy IELTS imtihonchisi bahosi emas, aniqligi o'lchanmagan.",
-        "Mezon ta'riflari Tayanch o'z so'zlari bilan yozgan, rasmiy band descriptors matni emas.",
-        "Task bali 4 mezon o'rtachasidan pastga 0.5 ga yaxlitlanadi: bu Tayanch qoidasi, rasmiy hisoblash usuli emas.",
-        "Mashq mavzulari Tayanch uchun yozilgan namuna, rasmiy IELTS savoli emas.",
+        "The score is given by AI and is an estimate: it is not an official IELTS examiner's score, and its accuracy has not been measured.",
+        "The criteria descriptions are in Tayanch's own words, not the text of the official band descriptors.",
+        "The task score is the average of the 4 criteria rounded down to the nearest 0.5: this is Tayanch's rule, not the official calculation.",
+        "The practice topics are samples written for Tayanch, not official IELTS questions.",
       ]}
     />
   </div>
@@ -186,7 +186,7 @@ const IK = {
   // ---- Sanoq va mavzu ----
   function sanoqniYangila() {
     const n = sozSoni(insho.value);
-    $('sanoq').textContent = `${n} so'z`;
+    $('sanoq').textContent = `${n} ${n === 1 ? 'word' : 'words'}`;
     $('sanoq-izoh').textContent = sanoqIzohi(n);
       }
   function mavzuniYangila() {
@@ -201,19 +201,19 @@ const IK = {
     if (!holat.kirgan) {
       const a = document.createElement('a');
       a.href = kirishYoli();
-      a.textContent = 'Hisobga kiring';
-      hisobHolat.append(a, ': baholash faqat hisob bilan ishlaydi (kuniga bepul tekshiruvlar). Yozishni hozir boshlashingiz mumkin, qoralama saqlanadi.');
-      yubor.textContent = 'Kirish va baholash';
+      a.textContent = 'Sign in';
+      hisobHolat.append(a, ': assessment works only with an account (free assessments every day). You can start writing now; your draft is saved.');
+      yubor.textContent = 'Sign in and assess';
       return;
     }
-    yubor.textContent = 'Baholash';
+    yubor.textContent = 'Assess';
     if (!holat.available) {
-      hisobHolat.textContent = "AI baholash hozir vaqtincha o'chiq. Yozishingiz mumkin: qoralama saqlanadi.";
+      hisobHolat.textContent = 'AI assessment is temporarily off. You can keep writing: your draft is saved.';
       return;
     }
     qoldiEl.textContent = holat.remaining > 0
-      ? `Bugun ${holat.remaining} ta tekshiruv qoldi (kuniga ${holat.daily_limit} ta).`
-      : `Bugungi ${holat.daily_limit} ta tekshiruv tugadi. Ertaga yana baholash mumkin.`;
+      ? `${holat.remaining} ${holat.remaining === 1 ? 'assessment' : 'assessments'} left today (${holat.daily_limit} a day).`
+      : `You have used today's ${holat.daily_limit} assessments. You can get more tomorrow.`;
   }
 
   // ---- Natija ----
@@ -228,8 +228,8 @@ const IK = {
     $('band-katta').textContent = bandMatni(j.task_band);
     const izohlar: string[] = [];
     if (eslatma) izohlar.push(eslatma);
-    if (j.cached) izohlar.push("Bu insho so'nggi 24 soatda baholangan: oldingi natija ko'rsatildi, limit sarflanmadi.");
-    if (j.result.under_length) izohlar.push(`Inshoda ${j.word_count} so'z: 250 dan kam. Haqiqiy imtihonda bu Task Response balini pasaytiradi.`);
+    if (j.cached) izohlar.push('This essay was assessed in the last 24 hours: the earlier result is shown, and your limit was not used.');
+    if (j.result.under_length) izohlar.push(`The essay has ${j.word_count} words: fewer than 250. In the real test this lowers the Task Response score.`);
     $('natija-izoh').textContent = izohlar.join(' ');
     $('xulosa').textContent = j.result.overall_summary;
     const ul = $('mezonlar');
@@ -244,11 +244,11 @@ const IK = {
       li.append(bosh, el('p', 'mezon-matn', c.feedback, 'en'));
       if (c.example_from_text) {
         const q = el('blockquote', 'iqtibos');
-        q.append(el('span', 'q-yorliq', 'Inshodan'), el('span', '', `“${c.example_from_text}”`, 'en'));
+        q.append(el('span', 'q-yorliq', 'From your essay'), el('span', '', `“${c.example_from_text}”`, 'en'));
         li.append(q);
       }
       const t = el('p', 'maslahat');
-      t.append(el('strong', '', 'Keyingi qadam: '), el('span', '', c.improvement_tip, 'en'));
+      t.append(el('strong', '', 'Next step: '), el('span', '', c.improvement_tip, 'en'));
       li.append(t);
       ul.append(li);
     }
@@ -271,25 +271,25 @@ const IK = {
     }
     tarix.hidden = royxat.length === 0;
     tarixRoyxat.replaceChildren();
-    const sana = new Intl.DateTimeFormat('uz-Latn-UZ', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const sana = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
     for (const x of royxat) {
       const li = el('li', 'tarix-qator');
       const ochish = el('button', 't-ochish');
       ochish.type = 'button';
       const matn = el('span', 't-matn');
-      matn.append(el('span', 't-savol', x.prompt, 'en'), el('span', 't-meta', `${sana.format(new Date(x.created_at))} · ${x.word_count} so'z`));
+      matn.append(el('span', 't-savol', x.prompt, 'en'), el('span', 't-meta', `${sana.format(new Date(x.created_at))} · ${x.word_count} words`));
       ochish.append(matn, el('span', 't-band', bandMatni(x.task_band)));
-      ochish.addEventListener('click', () => natijaniKorsat({ task_band: x.task_band, result: x.result, word_count: x.word_count, cached: false }, 'Oldingi natija.'));
-      const ochir = el('button', 'tugma tugma-ikkinchi t-ochir', "O'chirish");
+      ochish.addEventListener('click', () => natijaniKorsat({ task_band: x.task_band, result: x.result, word_count: x.word_count, cached: false }, 'Previous result.'));
+      const ochir = el('button', 'tugma tugma-ikkinchi t-ochir', 'Delete');
       ochir.type = 'button';
-      ochir.setAttribute('aria-label', `O'chirish: ${sana.format(new Date(x.created_at))} natijasi`);
+      ochir.setAttribute('aria-label', `Delete the result from ${sana.format(new Date(x.created_at))}`);
       ochir.addEventListener('click', async () => {
-        if (!confirm("Bu natija va insho hisobingizdan o'chiriladi. Davom etasizmi?")) return;
+        if (!confirm('This result and essay will be deleted from your account. Continue?')) return;
         try {
           await api.ochir(x.id);
           await tarixniYukla();
         } catch {
-          alert("O'chirib bo'lmadi. Keyinroq urinib ko'ring.");
+          alert("Couldn't delete it. Try again later.");
         }
       });
       li.append(ochish, ochir);
@@ -301,12 +301,12 @@ const IK = {
   function kutish(ha: boolean) {
     band = ha;
     yubor.disabled = ha;
-    yubor.textContent = ha ? 'Baholanmoqda…' : holat.kirgan ? 'Baholash' : 'Kirish va baholash';
+    yubor.textContent = ha ? 'Assessing…' : holat.kirgan ? 'Assess' : 'Sign in and assess';
     insho.readOnly = ha;
     ozSavol.readOnly = ha;
     radiolar().forEach((r) => (r.disabled = ha));
     forma.setAttribute('aria-busy', String(ha));
-    if (ha) qoldiEl.textContent = 'Baholanmoqda, odatda 10–30 soniya.';
+    if (ha) qoldiEl.textContent = 'Assessing; this usually takes 10–30 seconds.';
   }
 
   forma.addEventListener('submit', async (e) => {
@@ -375,7 +375,7 @@ const IK = {
 
   (async () => {
     if (!api) {
-      hisobHolat.textContent = "Baholash hozir mavjud emas. Yozishingiz mumkin: qoralama saqlanadi.";
+      hisobHolat.textContent = 'Assessment is not available right now. You can keep writing: your draft is saved.';
       return;
     }
     try {
