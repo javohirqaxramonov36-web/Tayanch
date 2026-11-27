@@ -1,0 +1,415 @@
+---
+// IELTS Reading: True / False / Not Given swipe mashqi.
+// To'plamlar: src/data/ielts/tfngToplamlar.ts (hozir faqat "NAMUNA"). Holatlar: to'plam tanlash -> gap kartasi -> javob (izoh) -> natija.
+// Javob: karta o'ngga = TRUE, chapga = FALSE, pastga = NOT GIVEN (Pointer Events), uchta tugma yoki klaviatura ← → ↓.
+// To'plam tugaganda markDone(4, "tfng-<setId>") (src/lib/progress.ts, kalit tayanch:progress:v1). Band ball hisoblanmaydi.
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { tfngToplamlar } from '../../../../../data/ielts/tfngToplamlar';
+import { yol } from '../../../../../lib/yol';
+
+const IK = {
+  chap: '<path d="M15 6l-6 6 6 6"/>',
+  ong: '<path d="M9 6l6 6-6 6"/>',
+  past: '<path d="M6 9l6 6 6-6"/>',
+  info: '<path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 8v5M12 16.5v.5"/>',
+};
+const xatboshilar = (m: string) => m.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+---
+<BolimQobiq
+  title="True / False / Not Given mashqi · IELTS"
+  description="IELTS Reading True / False / Not Given mashqi: gapni matnga solishtiring va kartani suring yoki tugmani bosing. Har javobdan keyin oʻzbekcha izoh."
+  turi="mashq"
+  bolim="ielts"
+  yol={['Reading']}
+  ota={yol('/uz/ielts/reading/')}
+  holat="chop-etilgan"
+>
+  <div class="ichki tfng">
+    <header class="bosh">
+      <p class="ustki-kok">Mashq · Reading</p>
+      <h1><span lang="en">True / False / Not Given</span></h1>
+      <p class="lead">
+        Matnni oʻqing, soʻng har bir gapni matnga solishtiring. Kartani <strong>oʻngga</strong> suring: <span lang="en">TRUE</span>,
+        <strong>chapga</strong>: <span lang="en">FALSE</span>, <strong>pastga</strong>: <span lang="en">NOT GIVEN</span>.
+        Tugmalar va klaviatura (← → ↓) ham ishlaydi.
+      </p>
+      <p class="eslatma">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.info} />
+        <span><strong>Namuna.</strong> Hozircha bitta sinov toʻplami bor, u IELTS matni emas. Haqiqiy toʻplamlar tez orada qoʻshiladi.</span>
+      </p>
+    </header>
+
+    <section id="toplamlar" aria-labelledby="toplam-h">
+      <h2 id="toplam-h" class="bolim-sarlavha">Toʻplamni tanlang</h2>
+      <ul class="toplam-royxat">
+        {tfngToplamlar.map((t) => (
+          <li>
+            <button type="button" class="toplam" data-toplam={t.setId}>
+              <span class="t-matn">
+                <strong class="t-nom">{t.nomi}</strong>
+                <span class="t-tavsif">{t.gaplar.length} ta gap</span>
+              </span>
+              <span class="t-holat" data-tfng-holat={t.setId}></span>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.ong} />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="mashq" class="panel" aria-labelledby="mashq-sarlavha" hidden>
+      <div class="panel-ust">
+        <h2 id="mashq-sarlavha" class="bolim-sarlavha"></h2>
+        <p class="hisob" id="hisob"></p>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="progress-ichi"></span></div>
+
+      <details class="matn" open>
+        <summary>Matn</summary>
+        {tfngToplamlar.map((t) => (
+          <div class="matn-ichi" lang="en" data-matn={t.setId} hidden>
+            {xatboshilar(t.matn).map((p) => <p>{p}</p>)}
+          </div>
+        ))}
+      </details>
+
+      <div class="karta-joy">
+        <div id="karta" class="karta" role="group" aria-labelledby="karta-yorliq gap" tabindex="-1">
+          <span id="karta-yorliq" class="karta-yorliq">Gap</span>
+          <span id="ishora" class="ishora" lang="en" aria-hidden="true"></span>
+          <p id="gap" class="gap" lang="en"></p>
+          <p id="tanlov" class="tanlov" hidden></p>
+        </div>
+      </div>
+
+      <div class="javoblar" role="group" aria-label="Javob">
+        <button type="button" class="t-tugma t-tugma--ikkinchi javob-tugma" data-javob="FALSE" aria-keyshortcuts="ArrowLeft">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.chap} />
+          <span lang="en">FALSE</span>
+        </button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi javob-tugma" data-javob="NOT GIVEN" aria-keyshortcuts="ArrowDown">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.past} />
+          <span lang="en">NOT GIVEN</span>
+        </button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi javob-tugma" data-javob="TRUE" aria-keyshortcuts="ArrowRight">
+          <span lang="en">TRUE</span>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IK.ong} />
+        </button>
+      </div>
+
+      <div id="xabar" class="xabar" role="status" aria-live="polite"></div>
+
+      <div class="amallar">
+        <button type="button" class="t-tugma ielts-tugma--urgu" id="keyingi" hidden>Keyingi</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="toplamga-qaytish">Toʻplamlar roʻyxatiga</button>
+      </div>
+    </section>
+
+    <section id="natija" class="panel" aria-labelledby="natija-h" hidden>
+      <h2 id="natija-h" class="bolim-sarlavha" tabindex="-1">Natija</h2>
+      <p class="natija-son" id="natija-son"></p>
+      <div id="xatolar-blok" hidden>
+        <h3 class="kichik-sarlavha">Xato qilingan gaplar</h3>
+        <ul id="xatolar" class="xatolar"></ul>
+      </div>
+      <div class="amallar">
+        <button type="button" class="t-tugma ielts-tugma--urgu" id="qaytadan">Toʻplamni qaytadan boshlash</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="boshqa">Toʻplamlar roʻyxatiga</button>
+      </div>
+    </section>
+  </div>
+</BolimQobiq>
+
+<script>
+  import { tfngToplamlar, tfngBandId, type TfngJavob, type TfngGap, type TfngToplam } from '../../../../../data/ielts/tfngToplamlar';
+  import { QAVAT_BANDLARI } from '../../../../../data/progressBandlar';
+  import { markDone, isDone, registerItems } from '../../../../../lib/progress';
+
+  interface Javob { gap: TfngGap; tanlov: TfngJavob; togri: boolean }
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const toplamBolim = $('toplamlar');
+  const mashqBolim = $('mashq');
+  const natijaBolim = $('natija');
+  const karta = $('karta');
+  const gapEl = $('gap');
+  const ishora = $('ishora');
+  const tanlovEl = $('tanlov');
+  const xabar = $('xabar');
+  const keyingi = $<HTMLButtonElement>('keyingi');
+  const javobTugmalar = [...document.querySelectorAll<HTMLButtonElement>('.javob-tugma')];
+
+  let toplam: TfngToplam | null = null;
+  let i = 0;
+  let javoblar: Javob[] = [];
+  let javobBerildi = false;
+
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const korsat = (el: HTMLElement) => { [toplamBolim, mashqBolim, natijaBolim].forEach((b) => { b.hidden = b !== el; }); };
+
+  function holatlarniKorsat() {
+    document.querySelectorAll<HTMLElement>('[data-tfng-holat]').forEach((el) => {
+      el.textContent = isDone(4, tfngBandId(el.dataset.tfngHolat!)) ? 'Bajarilgan' : '';
+    });
+  }
+
+  function boshla(t: TfngToplam) {
+    toplam = t;
+    i = 0;
+    javoblar = [];
+    $('mashq-sarlavha').textContent = t.nomi;
+    document.querySelectorAll<HTMLElement>('[data-matn]').forEach((m) => { m.hidden = m.dataset.matn !== t.setId; });
+    korsat(mashqBolim);
+    gapniKorsat();
+  }
+
+  function gapniKorsat() {
+    if (!toplam) return;
+    const g = toplam.gaplar[i];
+    javobBerildi = false;
+    $('hisob').textContent = `${i + 1} / ${toplam.gaplar.length}`;
+    $('progress-ichi').style.width = `${(i / toplam.gaplar.length) * 100}%`;
+    gapEl.textContent = g.gap;
+    tanlovEl.hidden = true;
+    karta.classList.remove('togri', 'xato');
+    javobTugmalar.forEach((b) => { b.disabled = false; b.removeAttribute('aria-pressed'); });
+    xabar.innerHTML = '';
+    keyingi.hidden = true;
+    joyigaQayt(false);
+    // Yangi karta kirishi: faqat transform/opacity (reduced motion'da --motion-distance 0, davomiylik 0)
+    karta.classList.add('kirish');
+    requestAnimationFrame(() => requestAnimationFrame(() => karta.classList.remove('kirish')));
+  }
+
+  function javobBer(tanlov: TfngJavob) {
+    if (!toplam || javobBerildi) return;
+    javobBerildi = true;
+    const g = toplam.gaplar[i];
+    const togri = tanlov === g.javob;
+    javoblar.push({ gap: g, tanlov, togri });
+    karta.classList.add(togri ? 'togri' : 'xato');
+    tanlovEl.textContent = `Sizning javobingiz: ${tanlov}`;
+    tanlovEl.hidden = false;
+    javobTugmalar.forEach((b) => {
+      b.disabled = true;
+      if (b.dataset.javob === tanlov) b.setAttribute('aria-pressed', 'true');
+    });
+    xabar.classList.toggle('xabar-xato', !togri);
+    xabar.innerHTML = `<p class="x-bosh"><strong>${togri ? 'Toʻgʻri' : 'Xato'}.</strong>${togri ? '' : ` Toʻgʻri javob: <span lang="en">${g.javob}</span>.`}</p><p>${esc(g.izoh_uz)}</p>`;
+    keyingi.textContent = i + 1 >= toplam.gaplar.length ? 'Natijani koʻrish' : 'Keyingi';
+    keyingi.hidden = false;
+    keyingi.focus();
+  }
+
+  function natijaniKorsat() {
+    if (!toplam) return;
+    markDone(4, tfngBandId(toplam.setId));
+    const togrilar = javoblar.filter((j) => j.togri).length;
+    $('natija-son').textContent = `${togrilar}/${javoblar.length}`;
+    const xatolar = javoblar.filter((j) => !j.togri);
+    $('xatolar-blok').hidden = xatolar.length === 0;
+    $('xatolar').innerHTML = xatolar.map((j) => `<li>
+      <p class="xg-gap" lang="en">${esc(j.gap.gap)}</p>
+      <p class="xg-javob">Sizning javobingiz: <span lang="en">${j.tanlov}</span> · Toʻgʻri javob: <span lang="en">${j.gap.javob}</span></p>
+      <p class="xg-izoh">${esc(j.gap.izoh_uz)}</p>
+    </li>`).join('');
+    korsat(natijaBolim);
+    holatlarniKorsat();
+    $('natija-h').focus();
+  }
+
+  function royxatgaQayt() {
+    korsat(toplamBolim);
+    holatlarniKorsat();
+    if (toplam) document.querySelector<HTMLButtonElement>(`[data-toplam="${toplam.setId}"]`)?.focus();
+  }
+
+  // ---- Swipe (Pointer Events) ----
+  let boshX = 0, boshY = 0, dx = 0, dy = 0, tortish: number | null = null;
+  const chegara = () => Math.min(110, karta.offsetWidth * 0.28);
+
+  function yonalish(x: number, y: number): TfngJavob | null {
+    if (Math.abs(x) >= Math.abs(y)) return x > 0 ? 'TRUE' : x < 0 ? 'FALSE' : null;
+    return y > 0 ? 'NOT GIVEN' : null;
+  }
+
+  function joyigaQayt(animatsiya = true) {
+    karta.classList.toggle('qaytish', animatsiya);
+    karta.style.transform = '';
+    ishora.textContent = '';
+    ishora.style.opacity = '0';
+  }
+
+  karta.addEventListener('pointerdown', (e) => {
+    if (javobBerildi || !e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    tortish = e.pointerId;
+    boshX = e.clientX; boshY = e.clientY; dx = 0; dy = 0;
+    try { karta.setPointerCapture(e.pointerId); } catch { /* pointer allaqachon tugagan */ }
+    karta.classList.remove('qaytish');
+    karta.classList.add('tortilmoqda');
+  });
+  karta.addEventListener('pointermove', (e) => {
+    if (e.pointerId !== tortish) return;
+    dx = e.clientX - boshX;
+    dy = e.clientY - boshY;
+    const y = yonalish(dx, dy);
+    const masofa = y === 'NOT GIVEN' ? dy : Math.abs(dx);
+    // Barmoqqa ergashish to'g'ridan-to'g'ri boshqaruv; tepaga surishda faqat ozgina siljiydi
+    karta.style.transform = `translate(${dx}px, ${dy < 0 ? dy * 0.25 : dy}px) rotate(${dx * 0.04}deg)`;
+    ishora.textContent = y ?? '';
+    ishora.style.opacity = y ? String(Math.min(1, masofa / chegara())) : '0';
+  });
+  function tugat(e: PointerEvent, bekor: boolean) {
+    if (e.pointerId !== tortish) return;
+    tortish = null;
+    karta.classList.remove('tortilmoqda');
+    const y = yonalish(dx, dy);
+    const masofa = y === 'NOT GIVEN' ? dy : Math.abs(dx);
+    joyigaQayt(true);
+    if (!bekor && y && masofa >= chegara()) javobBer(y);
+  }
+  karta.addEventListener('pointerup', (e) => tugat(e, false));
+  karta.addEventListener('pointercancel', (e) => tugat(e, true));
+
+  // ---- Tugmalar va klaviatura ----
+  javobTugmalar.forEach((b) => b.addEventListener('click', () => javobBer(b.dataset.javob as TfngJavob)));
+  const KALITLAR: Record<string, TfngJavob> = { ArrowLeft: 'FALSE', ArrowRight: 'TRUE', ArrowDown: 'NOT GIVEN' };
+  document.addEventListener('keydown', (e) => {
+    const j = KALITLAR[e.key];
+    if (!j || mashqBolim.hidden || javobBerildi || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const f = document.activeElement;
+    // Faqat fokus mashq ichida yoki sahifada (menyu, forma maydonlari strelkalarini o'g'irlamaymiz)
+    if (f && f !== document.body && !mashqBolim.contains(f)) return;
+    if (f instanceof HTMLInputElement || f instanceof HTMLTextAreaElement || f instanceof HTMLSelectElement) return;
+    e.preventDefault();
+    javobBer(j);
+  });
+
+  keyingi.addEventListener('click', () => {
+    if (!toplam) return;
+    i++;
+    if (i >= toplam.gaplar.length) { natijaniKorsat(); return; }
+    gapniKorsat();
+    karta.focus();
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('[data-toplam]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const t = tfngToplamlar.find((x) => x.setId === b.dataset.toplam);
+      if (t) { boshla(t); karta.focus(); }
+    });
+  });
+  $('toplamga-qaytish').addEventListener('click', royxatgaQayt);
+  $('boshqa').addEventListener('click', royxatgaQayt);
+  $('qaytadan').addEventListener('click', () => { if (toplam) { boshla(toplam); karta.focus(); } });
+
+  registerItems(4, QAVAT_BANDLARI.ielts);
+  holatlarniKorsat();
+</script>
+
+<style>
+  .tfng { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-8); max-width: var(--size-measure); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .bosh p { margin: 0; }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-h1-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); }
+  .lead { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
+  .eslatma {
+    align-self: flex-start; margin: 0; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
+    background: var(--color-warning-subtle); color: var(--color-warning-text);
+    display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); line-height: 1.5;
+  }
+  .eslatma svg { flex: none; }
+  .panel[hidden], section[hidden], [hidden] { display: none !important; }
+
+  .bolim-sarlavha { margin: 0 0 var(--space-4); font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
+  .kichik-sarlavha { margin: 0 0 var(--space-2); font-size: var(--text-body-size); font-weight: var(--font-weight-extrabold); }
+
+  .toplam-royxat { list-style: none; margin: 0; padding: var(--space-2); display: flex; flex-direction: column; gap: var(--space-1); background: var(--color-ielts-tile); border-radius: var(--radius-lg); }
+  .toplam {
+    width: 100%; min-height: var(--control-height-lg); padding: var(--space-3) var(--space-4); border: 0; border-radius: var(--radius-md);
+    background: transparent; color: var(--color-ielts-text); font: inherit; text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: var(--space-4);
+  }
+  @media (hover: hover) and (pointer: fine) { .toplam:hover { background: var(--color-ielts-surface); } }
+  .t-matn { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .t-nom { font-weight: var(--font-weight-extrabold); }
+  .t-tavsif { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
+  .t-holat { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-success-text); white-space: nowrap; }
+  .toplam svg { flex: none; color: var(--color-ielts-text-muted); }
+
+  .panel { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-ielts-surface); box-shadow: var(--shadow-glass); display: flex; flex-direction: column; gap: var(--space-4); }
+  .panel-ust { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+  .panel-ust .bolim-sarlavha { margin: 0; }
+  .hisob { margin: 0; font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .progress { height: var(--space-2); border-radius: var(--radius-full); background: var(--color-ielts-tile); overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--color-ielts-accent-text); }
+
+  /* Matn: yig'ib-ochiladigan */
+  .matn { border-radius: var(--radius-md); background: var(--color-ielts-tile); }
+  .matn summary {
+    min-height: var(--size-touch-min); padding: 0 var(--space-4); display: flex; align-items: center; gap: var(--space-2);
+    font-weight: var(--font-weight-extrabold); cursor: pointer; border-radius: var(--radius-md); list-style: none;
+  }
+  .matn summary::-webkit-details-marker { display: none; }
+  .matn summary::before { content: '▸'; transition: transform var(--duration-fast) var(--ease-state); }
+  .matn[open] summary::before { transform: rotate(90deg); }
+  .matn summary:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  .matn-ichi { padding: 0 var(--space-4) var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); line-height: 1.65; }
+  .matn-ichi p { margin: 0; }
+
+  /* Gap kartasi */
+  .karta-joy { padding: var(--space-2) 0; }
+  .karta {
+    position: relative; min-height: calc(var(--control-height-lg) * 3); padding: var(--space-6) var(--space-5) var(--space-5);
+    border: var(--border-width-2) solid var(--color-ielts-line-strong); border-radius: var(--radius-lg);
+    background: var(--color-ielts-bg); color: var(--color-ielts-text); box-shadow: var(--shadow-glass);
+    display: flex; flex-direction: column; justify-content: center; gap: var(--space-3);
+    touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab;
+    transition: opacity var(--duration-base) var(--ease-enter);
+  }
+  .karta.tortilmoqda { cursor: grabbing; transition: none; }
+  .karta.qaytish { transition: transform var(--duration-base) var(--ease-state), opacity var(--duration-base) var(--ease-enter); }
+  .karta.kirish { opacity: 0; transform: translateY(calc(var(--space-3) * var(--motion-distance))); transition: none; }
+  .karta:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  .karta.togri { border-color: var(--color-success-ui); }
+  .karta.xato { border-color: var(--color-error-ui); }
+  .karta-yorliq { position: absolute; top: var(--space-3); left: var(--space-5); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ielts-text-muted); }
+  .ishora {
+    position: absolute; top: var(--space-3); right: var(--space-4); padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+    background: var(--color-ielts-accent); color: var(--color-ielts-on-accent); font-size: var(--text-small-size); font-weight: var(--font-weight-extrabold); opacity: 0;
+  }
+  .ishora:empty { display: none; }
+  .gap { margin: 0; font-size: var(--font-size-body-d); font-weight: var(--font-weight-semibold); line-height: 1.5; }
+  .tanlov { margin: 0; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); }
+
+  .javoblar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
+  .javob-tugma { justify-content: center; gap: var(--space-1); padding-inline: var(--space-2); }
+  .javob-tugma svg { flex: none; }
+  .javob-tugma[aria-pressed='true'] { border-color: var(--color-ielts-text); font-weight: var(--font-weight-extrabold); }
+
+  .xabar:empty { display: none; }
+  .xabar { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-success-subtle); color: var(--color-success-text); display: flex; flex-direction: column; gap: var(--space-1); line-height: 1.5; }
+  .xabar.xabar-xato { background: var(--color-error-subtle); color: var(--color-error-text); }
+  .xabar :global(p) { margin: 0; }
+  .xabar :global(.x-bosh) { font-size: var(--font-size-body-d); }
+
+  .amallar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  .natija-son { margin: 0; font-size: var(--text-h2-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  #natija-h:focus { outline: none; }
+  .xatolar { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .xatolar :global(li) { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); display: flex; flex-direction: column; gap: var(--space-1); }
+  .xatolar :global(p) { margin: 0; line-height: 1.5; }
+  .xatolar :global(.xg-gap) { font-weight: var(--font-weight-bold); }
+  .xatolar :global(.xg-javob) { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
+
+  @media (max-width: 640px) {
+    .tfng { padding-top: var(--space-6); gap: var(--space-6); }
+    h1 { font-size: var(--text-h2-size); }
+    .panel { padding: var(--space-4); }
+    .toplam { padding: var(--space-3); gap: var(--space-3); }
+    .javob-tugma { font-size: var(--text-small-size); }
+    .amallar .t-tugma { flex: 1 1 100%; }
+  }
+</style>

@@ -94,7 +94,10 @@ export const konikmalar: Konikma[] = [
     tavsif: "Dalilni topishni o'rgan, savol turlarini darsda mashq qil, keyin to'liq testni ishla.",
     qollanma: band("Reading qo'llanmasi", qollanmalar[1].tavsif, IKONKA.reading, 'qollanma/reading/'),
     darslar,
-    mashqlar: [band('Reading testi', '60 daqiqa, 40 savol, taxminiy band', IKONKA.reading, 'mashq/reading/')],
+    mashqlar: [
+      band('Reading testi', '60 daqiqa, 40 savol, taxminiy band', IKONKA.reading, 'mashq/reading/'),
+      band('True / False / Not Given', 'Kartani surib javob berish, har gapdan keyin izoh', IKONKA.tahlil, 'mashq/tfng/'),
+    ],
     natijalar: [
       band('Reading natijalari', 'Shu brauzerda saqlangan urinishlar', IKONKA.tahlil, 'mashq/reading/#rb-tarix-h'),
       band('Xatolarni takrorlash', 'Darslar va testlardagi xatolar, oraliq bilan', IKONKA.takror, 'vosita/takrorlash/'),
