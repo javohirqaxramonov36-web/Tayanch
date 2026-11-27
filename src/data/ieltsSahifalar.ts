@@ -137,6 +137,10 @@ export const ieltsGuruhlar: { nomi: string; bandlar: IeltsBand[] }[] = [
       ...k.mashqlar,
     ],
   })),
+  // Lug'at darslari (ko'nikmaga bog'lanmagan): #223 ovqatlanish kollokatsiyalari.
+  { nomi: 'Vocabulary', bandlar: [
+    band('Food collocations', 'Five food phrases in context, 5 sample exercises', IKONKA.general, 'qollanma/lugat/ovqatlanish/'),
+  ] },
   { nomi: 'Plan and review', bandlar: [
     ...vositalar,
     band('All practice', 'Practice for every skill in one place', IKONKA.namuna, 'mashq/'),
