@@ -5,11 +5,11 @@
   "testId": "reading-04",
   "title": "Reading test 4",
   "durationMinutes": 60,
-  "explanationLang": "uz",
+  "explanationLang": "en",
   "passages": [
     {
       "id": "p1",
-      "difficulty": "Oson-O'rta",
+      "difficulty": "Easy–Medium",
       "title": "Bikes That Carry the City",
       "paragraphs": [
         {
@@ -47,7 +47,7 @@
               "prompt": "Delivery companies use the name 'last ______' for the final stage of a delivery.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "mile",
-              "explanation": "A paragraf: yetkazib berish kompaniyalari oxirgi bosqichni 'last mile' deb ataydi. Bo'sh joyga bitta so'z kerak: mile.",
+              "explanation": "Paragraph A: delivery companies call the final stage the 'last mile'. The gap needs one word: mile.",
               "evidence": {
                 "paragraph": "A",
                 "quote": "Delivery companies call this final stage the 'last mile'"
@@ -58,7 +58,7 @@
               "prompt": "Modern cargo bikes often have a small electric ______ that helps the rider on slopes.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "motor",
-              "explanation": "B paragraf: o'zgargan narsa kichik elektr motor (small electric motor) qo'shilgani. U to'xtab turgan joydan yurganda va qiyalikka chiqqanda yordam beradi.",
+              "explanation": "Paragraph B: what has changed is the addition of a small electric motor. It helps when pulling away from a stop and when climbing hills.",
               "evidence": {
                 "paragraph": "B",
                 "quote": "the addition of a small electric motor"
@@ -69,7 +69,7 @@
               "prompt": "A van driver may need several minutes at each stop to find a place to ______.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "park",
-              "explanation": "C paragraf: furgon haydovchisi har to'xtashda joy topishga (finding a place to park) bir necha daqiqa sarflashi mumkin, velosipedchi uchun bu deyarli muammo emas.",
+              "explanation": "Paragraph C: a van driver may spend several minutes at each stop finding a place to park; for a cyclist this is hardly a problem.",
               "evidence": {
                 "paragraph": "C",
                 "quote": "finding a place to park, which can take a van driver several minutes at every stop"
@@ -80,7 +80,7 @@
               "prompt": "The battery of an electric cargo bike can be charged ______.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "overnight",
-              "explanation": "D paragraf: elektr velosipedlarga faqat kichik batareya kerak, uni kechasi (overnight) quvvatlash mumkin.",
+              "explanation": "Paragraph D: electric bikes need only a small battery, which can be charged overnight.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "a small battery that can be charged overnight"
@@ -96,7 +96,7 @@
               "number": 5,
               "prompt": "The final stage of a delivery takes up only a small part of the driver's time.", "drafted_by": "ai", "reviewed": false,
               "answer": "FALSE",
-              "explanation": "A paragraf: oxirgi bosqich haydovchi vaqtining katta qismini (a large share) oladi. Gapdagi 'only a small part' bunga zid.",
+              "explanation": "Paragraph A: the final stage takes a large share of a driver's time. 'Only a small part' in the statement contradicts this.",
               "evidence": {
                 "paragraph": "A",
                 "quote": "it uses a large share of the driver's time"
@@ -106,7 +106,7 @@
               "number": 6,
               "prompt": "Cargo bikes were used to deliver goods before motor vans became widespread.", "drafted_by": "ai", "reviewed": false,
               "answer": "TRUE",
-              "explanation": "B paragraf: novvoylar, pochtachilar va do'kondorlar ularni motorli furgonlar keng tarqalishidan ancha oldin ishlatgan. 'Widespread' va 'common' bir ma'no.",
+              "explanation": "Paragraph B: bakers, postal workers and shopkeepers used them long before motor vans became widespread. 'Widespread' and 'common' mean the same.",
               "evidence": {
                 "paragraph": "B",
                 "quote": "relied on them long before motor vans became common"
@@ -116,7 +116,7 @@
               "number": 7,
               "prompt": "Cargo bikes with the load in front of the rider are easier to ride than other designs.", "drafted_by": "ai", "reviewed": false,
               "answer": "NOT GIVEN",
-              "explanation": "B paragraf yuk old tomonda, o'rindiq orqasida yoki tirkamada bo'lgan dizaynlarni sanaydi, lekin qaysi birini haydash osonroq ekanini aytmaydi. Taqqoslash matnda yo'q.",
+              "explanation": "Paragraph B lists designs with the load at the front, behind the seat or on a trailer, but does not say which is easier to ride. The comparison is not in the text.",
               "evidence": {
                 "paragraph": "B",
                 "quote": "Some have a large box mounted in front of the rider, between two wheels"
@@ -126,7 +126,7 @@
               "number": 8,
               "prompt": "In busy city centres, a cargo bike can sometimes finish its deliveries faster than a van.", "drafted_by": "ai", "reviewed": false,
               "answer": "TRUE",
-              "explanation": "C paragraf: gavjum shahar markazida velosiped yetkazishni furgon bilan bir xil tezlikda yoki undan ham tezroq tugatishi mumkin. 'Sometimes ... can' va 'may' bir-biriga mos.",
+              "explanation": "Paragraph C: in a busy city centre a bike can finish deliveries as fast as a van, or even faster. 'Sometimes ... can' matches 'may'.",
               "evidence": {
                 "paragraph": "C",
                 "quote": "a bike may complete a round of deliveries as quickly as a van, or even more quickly"
@@ -136,7 +136,7 @@
               "number": 9,
               "prompt": "Cargo bike riders generally earn more than van drivers.", "drafted_by": "ai", "reviewed": false,
               "answer": "NOT GIVEN",
-              "explanation": "D paragraf kompaniya xarajatlari (velosiped arzonroq) va haydovchilik guvohnomasi haqida gapiradi, lekin velosipedchilar yoki furgon haydovchilarining maoshi haqida hech narsa yo'q.",
+              "explanation": "Paragraph D talks about company costs (a bike is cheaper) and driving licences, but says nothing about the pay of cyclists or van drivers.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "the bikes are cheaper to buy and to maintain than vans"
@@ -146,7 +146,7 @@
               "number": 10,
               "prompt": "Cargo bikes are more expensive to maintain than vans.", "drafted_by": "ai", "reviewed": false,
               "answer": "FALSE",
-              "explanation": "D paragraf: velosipedni sotib olish ham, ta'mirlash (maintain) ham furgondan arzonroq. Gap buning teskarisini aytadi.",
+              "explanation": "Paragraph D: a bike is cheaper than a van both to buy and to maintain. The statement says the opposite.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "the bikes are cheaper to buy and to maintain than vans"
@@ -156,7 +156,7 @@
               "number": 11,
               "prompt": "Some local councils have set aside places where bikes can load and unload.", "drafted_by": "ai", "reviewed": false,
               "answer": "TRUE",
-              "explanation": "D paragraf: ayrim mahalliy kengashlar faqat velosipedlar uchun ajratilgan yuk tushirish joylarini (loading spaces reserved for bikes) yaratgan.",
+              "explanation": "Paragraph D: some local councils have created loading spaces reserved for bikes.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "have created loading spaces reserved for bikes"
@@ -166,7 +166,7 @@
               "number": 12,
               "prompt": "Micro-hubs are usually placed on the edge of the city, far from customers.", "drafted_by": "ai", "reviewed": false,
               "answer": "FALSE",
-              "explanation": "E paragraf: mikro-xablar xizmat qiladigan mahallalarga yaqin (close to the neighbourhoods they serve) quriladi. Gap ularni mijozlardan uzoq deydi, bu matnga zid.",
+              "explanation": "Paragraph E: micro-hubs are built close to the neighbourhoods they serve. The statement says they are far from customers, which contradicts the text.",
               "evidence": {
                 "paragraph": "E",
                 "quote": "close to the neighbourhoods they serve"
@@ -176,7 +176,7 @@
               "number": 13,
               "prompt": "Riders are given special clothing to protect them from bad weather.", "drafted_by": "ai", "reviewed": false,
               "answer": "NOT GIVEN",
-              "explanation": "F paragraf ob-havo ishni qiyinlashtirishi va hamma ham har faslda ochiq havoda ishlashga tayyor emasligini aytadi, lekin maxsus kiyim berilishi haqida gap yo'q.",
+              "explanation": "Paragraph F says the weather makes the work harder and not everyone is willing to work outdoors in every season, but nothing is said about special clothing being provided.",
               "evidence": {
                 "paragraph": "F",
                 "quote": "Strong wind, heavy rain and icy roads make the work harder"
@@ -188,7 +188,7 @@
     },
     {
       "id": "p2",
-      "difficulty": "O'rta",
+      "difficulty": "Medium",
       "title": "Finding the Way Home",
       "paragraphs": [
         {
@@ -247,7 +247,7 @@
                 }
               ],
               "answer": "B",
-              "explanation": "A paragraf: javob bitta sezgi emas, bir nechtasining birikmasi; biri ishlamasa, boshqasi o'rnini egallaydi. A (oldingi safar xotirasi) F paragrafda qisman bor, lekin A paragrafning topilmasi emas. C va D matnda yo'q.",
+              "explanation": "Paragraph A: the answer is not one sense but a combination of several; if one fails, another takes over. A (memory of the previous journey) is partly in paragraph F but is not the finding of paragraph A. C and D are not in the text.",
               "evidence": {
                 "paragraph": "A",
                 "quote": "is not a single sense but a combination of several, each of which can take over when another is unavailable"
@@ -275,7 +275,7 @@
                 }
               ],
               "answer": "D",
-              "explanation": "B paragraf: ichki soat sun'iy yorug'lik bilan surilganda qushlar oldindan aytsa bo'ladigan miqdorda (by a predictable amount) noto'g'ri yo'nalishni tanlagan. B chalg'itadi: egri chiziq bo'ylab uchish ichki soatsiz quyoshga qarab uchgan qush haqidagi faraz, tajriba natijasi emas. A va C matnda yo'q.",
+              "explanation": "Paragraph B: when their internal clock was shifted with artificial light, the birds chose the wrong direction by a predictable amount. B is a distractor: flying along a curve is a hypothesis about a bird flying towards the sun without an internal clock, not the result of the experiment. A and C are not in the text.",
               "evidence": {
                 "paragraph": "B",
                 "quote": "the birds choose the wrong direction by a predictable amount"
@@ -303,7 +303,7 @@
                 }
               ],
               "answer": "A",
-              "explanation": "C paragraf: yosh qushlar osmonning qaysi qismi qimirlamay turishini, qolgan yulduzlar uning atrofida aylanishini o'rganadi va o'sha nuqtani shimol deb oladi. B ga matn zid: ular yulduz turkumlarini bilib tug'ilmaydi. C va D matnda yo'q.",
+              "explanation": "Paragraph C: young birds learn which part of the sky stays still while the other stars turn around it, and take that point as north. The text contradicts B: they are not born knowing the constellations. C and D are not in the text.",
               "evidence": {
                 "paragraph": "C",
                 "quote": "they learn which part of the sky stays still while the rest of the stars turn around it"
@@ -331,7 +331,7 @@
                 }
               ],
               "answer": "C",
-              "explanation": "D paragraf: sezgi qanday ishlashi hali bahsli (still debated); ko'zdagi kimyoviy reaksiyalar va boshdagi mayda magnit zarrachalar haqida ikki xil tushuntirish bor. A matnga zid. B va D matnda yo'q (aksincha, qushlar bulutli kunda ham yo'nalishni yo'qotmaydi).",
+              "explanation": "Paragraph D: how the sense works is still debated; there are two explanations, chemical reactions in the eye and tiny magnetic particles in the head. A contradicts the text. B and D are not in the text (in fact, birds do not lose their direction even on cloudy days).",
               "evidence": {
                 "paragraph": "D",
                 "quote": "Exactly how they detect it is still debated"
@@ -376,7 +376,7 @@
                 "B",
                 "D"
               ],
-              "explanation": "E paragraf ikki manbani aytadi: ko'p qushlar qirg'oq, daryo va tog' tizmalarini taniydi (B); ayrim dengiz qushlari shamol olib kelgan hidlardan foydalanadi (D). A, C, E matnda tilga olinmaydi.",
+              "explanation": "Paragraph E gives two sources: many birds recognise coastlines, rivers and mountain ranges (B); some seabirds use smells carried by the wind (D). A, C and E are not mentioned in the text.",
               "evidence": {
                 "paragraph": "E",
                 "quote": "Many birds recognise coastlines, rivers and mountain ridges"
@@ -393,7 +393,7 @@
               "prompt": "Birds may use the Earth's magnetic field not only as a compass but also as a rough guide to their ______.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 2,
               "answer": "position",
-              "explanation": "D paragraf: qushlar magnit maydonni kompas sifatida va, ehtimol, joylashuvning taxminiy belgisi (a rough indication of position) sifatida ishlatadi.",
+              "explanation": "Paragraph D: birds use the magnetic field as a compass and possibly as a rough indication of position.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "as a rough indication of position"
@@ -404,7 +404,7 @@
               "prompt": "Some seabirds may find their way by smelling chemicals released by ______.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 2,
               "answer": "plankton",
-              "explanation": "E paragraf: ayrim dengiz qushlari dengizning muayyan joylarida plankton chiqaradigan kimyoviy moddalarni hidlab topadi.",
+              "explanation": "Paragraph E: some seabirds smell the chemicals released by plankton in particular parts of the sea.",
               "evidence": {
                 "paragraph": "E",
                 "quote": "detecting chemicals released by plankton"
@@ -418,7 +418,7 @@
                 "instructions"
               ],
               "answer": "inherited instructions",
-              "explanation": "F paragraf: birinchi safardagi yosh qushlar belgilangan vaqt davomida bir yo'nalishda uchadi, go'yo irsiy ko'rsatmalarga (inherited instructions) amal qilgandek. Faqat 'instructions' yozilsa ham to'g'ri hisoblanadi.",
+              "explanation": "Paragraph F: young birds on their first journey fly in one direction for a set time, as if following inherited instructions. Writing just 'instructions' is also accepted.",
               "evidence": {
                 "paragraph": "F",
                 "quote": "as though following inherited instructions"
@@ -429,7 +429,7 @@
               "prompt": "When young birds are blown off course, they usually keep flying in the same ______.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 2,
               "answer": "direction",
-              "explanation": "F paragraf: shamol yo'ldan chiqarsa, yosh qushlar ko'pincha o'sha yo'nalishda (in the same direction) uchishda davom etadi va odatdagi qishlash joyidan uzoqqa borib qoladi.",
+              "explanation": "Paragraph F: if the wind blows them off course, young birds often keep flying in the same direction and end up far from their usual wintering area.",
               "evidence": {
                 "paragraph": "F",
                 "quote": "they often continue in the same direction"
@@ -440,7 +440,7 @@
               "prompt": "Over time, birds seem to learn where their ______ is, not just which way to go.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 2,
               "answer": "destination",
-              "explanation": "F paragraf: bir yoki bir necha safardan keyin qushlarda manzil (destination) qayerdaligini sezish paydo bo'ladi, faqat qaysi tomonga uchishni emas.",
+              "explanation": "Paragraph F: after one or more journeys, birds develop a sense of where their destination is, not just which way to fly.",
               "evidence": {
                 "paragraph": "F",
                 "quote": "birds develop a sense of where their destination lies"
@@ -451,7 +451,7 @@
               "prompt": "Birds that migrate at night can be confused by bright ______ in cities.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 2,
               "answer": "lights",
-              "explanation": "G paragraf: shahardagi yorqin chiroqlar (bright lights) kechasi uchadigan qushlarni chalg'itib, binolar tomon tortadi.",
+              "explanation": "Paragraph G: bright lights in cities confuse birds that fly at night and draw them towards buildings.",
               "evidence": {
                 "paragraph": "G",
                 "quote": "Bright lights in cities can confuse birds that migrate at night"
@@ -462,7 +462,7 @@
               "prompt": "Changes in climate are altering the ______ of the seasons that migration relies on.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 2,
               "answer": "timing",
-              "explanation": "G paragraf: iqlim o'zgarishi migratsiya bog'liq bo'lgan fasllarning vaqtini (timing) siljityapti.",
+              "explanation": "Paragraph G: climate change is shifting the timing of the seasons that migration depends on.",
               "evidence": {
                 "paragraph": "G",
                 "quote": "shifting the timing of the seasons on which migration depends"
@@ -474,7 +474,7 @@
     },
     {
       "id": "p3",
-      "difficulty": "O'rta-Qiyin",
+      "difficulty": "Medium–Hard",
       "title": "The Experience of Waiting",
       "paragraphs": [
         {
@@ -553,7 +553,7 @@
               "number": 27,
               "prompt": "Paragraph A", "drafted_by": "ai", "reviewed": false,
               "answer": "vi",
-              "explanation": "A paragraf: kutishning uzunligi masalaning faqat bir qismi; kutish qanchalik uzoq tuyulishi va keyin qanday eslanishi soatga deyarli bog'liq bo'lmagan omillarga bog'liq. iv chalg'itadi: xodim yollash qimmatligi faqat muammoni tushuntirish uchun aytiladi, paragrafning asosiy fikri emas.",
+              "explanation": "Paragraph A: the length of a wait is only part of the matter; how long it feels and how it is remembered afterwards depend on factors that have little to do with the clock. iv is a distractor: the cost of hiring staff is mentioned only to explain the problem, not as the main idea.",
               "evidence": {
                 "paragraph": "A",
                 "quote": "its length is only part of the story"
@@ -563,7 +563,7 @@
               "number": 28,
               "prompt": "Paragraph B", "drafted_by": "ai", "reviewed": false,
               "answer": "iii",
-              "explanation": "B paragraf: band bo'lmagan vaqt sekinroq o'tadi; oynalar, jurnallar, ekranlar va menyular odamni biror narsa bilan band qiladi.",
+              "explanation": "Paragraph B: unoccupied time passes more slowly; mirrors, magazines, screens and menus keep people occupied.",
               "evidence": {
                 "paragraph": "B",
                 "quote": "Unoccupied time appears to pass more slowly than time that is filled with activity"
@@ -573,7 +573,7 @@
               "number": 29,
               "prompt": "Paragraph C", "drafted_by": "ai", "reviewed": false,
               "answer": "ix",
-              "explanation": "C paragraf: uzunligi noma'lum kutish og'irroq; qolgan daqiqalarni ko'rsatish va kechikish sababini tushuntirish odamni tinchlantiradi. viii chalg'itadi: tablo navbatni yo'q qilmaydi, faqat ma'lumot beradi.",
+              "explanation": "Paragraph C: a wait of unknown length is harder; showing the minutes left and explaining the reason for a delay calms people down. viii is a distractor: the display board does not remove the queue; it only gives information.",
               "evidence": {
                 "paragraph": "C",
                 "quote": "A wait of unknown length is generally experienced as longer and more stressful than a wait whose end is known"
@@ -583,7 +583,7 @@
               "number": 30,
               "prompt": "Paragraph D", "drafted_by": "ai", "reviewed": false,
               "answer": "vii",
-              "explanation": "D paragraf: eng kuchli ta'sir adolat hissi. Kechroq kelganlar oldin xizmat olsa, odamning jahli chiqadi; yagona navbat tizimni adolatli qiladi.",
+              "explanation": "Paragraph D: the strongest effect is the sense of fairness. If later arrivals are served first, people get angry; a single queue makes the system fair.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "Perhaps the strongest influence of all is the sense of fairness"
@@ -593,7 +593,7 @@
               "number": 31,
               "prompt": "Paragraph E", "drafted_by": "ai", "reviewed": false,
               "answer": "i",
-              "explanation": "E paragraf: kutilayotgan narsaning qiymati va yolg'iz yoki boshqalar bilan kutish kutishga bo'lgan munosabatni o'zgartiradi. Xulosa: kutish kutilma va sharoit shakllantiradigan tajriba.",
+              "explanation": "Paragraph E: the value of what is being waited for, and whether people wait alone or with others, changes their attitude to waiting. Conclusion: waiting is an experience shaped by expectations and circumstances.",
               "evidence": {
                 "paragraph": "E",
                 "quote": "an experience shaped by expectation and circumstance"
@@ -603,7 +603,7 @@
               "number": 32,
               "prompt": "Paragraph F", "drafted_by": "ai", "reviewed": false,
               "answer": "v",
-              "explanation": "F paragraf: kutish qanday tugashi keyin qanday eslanishiga nomutanosib darajada katta ta'sir qiladi; oxirgi daqiqalarni yaxshilash kutishni qisqartirish kabi foydali bo'lishi mumkin.",
+              "explanation": "Paragraph F: how a wait ends has a disproportionately large effect on how it is remembered; improving the last minutes can be as useful as shortening the wait.",
               "evidence": {
                 "paragraph": "F",
                 "quote": "the way a wait ends has a disproportionate effect on how it is later remembered"
@@ -613,7 +613,7 @@
               "number": 33,
               "prompt": "Paragraph G", "drafted_by": "ai", "reviewed": false,
               "answer": "ii",
-              "explanation": "G paragraf: tanqidchilar bu usullar haqiqiy xizmatni yaxshilash o'rniga shikoyatlarni boshqarish vositasi bo'lib qolishi mumkin deydi, tarafdorlar ularga javob beradi. iv chalg'itadi: xodimlar tilga olinadi, lekin paragraf ularning narxi oshishi haqida emas.",
+              "explanation": "Paragraph G: critics say these methods may become a tool for managing complaints instead of improving the real service, and supporters reply to them. iv is a distractor: staff are mentioned, but the paragraph is not about their cost rising.",
               "evidence": {
                 "paragraph": "G",
                 "quote": "Critics point out that techniques for making a wait feel shorter can easily become a way of avoiding the real cost of reducing it"
@@ -647,7 +647,7 @@
                 }
               ],
               "answer": "C",
-              "explanation": "B paragraf: hikoya har tafsilotda to'g'ri bo'lmasligi mumkin, lekin uning ortidagi tamoyil keng qo'llanadi. A, B, D matnda yo'q (D ga matn zid: oynalardan keyin shikoyatlar to'xtagan).",
+              "explanation": "Paragraph B: the story may not be accurate in every detail, but the principle behind it is widely applied. A, B and D are not in the text (the text contradicts D: complaints stopped after the mirrors were installed).",
               "evidence": {
                 "paragraph": "B",
                 "quote": "Whether or not the story is accurate in every detail, the principle behind it is widely applied"
@@ -675,7 +675,7 @@
                 }
               ],
               "answer": "A",
-              "explanation": "C paragraf: ma'lumot transportni tezlashtirmaydi (B ga zid), lekin yo'lovchilarga vaqtni qanday ishlatishni hal qilishga imkon beradi. C va D matnda yo'q.",
+              "explanation": "Paragraph C: the information does not make the transport faster (contradicting B), but it lets passengers decide how to use their time. C and D are not in the text.",
               "evidence": {
                 "paragraph": "C",
                 "quote": "it allows passengers to decide how to use the time"
@@ -703,7 +703,7 @@
                 }
               ],
               "answer": "D",
-              "explanation": "D paragraf: o'rtacha kutish qisqarishi shart emas (A ga zid); farq shundaki, mijoz qo'shni navbat tezroq yurishini ko'rmaydi va tizim adolatli tuyuladi. B va C matnda yo'q.",
+              "explanation": "Paragraph D: the average wait does not have to get shorter (contradicting A); the difference is that customers do not see a neighbouring queue moving faster, and the system feels fair. B and C are not in the text.",
               "evidence": {
                 "paragraph": "D",
                 "quote": "the feeling that the system is fair makes the wait easier to bear"
@@ -731,7 +731,7 @@
                 }
               ],
               "answer": "B",
-              "explanation": "G paragraf: tarafdorlar ikki yondashuv bir-birining o'rnini bosmaydi deydi: eng samarali tizimda ham kutish bo'ladi, shuning uchun u keragidan yomonroq bo'lmasligi kerak. A tanqidchilarning fikri, C va D matnda yo'q.",
+              "explanation": "Paragraph G: supporters say the two approaches do not replace each other: even the most efficient system involves waiting, so the wait should not be worse than it needs to be. A is the critics' view; C and D are not in the text.",
               "evidence": {
                 "paragraph": "G",
                 "quote": "even the most efficient system will sometimes involve waiting"
@@ -748,7 +748,7 @@
               "prompt": "People will wait much longer for something they regard as ______ than for something routine.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "important",
-              "explanation": "E paragraf: odamlar muhim deb hisoblagan narsasi (something they consider important), masalan davolanish uchun, oddiy narsadan ko'ra ancha uzoq kutishga tayyor.",
+              "explanation": "Paragraph E: people are willing to wait much longer for something they consider important, such as medical treatment, than for something ordinary.",
               "evidence": {
                 "paragraph": "E",
                 "quote": "far longer for something they consider important"
@@ -759,7 +759,7 @@
               "prompt": "Waiting with other people may provide distraction as well as ______.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "reassurance",
-              "explanation": "E paragraf: boshqalar bilan kutish chalg'itish va xotirjamlik (reassurance) beradi, shuning uchun yolg'iz kutish uzoqroq tuyuladi.",
+              "explanation": "Paragraph E: waiting with others provides distraction and reassurance, so waiting alone feels longer.",
               "evidence": {
                 "paragraph": "E",
                 "quote": "company provides both distraction and reassurance"
@@ -770,7 +770,7 @@
               "prompt": "A short wait that ends with a curt ______ may be remembered less favourably than a longer wait with a pleasant ending.", "drafted_by": "ai", "reviewed": false,
               "wordLimit": 1,
               "answer": "refusal",
-              "explanation": "F paragraf: qisqa, lekin qo'pol rad javobi (a curt refusal) bilan tugagan kutish do'stona kutib olish bilan tugagan uzunroq kutishdan yomonroq eslanishi mumkin.",
+              "explanation": "Paragraph F: a short wait that ends with a curt refusal can be remembered as worse than a longer wait that ends with a friendly welcome.",
               "evidence": {
                 "paragraph": "F",
                 "quote": "a shorter wait that ends with a curt refusal"

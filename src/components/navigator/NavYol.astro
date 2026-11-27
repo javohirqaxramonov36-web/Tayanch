@@ -1,0 +1,35 @@
+---
+// Navigator yo'li (DS NavYol): qora sahna ichida <ol class="nav-yol">, har qadam li.nav-qadam[data-holat].
+// Qadamlar statik (qadamlar prop) yoki skript bilan (src/lib/navigator/navYol.ts navQadam) chiziladi:
+// ikkalasi bir xil belgilash beradi. Holat so'z bilan ham aytiladi (yorliq), joriy qadamda aria-current="step".
+// Stil: src/styles/nav.css (.nav-yol, .nav-qadam, .nav-tugun).
+import type { NavQadamMalumot } from '../../lib/navigator/navYol';
+
+interface Props {
+  qadamlar?: NavQadamMalumot[];
+  'aria-label'?: string;
+  [k: `data-${string}`]: string | boolean | undefined;
+}
+const { qadamlar = [], ...rest } = Astro.props;
+const belgi = '<path d="M5 12l5 5 9-10"/>';
+---
+<ol class="nav-yol" {...rest}>
+  {qadamlar.map((q) => (
+    <li class="nav-qadam" data-holat={q.holat} aria-current={q.holat === 'hozir' ? 'step' : undefined}>
+      <span class="nav-tugun" aria-hidden="true">
+        {q.holat === 'bajarildi' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" set:html={belgi} />}
+      </span>
+      <div class="nav-qadam-asos">
+        <span class="nav-num" aria-hidden="true">{String(q.raqam).padStart(2, '0')}</span>
+        {q.manzil ? <a class="nav-nom" href={q.manzil}>{q.nomi}</a> : <span class="nav-nom">{q.nomi}</span>}
+        {q.yorliqlar.length > 0 && (
+          <span class="nav-qadam-yorliqlar">
+            {q.yorliqlar.map((y) => <span class:list={['nav-chip', y.laym ? 'nav-chip--laym' : 'nav-chip--sahna']}>{y.matn}</span>)}
+          </span>
+        )}
+        {q.izoh && <p class="nav-qadam-izoh">{q.izoh}</p>}
+      </div>
+    </li>
+  ))}
+  <slot />
+</ol>

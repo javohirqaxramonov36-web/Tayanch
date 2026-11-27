@@ -13,35 +13,35 @@ import { yol } from '../../../../../lib/yol';
 const KALIT = 'tayanch:ielts-speaking';
 const ie06 = manbalar.find((x) => x.id === 'IE06')!;
 const mundarija = [
-  { id: 'qismlar', nomi: 'Uch qism' },
-  { id: 'mezonlar', nomi: 'Baholash mezonlari' },
-  { id: 'part2', nomi: 'Part 2 rejasi' },
-  { id: 'tuzoq', nomi: 'Tuzoqlar' },
-  { id: 'mashq', nomi: 'Gapirish mashqi' },
+  { id: 'qismlar', nomi: 'Three parts' },
+  { id: 'mezonlar', nomi: 'Assessment criteria' },
+  { id: 'part2', nomi: 'Part 2 plan' },
+  { id: 'tuzoq', nomi: 'Traps' },
+  { id: 'mashq', nomi: 'Speaking practice' },
 ];
 const qismlar = [
-  ['Part 1', 'Tanishuv va suhbat', '4–5 daqiqa', "Imtihonchi o'zini tanishtiradi, shaxsingni tekshiradi va tanish mavzularda savol beradi: uy, oila, ish, o'qish, qiziqishlar. Kundalik mavzuda fikr va ma'lumot berish tekshiriladi."],
-  ['Part 2', 'Monolog', '3–4 daqiqa', "Kartochka beriladi: unda gapirish kerak bo'lgan bandlar va tushuntirish kerak bo'lgan bitta jihat bor. 1 daqiqa tayyorgarlik (qalam va qog'oz beriladi), keyin 2 daqiqa gapirasan. Vaqt tugaganda imtihonchi to'xtatadi va 1–2 savol berishi mumkin."],
-  ['Part 3', 'Muhokama', '4–5 daqiqa', "Part 2 mavzusiga bog'liq masalalar umumiyroq va chuqurroq muhokama qilinadi. Fikrni tushuntirish, tahlil qilish va taxmin qilish tekshiriladi."],
+  ['Part 1', 'Introduction and interview', '4–5 minutes', 'The examiner introduces themselves, checks your identity and asks questions on familiar topics: home, family, work, studies, interests. It tests giving opinions and information on everyday topics.'],
+  ['Part 2', 'Long turn', '3–4 minutes', 'You get a task card with points to talk about and one aspect to explain. You have 1 minute to prepare (you get a pencil and paper), then you speak for up to 2 minutes. When time is up the examiner stops you and may ask one or two questions.'],
+  ['Part 3', 'Discussion', '4–5 minutes', 'Issues linked to the Part 2 topic are discussed in a more general, deeper way. It tests explaining, analysing and speculating.'],
 ];
 const mezonlar = [
-  ['Fluency and coherence', "Ortiqcha ikkilanishsiz, normal tezlikda gapira olishing. Gap va fikrlarni mantiqiy tartibda aytish, bog'lovchi vositalarni (bog'lovchi so'zlar, olmoshlar) o'rinli ishlatish."],
-  ['Lexical resource', "So'z boyligi doirasi va ma'noni ifodalash uchun so'zlarni qanchalik to'g'ri va o'rinli ishlatishing. Kerakli so'zni bilmaganda uni boshqa so'zlar bilan ifodalay olish ham shu mezonga kiradi."],
-  ['Grammatical range and accuracy', "Grammatik tuzilmalar doirasi va ularni qanchalik to'g'ri va o'rinli ishlatishing."],
-  ['Pronunciation', "Nutqing ortiqcha kuch sarflamasdan tushunilishi."],
+  ['Fluency and coherence', 'Speaking at a normal speed without too much hesitation. Putting sentences and ideas in a logical order and using linking devices (linking words, pronouns) appropriately.'],
+  ['Lexical resource', 'The range of your vocabulary and how accurately and appropriately you use words to express meaning. Being able to say something in other words when you do not know the right word also counts here.'],
+  ['Grammatical range and accuracy', 'The range of grammatical structures you use, and how accurately and appropriately you use them.'],
+  ['Pronunciation', 'How easily your speech can be understood.'],
 ];
 const part2Reja = [
-  ['Kalit so\'zlar, gap emas', "1 daqiqada har bandga 2–3 kalit so'z yoz. To'liq gap yozishga vaqt yetmaydi."],
-  ['Har bandga taxminan 30 soniya', "Kartochkadagi 3 band va \"explain\" qismi: 4 bo'lak, har biri taxminan 30 soniya."],
-  ['"Explain" ni oxiriga saqla', "Nima uchun muhimligi, nima his qilganing: monologning eng shaxsiy va uzun qismi."],
-  ["Vaqt qolsa, misol qo'sh", "Yangi band qidirma: aytganingga bitta aniq voqea yoki tafsilot qo'sh."],
+  ['Key words, not sentences', 'In the 1 minute, write 2–3 key words for each point. There is no time to write full sentences.'],
+  ['About 30 seconds per point', 'The 3 points on the card and the "explain" part: 4 pieces, about 30 seconds each.'],
+  ['Save "explain" for the end', 'Why it matters, how you felt: the most personal and longest part of the talk.'],
+  ['If time is left, add an example', 'Don\'t look for a new point: add one specific event or detail to what you said.'],
 ];
 const tuzoqlar = [
-  ["Part 2 da vaqt tugamay to'xtash.", "Kartochka va eslatmalar 2 daqiqa gapirishga yetadigan qilib tuzilgan: imtihonchi o'zi to'xtatadi.", 'IE06'],
-  ["So'zni bilmay to'xtab qolish.", "Boshqa so'zlar bilan tushuntir: bu ham Lexical resource da hisobga olinadi.", 'IE06'],
-  ["Part 1 da bir so'zli javob.", "\"Yes, I do\" bilan tugatma: sabab yoki misol qo'shib, 2–3 gap ayt.", null],
-  ["Yodlangan javob.", "Tayyor matnni aytish savolga mos kelmay qoladi va tabiiy eshitilmaydi. Yodlama, rejani mashq qil.", null],
-  ["Part 3 da shaxsiy hikoyaga qaytish.", "Part 3 umumiyroq: \"people in my country\", \"in the future\" kabi kenroq nuqtai nazardan gapir.", null],
+  ['Stopping before time is up in Part 2.', 'The card and your notes are designed to last 2 minutes: the examiner will stop you.', 'IE06'],
+  ['Freezing when you don\'t know a word.', 'Explain it in other words: this also counts for Lexical resource.', 'IE06'],
+  ['One-word answers in Part 1.', 'Don\'t stop at "Yes, I do": add a reason or an example and say 2–3 sentences.', null],
+  ['Memorised answers.', 'A prepared text often does not fit the question and does not sound natural. Don\'t memorise; practise the plan.', null],
+  ['Going back to personal stories in Part 3.', 'Part 3 is more general: speak from a wider point of view, such as "people in my country" or "in the future".', null],
 ] as const;
 // Namuna savollar: Tayanch uchun yozilgan, rasmiy IELTS savoli emas.
 const part1 = [
@@ -52,21 +52,21 @@ const part1 = [
 ];
 const kartochkalar = [
   {
-    id: 'joy', nomi: 'Sevimli joy',
+    id: 'joy', nomi: 'A favourite place',
     mavzu: 'Describe a place in your city where you like to spend time.',
     bandlar: ['where it is', 'how often you go there', 'what you do there'],
     explain: 'and explain why you like this place.',
     part3: ['Why do some people prefer quiet places to busy ones?', 'How have public places in cities changed in recent years?', 'Should cities spend more money on parks or on roads? Why?'],
   },
   {
-    id: 'konikma', nomi: "Kattalardan o'rganilgan ko'nikma",
+    id: 'konikma', nomi: 'A skill learned from an older person',
     mavzu: 'Describe a useful skill you learned from an older person.',
     bandlar: ['what the skill is', 'who taught you', 'how you learned it'],
     explain: 'and explain why this skill is useful to you.',
     part3: ['What skills do young people today learn from their grandparents?', 'Is it better to learn a practical skill from a person or from a video?', 'Which skills will be more important in the future?'],
   },
   {
-    id: 'kutish', nomi: 'Kutish',
+    id: 'kutish', nomi: 'Waiting',
     mavzu: 'Describe a time when you had to wait for something.',
     bandlar: ['what you were waiting for', 'how long you waited', 'what you did while waiting'],
     explain: 'and explain how you felt about it.',
@@ -76,54 +76,55 @@ const kartochkalar = [
 // O'zini tekshirish: IE06 dagi mezon ta'riflari asosida Tayanch tuzgan.
 const tekshiruv = [
   { mezon: 'Fluency and coherence', savollar: [
-    ['fc1', 'Uzoq pauzalarsiz, normal tezlikda gapirdim.'],
-    ['fc2', "Fikrlarim tartibli edi: avval asosiy fikr, keyin sabab va misol."],
-    ['fc3', "Bog'lovchilar (because, so, for example) o'rinli edi, bittasini qayta-qayta takrorlamadim."],
+    ['fc1', 'I spoke at a normal speed without long pauses.'],
+    ['fc2', 'My ideas were in order: main idea first, then a reason and an example.'],
+    ['fc3', 'Linking words (because, so, for example) were appropriate, and I didn\'t repeat one again and again.'],
   ] },
   { mezon: 'Lexical resource', savollar: [
-    ['lr1', "So'zni bilmaganimda to'xtab qolmay, boshqacha tushuntirdim."],
-    ['lr2', "Mavzuga oid aniq so'zlar ishlatdim, faqat \"good\", \"nice\" emas."],
-    ['lr3', "Bitta so'zni qayta-qayta takrorlamadim."],
+    ['lr1', 'When I didn\'t know a word, I didn\'t stop; I explained it another way.'],
+    ['lr2', 'I used specific words for the topic, not only "good" and "nice".'],
+    ['lr3', 'I didn\'t repeat the same word again and again.'],
   ] },
   { mezon: 'Grammatical range and accuracy', savollar: [
-    ['gr1', "O'tgan voqea haqida o'tgan zamonda gapirdim."],
-    ['gr2', "Oddiy va qo'shma gaplar aralash edi (because, which, when)."],
-    ['gr3', "Ega-kesim moslashuvi (he goes) va artikllarda xato kam edi."],
+    ['gr1', 'I talked about past events in the past tense.'],
+    ['gr2', 'I mixed simple and complex sentences (because, which, when).'],
+    ['gr3', 'I made few mistakes with subject–verb agreement (he goes) and articles.'],
   ] },
   { mezon: 'Pronunciation', savollar: [
-    ['pr1', "Yozuvni eshitganda har so'z tushunarli."],
-    ['pr2', "Muhim so'zlarga urg'u berdim, ovozim bir xil ohangda emas."],
-    ['pr3', "Tez gapirganda so'z oxirlari yutilib ketmadi."],
+    ['pr1', 'When I listen to the recording, every word is clear.'],
+    ['pr2', 'I stressed the important words; my voice was not flat.'],
+    ['pr3', 'When I spoke fast, I didn\'t swallow the ends of words.'],
   ] },
 ];
 const sozlama = { kalit: KALIT, kartochkalar: kartochkalar.map((k) => ({ id: k.id, part3: k.part3 })) };
 const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 14 0v-1M12 18v4"/>';
 ---
 <BolimQobiq
-  title="Speaking qo'llanmasi · IELTS"
-  description="IELTS Speaking: uch qism, to'rt baholash mezoni, Part 2 rejasi, tuzoqlar va o'zingni yozib eshitadigan gapirish mashqi."
+  title="Speaking guide · IELTS"
+  description="IELTS Speaking: the three parts, the four assessment criteria, a Part 2 plan, traps, and speaking practice where you record and listen to yourself."
   turi="qollanma"
-  yol={["Qo'llanmalar"]}
+  yol={["Speaking"]}
+  ota={yol('/uz/ielts/speaking/')}
   bolim="ielts"
   holat="chop-etilgan"
 >
   <div class="ichki qol">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Qo'llanma</span><span class="pill-ochiq">ochiq</span></p>
-      <h1>Speaking: <span class="kok">o'zingni eshit</span></h1>
-      <p class="lead">Speaking imtihonchi bilan yuzma-yuz suhbat. Bu qo'llanma uch qismni, imtihonchi nimaga qarashini va o'zingni yozib, qayta eshitib tekshirishni ko'rsatadi.</p>
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill-ochiq">open</span></p>
+      <h1>Speaking: <span class="kok">listen to yourself</span></h1>
+      <p class="lead">Speaking is a face-to-face conversation with an examiner. This guide shows the three parts, what the examiner looks for, and how to check yourself by recording and listening back.</p>
     </header>
 
-    <section class="format" aria-label="Format kartasi">
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.speaking} />Bo'lim</span><span class="f-qiymat">Speaking</span><span class="f-izoh">IELTS Academic</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">11–14 daqiqa</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Qismlar</span><span class="f-qiymat">3 ta</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" /></svg>Shakl</span><span class="f-qiymat">Yuzma-yuz</span><span class="f-izoh">suhbat yozib olinadi</span></div>
+    <section class="format" aria-label="Format card">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.speaking} />Section</span><span class="f-qiymat">Speaking</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Time</span><span class="f-qiymat">11–14 minutes</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Parts</span><span class="f-qiymat">3</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" /></svg>Format</span><span class="f-qiymat">Face to face</span><span class="f-izoh">the interview is recorded</span></div>
     </section>
 
     <details class="mundarija-tel">
       <summary>
-        Mundarija
+        Contents
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </summary>
       <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
@@ -132,8 +133,8 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
     <div class="ikki">
       <article class="maqola">
         <section id="qismlar" aria-labelledby="qismlar-h">
-          <h2 id="qismlar-h">Uch qism</h2>
-          <p class="izoh-m">Har qism nutqni boshqa tomondan tekshiradi (<a href={ie06.havola} rel="noopener">ielts.org</a>).</p>
+          <h2 id="qismlar-h">Three parts</h2>
+          <p class="izoh-m">Each part tests your speaking from a different angle (<a href={ie06.havola} rel="noopener">ielts.org</a>).</p>
           <ol class="qismlar">
             {qismlar.map(([n, s, v, t]) => (
               <li>
@@ -145,64 +146,64 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
         </section>
 
         <section id="mezonlar" aria-labelledby="mezonlar-h">
-          <h2 id="mezonlar-h">Baholash mezonlari</h2>
-          <p class="izoh-m">Sertifikatlangan imtihonchi butun suhbat davomida to'rt mezon bo'yicha baholaydi. Ta'riflar o'z so'zlarimiz bilan.</p>
+          <h2 id="mezonlar-h">Assessment criteria</h2>
+          <p class="izoh-m">A certified examiner assesses you on four criteria throughout the whole interview. The descriptions are in our own words.</p>
           <ul class="turlar">
             {mezonlar.map(([n, t]) => <li><span class="t-nom" lang="en">{n}</span><span class="t-matn">{t}</span></li>)}
           </ul>
         </section>
 
         <section id="part2" aria-labelledby="part2-h">
-          <h2 id="part2-h">Part 2 rejasi</h2>
-          <p class="izoh-m">1 daqiqa tayyorgarlikdan qanday foydalanish. Bu Tayanch tavsiyasi, rasmiy qoida emas.</p>
+          <h2 id="part2-h">Part 2 plan</h2>
+          <p class="izoh-m">How to use the 1 minute of preparation. This is Tayanch's advice, not an official rule.</p>
           <div class="juft">
             {part2Reja.map(([n, t]) => <div class="kul"><h3>{n}</h3><p class="ikkinchi-m">{t}</p></div>)}
           </div>
         </section>
 
         <section id="tuzoq" aria-labelledby="tuzoq-h">
-          <h2 id="tuzoq-h">Tuzoqlar</h2>
+          <h2 id="tuzoq-h">Traps</h2>
           <ol class="tuzoqlar">
-            {tuzoqlar.map(([b, t, m], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span><span class="izoh">{m ? ' (ielts.org asosida)' : ' (Tayanch tavsiyasi)'}</span></p></li>)}
+            {tuzoqlar.map(([b, t, m], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span><span class="izoh">{m ? ' (based on ielts.org)' : " (Tayanch's advice)"}</span></p></li>)}
           </ol>
         </section>
 
         <section id="mashq" class="mashq" aria-labelledby="mashq-h" data-sozlama={JSON.stringify(sozlama)}>
           <div class="m-bosh">
-            <h2 id="mashq-h">Gapirish mashqi</h2>
-            <span class="izoh">Ball qo'yilmaydi</span>
+            <h2 id="mashq-h">Speaking practice</h2>
+            <span class="izoh">Not scored</span>
           </div>
-          <p class="maxfiy"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>Ovozing hech qayerga yuborilmaydi va saqlanmaydi: yozuv faqat sahifa ochiq turganda shu qurilmada turadi. Kerak bo'lsa, o'zing yuklab olasan.</span></p>
+          <p class="maxfiy"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>Your voice is not sent anywhere and is not saved: the recording stays on this device only while the page is open. Download it yourself if you need it.</span></p>
           <p class="ogoh" id="mik-xabar" role="status" hidden></p>
 
-          <div class="tablar" role="tablist" aria-label="Speaking qismlari">
+          <div class="tablar" role="tablist" aria-label="Speaking parts">
             <button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true">Part 1</button>
             <button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">Part 2</button>
             <button type="button" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">Part 3</button>
           </div>
 
           <div class="panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
-            <p class="izoh-m">Har savolga 2–3 gap bilan javob ber: javob, sabab, misol. Yozib olishni boshlab, savollarni ketma-ket o'qib javob ber. <span class="pill-namuna">Namuna</span></p>
+            <p class="izoh-m">Answer each question in 2–3 sentences: answer, reason, example. Start recording, then read the questions one by one and answer them. <span class="pill-namuna">Sample</span></p>
             <ol class="savollar" lang="en">{part1.map((s) => <li>{s}</li>)}</ol>
             <div class="yozgich" data-yozgich="part1">
               <div class="y-qator">
-                <button type="button" class="katta-q asosiy-q" data-amal="boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Yozishni boshlash</button>
-                <button type="button" class="katta-q toxtat-q" data-amal="toxtat" hidden>To'xtatish</button>
-                <span class="y-vaqt" role="timer" aria-label="Yozuv davomiyligi">00:00</span>
-                <span class="y-belgi" hidden>Yozilmoqda</span>
+                <button type="button" class="t-tugma ielts-tugma--urgu" data-amal="boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Start recording</button>
+                <button type="button" class="t-tugma t-tugma--ikkinchi toxtat-q" data-amal="toxtat" hidden>Stop</button>
+                <span class="y-vaqt" role="timer" aria-label="Recording length">00:00</span>
+                <span class="y-belgi" hidden>Recording</span>
               </div>
               <div class="y-natija" hidden>
                 <audio controls preload="metadata"></audio>
                 <div class="y-tugmalar">
-                  <a class="chiziq-tugma" data-amal="yuklab" download>Yuklab olish</a>
-                  <button type="button" class="matn-tugma" data-amal="ochir">Yozuvni o'chirish</button>
+                  <a class="t-tugma t-tugma--ikkinchi" data-amal="yuklab" download>Download</a>
+                  <button type="button" class="t-tugma t-tugma--ikkinchi" data-amal="ochir">Delete recording</button>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
-            <p class="ustki-yorliq" id="kartochka-h">Kartochka tanla <span class="pill-namuna">Namuna</span></p>
+            <p class="ustki-yorliq" id="kartochka-h">Choose a card <span class="pill-namuna">Sample</span></p>
             <div class="kartochkalar" role="group" aria-labelledby="kartochka-h">
               {kartochkalar.map((k, i) => <button type="button" class="k-tanlov" aria-pressed={i === 0 ? 'true' : 'false'} data-karta={k.id}>{k.nomi}</button>)}
             </div>
@@ -216,47 +217,47 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
             ))}
             <div class="bosqich-qator">
               <div class="b-taymer">
-                <span class="ustki-yorliq" id="p2-bosqich">Tayyorgarlik</span>
+                <span class="ustki-yorliq" id="p2-bosqich">Preparation</span>
                 <span class="katta-vaqt" id="p2-vaqt" role="timer" aria-labelledby="p2-bosqich">01:00</span>
               </div>
               <div class="y-tugmalar">
-                <button type="button" class="chiziq-tugma" id="tayyor-boshla">Tayyorgarlikni boshlash</button>
-                <button type="button" class="katta-q asosiy-q" id="gapir-boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Gapirishni boshlash</button>
+                <button type="button" class="t-tugma t-tugma--ikkinchi" id="tayyor-boshla">Start preparation</button>
+                <button type="button" class="t-tugma ielts-tugma--urgu" id="gapir-boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Start speaking</button>
               </div>
             </div>
-            <label class="ustki-yorliq" for="eslatma">Eslatmalar (kalit so'zlar)</label>
-            <textarea id="eslatma" rows="4" lang="en" spellcheck="false" placeholder="Har bandga 2–3 so'z…"></textarea>
+            <label class="ustki-yorliq" for="eslatma">Notes (key words)</label>
+            <textarea id="eslatma" rows="4" lang="en" spellcheck="false" placeholder="2–3 words for each point…"></textarea>
             <div class="yozgich" data-yozgich="part2" data-chegara="120000">
               <div class="y-qator">
-                <button type="button" class="katta-q toxtat-q" data-amal="toxtat" hidden>To'xtatish</button>
-                <span class="y-vaqt" role="timer" aria-label="Gapirish vaqti">00:00</span>
-                <span class="y-belgi" hidden>Yozilmoqda</span>
+                <button type="button" class="t-tugma t-tugma--ikkinchi toxtat-q" data-amal="toxtat" hidden>Stop</button>
+                <span class="y-vaqt" role="timer" aria-label="Speaking time">00:00</span>
+                <span class="y-belgi" hidden>Recording</span>
               </div>
               <div class="y-natija" hidden>
                 <audio controls preload="metadata"></audio>
                 <div class="y-tugmalar">
-                  <a class="chiziq-tugma" data-amal="yuklab" download>Yuklab olish</a>
-                  <button type="button" class="matn-tugma" data-amal="ochir">Yozuvni o'chirish</button>
+                  <a class="t-tugma t-tugma--ikkinchi" data-amal="yuklab" download>Download</a>
+                  <button type="button" class="t-tugma t-tugma--ikkinchi" data-amal="ochir">Delete recording</button>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
-            <p class="izoh-m">Part 2 dagi kartochka mavzusi bo'yicha umumiyroq savollar. Har javobda fikr, sabab va misol bo'lsin. <span class="pill-namuna">Namuna</span></p>
+            <p class="izoh-m">More general questions on the Part 2 card topic. Give an opinion, a reason and an example in each answer. <span class="pill-namuna">Sample</span></p>
             <ol class="savollar" id="part3-savollar" lang="en">{kartochkalar[0].part3.map((s) => <li>{s}</li>)}</ol>
             <div class="yozgich" data-yozgich="part3">
               <div class="y-qator">
-                <button type="button" class="katta-q asosiy-q" data-amal="boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Yozishni boshlash</button>
-                <button type="button" class="katta-q toxtat-q" data-amal="toxtat" hidden>To'xtatish</button>
-                <span class="y-vaqt" role="timer" aria-label="Yozuv davomiyligi">00:00</span>
-                <span class="y-belgi" hidden>Yozilmoqda</span>
+                <button type="button" class="t-tugma ielts-tugma--urgu" data-amal="boshla"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKON_MIK} />Start recording</button>
+                <button type="button" class="t-tugma t-tugma--ikkinchi toxtat-q" data-amal="toxtat" hidden>Stop</button>
+                <span class="y-vaqt" role="timer" aria-label="Recording length">00:00</span>
+                <span class="y-belgi" hidden>Recording</span>
               </div>
               <div class="y-natija" hidden>
                 <audio controls preload="metadata"></audio>
                 <div class="y-tugmalar">
-                  <a class="chiziq-tugma" data-amal="yuklab" download>Yuklab olish</a>
-                  <button type="button" class="matn-tugma" data-amal="ochir">Yozuvni o'chirish</button>
+                  <a class="t-tugma t-tugma--ikkinchi" data-amal="yuklab" download>Download</a>
+                  <button type="button" class="t-tugma t-tugma--ikkinchi" data-amal="ochir">Delete recording</button>
                 </div>
               </div>
             </div>
@@ -264,8 +265,8 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
           <p class="sr" id="elon" aria-live="polite"></p>
 
           <div class="tekshiruv">
-            <h3>Yozuvni eshitib, o'zingni tekshir</h3>
-            <p class="izoh-m">Bajarilgan bandlarni belgila. Halol belgila: bu faqat o'zing uchun.</p>
+            <h3>Listen to the recording and check yourself</h3>
+            <p class="izoh-m">Tick the points you did. Be honest: this is only for you.</p>
             {tekshiruv.map((g) => (
               <fieldset class="t-guruh">
                 <legend lang="en">{g.mezon}</legend>
@@ -281,26 +282,26 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
           </div>
 
           <div class="tozalash">
-            <button type="button" class="matn-tugma" id="tozala">Eslatma va belgilarni o'chirish</button>
-            <span class="tasdiq" id="tasdiq" hidden>Eslatma va belgilar o'chirilsinmi? Yozuvlar ham o'chadi.
-              <button type="button" class="matn-tugma" id="tasdiq-ha">Ha, o'chirish</button>
-              <button type="button" class="matn-tugma" id="tasdiq-yoq">Bekor qilish</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">Delete notes and ticks</button>
+            <span class="tasdiq" id="tasdiq" hidden>Delete the notes and ticks? The recordings will be deleted too.
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">Yes, delete</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">Cancel</button>
             </span>
           </div>
         </section>
 
         <section class="keyingi" aria-labelledby="keyingi-h">
-          <p class="ustki-yorliq kok-q">Keyingi qadam</p>
-          <h2 id="keyingi-h">Har kuni bitta Part 2 kartochkasini yozib eshit</h2>
-          <p class="k-matn">Bir haftadan keyin birinchi va oxirgi yozuvni solishtir. Reja vositasi Speaking kunlarini haftaga bo'lib beradi.</p>
+          <p class="ustki-yorliq kok-q">Next step</p>
+          <h2 id="keyingi-h">Record and listen to one Part 2 card every day</h2>
+          <p class="k-matn">After a week, compare your first and last recordings. The plan tool spreads Speaking days across the week.</p>
           <div class="k-tugmalar">
-            <a class="katta asosiy" href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja tuzish</a>
-            <a class="katta qora-tugma" href={yol('/uz/ielts/#rasmiy')}>Rasmiy namunalar</a>
+            <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/vosita/reja/')}>Build a 30-day plan</a>
+            <a class="t-tugma" href={yol('/uz/ielts/#rasmiy')}>Official samples</a>
           </div>
         </section>
       </article>
-      <nav class="mundarija" aria-label="Sahifa mundarijasi">
-        <p class="ustki-yorliq">Mundarija</p>
+      <nav class="mundarija" aria-label="Page contents">
+        <p class="ustki-yorliq">Contents</p>
         {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
       </nav>
     </div>
@@ -310,10 +311,10 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Band descriptors (har mezon bo'yicha band qanday qo'yilishi) bu sahifada berilmagan.",
-        "Part 2 rejasi, tuzoqlar (\"Tayanch tavsiyasi\" deb belgilanganlari) va tekshiruv savollari rasmiy talab emas.",
-        "Savollar va kartochkalar Tayanch uchun yozilgan namuna, rasmiy IELTS savoli emas.",
-        "Yozib olish haqiqiy telefonlarda (ayniqsa iPhone Safari) sinalmagan.",
+        "The band descriptors (how a band is given for each criterion) are not on this page.",
+        "The Part 2 plan, the traps marked \"Tayanch's advice\" and the checklist are not official requirements.",
+        "The questions and cards are samples written for Tayanch, not official IELTS questions.",
+        "Recording has not been tested on real phones (especially iPhone Safari).",
       ]}
     />
   </div>
@@ -370,7 +371,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
   const MIME = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
   const qollaydimi = typeof window.MediaRecorder !== 'undefined' && !!navigator.mediaDevices?.getUserMedia;
   const mikXabar = (t: string) => { const el = $('mik-xabar'); el.textContent = t; el.hidden = !t; };
-  if (!qollaydimi) mikXabar("Bu brauzer ovoz yozishni qo'llamaydi. Mashqni taymer bilan ovozsiz davom ettirishing mumkin.");
+  if (!qollaydimi) mikXabar("This browser does not support voice recording. You can continue the practice silently with the timer.");
 
   interface Yozgich {
     el: HTMLElement; nom: string; chegara: number;
@@ -396,8 +397,8 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
     q(y, '.y-vaqt').textContent = y.chegara ? mmss(y.chegara - otdi) : mmss(otdi);
     if (y.chegara && y.rec?.state === 'recording') {
       const qoldi = y.chegara - otdi;
-      if (qoldi <= 10000 && qoldi > 9500) elon('10 soniya qoldi.');
-      if (qoldi <= 0) { toxtat(y); elon("Vaqt tugadi. Imtihonchi shu yerda to'xtatadi."); }
+      if (qoldi <= 10000 && qoldi > 9500) elon('10 seconds left.');
+      if (qoldi <= 0) { toxtat(y); elon("Time is up. The examiner would stop you here."); }
     }
   }
 
@@ -410,8 +411,8 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
     } catch (e) {
       const nom = (e as DOMException)?.name;
       mikXabar(nom === 'NotAllowedError' || nom === 'SecurityError'
-        ? "Mikrofonga ruxsat berilmadi. Brauzer sozlamalarida ruxsat berib, qayta urin yoki taymer bilan ovozsiz mashq qil."
-        : "Mikrofon topilmadi yoki band. Uni tekshirib, qayta urin.");
+        ? "Microphone access was not allowed. Allow it in your browser settings and try again, or practise silently with the timer."
+        : "No microphone was found, or it is in use. Check it and try again.");
       return false;
     }
     mikXabar('');
@@ -421,7 +422,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
       rec = new MediaRecorder(oqim, mime ? { mimeType: mime } : undefined);
     } catch {
       oqim.getTracks().forEach((t) => t.stop());
-      mikXabar("Ovoz yozishni boshlab bo'lmadi. Sahifani yangilab, qayta urin yoki taymer bilan ovozsiz mashq qil.");
+      mikXabar("Couldn't start recording. Refresh the page and try again, or practise silently with the timer.");
       return false;
     }
     const bolaklar: Blob[] = [];
@@ -438,13 +439,13 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
         a.download = `tayanch-speaking-${y.nom}.${turi.includes('mp4') ? 'm4a' : turi.includes('ogg') ? 'ogg' : 'webm'}`;
       }
       yozgichChiz(y);
-      if (y.url) elon('Yozuv tayyor. Uni eshitib, quyidagi ro\'yxat bo\'yicha tekshir.');
+      if (y.url) elon('Recording ready. Listen to it and check yourself against the list below.');
     });
     try {
       rec.start(1000);
     } catch {
       oqim.getTracks().forEach((t) => t.stop());
-      mikXabar("Ovoz yozishni boshlab bo'lmadi. Sahifani yangilab, qayta urin yoki taymer bilan ovozsiz mashq qil.");
+      mikXabar("Couldn't start recording. Refresh the page and try again, or practise silently with the timer.");
       return false;
     }
     y.rec = rec; y.oqim = oqim; y.boshlandi = Date.now();
@@ -454,7 +455,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
     vaqtChiz(y);
     yozgichChiz(y);
     q<HTMLButtonElement>(y, '[data-amal=toxtat]').focus();
-    elon('Yozib olish boshlandi.');
+    elon('Recording started.');
     return true;
   }
   function toxtat(y: Yozgich) {
@@ -487,7 +488,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
   let tayyorTugash = 0;
   type P2 = 'boshlanmagan' | 'tayyorgarlik' | 'gapirish' | 'tugadi';
   function p2Holat(x: P2) {
-    $('p2-bosqich').textContent = x === 'gapirish' ? 'Gapirish' : x === 'tugadi' ? 'Tugadi' : 'Tayyorgarlik';
+    $('p2-bosqich').textContent = x === 'gapirish' ? 'Speaking' : x === 'tugadi' ? 'Finished' : 'Preparation';
     $<HTMLButtonElement>('tayyor-boshla').hidden = x !== 'boshlanmagan';
     $<HTMLButtonElement>('gapir-boshla').hidden = x === 'gapirish' || x === 'tugadi';
     if (x === 'boshlanmagan') $('p2-vaqt').textContent = mmss(TAYYOR_MS);
@@ -497,8 +498,8 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
   function tayyorChiz() {
     const qoldi = tayyorTugash - Date.now();
     $('p2-vaqt').textContent = mmss(qoldi);
-    if (qoldi <= 10000 && qoldi > 9750) elon('Tayyorgarlikka 10 soniya qoldi.');
-    if (qoldi <= 0) { elon('Tayyorgarlik tugadi. Gapirishni boshla.'); void gapir(); }
+    if (qoldi <= 10000 && qoldi > 9750) elon('10 seconds of preparation left.');
+    if (qoldi <= 0) { elon('Preparation is over. Start speaking.'); void gapir(); }
   }
   $('tayyor-boshla').addEventListener('click', () => {
     tayyorTugash = Date.now() + TAYYOR_MS;
@@ -506,7 +507,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
     tayyorTik = window.setInterval(tayyorChiz, 250);
     tayyorChiz();
     $('eslatma').focus();
-    elon("Tayyorgarlik boshlandi: 1 daqiqa. Eslatmalarni yoz.");
+    elon("Preparation started: 1 minute. Write your notes.");
   });
   async function gapir() {
     clearInterval(tayyorTik); tayyorTik = undefined;
@@ -520,7 +521,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
       p2.tik = window.setInterval(() => {
         const qoldi = p2.chegara - (Date.now() - p2.boshlandi);
         $('p2-vaqt').textContent = mmss(qoldi);
-        if (qoldi <= 0) { clearInterval(p2.tik); p2Holat('tugadi'); elon("Vaqt tugadi. Imtihonchi shu yerda to'xtatadi."); }
+        if (qoldi <= 0) { clearInterval(p2.tik); p2Holat('tugadi'); elon("Time is up. The examiner would stop you here."); }
       }, 250);
       return;
     }
@@ -558,7 +559,7 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
   function xulosa() {
     bandlar.forEach((b) => b.setAttribute('aria-pressed', String(h.belgilar.includes(b.dataset.band!))));
     const n = bandlar.filter((b) => h.belgilar.includes(b.dataset.band!)).length;
-    $('t-xulosa').textContent = n === 0 ? '' : `${bandlar.length} banddan ${n} tasi belgilandi. Belgilanmaganlari keyingi yozuvda e'tibor beriladigan joylar.`;
+    $('t-xulosa').textContent = n === 0 ? '' : `${n} of ${bandlar.length} points ticked. The unticked ones are what to focus on in your next recording.`;
   }
   bandlar.forEach((b) => b.addEventListener('click', () => {
     const id = b.dataset.band!;
@@ -603,165 +604,153 @@ const IKON_MIK = '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0zM5 10v1a7 7 0 0 0 
 </script>
 
 <style>
-  .qol { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); max-width: calc(912px + 2 * var(--b-10)) !important; }
-  .kok { color: var(--rang-havola); }
-  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  .ustki-yorliq { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
-  .izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
-  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--matn-ikkinchi); }
-  .izoh-m a { color: var(--rang-havola); }
-  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
-  h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .qol { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-10); max-width: calc(912px + 2 * var(--space-10)) !important; }
+  .kok { color: var(--color-link); }
+  .ustki-kok { margin: 0; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  .ustki-yorliq { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ielts-text-muted); }
+  .izoh { font-size: var(--text-small-size); font-weight: var(--font-weight-medium); color: var(--color-ielts-text-muted); }
+  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--color-ielts-text-muted); }
+  .izoh-m a { color: var(--color-link); }
+  h2 { font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1.2; }
+  h3 { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
   [hidden] { display: none !important; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
-  .pill-namuna { display: inline-block; padding: 2px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0; text-transform: none; }
+  .pill-ochiq { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-ielts-tile); color: var(--color-link); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .pill-namuna { display: inline-block; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); background: var(--color-ielts-tile); color: var(--color-ielts-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0; text-transform: none; }
 
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
-  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
-  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; align-items: center; gap: var(--space-3); }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-sarlavha); }
+  .lead { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
 
-  .format { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
-  .format > div { padding: var(--b-5) var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
-  .format > div + div { border-left: 1px solid var(--chiziq); }
-  .f-yorliq { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
-  .f-yorliq svg { color: var(--rang-havola); }
-  .f-qiymat { font-size: 18px; font-weight: 800; }
-  .f-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .format { border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
+  .format > div { padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
+  .format > div + div { border-left: 1px solid var(--color-ielts-line); }
+  .f-yorliq { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ielts-text-muted); }
+  .f-yorliq svg { color: var(--color-link); }
+  .f-qiymat { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
+  .f-izoh { font-size: var(--text-small-size); font-weight: var(--font-weight-medium); color: var(--color-ielts-text-muted); }
 
   .mundarija-tel { display: none; }
-  .ikki { display: flex; gap: var(--b-10); align-items: flex-start; }
-  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-14); }
-  .maqola > section { display: flex; flex-direction: column; gap: var(--b-4); scroll-margin-top: var(--b-6); }
+  .ikki { display: flex; gap: var(--space-10); align-items: flex-start; }
+  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-14); }
+  .maqola > section { display: flex; flex-direction: column; gap: var(--space-4); scroll-margin-top: var(--space-6); }
 
-  .qismlar { margin: 0; padding: 0; list-style: none; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
-  .qismlar li { padding: var(--b-4) var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); }
-  .qismlar li + li { border-top: 1px solid var(--chiziq); }
-  .q-bosh { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-3); font-weight: 700; }
+  .qismlar { margin: 0; padding: 0; list-style: none; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); overflow: hidden; }
+  .qismlar li { padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); }
+  .qismlar li + li { border-top: 1px solid var(--color-ielts-line); }
+  .q-bosh { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-3); font-weight: var(--font-weight-bold); }
 
-  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
-  .turlar li { padding: var(--b-4) var(--b-5); display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--b-4); row-gap: var(--b-1); }
-  .turlar li + li { border-top: 1px solid var(--chiziq); }
-  .t-nom { font-weight: 800; }
-  .t-matn { color: var(--matn-ikkinchi); line-height: 1.55; }
+  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); overflow: hidden; }
+  .turlar li { padding: var(--space-4) var(--space-5); display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--space-4); row-gap: var(--space-1); }
+  .turlar li + li { border-top: 1px solid var(--color-ielts-line); }
+  .t-nom { font-weight: var(--font-weight-extrabold); }
+  .t-matn { color: var(--color-ielts-text-muted); line-height: 1.55; }
 
-  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
-  .kul { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
+  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .kul { background: var(--color-ielts-tile); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
 
-  .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }
-  .tuzoqlar li { display: flex; gap: var(--b-4); align-items: flex-start; }
-  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: var(--matn-kichik); }
-  .tuzoqlar p { margin-top: var(--b-1); line-height: 1.6; }
+  .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
+  .tuzoqlar li { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--radius-full); border: 1.5px solid var(--color-ielts-text); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-extrabold); font-size: var(--text-small-size); }
+  .tuzoqlar p { margin-top: var(--space-1); line-height: 1.6; }
 
   /* Gapirish mashqi: sahifadagi yagona soya */
-  .mashq { background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya); padding: 28px; gap: var(--b-5) !important; }
-  .m-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
-  .maxfiy { display: flex; gap: var(--b-3); align-items: flex-start; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--fon-ikkinchi); line-height: 1.5; font-size: var(--matn-kichik); font-weight: 600; }
-  .maxfiy svg { flex: none; margin-top: 2px; color: var(--rang-havola); }
-  .ogoh { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; line-height: 1.5; }
+  .mashq { background: var(--color-ielts-bg); border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); box-shadow: var(--shadow-glass); padding: var(--space-7); gap: var(--space-5) !important; }
+  .m-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .maxfiy { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); line-height: 1.5; font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); }
+  .maxfiy svg { flex: none; margin-top: var(--space-1); color: var(--color-link); }
+  .ogoh { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-bold); line-height: 1.5; }
 
-  .tablar { display: flex; gap: var(--b-1); padding: var(--b-1); background: var(--fon-ikkinchi); border-radius: var(--r-toliq); align-self: flex-start; }
-  .tablar button { min-height: 44px; padding: 0 var(--b-5); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 800; cursor: pointer; }
-  .tablar button:hover { color: var(--matn); }
-  .tablar button[aria-selected='true'] { background: var(--matn); color: var(--fon); }
-  .panel { display: flex; flex-direction: column; gap: var(--b-4); }
+  .tablar { display: flex; gap: var(--space-1); padding: var(--space-1); background: var(--color-ielts-tile); border-radius: var(--radius-full); align-self: flex-start; }
+  .tablar button { min-height: 44px; padding: 0 var(--space-5); border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-ielts-text-muted); font: inherit; font-weight: var(--font-weight-extrabold); cursor: pointer; }
+  .tablar button:hover { color: var(--color-ielts-text); }
+  .tablar button[aria-selected='true'] { background: var(--color-ielts-text); color: var(--color-ielts-bg); }
+  .panel { display: flex; flex-direction: column; gap: var(--space-4); }
   .panel:focus-visible, .tablar button:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .savollar { margin: 0; padding-left: var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.55; font-weight: 600; }
+  .savollar { margin: 0; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); line-height: 1.55; font-weight: var(--font-weight-semibold); }
 
-  .kartochkalar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
-  .k-tanlov { min-height: 44px; padding: 0 var(--b-4); border-radius: var(--r-toliq); border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
-  .k-tanlov:hover { border-color: var(--rang-asosiy); }
-  .k-tanlov[aria-pressed='true'] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
-  .kartochka { padding: var(--b-5); border: 1.5px dashed var(--matn); border-radius: var(--r-orta); display: flex; flex-direction: column; gap: var(--b-2); line-height: 1.55; }
-  .kartochka ul { margin: 0; padding-left: var(--b-6); }
-  .k-mavzu { font-weight: 800; font-size: 18px; }
-  .bosqich-qator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-4); }
-  .b-taymer { display: flex; flex-direction: column; gap: var(--b-1); }
-  .katta-vaqt { font-size: 40px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .kartochkalar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .k-tanlov { min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-full); border: 1.5px solid var(--color-ielts-line); background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; font-weight: var(--font-weight-bold); cursor: pointer; }
+  .k-tanlov:hover { border-color: var(--color-ielts-accent-text); }
+  .k-tanlov[aria-pressed='true'] { border-color: var(--color-ielts-accent-text); background: var(--color-ielts-tile); }
+  .kartochka { padding: var(--space-5); border: 1.5px dashed var(--color-ielts-text); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: var(--space-2); line-height: 1.55; }
+  .kartochka ul { margin: 0; padding-left: var(--space-6); }
+  .k-mavzu { font-weight: var(--font-weight-extrabold); font-size: var(--text-h3-size); }
+  .bosqich-qator { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
+  .b-taymer { display: flex; flex-direction: column; gap: var(--space-1); }
+  .katta-vaqt { font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1; font-variant-numeric: tabular-nums; }
   textarea {
-    width: 100%; resize: vertical; padding: var(--b-3) var(--b-4); border-radius: var(--r-orta);
-    border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; line-height: 1.6;
+    width: 100%; resize: vertical; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-ielts-line); background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; line-height: 1.6;
   }
-  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-color: var(--rang-asosiy); }
-  textarea::placeholder { color: var(--matn-sust); opacity: 1; }
+  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-color: var(--color-ielts-accent-text); }
+  textarea::placeholder { color: var(--color-ielts-text-muted); opacity: 1; }
 
-  .yozgich { display: flex; flex-direction: column; gap: var(--b-3); }
-  .y-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .y-vaqt { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .y-belgi { display: inline-flex; align-items: center; gap: var(--b-2); padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-size: var(--matn-mayda); font-weight: 800; }
-  .y-belgi::before { content: ''; width: 8px; height: 8px; border-radius: var(--r-toliq); background: currentColor; }
-  .y-natija { display: flex; flex-direction: column; gap: var(--b-3); }
+  .yozgich { display: flex; flex-direction: column; gap: var(--space-3); }
+  .y-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .y-vaqt { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .y-belgi { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-warning-subtle); color: var(--color-warning-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-extrabold); }
+  .y-belgi::before { content: ''; width: 8px; height: 8px; border-radius: var(--radius-full); background: currentColor; }
+  .y-natija { display: flex; flex-direction: column; gap: var(--space-3); }
   audio { width: 100%; }
-  .y-tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
+  .y-tugmalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 
-  .tekshiruv { display: flex; flex-direction: column; gap: var(--b-3); border-top: 1px solid var(--chiziq); padding-top: var(--b-5); }
-  .t-guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .t-guruh legend { padding: 0; margin: var(--b-2) 0; font-weight: 800; font-size: 18px; }
+  .tekshiruv { display: flex; flex-direction: column; gap: var(--space-3); border-top: 1px solid var(--color-ielts-line); padding-top: var(--space-5); }
+  .t-guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .t-guruh legend { padding: 0; margin: var(--space-2) 0; font-weight: var(--font-weight-extrabold); font-size: var(--text-h3-size); }
   .t-band {
-    display: flex; align-items: center; gap: var(--b-3); text-align: left; min-height: 48px; padding: var(--b-2) var(--b-4);
-    border-radius: var(--r-orta); border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; line-height: 1.45; cursor: pointer;
+    display: flex; align-items: center; gap: var(--space-3); text-align: left; min-height: 48px; padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md); border: 1.5px solid var(--color-ielts-line); background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; line-height: 1.45; cursor: pointer;
   }
-  .t-band:hover { border-color: var(--rang-asosiy); }
-  .katakcha { width: 24px; height: 24px; flex: none; border-radius: var(--r-kichik); border: 2px solid var(--matn-ikkinchi); display: grid; place-items: center; color: transparent; }
-  .t-band[aria-pressed='true'] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
-  .t-band[aria-pressed='true'] .katakcha { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .t-xulosa { font-weight: 700; line-height: 1.5; }
+  .t-band:hover { border-color: var(--color-ielts-accent-text); }
+  .katakcha { width: 24px; height: 24px; flex: none; border-radius: var(--radius-sm); border: 2px solid var(--color-ielts-text-muted); display: grid; place-items: center; color: transparent; }
+  .t-band[aria-pressed='true'] { border-color: var(--color-ielts-accent-text); background: var(--color-ielts-tile); }
+  .t-band[aria-pressed='true'] .katakcha { background: var(--color-ielts-accent-text); border-color: var(--color-ielts-accent-text); color: var(--color-ielts-on-accent); }
+  .t-xulosa { font-weight: var(--font-weight-bold); line-height: 1.5; }
   .t-xulosa:empty { display: none; }
+  .toxtat-q { background: var(--color-ielts-text); color: var(--color-ielts-bg); }
+  .k-tanlov:focus-visible, .t-band:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .tozalash { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); border-top: 1px solid var(--color-ielts-line); padding-top: var(--space-3); }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); }
 
-  .katta-q { display: inline-flex; align-items: center; justify-content: center; gap: var(--b-2); min-height: var(--control-height-md); padding: 0 24px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; cursor: pointer; }
-  .asosiy-q { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
-  .asosiy-q:hover { background: var(--btn-primary-bg-hover); }
-  .asosiy-q:disabled { background: var(--sirt-ikkinchi); color: var(--matn-sust); cursor: not-allowed; }
-  .toxtat-q { background: var(--matn); color: var(--fon); }
-  .chiziq-tugma { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
-  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
-  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
-  .k-tanlov:focus-visible, .t-band:focus-visible, .katta-q:focus-visible, .chiziq-tugma:focus-visible, .matn-tugma:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .tozalash { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
-  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+  .keyingi { background: var(--color-ielts-ink); color: var(--color-neutral-0); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); padding: var(--space-7); gap: var(--space-4) !important; }
+  .kok-q { color: var(--color-floor-ielts-400); }
+  .keyingi h2 { font-size: var(--text-h2-size); line-height: 1.25; }
+  .k-matn { line-height: 1.6; color: var(--color-neutral-400); }
+  .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); padding-top: var(--space-1); }
 
-  .keyingi { background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
-  .kok-q { color: var(--rang-asosiy-qorada); }
-  .keyingi h2 { font-size: 26px; line-height: 1.25; }
-  .k-matn { line-height: 1.6; color: var(--qora-matn-ikkinchi); }
-  .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
-  .katta { display: inline-flex; align-items: center; justify-content: center; min-height: var(--control-height-md); padding: 0 24px; border-radius: var(--r-toliq); text-decoration: none; font-weight: 800; }
-  .katta.asosiy { background: var(--qora-matn); color: var(--qora); }
-  .katta.asosiy:hover { background: var(--color-neutral-200); }
-  .katta.qora-tugma { background: var(--qora-sirt); color: var(--qora-matn); font-weight: 700; }
-
-  .mundarija { flex: 0 0 240px; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1); border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-3); }
-  .mundarija .ustki-yorliq { margin: var(--b-2) var(--b-3); }
-  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
-  .mundarija a:hover { background: var(--fon-ikkinchi); }
-  .mundarija a[aria-current='true'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .mundarija { flex: 0 0 240px; position: sticky; top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-1); border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); padding: var(--space-3); }
+  .mundarija .ustki-yorliq { margin: var(--space-2) var(--space-3); }
+  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-3); border-radius: var(--radius-md); color: var(--color-ielts-text); text-decoration: none; font-weight: var(--font-weight-bold); }
+  .mundarija a:hover { background: var(--color-ielts-tile); }
+  .mundarija a[aria-current='true'] { background: var(--color-ielts-tile); color: var(--color-link); }
 
   @media (max-width: 1180px) {
     .mundarija { display: none; }
-    .mundarija-tel { display: block; border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
-    .mundarija-tel summary { list-style: none; min-height: 52px; padding: 0 var(--b-4); display: flex; align-items: center; justify-content: space-between; font-weight: 800; cursor: pointer; }
+    .mundarija-tel { display: block; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-md); }
+    .mundarija-tel summary { list-style: none; min-height: 52px; padding: 0 var(--space-4); display: flex; align-items: center; justify-content: space-between; font-weight: var(--font-weight-extrabold); cursor: pointer; }
     .mundarija-tel summary::-webkit-details-marker { display: none; }
     .mundarija-tel[open] summary svg { transform: rotate(180deg); }
-    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--b-2) var(--b-2); display: flex; flex-direction: column; gap: 2px; }
-    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
-    .mundarija-tel a:hover { background: var(--fon-ikkinchi); }
+    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--space-2) var(--space-2); display: flex; flex-direction: column; gap: var(--space-1); }
+    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-3); border-radius: var(--radius-md); color: var(--color-ielts-text); text-decoration: none; font-weight: var(--font-weight-bold); }
+    .mundarija-tel a:hover { background: var(--color-ielts-tile); }
   }
   @media (max-width: 760px) {
     .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .format > div:nth-child(3) { border-left: 0; }
-    .format > div:nth-child(n + 3) { border-top: 1px solid var(--chiziq); }
+    .format > div:nth-child(n + 3) { border-top: 1px solid var(--color-ielts-line); }
     .juft, .turlar li { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .qol { padding-top: var(--b-6); gap: var(--b-8); }
-    h1 { font-size: 34px; }
-    h2 { font-size: 24px; }
-    .maqola { gap: var(--b-10); }
-    .mashq { padding: var(--b-5); }
+    .qol { padding-top: var(--space-6); gap: var(--space-8); }
+    h1 { font-size: var(--text-h1-size); }
+    h2 { font-size: var(--text-h2-size); }
+    .maqola { gap: var(--space-10); }
+    .mashq { padding: var(--space-5); }
     .tablar { align-self: stretch; }
-    .tablar button { flex: 1; padding: 0 var(--b-2); }
-    .katta-q, .y-tugmalar .chiziq-tugma, .k-tugmalar .katta { width: 100%; }
-    .katta-vaqt { font-size: 32px; }
+    .tablar button { flex: 1; padding: 0 var(--space-2); }
+    .y-tugmalar .t-tugma, .k-tugmalar .t-tugma { width: 100%; }
+    .katta-vaqt { font-size: var(--text-h1-size); }
   }
 </style>

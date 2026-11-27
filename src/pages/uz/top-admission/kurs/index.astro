@@ -1,4 +1,5 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css (.adm doira, eyebrow, Onest 800 sarlavha; uzun matn zich sirtda).
 // 2-qavat · Top Admission · kurs bosh sahifasi (Admission H; spetsifikatsiya muallif tasdig'i bilan, 2026-11-21).
 // 4 modul, 16 dars; mazmuni tayyor darslar havola, qolgani "tez orada". Tavsiya etilgan yo'llar (bakalavr, magistratura).
 // Progress `tayanch:top-admission-kurs-progress` dan (kursProgress.ts): "n / jami dars bajarildi", har dars yonida belgi.
@@ -7,6 +8,7 @@ import BolimQobiq from '../../../../layouts/BolimQobiq.astro';
 import { DARSLAR, KURS_NOMI, KURS_TAVSIF, MODULLAR, YOLLAR } from '../../../../data/topAdmission/kurs';
 import { KURS_KALIT } from '../../../../lib/topAdmission/kursProgress';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/adm.css';
 
 const tayyor = DARSLAR.filter((d) => d.tushuntirish);
 const darslarJson = JSON.stringify(tayyor.map((d) => ({ slug: d.slug, mezonlar: d.mezonlar!.map((m) => m.id) })));
@@ -21,19 +23,19 @@ const darslarJson = JSON.stringify(tayyor.map((d) => ({ slug: d.slug, mezonlar: 
 >
   <div class="ichki kk-sahifa" data-kurs data-kalit={KURS_KALIT} data-darslar={darslarJson} data-jami={DARSLAR.length}>
     <header class="kk-bosh">
-      <p class="ustki">Kurs</p>
-      <h1>{KURS_NOMI}</h1>
+      <p class="adm-eyebrow">Kurs</p>
+      <h1 class="adm-h1">{KURS_NOMI}</h1>
       <p class="matn">{KURS_TAVSIF}</p>
-      <p class="sust">Mashqlar, namunalar va tekshiruv mezonlari Tayanch uchun yozilgan original o'quv materiallari. Belgilar faqat shu brauzerda saqlanadi.</p>
-      <p class="kk-qoshimcha"><a class="tugma tugma-ikkinchi" href={yol('/uz/top-admission/kurs/shablonlar/')}>Ish shablonlari</a> <a class="tugma tugma-ikkinchi" href={yol('/uz/top-admission/kurs/namunalar/')}>Yozuv namunalari</a></p>
+      <p class="sust">Mashqlar, namunalar va tekshiruv mezonlari Tayanch uchun yozilgan original oʻquv materiallari. Belgilar faqat shu brauzerda saqlanadi.</p>
+      <p class="kk-qoshimcha"><a class="t-tugma t-tugma--ikkinchi" href={yol('/uz/top-admission/kurs/shablonlar/')}>Ish shablonlari</a> <a class="t-tugma t-tugma--ikkinchi" href={yol('/uz/top-admission/kurs/namunalar/')}>Yozuv namunalari</a></p>
       <div class="kk-progress" data-progress hidden>
         <p class="kk-soni" aria-live="polite" tabindex="-1" data-soni></p>
         <div class="kk-tozala">
-          <button type="button" class="tugma tugma-ikkinchi" data-tozala>Belgilarni tozalash</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-tozala>Belgilarni tozalash</button>
           <div class="kk-tasdiq" data-tasdiq hidden role="group" aria-label="Tozalashni tasdiqlash">
-            <span>Hamma darslardagi belgilar o'chadi.</span>
-            <button type="button" class="tugma tugma-asosiy" data-ha>Ha, tozalash</button>
-            <button type="button" class="tugma tugma-ikkinchi" data-bekor>Bekor qilish</button>
+            <span>Hamma darslardagi belgilar oʻchadi.</span>
+            <button type="button" class="t-tugma adm-tugma--urgu" data-ha>Ha, tozalash</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" data-bekor>Bekor qilish</button>
           </div>
         </div>
       </div>
@@ -107,30 +109,30 @@ const darslarJson = JSON.stringify(tayyor.map((d) => ({ slug: d.slug, mezonlar: 
 </script>
 
 <style>
-  .kk-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); }
-  .kk-bosh { display: grid; gap: var(--b-3); }
-  .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .kk-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
+  .kk-bosh { display: grid; gap: var(--space-3); }
+  .ustki { margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
   .matn { max-width: 62ch; margin: 0; }
-  .sust { max-width: 62ch; margin: 0; color: var(--matn-ikkinchi); }
-  .kk-qoshimcha { margin: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-3); }
-  .kk-progress { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-5); }
-  .kk-soni { margin: 0; font-weight: 700; }
-  .kk-tasdiq { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-3); }
+  .sust { max-width: 62ch; margin: 0; color: var(--color-adm-text-muted); }
+  .kk-qoshimcha { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
+  .kk-progress { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); }
+  .kk-soni { margin: 0; font-weight: var(--font-weight-bold); }
+  .kk-tasdiq { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
   .kk-tasdiq[hidden], .kk-tozala [hidden] { display: none; }
-  .kk-yollar, .kk-modul { display: grid; gap: var(--b-3); }
+  .kk-yollar, .kk-modul { display: grid; gap: var(--space-3); }
   .kk-yollar h2, .kk-modul h2 { margin: 0; }
-  .kk-yol-royxat { margin: 0; padding-left: 1.2em; display: grid; gap: var(--b-1); }
-  .kk-darslar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-2); }
+  .kk-yol-royxat { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-1); }
+  .kk-darslar { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
   .kk-dars {
-    display: flex; align-items: center; gap: var(--b-3); min-height: 56px; padding: var(--b-2) var(--b-4);
-    border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt);
+    display: flex; align-items: center; gap: var(--space-3); min-height: 56px; padding: var(--space-2) var(--space-4);
+    border: var(--border-width-1) solid var(--color-adm-glass-border); border-radius: var(--radius-xl); background: var(--color-adm-glass-strong); box-shadow: var(--shadow-glass);
   }
   .kk-raqam {
-    flex: none; width: 32px; height: 32px; display: inline-grid; place-items: center; border-radius: var(--r-toliq);
-    border: 1.5px solid var(--chiziq-kuchli); font-weight: 700; font-size: var(--matn-kichik);
+    flex: none; width: 32px; height: 32px; display: inline-grid; place-items: center; border-radius: var(--radius-full);
+    border: 1.5px solid var(--color-adm-line-strong); font-weight: var(--font-weight-bold); font-size: var(--text-small-size);
   }
-  .kk-nom { flex: 1; min-width: 0; font-weight: 700; }
-  a.kk-nom { color: var(--rang-havola); min-height: 44px; display: inline-flex; align-items: center; }
-  .kk-sust { color: var(--matn-sust); }
+  .kk-nom { flex: 1; min-width: 0; font-weight: var(--font-weight-bold); }
+  a.kk-nom { color: var(--color-link); min-height: 44px; display: inline-flex; align-items: center; }
+  .kk-sust { color: var(--color-adm-text-muted); }
   .kk-belgi[hidden] { display: none; }
 </style>

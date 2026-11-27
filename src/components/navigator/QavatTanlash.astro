@@ -1,0 +1,153 @@
+---
+// 1-qavat bosh sahifa hero'si: doim ko'rinadigan qavat tanlash paneli (CTA brifi, 2026-11-24).
+// Qatorlar role="radiogroup"/"radio" (roving tabindex: faqat tanlangan qator Tab'da), strelka, Home/End.
+// Tasdiq tugmasi <a>: skriptsiz ham standart qavat (SAT) sahifasiga olib boradi; tanlovda matn va href almashadi.
+// Tanlov saqlanmaydi (localStorage yo'q). Boshqa joylardagi [data-qavat-tanlash] havolalari shu panelga
+// scroll qiladi va fokusni tanlangan qatorga qo'yadi. Sahna (.nav-sahna) ichida turadi: shisha va tugma
+// tokenlari sahna qiymatida. Harakat: faqat transform/opacity, ekrandan chiqsa va reduced motion'da to'xtaydi.
+import { boshKartalar, standartQavat } from '../../data/boshSahifa';
+import { qavatlar } from '../../data/qavatlar';
+import { yol } from '../../lib/yol';
+
+const qatorlar = boshKartalar.filter((k) => k.tugma).map((k) => ({ ...k, raqam: String(qavatlar.find((q) => q.slug === k.slug)?.raqam ?? 0).padStart(2, '0') }));
+const standart = qatorlar.find((q) => q.slug === standartQavat) ?? qatorlar[0];
+---
+<div class="qt t-shisha t-shisha--zich" id="qavat-tanlash" data-qt>
+  <h2 id="qt-h" class="qt-sarlavha">Qavatni tanlang</h2>
+  <p class="qt-yorliq">{qatorlar.length} qavat · hammasida bepul qism</p>
+  <div class="qt-royxat" role="radiogroup" aria-labelledby="qt-h">
+    {qatorlar.map((q) => {
+      const tanlangan = q.slug === standart.slug;
+      return (
+        <div class="qt-qator" role="radio" aria-checked={tanlangan ? 'true' : 'false'} tabindex={tanlangan ? 0 : -1} data-qavat={q.slug} data-href={yol(q.href)} data-tugma={q.tugma}>
+          <span class="qt-nuqta" aria-hidden="true"></span>
+          <span class="qt-matn">
+            <span class="qt-nom"><span class="qt-raqam">{q.raqam}</span> {q.title}</span>
+            <span class="qt-harakat">{q.harakat}</span>
+          </span>
+          <span class="qt-bepul">Bepul</span>
+        </div>
+      );
+    })}
+  </div>
+  <a class="t-tugma qt-tugma" href={yol(standart.href)} data-qt-tugma>
+    <span data-qt-tugma-matn>{standart.tugma}</span>
+    <svg class="qt-strelka" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+  </a>
+</div>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-qt]');
+  if (panel) {
+    const qatorlar = [...panel.querySelectorAll<HTMLElement>('[role="radio"]')];
+    const tugma = panel.querySelector<HTMLAnchorElement>('[data-qt-tugma]')!;
+    const tugmaMatni = panel.querySelector<HTMLElement>('[data-qt-tugma-matn]')!;
+    const tanlangan = () => qatorlar.find((q) => q.getAttribute('aria-checked') === 'true') ?? qatorlar[0];
+
+    function tanla(qator: HTMLElement, fokus = true) {
+      for (const q of qatorlar) {
+        const bu = q === qator;
+        q.setAttribute('aria-checked', String(bu));
+        q.tabIndex = bu ? 0 : -1;
+      }
+      tugma.href = qator.dataset.href ?? tugma.href;
+      tugmaMatni.textContent = qator.dataset.tugma ?? tugmaMatni.textContent;
+      if (fokus) qator.focus();
+    }
+
+    for (const q of qatorlar) {
+      q.addEventListener('click', () => tanla(q));
+      q.addEventListener('keydown', (e) => {
+        const i = qatorlar.indexOf(q);
+        const n = qatorlar.length;
+        let keyingi: number | null = null;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') keyingi = (i + 1) % n;
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') keyingi = (i - 1 + n) % n;
+        else if (e.key === 'Home') keyingi = 0;
+        else if (e.key === 'End') keyingi = n - 1;
+        else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); tanla(q); return; }
+        if (keyingi === null) return;
+        e.preventDefault();
+        tanla(qatorlar[keyingi]);
+      });
+    }
+
+    // Sahifadagi "Bepul qavatni tanlash", "Qavatni tanlang" va boshqa havolalar: panelga scroll + fokus
+    const harakatKam = () => matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduced';
+    document.addEventListener('click', (e) => {
+      const havola = e.target instanceof Element ? e.target.closest<HTMLAnchorElement>('a[data-qavat-tanlash]') : null;
+      if (!havola || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      panel.scrollIntoView({ behavior: harakatKam() ? 'auto' : 'smooth', block: 'center' });
+      tanlangan().focus({ preventScroll: true });
+      history.replaceState(null, '', '#qavat-tanlash');
+    });
+
+    // Pulsatsiya halqasi: panel ekrandan chiqsa to'xtaydi
+    new IntersectionObserver(([y]) => { panel.dataset.harakat = y.isIntersecting ? '' : 'toxta'; }).observe(panel);
+  }
+</script>
+
+<style>
+  .qt { display: grid; gap: var(--space-1); padding: var(--space-3); border-radius: var(--radius-lg); min-width: 0; scroll-margin-block: var(--space-16); }
+  .qt-sarlavha {
+    margin: 0; padding: var(--space-2) var(--space-3) 0;
+    font-family: var(--font-display); font-weight: var(--font-weight-bold);
+    font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); letter-spacing: var(--text-nav-sarlavha-ls);
+    text-transform: uppercase; color: var(--color-nav-on-stage);
+  }
+  .qt-yorliq {
+    margin: 0; padding: 0 var(--space-3) var(--space-2);
+    font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono);
+    letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; color: var(--color-nav-on-stage-muted);
+  }
+  .qt-royxat { display: grid; gap: var(--space-1); }
+  .qt-qator {
+    --qt-rang: var(--color-floor-sat-500); --qt-nur: var(--color-floor-sat-glow);
+    display: flex; align-items: center; gap: var(--space-3);
+    min-height: var(--size-touch-min); padding: var(--space-3);
+    border: var(--border-width-1) solid transparent; border-radius: var(--radius-md);
+    color: var(--color-nav-on-stage); cursor: pointer; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-qator[data-qavat="top-admission"] { --qt-rang: var(--color-floor-admission-500); --qt-nur: var(--color-floor-admission-glow); }
+  .qt-qator[data-qavat="ielts"] { --qt-rang: var(--color-floor-ielts-400); --qt-nur: var(--color-floor-ielts-glow); }
+  .qt-qator[data-qavat="eyuf"] { --qt-rang: var(--color-floor-eyuf-400); --qt-nur: var(--color-floor-eyuf-glow); }
+  @media (hover: hover) and (pointer: fine) { .qt-qator:hover { background: var(--color-nav-glass-stage); } }
+  .qt-qator[aria-checked="true"] { background: var(--color-nav-glass-stage); border-color: var(--color-nav-line-on-stage); }
+  .qt-qator:focus-visible { outline: var(--border-width-2) solid var(--color-focus-ring); outline-offset: var(--border-width-2); }
+  .qt-nuqta { flex: none; width: var(--size-nav-nuqta); height: var(--size-nav-nuqta); border-radius: var(--radius-full); background: var(--qt-rang); box-shadow: 0 0 var(--space-3) var(--qt-nur); }
+  .qt-matn { display: grid; gap: var(--space-1); flex: 1; min-width: 0; }
+  .qt-nom { font-weight: var(--font-weight-semibold); font-size: var(--text-body-size); line-height: var(--text-small-lh); }
+  .qt-raqam { font-family: var(--font-mono); font-size: var(--text-small-size); font-variant-numeric: tabular-nums; color: var(--color-nav-on-stage-muted); }
+  .qt-qator[aria-checked="true"] .qt-raqam { color: var(--color-nav-lime); }
+  .qt-harakat { font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-nav-on-stage-muted); }
+  .qt-bepul { flex: none; font: var(--font-weight-medium) var(--text-nav-yorliq-size) / var(--text-nav-yorliq-lh) var(--font-mono); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; color: var(--color-nav-lime); }
+
+  /* Tasdiq tugmasi: poydevor .t-tugma (sahnada nur = floor-navigator-glow), ostida yumshoq pulsatsiya halqasi */
+  .qt-tugma { margin-top: var(--space-2); width: 100%; isolation: isolate; }
+  .qt-tugma::after {
+    content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+    box-shadow: 0 0 0 var(--border-width-2) var(--color-nav-lime), 0 0 var(--space-6) var(--color-floor-navigator-glow);
+    opacity: 0;
+    animation: qt-puls var(--nav-puls-davomi) var(--ease-enter) infinite;
+  }
+  @keyframes qt-puls {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 0; transform: scale(var(--nav-puls-masshtab)); }
+  }
+  .qt[data-harakat="toxta"] .qt-tugma::after { animation-play-state: paused; }
+  .qt-strelka { transition: transform var(--duration-base) var(--ease-state); }
+  @media (hover: hover) and (pointer: fine) { .qt-tugma:hover .qt-strelka { transform: translateX(var(--nav-strelka-siljish)); } }
+  .qt-tugma:focus-visible .qt-strelka { transform: translateX(var(--nav-strelka-siljish)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-tugma::after { animation: none; }
+    .qt-strelka { transition: none; }
+  }
+  :global(:root[data-motion="reduced"]) .qt-tugma::after { animation: none; }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .qt-tugma { background: var(--color-action-primary-bg); color: var(--color-action-primary-text); border-color: var(--color-nav-line-on-stage); box-shadow: none; }
+    .qt-tugma::after { display: none; }
+  }
+</style>

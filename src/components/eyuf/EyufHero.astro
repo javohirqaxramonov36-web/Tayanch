@@ -1,0 +1,41 @@
+---
+// EyufHero (DS 5-qavat, PR 9): noshaffof zumrad / fil suyagi sahna (.eyuf-sahna.t-fon), ichida shaffof shisha panel.
+// Chapda yorliq, Playfair sarlavha (urg'u so'z kursiv oltin), 1–2 jumla va tugmalar (slot "tugmalar");
+// `obyekt` berilsa o'ngda oltin orbita (motiv, ekranda bitta). `ixcham`: ichki sahifa sarlavhasi, orbitasiz.
+// Shaffof shishada matn faqat eyuf-text (DESIGN.md "5-qavat EYUF" kontrast jadvali).
+import '../../styles/eyuf.css';
+import EyufIkonka from './EyufIkonka.astro';
+import EyufYulduz from './EyufYulduz.astro';
+interface Props {
+  id: string;
+  yorliq: string;
+  sarlavha: string;
+  /** Sarlavha oxiridagi urg'u so'z (kursiv, oltin) */
+  urgu?: string;
+  matn?: string;
+  obyekt?: 'qalpoq';
+  ixcham?: boolean;
+  /** Sarlavha yonidagi yulduzcha (faqat asosiy hero) */
+  yulduz?: boolean;
+}
+const { id, yorliq, sarlavha, urgu, matn, obyekt, ixcham = false, yulduz = false } = Astro.props;
+---
+<section class="eyuf-sahna t-fon" aria-labelledby={id}>
+  <div class:list={['eyuf-hero t-shisha', obyekt && 'eyuf-hero--orbita', ixcham && 'eyuf-hero--ixcham']}>
+    <div class="eyuf-hero-matn">
+      <slot name="ustki" />
+      <p class="eyuf-yorliq">{yorliq}</p>
+      <h1 id={id}>{sarlavha}{urgu && <Fragment> <span class="eyuf-urgu">{urgu}</span></Fragment>}{yulduz && <Fragment> <EyufYulduz /></Fragment>}</h1>
+      {matn && <p>{matn}</p>}
+      <slot />
+      {Astro.slots.has('tugmalar') && <div class="eyuf-hero-tugmalar"><slot name="tugmalar" /></div>}
+    </div>
+    {obyekt && (
+      <div class="eyuf-orbita" aria-hidden="true">
+        <EyufIkonka nomi={obyekt} qalinlik={1.5} />
+        <EyufYulduz />
+      </div>
+    )}
+  </div>
+  <slot name="pastki" />
+</section>

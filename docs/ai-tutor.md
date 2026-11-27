@@ -42,7 +42,7 @@ Uchala shart birga bajarilishi kerak:
     where code = '<free|pro>';
    ```
 
-**Muallif uchun taklif (raqam emas, variant a):** Free kuniga 3 / oyiga 30, Pro kuniga 30 / oyiga 300. Bu faqat taklif, kodga va bazaga yozilmagan.
+**Qaror (muallif, 2026-11-24):** AI Tutor faqat Max tarifida; Free va Pro'da kalit yozilmaydi (yopiq). Max limiti raqami AI tutor qurilgach belgilanadi. Eski taklif (Free 3/30, Pro 30/300) bekor. Sotuv tartibi: `docs/tarif-qoidalari.md` "Max sotuvga chiqishi".
 
 Deploy (muallif "ha" degandan keyin): migratsiya (`db push`, HANDOFF §8 tartibi bilan, avval dry-run), keyin `supabase functions deploy ai-tutor --no-verify-jwt --use-api`.
 

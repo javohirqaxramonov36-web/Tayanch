@@ -5,7 +5,8 @@
    - DS @container vp → @media (min-width: 768px).
    - <html data-floor> server tomonda (joriyQavat). 1-qavat standarti :where(:root) da,
      aks holda keyingi :root qoidasi [data-floor="3"] ni bosib ketadi.
-   - Shrift oilasi: 'Onest Variable' (@fontsource-variable/onest).
+   - Shrift oilasi: 'Onest Variable' (@fontsource-variable/onest). Qavat shriftlari --font-display … --font-eyuf
+     (DS PR 4), fayllari QavatShrifti.astro da.
    - Oxirida: sayt qo'shimchalari va eski o'zbekcha nomlarning DS ga ulanishi. */
 
 /* ==========================================================================
@@ -24,11 +25,14 @@
   /* Havola va fokus urg'usi (A yo'nalish): qavat rangidan alohida */
   --color-accent-300:#93B2FF; --color-accent-400:#7FB0FF; --color-accent-500:#2F86FF; --color-accent-700:#264CD0;
   --color-brand-100:#F4F7FE; --color-brand-200:#BDCCFF; --color-brand-300:#8BA0F0; --color-brand-400:#5D72D9; --color-brand-500:#323CB3; --color-brand-600:#282E9C; --color-brand-700:#1E2282; --color-brand-800:#151866; --color-brand-900:#0D1049;
-  --color-floor-navigator-100:#EBFAFC; --color-floor-navigator-200:#C1F4FB; --color-floor-navigator-300:#94ECF7; --color-floor-navigator-400:#62E1F1; --color-floor-navigator-500:#19D3E6; --color-floor-navigator-600:#04A6B8; --color-floor-navigator-700:#017A8A; --color-floor-navigator-800:#00515E; --color-floor-navigator-900:#012C35;
-  --color-floor-admission-100:#FDF6E8; --color-floor-admission-200:#FFEBC3; --color-floor-admission-300:#FFDF9D; --color-floor-admission-400:#FFD271; --color-floor-admission-500:#FFC21F; --color-floor-admission-600:#CC9200; --color-floor-admission-700:#976600; --color-floor-admission-800:#633E02; --color-floor-admission-900:#331B00;
+  /* Qavat shkalalari (ADR 005, DS artifakti v15, 2026-11-18). 500 = belgi rangi; 700 va 400 = DS dagi
+     yorug' / qorong'i matn rangi (navigator: nav-lime-text). Qolganlari OKLCH da 400–500–700 orasidan hisoblangan.
+     SAT shkalasi o'zgarmagan. */
+  --color-floor-navigator-100:#F5FAE4; --color-floor-navigator-200:#E5F2B7; --color-floor-navigator-300:#D6E987; --color-floor-navigator-400:#C8E04A; --color-floor-navigator-500:#B8D02C; --color-floor-navigator-600:#879C1B; --color-floor-navigator-700:#5A6A0A; --color-floor-navigator-800:#3D4900; --color-floor-navigator-900:#232B00;
+  --color-floor-admission-100:#FFF5EE; --color-floor-admission-200:#FFD8BE; --color-floor-admission-300:#FEBB8C; --color-floor-admission-400:#FF9A4A; --color-floor-admission-500:#FF5A0C; --color-floor-admission-600:#DB4B05; --color-floor-admission-700:#B83C00; --color-floor-admission-800:#7D2600; --color-floor-admission-900:#471201;
   --color-floor-sat-100:#F2F7FF; --color-floor-sat-200:#C9DFFF; --color-floor-sat-300:#9EC5FE; --color-floor-sat-400:#6FA9FF; --color-floor-sat-500:#2F86FF; --color-floor-sat-600:#156AD9; --color-floor-sat-700:#0050B0; --color-floor-sat-800:#003982; --color-floor-sat-900:#002357;
-  --color-floor-ielts-100:#FEF4F3; --color-floor-ielts-200:#FFD1CB; --color-floor-ielts-300:#FEABA1; --color-floor-ielts-400:#FF7D71; --color-floor-ielts-500:#EF4841; --color-floor-ielts-600:#C92C2A; --color-floor-ielts-700:#A11618; --color-floor-ielts-800:#78040A; --color-floor-ielts-900:#500003;
-  --color-floor-eyuf-100:#ECFBF0; --color-floor-eyuf-200:#C4F7D0; --color-floor-eyuf-300:#9BF0B2; --color-floor-eyuf-400:#6EE695; --color-floor-eyuf-500:#3BD879; --color-floor-eyuf-600:#07AC5E; --color-floor-eyuf-700:#007F47; --color-floor-eyuf-800:#015631; --color-floor-eyuf-900:#002F1A;
+  --color-floor-ielts-100:#F3F7FF; --color-floor-ielts-200:#D2E1FF; --color-floor-ielts-300:#B0CAFF; --color-floor-ielts-400:#8FB3FF; --color-floor-ielts-500:#2760DE; --color-floor-ielts-600:#1F53CB; --color-floor-ielts-700:#1846B8; --color-floor-ielts-800:#0C308D; --color-floor-ielts-900:#07205C;
+  --color-floor-eyuf-100:#E5FEF1; --color-floor-eyuf-200:#BDF2D9; --color-floor-eyuf-300:#92E6C0; --color-floor-eyuf-400:#5ED9A8; --color-floor-eyuf-500:#10895F; --color-floor-eyuf-600:#0D7E57; --color-floor-eyuf-700:#0A7350; --color-floor-eyuf-800:#045036; --color-floor-eyuf-900:#022F1E;
   /* 6-qavat AI Academy (2026-11-19): binafsha urg'u. 500 = #7C3AED, oq fonda 5.70:1, #F5F3FF da 5.20:1 */
   --color-floor-ai-100:#F5F3FF; --color-floor-ai-200:#DDD6FE; --color-floor-ai-300:#C4B5FD; --color-floor-ai-400:#A78BFA; --color-floor-ai-500:#7C3AED; --color-floor-ai-600:#6D28D9; --color-floor-ai-700:#5B21B6; --color-floor-ai-800:#4C1D95; --color-floor-ai-900:#2E1065;
   --color-success-100:#EEFAF3; --color-success-200:#BDE6CD; --color-success-300:#8BD0A8; --color-success-400:#57B784; --color-success-500:#02985F; --color-success-600:#047C4D; --color-success-700:#01613B; --color-success-800:#00482A; --color-success-900:#00301A;
@@ -42,6 +46,15 @@
   --font-family-sans-inter:"Inter","Segoe UI",Roboto,"Noto Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-family-sans:var(--font-family-sans-onest);
   --font-family-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  /* Qavat sarlavha shriftlari (ADR 005, DS PR 4). Fayllar faqat o'z qavatida e'lon qilinadi (QavatShrifti.astro),
+     boshqa qavatda token zaxira oilaga tushadi. Matn hamma joyda --font-family-sans (Onest); 2-qavat Onest 800.
+     --font-mono faqat 1-qavat yorlig'i (nav-yorliq, nav-kod); --font-family-mono umumiy tizim mono (kod, taklif kodi)
+     bo'lib qoladi va --font-mono ning zaxirasi. */
+  --font-display:"Barlow Condensed",'Onest Variable',"Arial Narrow",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",var(--font-family-mono);
+  --font-sat:"Sora",'Onest Variable',system-ui,sans-serif;
+  --font-ielts:"Lexend",'Onest Variable',system-ui,sans-serif;
+  --font-eyuf:"Playfair Display",Georgia,"Times New Roman",serif;
   --font-weight-regular:400; --font-weight-medium:500; --font-weight-semibold:600; --font-weight-bold:700; --font-weight-extrabold:800;
   /* size / line-height / weight / letter-spacing — mobile (m) and desktop (d) */
   --font-size-display-m:40px; --line-height-display-m:44px; --font-weight-display-m:700; --letter-spacing-display-m:-0.035em;
@@ -114,6 +127,7 @@
   --color-text-disabled:var(--color-neutral-400);
   --color-text-inverse:var(--color-neutral-0);
   --color-on-floor:var(--color-neutral-950);
+  --color-on-floor-inverse:var(--color-neutral-0); /* to'q belgi rangi (4, 5-qavat) ustidagi matn */
 
   --color-brand:var(--color-brand-700);
   --color-link:var(--color-accent-700);
@@ -128,7 +142,8 @@
   --color-error-text:var(--color-error-600);     --color-error-ui:var(--color-error-600);     --color-error-subtle:var(--color-error-100);
   --color-info-text:var(--color-brand-600);      --color-info-ui:var(--color-brand-600);      --color-info-subtle:var(--color-brand-100);
 
-  /* floors: fill = identity (500), text = AA text on bg/surface, ui = 3:1 on bg, subtle = tinted surface */
+  /* floors: fill = identity (500), text = AA text on bg/surface, ui = AA on bg/surface (--rang-asosiy matn rangi ham), subtle = tinted surface.
+     Qorong'ida 4, 5-qavat ui = 400: 500 (elektr ko'k, zumrad) to'q fonda 3.5 / 4.4 (ADR 005, PR 3) */
   --color-floor-navigator-fill:var(--color-floor-navigator-500); --color-floor-navigator-text:var(--color-floor-navigator-700); --color-floor-navigator-ui:var(--color-floor-navigator-700); --color-floor-navigator-subtle:var(--color-floor-navigator-100);
   --color-floor-admission-fill:var(--color-floor-admission-500); --color-floor-admission-text:var(--color-floor-admission-700); --color-floor-admission-ui:var(--color-floor-admission-700); --color-floor-admission-subtle:var(--color-floor-admission-100);
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-700);             --color-floor-sat-ui:var(--color-floor-sat-600);             --color-floor-sat-subtle:var(--color-floor-sat-100);
@@ -161,6 +176,7 @@
   --color-text-disabled:var(--color-neutral-600);
   --color-text-inverse:var(--color-neutral-950);
   --color-on-floor:var(--color-neutral-950);
+  --color-on-floor-inverse:var(--color-neutral-0); /* to'q belgi rangi (4, 5-qavat) ustidagi matn */
 
   --color-brand:var(--color-brand-300);
   --color-link:var(--color-accent-300);
@@ -178,8 +194,8 @@
   --color-floor-navigator-fill:var(--color-floor-navigator-500); --color-floor-navigator-text:var(--color-floor-navigator-400); --color-floor-navigator-ui:var(--color-floor-navigator-500); --color-floor-navigator-subtle:color-mix(in srgb, var(--color-floor-navigator-900) 60%, var(--color-neutral-900));
   --color-floor-admission-fill:var(--color-floor-admission-500); --color-floor-admission-text:var(--color-floor-admission-400); --color-floor-admission-ui:var(--color-floor-admission-500); --color-floor-admission-subtle:color-mix(in srgb, var(--color-floor-admission-900) 60%, var(--color-neutral-900));
   --color-floor-sat-fill:var(--color-floor-sat-500);             --color-floor-sat-text:var(--color-floor-sat-400);             --color-floor-sat-ui:var(--color-floor-sat-500);             --color-floor-sat-subtle:color-mix(in srgb, var(--color-floor-sat-900) 60%, var(--color-neutral-900));
-  --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-500);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
-  --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-500);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
+  --color-floor-ielts-fill:var(--color-floor-ielts-500);         --color-floor-ielts-text:var(--color-floor-ielts-400);         --color-floor-ielts-ui:var(--color-floor-ielts-400);         --color-floor-ielts-subtle:color-mix(in srgb, var(--color-floor-ielts-900) 60%, var(--color-neutral-900));
+  --color-floor-eyuf-fill:var(--color-floor-eyuf-500);           --color-floor-eyuf-text:var(--color-floor-eyuf-400);           --color-floor-eyuf-ui:var(--color-floor-eyuf-400);           --color-floor-eyuf-subtle:color-mix(in srgb, var(--color-floor-eyuf-900) 60%, var(--color-neutral-900));
   --color-floor-ai-fill:var(--color-floor-ai-500);             --color-floor-ai-text:var(--color-floor-ai-400);             --color-floor-ai-ui:var(--color-floor-ai-400);             --color-floor-ai-subtle:color-mix(in srgb, var(--color-floor-ai-900) 60%, var(--color-neutral-900));
 
   --color-indicator-off:var(--color-neutral-700);
@@ -221,15 +237,15 @@
   --floor-light-in-delay:calc(var(--duration-stagger) * 2);
   --floor-car-duration:var(--duration-base); --floor-car-ease:var(--ease-state);
 }
-/* floor context: any element with data-floor exposes --floor-* for its children */
-/* floor context: any element with data-floor exposes --floor-* for its children (1-qavat = :root standarti) */
-:where(:root), [data-floor="1"]{ --floor-fill:var(--color-floor-navigator-fill); --floor-text:var(--color-floor-navigator-text); --floor-ui:var(--color-floor-navigator-ui); --floor-subtle:var(--color-floor-navigator-subtle); }
-[data-floor="2"]{ --floor-fill:var(--color-floor-admission-fill); --floor-text:var(--color-floor-admission-text); --floor-ui:var(--color-floor-admission-ui); --floor-subtle:var(--color-floor-admission-subtle); }
-[data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); }
-[data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); }
-[data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); }
-[data-floor="6"]{ --floor-fill:var(--color-floor-ai-fill);        --floor-text:var(--color-floor-ai-text);        --floor-ui:var(--color-floor-ai-ui);        --floor-subtle:var(--color-floor-ai-subtle); }
-[data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
+/* floor context: any element with data-floor exposes --floor-* for its children (1-qavat = :root standarti).
+   --floor-on-fill: belgi rangi (fill, 500) ustidagi matn, masalan bino yorlig'i (4–6-qavatda oq). */
+:where(:root), [data-floor="1"]{ --floor-fill:var(--color-floor-navigator-fill); --floor-text:var(--color-floor-navigator-text); --floor-ui:var(--color-floor-navigator-ui); --floor-subtle:var(--color-floor-navigator-subtle); --floor-on-fill:var(--color-on-floor); }
+[data-floor="2"]{ --floor-fill:var(--color-floor-admission-fill); --floor-text:var(--color-floor-admission-text); --floor-ui:var(--color-floor-admission-ui); --floor-subtle:var(--color-floor-admission-subtle); --floor-on-fill:var(--color-on-floor); }
+[data-floor="3"]{ --floor-fill:var(--color-floor-sat-fill);       --floor-text:var(--color-floor-sat-text);       --floor-ui:var(--color-floor-sat-ui);       --floor-subtle:var(--color-floor-sat-subtle); --floor-on-fill:var(--color-on-floor); }
+[data-floor="4"]{ --floor-fill:var(--color-floor-ielts-fill);     --floor-text:var(--color-floor-ielts-text);     --floor-ui:var(--color-floor-ielts-ui);     --floor-subtle:var(--color-floor-ielts-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
+[data-floor="5"]{ --floor-fill:var(--color-floor-eyuf-fill);      --floor-text:var(--color-floor-eyuf-text);      --floor-ui:var(--color-floor-eyuf-ui);      --floor-subtle:var(--color-floor-eyuf-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
+[data-floor="6"]{ --floor-fill:var(--color-floor-ai-fill);        --floor-text:var(--color-floor-ai-text);        --floor-ui:var(--color-floor-ai-ui);        --floor-subtle:var(--color-floor-ai-subtle); --floor-on-fill:var(--color-on-floor-inverse); }
+[data-floor="0"]{ --floor-fill:var(--color-indicator-off); --floor-on-fill:var(--color-on-floor); --floor-text:var(--color-text-secondary); --floor-ui:var(--color-border-strong); --floor-subtle:var(--color-surface-sunken); }
 
 /* desktop type roles (sayt: container query o'rniga media query) */
 @media (min-width: 768px){
@@ -360,6 +376,256 @@
 }
 
 /* ==========================================================================
+   Poydevor · Liquid Glass (ADR 005, 2026-11-18). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: glass-*, btn-glass-*, floor-*-glow). Stillar: shisha.css (.t-fon, .t-shisha, .t-tugma).
+   Qavat o'z PR'ida yoqmaguncha hech bir sahifa ishlatmaydi.
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · shisha uchun to'q siyoh va soya tusi (DS qiymatlari, neutral shkalada yo'q) */
+  --color-glass-ink-900:#121216; --color-glass-ink-850:#1C1C22; --color-glass-ink-800:#1D1D24;
+  --color-glass-shade:#281E14; --color-glass-shade-dark:#000000;
+
+  /* Qavat nuri (bezak, matn emas): belgi rangining 60% i (to'q sariq 55%), DS floor-*-glow bilan bir xil. */
+  --color-floor-navigator-glow:color-mix(in srgb, var(--color-floor-navigator-500) 60%, transparent);
+  --color-floor-admission-glow:color-mix(in srgb, var(--color-floor-admission-500) 55%, transparent);
+  --color-floor-sat-glow:color-mix(in srgb, var(--color-floor-sat-500) 60%, transparent);
+  --color-floor-ielts-glow:color-mix(in srgb, var(--color-floor-ielts-500) 60%, transparent);
+  --color-floor-eyuf-glow:color-mix(in srgb, var(--color-floor-eyuf-500) 60%, transparent);
+  --color-floor-ai-glow:color-mix(in srgb, var(--color-floor-ai-500) 55%, transparent); /* bosh sahifa AI Academy kartasi */
+
+  /* SEMANTIC · shisha (yorug') */
+  --color-glass-bg:color-mix(in srgb, var(--color-neutral-0) 52%, transparent);
+  --color-glass-bg-strong:color-mix(in srgb, var(--color-neutral-0) 82%, transparent);
+  --color-glass-border:color-mix(in srgb, var(--color-neutral-0) 90%, transparent);
+  --color-glass-highlight:color-mix(in srgb, var(--color-neutral-0) 95%, transparent);
+  --color-btn-glass-bg:var(--color-glass-ink-900);
+  --color-btn-glass-text:var(--color-neutral-50);
+  --shadow-glass:inset 0 1px 0 var(--color-glass-highlight), 0 12px 32px -12px color-mix(in srgb, var(--color-glass-shade) 22%, transparent), 0 2px 6px color-mix(in srgb, var(--color-glass-shade) 6%, transparent);
+
+  /* PRIMITIVE / COMPONENT · o'lchamlar (mavzuga bog'liq emas) */
+  --size-glass-blur:24px;
+  --glass-backdrop:blur(var(--size-glass-blur)) saturate(1.6);
+  --btn-glass-height:52px;
+  --fon-nur-size:320px; --fon-nur-blur:48px; --fon-nur-opacity:0.9; --fon-nur-opacity-past:0.55;
+}
+:root[data-mavzu='qorongi']{
+  --color-glass-bg:color-mix(in srgb, var(--color-neutral-0) 7%, transparent);
+  --color-glass-bg-strong:color-mix(in srgb, var(--color-glass-ink-850) 82%, transparent);
+  --color-glass-border:color-mix(in srgb, var(--color-neutral-0) 14%, transparent);
+  --color-glass-highlight:color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
+  --color-btn-glass-bg:var(--color-glass-ink-800);
+  --color-btn-glass-text:var(--color-neutral-50);
+  --shadow-glass:inset 0 1px 0 color-mix(in srgb, var(--color-neutral-0) 18%, transparent), 0 18px 40px -16px color-mix(in srgb, var(--color-glass-shade-dark) 75%, transparent);
+}
+/* --nur ishlatadigan soyalar tugmaning o'zida hisoblanadi: shunda qavat konteksti (data-floor,
+   keyinroq .adm, .sat) bergan nur olinadi, :root niki emas. */
+.t-tugma{
+  --shadow-btn-glass:inset 0 1px 0 var(--color-glass-highlight), inset 0 -10px 18px -10px var(--nur), 0 12px 24px -10px var(--nur), 0 2px 4px color-mix(in srgb, var(--color-glass-shade-dark) 25%, transparent);
+  --shadow-btn-glass-hover:inset 0 1px 0 var(--color-glass-highlight), inset 0 -12px 20px -8px var(--nur), 0 16px 30px -10px var(--nur), 0 2px 4px color-mix(in srgb, var(--color-glass-shade-dark) 25%, transparent);
+}
+
+/* ==========================================================================
+   3-qavat SAT mini-DS (ADR 005, PR 5a, 2026-11-18). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: sat-*, sat-panel-navy, sat-plitka, sat-tabbar; qavat-3-sat.md). Stillar: sat.css.
+   Faqat SAT sahifalarida ishlatiladi (DESIGN.md "Bino qoidasi": boshqa qavat sat-* ni olmaydi).
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · navy sahna (ikkala mavzuda bir xil) */
+  --color-sat-navy:#071C33; --color-sat-navy-raised:#0F2B4A; --color-sat-navy-high:#183A60;
+  --color-sat-mist:#EEF2F8;
+  --color-sat-on-navy:#EDF6FF; --color-sat-on-navy-muted:#A3B6CE;
+  --color-sat-sky:#7DB4FF; --color-sat-line-on-navy:#6B88AB;
+  --color-sat-blue:var(--color-floor-sat-500); /* belgi rangi: nur, hover chegara, grafik. Matn emas */
+  --color-sat-blue-fill:#2266E5;               /* tanlangan holat va ko'k kapsula */
+  --color-sat-on-blue-fill:var(--color-neutral-0);
+  --color-sat-glass-navy:rgb(16 46 82 / 0.62);
+  --color-sat-glass-navy-strong:rgb(12 36 64 / 0.9);
+  --color-sat-glass-navy-border:rgb(150 195 245 / 0.22);
+  --shadow-sat-panel-navy:inset 0 1px 0 rgb(255 255 255 / 0.12), 0 14px 32px -14px rgb(0 0 0 / 0.7);
+  --shadow-sat-plitka-hover:var(--shadow-sat-panel-navy), 0 10px 24px -10px var(--color-floor-sat-glow);
+  --shadow-sat-plitka-joriy:var(--shadow-sat-panel-navy), 0 10px 24px -8px var(--color-floor-sat-glow);
+  --shadow-sat-ikon:0 6px 14px -6px var(--color-floor-sat-glow);   /* PR 5b: ko'rsatkich ikonkasi ostidagi nur */
+  --shadow-sat-chip:0 8px 18px -8px var(--color-floor-sat-glow);   /* PR 5b: tanlangan chip */
+
+  /* SEMANTIC · yorug' */
+  --color-sat-bg:var(--color-sat-mist);
+  --color-sat-surface:var(--color-neutral-0);
+  --color-sat-glass:rgb(255 255 255 / 0.6);
+  --color-sat-glass-strong:rgb(255 255 255 / 0.88);
+  --color-sat-glass-border:rgb(255 255 255 / 0.9);
+  --color-sat-text:var(--color-sat-navy);
+  --color-sat-text-muted:#4A5B73;
+  --color-sat-blue-text:var(--color-floor-sat-700);
+  --color-sat-line:#D3DCE8;
+  --color-sat-line-strong:#6F819A;
+  /* DS 5-bosqich (2026-11-24): eski taxalluslar o'rniga (qiymat .sat dagi taxallus bilan bir xil) */
+  --color-sat-sunken:color-mix(in srgb, var(--color-sat-line) 60%, var(--color-sat-surface)); /* eski --fon-ikkinchi */
+  --color-sat-blue-subtle:var(--color-floor-sat-subtle);                                     /* eski --rang-asosiy-och */
+  --color-sat-blue-fill-hover:color-mix(in srgb, var(--color-sat-blue-fill) 80%, var(--color-sat-navy)); /* eski --rang-asosiy-toq */
+  --color-sat-blue-deep:color-mix(in srgb, var(--color-floor-sat-ui) 60%, var(--color-neutral-950));    /* eski --rang-asosiy-chuqur */
+  --color-sat-stage:var(--color-sat-navy);               /* eski --qora: navy sahna bloki */
+  --color-sat-stage-raised:var(--color-sat-navy-raised); /* eski --qora-sirt */
+
+  /* COMPONENT · o'lcham va tipografiya (Sora 600 = --font-sat, faqat inglizcha matn) */
+  --size-sat-plitka:64px; --size-sat-tabbar:56px;
+  --text-sat-hero-size:36px; --text-sat-hero-lh:40px; --text-sat-hero-ls:-0.02em;
+  --text-sat-h2-size:24px; --text-sat-h2-lh:30px; --text-sat-h2-ls:-0.01em;
+  /* PR 5b · vositalar: ko'rsatkich raqami (sat-raqam 32/36, desktop 40/44) va vosita foni nuri.
+     Nur xiraroq (0.4 / 0.25): oddiy sahifa matni (muted, blue-text) nur markazida ham 4.5+ (DESIGN.md). */
+  --text-sat-raqam-size:32px; --text-sat-raqam-lh:36px;
+  --sat-fon-nur-opacity:0.4; --sat-fon-nur-opacity-past:0.25;
+}
+:root[data-mavzu='qorongi']{
+  --color-sat-bg:var(--color-sat-navy);
+  --color-sat-surface:var(--color-sat-navy-raised);
+  --color-sat-glass:var(--color-sat-glass-navy);
+  --color-sat-glass-strong:var(--color-sat-glass-navy-strong);
+  --color-sat-glass-border:var(--color-sat-glass-navy-border);
+  --color-sat-text:var(--color-sat-on-navy);
+  --color-sat-text-muted:var(--color-sat-on-navy-muted);
+  --color-sat-blue-text:var(--color-sat-sky);
+  --color-sat-line:#1E3A5C;
+  --color-sat-line-strong:var(--color-sat-line-on-navy);
+  --color-sat-stage:var(--color-sat-navy-raised);
+  --color-sat-stage-raised:var(--color-sat-navy-high);
+}
+@media (min-width: 720px){
+  :root{ --size-sat-plitka:72px; --text-sat-hero-size:56px; --text-sat-hero-lh:60px; --text-sat-raqam-size:40px; --text-sat-raqam-lh:44px; }
+}
+/* 3-qavat SAT · telefon tab bari (DS PR 5d, 2026-11-23, SatTabBar.astro). Faqat <720px.
+   joy = band (56) + ichki 2×4 + pastdagi 8 + kontent bilan 8 oraliq; safe area komponentda qo'shiladi. */
+:root{
+  --size-sat-tabbar-joy:calc(var(--size-sat-tabbar) + var(--space-6));
+}
+
+/* ==========================================================================
+   4-qavat IELTS mini-DS (ADR 005, PR 8, 2026-11-23). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: ielts-*; qavat-4-ielts.md). Stillar: ielts.css (.ielts-qobiq, .ielts-glass, .ielts-glass-strong).
+   Hozircha faqat tokenlar: IELTS sahifalari hali ishlatmaydi. Boshqa qavat ielts-* ni olmaydi.
+   3-qavat ko'ki bilan yaqin (1.57:1): muallif qarori (2026-11-18) ikkalasi ko'k, farq shrift
+   (Lexend, --font-ielts), halqa motivi va qavat raqami bilan.
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · tungi navy va tong (ikkala mavzuda bir xil) */
+  --color-ielts-night:#0B1530; --color-ielts-dawn:#F0F4FB; --color-ielts-ink:#0B1530;
+  --color-ielts-on-accent:var(--color-neutral-0);
+
+  /* SEMANTIC · yorug' ("tong") */
+  --color-ielts-bg:var(--color-ielts-dawn);
+  --color-ielts-glass:rgb(255 255 255 / 0.55);          /* qisqa matn, plitka, hero. Uzun matn emas */
+  --color-ielts-glass-strong:rgb(255 255 255 / 0.86);   /* matnli panel, ro'yxat, test, forma */
+  --color-ielts-glass-border:rgb(255 255 255 / 0.9);
+  --color-ielts-tile:rgb(39 96 222 / 0.08);             /* ikonka katagi, eskiz foni (blursiz) */
+  --color-ielts-text:var(--color-ielts-ink);
+  --color-ielts-text-muted:#4F5D78;
+  --color-ielts-accent:var(--color-floor-ielts-500);    /* yagona urg'u fill, ustida doim on-accent */
+  --color-ielts-accent-text:var(--color-floor-ielts-700); /* oddiy o'lchamdagi ko'k matn va ikonka */
+  --color-ielts-accent-display:var(--color-floor-ielts-500); /* faqat 24px+ sarlavha urg'usi, katta raqam */
+  --color-ielts-halo:rgb(39 96 222 / 0.4);              /* halqa motivi: bezak */
+  --color-ielts-line:#D3DBEA;                           /* bezak chizig'i */
+  --color-ielts-line-strong:#74819A;                    /* ma'noli chegara (chip, maydon) */
+  --color-ielts-surface:var(--color-neutral-0);          /* glass-strong ning noshaffof zaxirasi: maydon, karta */
+  --color-ielts-bg-deep:color-mix(in srgb, var(--color-ielts-dawn) 92%, var(--color-ielts-ink));
+
+  /* COMPONENT · tipografiya (Lexend 600 = --font-ielts, oddiy harflar) */
+  --text-ielts-hero-size:32px; --text-ielts-hero-lh:40px; --text-ielts-hero-ls:-0.02em;
+  --text-ielts-h2-size:24px; --text-ielts-h2-lh:32px; --text-ielts-h2-ls:-0.01em;
+  --text-ielts-raqam-size:28px; --text-ielts-raqam-lh:32px;
+  --text-ielts-birlik-size:13px; --text-ielts-birlik-lh:18px;
+  --ielts-glass-backdrop:blur(var(--size-glass-blur)) saturate(1.5);
+}
+:root[data-mavzu='qorongi']{
+  /* SEMANTIC · qorong'i ("tun", qavatning asosiy ko'rinishi) */
+  --color-ielts-bg:var(--color-ielts-night);
+  --color-ielts-glass:rgb(40 62 110 / 0.38);
+  --color-ielts-glass-strong:rgb(16 28 56 / 0.92);
+  --color-ielts-glass-border:rgb(150 190 255 / 0.16);
+  --color-ielts-tile:rgb(255 255 255 / 0.06);
+  --color-ielts-text:#EEF3FF;
+  --color-ielts-text-muted:#A6B4CF;
+  --color-ielts-accent:#2F6BF0;
+  --color-ielts-accent-text:var(--color-floor-ielts-400);
+  --color-ielts-accent-display:#6F9BFF;
+  --color-ielts-halo:rgb(80 140 255 / 0.75);
+  --color-ielts-line:#1F2E50;
+  --color-ielts-line-strong:#62739A;
+  --color-ielts-surface:#111D3A;
+  --color-ielts-bg-deep:color-mix(in srgb, var(--color-ielts-night) 70%, var(--color-neutral-950));
+}
+@media (min-width: 481px){
+  :root{ --text-ielts-hero-size:40px; --text-ielts-hero-lh:48px; }
+}
+
+/* ==========================================================================
+   2-qavat Top Admission mini-DS (ADR 005, PR 7, 2026-11-23). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: adm-*; qavat-2-top-admission.md). Stillar: adm.css. Faqat Top Admission sahifalarida
+   (DESIGN.md "Bino qoidasi": boshqa qavat adm-* ni olmaydi). Kontrast jadvali DESIGN.md "2-qavat".
+   DS dan farq: qorong'i adm-line-strong #6E5F55 → #8A7A6F (sirtda 2.57 edi, 3:1 kerak);
+   adm-surface, adm-sunken, adm-chip, adm-accent-subtle DS da yo'q (tekis zaxira va eski sinflar uchun).
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · ikkala mavzuda bir xil */
+  --color-adm-ink:#0C0C0C; --color-adm-cream:#F5F2EE; --color-adm-ember:#140F0D;
+  --color-adm-orange:var(--color-floor-admission-500); /* belgi rangi: nur, chiziq. Matn emas */
+  --color-adm-on-accent:var(--color-adm-ink);          /* to'q sariq fill ustida faqat qora (6.26 / 7.50) */
+
+  /* SEMANTIC · yorug' (krem, qora, to'q sariq) */
+  --color-adm-bg:var(--color-adm-cream);
+  --color-adm-surface:var(--color-neutral-0);
+  --color-adm-sunken:color-mix(in srgb, var(--color-adm-ink) 5%, var(--color-adm-cream));
+  --color-adm-chip:color-mix(in srgb, var(--color-adm-ink) 6%, var(--color-adm-cream));
+  --color-adm-glass:rgb(255 255 255 / 0.55);
+  --color-adm-glass-strong:rgb(255 255 255 / 0.85);
+  --color-adm-glass-border:rgb(255 255 255 / 0.9);
+  --color-adm-text:var(--color-adm-ink);
+  --color-adm-text-muted:#5E5852;
+  --color-adm-accent:#FF5A0C;          /* fill: asosiy tugma, chip, belgilangan checkbox */
+  --color-adm-accent-display:#F05000;  /* faqat 24px+ qalin sarlavha so'zi va katta raqam (3.27+) */
+  --color-adm-accent-text:#B83C00;     /* oddiy o'lchamdagi to'q sariq matn va havola (4.53+) */
+  --color-adm-on-accent-text:var(--color-neutral-0); /* accent-text fill ustidagi matn (5.70; qorong'ida qora 9.29) */
+  --color-adm-accent-subtle:color-mix(in srgb, var(--color-adm-accent) 10%, var(--color-adm-cream)); /* ustida accent-text 4.58 */
+  --color-adm-line:#D9D3CC;            /* bezak chizig'i */
+  --color-adm-line-strong:#8A8178;     /* ma'noli chiziq: checkbox, maydon, ikkinchi tugma (3.04+) */
+  /* Foto fonli kirish sahifasida main shishasi (eng yomon foto pikseli bilan hisoblangan) */
+  --color-adm-foto-shisha:color-mix(in srgb, var(--color-adm-bg) 92%, transparent);
+
+  /* COMPONENT · tipografiya (hammasi Onest) */
+  --text-adm-hero-min:36px; --text-adm-hero-max:96px; --text-adm-hero-lh:0.95; --text-adm-hero-ls:-0.04em; --text-adm-hero-weight:800;
+  --text-adm-h1-size:36px; --text-adm-h1-lh:40px;
+  --text-adm-h2-size:32px; --text-adm-h2-lh:36px; --text-adm-h2-ls:-0.025em; --text-adm-h2-weight:500;
+  --text-adm-eyebrow-size:11px; --text-adm-eyebrow-lh:16px; --text-adm-eyebrow-ls:0.12em;
+  --text-adm-raqam-size:44px; --text-adm-raqam-ls:-0.03em;
+  --size-adm-eyebrow-chiziq:24px;
+  --size-adm-plitka-min:104px;
+  --size-adm-royxat-qator:52px;
+  --size-adm-plitka-ikon:28px; --size-adm-belgi:24px; --size-adm-belgi-ikon:14px; --size-adm-qator-min:120px;
+  --text-adm-hero-fluid:12.5cqi;
+  --shadow-adm-plitka-joriy:var(--shadow-glass), 0 10px 24px -12px var(--color-floor-admission-glow);
+}
+:root[data-mavzu='qorongi']{
+  --color-adm-bg:var(--color-adm-ember);
+  --color-adm-surface:#2B211C;
+  --color-adm-sunken:color-mix(in srgb, var(--color-adm-cream) 6%, var(--color-adm-ember));
+  --color-adm-chip:color-mix(in srgb, var(--color-adm-cream) 12%, var(--color-adm-ember));
+  --color-adm-glass:rgb(64 46 38 / 0.5);
+  --color-adm-glass-strong:rgb(43 33 28 / 0.88);
+  --color-adm-glass-border:rgb(255 170 120 / 0.16);
+  --color-adm-text:var(--color-adm-cream);
+  --color-adm-text-muted:#B3A79F;
+  --color-adm-accent:#FF7A1A;
+  --color-adm-accent-display:#FF7A1A;
+  --color-adm-accent-text:#FF9A4A;
+  --color-adm-on-accent-text:var(--color-adm-ink);
+  --color-adm-accent-subtle:color-mix(in srgb, var(--color-adm-accent) 18%, var(--color-adm-ember));
+  --color-adm-line:#3A2E28;
+  --color-adm-line-strong:#8A7A6F;
+  --color-adm-foto-shisha:color-mix(in srgb, var(--color-adm-bg) 85%, transparent);
+}
+@media (min-width: 720px){
+  :root{ --text-adm-h1-size:48px; --text-adm-h1-lh:52px; --text-adm-h2-size:44px; --text-adm-h2-lh:48px; }
+}
+
+/* ==========================================================================
    Sayt qo'shimchalari (muallif tasdiqladi, 2026-11-09)
    ========================================================================== */
 :root{
@@ -483,6 +749,7 @@
   --header-menu-width: 420px;
   --header-language-width: 240px;
   --header-accent: #315BDD;
+  --header-on-accent: var(--color-neutral-0);
   --flag-blue: #0099B5;
   --flag-green: #1EB53A;
   --flag-red: #CE1126;
@@ -518,4 +785,151 @@
   --login-radius: 24px;
   --login-button-height: 54px;
   --login-backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* ==========================================================================
+   1-qavat Navigator mini-DS (ADR 005, PR 6 `ds-navigator`, 2026-11-23). Manba: Claude Design artifakti
+   (tokens.json: nav-*, nav-node; qavat-1-navigator.md; bundle.css "1 · Navigator"). Stillar: nav.css.
+   Faqat 1-qavat sahifalarida (html[data-floor="1"]: /uz/, /uz/yol-tanlash/, /uz/hisob/*, /uz/deadline/ va h.k.).
+   Laym (nav-lime) faqat qora sahna ustida yoki fill; yorug' fonda laym ohangli matn nav-lime-text.
+   ========================================================================== */
+:root{
+  /* PRIMITIVE · bloklar (ikkala mavzuda bir xil) */
+  --color-nav-stage:#181818; --color-nav-stage-raised:#303030;
+  --color-nav-paper:#F0F0F0; --color-nav-cream:#EEEED6;
+  --color-nav-on-stage:var(--color-nav-paper); --color-nav-on-stage-muted:#A8A8A8;
+  --color-nav-on-paper:var(--color-nav-stage); --color-nav-on-paper-muted:#5A5A5A;
+  --color-nav-line-on-stage:#6E6E6E;
+  --color-nav-lime:var(--color-floor-navigator-500);
+  --color-nav-on-lime:var(--color-nav-stage);
+  /* Qora sahna ichidagi shisha (poydevor qorong'i shishasi qiymatlari; sahna ikkala mavzuda bir xil) */
+  --color-nav-glass-stage:color-mix(in srgb, var(--color-neutral-0) 7%, transparent);
+  --color-nav-glass-stage-strong:color-mix(in srgb, var(--color-nav-stage-raised) 92%, transparent);
+  --color-nav-glass-stage-border:color-mix(in srgb, var(--color-neutral-0) 14%, transparent);
+  --color-nav-glass-stage-highlight:color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
+  --shadow-nav-glass-stage:inset 0 1px 0 var(--color-nav-glass-stage-highlight);
+
+  /* SEMANTIC · yorug' */
+  --color-nav-bg:var(--color-nav-paper);
+  --color-nav-surface:var(--color-neutral-0);
+  --color-nav-text:var(--color-nav-stage);
+  --color-nav-text-muted:var(--color-nav-on-paper-muted);
+  --color-nav-lime-text:var(--color-floor-navigator-700);
+  --color-nav-line:#C8C8C0;
+  --color-nav-line-strong:#7A7A72;
+
+  /* COMPONENT · o'lcham va tipografiya (Barlow Condensed 700 = --font-display, JetBrains Mono = --font-mono) */
+  --size-nav-node:20px; --size-nav-node-hozir:28px; --size-nav-burchak:12px;
+  /* Onboarding dialogi (Onboarding.astro): oyna kengligi, maqsad kartasi ustuni va balandligi, sana maydoni */
+  --size-nav-dialog:640px; --size-nav-maqsad-min:240px; --size-nav-maqsad-tanlov:88px; --size-nav-sana-max:260px;
+  --text-nav-raqam-size:72px; --text-nav-raqam-lh:0.9; --text-nav-raqam-ls:-0.01em;
+  --text-nav-sarlavha-size:28px; --text-nav-sarlavha-lh:1; --text-nav-sarlavha-ls:0.01em;
+  --text-nav-hero-size:56px; --text-nav-hero-lh:0.95;
+  --text-nav-yorliq-size:12px; --text-nav-yorliq-lh:16px; --text-nav-yorliq-ls:0.08em;
+  --text-nav-kod-size:13px; --text-nav-kod-lh:20px;
+  /* Qora sahnadagi nur dog'i: nav-on-stage nur markazida 4.5:1 dan past tushmasligi uchun xiraroq */
+  --fon-nur-opacity-nav:0.5; --fon-nur-opacity-past-nav:0.35;
+  /* Bosh sahifa CTA'lari (2026-11-24, muallif brifi): karta ko'tarilishi va strelka siljishi (reduced motion'da 0),
+     cheksiz bezak harakatlari (faqat transform/opacity, ekrandan chiqsa to'xtaydi, reduced motion'da yo'q) */
+  --nav-karta-kotarilish:calc(-6px * var(--motion-distance)); --nav-strelka-siljish:calc(5px * var(--motion-distance));
+  --nav-puls-davomi:2.2s; --nav-puls-masshtab:1.14; --nav-marquee-davomi:24s; --nav-nur-davomi:6s; --nav-nur-masshtab:1.15;
+  --size-nav-panel-min:320px; --size-nav-nuqta:12px;
+  /* Bino chiroqlari (BinoChiroqlari.astro, 2026-11-25): qora sahnada, ikkala mavzuda bir xil.
+     Yonib turgan deraza iliq sariq: nav-stage (#181818) ustida 12.4:1; o'chiq deraza nav-stage-raised + nav-line-on-stage. */
+  --color-nav-chiroq:#FFC94D;
+  --color-nav-chiroq-nur:color-mix(in srgb, var(--color-nav-chiroq) 55%, transparent);
+  --size-nav-deraza-w:16px; --size-nav-deraza-h:22px; --size-nav-bino:440px; --nav-chiroq-masshtab:0.6;
+}
+:root[data-mavzu='qorongi']{
+  --color-nav-bg:var(--color-nav-stage);
+  --color-nav-surface:var(--color-nav-stage-raised);
+  --color-nav-text:var(--color-nav-paper);
+  --color-nav-text-muted:var(--color-nav-on-stage-muted);
+  --color-nav-lime-text:var(--color-floor-navigator-400);
+  --color-nav-line:#3C3C3C;
+  /* DS #6E6E6E nav-surface (#303030) ustida 2.59: maydon va ma'noli chiziq 3:1 uchun ochroq (3.43 / bg 4.62) */
+  --color-nav-line-strong:#828282;
+}
+@media (min-width: 640px){
+  :root{ --text-nav-raqam-size:96px; --text-nav-sarlavha-size:32px; }
+}
+@media (min-width: 720px){
+  :root{ --text-nav-hero-size:88px; }
+}
+/* 1-qavat sahifasi: poydevor fon, sirt va matn tokenlari nav-* qiymatga o'tadi (studio foni o'rniga nav-bg).
+   html:root (0,2,1) mavzu qoidasidan ((0,2,0)) ustun. Eski taxalluslar (--fon, --sirt, --matn) :root da
+   shu tokenlardan olingani uchun ular ham o'zgaradi. */
+html:root[data-floor="1"]{
+  --color-bg:var(--color-nav-bg);
+  --color-bg-deep:var(--color-nav-bg);
+  --color-surface:var(--color-nav-surface);
+  --color-text-primary:var(--color-nav-text);
+  --color-text-secondary:var(--color-nav-text-muted);
+  --color-border:var(--color-nav-line);
+  --color-border-strong:var(--color-nav-line-strong);
+  /* Ustki qator urg'usi (faol pill, Kirish strelkasi): 1-qavatda faqat laym fill, ustida nav-on-lime (ikkinchi urg'u yo'q) */
+  --header-accent:var(--color-nav-lime);
+  --header-on-accent:var(--color-nav-on-lime);
+}
+
+/* ==========================================================================
+   5-qavat EYUF mini-DS (ADR 005, PR 9 `ds-eyuf`, 2026-11-23). Manba: Claude Design artifakti, versiya 15
+   (tokens.json: eyuf-*; qavat-5-eyuf.md). Stillar: eyuf.css (faqat EYUF sahifalari import qiladi).
+   Zumrad tun (qorong'i) va fil suyagi (yorug'), shampan oltin faqat bezak va serif raqam.
+   Faqat 5-qavatda ishlatiladi (DESIGN.md "Bino qoidasi": boshqa qavat eyuf-* ni olmaydi).
+   ========================================================================== */
+:root{
+  /* PRIMITIVE */
+  --color-eyuf-night:#0A1A14; --color-eyuf-ivory:#F4F3EC; --color-eyuf-ink:#0A1A14;
+  --color-eyuf-on-accent:var(--color-neutral-0);
+
+  /* SEMANTIC · yorug' (fil suyagi) */
+  --color-eyuf-bg:var(--color-eyuf-ivory);
+  --color-eyuf-bg-deep:color-mix(in srgb, var(--color-eyuf-ivory) 92%, var(--color-eyuf-ink));
+  --color-eyuf-surface:var(--color-neutral-0);           /* glass-strong ning noshaffof zaxirasi */
+  --color-eyuf-glass:rgb(255 255 255 / 0.55);
+  --color-eyuf-glass-strong:rgb(255 255 255 / 0.88);
+  --color-eyuf-glass-border:rgb(255 255 255 / 0.9);
+  --color-eyuf-tile:rgb(15 125 88 / 0.08);
+  --color-eyuf-text:var(--color-eyuf-ink);
+  --color-eyuf-text-muted:#4A5C53;
+  --color-eyuf-accent:#0B7A55;                            /* yagona urg'u fill, ustida on-accent */
+  --color-eyuf-accent-hover:color-mix(in srgb, var(--color-eyuf-accent) 82%, var(--color-eyuf-night));
+  --color-eyuf-accent-text:#0A6B4A;
+  --color-eyuf-gold:#7F6234;                              /* serif raqam, kursiv urg'u, yulduzcha */
+  --color-eyuf-gold-line:#C2A774;                         /* faqat bezak chizig'i (2.1:1) */
+  --color-eyuf-halo:rgb(15 125 88 / 0.3);
+  --color-eyuf-line:#D7DDD4;
+  --color-eyuf-line-strong:#6E8077;
+
+  /* COMPONENT · tipografiya (Playfair Display 600 = --font-eyuf) */
+  --text-eyuf-hero-size:34px; --text-eyuf-hero-lh:40px; --text-eyuf-hero-ls:-0.01em;
+  --text-eyuf-h1-size:30px; --text-eyuf-h1-lh:36px;
+  --text-eyuf-h2-size:26px; --text-eyuf-h2-lh:32px;
+  --text-eyuf-raqam-size:40px; --text-eyuf-raqam-lh:44px; --text-eyuf-yorliq-ls:0.14em;
+  --size-eyuf-doira:44px; --size-eyuf-qator:64px; --size-eyuf-halqa:140px; --size-eyuf-halqa-qalinlik:14px;
+}
+:root[data-mavzu='qorongi']{
+  --color-eyuf-bg:var(--color-eyuf-night);
+  --color-eyuf-bg-deep:color-mix(in srgb, var(--color-eyuf-night) 70%, var(--color-neutral-950));
+  --color-eyuf-surface:#0C241B;
+  --color-eyuf-glass:rgb(36 92 70 / 0.28);
+  --color-eyuf-glass-strong:rgb(12 36 27 / 0.92);
+  --color-eyuf-glass-border:rgb(216 200 166 / 0.18);
+  --color-eyuf-tile:rgb(255 255 255 / 0.06);
+  --color-eyuf-text:#EEF5F0;
+  --color-eyuf-text-muted:#A7BCB1;
+  --color-eyuf-accent:#0F7D58;
+  --color-eyuf-accent-text:#5ED9A8;
+  --color-eyuf-gold:#D8C8A6;
+  --color-eyuf-gold-line:#B7A68A;
+  --color-eyuf-halo:rgb(32 208 152 / 0.45);
+  --color-eyuf-line:#1D3A2E;
+  --color-eyuf-line-strong:#5F7D6F;
+}
+@media (min-width: 640px){
+  :root{ --text-eyuf-hero-size:40px; --text-eyuf-hero-lh:46px; --text-eyuf-h1-size:36px; --text-eyuf-h1-lh:42px; }
+}
+@media (min-width: 1280px){
+  :root{ --text-eyuf-hero-size:56px; --text-eyuf-hero-lh:62px; }
 }

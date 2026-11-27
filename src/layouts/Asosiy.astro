@@ -1,6 +1,7 @@
 ---
 // Hamma sahifaning umumiy qolipi. Props = T1'dagi majburiy maydonlar.
 import '../styles/global.css';
+import '../styles/nav.css';
 import Menyu from '../components/Menyu.astro';
 import Footer from '../components/Footer.astro';
 import SahifaOxiri from '../components/SahifaOxiri.astro';
@@ -37,7 +38,7 @@ const {
     <slot name="bosh" />
   </head>
   <body>
-    <a class="otish" href="#asosiy">Asosiy matnga o'tish</a>
+    <a class="otish" href="#asosiy">Asosiy matnga oʻtish</a>
     <Menyu qm={Astro.slots.has('menyu')}><slot name="menyu" slot="markaz" /></Menyu>
     <main id="asosiy">
       <div class="ichki qavat-yoli-orami"><QavatYoli bandlar={bandlar} sahifaNomi={title} /></div>

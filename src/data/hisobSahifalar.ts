@@ -17,12 +17,12 @@ export const hisobSahifalar: Record<HisobSahifaKalit, HisobSahifaMalumot> = {
     tavsif: "Tayanch hisobingizga kiring. Hisob ixtiyoriy: darslar va mashqlar hisobsiz ham ishlaydi.",
   },
   royxat: {
-    nomi: "Ro'yxatdan o'tish",
+    nomi: "Roʻyxatdan oʻtish",
     tavsif: "Email bilan Tayanch hisobini oching. Hisob ixtiyoriy.",
   },
   'parol-tiklash': {
     nomi: 'Parolni tiklash',
-    tavsif: "Tayanch hisobingiz uchun yangi parol o'rnatish havolasini oling.",
+    tavsif: "Tayanch hisobingiz uchun yangi parol oʻrnatish havolasini oling.",
   },
   profil: {
     nomi: 'Hisobim',
@@ -31,7 +31,7 @@ export const hisobSahifalar: Record<HisobSahifaKalit, HisobSahifaMalumot> = {
   // Google'dan qaytish sahifasi (P03B). Supabase Redirect URLs ro'yxatida aniq shu manzil turadi.
   callback: {
     nomi: 'Google orqali kirish',
-    tavsif: "Google hisobingiz bilan Tayanch'ga kirish yakunlanmoqda.",
+    tavsif: "Google hisobingiz bilan Tayanchʼga kirish yakunlanmoqda.",
   },
   // Rozilik darvozasi (P03B): Google bilan birinchi kirishda yoki rozilik yozilmagan hisobda.
   rozilik: {

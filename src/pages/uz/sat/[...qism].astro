@@ -18,6 +18,7 @@ const TEKSHIRILGAN = '2026-11-04';
 const KEYINGI = '2026-12-04';
 ---
 <BolimQobiq
+  sahifaSinfi="sat t-fon"
   title={`${sahifa.nomi} · SAT`}
   description={sahifa.tavsif}
   turi={sahifa.turi}
@@ -33,7 +34,6 @@ const KEYINGI = '2026-12-04';
     <div class="bosh">
       <p class="pill-qator">
         <span class="pill">{turiNomi[sahifa.turi]}</span>
-        <span class="pill pill-chiziq">Draft</span>
       </p>
       <h1 id="sarlavha">{sahifa.nomi}</h1>
       <p class="tavsif">{sahifa.tavsif}</p>
@@ -51,7 +51,7 @@ const KEYINGI = '2026-12-04';
       <div><dt>Language</dt><dd>English</dd></div>
       <div><dt>Page type</dt><dd>{turiNomi[sahifa.turi]}</dd></div>
       <div><dt>Section</dt><dd>SAT</dd></div>
-      <div><dt>Status</dt><dd>Draft</dd></div>
+      <div><dt>Status</dt><dd>Coming soon</dd></div>
     </dl>
 
     <p><a class="qaytish" href={yol('/uz/sat/')}>
@@ -62,45 +62,45 @@ const KEYINGI = '2026-12-04';
 
 <style>
   /* Dizayn: Tayanch-SAT-dizayn.md (Natijalar va Savol banki sarlavhasi) */
-  .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-8); }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
-  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; }
-  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  .sahifa h1 { font-size: 46px; line-height: 1.1; font-weight: 900; letter-spacing: var(--oraliq-sarlavha); }
-  .tavsif { font-size: 18px; line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .sahifa { padding-block: var(--space-14) 0; display: flex; flex-direction: column; gap: var(--space-8); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); padding: var(--space-1) var(--space-3); }
+  .sahifa h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-sarlavha); }
+  .tavsif { font-size: var(--text-h3-size); line-height: 1.6; color: var(--color-sat-text-muted); max-width: 60ch; }
   .tez-orada {
-    border: 1.5px solid var(--matn);
-    border-radius: var(--r-katta);
-    padding: var(--b-6);
-    display: flex; align-items: flex-start; gap: var(--b-4);
+    border: 1.5px solid var(--color-sat-text);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex; align-items: flex-start; gap: var(--space-4);
   }
   .tez-belgi {
-    flex: none; width: 40px; height: 40px; border-radius: var(--r-yon);
-    background: var(--rang-asosiy); color: var(--rang-asosiy-matn);
+    flex: none; width: 40px; height: 40px; border-radius: var(--radius-md);
+    background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill);
     display: flex; align-items: center; justify-content: center;
   }
-  .tez-sarlavha { font-weight: 800; font-size: 18px; }
-  .tez-matn { color: var(--matn-ikkinchi); }
+  .tez-sarlavha { font-weight: var(--font-weight-extrabold); font-size: var(--text-h3-size); }
+  .tez-matn { color: var(--color-sat-text-muted); }
   .maydonlar {
     margin: 0;
     display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: var(--b-3);
+    gap: var(--space-3);
   }
-  .maydonlar div { background: var(--fon-ikkinchi); border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); }
-  .maydonlar dt { font-size: var(--matn-kichik); color: var(--matn-sust); }
-  .maydonlar dd { margin: 0; font-weight: 700; }
+  .maydonlar div { background: var(--color-sat-sunken); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .maydonlar dt { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
+  .maydonlar dd { margin: 0; font-weight: var(--font-weight-bold); }
   .qaytish {
-    display: inline-flex; align-items: center; gap: var(--b-2);
-    min-height: 52px; padding: 0 22px 0 18px;
-    border-radius: var(--r-toliq);
-    background: var(--sirt-ikkinchi); color: var(--matn);
-    text-decoration: none; font-weight: 700;
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: 52px; padding: 0 var(--space-6) 0 var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--color-sat-line); color: var(--color-sat-text);
+    text-decoration: none; font-weight: var(--font-weight-bold);
   }
-  @media (hover: hover) and (pointer: fine) { .qaytish:hover { background: var(--chiziq); } }
+  @media (hover: hover) and (pointer: fine) { .qaytish:hover { background: var(--color-sat-line); } }
   @media (max-width: 640px) {
-    .sahifa { padding-top: 28px; gap: var(--b-6); }
-    .sahifa h1 { font-size: 34px; }
-    .tavsif { font-size: 17px; }
+    .sahifa { padding-top: var(--space-7); gap: var(--space-6); }
+    .sahifa h1 { font-size: var(--text-h1-size); }
+    .tavsif { font-size: var(--text-body-size); }
   }
 </style>

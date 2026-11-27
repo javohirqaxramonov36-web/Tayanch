@@ -1,10 +1,11 @@
 ---
 import HisobKarta from '../../../../components/hisob/HisobKarta.astro';
 import HisobQorovul from '../../../../components/hisob/HisobQorovul.astro';
+import TarifTanlov from '../../../../components/TarifTanlov.astro';
 import { bolimlar } from '../../../../data/bolimlar';
 import { yol } from '../../../../lib/yol';
 ---
-<HisobKarta sahifa={{ nomi: 'Obunalarim', tavsif: "Qavat obunalaringiz va to'lovlaringiz." }}>
+<HisobKarta sahifa={{ nomi: 'Obunalarim', tavsif: "Qavat obunalaringiz va toʻlovlaringiz." }}>
   <HisobQorovul kirishgaYonaltir>
     <div id="obunalar" aria-busy="true">
       <p id="obuna-holat" role="status">Obunalar yuklanmoqda…</p>
@@ -13,10 +14,15 @@ import { yol } from '../../../../lib/yol';
       <div id="obuna-kontent" hidden>
         <section aria-labelledby="qavat-sarlavha">
           <h2 id="qavat-sarlavha">Qavat obunalari</h2>
-          <ul class="obuna-royxat">{bolimlar.map(b => <li class="hisob-karta" data-obuna-bolim={b.slug}>
+          <ul class="obuna-royxat">{bolimlar.map(b => <li class="hisob-karta t-shisha t-shisha--zich" data-obuna-bolim={b.slug}>
             <h3>{b.nomi}</h3><p data-obuna-tarif></p><p data-obuna-muddat hidden></p>
             {b.slug === 'sat' && <a href={yol('/uz/sat/hisob/obuna/')}>Tarifni o‘zgartirish</a>}
           </li>)}</ul>
+        </section>
+        <section class="obuna-tariflar" aria-labelledby="tariflar-sarlavha">
+          <h2 id="tariflar-sarlavha">Tariflar</h2>
+          <p>Pullik tarif hozircha faqat SAT boʻlimida. Narx va toʻlov SAT tarif sahifasida.</p>
+          <TarifTanlov id="obuna-tarif" sarlavhaDarajasi={3} />
         </section>
         <section aria-labelledby="tarix-sarlavha">
           <h2 id="tarix-sarlavha">To‘lov tarixi</h2>
@@ -34,6 +40,10 @@ import { yol } from '../../../../lib/yol';
   #obunalar [hidden] { display: none; }
   .obuna-royxat { list-style: none; padding: 0; display: grid; gap: var(--b-4); margin-block: var(--b-4); }
   section { min-width: 0; }
+  /* Tariflar uchun keng: 3 karta va jadval (TarifTanlov container query bilan torayadi) */
+  :global(.hisob:has(#obunalar)) { max-width: 1040px; }
+  .obuna-tariflar { display: grid; gap: var(--space-4); }
+  .obuna-tariflar > p { margin: 0 0 var(--space-6); }
   h3 { font-size: var(--matn-katta); }
 </style>
 <script>

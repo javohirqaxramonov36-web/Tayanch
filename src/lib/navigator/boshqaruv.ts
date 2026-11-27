@@ -15,6 +15,7 @@ import { salomMatni } from './salom.ts';
 import { serverga, sinxronla } from './sinxronMijoz.ts';
 import { kirganFoydalanuvchi } from '../hisobHolat.ts';
 import { yol } from '../yol.ts';
+import { navQadam, type NavYorliqMalumot } from './navYol.ts';
 
 type Rejim = 'birinchi' | 'qayta';
 type Qoralama = Pick<YolProfil, 'goals' | 'primaryGoal' | 'timeLeft' | 'examDate' | 'dailyMinutes'>;
@@ -305,13 +306,6 @@ export function navigatorniIshgaTushir(): void {
   }
 
   // ---------- roadmap rendering ----------
-  function el<K extends keyof HTMLElementTagNameMap>(teg: K, klass?: string, matn?: string) {
-    const x = document.createElement(teg);
-    if (klass) x.className = klass;
-    if (matn !== undefined) x.textContent = matn;
-    return x;
-  }
-
   function chiz() {
     document.documentElement.setAttribute('data-yol', profil ? 'bor' : 'yoq');
     // "Boshlash" opens a dialog unless the profile is complete (then it is an in-page jump).
@@ -331,8 +325,10 @@ export function navigatorniIshgaTushir(): void {
 
     const muddat = $('[data-yol-muddat]', blok!);
     const kun = holat.qolgan !== null && !holat.otgan ? holat.qolgan : null;
-    muddat.hidden = kun === null;
-    muddat.textContent = kun !== null ? m.qolganKun(kun) : '';
+    // Aniq sana bo'lsa qolgan kun, aks holda (o'tkazib yubormagan bo'lsa) sur'at nomi: vaqt har doim ko'rinadi.
+    const suratMatn = !profil.skipped && !holat.otgan && holat.qolgan === null ? m.suratNomi[holat.surat] : '';
+    muddat.hidden = kun === null && !suratMatn;
+    muddat.textContent = kun !== null ? m.qolganKun(kun) : suratMatn;
 
     // Next step card: override (other modules) > first ready roadmap step.
     const keyingi = tanlaKeyingiQadam(qadamlar, oqiKeyingiQadam(ombor, hozir));
@@ -352,26 +348,26 @@ export function navigatorniIshgaTushir(): void {
     asosiy.hidden = !asosiyNom || profil.goals.length < 2;
     asosiy.textContent = asosiyNom ? m.asosiyMaqsad(asosiyNom) : '';
 
+    // NavYol: "Keyingi qadam" kartasidagi yo'l qadami "hozir" (laym), qolganlari "keyin".
+    // Bajarilgan qadamlar kuzatilmaydi, shuning uchun "bajarildi" holati ishlatilmaydi.
+    const hozirId = keyingi?.turi === 'qadam' ? keyingi.qadam.id : null;
     const ol = $('[data-yol-qadamlar]', blok!);
     ol.replaceChildren(
       ...qadamlar.map((q, i) => {
-        const li = el('li', q.tayyor ? '' : 'tez');
-        const raqam = el('span', 'q-raqam', String(i + 1));
-        raqam.setAttribute('aria-hidden', 'true');
-        const matn = el('div', 'q-matn');
-        const qator = el('div', 'q-qator');
-        if (q.tayyor && q.manzil) {
-          const a = el('a', 'q-nom', q.nomi);
-          a.href = yol(q.manzil);
-          qator.append(a);
-        } else {
-          qator.append(el('span', 'q-nom', q.nomi), el('span', 'yorliq', m.tezOrada));
-        }
+        const hozirmi = q.id === hozirId;
+        const yorliqlar: NavYorliqMalumot[] = [];
+        if (!q.tayyor || !q.manzil) yorliqlar.push({ matn: m.tezOrada });
+        else yorliqlar.push(hozirmi ? { matn: m.holatHozir, laym: true } : { matn: m.holatKeyin });
         const maqsad = q.maqsad === 'umumiy' ? null : m.maqsadlar[q.maqsad].nomi;
-        if (maqsad && (profil!.skipped || profil!.goals.length > 1)) qator.append(el('span', 'yorliq', maqsad));
-        matn.append(qator, el('span', 'q-izoh', q.izoh));
-        li.append(raqam, matn);
-        return li;
+        if (maqsad && (profil!.skipped || profil!.goals.length > 1)) yorliqlar.push({ matn: maqsad });
+        return navQadam({
+          raqam: i + 1,
+          nomi: q.nomi,
+          holat: hozirmi ? 'hozir' : 'keyin',
+          manzil: q.tayyor && q.manzil ? yol(q.manzil) : null,
+          izoh: q.izoh,
+          yorliqlar,
+        });
       }),
     );
 
@@ -379,7 +375,8 @@ export function navigatorniIshgaTushir(): void {
     ogoh.hidden = !holat.otgan;
     ogoh.textContent = holat.otgan ? m.sanaOtibKetdi : '';
 
-    const izohlar = [profil.skipped ? m.umumiyIzoh : '', m.qoidaIzoh].filter(Boolean);
+    const nomalum = !profil.skipped && profil.timeLeft === 'unknown';
+    const izohlar = [profil.skipped ? m.umumiyIzoh : '', nomalum ? m.muddatNomalumIzoh : '', m.qoidaIzoh].filter(Boolean);
     $('[data-yol-izoh]', blok!).textContent = izohlar.join(' ');
     $('[data-yol-saqlanmadi]', blok!).hidden = ombor.doimiy;
   }

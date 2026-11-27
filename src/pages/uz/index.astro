@@ -1,75 +1,150 @@
 ---
+// 1-qavat · Bosh sahifa: Navigator mini-DS (nav.css, DESIGN.md "Qavat mini-DS'lari").
+// Hero qora sahnada (.nav-sahna + .t-fon laym nuri): chapda sarlavha va "3 savol" havolasi, o'ngda
+// (telefonda matn ostida) doim ko'rinadigan qavat tanlash paneli QavatTanlash (CTA brifi, 2026-11-24).
+// Qavat kartalari: butun karta bitta <a>, aniq fe'l, raqam har qavat shriftida va rangida, hover'da qavat nuri.
+// Kartalardan keyin "Bino chiroqlari" (BinoChiroqlari, progress moduli). Oxirida "Bepul · 0 soʻm" bloki, marquee va laym yakuniy banner (BoshBepul, BoshYakun).
 import onestLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
 import onestSymbols from '@fontsource-variable/onest/files/onest-symbols-wght-normal.woff2?url';
 import Asosiy from '../../layouts/Asosiy.astro';
 import DeadlineRoyxati from '../../components/DeadlineRoyxati.astro';
 import BoshTariflar from '../../components/BoshTariflar.astro';
+import NavRaqam from '../../components/navigator/NavRaqam.astro';
+import NavYorliq from '../../components/navigator/NavYorliq.astro';
+import QavatTanlash from '../../components/navigator/QavatTanlash.astro';
+import BoshBepul from '../../components/navigator/BoshBepul.astro';
+import BoshYakun from '../../components/navigator/BoshYakun.astro';
+import BinoChiroqlari from '../../components/navigator/BinoChiroqlari.astro';
+import RaqamShrifti from '../../components/navigator/RaqamShrifti.astro';
 import { boshKartalar } from '../../data/boshSahifa';
 import { qavatlar } from '../../data/qavatlar';
 import { yol } from '../../lib/yol';
+
+const qavat = (slug: string) => qavatlar.find((q) => q.slug === slug);
 ---
 <Asosiy title="Tayanch" description="Chet elda o'qish yo'lingiz — bitta joyda." turi="bosh-sahifa" bolim="umumiy" holat="chop-etilgan" sahifaOxiri={false}>
-  <Fragment slot="bosh"><link rel="preload" href={onestLatin} as="font" type="font/woff2" crossorigin /><link rel="preload" href={onestSymbols} as="font" type="font/woff2" crossorigin /></Fragment>
+  <Fragment slot="bosh"><link rel="preload" href={onestLatin} as="font" type="font/woff2" crossorigin /><link rel="preload" href={onestSymbols} as="font" type="font/woff2" crossorigin /><RaqamShrifti /></Fragment>
   <div class="home">
-    <section class="home-hero" aria-labelledby="home-h1">
-      <h1 id="home-h1">Chet elda o'qish yo'lingiz — <span>bitta joyda.</span></h1>
-      <p>Imtihon, hujjat, grant va muddatlar — o'zbek tilida. Bo'limni tanlang va bepul boshlang.</p>
+    <section class="nav-sahna t-fon home-hero" aria-labelledby="home-h1" data-home-hero>
+      <div class="home-hero-matn">
+        <NavYorliq tur="sahna">01 · Navigator</NavYorliq>
+        <h1 id="home-h1" class="nav-hero">Chet elda oʻqish yoʻlingiz — <span>bitta joyda.</span></h1>
+        <p class="home-lead">Imtihon, hujjat, grant va muddatlar — oʻzbek tilida. Qavatni tanlang va birinchi darsni hoziroq boshlang.</p>
+        <a class="home-help" href={yol('/uz/yol-tanlash/')}>Qaysi biri kerakligini bilmaysizmi? 3 savolga javob bering</a>
+      </div>
+      <QavatTanlash />
     </section>
-    <section id="qavatlar" class="home-sections" aria-label="Bo'limlar">
+    <section id="qavatlar" class="home-sections" aria-label="Boʻlimlar" data-home-kartalar>
       <ul class="home-cards" role="list">
         {boshKartalar.map((k) => <li>
-          <a class="home-card" href={yol(k.href)} style={`--section-color:${k.color}`}>
-            <span class="home-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={qavatlar.find((q) => q.slug === k.slug)?.ikonka} /></span>
-            {k.free && <span class="home-free">Bepul</span>}
-            <h2>{k.title}</h2>
+          <a class="home-card" href={yol(k.href)} data-qavat={k.slug}>
+            <span class="home-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={qavat(k.slug)?.ikonka} /></span>
+            <NavRaqam raqam={qavat(k.slug)?.raqam ?? 0} class="home-raqam">{k.title}</NavRaqam>
+            {k.free && <NavYorliq class="home-free">Bepul</NavYorliq>}
             <p class="home-long">{k.line}</p><p class="home-short">{k.short}</p>
-            <span class="home-cta">{k.cta}</span>
-            <svg class="home-chevron" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7" /></svg>
+            <span class="home-cta">{k.harakat}<svg class="home-strelka" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
           </a>
         </li>)}
       </ul>
     </section>
-    <a class="home-help" href={yol('/uz/yol-tanlash/')}><span>Qaysi biri kerakligini bilmayapsizmi?</span> <strong>3 savolga javob bering →</strong></a>
+    <BinoChiroqlari />
+    <BoshBepul />
     <section class="home-deadlines" aria-labelledby="home-muddat">
-      <h2 id="home-muddat">Yaqin muddatlar</h2>
+      <h2 id="home-muddat" class="nav-nom">Yaqin muddatlar</h2>
       <DeadlineRoyxati faqatKelajak limit={3} />
       <a href={yol('/uz/deadline/')}>Hamma muddatlar →</a>
     </section>
     <BoshTariflar />
+    <BoshYakun />
   </div>
 </Asosiy>
+<script>
+  // Hero nur dog'i ekrandan chiqsa to'xtaydi
+  const hero = document.querySelector<HTMLElement>('[data-home-hero]');
+  if (hero) new IntersectionObserver(([y]) => { hero.dataset.harakat = y.isIntersecting ? '' : 'toxta'; }).observe(hero);
+  // Qavat raqami shriftlari (Sora, Lexend, Playfair) kartalar ekranga yaqinlashganda yoqiladi: hero LCP bilan tarmoq talashmaydi
+  const kartalar = document.querySelector<HTMLElement>('[data-home-kartalar]');
+  if (kartalar) {
+    const kuz = new IntersectionObserver(([y]) => { if (y.isIntersecting) { kartalar.dataset.shrift = 'on'; kuz.disconnect(); } }, { rootMargin: '200px 0px' });
+    kuz.observe(kartalar);
+  }
+</script>
 <style>
-  .home { max-width: var(--header-max); padding: var(--space-8); margin-inline: auto; }
-  .home-hero { padding-block: var(--space-8); max-width: var(--home-hero-width); }
-  .home-hero h1 { font-size: var(--home-title); font-weight: 800; line-height: var(--home-title-lh); letter-spacing: var(--oraliq-hero); }
-  .home-hero h1 span { color: var(--color-text-secondary); }
-  .home-hero p { color: var(--color-text-secondary); font-size: var(--text-body-size); max-width: var(--home-copy-width); margin-block: var(--space-4) 0; }
-  .home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--home-card-min), 1fr)); gap: var(--space-4); list-style: none; padding: 0; margin: var(--space-5) 0; }
-  .home-card { height: 100%; min-height: var(--home-card-height); position: relative; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-text-primary); text-decoration: none; transition: transform var(--duration-fast) var(--ease-state); }
-  @media (hover: hover) { .home-card:hover { transform: translateY(calc(-1 * var(--space-1))); border-color: var(--color-link); } }
-  .home-icon { width: var(--space-12); height: var(--space-12); display: grid; place-items: center; border-radius: var(--radius-full); background: var(--section-color); color: var(--home-icon-ink); }
-  .home-free { position: absolute; top: var(--space-5); right: var(--space-4); background: var(--home-free-bg); color: var(--home-free-ink); border-radius: var(--radius-full); font-size: var(--text-caption-size); font-weight: 600; padding: var(--space-1) var(--space-2); }
-  .home-card h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); margin-top: var(--space-2); white-space: nowrap; }
-  .home-long { color: var(--color-text-secondary); font-size: var(--text-small-size); line-height: var(--text-small-lh); margin: 0; }
-  .home-cta { color: var(--color-link); font-size: var(--text-small-size); font-weight: 700; margin-top: auto; padding-top: var(--space-3); }
-  .home-short, .home-chevron { display: none; }
-  .home-help { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); width: fit-content; margin: var(--space-6) auto var(--space-12); padding: var(--space-3) var(--space-5); border: var(--border-width-1) dashed var(--color-border-strong); border-radius: var(--radius-full); color: var(--color-text-secondary); font-size: var(--text-small-size); text-decoration: none; }
-  .home-help strong { color: var(--color-link); }
-  .home-deadlines { display: grid; gap: var(--space-4); padding-block: var(--space-6) var(--space-12); }
-  .home-deadlines :global(.royxat li) { border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+  /* Bloklar orasi space-12 (telefonda space-8). Hero sahnada matn faqat nav-on-stage (nur markazida 4.5:1+). */
+  .home { max-width: var(--header-max); padding: var(--space-8); margin-inline: auto; display: grid; gap: var(--space-12); }
+  .home-hero { display: grid; gap: var(--space-8); align-items: start; }
+  .home-hero-matn { display: grid; gap: var(--space-6); justify-items: start; min-width: 0; }
+  .home-hero h1 { max-width: var(--home-hero-width); }
+  .home-hero h1 span { color: var(--color-nav-lime); }
+  .home-lead { margin: 0; max-width: var(--home-copy-width); color: var(--color-nav-on-stage); font-size: var(--text-body-size); line-height: var(--text-body-lh); }
+  /* Ikkinchi darajali havola: link tokeni (sahnada --color-link = nav-on-stage), bosish maydoni 44px */
+  .home-hero .home-help { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-size: var(--text-small-size); line-height: var(--text-small-lh); font-weight: var(--font-weight-medium); text-underline-offset: 0.25em; }
+  @media (min-width: 960px) {
+    .home-hero { grid-template-columns: minmax(0, 1.4fr) minmax(var(--size-nav-panel-min), 1fr); gap: var(--space-12); }
+  }
+  /* Hero nur dog'i (.t-fon::before): 6s sekin nafas, faqat transform/opacity */
+  .home-hero.t-fon::before { animation: home-nur var(--nav-nur-davomi) ease-in-out infinite; }
+  @keyframes home-nur { 50% { transform: scale(var(--nav-nur-masshtab)); opacity: calc(var(--fon-nur-opacity) * 0.75); } }
+  .home-hero[data-harakat="toxta"]::before { animation-play-state: paused; }
+
+  .home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--home-card-min), 1fr)); gap: var(--space-4); list-style: none; padding: 0; margin: 0; }
+  .home-card {
+    --karta-rang: var(--color-floor-navigator-text); --karta-nur: var(--color-floor-navigator-glow); --karta-shrift: var(--font-display);
+    height: 100%; min-height: var(--home-card-height); position: relative;
+    display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5);
+    border: var(--border-width-1) solid var(--color-nav-line); border-radius: var(--radius-lg);
+    background: var(--color-nav-surface); color: var(--color-nav-text); text-decoration: none;
+    transition: transform var(--duration-base) var(--ease-state);
+  }
+  .home-card[data-qavat="top-admission"] { --karta-rang: var(--color-floor-admission-text); --karta-nur: var(--color-floor-admission-glow); }
+  .home-card[data-qavat="sat"] { --karta-rang: var(--color-floor-sat-text); --karta-nur: var(--color-floor-sat-glow); --karta-shrift: var(--font-sat); }
+  .home-card[data-qavat="ielts"] { --karta-rang: var(--color-floor-ielts-text); --karta-nur: var(--color-floor-ielts-glow); --karta-shrift: var(--font-ielts); }
+  .home-card[data-qavat="eyuf"] { --karta-rang: var(--color-floor-eyuf-text); --karta-nur: var(--color-floor-eyuf-glow); --karta-shrift: var(--font-eyuf); }
+  .home-card[data-qavat="ai-academy"] { --karta-rang: var(--color-floor-ai-text); --karta-nur: var(--color-floor-ai-glow); }
+  /* Qavat nuri: alohida qatlam, faqat opacity o'zgaradi (soya animatsiya qilinmaydi) */
+  .home-card::after {
+    content: ''; position: absolute; inset: calc(-1 * var(--border-width-1)); border-radius: inherit; pointer-events: none;
+    border: var(--border-width-1) solid var(--karta-nur); box-shadow: 0 var(--space-6) var(--space-12) calc(-1 * var(--space-5)) var(--karta-nur);
+    opacity: 0; transition: opacity var(--duration-base) var(--ease-state);
+  }
+  .home-card:is(:hover, :focus-visible)::after { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .home-card:hover { transform: translateY(var(--nav-karta-kotarilish)); } }
+  .home-card:focus-visible { transform: translateY(var(--nav-karta-kotarilish)); }
+  .home-card:active { transform: var(--bosilish); }
+  .home-icon { position: absolute; top: var(--space-5); right: var(--space-5); display: grid; place-items: center; color: var(--color-nav-text-muted); }
+  .home-card :global(.home-raqam) { gap: var(--space-3); }
+  .home-card :global(.home-raqam .nav-num) { color: var(--karta-rang); }
+  .home-sections[data-shrift] .home-card :global(.home-raqam .nav-num) { font-family: var(--karta-shrift); }
+  .home-card :global(.home-raqam .nav-nom) { white-space: nowrap; }
+  .home-card :global(.home-free) { align-self: flex-start; justify-self: start; }
+  .home-long { color: var(--color-nav-text-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); margin: 0; }
+  .home-cta { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--color-nav-text); font-size: var(--text-small-size); font-weight: var(--font-weight-bold); margin-top: auto; padding-top: var(--space-3); }
+  .home-strelka { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); transition: transform var(--duration-base) var(--ease-state); }
+  .home-card:is(:hover, :focus-visible) .home-strelka { transform: translateX(var(--nav-strelka-siljish)); }
+  .home-short { display: none; }
+
+  .home-deadlines { display: grid; gap: var(--space-4); }
+  .home-deadlines :global(.royxat li) { border: var(--border-width-1) solid var(--color-nav-line); border-radius: var(--radius-lg); background: var(--color-nav-surface); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-hero.t-fon::before { animation: none; }
+    .home-card, .home-card::after, .home-strelka { transition: none; }
+  }
+  :global(:root[data-motion="reduced"]) .home-hero.t-fon::before { animation: none; }
+
   @media (width < 768px) {
-    .home { padding: var(--space-4); }
-    .home-hero { padding-block: var(--space-3) var(--space-2); }
-    .home-hero h1 { font-size: var(--home-title-mobile); line-height: var(--home-title-lh); }
-    .home-hero p { font-size: var(--text-small-size); line-height: var(--text-small-lh); margin-top: var(--space-3); }
-    .home-cards { grid-template-columns: 1fr; gap: var(--space-2); margin-block: var(--space-4); }
-    .home-card { min-height: var(--home-row-height); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--space-3); row-gap: 0; align-content: center; padding: var(--space-3); }
-    .home-icon { grid-row: 1 / 3; width: var(--space-10); height: var(--space-10); align-self: center; }
-    .home-card h2 { grid-column: 2; font-size: var(--text-body-size); line-height: var(--text-body-lh); margin: 0; }
-    .home-short { display: block; grid-column: 2; margin: 0; color: var(--color-text-secondary); font-size: var(--text-caption-size); line-height: var(--text-small-lh); }
-    .home-chevron { display: block; grid-column: 3; grid-row: 1 / 3; align-self: center; color: var(--color-link); }
-    .home-free { top: var(--space-3); right: var(--space-9); font-size: var(--home-badge-mobile); padding: 0 var(--space-1); }
-    .home-long, .home-cta { display: none; }
-    .home-help { margin-block: var(--space-4) var(--space-6); padding: var(--space-3); border-radius: var(--radius-lg); }
+    .home { padding: var(--space-4); gap: var(--space-8); }
+    .home-hero, .home-hero-matn { gap: var(--space-5); }
+    .home-lead { font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+    .home-cards { grid-template-columns: 1fr; gap: var(--space-2); }
+    .home-card { min-height: var(--home-row-height); display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-1); align-content: center; padding: var(--space-3) var(--space-4); }
+    .home-icon { display: none; }
+    .home-card :global(.home-raqam) { display: flex; align-items: baseline; gap: var(--space-3); }
+    .home-card :global(.home-raqam .nav-num) { font-size: var(--text-nav-sarlavha-size); line-height: var(--text-nav-sarlavha-lh); }
+    .home-card :global(.home-raqam .nav-nom) { font-size: var(--text-h3-size); line-height: var(--text-nav-sarlavha-lh); }
+    .home-card :global(.home-free) { position: absolute; top: var(--space-3); right: var(--space-4); }
+    .home-short { display: block; margin: 0; color: var(--color-nav-text-muted); font-size: var(--text-caption-size); line-height: var(--text-small-lh); }
+    .home-long { display: none; }
+    .home-cta { margin-top: 0; padding-top: var(--space-1); }
   }
 </style>

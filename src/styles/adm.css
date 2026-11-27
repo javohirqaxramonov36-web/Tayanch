@@ -1,0 +1,366 @@
+/* 2-qavat Top Admission mini-DS (ADR 005, PR 7, 2026-11-23). Manba: Claude Design artifakti, versiya 15,
+   components/bundle.css ".adm-*", qavat-2-top-admission.md. Tokenlar tokens.css ("2-qavat Top Admission mini-DS"),
+   qoidalar DESIGN.md "2-qavat Top Admission". Faqat Top Admission sahifalari import qiladi.
+   Saytga moslash:
+   - .adm = BolimQobiq dagi <main> (bolim="top-admission"). U poydevor va eski nomli tokenlarni krem/qora/to'q sariq
+     qiymatga almashtiradi, shuning uchun sahifalardagi eski kartalar, yorliqlar va tugmalar ham 2-qavat tusini oladi.
+     Eski nomlar (--fon, --matn, ...) :root da hisoblangan, shuning uchun ular ham shu yerda qayta e'lon qilinadi.
+   - Blur faqat .adm-shisha da (hero, muddat, plitka, ro'yxat). Oddiy kartalar .adm-karta: zich sirt, blursiz
+     (ko'p blur telefonda og'ir; ichma-ich blur yo'q).
+   - Hero DS da shaffof shisha edi: nur dog'i markazida urg'u so'z 2.68 bo'lgani uchun zich shishada.
+   - Harakat sayt qoidasi bo'yicha: rang va soya darhol, faqat transform (--bosilish), hover faqat sichqoncha bilan. */
+
+/* ---------- Doira: sahifa foni va tokenlar ---------- */
+body:has(main.adm) {
+  background: var(--color-adm-bg);
+  /* Foto fonli kirish sahifasida main shishasi krem tusda (QavatFoto) */
+  --qavat-fon-shisha: var(--color-adm-foto-shisha);
+}
+/* Studio gradienti o'rniga krem/qora fon (gradient faqat studio fonida) */
+body:has(main.adm)::before { display: none; }
+
+.adm {
+  --nur: var(--color-floor-admission-glow);
+  color: var(--color-adm-text);
+
+  /* Poydevor semantikasi → 2-qavat */
+  --color-bg: var(--color-adm-bg);
+  --color-surface: var(--color-adm-surface);
+  --color-surface-sunken: var(--color-adm-sunken);
+  --color-border: var(--color-adm-line);
+  --color-border-strong: var(--color-adm-line-strong);
+  --color-text-primary: var(--color-adm-text);
+  --color-text-secondary: var(--color-adm-text-muted);
+  /* Ikkinchi urg'u rangi yo'q: havola to'q sariq matn rangida, tagi chizilgan */
+  --color-link: var(--color-adm-accent-text);
+  --color-action-primary-bg: var(--color-adm-accent);
+  --color-action-primary-bg-hover: var(--color-adm-accent-display);
+  --color-action-primary-text: var(--color-adm-on-accent);
+  --color-focus-gap: var(--color-adm-bg);
+  --color-glass-bg: var(--color-adm-glass);
+  --color-glass-bg-strong: var(--color-adm-glass-strong);
+  --color-glass-border: var(--color-adm-glass-border);
+
+  /* Qavat konteksti: urg'u matni va to'q sariq fill */
+  --floor-fill: var(--color-adm-accent);
+  --floor-text: var(--color-adm-accent-text);
+  --floor-ui: var(--color-adm-accent-text);
+  --floor-ui-text: var(--color-adm-on-accent-text);
+  --floor-subtle: var(--color-adm-accent-subtle);
+  --floor-on-fill: var(--color-adm-on-accent);
+  --floor-ui-toq: color-mix(in srgb, var(--floor-ui) 80%, var(--color-adm-ink));
+  --floor-ui-chuqur: color-mix(in srgb, var(--floor-ui) 60%, var(--color-adm-ink));
+
+  /* Komponent tokenlari */
+  --btn-primary-bg: var(--color-adm-accent);
+  --btn-primary-bg-hover: var(--color-adm-accent-display);
+  --btn-primary-bg-pressed: var(--color-adm-accent-display);
+  --btn-primary-text: var(--color-adm-on-accent);
+  --btn-secondary-bg: transparent;
+  --btn-secondary-bg-hover: var(--color-adm-sunken);
+  --btn-secondary-bg-pressed: var(--color-adm-chip);
+  --btn-secondary-border: var(--color-adm-line-strong);
+  --btn-secondary-text: var(--color-adm-text);
+  --btn-ghost-text: var(--color-adm-text);
+  --btn-ghost-bg-hover: var(--color-adm-sunken);
+  --control-checked-bg: var(--color-adm-accent);
+  --control-checked-mark: var(--color-adm-on-accent);
+  --input-bg: var(--color-adm-surface);
+  --input-border: var(--color-adm-line-strong);
+  --input-border-hover: var(--color-adm-text-muted);
+  --input-text: var(--color-adm-text);
+  --card-bg: var(--color-adm-glass-strong);
+  --card-line: var(--color-adm-line);
+  --card-border: var(--color-adm-line);
+  --card-shadow: var(--shadow-glass);
+  --card-shadow-hover: var(--shadow-glass);
+  --progress-track: var(--color-adm-line);
+  --progress-fill: var(--color-adm-accent);
+  --nav-item-active-bg: var(--color-adm-accent-subtle);
+  --nav-item-hover-bg: var(--color-adm-sunken);
+
+  /* Eski nomlar (:root da hisoblangan) → 2-qavat */
+  --fon: var(--color-adm-bg);
+  --fon-ikkinchi: var(--color-adm-sunken);
+  --sirt: var(--color-adm-surface);
+  --sirt-ikkinchi: var(--color-adm-chip);
+  --chiziq: var(--color-adm-line);
+  --chiziq-kuchli: var(--color-adm-line-strong);
+  --chiziq-maydon: var(--color-adm-line-strong);
+  --matn: var(--color-adm-text);
+  --matn-ikkinchi: var(--color-adm-text-muted);
+  --matn-sust: var(--color-adm-text-muted);
+  --rang-havola: var(--color-adm-accent-text);
+  --rang-asosiy: var(--floor-ui);
+  --rang-asosiy-toq: var(--floor-ui-toq);
+  --rang-asosiy-chuqur: var(--floor-ui-chuqur);
+  --rang-asosiy-och: var(--floor-subtle);
+  --rang-asosiy-matn: var(--floor-ui-text);
+  --soya: var(--shadow-glass);
+}
+/* Havola to'q sariq matnda: rangdan tashqari tag chizig'i ham (rang yagona belgi emas) */
+.adm :where(p, li, dd, td, small) a:not([class]) {
+  color: var(--color-adm-accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width-1);
+}
+
+/* ---------- Sarlavhalar va yorliq ---------- */
+.adm-h1 {
+  margin: 0;
+  font-size: var(--text-adm-h1-size);
+  line-height: var(--text-adm-h1-lh);
+  font-weight: var(--text-adm-hero-weight);
+  letter-spacing: var(--text-adm-hero-ls);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+.adm-h2 {
+  margin: 0;
+  font-size: var(--text-adm-h2-size);
+  line-height: var(--text-adm-h2-lh);
+  font-weight: var(--text-adm-h2-weight);
+  letter-spacing: var(--text-adm-h2-ls);
+  text-wrap: balance;
+}
+/* Urg'u so'z: faqat 24px+ qalin sarlavhada (3:1) */
+.adm-urgu { color: var(--color-adm-accent-display); font-weight: var(--text-adm-hero-weight); }
+.adm-h2 .adm-urgu { font-weight: var(--font-weight-bold); }
+.adm-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-adm-eyebrow-size);
+  line-height: var(--text-adm-eyebrow-lh);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-adm-eyebrow-ls);
+  text-transform: uppercase;
+  color: var(--color-adm-text-muted);
+}
+.adm-eyebrow::before {
+  content: '';
+  flex: none;
+  width: var(--size-adm-eyebrow-chiziq);
+  height: var(--border-width-2);
+  background: var(--color-adm-orange);
+}
+
+/* ---------- Sirtlar ---------- */
+/* Shisha (blur bilan): qisqa matn. Uzun matn faqat --zich da */
+.adm-shisha {
+  border: var(--border-width-1) solid var(--color-adm-glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-adm-glass);
+  box-shadow: var(--shadow-glass);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  backdrop-filter: var(--glass-backdrop);
+}
+.adm-shisha--zich { background: var(--color-adm-glass-strong); }
+/* Karta: zich sirt, blursiz (ro'yxatlar, matnli bloklar) */
+.adm-karta {
+  border: var(--border-width-1) solid var(--color-adm-glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-adm-glass-strong);
+  box-shadow: var(--shadow-glass);
+}
+/* Ichki qator (shisha ichida tekis, ichma-ich blur yo'q) */
+.adm-ichki {
+  border: var(--border-width-1) solid var(--color-adm-line);
+  border-radius: var(--radius-md);
+  background: var(--color-adm-sunken);
+}
+
+/* ---------- Tugma: poydevor kapsulasi, fill to'q sariq, matn qora ---------- */
+.adm .t-tugma { --nur: var(--color-floor-admission-glow); }
+.t-tugma.adm-tugma--urgu {
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--color-glass-highlight), transparent 55%) top / 100% 50% no-repeat, var(--color-adm-accent);
+  color: var(--color-adm-on-accent);
+}
+.t-tugma.t-tugma--ikkinchi { color: var(--color-adm-text); }
+.adm .t-tugma--ikkinchi { border-color: var(--color-adm-line-strong); }
+
+/* ---------- Chip (to'q sariq fill) ---------- */
+.adm-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--badge-height);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-adm-accent);
+  color: var(--color-adm-on-accent);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+/* Neytral chip (holat emas, yorliq) */
+.adm-chip--sust { background: var(--color-adm-chip); color: var(--color-adm-text); }
+
+/* ---------- AdmTekshirildi: rasmiy manbada tekshirilgan fakt belgisi (eski muhr o'rnida) ---------- */
+.adm-tekshirildi {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--badge-height);
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-adm-chip);
+  color: var(--color-adm-text);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+.adm-tekshirildi svg { flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); color: var(--color-adm-accent-text); }
+.adm-tekshirildi-sana { font-variant-numeric: tabular-nums; }
+/* Ekran o'quvchi uchun matn (ko'rinmaydi) */
+.adm-yashirin {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- AdmHero ---------- */
+.adm-hero-fon { border-radius: var(--radius-xl); padding: var(--space-4); }
+.adm-hero { padding: var(--space-8) var(--space-6); display: grid; gap: var(--space-4); container-type: inline-size; }
+.adm-hero h1 {
+  margin: 0;
+  font-size: clamp(var(--text-adm-hero-min), var(--text-adm-hero-fluid), var(--text-adm-hero-max));
+  line-height: var(--text-adm-hero-lh);
+  font-weight: var(--text-adm-hero-weight);
+  letter-spacing: var(--text-adm-hero-ls);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+.adm-hero-matn { margin: 0; max-width: 46ch; color: var(--color-adm-text-muted); font-size: var(--text-body-size); line-height: var(--text-body-lh); }
+.adm-hero--ichki { gap: var(--space-3); padding: var(--space-6); }
+.adm-hero--ichki h1 { font-size: var(--text-adm-h1-size); line-height: var(--text-adm-h1-lh); text-transform: none; }
+.adm-hero-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+@media (min-width: 720px) {
+  .adm-hero-fon { padding: var(--space-6); }
+  .adm-hero { padding: var(--space-12); }
+  .adm-hero--ichki { padding: var(--space-8); }
+}
+
+/* ---------- AdmPlitka ---------- */
+.adm-plitkalar {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--size-adm-plitka-min), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.adm-plitka {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-2);
+  height: 100%;
+  min-height: var(--size-touch-min);
+  padding: var(--space-4) var(--space-2);
+  border-radius: var(--radius-lg);
+  color: var(--color-adm-text);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  text-decoration: none;
+  transition: transform var(--duration-fast) var(--ease-state);
+}
+.adm-plitka svg { width: var(--size-adm-plitka-ikon); height: var(--size-adm-plitka-ikon); color: var(--color-adm-accent-text); }
+.adm-plitka[aria-current='page'] {
+  border-color: var(--color-adm-orange);
+  box-shadow: var(--shadow-adm-plitka-joriy), inset 0 0 0 var(--border-width-1) var(--color-adm-orange);
+}
+@media (hover: hover) and (pointer: fine) {
+  .adm-plitka:hover { border-color: var(--color-adm-line-strong); }
+}
+.adm-plitka:active { transform: var(--bosilish); }
+
+/* ---------- AdmMuddat ---------- */
+.adm-muddat { padding: var(--space-6); display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
+.adm-muddat[hidden], [data-adm-bosh][hidden] { display: none; }
+.adm-muddat-tepa { display: flex; justify-content: space-between; align-items: start; gap: var(--space-4); }
+.adm-muddat-tepa > div { display: grid; gap: var(--space-1); min-width: 0; }
+.adm-muddat h3 { margin: 0; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); font-weight: var(--font-weight-bold); letter-spacing: var(--text-h3-ls); }
+.adm-qatorlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--size-adm-qator-min), 1fr)); gap: var(--space-3); margin: 0; }
+.adm-qatorlar > div { padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-adm-sunken); border: var(--border-width-1) solid var(--color-adm-line); min-width: 0; }
+.adm-qatorlar dt { font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
+.adm-qatorlar dd { margin: var(--space-1) 0 0; font-size: var(--text-body-size); line-height: var(--text-body-lh); font-weight: var(--font-weight-bold); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.adm-muddat-past { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-4); }
+.adm-qolgan-blok { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2); font-weight: var(--font-weight-semibold); }
+.adm-qolgan {
+  font-size: var(--text-adm-raqam-size);
+  line-height: 1;
+  font-weight: var(--text-adm-hero-weight);
+  letter-spacing: var(--text-adm-raqam-ls);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-adm-accent-display);
+}
+.adm-qolgan:empty { display: none; }
+.adm-manba { margin: 0; font-size: var(--text-small-size); line-height: var(--text-small-lh); color: var(--color-adm-text-muted); }
+.adm-muddat-havolalar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
+
+/* ---------- AdmRoyxat: haqiqiy checkbox, to'q sariq belgi ---------- */
+.adm-royxat { list-style: none; margin: 0; padding: var(--space-2); display: grid; gap: var(--space-1); }
+.adm-royxat label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--size-adm-royxat-qator);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: var(--font-weight-medium);
+}
+@media (hover: hover) and (pointer: fine) {
+  .adm-royxat label:hover { background: var(--color-adm-sunken); }
+}
+.adm-royxat input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.adm-royxat .belgi {
+  flex: none;
+  width: var(--size-adm-belgi);
+  height: var(--size-adm-belgi);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-2) solid var(--color-adm-line-strong);
+  display: grid;
+  place-items: center;
+  color: transparent;
+}
+.adm-royxat .belgi svg { width: var(--size-adm-belgi-ikon); height: var(--size-adm-belgi-ikon); }
+.adm-royxat input:checked + .belgi { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
+.adm-royxat input:focus-visible + .belgi { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+.adm-royxat small { margin-left: auto; color: var(--color-adm-text-muted); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+
+/* ---------- Zaxira: blur yo'q brauzer ---------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .adm-shisha { background: var(--color-adm-glass-strong); }
+}
+/* ---------- Zaxira: shaffoflik kamaytirilgan yoki yuqori kontrast: tekis sirt, ko'rinadigan chet ---------- */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  body:has(main.adm) { --qavat-fon-shisha: var(--color-adm-bg); }
+  .adm-shisha,
+  .adm-shisha--zich,
+  .adm-karta {
+    border-color: var(--color-adm-line-strong);
+    background: var(--color-adm-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .adm { --card-bg: var(--color-adm-surface); --card-border: var(--color-adm-line-strong); }
+  .t-tugma.adm-tugma--urgu,
+  .t-tugma.adm-tugma--urgu:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--color-adm-accent);
+    color: var(--color-adm-on-accent);
+  }
+}

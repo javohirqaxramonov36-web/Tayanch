@@ -69,6 +69,8 @@ const qadamlar = [
   { id: 'formula', nomi: qadamNomlari[1] },
   { id: 'sinab', nomi: qadamNomlari[2] },
 ];
+// DS: asosiy tugma qavat urg'usida (boshqa qavat tokeni ishlatilmaydi)
+const urgu = bolim === 'sat' ? 'sat-tugma--kok' : bolim === 'top-admission' ? 'adm-tugma--urgu' : bolim === 'ielts' ? 'ielts-tugma--urgu' : undefined;
 ---
 <BolimQobiq
   title={title}
@@ -77,18 +79,18 @@ const qadamlar = [
   yol={yolBandlari}
   bolim={bolim}
   holat="chop-etilgan"
+  sahifaSinfi={bolim === 'sat' ? 'sat t-fon' : undefined}
 >
   <div class="ichki dars" data-modul={modul} data-savol-tili={savolTili}>
     <header class="bosh">
       <p class="pill-qator">
         <span class="ustki-kok">{darsTuri}</span>
         <span class="pill">{yonalish}</span>
-        {bolim !== 'top-admission' && <span class="pill pill-chiziq">{M.qoralama}</span>}
       </p>
       <h1>{sarlavha}</h1>
       {keyingi && <a class="dars-keyingi" href={keyingi.href}>{keyingiNomi}</a>}
       <p class="lead">{lead}</p>
-      <a class="tugma tugma-ikkinchi mashqqa" href="#mashqlar">
+      <a class="t-tugma t-tugma--ikkinchi mashqqa" href="#mashqlar">
         {M.mashqqaOtish(savollar.length)}
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
       </a>
@@ -211,10 +213,10 @@ const qadamlar = [
               <p class="izoh-yechim"><b>{M.yechim}</b> {s.yechim}</p>
             </div>
             <div class="s-tugmalar">
-              {s.belgilash?.tur === 'soz' && <button type="button" class="katta asosiy joy-tekshir" disabled>{M.joyTekshirish}</button>}
-              <button type="button" class="katta asosiy tekshir" disabled hidden={s.belgilash?.tur === 'soz'}>{M.tekshirish}</button>
-              <button type="button" class="katta ikkinchi qayta" hidden>{M.qaytaYechish}</button>
-              <button type="button" class="katta qora keyingi" hidden>{i < savollar.length - 1 ? M.keyingiMashq : M.xulosagaOtish}</button>
+              {s.belgilash?.tur === 'soz' && <button type="button" class:list={['t-tugma', urgu, 'joy-tekshir']} disabled>{M.joyTekshirish}</button>}
+              <button type="button" class:list={['t-tugma', urgu, 'tekshir']} disabled hidden={s.belgilash?.tur === 'soz'}>{M.tekshirish}</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi qayta" hidden>{M.qaytaYechish}</button>
+              <button type="button" class="t-tugma keyingi" hidden>{i < savollar.length - 1 ? M.keyingiMashq : M.xulosagaOtish}</button>
             </div>
           </fieldset>
         ))}
@@ -237,11 +239,11 @@ const qadamlar = [
           <p class="daftar-takror"><a class="kok-tugma" href={takrorlashHref}>{M.takrorlash}</a></p>
         )}
         <div class="daftar-tozala">
-          <button type="button" class="matn-tugma" id="tozala">{M.tozala}</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">{M.tozala}</button>
           <span class="tasdiq" id="tasdiq" hidden>
             {M.tasdiq}
-            <button type="button" class="matn-tugma" id="tasdiq-ha">{M.tasdiqHa}</button>
-            <button type="button" class="matn-tugma" id="tasdiq-yoq">{M.tasdiqYoq}</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">{M.tasdiqHa}</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">{M.tasdiqYoq}</button>
           </span>
         </div>
         <p class="kichik ikkinchi" id="saqlash-holat">{M.saqlash}</p>
@@ -249,11 +251,11 @@ const qadamlar = [
 
       {katalog ? (
         <nav class="dars-davomi" aria-label={til === 'en' ? 'Lesson navigation' : 'Dars navigatsiyasi'}>
-          {keyingi && <a class="katta asosiy keyingi-dars" href={keyingi.href}>{M.keyingiQadam(keyingi.nomi)}</a>}
-          <a class="katta ikkinchi" href={yol(katalog)}>{til === 'en' ? 'Back to the guide' : "Qo'llanmaga qaytish"}</a>
+          {keyingi && <a class:list={['t-tugma', urgu, 'keyingi-dars']} href={keyingi.href}>{M.keyingiQadam(keyingi.nomi)}</a>}
+          <a class="t-tugma t-tugma--ikkinchi" href={yol(katalog)}>{til === 'en' ? 'Back to the guide' : "Qo'llanmaga qaytish"}</a>
         </nav>
       ) : keyingi && (
-        <a class="katta asosiy keyingi-dars" href={keyingi.href}>{keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi)}</a>
+        <a class:list={['t-tugma', urgu, 'keyingi-dars']} href={keyingi.href}>{keyingi.turi === 'qadam' ? M.keyingiQadam(keyingi.nomi) : M.keyingiDars(keyingi.nomi)}</a>
       )}
       {telegramKorinadi('guruh') && (
         <aside class="telegram-blok" aria-labelledby="telegram-h">
@@ -504,7 +506,7 @@ const qadamlar = [
       const t = document.createElement('p'); t.className = 'kichik ikkinchi'; t.textContent = M.javobingiz(x.tanlangan, x.sana);
       matn.append(b, t);
       const tugma = document.createElement('button');
-      tugma.type = 'button'; tugma.className = 'matn-tugma kok-tugma'; tugma.textContent = M.qaytaYechish;
+      tugma.type = 'button'; tugma.className = 't-tugma t-tugma--ikkinchi kok-tugma'; tugma.textContent = M.qaytaYechish;
       tugma.addEventListener('click', () => {
         tiklash(fieldsetlar[i]);
         korsat(i, true);
@@ -672,7 +674,6 @@ const qadamlar = [
   .dars .izoh-sarlavha { font-size: 18px; font-weight: 800; }
   .dars .izoh-xato:empty { display: none; }
   .dars .s-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
-  .dars .katta[hidden] { display: none; }
 
   /* Matndan belgilash (R&W): belgilangan bo'lak rang bilan bir qatorda tagchiziq, fon va chegara bilan ajraladi */
   .dars .s-korsatma { font-size: 17px; font-weight: 700; line-height: 1.4; }
@@ -739,7 +740,7 @@ const qadamlar = [
     .dars .maqsad { padding: var(--b-3) var(--b-5) var(--b-4); gap: var(--b-2); }
     .dars .savol-karta { padding: var(--b-5); }
     .dars .s-matn { font-size: 19px; }
-    .dars .s-tugmalar .katta { flex: 1 1 100%; }
+    .dars .s-tugmalar .t-tugma { flex: 1 1 100%; }
     .dars .qadamlar button { font-size: 14px; padding: 0 var(--b-2); }
     .dars .slayder { grid-template-columns: 5ch minmax(0, 1fr) 5ch; gap: var(--b-2); }
     .dars .soz-bolaklar { font-size: 18px; }

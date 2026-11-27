@@ -25,17 +25,17 @@ const { sarlavhaId, rejalar = true, tor = false } = Astro.props;
 </div>
 
 <style>
-  .usage-bar { display: flex; flex-direction: column; gap: var(--b-3); }
-  .ub-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--b-4); }
-  .ub-royxat :global(.ub-qator) { display: flex; flex-direction: column; gap: var(--b-1); }
-  .ub-royxat :global(.ub-bosh) { display: flex; justify-content: space-between; align-items: baseline; gap: var(--b-3); margin: 0; }
-  .ub-royxat :global(.ub-nom) { font-weight: 700; }
+  .usage-bar { display: flex; flex-direction: column; gap: var(--space-3); }
+  .ub-royxat { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+  .ub-royxat :global(.ub-qator) { display: flex; flex-direction: column; gap: var(--space-1); }
+  .ub-royxat :global(.ub-bosh) { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; }
+  .ub-royxat :global(.ub-nom) { font-weight: var(--font-weight-bold); }
   .ub-royxat :global(.ub-son) { font-variant-numeric: tabular-nums; }
-  .ub-royxat :global(.ub-chiziq) { block-size: var(--b-2); border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .ub-royxat :global(.ub-chiziq span) { display: block; block-size: 100%; background: var(--rang-havola); border-radius: var(--r-toliq); }
-  .usage-bar :global(.ub-izoh) { margin: 0; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .ub-tor .ub-royxat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--b-3); }
-  .ub-tor .ub-royxat :global(.ub-qator) { padding: var(--b-3) var(--b-4); border: 1px solid var(--chiziq); border-radius: var(--r-orta); background: var(--sirt); }
-  .ub-tugadi { margin: 0; font-size: var(--matn-kichik); }
-  .ub-tugadi a { font-weight: 700; }
+  .ub-royxat :global(.ub-chiziq) { block-size: var(--space-2); border-radius: var(--radius-full); background: var(--color-sat-line); overflow: hidden; }
+  .ub-royxat :global(.ub-chiziq span) { display: block; block-size: 100%; background: var(--color-sat-blue-text); border-radius: var(--radius-full); }
+  .usage-bar :global(.ub-izoh) { margin: 0; font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
+  .ub-tor .ub-royxat { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--space-3); }
+  .ub-tor .ub-royxat :global(.ub-qator) { padding: var(--space-3) var(--space-4); border: 1px solid var(--color-sat-line); border-radius: var(--radius-md); background: var(--color-sat-surface); }
+  .ub-tugadi { margin: 0; font-size: var(--text-small-size); }
+  .ub-tugadi a { font-weight: var(--font-weight-bold); }
 </style>

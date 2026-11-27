@@ -1,5 +1,5 @@
 // Qavatlar orasidagi yo'l: dars yoki vosita oxirida "boshqa qavatda" kartalari (dizayn rejasi B, 4-bosqich).
-// Juftliklarni muallif tasdiqlagan (2026-11-09). Matn manba sahifa tilida: SAT sahifalarida inglizcha.
+// Juftliklarni muallif tasdiqlagan (2026-11-09). Matn manba sahifa tilida: SAT va IELTS sahifalarida inglizcha.
 // Faqat saytda bor sahifalarga havola; imtihon yoki qabul haqida fakt yozilmaydi.
 import { yol } from '../lib/yol';
 
@@ -23,22 +23,21 @@ const topshirishYoliEn: QavatlarAroKarta = {
 const ieltsTfngEn: QavatlarAroKarta = {
   qavat: 4,
   nomi: 'IELTS Reading: True / False / Not Given',
-  izoh: 'Another lesson on finding the evidence sentence, for IELTS. In Uzbek.',
+  izoh: 'Another lesson on finding the evidence sentence, for IELTS.',
   href: yol('/uz/ielts/qollanma/reading/tfng/'),
 };
 
 const satDalilUz: QavatlarAroKarta = {
   qavat: 3,
   nomi: 'SAT Reading & Writing: Mark the evidence',
-  nomiTili: 'en',
-  izoh: 'Dalil gapni topish, SAT matnlarida. Dars ingliz tilida.',
+  izoh: 'Finding the evidence sentence, in SAT texts.',
   href: yol('/uz/sat/qollanma/reading-writing/dalil/'),
 };
 
 const ieltsUz: QavatlarAroKarta = {
   qavat: 4,
   nomi: 'IELTS Reading darslari',
-  izoh: 'True / False / Not Given, Matching headings va 30 kunlik reja.',
+  izoh: 'True / False / Not Given, Matching headings va 30 kunlik reja. Ingliz tilida.',
   href: yol('/uz/ielts/'),
 };
 

@@ -2,14 +2,15 @@
 import { kursHavola, kursOchiq } from '../lib/sat/kursKatalog';
 // Bo'lim yon paneli (sidebar): SAT, IELTS yoki Top Admission (maket "LiftSidebar").
 // >= 768px: bo‘limlar ustki qatorda, joriy bo‘lim menyusi o‘ngda ochiladi.
-// < 768px: bo‘limlar va joriy bo‘lim sahifalari hamburger menyusida.
+// < 768px: bo‘limlar sarlavha ostidagi chiplarda (BolimChiplar), hamburgerda faqat joriy bo‘lim sahifalari (2026-11-27).
 //   Esc yopadi, fokus panel ichida aylanadi, qolgan sahifa inert bo'ladi, aria-expanded yangilanadi.
 // Dizayn: Tayanch-SAT-dizayn.md va Tayanch-IELTS-dizayn.md.
 import { satYonGuruhlar } from '../data/satSahifalar';
-import { qollanmalar, asos, vositalar, mashqlar as ieltsMashqlar, darslar as ieltsDarslar } from '../data/ieltsSahifalar';
+import { ieltsGuruhlar } from '../data/ieltsSahifalar';
 import { taGuruhlar } from '../data/topAdmissionSahifalar';
 import { eyufGuruhlar } from '../data/eyufSahifalar';
 import QavatMenyu from './navigator/QavatMenyu.astro';
+import BolimChiplar from './navigator/BolimChiplar.astro';
 import KirishDialog from './hisob/KirishDialog.astro';
 import HeaderAmallar from './HeaderAmallar.astro';
 import Suhbatdosh from './Suhbatdosh.astro';
@@ -39,7 +40,7 @@ const LOGO_NOM = bolim === 'sat' ? 'SAT®' : bolim && bolim !== 'eyuf' && bolim 
 const b = (qism: string) => yol(bolim ? `/uz/${bolim}/${qism}` : '/uz/');
 const umumiy = [
   { path: '/uz/', uz: 'Bosh sahifa', en: 'Home' },
-  { path: '/uz/#qavatlar', uz: "Yo'nalishlar", en: 'Directions' },
+  { path: '/uz/#qavatlar', uz: "Yoʻnalishlar", en: 'Directions' },
   { path: '/uz/deadline/', uz: 'Muddatlar', en: 'Deadlines' },
   { path: '/uz/manbalar/', uz: 'Manbalar', en: 'Sources' },
   { path: '/uz/yol-tanlash/?boshlash=1', uz: 'Boshlash', en: 'Get started' },
@@ -84,14 +85,9 @@ const hisobBand = Boolean(PUBLIC_SUPABASE_URL && PUBLIC_SUPABASE_ANON_KEY);
 const hisobKirish = `${yol('/uz/hisob/kirish/')}?keyin=${encodeURIComponent(joriy)}`;
 const hisobProfil = yol('/uz/hisob/profil/');
 const joriymi = (href: string) => joriy === href || joriy === href.replace(/\/$/, '');
-const ieltsGuruhlar = [
-  { nomi: "Qo'llanmalar", bandlar: [...qollanmalar, asos] },
-  { nomi: 'Reading darslari', bandlar: ieltsDarslar },
-  { nomi: 'Mashq', bandlar: ieltsMashqlar },
-  { nomi: 'Vositalar', bandlar: vositalar },
-];
+
 ---
-<header class="ustki-qator nav-shisha" data-bolim={bolim} lang="uz">
+<header class="ustki-qator nav-shisha" data-bolim={bolim} lang={TIL}>
   <a class="logo" href={yol('/')}>
     <TayanchLogo />
 
@@ -121,13 +117,12 @@ const ieltsGuruhlar = [
       <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
       </div>
-  <div class="mobile-nav"><QavatMenyu mobil /></div>
   <nav class="yon-nav yon-matn" id="bolim-yon-nav" aria-label={M.navigatsiya(NOM)}>
     {bolim && <ul class="royxat">
       <li>
         <a href={b('')} aria-current={joriymi(b('')) ? 'page' : undefined}>
           <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>
-          {bolim === 'top-admission' ? "Bo'lim haqida" : bolim === 'sat' ? 'Today' : M.haqida(NOM)}
+          {bolim === 'top-admission' ? "Boʻlim haqida" : bolim === 'sat' ? 'Today' : M.haqida(NOM)}
         </a>
       </li>
       {bolim === 'sat' && kursOchiq && <li><a href={kursHavola()} aria-current={joriymi(kursHavola()) ? 'page' : undefined}>
@@ -177,7 +172,7 @@ const ieltsGuruhlar = [
                 <p class="nofaol">
                   <svg class="ikonka" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={s.ikonka} />
                   <span class="nofaol-nom">{s.nomi}</span>
-                  <span class="yorliq-tez">tez orada</span>
+                  <span class="yorliq-tez">{M.tezOrada}</span>
                 </p>
               )}
             </li>
@@ -262,15 +257,16 @@ const ieltsGuruhlar = [
       </ul>
     )}
     {bolim === 'ielts' && (
-      <p class="past-tugma past-nofaol" title="Telegram kanal: tez orada">
+      <p class="past-tugma past-nofaol" title="Telegram channel: coming soon">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" /></svg>
-        <span class="yon-matn nofaol-nom">Telegram kanal</span>
-        <span class="yon-matn yorliq-tez">tez orada</span>
+        <span class="yon-matn nofaol-nom">Telegram channel</span>
+        <span class="yon-matn yorliq-tez">{M.tezOrada}</span>
       </p>
     )}
   </div>
     </div>
   </details>
+  <BolimChiplar />
 
 </header>
 <KirishDialog />
@@ -311,11 +307,9 @@ const ieltsGuruhlar = [
 
   const ochiqPanel = () => d.querySelector<HTMLDetailsElement>('.ustki-qator details[open]');
   const yopish = document.getElementById('panel-yopish') as HTMLButtonElement;
-  let desktopOchuvchi: HTMLButtonElement | null = null;
   const panelniYop = (panel: HTMLDetailsElement) => {
     panel.open = false;
-    if (desktop.matches) desktopOchuvchi?.focus({ preventScroll: true });
-    else panel.querySelector('summary')?.focus({ preventScroll: true });
+    if (!desktop.matches) panel.querySelector('summary')?.focus({ preventScroll: true });
   };
 
   yopish.hidden = false;
@@ -324,10 +318,6 @@ const ieltsGuruhlar = [
     if (panel) panelniYop(panel);
   });
   const menyuDetails = document.querySelector<HTMLDetailsElement>('.yon-orami')!;
-  document.addEventListener('tayanch:joriy-menyu', (event) => {
-    desktopOchuvchi = (event as CustomEvent<{ fokus: HTMLButtonElement }>).detail.fokus;
-    setTimeout(() => { menyuDetails.open = true; menyuDetails.querySelector<HTMLElement>('a[href]')?.focus(); }, 0);
-  });
   menyuDetails.addEventListener('toggle', () => { document.getElementById('panel-ochish')?.setAttribute('aria-expanded', String(menyuDetails.open)); });
   const ustki = document.querySelector<HTMLElement>('header.ustki-qator')!;
   ustki.addEventListener('keydown', (event) => {
@@ -584,7 +574,6 @@ const ieltsGuruhlar = [
   .ustki-qator { display: flex; min-height: var(--header-height); height: auto; gap: var(--space-3); padding: var(--space-2) max(var(--space-8), calc((100% - var(--header-max)) / 2)); background: var(--color-surface); }
   .ustki-qator > .logo { width: var(--header-logo); flex-shrink: 0; }
   .desktop-nav { margin-inline: auto; min-width: 0; }
-  .mobile-nav { display: none; }
   .yon-orami > summary { display: none; }
   @media (width >= 768px) { .yon-orami { position: absolute; inset: 100% var(--space-8) auto auto; width: var(--header-menu-width); } .yon-orami .yon { position: static; width: 100%; } }
   @media (width < 1024px) {
@@ -597,7 +586,7 @@ const ieltsGuruhlar = [
     .ustki-qator > .logo { margin-right: auto; width: var(--header-logo-mobile); }
     .desktop-nav { display: none; }
     .yon-orami > summary { display: inline-flex; }
-    .mobile-nav { display: block; padding: var(--space-3); }
+    .ustki-qator { flex-wrap: wrap; row-gap: 0; }
     .yon { overflow-y: auto; width: min(var(--header-menu-width), calc(100% - var(--space-4))); }
     .yon-nav { flex: none; overflow: visible; border-top: var(--border-width-1) solid var(--color-border); }
     .yon-bosh { display: none; }

@@ -1,9 +1,19 @@
 ---
 import EyufSahifa from '../../../../components/eyuf/EyufSahifa.astro';
 import KursDarslar from '../../../../components/eyuf/KursDarslar.astro';
+import EyufBosqich from '../../../../components/eyuf/EyufBosqich.astro';
 import { yol } from '../../../../lib/yol';
+const kurslar = [
+  { nomi: 'Hujjatlar va esse', izoh: 'Shu sahifada.', holat: 'hozir' as const, href: yol('/uz/eyuf/tayyorgarlik/') },
+  { nomi: 'Test bosqichi', izoh: 'IQ mashq va simulyatsiya.', href: yol('/uz/eyuf/trenajyor/') },
+  { nomi: 'Suhbat bosqichi', izoh: 'Savol kartalari va soha.', href: yol('/uz/eyuf/suhbat/') },
+  { nomi: 'Natija', izoh: 'Keyingi qadamlar va B reja.', href: yol('/uz/eyuf/natija/') },
+];
 ---
 <EyufSahifa title="Hujjatlar, universitet va esse" description="Birinchi kurs. Har darsda shaxsiy ish varag‘i va aniq tayyorgarlik natijasi.">
- <nav class="eyuf-panel" aria-label="To‘rt kurs"><h2>Tayyorgarlik yo‘li</h2><ol class="eyuf-list"><li>Hujjatlar, universitet va esse — shu sahifada</li><li><a href={yol('/uz/eyuf/trenajyor/')}>Test bosqichi</a></li><li><a href={yol('/uz/eyuf/suhbat/')}>Suhbat bosqichi</a></li><li><a href={yol('/uz/eyuf/natija/')}>Natija va keyingi qadamlar</a></li></ol></nav>
+ <nav class="tayyorgarlik-yol" aria-labelledby="tayyorgarlik-yol-h"><h2 id="tayyorgarlik-yol-h">Tayyorgarlik yoʻli</h2><EyufBosqich bosqichlar={kurslar} yorliq="To‘rt kurs" zich /></nav>
  <KursDarslar course="c1" />
 </EyufSahifa>
+<style>
+  .tayyorgarlik-yol { display: grid; gap: var(--space-4); }
+</style>

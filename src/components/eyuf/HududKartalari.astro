@@ -5,15 +5,15 @@ const registry = new Map(sources.items.map(s => [s.id, s]));
 ---
 <section class="eyuf-panel" aria-labelledby="hudud-h">
  <h2 id="hudud-h">Hududingiz haqida</h2>
- <p>Tarixiy meros, hudud bilan bog‘liq shaxslar va iqtisodiy yo‘nalishlar. Hozirgi ma’muriy hudud bilan tarixiy o‘lka chegaralari har doim bir xil bo‘lmaydi. Keltirilgan yo‘nalishlar ish o‘rni mavjudligi haqidagi va’da emas.</p>
+ <p>Tarixiy meros, hudud bilan bogʻliq shaxslar va iqtisodiy yoʻnalishlar. Hozirgi maʼmuriy hudud bilan tarixiy oʻlka chegaralari har doim bir xil boʻlmaydi. Keltirilgan yoʻnalishlar ish oʻrni mavjudligi haqidagi vaʼda emas.</p>
  {regions.items.map(region => <details class="eyuf-region" id={`hudud-${region.id}`}>
   <summary>{region.title}</summary>
   <h3>Tarixiy tayanch</h3><p>{region.history ?? 'Manba kutilmoqda.'}</p>
   <h3>Shaxslar va hudud bilan aloqasi</h3><ul>{region.people.map(person => <li>{person}</li>)}</ul>
-  <h3>Iqtisodiy yo‘nalishlar</h3><ul>{region.industry.map(item => <li>{item}</li>)}</ul>
-  <p class="eyuf-small">Manba ko‘rilgan sana {region.as_of}. Ushbu karta tanlangan dalillarni qamraydi.</p>
+  <h3>Iqtisodiy yoʻnalishlar</h3><ul>{region.industry.map(item => <li>{item}</li>)}</ul>
+  <p class="eyuf-small">Manba koʻrilgan sana {region.as_of}. Ushbu karta tanlangan dalillarni qamraydi.</p>
   <ul>{region.sources.map(ref => <li><a href={registry.get(ref.id)?.url ?? undefined} target="_blank" rel="noopener noreferrer">{ref.id} · {ref.locator} (yangi oynada)</a></li>)}</ul>
-  <p>Mashq. Ushbu hududdagi bitta muammo, sizning sohangizga aloqasi va qaytgach bajarishingiz mumkin bo‘lgan mahsulotni yozing. Dinamik raqamni yangi birlamchi manba bilan tekshiring.</p>
+  <p>Mashq. Ushbu hududdagi bitta muammo, sizning sohangizga aloqasi va qaytgach bajarishingiz mumkin boʻlgan mahsulotni yozing. Dinamik raqamni yangi birlamchi manba bilan tekshiring.</p>
  </details>)}
 </section>
 <style>

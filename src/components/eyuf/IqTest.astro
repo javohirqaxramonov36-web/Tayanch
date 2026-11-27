@@ -1,16 +1,20 @@
 ---
 import { TOGRI_XP } from '../../lib/eyuf/iq/model';
+import EyufTayyorlik from './EyufTayyorlik.astro';
+import '../../styles/eyuf.css';
+// 5-qavat mini-DS (PR 9): tanlash va test ekrani zich panelda (eyuf-panel-zich), natija EyufTayyorlik halqasida.
+// Mantiq, data-* tanlagichlari va saqlash kalitlari o'zgarmagan (src/lib/eyuf/iq/sahifa.ts).
 ---
 <div id="eyuf-iq" class="iq">
   <p class="iq-xabar" data-saqlash role="status" hidden></p>
-  <section data-tanlash aria-labelledby="iq-tanlash-h">
+  <section class="eyuf-panel-zich iq-ekran" data-tanlash aria-labelledby="iq-tanlash-h">
     <div class="iq-sarlavha">
       <div><p class="iq-kichik">Mustaqil mashq</p><h2 id="iq-tanlash-h">Testni tanlang</h2></div>
       <p class="iq-chip"><span data-jami-xp>0</span> lokal XP</p>
     </div>
     <div class="iq-davom iq-panel" data-davom hidden>
       <p data-davom-matn></p>
-      <button type="button" class="tugma tugma-asosiy" data-davom-et>Davom ettirish</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-davom-et>Davom ettirish</button>
     </div>
     <div class="iq-sozlama">
       <label for="iq-daqiqa">Test vaqti, daqiqa</label>
@@ -34,11 +38,11 @@ import { TOGRI_XP } from '../../lib/eyuf/iq/model';
         <span class="iq-boshlash">Boshlash <span aria-hidden="true">↗</span></span>
       </button>
     </div>
-    <p class="iq-izoh">Har yangi tasdiqlangan to‘g‘ri javob +{TOGRI_XP} lokal XP beradi. Qayta yechish XP bermaydi. Combo — testdagi ketma-ket to‘g‘ri javoblar. Natija va XP shu brauzerda saqlanadi.</p>
-    <noscript><p class="iq-xabar">Testni ishlash uchun brauzerda JavaScript’ni yoqing.</p></noscript>
+    <p class="iq-izoh">Har yangi tasdiqlangan toʻgʻri javob +{TOGRI_XP} lokal XP beradi. Qayta yechish XP bermaydi. Combo — testdagi ketma-ket toʻgʻri javoblar. Natija va XP shu brauzerda saqlanadi.</p>
+    <noscript><p class="iq-xabar">Testni ishlash uchun brauzerda JavaScriptʼni yoqing.</p></noscript>
   </section>
 
-  <section data-test-ekran aria-labelledby="iq-savol-h" hidden>
+  <section class="eyuf-panel-zich iq-ekran" data-test-ekran aria-labelledby="iq-savol-h" hidden>
     <div class="iq-sarlavha">
       <div><p class="iq-kichik" data-rejim></p><p data-javob-soni></p></div>
       <div class="iq-soat"><span class="iq-kichik">Qolgan vaqt</span><output data-taymer aria-label="Qolgan vaqt">30:00</output></div>
@@ -56,35 +60,34 @@ import { TOGRI_XP } from '../../lib/eyuf/iq/model';
       <p class="iq-sr" data-javob-xabar aria-live="polite"></p>
     </div>
     <div class="iq-boshqaruv">
-      <button type="button" class="tugma tugma-ikkinchi" data-oldingi>Oldingi</button>
-      <button type="button" class="tugma tugma-asosiy" data-keyingi>Keyingi</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-oldingi>Oldingi</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-keyingi>Keyingi</button>
     </div>
     <div class="iq-boshqaruv">
-      <button type="button" class="tugma tugma-matn" data-tanlashga>Test tanlash</button>
-      <button type="button" class="tugma tugma-ikkinchi" data-yakunla>Testni yakunlash</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-tanlashga>Test tanlash</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-yakunla>Testni yakunlash</button>
     </div>
   </section>
 
   <section data-natija aria-labelledby="iq-natija-h" hidden>
-    <div class="iq-panel iq-natija-bosh">
+    <EyufTayyorlik id="iq-natija-h" sarlavha="Natijangiz" dinamik>
+      <Fragment slot="halqa"><b data-ball>0</b><small>/100 ball</small></Fragment>
       <p class="iq-kichik" data-natija-rejim></p>
-      <h2 id="iq-natija-h" tabindex="-1">Natijangiz</h2>
-      <p class="iq-ball"><span data-ball>0</span><span class="iq-ball-jami">/100</span></p>
       <p class="iq-chegara" data-chegara></p>
       <p data-natija-izoh></p>
       <p class="iq-xabar" data-natija-ogoh hidden></p>
-      <div class="iq-metrlar">
-        <p><strong data-togri>0</strong><span>to‘g‘ri javob</span></p>
-        <p><strong data-xato-son>0</strong><span>xato yoki javobsiz</span></p>
-        <p><strong data-combo>0</strong><span>eng uzun combo</span></p>
-        <p><strong data-xp>+0</strong><span>lokal XP</span></p>
-      </div>
+      <ul class="iq-metrlar">
+        <li><span>Toʻgʻri javob</span><strong data-togri>0</strong></li>
+        <li><span>Xato yoki javobsiz</span><strong data-xato-son>0</strong></li>
+        <li><span>Eng uzun combo</span><strong data-combo>0</strong></li>
+        <li><span>Lokal XP</span><strong data-xp>+0</strong></li>
+      </ul>
       <p class="iq-kichik">Tayyorgarlik natijasi. 61 ballik mezon bilan taqqoslanadi. Ball har savolga teng ulushda hisoblanadi.</p>
-    </div>
+    </EyufTayyorlik>
     <div class="iq-natija-amallar">
-      <button type="button" class="tugma tugma-asosiy" data-qayta>Xatolarni qayta yechish</button>
-      <button type="button" class="tugma tugma-ikkinchi" data-ulash>Natijani ulashish</button>
-      <button type="button" class="tugma tugma-matn" data-boshqa>Boshqa test tanlash</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-qayta>Xatolarni qayta yechish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-ulash>Natijani ulashish</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-boshqa>Boshqa test tanlash</button>
     </div>
     <p data-nusxa-xabar role="status"></p>
     <div data-nusxa-oram hidden>
@@ -92,7 +95,7 @@ import { TOGRI_XP } from '../../lib/eyuf/iq/model';
       <textarea id="iq-nusxa" rows="4" readonly></textarea>
     </div>
     <h3>Xatolar va tekshirilayotgan savollar</h3>
-    <p data-xatosiz hidden>Barcha javoblaringiz to‘g‘ri. Boshqa test bilan davom etishingiz mumkin.</p>
+    <p data-xatosiz hidden>Barcha javoblaringiz toʻgʻri. Boshqa test bilan davom etishingiz mumkin.</p>
     <ul class="iq-tahlil" data-tahlil></ul>
   </section>
 
@@ -100,13 +103,13 @@ import { TOGRI_XP } from '../../lib/eyuf/iq/model';
     <h2 id="iq-tasdiq-h">Testni yakunlaysizmi?</h2>
     <p data-tasdiq-matn></p>
     <div class="iq-boshqaruv">
-      <button type="button" class="tugma tugma-ikkinchi" data-bekor>Ortga</button>
-      <button type="button" class="tugma tugma-asosiy" data-tasdiqla>Yakunlash</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-bekor>Ortga</button>
+      <button type="button" class="t-tugma eyuf-tugma--urgu" data-tasdiqla>Yakunlash</button>
     </div>
   </dialog>
   <dialog class="iq-dialog iq-zoom" data-zoom aria-labelledby="iq-zoom-h">
-    <div class="iq-sarlavha"><h2 id="iq-zoom-h">Savol rasmi</h2><button type="button" class="tugma tugma-ikkinchi" data-zoom-yop>Yopish</button></div>
-    <p class="iq-kichik">Rasmni yon va pastga surib ko‘ring. Esc bilan yopiladi.</p>
+    <div class="iq-sarlavha"><h2 id="iq-zoom-h">Savol rasmi</h2><button type="button" class="t-tugma t-tugma--ikkinchi" data-zoom-yop>Yopish</button></div>
+    <p class="iq-kichik">Rasmni yon va pastga surib koʻring. Esc bilan yopiladi.</p>
     <div class="iq-zoom-rasmlar" data-zoom-rasmlar></div>
   </dialog>
 </div>
@@ -114,70 +117,84 @@ import { TOGRI_XP } from '../../lib/eyuf/iq/model';
 <script>
   import { ishgaTushir } from '../../lib/eyuf/iq/sahifa';
   ishgaTushir();
+  // Natija halqasi (bezak): [data-ball] matnidan ulush. Faqat ko'rinish, mantiq sahifa.ts da.
+  const ball = document.querySelector<HTMLElement>('#eyuf-iq [data-ball]');
+  const halqa = document.querySelector<HTMLElement>('#eyuf-iq [data-eyuf-halqa]');
+  if (ball && halqa) {
+    const yangila = () => {
+      const n = Number.parseFloat((ball.textContent ?? '0').replace(',', '.'));
+      halqa.style.setProperty('--ulush', String(Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : 0));
+    };
+    new MutationObserver(yangila).observe(ball, { childList: true, characterData: true, subtree: true });
+    yangila();
+  }
 </script>
 
 <style is:global>
+  /* Ranglar eyuf.css qavat qatlamidan (eyuf-*). Test va savol faqat zich panelda; ichidagi kartalar tekis. */
   .iq { display: grid; gap: var(--space-6); min-width: 0; }
   .iq [hidden] { display: none !important; }
   .iq section { display: grid; gap: var(--space-5); }
+  .iq-ekran { padding: var(--space-5) var(--space-4); }
   .iq p, .iq button, .iq summary { overflow-wrap: anywhere; }
   .iq-sarlavha, .iq-boshqaruv { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
   .iq-sarlavha { flex-wrap: wrap; }
-  .iq-kichik, .iq-izoh { color: var(--color-text-secondary); font-size: var(--text-small-size); }
+  .iq-kichik, .iq-izoh { color: var(--color-eyuf-text-muted); font-size: var(--text-small-size); }
   .iq-kartalar { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .iq-karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-4); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-text-primary); font: inherit; cursor: pointer; text-align: left; }
+  .iq-karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-4); border: var(--border-width-1) solid var(--color-eyuf-line); border-radius: var(--radius-lg); background: var(--color-eyuf-tile); color: var(--color-eyuf-text); font: inherit; cursor: pointer; text-align: left; transition: transform var(--duration-fast) var(--ease-state); }
+  .iq-karta:active:not(:disabled) { transform: var(--bosilish); }
+  @media (hover: hover) and (pointer: fine) { .iq-karta:hover:not(:disabled) { border-color: var(--color-eyuf-gold-line); } }
   .iq-karta:disabled { cursor: wait; }
-  .iq-karta-raqam { color: var(--floor-text); font-size: var(--text-h3-size); }
-  .iq-karta-nom { font-weight: var(--font-weight-bold); }
-  .iq-boshlash { display: flex; justify-content: space-between; gap: var(--space-2); width: 100%; margin-top: auto; padding-top: var(--space-3); color: var(--floor-text); font-size: var(--text-small-size); }
-  .iq-panel { background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4); }
+  .iq-karta-raqam { font-family: var(--font-eyuf); font-weight: var(--font-weight-medium); font-size: var(--text-eyuf-raqam-size); line-height: var(--text-eyuf-raqam-lh); color: var(--color-eyuf-gold); font-variant-numeric: lining-nums tabular-nums; }
+  .iq-karta-nom { font-family: var(--font-eyuf); font-size: var(--text-h3-size); font-weight: var(--font-weight-semibold); }
+  .iq-boshlash { display: flex; justify-content: space-between; gap: var(--space-2); width: 100%; margin-top: auto; padding-top: var(--space-3); border-top: var(--border-width-1) solid var(--color-eyuf-line); color: var(--color-eyuf-accent-text); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); }
+  .iq-panel { background: var(--color-eyuf-tile); border: var(--border-width-1) solid var(--color-eyuf-line); border-radius: var(--radius-lg); padding: var(--space-4); }
   .iq-davom { display: grid; gap: var(--space-3); }
-  .iq-chip { display: inline-flex; gap: var(--space-1); padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--floor-subtle); color: var(--floor-text); font-size: var(--text-small-size); }
+  .iq-chip { display: inline-flex; gap: var(--space-1); padding: var(--space-1) var(--space-3); border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-full); color: var(--color-eyuf-text); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); font-variant-numeric: tabular-nums; }
   .iq-sozlama { display: grid; gap: var(--space-2); }
   .iq-sozlama label, .iq label { font-weight: var(--font-weight-semibold); }
-  .iq input, .iq textarea { width: 100%; min-height: var(--control-height-md); border: var(--border-width-1) solid var(--chiziq-maydon); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text-primary); padding: var(--space-3); font: inherit; }
+  .iq input, .iq textarea { width: 100%; min-height: var(--control-height-md); border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-md); background: var(--color-eyuf-surface); color: var(--color-eyuf-text); padding: var(--space-3); font: inherit; }
   .iq input { max-width: calc(var(--space-16) * 2); }
   .iq input:focus-visible, .iq textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
-  .iq-xabar { border: var(--border-width-1) solid var(--color-warning-text); border-radius: var(--radius-md); padding: var(--space-3); color: var(--color-warning-text); background: var(--color-surface); }
+  .iq-xabar { border: var(--border-width-1) solid var(--color-warning-text); border-radius: var(--radius-md); padding: var(--space-3); color: var(--color-warning-text); background: var(--color-eyuf-surface); }
   .iq-xato { color: var(--color-error-text); }
   .iq-soat { display: grid; text-align: right; }
-  .iq-soat output { font-size: var(--text-h3-size); font-weight: var(--font-weight-bold); font-variant-numeric: tabular-nums; }
+  .iq-soat output { font-family: var(--font-eyuf); font-size: var(--text-eyuf-h2-size); line-height: var(--text-eyuf-h2-lh); font-weight: var(--font-weight-semibold); font-variant-numeric: lining-nums tabular-nums; }
   .iq-savol-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-2); }
-  .iq-nav-tugma, .iq-variant { min-width: var(--size-touch-min); min-height: var(--control-height-md); border: var(--border-width-1) solid var(--chiziq-maydon); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text-primary); font: inherit; cursor: pointer; }
-  .iq-nav-tugma[data-javob="bor"] { background: var(--floor-subtle); color: var(--floor-text); }
-  .iq-nav-tugma[aria-current="step"] { outline: var(--focus-ring-width) solid var(--floor-ui); outline-offset: var(--space-1); font-weight: var(--font-weight-bold); }
+  .iq-nav-tugma, .iq-variant { min-width: var(--size-touch-min); min-height: var(--control-height-md); border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-md); background: var(--color-eyuf-surface); color: var(--color-eyuf-text); font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; transition: transform var(--duration-fast) var(--ease-state); }
+  .iq-nav-tugma:active, .iq-variant:active { transform: var(--bosilish); }
+  .iq-nav-tugma[data-javob="bor"] { border-color: var(--color-eyuf-accent-text); background: var(--color-eyuf-tile); color: var(--color-eyuf-accent-text); font-weight: var(--font-weight-semibold); }
+  .iq-nav-tugma[aria-current="step"] { outline: var(--focus-ring-width) solid var(--color-eyuf-gold-line); outline-offset: var(--space-1); font-weight: var(--font-weight-bold); box-shadow: inset 0 0 0 var(--border-width-1) var(--color-eyuf-text); }
   .iq-savol { display: grid; gap: var(--space-4); }
   .iq-rasmlar { display: grid; gap: var(--space-2); }
-  .iq-rasm-tugma { display: block; width: 100%; padding: 0; border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; cursor: zoom-in; background: var(--color-neutral-0); }
+  .iq-rasm-tugma { display: block; width: 100%; padding: 0; border: var(--border-width-1) solid var(--color-eyuf-line); border-radius: var(--radius-md); overflow: hidden; cursor: zoom-in; background: var(--color-neutral-0); }
   .iq-rasm-tugma img, .iq-tahlil img { display: block; width: 100%; height: auto; }
   .iq-variantlar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-2); }
-  .iq-variant[aria-pressed="true"] { background: var(--btn-primary-bg); color: var(--btn-primary-text); border-color: var(--btn-primary-bg); }
-  .iq-boshqaruv .tugma { flex: 1; padding-inline: var(--space-2); }
-  .iq-natija-bosh { display: grid; gap: var(--space-3); }
-  .iq-ball { font-size: var(--text-display-size); font-weight: var(--font-weight-bold); line-height: var(--text-display-lh); }
-  .iq-ball-jami { font-size: var(--text-h3-size); color: var(--color-text-secondary); }
-  .iq-chegara { font-weight: var(--font-weight-semibold); color: var(--floor-text); }
-  .iq-metrlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); padding-block: var(--space-3); }
-  .iq-metrlar p { display: grid; gap: var(--space-1); }
-  .iq-metrlar strong { font-size: var(--text-h3-size); }
-  .iq-metrlar span { font-size: var(--text-small-size); color: var(--color-text-secondary); }
+  .iq-variant { font-family: var(--font-eyuf); font-size: var(--text-h3-size); font-weight: var(--font-weight-semibold); }
+  .iq-variant[aria-pressed="true"] { background: var(--color-eyuf-accent); color: var(--color-eyuf-on-accent); border-color: var(--color-eyuf-accent); }
+  .iq-boshqaruv .t-tugma { flex: 1; padding-inline: var(--space-2); }
+  .iq-chegara { font-weight: var(--font-weight-semibold); color: var(--color-eyuf-accent-text); }
+  .iq-metrlar strong { font-family: var(--font-eyuf); font-size: var(--text-h3-size); font-weight: var(--font-weight-semibold); color: var(--color-eyuf-text); }
   .iq-natija-amallar { display: grid; gap: var(--space-3); }
   .iq-tahlil { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
-  .iq-tahlil details { background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); }
-  .iq-tahlil summary { cursor: pointer; min-height: var(--size-touch-min); display: list-item; font-weight: var(--font-weight-semibold); }
+  .iq-tahlil details { background: var(--color-eyuf-glass-strong); border: var(--border-width-1) solid var(--color-eyuf-glass-border); border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4); box-shadow: var(--shadow-1); }
+  .iq-tahlil summary { cursor: pointer; min-height: var(--size-touch-min); display: list-item; padding-block: var(--space-2); font-weight: var(--font-weight-semibold); }
   .iq-tahlil-ichki { display: grid; gap: var(--space-3); padding-top: var(--space-3); }
-  .iq-dialog { max-width: min(calc(100vw - var(--space-6)), var(--size-content-max)); max-height: calc(100dvh - var(--space-6)); padding: var(--space-5); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-xl); background: var(--color-surface); color: var(--color-text-primary); }
+  .iq-dialog { max-width: min(calc(100vw - var(--space-6)), var(--size-content-max)); max-height: calc(100dvh - var(--space-6)); padding: var(--space-5); border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-xl); background: var(--color-eyuf-surface); color: var(--color-eyuf-text); }
   .iq-dialog h2, .iq-dialog p { margin-bottom: var(--space-4); }
-  .iq-dialog::backdrop { background: color-mix(in srgb, var(--color-neutral-950) 70%, transparent); }
+  .iq-dialog::backdrop { background: color-mix(in srgb, var(--color-eyuf-night) 70%, transparent); }
   .iq-zoom { width: calc(100vw - var(--space-6)); }
   .iq-zoom-rasmlar { display: grid; gap: var(--space-3); overflow: auto; max-height: 70dvh; background: var(--color-neutral-0); }
   .iq-zoom-rasmlar img { width: max(100%, var(--size-content-max)); height: auto; display: block; }
   .iq-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .iq-tahlil details { background: var(--color-eyuf-surface); border-color: var(--color-eyuf-line-strong); }
+  }
   @media (min-width: 640px) {
+    .iq-ekran { padding: var(--space-6); }
     .iq-kartalar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .iq-karta, .iq-panel { padding: var(--space-6); }
+    .iq-karta, .iq-panel { padding: var(--space-5); }
     .iq-savol-nav { grid-template-columns: repeat(10, minmax(0, 1fr)); }
-    .iq-metrlar { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .iq-natija-amallar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 </style>

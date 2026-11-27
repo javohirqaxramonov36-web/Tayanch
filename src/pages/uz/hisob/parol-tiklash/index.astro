@@ -13,9 +13,9 @@ import { yol } from '../../../../lib/yol';
 <HisobKarta sahifa={hisobSahifalar['parol-tiklash']}>
   <p class="hisob-alert" id="tiklash-havola-xato" role="alert" hidden></p>
 
-  <div class="hisob-karta" id="sorov-karta" data-hisob-bor>
+  <div class="hisob-karta t-shisha t-shisha--zich" id="sorov-karta" data-hisob-bor>
     <form class="hisob-forma" id="sorov-forma" novalidate aria-labelledby="hisob-sarlavha">
-      <p class="hisob-sust">Hisob ochgan emailingizni kiriting. Yangi parol o'rnatish uchun havola yuboramiz.</p>
+      <p class="hisob-sust">Hisob ochgan emailingizni kiriting. Yangi parol oʻrnatish uchun havola yuboramiz.</p>
       <p class="hisob-alert" id="sorov-xato" role="alert" hidden></p>
       <p class="hisob-holat" id="sorov-holat" role="status" hidden></p>
       <Maydon id="sorov-email" nomi="Email" turi="email" autocomplete="email" />
@@ -23,8 +23,8 @@ import { yol } from '../../../../lib/yol';
     </form>
   </div>
 
-  <section class="hisob-karta" id="yangi-karta" aria-labelledby="yangi-sarlavha" hidden>
-    <h2 id="yangi-sarlavha" tabindex="-1">Yangi parol o'rnating</h2>
+  <section class="hisob-karta t-shisha t-shisha--zich" id="yangi-karta" aria-labelledby="yangi-sarlavha" hidden>
+    <h2 id="yangi-sarlavha" tabindex="-1">Yangi parol oʻrnating</h2>
     <form class="hisob-forma" id="yangi-forma" novalidate aria-labelledby="yangi-sarlavha">
       <p class="hisob-alert" id="yangi-xato" role="alert" hidden></p>
       <ParolMaydon id="yangi-parol" nomi="Yangi parol" autocomplete="new-password" izoh={`Kamida ${hisobSozlama.parolMinUzunlik} ta belgi.`} />
@@ -32,10 +32,10 @@ import { yol } from '../../../../lib/yol';
     </form>
   </section>
 
-  <section class="hisob-karta" id="tayyor-karta" aria-labelledby="tayyor-sarlavha" hidden>
-    <h2 id="tayyor-sarlavha" tabindex="-1">Parolingiz o'zgartirildi</h2>
+  <section class="hisob-karta t-shisha t-shisha--zich" id="tayyor-karta" aria-labelledby="tayyor-sarlavha" hidden>
+    <h2 id="tayyor-sarlavha" tabindex="-1">Parolingiz oʻzgartirildi</h2>
     <p class="hisob-sust">Siz yangi parol bilan hisobingizdasiz.</p>
-    <a class="tugma tugma-asosiy" href={yol('/uz/hisob/profil/')}>Hisobimga o'tish</a>
+    <a class="tugma tugma-asosiy" href={yol('/uz/hisob/profil/')}>Hisobimga oʻtish</a>
   </section>
 
   <p class="hisob-past" data-hisob-bor>

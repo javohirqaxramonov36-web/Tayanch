@@ -1,0 +1,272 @@
+---
+// HujjatChamadoni (2-qavat, Top Admission vositasi).
+// Yo'nalish tanlanadi, hujjat kartasi bosilsa (yoki Enter/Space) chamadonga "uchadi", qayta bosilsa chiqadi.
+// Saqlash: qaysi hujjat chamadonda ekani `tayanch:hujjat-chamadoni:v1` (progress modulida "olib tashlash" yo'q),
+// ro'yxat to'lganda progress moduli: markDone(2, "chamadon-<yonalish-id>"). Fayl yuklash yo'q.
+// Harakat faqat transform va opacity; prefers-reduced-motion da uchish va tabrik o'chadi (global.css ham o'chiradi).
+import '../../styles/adm.css';
+import { chamadonYonalishlari } from '../../data/topAdmission/chamadon';
+import { manbalar } from '../../data/manbalar';
+
+const yonalishlar = chamadonYonalishlari.map((y) => ({ ...y, rasmiy: manbalar.find((m) => m.id === y.rasmiy_manba_id)! }));
+const birinchi = yonalishlar[0];
+---
+<section class="adm hch" data-hch aria-labelledby="hch-sarlavha">
+  <h2 id="hch-sarlavha" class="ekranda-yoq">Hujjat chamadoni</h2>
+
+  <div class="hch-tanlov" role="group" aria-label="Yoʻnalish">
+    {yonalishlar.map((y, i) => (
+      <button type="button" class="hch-tab" data-hch-tab={y.id} aria-pressed={i === 0 ? 'true' : 'false'}>{y.nomi}</button>
+    ))}
+  </div>
+
+  <p class="hch-eslatma">
+    Bu roʻyxat eslatma. Asosiy manba — rasmiy sayt.
+    {yonalishlar.map((y, i) => (
+      <span data-hch-panel-rasmiy={y.id} hidden={i !== 0}>
+        {' '}<a href={y.rasmiy.havola} rel="noopener" target="_blank">{y.nomi} rasmiy sayti<span class="ekranda-yoq"> (yangi oynada)</span></a>
+      </span>
+    ))}
+  </p>
+
+  <div class="hch-joy">
+    <div class="hch-chamadon" data-hch-chamadon>
+      <svg class="hch-belgi" viewBox="0 0 64 56" aria-hidden="true">
+        <rect x="22" y="2" width="20" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="3" />
+        <rect x="4" y="11" width="56" height="42" rx="7" fill="var(--color-adm-accent-subtle)" stroke="currentColor" stroke-width="3" />
+        <path d="M18 11v42M46 11v42" stroke="currentColor" stroke-width="3" />
+      </svg>
+      <p class="hch-hisob" data-hch-hisob aria-live="polite">0/{birinchi.hujjatlar.length} tayyor</p>
+      <ul class="hch-ichi" data-hch-ichi aria-label="Chamadondagi hujjatlar"></ul>
+      <p class="hch-bosh" data-hch-bosh>Chamadon boʻsh. Hujjatni tayyorlagach, kartasini bosing.</p>
+      <p class="hch-tabrik" data-hch-tabrik role="status"></p>
+    </div>
+
+    {yonalishlar.map((y, i) => (
+      <ul class="hch-royxat" data-hch-panel={y.id} data-nomi={y.nomi} hidden={i !== 0} aria-label={`${y.nomi}: hujjatlar`}>
+        {y.hujjatlar.map((h) => (
+          <li class="hch-karta" data-hch-karta={h.id}>
+            <button type="button" class="hch-tugma" aria-pressed="false" data-hch-tugma={h.id}>
+              <span class="hch-katak" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg>
+              </span>
+              <span class="hch-matn">
+                <span class="hch-nomi" data-hch-nomi>{h.nomi}</span>
+                <span class="hch-izoh">{h.izoh}</span>
+              </span>
+              <span class="hch-holat" data-hch-holat>Chamadonga</span>
+            </button>
+            <p class="hch-meta">
+              {h.manba_url
+                ? <a href={h.manba_url} rel="noopener" target="_blank">Manba<span class="ekranda-yoq">: {h.nomi} (yangi oynada)</span></a>
+                : <span>Manba: <span class="hch-kerak">tekshirish kerak</span></span>}
+              <span aria-hidden="true"> · </span>
+              <span>tekshirilgan: {h.tekshirilgan_sana || <span class="hch-kerak">tekshirish kerak</span>}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</section>
+
+<script>
+  import { markDone, isDone } from '../../lib/progress';
+
+  const KALIT = 'tayanch:hujjat-chamadoni:v1';
+  interface Holat { yonalish?: string; ichida: Record<string, string[]> }
+
+  function oqi(): Holat {
+    try {
+      const x = JSON.parse(localStorage.getItem(KALIT) ?? 'null');
+      if (x && typeof x === 'object' && x.ichida && typeof x.ichida === 'object') return x as Holat;
+    } catch { /* buzilgan yoki yopiq xotira */ }
+    return { ichida: {} };
+  }
+  let zaxira: Holat = oqi();
+  function yoz(h: Holat) {
+    zaxira = h;
+    try { localStorage.setItem(KALIT, JSON.stringify(h)); } catch { /* private rejim: sahifa davomida xotirada */ }
+  }
+
+  const ildiz = document.querySelector<HTMLElement>('[data-hch]');
+  if (ildiz) {
+    const kamHarakat = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const tablar = [...ildiz.querySelectorAll<HTMLButtonElement>('[data-hch-tab]')];
+    const panellar = [...ildiz.querySelectorAll<HTMLElement>('[data-hch-panel]')];
+    const rasmiylar = [...ildiz.querySelectorAll<HTMLElement>('[data-hch-panel-rasmiy]')];
+    const chamadon = ildiz.querySelector<HTMLElement>('[data-hch-chamadon]')!;
+    const hisob = ildiz.querySelector<HTMLElement>('[data-hch-hisob]')!;
+    const ichi = ildiz.querySelector<HTMLUListElement>('[data-hch-ichi]')!;
+    const bosh = ildiz.querySelector<HTMLElement>('[data-hch-bosh]')!;
+    const tabrik = ildiz.querySelector<HTMLElement>('[data-hch-tabrik]')!;
+    const idlar = new Set(panellar.map((p) => p.dataset.hchPanel!));
+
+    let holat = zaxira;
+    let joriy = holat.yonalish && idlar.has(holat.yonalish) ? holat.yonalish : panellar[0].dataset.hchPanel!;
+
+    const panel = () => panellar.find((p) => p.dataset.hchPanel === joriy)!;
+    const panelIdlar = () => [...panel().querySelectorAll<HTMLElement>('[data-hch-karta]')].map((k) => k.dataset.hchKarta!);
+    // Ro'yxatdan olib tashlangan eski id'lar hisobga kirmaydi.
+    const ichidagilar = () => { const bor = new Set(panelIdlar()); return (holat.ichida[joriy] ?? []).filter((id) => bor.has(id)); };
+
+    function chiz() {
+      tablar.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.hchTab === joriy)));
+      panellar.forEach((p) => { p.hidden = p.dataset.hchPanel !== joriy; });
+      rasmiylar.forEach((r) => { r.hidden = r.dataset.hchPanelRasmiy !== joriy; });
+      const ichida = ichidagilar();
+      const jami = panelIdlar().length;
+      panel().querySelectorAll<HTMLButtonElement>('[data-hch-tugma]').forEach((b) => {
+        const bor = ichida.includes(b.dataset.hchTugma!);
+        b.setAttribute('aria-pressed', String(bor));
+        b.closest('.hch-karta')!.classList.toggle('hch-karta--ichida', bor);
+        b.querySelector('[data-hch-holat]')!.textContent = bor ? 'Chamadonda' : 'Chamadonga';
+      });
+      hisob.textContent = `${ichida.length}/${jami} tayyor`;
+      ichi.replaceChildren(...ichida.map((id) => {
+        const li = document.createElement('li');
+        li.textContent = panel().querySelector(`[data-hch-karta="${CSS.escape(id)}"] [data-hch-nomi]`)?.textContent ?? id;
+        return li;
+      }));
+      bosh.hidden = ichida.length > 0;
+      const toldi = jami > 0 && ichida.length === jami;
+      chamadon.classList.toggle('hch-chamadon--toldi', toldi);
+      if (!toldi) tabrik.textContent = '';
+      else if (!tabrik.textContent) tabrik.textContent = 'Chamadon tayyor! Endi rasmiy saytda roʻyxatni yana bir bor solishtiring.';
+    }
+
+    function uchir(karta: HTMLElement, ichkariga: boolean) {
+      if (kamHarakat()) return;
+      const a = karta.getBoundingClientRect();
+      const b = chamadon.getBoundingClientRect();
+      const arvoh = document.createElement('div');
+      arvoh.className = 'hch-arvoh';
+      arvoh.setAttribute('aria-hidden', 'true');
+      arvoh.textContent = karta.querySelector('[data-hch-nomi]')?.textContent ?? '';
+      Object.assign(arvoh.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px` });
+      document.body.append(arvoh);
+      const dx = b.left + b.width / 2 - (a.left + a.width / 2);
+      const dy = b.top + b.height / 2 - (a.top + a.height / 2);
+      const uzoq = `translate(${dx}px, ${dy}px) scale(0.2)`;
+      const [boshi, oxiri] = ichkariga ? ['translate(0, 0) scale(1)', uzoq] : [uzoq, 'translate(0, 0) scale(1)'];
+      const anim = arvoh.animate(
+        [{ transform: boshi, opacity: ichkariga ? 1 : 0.2 }, { transform: oxiri, opacity: ichkariga ? 0.2 : 1 }],
+        { duration: 200, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
+      );
+      anim.onfinish = anim.oncancel = () => arvoh.remove();
+      if (ichkariga) chamadon.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.04)' }, { transform: 'scale(1)' }], { duration: 200, delay: 160 });
+    }
+
+    function almashtir(id: string, karta: HTMLElement) {
+      const avval = ichidagilar();
+      const ichkariga = !avval.includes(id);
+      const keyin = ichkariga ? [...avval, id] : avval.filter((x) => x !== id);
+      holat = { ...holat, yonalish: joriy, ichida: { ...holat.ichida, [joriy]: keyin } };
+      yoz(holat);
+      uchir(karta, ichkariga);
+      chiz();
+      const jami = panelIdlar().length;
+      if (ichkariga && keyin.length === jami) {
+        markDone(2, `chamadon-${joriy}`);
+        if (!kamHarakat()) chamadon.animate(
+          [{ transform: 'rotate(0)' }, { transform: 'rotate(-4deg) scale(1.06)' }, { transform: 'rotate(4deg) scale(1.06)' }, { transform: 'rotate(0)' }],
+          { duration: 200, delay: 200, iterations: 2, easing: 'ease-in-out' },
+        );
+      }
+    }
+
+    tablar.forEach((t) => t.addEventListener('click', () => {
+      joriy = t.dataset.hchTab!;
+      tabrik.textContent = '';
+      holat = { ...holat, yonalish: joriy };
+      yoz(holat);
+      chiz();
+    }));
+    panellar.forEach((p) => p.addEventListener('click', (e) => {
+      const b = (e.target as Element).closest<HTMLButtonElement>('[data-hch-tugma]');
+      if (b) almashtir(b.dataset.hchTugma!, b.closest<HTMLElement>('[data-hch-karta]')!);
+    }));
+    // Oldin to'lgan, lekin progress'ga yozilmagan bo'lsa (masalan, eski versiya) yozib qo'yamiz.
+    for (const id of idlar) {
+      const p = panellar.find((x) => x.dataset.hchPanel === id)!;
+      const jami = p.querySelectorAll('[data-hch-karta]').length;
+      const ichida = (holat.ichida[id] ?? []).length;
+      if (jami > 0 && ichida >= jami && !isDone(2, `chamadon-${id}`)) markDone(2, `chamadon-${id}`);
+    }
+    chiz();
+  }
+</script>
+
+<style>
+  .hch { display: grid; gap: var(--b-6); }
+  .hch [hidden] { display: none; }
+  .hch-tanlov { display: flex; flex-wrap: wrap; gap: var(--b-2); }
+  .hch-tab {
+    min-block-size: var(--size-touch-min); padding: var(--b-2) var(--b-4);
+    border: var(--border-width-1) solid var(--color-adm-line-strong); border-radius: var(--radius-full);
+    background: var(--color-adm-surface); color: var(--color-adm-text);
+    font: inherit; font-weight: var(--font-weight-semibold); cursor: pointer;
+  }
+  .hch-tab[aria-pressed='true'] { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
+  .hch-tab:focus-visible, .hch-tugma:focus-visible { outline: 2px solid var(--color-adm-accent-text); outline-offset: 2px; }
+
+  .hch-eslatma {
+    margin: 0; padding: var(--b-3) var(--b-4); border-radius: var(--radius-md);
+    background: var(--color-adm-sunken); color: var(--color-adm-text); font-size: var(--matn-kichik);
+  }
+
+  .hch-joy { display: grid; gap: var(--b-6); align-items: start; }
+  @media (min-width: 768px) { .hch-joy { grid-template-columns: minmax(0, 1fr) minmax(0, 18rem); } .hch-chamadon { order: 2; position: sticky; top: var(--b-24); } }
+
+  .hch-chamadon {
+    display: grid; justify-items: center; gap: var(--b-2); padding: var(--b-6) var(--b-4); text-align: center;
+    border: var(--border-width-1) solid var(--color-adm-line-strong); border-radius: var(--radius-lg);
+    background: var(--color-adm-surface); color: var(--color-adm-text);
+  }
+  .hch-chamadon--toldi { border-color: var(--color-adm-accent); }
+  .hch-belgi { inline-size: 4rem; color: var(--color-adm-text); }
+  .hch-hisob { margin: 0; font-family: var(--font-display); font-size: var(--matn-h3); font-weight: var(--font-weight-bold); }
+  .hch-ichi { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-1); inline-size: 100%; font-size: var(--matn-kichik); }
+  .hch-ichi li { padding: var(--b-1) var(--b-2); border-radius: var(--radius-sm); background: var(--color-adm-chip); }
+  .hch-bosh, .hch-tabrik { margin: 0; font-size: var(--matn-kichik); color: var(--color-adm-text-muted); }
+  .hch-tabrik { color: var(--color-adm-text); font-weight: var(--font-weight-semibold); }
+  .hch-tabrik:empty { display: none; }
+
+  .hch-royxat { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--b-3); }
+  .hch-karta {
+    border: var(--border-width-1) solid var(--color-adm-line-strong); border-radius: var(--radius-md);
+    background: var(--color-adm-surface);
+    transition: border-color var(--harakat-tez) var(--harakat-egri);
+  }
+  .hch-karta--ichida { border-color: var(--color-adm-accent); background: var(--color-adm-accent-subtle); }
+  .hch-tugma {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: var(--b-3);
+    inline-size: 100%; padding: var(--b-4); border: 0; border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background: none; color: var(--color-adm-text); font: inherit; text-align: start; cursor: pointer;
+  }
+  .hch-katak {
+    display: grid; place-items: center; inline-size: 1.5rem; block-size: 1.5rem; border-radius: var(--radius-sm);
+    border: 2px solid var(--color-adm-line-strong); color: transparent;
+  }
+  .hch-katak svg { inline-size: 1rem; }
+  .hch-karta--ichida .hch-katak { background: var(--color-adm-accent); border-color: var(--color-adm-accent); color: var(--color-adm-on-accent); }
+  .hch-matn { display: grid; gap: var(--b-1); }
+  .hch-nomi { font-weight: var(--font-weight-semibold); }
+  .hch-izoh { font-size: var(--matn-kichik); color: var(--color-adm-text-muted); }
+  .hch-holat { font-size: var(--matn-kichik); color: var(--color-adm-accent-text); font-weight: var(--font-weight-semibold); white-space: nowrap; }
+  .hch-meta { margin: 0; padding: 0 var(--b-4) var(--b-3) calc(var(--b-4) + 1.5rem + var(--b-3)); font-size: var(--matn-kichik); color: var(--color-adm-text-muted); }
+  .hch-meta a { color: var(--color-adm-accent-text); }
+  .hch-kerak { color: var(--color-adm-text); font-weight: var(--font-weight-semibold); }
+
+  @media (max-width: 420px) {
+    .hch-tugma { grid-template-columns: auto 1fr; }
+    .hch-holat { grid-column: 2; }
+  }
+
+  :global(.hch-arvoh) {
+    position: fixed; z-index: 50; pointer-events: none; transform-origin: center;
+    padding: var(--b-3) var(--b-4); border-radius: var(--radius-md);
+    background: var(--color-adm-accent); color: var(--color-adm-on-accent);
+    font-weight: var(--font-weight-semibold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+</style>

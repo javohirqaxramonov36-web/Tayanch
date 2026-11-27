@@ -54,7 +54,7 @@ function savolHtml(q: SavolNatija, tushuntirishTili: string): string {
 <div><dt>${RM.sizning}</dt><dd>${sizning}</dd></div>
 <div><dt>${RM.togriJavob}</dt><dd><span lang="en">${qoch(q.togriJavob)}</span></dd></div>
 <div><dt>${RM.tushuntirish}</dt><dd><span lang="${tushuntirishTili}">${qoch(q.explanation)}</span></dd></div>
-${q.evidence ? `<div><dt>${RM.dalil} (${qoch(RM.paragraf(q.evidence.paragraph))})</dt><dd><blockquote lang="en">${qoch(q.evidence.quote)}</blockquote><button type="button" class="tugma tugma-ikkinchi" data-kor="${q.number}">${RM.matndaKor}</button></dd></div>` : `<div><dt>${RM.dalil}</dt><dd>Matndagi dalil hali tekshirilmagan.</dd></div>`}
+${q.evidence ? `<div><dt>${RM.dalil} (${qoch(RM.paragraf(q.evidence.paragraph))})</dt><dd><blockquote lang="en">${qoch(q.evidence.quote)}</blockquote><button type="button" class="t-tugma t-tugma--ikkinchi" data-kor="${q.number}">${RM.matndaKor}</button></dd></div>` : `<div><dt>${RM.dalil}</dt><dd>${RM.dalilYoq}</dd></div>`}
 </dl>
 </div>
 </details></li>`;

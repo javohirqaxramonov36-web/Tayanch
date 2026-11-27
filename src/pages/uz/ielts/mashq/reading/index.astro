@@ -10,49 +10,50 @@ const yuklanganTestlar = barchaTestlar.filter((test) => test.source?.kind === 'u
 const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
 ---
 <BolimQobiq
-  title="Reading mock · IELTS"
-  description="IELTS Reading mashqi. Mockni tanlang va testni boshlang."
+  title="Reading test · IELTS"
+  description="IELTS Reading practice. Choose a mock and start the test."
   turi="mashq"
-  yol={['Mashq']}
+  yol={['Reading']}
+  ota={yol('/uz/ielts/reading/')}
   bolim="ielts"
   holat="chop-etilgan"
 >
   <div class="ichki rb" id="rb">
     <header class="bosh">
       <h1>IELTS Reading</h1>
-      <p class="format">60 daqiqa · 40 savol · 3 matn</p>
+      <p class="format">60 minutes · 40 questions · 3 passages</p>
     </header>
 
-    <section class="boshla" aria-label="Mock tanlash">
+    <section class="boshla" aria-label="Choose a mock">
       {testlar.length > 0 ? (
         <>
-          <label for="rb-test">Mock tanlang</label>
+          <label for="rb-test">Choose a mock</label>
           <select id="rb-test">
             {testlar.map((test) => (
               <option value={test.testId}>{test.title}</option>
             ))}
           </select>
-          <a class="tugma tugma-asosiy katta" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1&test=${encodeURIComponent(testlar[0].testId)}`}>Boshlash</a>
+          <a class="t-tugma ielts-tugma--urgu" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1&test=${encodeURIComponent(testlar[0].testId)}`}>Start</a>
           <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
         </>
-      ) : <p>Mocklar tayyorlanmoqda.</p>}
+      ) : <p>Mocks are being prepared.</p>}
     </section>
 
     <section class="tarix" id="rb-tarix-oram" aria-labelledby="rb-tarix-h">
-      <h2 id="rb-tarix-h">Oxirgi natijalar</h2>
+      <h2 id="rb-tarix-h">Recent results</h2>
       <div id="rb-tarix"></div>
     </section>
 
     <details class="manba-izoh">
-      <summary>Manbalar va izohlar</summary>
-      <p>IELTS formatidagi mashq testlari.</p>
+      <summary>Sources and notes</summary>
+      <p>Practice tests in the IELTS format.</p>
       <ManbaBlok
         manbalar={['IE02', 'IE04']}
         tekshirilgan="2026-11-10"
         keyingiTekshiruv="2026-12-10"
         tekshirilmagan={[
-          'Band taxminiy. Rasmiy manbada to‘rtta tayanch nuqta bor, oraliq qiymatlar Tayanch taxmini.',
-          'Yuklangan mocklarda manba javob kaliti ishlatiladi.',
+          'The band is an estimate. The official source gives four reference points; the values in between are a Tayanch estimate.',
+          'Uploaded mocks use the answer key from their source.',
         ]}
       />
     </details>

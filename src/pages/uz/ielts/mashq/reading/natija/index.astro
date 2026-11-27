@@ -7,10 +7,10 @@ import '../../../../../../styles/ielts-reading.css';
 import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 ---
 <BolimQobiq
-  title="Reading natijasi · IELTS"
-  description="IELTS Reading mashq testi natijasi: to'g'ri javoblar, taxminiy band, savol turlari bo'yicha aniqlik va tushuntirishlar."
+  title="Reading result · IELTS"
+  description="IELTS Reading practice test result: correct answers, estimated band, accuracy by question type and explanations."
   turi="mashq"
-  yol={[MM.ustki, 'Reading test']}
+  yol={['Reading', 'Reading test']}
   bolim="ielts"
   holat="qoralama"
 >
@@ -23,7 +23,7 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 
     <div class="rn" id="rn">
       <p class="rn-bosh-xabar" role="status">{RM.natijaYuklanmoqda}</p>
-      <noscript><p class="rn-bosh-xabar">Natijani ko'rish uchun brauzerda JavaScript yoqilgan bo'lishi kerak.</p></noscript>
+      <noscript><p class="rn-bosh-xabar">JavaScript must be turned on in your browser to see the result.</p></noscript>
     </div>
 
     <ManbaBlok
@@ -31,8 +31,8 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
       tekshirilgan="2026-11-10"
       keyingiTekshiruv="2026-12-10"
       tekshirilmagan={[
-        "Band jadvalida rasmiy manbada faqat to'rtta nuqta bor (15 → 5, 23 → 6, 30 → 7, 35 → 8). Qolgan chegaralar Tayanch taxmini.",
-        "Savollar va matnlar Tayanch uchun yozilgan mashq, rasmiy IELTS materiali emas.",
+        "The official source gives only four points in the band table (15 → 5, 23 → 6, 30 → 7, 35 → 8). The other boundaries are a Tayanch estimate.",
+        "The questions and passages are practice material written for Tayanch, not official IELTS material.",
       ]}
     />
   </div>
@@ -44,13 +44,13 @@ import { MM, RM } from '../../../../../../data/ielts/readingMatn';
 </script>
 
 <style>
-  .rn-sahifa { padding-top: var(--b-10); padding-bottom: var(--b-14); display: flex; flex-direction: column; gap: var(--b-8); max-width: calc(912px + 2 * var(--b-10)) !important; }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-3); }
-  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.5px; }
+  .rn-sahifa { padding-top: var(--space-10); padding-bottom: var(--space-14); display: flex; flex-direction: column; gap: var(--space-8); max-width: calc(912px + 2 * var(--space-10)) !important; }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-3); }
+  .ustki-kok { margin: 0; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: -0.5px; }
   .bosh p { margin: 0; }
   @media (max-width: 640px) {
-    .rn-sahifa { padding-top: var(--b-6); }
-    h1 { font-size: 32px; }
+    .rn-sahifa { padding-top: var(--space-6); }
+    h1 { font-size: var(--text-h1-size); }
   }
 </style>

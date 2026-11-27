@@ -5,7 +5,9 @@ import type { Fakt } from '../fakt.ts';
 import {
   BOSH_HOLAT, almashtir, deadlineSanasi, filtrBormi, filtrdanOtadimi, grantKorinadimi, grantXulosasi, holatniOqi,
   holatniYoz, ichkiSahifa, muddatHolati, saralash, toliqQoplaydimi, type GrantKirish,
+  umumiyManba, qolganKunBelgisi, SHOSHILINCH_KUN, GRANT_SAQLASH_KALIT,
 } from '../grantKatalog.ts';
+import { shortlistAlmashtir, shortlistTozala } from '../universitetMoslik.ts';
 
 const t = <Q extends string | number | boolean>(qiymat: Q): Fakt => ({
   qiymat, source_url: 'https://example.org/soxta', manba_iborasi: 'soxta ibora', tekshirilgan_sana: '2026-11-01', turi: 'muddatli', holat: 'tasdiqlangan',
@@ -91,4 +93,36 @@ test("almashtir va ichki sahifa (Türkiye Bursları)", () => {
   assert.equal(ichkiSahifa({ slug: 'boshqa', turi: 'davlat', davlat: 'turkiya' })?.yol, '/uz/top-admission/turkiye-burslari/');
   assert.equal(ichkiSahifa({ slug: 'boshqa', turi: 'universitet', davlat: 'turkiya' }), undefined);
   assert.equal(ichkiSahifa({ slug: 'boshqa', turi: 'davlat', davlat: 'sinoviya' }), undefined);
+});
+
+test('umumiyManba: hamma ko\'rinadigan fakt bir manba va sanada bo\'lsa juftlik, aks holda null', () => {
+  const a = t('bir'), b = t('ikki');
+  assert.deepEqual(umumiyManba([a, b]), { source_url: 'https://example.org/soxta', tekshirilgan_sana: '2026-11-01' });
+  assert.equal(umumiyManba([a]), null, 'bitta fakt: birlashtirishga hojat yo\'q');
+  assert.equal(umumiyManba([a, { ...b, source_url: 'https://example.org/boshqa' }]), null);
+  assert.equal(umumiyManba([a, { ...b, tekshirilgan_sana: '2026-10-01' }]), null);
+  // ko'rinmaydigan (qoralama) fakt hisobga olinmaydi
+  assert.deepEqual(umumiyManba([a, b, { ...b, holat: 'qoralama', source_url: 'https://example.org/boshqa' }]), umumiyManba([a, b]));
+  assert.equal(umumiyManba([a, undefined, null]), null);
+});
+
+test('qolganKunBelgisi: bugun, kelajak, shoshilinch chegara, o\'tgan va sanasiz', () => {
+  const BUGUN = '2026-11-24';
+  assert.deepEqual(qolganKunBelgisi('2026-11-24', BUGUN), { kun: 0, matn: 'Bugun tugaydi', shoshilinch: true });
+  assert.deepEqual(qolganKunBelgisi('2026-11-30', BUGUN), { kun: 6, matn: '6 kun qoldi', shoshilinch: true });
+  const chegara = qolganKunBelgisi('2026-12-08', BUGUN)!;
+  assert.equal(chegara.kun, SHOSHILINCH_KUN);
+  assert.equal(chegara.shoshilinch, false);
+  assert.equal(qolganKunBelgisi('2026-11-23', BUGUN), null);
+  assert.equal(qolganKunBelgisi(null, BUGUN), null);
+  assert.equal(qolganKunBelgisi('yil davomida', BUGUN), null);
+});
+
+test('saqlangan grantlar: kalit va ro\'yxat shakli universitet shortlisti bilan bir xil', () => {
+  assert.equal(GRANT_SAQLASH_KALIT, 'tayanch:admission-grantlar');
+  let r = shortlistAlmashtir([], 'soxta-grant');
+  r = shortlistAlmashtir(r, 'ikkinchi-grant');
+  assert.deepEqual(r, [{ id: 'ikkinchi-grant' }, { id: 'soxta-grant' }]);
+  assert.deepEqual(shortlistAlmashtir(r, 'soxta-grant'), [{ id: 'ikkinchi-grant' }]);
+  assert.deepEqual(shortlistTozala([{ id: 'a' }, { id: 'a' }, { id: 'Yomon Slug' }, 5, null]), [{ id: 'a' }]);
 });
