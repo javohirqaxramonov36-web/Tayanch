@@ -63,7 +63,7 @@ export function javobMatni(j: RaqamJavob): string {
   switch (j.tur) {
     case 'harf': return j.matn;
     case 'raqam': return j.raqamlar;
-    case 'sana': return `${j.kun} ${OY_NOMI[j.oy - 1]} (yoki ${OY_NOMI[j.oy - 1]} ${j.kun})`;
+    case 'sana': return `${j.kun} ${OY_NOMI[j.oy - 1]} (or ${OY_NOMI[j.oy - 1]} ${j.kun})`;
     case 'vaqt': return `${j.soat}.${String(j.daqiqa).padStart(2, '0')}`;
     case 'son': return String(j.qiymat);
   }
