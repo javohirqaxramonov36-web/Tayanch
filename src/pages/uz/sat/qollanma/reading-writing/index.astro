@@ -74,6 +74,7 @@ const sabablar = [
 ];
 ---
 <BolimQobiq
+  sahifaSinfi="sat t-fon"
   title="Reading & Writing guide · SAT"
   description="What the SAT Reading and Writing section tests, a way to work each of its four question domains, and what to do after a mistake. Linked to Tayanch lessons and the question bank."
   turi="qollanma"
@@ -83,7 +84,7 @@ const sabablar = [
 >
   <div class="ichki rw">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill pill-chiziq">Draft</span></p>
+      <p class="pill-qator"><span class="ustki-kok">Guide</span></p>
       <h1>Reading &amp; Writing on the SAT®</h1>
       <p class="lead">The section has four kinds of questions. For each one: what it asks, a short way to work it, and the Tayanch lesson to practice it.</p>
     </header>
@@ -161,41 +162,41 @@ const sabablar = [
 </BolimQobiq>
 
 <style>
-  .rw { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); }
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
-  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3); }
-  .ustki-kok { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  .pill { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); font-size: var(--matn-mayda); font-weight: 700; white-space: nowrap; }
-  .pill-chiziq { background: transparent; border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); padding: 2.5px 10.5px; }
-  h1 { font-size: var(--matn-h1); line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
-  h2 { font-size: var(--matn-h2); }
-  h3 { font-size: var(--matn-katta); font-weight: 800; }
+  .rw { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-10); }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-blue-text); }
+  .pill { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-sat-line); color: var(--color-sat-text); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); white-space: nowrap; }
+  .pill-chiziq { background: transparent; border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); padding: var(--space-1) var(--space-3); }
+  h1 { font-size: var(--text-h1-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-sarlavha); }
+  h2 { font-size: var(--text-h2-size); }
+  h3 { font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); }
   p, li { line-height: 1.6; }
-  .lead { font-size: var(--matn-katta); color: var(--matn-ikkinchi); max-width: 62ch; }
-  .ogoh { background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); }
-  a { color: var(--rang-havola); }
+  .lead { font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); max-width: 62ch; }
+  .ogoh { background: var(--color-warning-subtle); color: var(--color-warning-text); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); }
+  a { color: var(--color-sat-blue-text); }
 
-  .bolak { display: flex; flex-direction: column; gap: var(--b-4); max-width: 72ch; }
-  .faktlar, .sabablar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--b-2); }
-  .mundarija { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5); }
-  .mundarija a, .havolalar a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; }
+  .bolak { display: flex; flex-direction: column; gap: var(--space-4); max-width: 72ch; }
+  .faktlar, .sabablar { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--space-2); }
+  .mundarija { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-5); }
+  .mundarija a, .havolalar a { min-height: 44px; display: inline-flex; align-items: center; font-weight: var(--font-weight-bold); }
 
-  .domenlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-5); }
-  .karta { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-5); min-width: 0; scroll-margin-top: calc(var(--b-16) + var(--b-4)); }
-  .k-bosh { display: flex; align-items: center; gap: var(--b-3); }
-  .k-bosh h2 { font-size: var(--matn-h3); font-weight: 800; }
-  .raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); display: grid; place-items: center; background: var(--rang-asosiy); color: var(--rang-asosiy-matn); font-size: var(--matn-kichik); font-weight: 800; }
-  .k-qism { display: flex; flex-direction: column; gap: var(--b-2); }
-  .tavsiya { font-weight: 700; font-size: var(--matn-mayda); margin-left: var(--b-2); white-space: nowrap; }
-  .qadamlar { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: var(--b-2); }
-  .havolalar { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--b-5); }
+  .domenlar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+  .karta { border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; scroll-margin-top: calc(var(--space-16) + var(--space-4)); }
+  .k-bosh { display: flex; align-items: center; gap: var(--space-3); }
+  .k-bosh h2 { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
+  .raqam { width: 32px; height: 32px; flex: none; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); font-size: var(--text-small-size); font-weight: var(--font-weight-extrabold); }
+  .k-qism { display: flex; flex-direction: column; gap: var(--space-2); }
+  .tavsiya { font-weight: var(--font-weight-bold); font-size: var(--text-caption-size); margin-left: var(--space-2); white-space: nowrap; }
+  .qadamlar { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: var(--space-2); }
+  .havolalar { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--space-5); }
 
   @media (max-width: 900px) {
     .domenlar { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .rw { padding-top: var(--b-8); gap: var(--b-8); }
-    .karta { padding: var(--b-5); }
+    .rw { padding-top: var(--space-8); gap: var(--space-8); }
+    .karta { padding: var(--space-5); }
     .tavsiya { display: block; margin-left: 0; }
   }
 </style>

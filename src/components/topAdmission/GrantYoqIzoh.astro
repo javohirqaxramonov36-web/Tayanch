@@ -18,17 +18,17 @@ const eskirgan = !!fakt && faktEskirganmi(fakt);
     </span>
   </span>
 ) : (
-  <span class="gy gy-yoq">Ma'lumot tekshirilmoqda</span>
+  <span class="gy gy-yoq">Maʼlumot tekshirilmoqda</span>
 )}
 
 <style>
-  .gy { display: inline-flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
-  .gy-matn { font-weight: 600; overflow-wrap: anywhere; }
-  .gy-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-1) var(--b-2); font-size: var(--matn-mayda); color: var(--matn-ikkinchi); }
-  .gy-meta a { color: var(--rang-havola); }
+  .gy { display: inline-flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .gy-matn { font-weight: var(--font-weight-semibold); overflow-wrap: anywhere; }
+  .gy-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); font-size: var(--text-caption-size); color: var(--color-adm-text-muted); }
+  .gy-meta a { color: var(--color-link); }
   .gy-belgi {
     display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
-    border-radius: var(--badge-radius); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 600;
+    border-radius: var(--badge-radius); background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-semibold);
   }
-  .gy-yoq { color: var(--matn-sust); font-style: italic; }
+  .gy-yoq { color: var(--color-adm-text-muted); font-style: italic; }
 </style>

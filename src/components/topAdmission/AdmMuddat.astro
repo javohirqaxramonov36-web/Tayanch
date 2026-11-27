@@ -1,0 +1,77 @@
+---
+// AdmMuddat (2-qavat mini-DS, ADR 005, PR 7): bitta rasmiy muddat zich shisha panelda, qolgan kun katta to'q sariq raqam.
+// Manba: DS artifakti v15, components/AdmMuddat. Sana faqat deadline.ts dan (chegara lib/muddat.ts, Toshkent kuni),
+// manba va tekshirilgan sana manbalar.ts dan. JS bo'lmasa: "zaxira" matni (masalan "20-fevral oxirgi kun") qoladi.
+// Holat: ochilishdan oldin "Ochilishi kutilmoqda", keyin "N kun qoldi" / "Bugun tugaydi" / "Tugadi" (muddatHolati).
+// Ro'yxat ota-elementida data-adm-tartib bo'lsa ("Yaqin muddatlar"), tugagan muddat yashiriladi; hammasi tugasa [data-adm-bosh] chiqadi. Stillar src/styles/adm.css.
+import '../../styles/adm.css';
+import type { Manba } from '../../data/manbalar';
+import AdmTekshirildi from './AdmTekshirildi.astro';
+
+export interface Props {
+  id: string;
+  nomi: string;
+  yorliq?: string;
+  chip?: string;
+  qatorlar: { dt: string; dd: string }[];
+  ochilish?: string | null;
+  /** muddatChegarasi(): Toshkent kuni boshi va yopilish vaqti (ms) */
+  kun: number;
+  oxir: number;
+  /** JS bo'lmasa katta raqam o'rnida (odatda bo'sh) */
+  zaxiraSon?: string;
+  zaxiraMatn: string;
+  manba: Manba;
+  sarlavhaDarajasi?: 2 | 3;
+}
+const { id, nomi, yorliq, chip, qatorlar, ochilish, kun, oxir, zaxiraSon = '', zaxiraMatn, manba, sarlavhaDarajasi = 3 } = Astro.props;
+const H = `h${sarlavhaDarajasi}`;
+---
+<article class="adm-shisha adm-shisha--zich adm-muddat" aria-labelledby={`${id}-nomi`} data-ochilish={ochilish ?? undefined} data-kun={kun} data-oxir={oxir}>
+  <div class="adm-muddat-tepa">
+    <div>
+      {yorliq && <p class="adm-eyebrow">{yorliq}</p>}
+      <H id={`${id}-nomi`}>{nomi}</H>
+    </div>
+    {chip && <span class="adm-chip">{chip}</span>}
+  </div>
+  <dl class="adm-qatorlar">
+    {qatorlar.map((q) => <div><dt>{q.dt}</dt><dd>{q.dd}</dd></div>)}
+  </dl>
+  <slot />
+  <div class="adm-muddat-past">
+    <p class="adm-qolgan-blok" aria-live="off"><span class="adm-qolgan" data-qolgan-son>{zaxiraSon}</span> <span data-qolgan-matn>{zaxiraMatn}</span></p>
+    <AdmTekshirildi sana={manba.tekshirilganSana} />
+  </div>
+  <p class="adm-manba">Manba: <a href={manba.havola} rel="noopener">{manba.tashkilot}</a></p>
+  {Astro.slots.has('havolalar') && <div class="adm-muddat-havolalar"><slot name="havolalar" /></div>}
+</article>
+
+<script>
+  import { muddatHolati } from '../../lib/muddat';
+  const hozir = Date.now();
+  document.querySelectorAll<HTMLElement>('.adm-muddat[data-oxir]').forEach((k) => {
+    const son = k.querySelector('[data-qolgan-son]');
+    const matn = k.querySelector('[data-qolgan-matn]');
+    if (!son || !matn) return;
+    const { ochilish, kun, oxir } = k.dataset;
+    const oldin = ochilish && hozir < Date.parse(`${ochilish}T00:00:00+14:00`);
+    const holat = oldin ? 'Ochilishi kutilmoqda' : muddatHolati(hozir, Number(kun), Number(oxir));
+    const [birinchi, ...qolgan] = holat.split(' ');
+    if (/^\d+$/.test(birinchi)) {
+      son.textContent = birinchi;
+      matn.textContent = qolgan.join(' ');
+    } else {
+      son.textContent = '';
+      matn.textContent = holat;
+    }
+    k.dataset.holat = holat === 'Tugadi' ? 'tugadi' : 'ochiq';
+    if (holat === 'Tugadi' && k.parentElement?.hasAttribute('data-adm-tartib')) k.hidden = true;
+  });
+  // "Yaqin muddatlar" ro'yxatida hamma muddat tugagan bo'lsa, ro'yxat o'rniga bo'sh holat matni.
+  document.querySelectorAll<HTMLElement>('[data-adm-tartib]').forEach((r) => {
+    const ochiq = [...r.querySelectorAll<HTMLElement>('.adm-muddat')].some((k) => !k.hidden);
+    const bosh = r.parentElement?.querySelector<HTMLElement>('[data-adm-bosh]');
+    if (bosh) bosh.hidden = ochiq;
+  });
+</script>

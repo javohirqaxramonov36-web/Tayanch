@@ -12,94 +12,95 @@ import { yol } from '../../../../../lib/yol';
 
 const ie05 = manbalar.find((x) => x.id === 'IE05')!;
 const mundarija = [
-  { id: 'mezonlar', nomi: 'Baholash mezonlari' },
-  { id: 'turlar', nomi: 'Topshiriq nimani so\'raydi' },
-  { id: 'tuzilma', nomi: 'Insho tuzilmasi' },
-  { id: 'tuzoq', nomi: 'Tuzoqlar' },
-  { id: 'mashq', nomi: 'Insho mashqi' },
+  { id: 'mezonlar', nomi: 'Assessment criteria' },
+  { id: 'turlar', nomi: 'What the task asks' },
+  { id: 'tuzilma', nomi: 'Essay structure' },
+  { id: 'tuzoq', nomi: 'Traps' },
+  { id: 'mashq', nomi: 'Essay practice' },
 ];
 const mezonlar = [
-  ['Task response', "Topshiriq talabiga qanchalik aniq, o'rinli va to'liq javob berganing. Fikrni qanday rivojlantirganing, dalil va misollar (o'z tajribangdan ham bo'lishi mumkin)."],
-  ['Coherence and cohesion', "Matn qanchalik aniq va ravon, fikrlar qanday tartiblangan. Fikrlar mantiqiy ketma-ketlikda, bog'lovchi vositalar (bog'lovchi so'zlar, olmoshlar) o'rinli ishlatilgan."],
-  ['Lexical resource', "Qanchalik keng so'z boyligidan foydalanganing va so'zlarni qanchalik to'g'ri va o'rinli ishlatganing."],
-  ['Grammatical range and accuracy', "Qanchalik xilma-xil grammatik tuzilmalar ishlatganing va ularni qanchalik to'g'ri va o'rinli qo'llaganing."],
+  ['Task response', 'How clearly, relevantly and fully you answer what the task asks. How you develop your ideas, with support and examples (these can come from your own experience).'],
+  ['Coherence and cohesion', 'How clear and fluent the text is and how the ideas are organised. Ideas follow a logical order, and linking devices (linking words, pronouns) are used appropriately.'],
+  ['Lexical resource', 'How wide a range of vocabulary you use, and how accurately and appropriately you use words.'],
+  ['Grammatical range and accuracy', 'How varied your grammatical structures are, and how accurately and appropriately you use them.'],
 ];
 const turlar = [
-  ['Muammoga yechim', "Muammo beriladi: sabablarini va yechimini taklif qilasan."],
-  ["Fikr bildirish va asoslash", "Bir qarash beriladi: qanchalik qo'shilishingni aytib, sabab va misol bilan asoslaysan."],
-  ['Solishtirish', "Ikki qarash, dalil yoki oqibat solishtiriladi: ikkalasini muhokama qilib, o'z fikringni aytasan."],
-  ["Baholash va e'tiroz", "G'oya yoki dalil beriladi: uning kuchli va zaif tomonini baholaysan."],
+  ['Solution to a problem', 'You are given a problem: you suggest its causes and a solution.'],
+  ['Giving and justifying an opinion', 'You are given a view: you say how far you agree and support it with reasons and examples.'],
+  ['Comparing', 'Two views, pieces of evidence or consequences are compared: you discuss both and give your own opinion.'],
+  ['Evaluating and challenging', 'You are given an idea or argument: you assess its strengths and weaknesses.'],
 ];
 const tuzilma = [
-  ['Kirish', "Savolni o'z so'zlaring bilan qayta ayt va pozitsiyangni bitta gapda aniq bildir.", '2–3 gap'],
-  ['1-asosiy paragraf', "Bitta asosiy fikr: birinchi gapda ayt, keyin izohla va misol keltir.", '4–6 gap'],
-  ['2-asosiy paragraf', "Ikkinchi fikr yoki qarama-qarshi qarash, xuddi shu tartibda.", '4–6 gap'],
-  ['Xulosa', "Pozitsiyangni boshqa so'zlar bilan takrorla. Yangi fikr qo'shma.", '2–3 gap'],
+  ['Introduction', 'Restate the question in your own words and state your position clearly in one sentence.', '2–3 sentences'],
+  ['Body paragraph 1', 'One main idea: state it in the first sentence, then explain it and give an example.', '4–6 sentences'],
+  ['Body paragraph 2', 'A second idea or the opposing view, in the same order.', '4–6 sentences'],
+  ['Conclusion', 'Restate your position in different words. Do not add a new idea.', '2–3 sentences'],
 ];
 const tuzoqlar = [
-  ["Mavzudan chetga chiqish.", "Savol katta mavzuning bitta jihati haqida bo'lsa, faqat shu jihatni yoz. Mavzuga aloqasiz yozish jazolanadi.", true],
-  ["Eslatma yoki ro'yxat ko'rinishida yozish.", "Javob to'liq gaplardan iborat yaxlit matn bo'lishi kerak: bullet va eslatmalar jazolanadi.", true],
-  ["Boshqa manbadan ko'chirish.", "Ko'chirilgan matn qattiq jazolanadi.", true],
-  ["250 so'zdan kam yozish.", "Matn juda qisqa bo'lsa, yuqori band uchun til dalili yetmasligi mumkin.", true],
-  ["Juda uzun yozish.", "250 dan ko'p yozish jazolanmaydi, lekin oxirida tekshirishga vaqt qolmasligi va ba'zi fikrlar savoldan uzoqlashishi mumkin.", true],
-  ["Savolning bir qismini unutish.", "\"Discuss both views and give your opinion\" kabi savolda ikkala qarash ham, o'z fikring ham bo'lishi kerak. Rejani shunga qarab tuz.", false],
+  ['Going off topic.', 'If the question is about one aspect of a big topic, write only about that aspect. Writing off topic is penalised.', true],
+  ['Writing in notes or lists.', 'Your answer must be a connected text of full sentences: bullet points and notes are penalised.', true],
+  ['Copying from another source.', 'Copied text is heavily penalised.', true],
+  ['Writing fewer than 250 words.', 'If the text is very short, there may not be enough evidence of your language for a high band.', true],
+  ['Writing far too much.', 'Writing more than 250 words is not penalised, but you may run out of time to check at the end, and some ideas may drift away from the question.', true],
+  ['Forgetting part of the question.', 'In a question like "Discuss both views and give your opinion", you need both views and your own opinion. Plan with this in mind.', false],
 ] as const;
 // Namuna mavzular (Tayanch uchun yozilgan): src/data/ielts/writingSavollar.ts. Qo'llanmada birinchi uchtasi.
 const mavzular = writingMavzular.slice(0, 3);
 // O'zini tekshirish savollari: IE05 dagi mezon ta'riflari asosida Tayanch tuzgan.
 const tekshiruv = [
   { mezon: 'Task response', savollar: [
-    ['tr1', "Kirishda savolga aniq javob (pozitsiyam) bor."],
-    ['tr2', "Savolning hamma qismiga javob berdim (masalan, ikkala qarash va o'z fikrim)."],
-    ['tr3', 'Har asosiy fikr izoh va misol bilan rivojlangan.'],
-    ['tr4', "Hamma paragraf aynan shu savol haqida, umumiy mavzuga chiqib ketmadim."],
+    ['tr1', 'My introduction answers the question clearly (my position).'],
+    ['tr2', 'I answered every part of the question (for example, both views and my own opinion).'],
+    ['tr3', 'Each main idea is developed with an explanation and an example.'],
+    ['tr4', 'Every paragraph is about this exact question; I did not drift into the general topic.'],
   ] },
   { mezon: 'Coherence and cohesion', savollar: [
-    ['cc1', "Har paragrafda bitta asosiy fikr bor va u birinchi gapda aytilgan."],
-    ['cc2', "Paragraflar ajratilgan va mantiqiy tartibda."],
-    ['cc3', "Bog'lovchi so'zlar (however, as a result) o'rinli va me'yorida, har gap boshida emas."],
-    ['cc4', "Takrorlanuvchi otlar o'rniga olmoshlar (this, they, it) to'g'ri ishlatilgan."],
+    ['cc1', 'Each paragraph has one main idea, stated in the first sentence.'],
+    ['cc2', 'The paragraphs are separated and in a logical order.'],
+    ['cc3', 'Linking words (however, as a result) are used appropriately and not too often, not at the start of every sentence.'],
+    ['cc4', 'Pronouns (this, they, it) are used correctly instead of repeating nouns.'],
   ] },
   { mezon: 'Lexical resource', savollar: [
-    ['lr1', "Savoldagi iboralarni ko'chirmay, o'z so'zlarim bilan aytdim."],
-    ['lr2', "Bitta so'zni qayta-qayta takrorlamadim."],
-    ['lr3', "Ma'nosini aniq bilmagan \"chiroyli\" so'zni ishlatmadim."],
-    ['lr4', 'Imlo xatolarini tekshirdim.'],
+    ['lr1', 'I did not copy phrases from the question; I used my own words.'],
+    ['lr2', 'I did not repeat the same word again and again.'],
+    ['lr3', 'I did not use a "fancy" word whose meaning I am not sure of.'],
+    ['lr4', 'I checked my spelling.'],
   ] },
   { mezon: 'Grammatical range and accuracy', savollar: [
-    ['gr1', "Oddiy va qo'shma gaplar aralash (because, which, although)."],
-    ['gr2', "Fe'l zamonlari va ega-kesim moslashuvi to'g'ri (he goes, they go)."],
-    ['gr3', "Artikllar (a, an, the) va ko'plik shakllarini tekshirdim."],
-    ['gr4', 'Har gap katta harf bilan boshlanib, tinish belgisi bilan tugaydi.'],
+    ['gr1', 'I mixed simple and complex sentences (because, which, although).'],
+    ['gr2', 'Verb tenses and subject–verb agreement are correct (he goes, they go).'],
+    ['gr3', 'I checked articles (a, an, the) and plural forms.'],
+    ['gr4', 'Every sentence starts with a capital letter and ends with punctuation.'],
   ] },
 ];
 const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.map((g) => ({ mezon: g.mezon, idlar: g.savollar.map(([id, m]) => ({ id, matn: m })) })) };
 ---
 <BolimQobiq
-  title="Writing Task 2 qo'llanmasi · IELTS"
-  description="IELTS Academic Writing Task 2: format, to'rt baholash mezoni, topshiriq turlari, insho tuzilmasi, tuzoqlar va so'z hisoblagichli insho mashqi."
+  title="Writing Task 2 guide · IELTS"
+  description="IELTS Academic Writing Task 2: the format, the four assessment criteria, task types, essay structure, traps and essay practice with a word counter."
   turi="qollanma"
-  yol={["Qo'llanmalar"]}
+  yol={["Writing"]}
+  ota={yol('/uz/ielts/writing/')}
   bolim="ielts"
   holat="chop-etilgan"
 >
   <div class="ichki qol">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Qo'llanma</span><span class="pill-ochiq">ochiq</span></p>
-      <h1>Writing Task 2: <span class="kok">aniq fikr, aniq tuzilma</span></h1>
-      <p class="lead">Task 2 da bitta qarash, bahs yoki muammo haqida insho yozasan. Bu qo'llanma imtihonchi nimaga qarashini, inshoni qanday qurishni va o'zingni qanday tekshirishni ko'rsatadi.</p>
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill-ochiq">open</span></p>
+      <h1>Writing Task 2: <span class="kok">a clear idea, a clear structure</span></h1>
+      <p class="lead">In Task 2 you write an essay about a point of view, an argument or a problem. This guide shows what the examiner looks for, how to build the essay and how to check your own work.</p>
     </header>
 
-    <section class="format" aria-label="Format kartasi">
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Topshiriq</span><span class="f-qiymat">Task 2</span><span class="f-izoh">IELTS Academic</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">40 daqiqa</span><span class="f-izoh">ko'pi bilan; Writing jami 60 daqiqa</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg>Hajm</span><span class="f-qiymat">250 so'z</span><span class="f-izoh">kamida</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14" /></svg>Og'irlik</span><span class="f-qiymat">2 baravar</span><span class="f-izoh">Task 1 ga nisbatan</span></div>
+    <section class="format" aria-label="Format card">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Task</span><span class="f-qiymat">Task 2</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Time</span><span class="f-qiymat">40 minutes</span><span class="f-izoh">at most; Writing is 60 minutes in total</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg>Length</span><span class="f-qiymat">250 words</span><span class="f-izoh">at least</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14" /></svg>Weight</span><span class="f-qiymat">twice</span><span class="f-izoh">as much as Task 1</span></div>
     </section>
 
     <details class="mundarija-tel">
       <summary>
-        Mundarija
+        Contents
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </summary>
       <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
@@ -108,54 +109,54 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     <div class="ikki">
       <article class="maqola">
         <section id="mezonlar" aria-labelledby="mezonlar-h">
-          <h2 id="mezonlar-h">Baholash mezonlari</h2>
-          <p class="izoh-m">Inshoni sertifikatlangan imtihonchi to'rt mezon bo'yicha baholaydi (<a href={ie05.havola} rel="noopener">ielts.org</a>). Quyida har birining ta'rifi qisqa, o'z so'zlarimiz bilan.</p>
+          <h2 id="mezonlar-h">Assessment criteria</h2>
+          <p class="izoh-m">A certified examiner marks the essay on four criteria (<a href={ie05.havola} rel="noopener">ielts.org</a>). Below is a short description of each, in our own words.</p>
           <ul class="turlar">
             {mezonlar.map(([n, t]) => <li><span class="t-nom" lang="en">{n}</span><span class="t-matn">{t}</span></li>)}
           </ul>
         </section>
 
         <section id="turlar" aria-labelledby="turlar-h">
-          <h2 id="turlar-h">Topshiriq nimani so'raydi</h2>
-          <p class="izoh-m">Rasmiy sahifaga ko'ra Task 2 shu ko'nikmalarni tekshiradi. Darsliklarda ular ko'pincha "opinion", "discussion", "problem–solution" deb ataladi: bu nomlar rasmiy emas.</p>
+          <h2 id="turlar-h">What the task asks</h2>
+          <p class="izoh-m">According to the official page, Task 2 tests these skills. Textbooks often call them "opinion", "discussion" and "problem–solution": these names are not official.</p>
           <div class="juft">
             {turlar.map(([n, t]) => <div class="kul"><h3>{n}</h3><p class="ikkinchi-m">{t}</p></div>)}
           </div>
         </section>
 
         <section id="tuzilma" aria-labelledby="tuzilma-h">
-          <h2 id="tuzilma-h">Insho tuzilmasi</h2>
-          <p class="izoh-m">Eng ko'p ishlatiladigan sxema: to'rt paragraf. Bu Tayanch tavsiyasi, rasmiy talab emas: imtihonchi tuzilmaning aniqligiga qaraydi, paragraflar soniga emas.</p>
+          <h2 id="tuzilma-h">Essay structure</h2>
+          <p class="izoh-m">The most common plan: four paragraphs. This is Tayanch's suggestion, not an official requirement: the examiner looks at how clear the structure is, not at the number of paragraphs.</p>
           <ol class="tuzilma">
             {tuzilma.map(([n, t, h], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><div><p class="tz-bosh"><b>{n}</b><span class="izoh">{h}</span></p><p class="ikkinchi-m">{t}</p></div></li>)}
           </ol>
           <div class="vaqt-karta">
             <div class="chiziqlar" aria-hidden="true"><span></span><span class="qora"></span><span></span></div>
             <div class="ulushlar">
-              <span><b>Reja</b><br /><span class="ikkinchi-m">taxminan 5 daqiqa</span></span>
-              <span><b>Yozish</b><br /><span class="ikkinchi-m">taxminan 30 daqiqa</span></span>
-              <span><b>Tekshirish</b><br /><span class="ikkinchi-m">taxminan 5 daqiqa</span></span>
+              <span><b>Plan</b><br /><span class="ikkinchi-m">about 5 minutes</span></span>
+              <span><b>Write</b><br /><span class="ikkinchi-m">about 30 minutes</span></span>
+              <span><b>Check</b><br /><span class="ikkinchi-m">about 5 minutes</span></span>
             </div>
-            <p class="izoh">40 daqiqani bo'lish Tayanch tavsiyasi, rasmiy qoida emas.</p>
+            <p class="izoh">This split of the 40 minutes is Tayanch's suggestion, not an official rule.</p>
           </div>
         </section>
 
         <section id="tuzoq" aria-labelledby="tuzoq-h">
-          <h2 id="tuzoq-h">Tuzoqlar</h2>
+          <h2 id="tuzoq-h">Traps</h2>
           <ol class="tuzoqlar">
-            {tuzoqlar.map(([b, t, rasmiy], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span>{rasmiy ? <span class="izoh"> (ielts.org)</span> : <span class="izoh"> (Tayanch tavsiyasi)</span>}</p></li>)}
+            {tuzoqlar.map(([b, t, rasmiy], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span>{rasmiy ? <span class="izoh"> (ielts.org)</span> : <span class="izoh"> (Tayanch's advice)</span>}</p></li>)}
           </ol>
         </section>
 
         <section id="mashq" class="mashq" aria-labelledby="mashq-h" data-sozlama={JSON.stringify(sozlama)}>
           <div class="m-bosh">
-            <h2 id="mashq-h">Insho mashqi</h2>
-            <span class="izoh">Ball qo'yilmaydi</span>
+            <h2 id="mashq-h">Essay practice</h2>
+            <span class="izoh">Not scored</span>
           </div>
-          <p class="izoh-m">Mavzu tanla, yoz va o'zingni to'rt mezon bo'yicha tekshir. Matn faqat shu brauzerda saqlanadi, hech qayerga yuborilmaydi.</p>
+          <p class="izoh-m">Choose a topic, write, and check yourself against the four criteria. Your text is saved only in this browser and is not sent anywhere.</p>
 
           <div class="bosqich" id="b-mavzu">
-            <p class="ustki-yorliq" id="mavzu-h">1. Mavzu tanla <span class="pill-namuna">Namuna</span></p>
+            <p class="ustki-yorliq" id="mavzu-h">1. Choose a topic <span class="pill-namuna">Sample</span></p>
             <div class="mavzular" role="group" aria-labelledby="mavzu-h">
               {mavzular.map((m) => (
                 <button type="button" class="mavzu" aria-pressed="false" data-mavzu={m.id}>
@@ -167,29 +168,29 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
           </div>
 
           <div class="bosqich" id="b-yozish" hidden>
-            <p class="ustki-yorliq">2. Yoz</p>
+            <p class="ustki-yorliq">2. Write</p>
             <blockquote class="savol-matn" id="tanlangan-mavzu" lang="en"></blockquote>
             <div class="yozish-ust">
-              <p class="hisob" id="hisob" aria-live="off"><b id="soz-soni">0</b> / 250 so'z</p>
+              <p class="hisob" id="hisob" aria-live="off"><b id="soz-soni">0</b> / 250 words</p>
               <div class="taymer">
-                <span class="vaqt" id="vaqt" role="timer" aria-label="Qolgan vaqt">40:00</span>
-                <button type="button" class="chiziq-tugma kichik-t" id="taymer-tugma">Taymerni boshlash</button>
+                <span class="vaqt" id="vaqt" role="timer" aria-label="Time left">40:00</span>
+                <button type="button" class="t-tugma t-tugma--ikkinchi kichik-t" id="taymer-tugma">Start timer</button>
               </div>
             </div>
             <p class="sr" id="elon" aria-live="polite"></p>
-            <label class="sr" for="matn">Insho matni</label>
-            <textarea id="matn" lang="en" rows="16" spellcheck="false" autocapitalize="sentences" placeholder="Inshoni shu yerga yoz…"></textarea>
-            <p class="izoh" id="saqlash-holat">Qoralama shu brauzerda avtomatik saqlanadi.</p>
+            <label class="sr" for="matn">Essay text</label>
+            <textarea id="matn" lang="en" rows="16" spellcheck="false" autocapitalize="sentences" placeholder="Write your essay here…"></textarea>
+            <p class="izoh" id="saqlash-holat">Your draft is saved automatically in this browser.</p>
             <div class="tugmalar">
-              <button type="button" class="katta-q asosiy-q" id="tekshirishga">O'zimni tekshirish</button>
-              <button type="button" class="chiziq-tugma" id="mavzu-almashtir">Boshqa mavzu</button>
+              <button type="button" class="t-tugma ielts-tugma--urgu" id="tekshirishga">Check myself</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="mavzu-almashtir">Another topic</button>
             </div>
             <p class="ogoh" id="qisqa-ogoh" hidden></p>
           </div>
 
           <div class="bosqich" id="b-tekshiruv" hidden>
-            <p class="ustki-yorliq">3. O'zingni tekshir</p>
-            <p class="izoh-m">Inshoni qayta o'qi va bajarilgan bandlarni belgila. Halol belgila: bu faqat o'zing uchun.</p>
+            <p class="ustki-yorliq">3. Check yourself</p>
+            <p class="izoh-m">Read your essay again and tick the points you have done. Be honest: this is only for you.</p>
             {tekshiruv.map((g) => (
               <fieldset class="t-guruh">
                 <legend lang="en">{g.mezon}</legend>
@@ -202,47 +203,47 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
               </fieldset>
             ))}
             <div class="tugmalar">
-              <button type="button" class="katta-q asosiy-q" id="xulosaga">Xulosani ko'rish</button>
-              <button type="button" class="chiziq-tugma" id="matnga-1">Matnga qaytish</button>
+              <button type="button" class="t-tugma ielts-tugma--urgu" id="xulosaga">See summary</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="matnga-1">Back to the text</button>
             </div>
           </div>
 
           <div class="bosqich" id="b-xulosa" hidden>
-            <p class="ustki-yorliq">4. Xulosa</p>
-            <h3 id="xulosa-h" tabindex="-1">O'z-o'zini tekshirish natijasi</h3>
+            <p class="ustki-yorliq">4. Summary</p>
+            <h3 id="xulosa-h" tabindex="-1">Self-check result</h3>
             <ul class="xulosa-mezon" id="xulosa-mezon"></ul>
             <div id="ishlash-blok">
-              <p><b>Keyingi inshoda e'tibor ber:</b></p>
+              <p><b>In your next essay, pay attention to:</b></p>
               <ul class="ishlash" id="ishlash"></ul>
             </div>
-            <p class="izoh">Bu band emas: rasmiy band'ni faqat sertifikatlangan imtihonchi qo'yadi. Ro'yxat inshoni qayta ko'rib chiqish uchun.</p>
+            <p class="izoh">This is not a band: only a certified examiner gives an official band. The list is for reviewing your essay.</p>
             <div class="tugmalar">
-              <button type="button" class="chiziq-tugma" id="matnga-2">Matnga qaytish</button>
-              <button type="button" class="chiziq-tugma" id="tekshiruvga">Belgilarni o'zgartirish</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="matnga-2">Back to the text</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tekshiruvga">Change ticks</button>
             </div>
           </div>
 
           <div class="tozalash">
-            <button type="button" class="matn-tugma" id="tozala">Qoralamani o'chirish</button>
-            <span class="tasdiq" id="tasdiq" hidden>Insho matni va belgilar o'chirilsinmi?
-              <button type="button" class="matn-tugma" id="tasdiq-ha">Ha, o'chirish</button>
-              <button type="button" class="matn-tugma" id="tasdiq-yoq">Bekor qilish</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">Delete draft</button>
+            <span class="tasdiq" id="tasdiq" hidden>Delete the essay text and ticks?
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">Yes, delete</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">Cancel</button>
             </span>
           </div>
         </section>
 
         <section class="keyingi" aria-labelledby="keyingi-h">
-          <p class="ustki-yorliq kok-q">Keyingi qadam</p>
-          <h2 id="keyingi-h">Rasmiy namunadagi Task 2 ni 40 daqiqada yoz</h2>
-          <p class="k-matn">Keyin yuqoridagi tekshiruv ro'yxatidan o'tkaz. Reja vositasi Writing kunlarini haftaga bo'lib beradi.</p>
+          <p class="ustki-yorliq kok-q">Next step</p>
+          <h2 id="keyingi-h">Write an official sample Task 2 in 40 minutes</h2>
+          <p class="k-matn">Then go through the checklist above. The plan tool spreads Writing days across the week.</p>
           <div class="k-tugmalar">
-            <a class="katta asosiy" href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja tuzish</a>
-            <a class="katta qora-tugma" href={yol('/uz/ielts/#rasmiy')}>Rasmiy namunalar</a>
+            <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/vosita/reja/')}>Build a 30-day plan</a>
+            <a class="t-tugma" href={yol('/uz/ielts/#rasmiy')}>Official samples</a>
           </div>
         </section>
       </article>
-      <nav class="mundarija" aria-label="Sahifa mundarijasi">
-        <p class="ustki-yorliq">Mundarija</p>
+      <nav class="mundarija" aria-label="Page contents">
+        <p class="ustki-yorliq">Contents</p>
         {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
       </nav>
     </div>
@@ -252,10 +253,10 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Band descriptors (har mezon bo'yicha band qanday qo'yilishi) bu sahifada berilmagan.",
-        "General Training Writing formati (bu sahifa Academic bo'yicha).",
-        "Insho tuzilmasi, vaqt bo'linishi va tekshiruv savollari Tayanch tavsiyasi, rasmiy talab emas.",
-        "Mashq mavzulari Tayanch uchun yozilgan namuna, rasmiy IELTS savoli emas.",
+        "The band descriptors (how a band is given for each criterion) are not on this page.",
+        "The General Training Writing format (this page covers Academic).",
+        "The essay structure, time split and checklist are Tayanch's suggestions, not official requirements.",
+        "The practice topics are samples written for Tayanch, not official IELTS questions.",
       ]}
     />
   </div>
@@ -297,8 +298,8 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     try { localStorage.setItem(S.kalit, JSON.stringify(h)); saqlashMumkin = true; }
     catch { saqlashMumkin = false; }
     $('saqlash-holat').textContent = saqlashMumkin
-      ? 'Qoralama shu brauzerda avtomatik saqlanadi.'
-      : "Brauzer saqlashga ruxsat bermadi: sahifa yopilsa, matn yo'qoladi.";
+      ? 'Your draft is saved automatically in this browser.'
+      : 'The browser did not allow saving: if you close the page, the text will be lost.';
   }
 
   // ---------- So'z soni ----------
@@ -323,14 +324,14 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     vaqtEl.classList.toggle('kam', q <= 5 * 60 * 1000);
     const daqiqa = Math.ceil(q / 60000);
     if (h.tugash !== null && oldingiDaqiqa !== null && daqiqa !== oldingiDaqiqa && (daqiqa === 10 || daqiqa === 5)) {
-      $('elon').textContent = `${daqiqa} daqiqa qoldi.`;
+      $('elon').textContent = `${daqiqa} ${daqiqa === 1 ? 'minute' : 'minutes'} left.`;
     }
     oldingiDaqiqa = daqiqa;
     if (h.tugash !== null && q === 0) {
       h.tugash = null; h.qoldi = 0; saqla();
-      $('elon').textContent = "Vaqt tugadi. Yozishni davom ettirishing mumkin, lekin imtihonda bu yerda to'xtarding.";
+      $('elon').textContent = 'Time is up. You can keep writing, but in the test you would stop here.';
     }
-    taymerTugma.textContent = h.tugash !== null ? "To'xtatish" : h.qoldi === 0 ? 'Qaytadan boshlash' : h.qoldi < TOLIQ_MS ? 'Davom ettirish' : 'Taymerni boshlash';
+    taymerTugma.textContent = h.tugash !== null ? 'Pause' : h.qoldi === 0 ? 'Start again' : h.qoldi < TOLIQ_MS ? 'Resume' : 'Start timer';
     if (h.tugash === null && tik !== undefined) { clearInterval(tik); tik = undefined; }
     if (h.tugash !== null && tik === undefined) tik = window.setInterval(taymerChiz, 500);
   }
@@ -377,7 +378,7 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     const n = sozSoni(matn.value);
     const ogoh = $('qisqa-ogoh');
     if (n < MIN_SOZ && ogoh.hidden) {
-      ogoh.textContent = `Hozir ${n} so'z: imtihonda kamida ${MIN_SOZ} so'z kerak. Baribir tekshirmoqchi bo'lsang, tugmani yana bos.`;
+      ogoh.textContent = `You have ${n} ${n === 1 ? 'word' : 'words'}: the test needs at least ${MIN_SOZ}. If you still want to check, press the button again.`;
       ogoh.hidden = false;
       saqla();
       return;
@@ -447,163 +448,153 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
 </script>
 
 <style>
-  .qol { padding-top: var(--b-10); display: flex; flex-direction: column; gap: var(--b-10); max-width: calc(912px + 2 * var(--b-10)) !important; }
-  .kok { color: var(--rang-havola); }
-  .ustki-kok { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rang-havola); }
-  .ustki-yorliq { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
-  .izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
-  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--matn-ikkinchi); }
-  .izoh-m a { color: var(--rang-havola); }
-  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; }
-  h3 { font-size: var(--matn-h3); font-weight: 800; }
+  .qol { padding-top: var(--space-10); display: flex; flex-direction: column; gap: var(--space-10); max-width: calc(912px + 2 * var(--space-10)) !important; }
+  .kok { color: var(--color-link); }
+  .ustki-kok { margin: 0; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  .ustki-yorliq { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ielts-text-muted); }
+  .izoh { font-size: var(--text-small-size); font-weight: var(--font-weight-medium); color: var(--color-ielts-text-muted); }
+  .izoh-m, .ikkinchi-m { line-height: 1.6; color: var(--color-ielts-text-muted); }
+  .izoh-m a { color: var(--color-link); }
+  h2 { font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1.2; }
+  h3 { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
   [hidden] { display: none !important; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .pill-ochiq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy-och); color: var(--rang-havola); font-size: var(--matn-mayda); font-weight: 700; }
-  .pill-namuna { padding: 2px 10px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn); letter-spacing: 0; text-transform: none; }
+  .pill-ochiq { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-ielts-tile); color: var(--color-link); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .pill-namuna { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); background: var(--color-ielts-tile); color: var(--color-ielts-text); letter-spacing: 0; text-transform: none; }
 
-  .bosh { display: flex; flex-direction: column; gap: var(--b-4); }
-  .pill-qator { display: flex; align-items: center; gap: var(--b-3); }
-  h1 { font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: var(--oraliq-sarlavha); }
-  .lead { line-height: 1.6; color: var(--matn-ikkinchi); max-width: 60ch; }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-4); }
+  .pill-qator { display: flex; align-items: center; gap: var(--space-3); }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); letter-spacing: var(--oraliq-sarlavha); }
+  .lead { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
 
-  .format { border: 1.5px solid var(--matn); border-radius: var(--r-katta); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
-  .format > div { padding: var(--b-5) var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
-  .format > div + div { border-left: 1px solid var(--chiziq); }
-  .f-yorliq { display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-ikkinchi); }
-  .f-yorliq svg { color: var(--rang-havola); }
-  .f-qiymat { font-size: 18px; font-weight: 800; }
-  .f-izoh { font-size: var(--matn-kichik); font-weight: 500; color: var(--matn-ikkinchi); }
+  .format { border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
+  .format > div { padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
+  .format > div + div { border-left: 1px solid var(--color-ielts-line); }
+  .f-yorliq { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ielts-text-muted); }
+  .f-yorliq svg { color: var(--color-link); }
+  .f-qiymat { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
+  .f-izoh { font-size: var(--text-small-size); font-weight: var(--font-weight-medium); color: var(--color-ielts-text-muted); }
 
   .mundarija-tel { display: none; }
-  .ikki { display: flex; gap: var(--b-10); align-items: flex-start; }
-  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-14); }
-  .maqola > section { display: flex; flex-direction: column; gap: var(--b-4); scroll-margin-top: var(--b-6); }
+  .ikki { display: flex; gap: var(--space-10); align-items: flex-start; }
+  .maqola { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-14); }
+  .maqola > section { display: flex; flex-direction: column; gap: var(--space-4); scroll-margin-top: var(--space-6); }
 
-  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden; }
-  .turlar li { padding: var(--b-4) var(--b-5); display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--b-4); row-gap: var(--b-1); }
-  .turlar li + li { border-top: 1px solid var(--chiziq); }
-  .t-nom { font-weight: 800; }
-  .t-matn { color: var(--matn-ikkinchi); line-height: 1.55; }
+  .turlar { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); overflow: hidden; }
+  .turlar li { padding: var(--space-4) var(--space-5); display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: var(--space-4); row-gap: var(--space-1); }
+  .turlar li + li { border-top: 1px solid var(--color-ielts-line); }
+  .t-nom { font-weight: var(--font-weight-extrabold); }
+  .t-matn { color: var(--color-ielts-text-muted); line-height: 1.55; }
 
-  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
-  .kul { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-2); }
+  .juft { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .kul { background: var(--color-ielts-tile); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
 
-  .tuzilma, .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--b-3); }
-  .tuzilma li, .tuzoqlar li { display: flex; gap: var(--b-4); align-items: flex-start; }
-  .tz-bosh { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--b-3); }
-  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--r-toliq); border: 1.5px solid var(--matn); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: var(--matn-kichik); }
-  .tuzilma p, .tuzoqlar p { margin-top: var(--b-1); line-height: 1.6; }
+  .tuzilma, .tuzoqlar { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
+  .tuzilma li, .tuzoqlar li { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .tz-bosh { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-3); }
+  .t-raqam { width: 32px; height: 32px; flex: none; border-radius: var(--radius-full); border: 1.5px solid var(--color-ielts-text); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-extrabold); font-size: var(--text-small-size); }
+  .tuzilma p, .tuzoqlar p { margin-top: var(--space-1); line-height: 1.6; }
 
-  .vaqt-karta { border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3); }
-  .chiziqlar, .ulushlar { display: grid; grid-template-columns: 5fr 30fr 5fr; gap: var(--b-2); }
-  .chiziqlar span { height: 12px; border-radius: var(--r-toliq); background: var(--rang-asosiy); }
-  .chiziqlar span.qora { background: var(--matn); }
-  .ulushlar { font-size: var(--matn-kichik); }
+  .vaqt-karta { border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+  .chiziqlar, .ulushlar { display: grid; grid-template-columns: 5fr 30fr 5fr; gap: var(--space-2); }
+  .chiziqlar span { height: 12px; border-radius: var(--radius-full); background: var(--color-ielts-accent-text); }
+  .chiziqlar span.qora { background: var(--color-ielts-text); }
+  .ulushlar { font-size: var(--text-small-size); }
 
   /* Insho mashqi: sahifadagi yagona soya */
-  .mashq { background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); box-shadow: var(--soya); padding: 28px; gap: var(--b-5) !important; }
-  .m-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--b-3); }
-  .bosqich { display: flex; flex-direction: column; gap: var(--b-4); }
-  .mavzular { display: flex; flex-direction: column; gap: var(--b-3); }
+  .mashq { background: var(--color-ielts-bg); border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); box-shadow: var(--shadow-glass); padding: var(--space-7); gap: var(--space-5) !important; }
+  .m-bosh { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .bosqich { display: flex; flex-direction: column; gap: var(--space-4); }
+  .mavzular { display: flex; flex-direction: column; gap: var(--space-3); }
   .mavzu {
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); text-align: left;
-    min-height: 56px; padding: var(--b-4) var(--b-5); border-radius: var(--r-orta);
-    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-kuchli); font: inherit; cursor: pointer;
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); text-align: left;
+    min-height: 56px; padding: var(--space-4) var(--space-5); border-radius: var(--radius-md);
+    background: var(--color-ielts-bg); color: var(--color-ielts-text); border: 2px solid var(--color-ielts-line); font: inherit; cursor: pointer;
   }
-  .mavzu:hover { border-color: var(--rang-asosiy); }
-  .mavzu[aria-pressed='true'] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
-  .m-tur { font-size: var(--matn-mayda); font-weight: 700; color: var(--rang-havola); }
-  .m-matn { line-height: 1.55; font-weight: 600; }
-  .savol-matn { margin: 0; padding: var(--b-4) var(--b-5); background: var(--fon-ikkinchi); border-radius: var(--r-orta); line-height: 1.6; font-weight: 600; }
+  .mavzu:hover { border-color: var(--color-ielts-accent-text); }
+  .mavzu[aria-pressed='true'] { border-color: var(--color-ielts-accent-text); background: var(--color-ielts-tile); }
+  .m-tur { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); color: var(--color-link); }
+  .m-matn { line-height: 1.55; font-weight: var(--font-weight-semibold); }
+  .savol-matn { margin: 0; padding: var(--space-4) var(--space-5); background: var(--color-ielts-tile); border-radius: var(--radius-md); line-height: 1.6; font-weight: var(--font-weight-semibold); }
   .yozish-ust {
     /* 1024px dan kichikda BolimYon ustki qatori (64px) yopishib turadi: hisoblagich uning ostiga kirmasin */
-    position: sticky; top: 64px; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--b-3);
-    padding: var(--b-2) 0; background: var(--fon);
+    position: sticky; top: 64px; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-2) 0; background: var(--color-ielts-bg);
   }
-  .hisob { font-variant-numeric: tabular-nums; color: var(--rang-ogoh-matn); }
-  .hisob.yetarli { color: var(--matn); }
-  .taymer { display: flex; align-items: center; gap: var(--b-3); }
-  .vaqt { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .vaqt.kam { color: var(--rang-ogoh-matn); }
+  .hisob { font-variant-numeric: tabular-nums; color: var(--color-warning-text); }
+  .hisob.yetarli { color: var(--color-ielts-text); }
+  .taymer { display: flex; align-items: center; gap: var(--space-3); }
+  .vaqt { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .vaqt.kam { color: var(--color-warning-text); }
   textarea {
-    width: 100%; min-height: 320px; resize: vertical; padding: var(--b-4); border-radius: var(--r-orta);
-    border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn);
-    font: inherit; font-size: 17px; line-height: 1.7;
+    width: 100%; min-height: 320px; resize: vertical; padding: var(--space-4); border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-ielts-line); background: var(--color-ielts-bg); color: var(--color-ielts-text);
+    font: inherit; font-size: var(--text-body-size); line-height: 1.7;
   }
-  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-color: var(--rang-asosiy); }
-  textarea::placeholder { color: var(--matn-sust); opacity: 1; }
-  .ogoh { padding: var(--b-3) var(--b-4); border-radius: var(--r-orta); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 700; line-height: 1.5; }
+  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-color: var(--color-ielts-accent-text); }
+  textarea::placeholder { color: var(--color-ielts-text-muted); opacity: 1; }
+  .ogoh { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-bold); line-height: 1.5; }
 
-  .t-guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--b-2); }
-  .t-guruh legend { padding: 0; margin-bottom: var(--b-2); font-weight: 800; font-size: 18px; }
+  .t-guruh { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+  .t-guruh legend { padding: 0; margin-bottom: var(--space-2); font-weight: var(--font-weight-extrabold); font-size: var(--text-h3-size); }
   .t-band {
-    display: flex; align-items: center; gap: var(--b-3); text-align: left; min-height: 48px; padding: var(--b-2) var(--b-4);
-    border-radius: var(--r-orta); border: 1.5px solid var(--chiziq-kuchli); background: var(--fon); color: var(--matn); font: inherit; line-height: 1.45; cursor: pointer;
+    display: flex; align-items: center; gap: var(--space-3); text-align: left; min-height: 48px; padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md); border: 1.5px solid var(--color-ielts-line); background: var(--color-ielts-bg); color: var(--color-ielts-text); font: inherit; line-height: 1.45; cursor: pointer;
   }
-  .t-band:hover { border-color: var(--rang-asosiy); }
-  .katakcha { width: 24px; height: 24px; flex: none; border-radius: var(--r-kichik); border: 2px solid var(--matn-ikkinchi); display: grid; place-items: center; color: transparent; }
-  .t-band[aria-pressed='true'] { border-color: var(--rang-asosiy); background: var(--rang-asosiy-och); }
-  .t-band[aria-pressed='true'] .katakcha { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
-  .xulosa-mezon { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--matn); border-radius: var(--r-orta); overflow: hidden; }
-  .xulosa-mezon :global(li) { display: flex; justify-content: space-between; gap: var(--b-3); padding: var(--b-3) var(--b-4); }
-  .xulosa-mezon :global(li + li) { border-top: 1px solid var(--chiziq); }
+  .t-band:hover { border-color: var(--color-ielts-accent-text); }
+  .katakcha { width: 24px; height: 24px; flex: none; border-radius: var(--radius-sm); border: 2px solid var(--color-ielts-text-muted); display: grid; place-items: center; color: transparent; }
+  .t-band[aria-pressed='true'] { border-color: var(--color-ielts-accent-text); background: var(--color-ielts-tile); }
+  .t-band[aria-pressed='true'] .katakcha { background: var(--color-ielts-accent-text); border-color: var(--color-ielts-accent-text); color: var(--color-ielts-on-accent); }
+  .xulosa-mezon { list-style: none; margin: 0; padding: 0; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-md); overflow: hidden; }
+  .xulosa-mezon :global(li) { display: flex; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); }
+  .xulosa-mezon :global(li + li) { border-top: 1px solid var(--color-ielts-line); }
   .xulosa-mezon :global(b) { font-variant-numeric: tabular-nums; }
-  .ishlash { margin: var(--b-2) 0 0; padding-left: var(--b-5); display: flex; flex-direction: column; gap: var(--b-1); line-height: 1.55; }
+  .ishlash { margin: var(--space-2) 0 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); line-height: 1.55; }
   #xulosa-h:focus { outline: none; }
 
-  .tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); }
-  .katta-q { min-height: var(--control-height-md); padding: 0 24px; border: 0; border-radius: var(--r-toliq); font: inherit; font-weight: 800; cursor: pointer; }
-  .asosiy-q { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
-  .asosiy-q:hover { background: var(--btn-primary-bg-hover); }
-  .chiziq-tugma { min-height: 48px; padding: 0 20px; border: 1.5px solid var(--matn); border-radius: var(--r-toliq); background: var(--fon); color: var(--matn); font: inherit; font-weight: 700; cursor: pointer; }
-  .kichik-t { min-height: 44px; padding: 0 16px; }
-  .matn-tugma { min-height: 44px; padding: 0 var(--b-4); border: 0; border-radius: var(--r-toliq); background: transparent; color: var(--matn-ikkinchi); font: inherit; font-weight: 700; cursor: pointer; }
-  .matn-tugma:hover { background: var(--sirt-ikkinchi); }
-  .mavzu:focus-visible, .t-band:focus-visible, .katta-q:focus-visible, .chiziq-tugma:focus-visible, .matn-tugma:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  .tozalash { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
-  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--b-2); font-weight: 700; }
+  .tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .kichik-t { min-height: 44px; padding: 0 var(--space-4); }
+  .mavzu:focus-visible, .t-band:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .tozalash { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); border-top: 1px solid var(--color-ielts-line); padding-top: var(--space-3); }
+  .tasdiq { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); }
 
-  .keyingi { background: var(--qora); color: var(--qora-matn); border: 1px solid var(--qora-chiziq); border-radius: var(--r-katta); padding: 28px; gap: var(--b-4) !important; }
-  .kok-q { color: var(--rang-asosiy-qorada); }
-  .keyingi h2 { font-size: 26px; line-height: 1.25; }
-  .k-matn { line-height: 1.6; color: var(--qora-matn-ikkinchi); }
-  .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--b-3); padding-top: var(--b-1); }
-  .katta { display: inline-flex; align-items: center; justify-content: center; min-height: var(--control-height-md); padding: 0 24px; border-radius: var(--r-toliq); text-decoration: none; font-weight: 800; }
-  .katta.asosiy { background: var(--qora-matn); color: var(--qora); }
-  .katta.asosiy:hover { background: var(--color-neutral-200); }
-  .katta.qora-tugma { background: var(--qora-sirt); color: var(--qora-matn); font-weight: 700; }
+  .keyingi { background: var(--color-ielts-ink); color: var(--color-neutral-0); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); padding: var(--space-7); gap: var(--space-4) !important; }
+  .kok-q { color: var(--color-floor-ielts-400); }
+  .keyingi h2 { font-size: var(--text-h2-size); line-height: 1.25; }
+  .k-matn { line-height: 1.6; color: var(--color-neutral-400); }
+  .k-tugmalar { display: flex; flex-wrap: wrap; gap: var(--space-3); padding-top: var(--space-1); }
 
-  .mundarija { flex: 0 0 240px; position: sticky; top: var(--b-6); display: flex; flex-direction: column; gap: var(--b-1); border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: var(--b-3); }
-  .mundarija .ustki-yorliq { margin: var(--b-2) var(--b-3); }
-  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
-  .mundarija a:hover { background: var(--fon-ikkinchi); }
-  .mundarija a[aria-current='true'] { background: var(--rang-asosiy-och); color: var(--rang-havola); }
+  .mundarija { flex: 0 0 240px; position: sticky; top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-1); border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); padding: var(--space-3); }
+  .mundarija .ustki-yorliq { margin: var(--space-2) var(--space-3); }
+  .mundarija a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-3); border-radius: var(--radius-md); color: var(--color-ielts-text); text-decoration: none; font-weight: var(--font-weight-bold); }
+  .mundarija a:hover { background: var(--color-ielts-tile); }
+  .mundarija a[aria-current='true'] { background: var(--color-ielts-tile); color: var(--color-link); }
 
   @media (min-width: 1024px) { .yozish-ust { top: 0; } }
   @media (max-width: 1180px) {
     .mundarija { display: none; }
-    .mundarija-tel { display: block; border: 1.5px solid var(--matn); border-radius: var(--r-orta); }
-    .mundarija-tel summary { list-style: none; min-height: 52px; padding: 0 var(--b-4); display: flex; align-items: center; justify-content: space-between; font-weight: 800; cursor: pointer; }
+    .mundarija-tel { display: block; border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-md); }
+    .mundarija-tel summary { list-style: none; min-height: 52px; padding: 0 var(--space-4); display: flex; align-items: center; justify-content: space-between; font-weight: var(--font-weight-extrabold); cursor: pointer; }
     .mundarija-tel summary::-webkit-details-marker { display: none; }
     .mundarija-tel[open] summary svg { transform: rotate(180deg); }
-    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--b-2) var(--b-2); display: flex; flex-direction: column; gap: 2px; }
-    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--b-3); border-radius: var(--r-orta); color: var(--matn); text-decoration: none; font-weight: 700; }
-    .mundarija-tel a:hover { background: var(--fon-ikkinchi); }
+    .mundarija-tel ul { list-style: none; margin: 0; padding: 0 var(--space-2) var(--space-2); display: flex; flex-direction: column; gap: var(--space-1); }
+    .mundarija-tel a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-3); border-radius: var(--radius-md); color: var(--color-ielts-text); text-decoration: none; font-weight: var(--font-weight-bold); }
+    .mundarija-tel a:hover { background: var(--color-ielts-tile); }
   }
   @media (max-width: 760px) {
     .format { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .format > div:nth-child(3) { border-left: 0; }
-    .format > div:nth-child(n + 3) { border-top: 1px solid var(--chiziq); }
+    .format > div:nth-child(n + 3) { border-top: 1px solid var(--color-ielts-line); }
     .juft, .turlar li { grid-template-columns: 1fr; }
-    .ulushlar { grid-template-columns: 1fr; gap: var(--b-2); }
+    .ulushlar { grid-template-columns: 1fr; gap: var(--space-2); }
   }
   @media (max-width: 640px) {
-    .qol { padding-top: var(--b-6); gap: var(--b-8); }
-    h1 { font-size: 34px; }
-    h2 { font-size: 24px; }
-    .maqola { gap: var(--b-10); }
-    .mashq { padding: var(--b-5); }
-    textarea { min-height: 260px; font-size: 16px; }
-    .katta-q, .tugmalar .chiziq-tugma, .k-tugmalar .katta { width: 100%; }
+    .qol { padding-top: var(--space-6); gap: var(--space-8); }
+    h1 { font-size: var(--text-h1-size); }
+    h2 { font-size: var(--text-h2-size); }
+    .maqola { gap: var(--space-10); }
+    .mashq { padding: var(--space-5); }
+    textarea { min-height: 260px; font-size: var(--text-body-size); }
+    .tugmalar .t-tugma, .k-tugmalar .t-tugma { width: 100%; }
   }
 </style>

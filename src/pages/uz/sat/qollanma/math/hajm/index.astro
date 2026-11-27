@@ -47,7 +47,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
         <path d="M100 40h45" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
       </svg>
       <div class="hajm-holat">
-        <button type="button" class="kichik-tugma" id="hajm-och" hidden>Open 3D</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="hajm-och" hidden>Open 3D</button>
         <p id="hajm-holat" role="status"></p>
       </div>
     </div>
@@ -57,7 +57,7 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
       <button type="button" class="belgi-t" data-amal="ong" aria-label="Rotate right"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg></button>
       <button type="button" class="belgi-t" data-amal="yaqin" aria-label="Zoom in"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
       <button type="button" class="belgi-t" data-amal="uzoq" aria-label="Zoom out"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg></button>
-      <button type="button" class="kichik-tugma" data-amal="tikla">Reset camera</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" data-amal="tikla">Reset camera</button>
     </div>
     <p class="sahna-izoh">Drag with the mouse. On a phone, swipe sideways with one finger and pinch with two fingers to zoom. One floor square = 1 unit.</p>
   </div>
@@ -65,8 +65,8 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   <div slot="animatsiya">
     <p>We build the cylinder from identical disks with a thickness of 1. The volume of each disk is base area × thickness = πr² × 1. The volume is πr² times the number of disks.</p>
     <div class="segment">
-      <button type="button" class="katta asosiy" id="disk-boshla">Stack the disks</button>
-      <button type="button" class="kichik-tugma" id="disk-tikla">Whole cylinder</button>
+      <button type="button" class="t-tugma sat-tugma--kok" id="disk-boshla">Stack the disks</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="disk-tikla">Whole cylinder</button>
     </div>
     <div class="formula">
       <span class="f-qiymat" id="disk-matn" aria-live="polite">A cylinder with r = 3, h = 6: press the button.</span>
@@ -255,8 +255,8 @@ import DarsQolip from '../../../../../../components/dars/DarsQolip.astro';
   .dars .hajm-quti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: none; touch-action: pan-y; cursor: grab; }
   .dars .hajm-quti.tayyor canvas { display: block; }
   .dars .hajm-quti.ushlangan canvas { cursor: grabbing; }
-  .dars .hajm-poster { position: absolute; inset: 15% 20%; width: 60%; height: 60%; color: var(--matn-sust); }
+  .dars .hajm-poster { position: absolute; inset: 15% 20%; width: 60%; height: 60%; color: var(--color-sat-text-muted); }
   .dars .hajm-quti.tayyor .hajm-poster { display: none; }
-  .dars .hajm-holat { position: absolute; left: var(--b-4); right: var(--b-4); bottom: var(--b-4); text-align: center; font-size: var(--matn-kichik); font-weight: 600; color: var(--matn-ikkinchi); }
-  .dars .formula-jadval dd { font-size: 17px; }
+  .dars .hajm-holat { position: absolute; left: var(--space-4); right: var(--space-4); bottom: var(--space-4); text-align: center; font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
+  .dars .formula-jadval dd { font-size: var(--text-body-size); }
 </style>

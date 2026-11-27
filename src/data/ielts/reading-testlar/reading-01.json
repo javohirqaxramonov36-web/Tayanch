@@ -3,11 +3,11 @@
   "testId": "reading-01",
   "title": "Reading test 1",
   "durationMinutes": 60,
-  "explanationLang": "uz",
+  "explanationLang": "en",
   "passages": [
     {
       "id": "p1",
-      "difficulty": "Oson-O'rta",
+      "difficulty": "Easy–Medium",
       "title": "Inns of the Silk Road",
       "paragraphs": [
         {
@@ -48,42 +48,42 @@
               "number": 1,
               "prompt": "Caravanserais allowed travellers and their animals to stay inside the same enclosed space.",
               "answer": "TRUE",
-              "explanation": "A paragrafda karvonsaroy sayohatchilar, ularning hayvonlari va yuklari bitta darvoza ortida tunaydigan devorli joy ekani aytilgan. Bu gapga mos.",
+              "explanation": "Paragraph A says a caravanserai was a walled place where travellers, their animals and their goods spent the night behind a single gate. This matches the statement.",
               "evidence": { "paragraph": "A", "quote": "where travellers, their animals and their goods could all spend the night behind a single gate" }
             },
             {
               "number": 2,
               "prompt": "The outer walls of caravanserais usually had many large windows.",
               "answer": "FALSE",
-              "explanation": "B paragrafda tashqi devorda derazalar kam yoki umuman yo'q bo'lgani aytilgan. Bu \"ko'p katta deraza\" degan gapga zid.",
+              "explanation": "Paragraph B says the outer wall had few or no windows. This contradicts \"many large windows\".",
               "evidence": { "paragraph": "B", "quote": "often with few or no windows" }
             },
             {
               "number": 3,
               "prompt": "Rooms for travellers were usually built lower than the courtyard.",
               "answer": "FALSE",
-              "explanation": "B paragrafga ko'ra xonalar hovli sathidan biroz baland qurilgan. Gapda esa \"pastroq\" deyilgan, demak zid.",
+              "explanation": "According to paragraph B, the rooms were built slightly above the level of the courtyard. The statement says \"lower\", so it contradicts the text.",
               "evidence": { "paragraph": "B", "quote": "usually raised slightly above the level of the yard" }
             },
             {
               "number": 4,
               "prompt": "Caravanserais built beside rivers were generally larger than those that depended on wells.",
               "answer": "NOT GIVEN",
-              "explanation": "C paragrafda ba'zi karvonsaroylar daryo bo'yida, ba'zilari quduqqa tayangani aytilgan, lekin ularning kattaligi solishtirilmagan. Matnda bu haqda ma'lumot yo'q.",
+              "explanation": "Paragraph C says some caravanserais stood by rivers and others relied on wells, but their sizes are not compared. The text gives no information about this.",
               "evidence": { "paragraph": "C", "quote": "Some stood beside rivers or springs; others depended on wells" }
             },
             {
               "number": 5,
               "prompt": "Travellers tended to think of their journeys as a series of stages between resting places.",
               "answer": "TRUE",
-              "explanation": "C paragrafda sayohatchilar yo'lni kilometr bilan emas, har biri ma'lum dam olish joyida tugaydigan bosqichlar bilan rejalashtirgani aytilgan.",
+              "explanation": "Paragraph C says travellers planned a route not in kilometres but in stages, each ending at a particular resting place.",
               "evidence": { "paragraph": "C", "quote": "planned their journeys not in kilometres but in stages" }
             },
             {
               "number": 6,
               "prompt": "Every caravanserai provided meals for its guests.",
               "answer": "FALSE",
-              "explanation": "D paragrafda ovqat va yem har doim ham berilmagani, tinch yo'llarda savdogarlar o'zinikini olib yurishi aytilgan. \"Har bir\" karvonsaroy ovqat bergan degan gapga zid.",
+              "explanation": "Paragraph D says food and fodder were not always provided, and on quiet routes merchants carried their own. This contradicts the claim that \"every\" caravanserai provided food.",
               "evidence": { "paragraph": "D", "quote": "Food and fodder were not always included" }
             }
           ]
@@ -97,7 +97,7 @@
               "prompt": "Many caravanserais were paid for by rulers or by wealthy ______.",
               "wordLimit": 1,
               "answer": "patrons",
-              "explanation": "D paragraf: karvonsaroylarni hukmdorlar yoki boy homiylar (patrons) qurdirgan.",
+              "explanation": "Paragraph D: caravanserais were built by rulers or wealthy patrons.",
               "evidence": { "paragraph": "D", "quote": "many were paid for by rulers or wealthy patrons" }
             },
             {
@@ -105,7 +105,7 @@
               "prompt": "Rulers supported caravanserais partly so that they could collect ______ on trade.",
               "wordLimit": 1,
               "answer": "taxes",
-              "explanation": "D paragraf: homiylar ularni savdoni rag'batlantirish va undan soliq (taxes) yig'ish yo'li deb bilgan.",
+              "explanation": "Paragraph D: patrons saw them as a way to encourage trade and to collect taxes from it.",
               "evidence": { "paragraph": "D", "quote": "to encourage trade and to collect taxes on it" }
             },
             {
@@ -113,7 +113,7 @@
               "prompt": "In the courtyard, merchants could compare ______ and hear news.",
               "wordLimit": 1,
               "answer": "prices",
-              "explanation": "E paragraf: hovlida tovar qo'ldan qo'lga o'tgan, narxlar (prices) solishtirilgan va yangiliklar tarqalgan.",
+              "explanation": "Paragraph E: in the courtyard goods changed hands, prices were compared and news spread.",
               "evidence": { "paragraph": "E", "quote": "prices were compared and news travelled" }
             },
             {
@@ -121,7 +121,7 @@
               "prompt": "A trader might learn that a mountain ______ ahead was blocked by snow.",
               "wordLimit": 1,
               "answer": "pass",
-              "explanation": "E paragraf: savdogar oldindagi dovon (pass) qor bilan to'silganini bilib olishi mumkin edi.",
+              "explanation": "Paragraph E: a merchant could learn that a pass ahead was blocked by snow.",
               "evidence": { "paragraph": "E", "quote": "a pass ahead was blocked by snow" }
             },
             {
@@ -129,7 +129,7 @@
               "prompt": "Railways and motor ______ meant that most caravanserais were no longer needed.",
               "wordLimit": 1,
               "answer": "roads",
-              "explanation": "F paragraf: temir yo'l va keyinroq avtomobil yo'llari (motor roads) uzoq safarni o'zgartirdi.",
+              "explanation": "Paragraph F: the railway and later motor roads changed long journeys.",
               "evidence": { "paragraph": "F", "quote": "railways and, later, motor roads" }
             },
             {
@@ -137,7 +137,7 @@
               "prompt": "Some caravanserais survived because they were reused as markets, warehouses or ______.",
               "wordLimit": 1,
               "answer": "workshops",
-              "explanation": "F paragraf: ba'zilari bozor, ombor yoki ustaxona (workshops) sifatida qayta ishlatilgani uchun saqlanib qolgan.",
+              "explanation": "Paragraph F: some survived because they were reused as markets, warehouses or workshops.",
               "evidence": { "paragraph": "F", "quote": "reused as markets, warehouses or workshops" }
             },
             {
@@ -145,7 +145,7 @@
               "prompt": "Thick ______ kept the rooms cool in summer.",
               "wordLimit": 1,
               "answer": "walls",
-              "explanation": "G paragraf: qalin devorlar (walls) xonalarni yozda salqin, qishda iliqroq saqlagan.",
+              "explanation": "Paragraph G: thick walls kept the rooms cool in summer and warmer in winter.",
               "evidence": { "paragraph": "G", "quote": "With thick walls that kept rooms cool in summer" }
             }
           ]
@@ -154,7 +154,7 @@
     },
     {
       "id": "p2",
-      "difficulty": "O'rta",
+      "difficulty": "Medium",
       "title": "Roofs That Grow",
       "paragraphs": [
         {
@@ -201,42 +201,42 @@
               "number": 14,
               "prompt": "Paragraph A",
               "answer": "vi",
-              "explanation": "A paragraf shahardagi qattiq yuzalar va faqat yomg'irdan saqlaydigan tomlar haqida, so'ng tomdan boshqacha foydalanish (yashil tom) g'oyasi beriladi. vii va viii matnda yo'q.",
+              "explanation": "Paragraph A is about hard surfaces in cities and roofs that only keep out the rain, then gives the idea of using a roof differently (a green roof). vii and viii are not in the text.",
               "evidence": { "paragraph": "A", "quote": "have begun to ask whether roofs could do more" }
             },
             {
               "number": 15,
               "prompt": "Paragraph B",
               "answer": "i",
-              "explanation": "B paragraf o'simlik ostidagi qatlamlarni pastdan yuqoriga sanaydi: membrana, ildiz to'sig'i, drenaj, filtr, tuproq.",
+              "explanation": "Paragraph B lists the layers under the plants from the bottom up: membrane, root barrier, drainage, filter, soil.",
               "evidence": { "paragraph": "B", "quote": "Beneath the plants lies a series of layers, each with its own job" }
             },
             {
               "number": 16,
               "prompt": "Paragraph C",
               "answer": "ii",
-              "explanation": "C paragraf ikki turni (extensive va intensive) solishtiradi: biri yengil va kam parvarish talab qiladi, ikkinchisi og'ir, qimmat va doimiy parvarish kerak.",
+              "explanation": "Paragraph C compares two types (extensive and intensive): one is light and needs little care; the other is heavy, expensive and needs constant care.",
               "evidence": { "paragraph": "C", "quote": "Specialists usually divide green roofs into two broad types" }
             },
             {
               "number": 17,
               "prompt": "Paragraph D",
               "answer": "iii",
-              "explanation": "D paragrafning asosiy fikri: yashil tom yomg'ir suvining bir qismini ushlab, qolganini sekinroq oqizadi.",
+              "explanation": "The main idea of paragraph D: a green roof holds back part of the rainwater and lets the rest flow away more slowly.",
               "evidence": { "paragraph": "D", "quote": "let the rest drain away more slowly" }
             },
             {
               "number": 18,
               "prompt": "Paragraph E",
               "answer": "iv",
-              "explanation": "E paragraf bino ichi va tashqarisidagi haroratga ta'sir haqida: issiqlik oroli, soya, bug'lanish va izolyatsiya.",
+              "explanation": "Paragraph E is about the effect on temperature inside and outside the building: the heat island, shade, evaporation and insulation.",
               "evidence": { "paragraph": "E", "quote": "Green roofs can also influence temperature, both inside and outside the building" }
             },
             {
               "number": 19,
               "prompt": "Paragraph F",
               "answer": "v",
-              "explanation": "F paragraf avval qo'shimcha foydalarni sanaydi, keyin \"However\" bilan muammolarga o'tadi: og'irlik, oqish va sug'orish.",
+              "explanation": "Paragraph F first lists extra benefits, then moves to problems with \"However\": weight, leaks and watering.",
               "evidence": { "paragraph": "F", "quote": "However, the case is not entirely one-sided" }
             }
           ]
@@ -257,7 +257,7 @@
                 { "id": "E", "text": "Most plants die during cold winters." }
               ],
               "answer": ["B", "D"],
-              "explanation": "F paragrafda eski binolarni mustahkamlash qimmat bo'lishi (B) va oqish joyini topish qiyinligi (D) aytilgan. Hasharotlar matnda foyda sifatida tilga olingan (A emas), quyosh paneli va qishki sovuq haqida gap yo'q.",
+              "explanation": "Paragraph F says strengthening old buildings can be expensive (B) and that leaks are hard to find (D). Insects are mentioned as a benefit (so not A), and nothing is said about solar panels or winter cold.",
               "evidence": { "paragraph": "F", "quote": "which may require costly structural work on older buildings. Poor installation can lead to leaks that are difficult to locate" }
             }
           ]
@@ -271,7 +271,7 @@
               "prompt": "The plants used on extensive roofs need little ______ or care.",
               "wordLimit": 2,
               "answer": "water",
-              "explanation": "C paragraf: extensive tomlardagi o'simliklar kam suv (water) va kam parvarish talab qiladi.",
+              "explanation": "Paragraph C: the plants on extensive roofs need little water and little care.",
               "evidence": { "paragraph": "C", "quote": "need little water or care" }
             },
             {
@@ -279,7 +279,7 @@
               "prompt": "Intensive roofs can be used as gardens or ______.",
               "wordLimit": 2,
               "answer": "parks",
-              "explanation": "C paragraf: intensive tomlardan bog' yoki park (parks) sifatida foydalanish mumkin.",
+              "explanation": "Paragraph C: intensive roofs can be used as gardens or parks.",
               "evidence": { "paragraph": "C", "quote": "They can be used as gardens or parks" }
             },
             {
@@ -287,7 +287,7 @@
               "prompt": "In dense cities, water running off conventional roofs can overwhelm ______.",
               "wordLimit": 2,
               "answer": "sewer systems",
-              "explanation": "D paragraf: oddiy tomdan tez oqqan suv zich shaharlarda kanalizatsiya tizimlarini (sewer systems) to'ldirib yuborishi mumkin.",
+              "explanation": "Paragraph D: water running fast off an ordinary roof can overload sewer systems in dense cities.",
               "evidence": { "paragraph": "D", "quote": "this sudden flow can overwhelm sewer systems" }
             },
             {
@@ -295,7 +295,7 @@
               "prompt": "Cities tend to be warmer than the surrounding ______.",
               "wordLimit": 2,
               "answer": "countryside",
-              "explanation": "E paragraf: \"urban heat island\" shaharlarning atrofdagi qishloq joylaridan (countryside) issiqroq bo'lishiga moyilligi.",
+              "explanation": "Paragraph E: the \"urban heat island\" is the tendency of cities to be warmer than the surrounding countryside.",
               "evidence": { "paragraph": "E", "quote": "the tendency of cities to be warmer than the surrounding countryside" }
             },
             {
@@ -303,7 +303,7 @@
               "prompt": "Plants cool the air around them as water ______ from their leaves.",
               "wordLimit": 2,
               "answer": "evaporates",
-              "explanation": "E paragraf: barglardan suv bug'langanda (evaporates) o'simliklar atrofdagi havoni sovitadi.",
+              "explanation": "Paragraph E: when water evaporates from the leaves, plants cool the air around them.",
               "evidence": { "paragraph": "E", "quote": "as water evaporates from their leaves" }
             }
           ]
@@ -312,7 +312,7 @@
     },
     {
       "id": "p3",
-      "difficulty": "O'rta-Qiyin",
+      "difficulty": "Medium–Hard",
       "title": "Why Plans Run Late",
       "paragraphs": [
         {
@@ -359,7 +359,7 @@
                 { "id": "D", "text": "They were first noticed in building projects." }
               ],
               "answer": "B",
-              "explanation": "Muallifni hayratga solgan narsa xatolar bo'lishi emas, ularning doim bir tomonga (kechikish tomonga) og'ishi. C tuzoq: muallif dunyo oldindan aytib bo'lmasligini tan oladi, lekin buni asosiy fikr qilmaydi.",
+              "explanation": "What surprises the writer is not that mistakes happen but that they always lean the same way (towards delay). C is a trap: the writer accepts that the world is unpredictable but does not make this the main point.",
               "evidence": { "paragraph": "A", "quote": "the errors lean so consistently in one direction" }
             },
             {
@@ -372,7 +372,7 @@
                 { "id": "D", "text": "They do not keep written records." }
               ],
               "answer": "B",
-              "explanation": "B paragrafda o'tgan kechikishlar \"maxsus holat\" deb qaralishi aytilgan. A noto'g'ri: odam ularni yaxshi eslaydi. C tuzoq: kasal hamkasb faqat misol.",
+              "explanation": "Paragraph B says past delays are treated as \"special cases\". A is wrong: people remember them well. C is a trap: the ill colleague is only an example.",
               "evidence": { "paragraph": "B", "quote": "Past delays are treated as special cases" }
             },
             {
@@ -385,7 +385,7 @@
                 { "id": "D", "text": "depends too much on statistics." }
               ],
               "answer": "C",
-              "explanation": "C paragraf oxirida \"inside view\" rejasi eng yaxshi holatni eng ehtimolli holat qilib ko'rsatishi aytilgan. A noto'g'ri: asosiy qadamlar bor, mayda to'siqlar tushib qoladi.",
+              "explanation": "At the end of paragraph C it says an \"inside view\" plan presents the best case as the most likely case. A is wrong: the main steps are there; it is the small obstacles that are left out.",
               "evidence": { "paragraph": "C", "quote": "a description of the best case presented as though it were the most likely one" }
             },
             {
@@ -398,7 +398,7 @@
                 { "id": "D", "text": "the particular risks of the current project" }
               ],
               "answer": "B",
-              "explanation": "D paragraf: \"outside view\" shu loyiha qanday ketishini emas, o'xshash loyihalar oldin qanday ketganini so'raydi. D aynan \"inside view\" ga xos.",
+              "explanation": "Paragraph D: the \"outside view\" asks not how this project will go but how similar projects went before. D describes the \"inside view\".",
               "evidence": { "paragraph": "D", "quote": "the planner asks how similar projects have gone in the past" }
             },
             {
@@ -411,7 +411,7 @@
                 { "id": "D", "text": "Funding rules do not allow large budgets." }
               ],
               "answer": "A",
-              "explanation": "E paragrafda kamtarona baho realistik bahodan ko'ra ma'qullanishi osonroq ekani aytilgan, ya'ni sabab rag'bat (incentive).",
+              "explanation": "Paragraph E says a modest estimate is easier to get approved than a realistic one, so the reason is incentive.",
               "evidence": { "paragraph": "E", "quote": "a modest estimate is more likely to be approved than a realistic one" }
             }
           ]
@@ -424,35 +424,35 @@
               "number": 32,
               "prompt": "The term \"planning fallacy\" at first referred only to time, not to money.",
               "answer": "TRUE",
-              "explanation": "A paragrafda atama dastlab vazifa qancha vaqt olishini kam baholashni bildirgani, xarajat va xavfga keyinroq kengaytirilgani aytilgan.",
+              "explanation": "Paragraph A says the term first meant underestimating how long a task would take and was later extended to cost and risk.",
               "evidence": { "paragraph": "A", "quote": "In its original form the term described the tendency to underestimate how long a task will take" }
             },
             {
               "number": 33,
               "prompt": "People who have experienced many delays make more accurate predictions.",
               "answer": "FALSE",
-              "explanation": "B paragraf: tajriba bu xatoni davolamaydi. Gap esa tajriba aniqroq bashoratga olib keladi deydi, demak zid.",
+              "explanation": "Paragraph B: experience does not cure this mistake. The statement says experience leads to more accurate predictions, so it contradicts the text.",
               "evidence": { "paragraph": "B", "quote": "experience does not seem to cure it" }
             },
             {
               "number": 34,
               "prompt": "Reference class forecasting was first developed for railway projects.",
               "answer": "NOT GIVEN",
-              "explanation": "D paragrafda bu usul yo'l va temir yo'l kabi katta loyihalar uchun tavsiya qilingani aytilgan, lekin u qayerda birinchi ishlab chiqilgani haqida ma'lumot yo'q.",
+              "explanation": "Paragraph D says this method is recommended for large projects such as roads and railways, but there is no information about where it was first developed.",
               "evidence": { "paragraph": "D", "quote": "has been recommended for large public projects such as roads and railways" }
             },
             {
               "number": 35,
               "prompt": "It is easy to tell whether a low estimate was made honestly or on purpose.",
               "answer": "FALSE",
-              "explanation": "E paragraf: halol optimizm va ataylab kam baholashni ajratish qiyin. Gapda \"oson\" deyilgan, demak zid.",
+              "explanation": "Paragraph E: it is hard to tell honest optimism from deliberate underestimation. The statement says \"easy\", so it contradicts the text.",
               "evidence": { "paragraph": "E", "quote": "Distinguishing between honest optimism and strategic underestimation is difficult" }
             },
             {
               "number": 36,
               "prompt": "Breaking a task into smaller parts is the method most often used by professional planners.",
               "answer": "NOT GIVEN",
-              "explanation": "F paragrafda bir nechta muallif bu usulni tavsiya qilgani aytilgan, lekin professional rejalashtiruvchilar uni qanchalik ko'p ishlatishi haqida gap yo'q.",
+              "explanation": "Paragraph F says several writers recommend this method, but nothing is said about how often professional planners use it.",
               "evidence": { "paragraph": "F", "quote": "several writers suggest, is to break a task into smaller parts" }
             }
           ]
@@ -466,7 +466,7 @@
               "prompt": "Mental stories about a project tend to leave out small ______, misunderstandings and unexpected problems.",
               "wordLimit": 2,
               "answer": "interruptions",
-              "explanation": "C paragraf: hikoyalar asosiy qadamlarni o'z ichiga oladi, lekin mayda uzilishlar (interruptions), tushunmovchiliklar va kutilmagan muammolarni tashlab ketadi.",
+              "explanation": "Paragraph C: the stories include the main steps but leave out small interruptions, misunderstandings and unexpected problems.",
               "evidence": { "paragraph": "C", "quote": "leave out the many small interruptions, misunderstandings and unexpected problems" }
             },
             {
@@ -474,7 +474,7 @@
               "prompt": "When large public projects are too optimistic, the extra cost is often paid by ______.",
               "wordLimit": 2,
               "answer": "taxpayers",
-              "explanation": "D paragraf: katta davlat loyihalarida ortiqcha optimizm narxini ko'pincha soliq to'lovchilar (taxpayers) to'laydi.",
+              "explanation": "Paragraph D: in large public projects, the cost of over-optimism is often paid by taxpayers.",
               "evidence": { "paragraph": "D", "quote": "the cost of over-optimism is often paid by taxpayers" }
             },
             {
@@ -482,7 +482,7 @@
               "prompt": "A generous deadline can encourage people to ______.",
               "wordLimit": 2,
               "answer": "start late",
-              "explanation": "F paragraf: keng muddat odamlarni ishni kech boshlashga (start late) undashi mumkin.",
+              "explanation": "Paragraph F: a generous deadline can encourage people to start late.",
               "evidence": { "paragraph": "F", "quote": "a generous deadline can encourage people to start late" }
             },
             {
@@ -490,7 +490,7 @@
               "prompt": "The writer concludes that the aim is not to replace optimism with ______.",
               "wordLimit": 2,
               "answer": "pessimism",
-              "explanation": "G paragraf: maqsad optimizmni pessimizm (pessimism) bilan almashtirish emas, ishonchli reja dalilga emas, hikoyaga tayanganini payqash.",
+              "explanation": "Paragraph G: the aim is not to replace optimism with pessimism but to notice when a confident plan rests on a story rather than on evidence.",
               "evidence": { "paragraph": "G", "quote": "The aim, then, is not to replace optimism with pessimism" }
             }
           ]

@@ -1,4 +1,5 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css (.adm doira, eyebrow, Onest 800 sarlavha; uzun matn zich sirtda).
 // 2-qavat · Top Admission · qo'llanma: Arzonroq o'qish yo'llari (Admission G).
 // Ma'lumot: src/data/topAdmission/arzonYollar.json (Codex tadqiqot to'plami, `npm run malumot:tadqiqot`), faktlar "muallif" holatida.
 // Statik sahifa, JS yo'q. Har yo'l: davlat, qisqacha, shartlar, rasmiy manba va tekshirilgan sana (Fakt.astro).
@@ -8,6 +9,7 @@ import Fakt from '../../../../components/topAdmission/Fakt.astro';
 import type { Fakt as FaktT } from '../../../../lib/topAdmission/fakt';
 import yollarJson from '../../../../data/topAdmission/arzonYollar.json';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/adm.css';
 
 interface Yol { id: string; davlat: string; nom: string; qisqacha: FaktT; shartlar: FaktT }
 const yollar = yollarJson as unknown as Yol[];
@@ -27,10 +29,10 @@ const davlatlar = yol('/uz/top-admission/davlatlar/');
 >
   <div class="ichki ay-sahifa">
     <header class="ay-bosh">
-      <p class="ustki">Qo'llanma</p>
-      <h1>Arzonroq o'qish yo'llari</h1>
-      <p class="matn">Grant olmasangiz ham, ba'zi davlatlarda davlat universitetlari kontrakti past yoki umuman yo'q. Bu yo'llar grant emas: yashash xarajati, yig'imlar va dastur tili alohida tekshiriladi.</p>
-      <p class="matn sust">Har yo'l yonida rasmiy manba va tekshirilgan sana. Topshirishdan oldin universitetning aynan shu yildagi kontrakt qarorini tekshiring.</p>
+      <p class="adm-eyebrow">Qoʻllanma</p>
+      <h1 class="adm-h1">Arzonroq oʻqish yoʻllari</h1>
+      <p class="matn">Grant olmasangiz ham, baʼzi davlatlarda davlat universitetlari kontrakti past yoki umuman yoʻq. Bu yoʻllar grant emas: yashash xarajati, yigʻimlar va dastur tili alohida tekshiriladi.</p>
+      <p class="matn sust">Har yoʻl yonida rasmiy manba va tekshirilgan sana. Topshirishdan oldin universitetning aynan shu yildagi kontrakt qarorini tekshiring.</p>
     </header>
 
     <ul class="kartalar" aria-label="Arzonroq yo'llar">
@@ -52,26 +54,26 @@ const davlatlar = yol('/uz/top-admission/davlatlar/');
       ))}
     </ul>
 
-    <p class="matn">To'liq qoplaydigan yordamni <a class="havola-matn" href={grantlar}>Grantlar katalogida</a>, xavfsizlik va narxni <a class="havola-matn" href={davlatlar}>Davlatlarni taqqoslash</a> sahifasida ko'ring.</p>
+    <p class="matn">Toʻliq qoplaydigan yordamni <a class="havola-matn" href={grantlar}>Grantlar katalogida</a>, xavfsizlik va narxni <a class="havola-matn" href={davlatlar}>Davlatlarni taqqoslash</a> sahifasida koʻring.</p>
   </div>
 </BolimQobiq>
 
 <style>
-  .ay-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); }
-  .ay-bosh { display: grid; gap: var(--b-3); }
-  .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .ay-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
+  .ay-bosh { display: grid; gap: var(--space-3); }
+  .ustki { margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
   .matn { max-width: 62ch; margin: 0; }
-  .sust { color: var(--matn-ikkinchi); }
-  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-4); }
+  .sust { color: var(--color-adm-text-muted); }
+  .kartalar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
   .karta {
-    display: flex; flex-direction: column; gap: var(--b-2); min-width: 0;
-    padding: var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt);
+    display: flex; flex-direction: column; gap: var(--space-2); min-width: 0;
+    padding: var(--space-5); border: var(--border-width-1) solid var(--color-adm-glass-border); border-radius: var(--radius-xl); background: var(--color-adm-glass-strong); box-shadow: var(--shadow-glass);
   }
   .nom { margin: 0; }
-  .maydonlar { margin: 0; display: grid; gap: var(--b-3); }
-  .maydonlar > div { display: grid; gap: var(--b-1); padding-top: var(--b-3); border-top: 1px solid var(--chiziq); }
-  .maydonlar dt { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); }
+  .maydonlar { margin: 0; display: grid; gap: var(--space-3); }
+  .maydonlar > div { display: grid; gap: var(--space-1); padding-top: var(--space-3); border-top: 1px solid var(--color-adm-line); }
+  .maydonlar dt { font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-adm-text-muted); }
   .maydonlar dd { margin: 0; min-width: 0; }
-  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  .havola-matn { color: var(--color-link); font-weight: var(--font-weight-bold); }
   @media (max-width: 760px) { .kartalar { grid-template-columns: 1fr; } }
 </style>

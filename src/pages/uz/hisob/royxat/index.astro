@@ -16,16 +16,16 @@ const { maxfiylikSahifa, shartlarSahifa, parolMinUzunlik } = hisobSozlama;
 const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
 ---
 <HisobKarta sahifa={hisobSahifalar.royxat} lead="Hisob ixtiyoriy. Hisobsiz natijalaringiz shu brauzerda saqlanadi.">
-  <section class="hisob-karta" id="royxat-tayyor" aria-labelledby="tayyor-sarlavha" hidden>
+  <section class="hisob-karta t-shisha t-shisha--zich" id="royxat-tayyor" aria-labelledby="tayyor-sarlavha" hidden>
     <h2 id="tayyor-sarlavha" tabindex="-1">Emailingizni tekshiring</h2>
     <p><strong id="tayyor-email"></strong> manziliga tasdiqlash havolasini yubordik. Hisob ochishni tugatish uchun uni oching.</p>
-    <p class="hisob-sust">Havola shu saytni ochadi. Xat ko'rinmasa, "Spam" papkasini ham tekshiring.</p>
+    <p class="hisob-sust">Havola shu saytni ochadi. Xat koʻrinmasa, "Spam" papkasini ham tekshiring.</p>
     <p class="hisob-holat" id="qayta-holat" role="status" hidden></p>
     <p class="hisob-alert" id="qayta-xato" role="alert" hidden></p>
     <button type="button" class="tugma tugma-ikkinchi" id="qayta-tugma">Xatni qayta yuborish</button>
   </section>
 
-  <div class="hisob-karta" id="royxat-karta" data-hisob-bor>
+  <div class="hisob-karta t-shisha t-shisha--zich" id="royxat-karta" data-hisob-bor>
     <form class="hisob-forma" id="royxat-forma" novalidate aria-labelledby="hisob-sarlavha">
       <p class="hisob-alert" id="royxat-xato" role="alert" hidden></p>
       <Maydon id="royxat-email" nomi="Email" turi="email" autocomplete="email" />
@@ -40,7 +40,7 @@ const hujjatlarTayyor = Boolean(maxfiylikSahifa && shartlarSahifa);
             {maxfiylikSahifa ? <a class="hisob-havola" href={yol(maxfiylikSahifa)}>Maxfiylik siyosati</a> : 'Maxfiylik siyosati'}{' '}va {shartlarSahifa ? <a class="hisob-havola" href={yol(shartlarSahifa)}>Foydalanish shartlari</a> : 'Foydalanish shartlari'}ga roziman.
           </label>
         </div>
-        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Foydalanish shartlari sahifasi yozilmoqda. Havola shu yerda paydo bo'ladi.</p>}
+        {!hujjatlarTayyor && <p class="hisob-izoh" id="royxat-rozilik-izoh">Foydalanish shartlari sahifasi yozilmoqda. Havola shu yerda paydo boʻladi.</p>}
         <p class="hisob-xato" id="royxat-rozilik-xato" hidden></p>
       </div>
 

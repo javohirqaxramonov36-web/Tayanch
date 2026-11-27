@@ -1,0 +1,20 @@
+---
+// Navigator ramkali kartasi (DS NavRamka): ikki burchak qavsi, to'liq chegara yo'q, radius none.
+// Faqat qora sahna ichida va faqat yo'l yoki raqam yonida. Sarlavha mono, "// " CSS'dan qo'shiladi.
+// qatorlar berilsa mono ro'yxat ("> "), aks holda slot. Stil: src/styles/nav.css (.nav-ramka).
+interface Props {
+  sarlavha: string;
+  sarlavhaTeg?: 'h2' | 'h3' | 'h4' | 'p';
+  qatorlar?: string[];
+  class?: string;
+  id?: string;
+  [k: `data-${string}`]: string | boolean | undefined;
+  hidden?: boolean;
+}
+const { sarlavha, sarlavhaTeg: Teg = 'h3', qatorlar, class: klass, ...rest } = Astro.props;
+---
+<div class:list={['nav-ramka', klass]} {...rest}>
+  <Teg class="nav-ramka-sarlavha">{sarlavha}</Teg>
+  {qatorlar && <ul class="nav-ramka-royxat">{qatorlar.map((q) => <li>{q}</li>)}</ul>}
+  <slot />
+</div>

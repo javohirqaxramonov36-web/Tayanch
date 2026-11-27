@@ -7,6 +7,8 @@ import SahifaOxiri from '../../../../../components/SahifaOxiri.astro';
 import { rasmiyManbalar } from '../../../../../data/manbalar';
 import { eyufKurs, KURS_HOLATI_YORLIQ } from '../../../../../data/eyufKurslar';
 import { yol } from '../../../../../lib/yol';
+import EyufHero from '../../../../../components/eyuf/EyufHero.astro';
+import '../../../../../styles/eyuf.css';
 
 const MANBALAR = ['EY02', 'CH01', 'CH02', 'DA01'];
 if (rasmiyManbalar(MANBALAR).length !== MANBALAR.length) throw new Error("Nega chet elda: EY02, CH01, CH02, DA01 rasmiy manbalari topilmadi");
@@ -15,14 +17,14 @@ const kurs = eyufKurs('nega-chet-elda');
 const sana = '2026-11-19';
 const keyingi = '2026-12-19';
 const tekshirilmagan = [
-  "Chevening nimalarni qoplashi (o'qish to'lovi, oylik stipendiya, chipta): rasmiy sahifada ro'yxat ko'rinmadi, shartlar hujjatida tekshirish kerak.",
-  "QS va THE reyting metodologiyasi: rasmiy sahifalar ochilmadi (403), shuning uchun ko'rsatkich va ulushlar yozilmadi.",
-  "El-Yurt Umidi stipendiyasi yashash xarajatini qoplashi: PF-77 ning o'qilgan bandlarida yozilmagan.",
-  "Chet elda o'qiganlar bo'yicha ishonchli statistika (daromad, ish topish) topilmadi.",
+  "Chevening nimalarni qoplashi (oʻqish toʻlovi, oylik stipendiya, chipta): rasmiy sahifada roʻyxat koʻrinmadi, shartlar hujjatida tekshirish kerak.",
+  "QS va THE reyting metodologiyasi: rasmiy sahifalar ochilmadi (403), shuning uchun koʻrsatkich va ulushlar yozilmadi.",
+  "El-Yurt Umidi stipendiyasi yashash xarajatini qoplashi: PF-77 ning oʻqilgan bandlarida yozilmagan.",
+  "Chet elda oʻqiganlar boʻyicha ishonchli statistika (daromad, ish topish) topilmadi.",
 ];
 
 const mundarija = [
-  { id: 'sifat', nomi: "1. Ta'lim sifati" },
+  { id: 'sifat', nomi: "1. Taʼlim sifati" },
   { id: 'karyera', nomi: '2. Karyera' },
   { id: 'rivojlanish', nomi: '3. Shaxsiy rivojlanish' },
   { id: 'moliya', nomi: '4. Grant va stipendiyalar' },
@@ -43,11 +45,7 @@ const mundarija = [
   yol={['Kurslar']}
 >
   <article class="ichki kurs">
-    <header class="bosh">
-      <p class="yorliqlar"><span class="yorliq">Bepul kurs</span><span class="yorliq tayyor">{KURS_HOLATI_YORLIQ[kurs.holat]}</span></p>
-      <h1>{kurs.nomi}</h1>
-      <p class="tavsif">Chet elda o'qish qimmat va murakkab ko'rinadi. Bu kurs uning nima berishini, qayerda ehtiyot bo'lish kerakligini va grantlar orqali qanday arzon yoki bepul o'qish mumkinligini ko'rsatadi. 5 bo'lim, taxminan 15 daqiqa o'qish.</p>
-    </header>
+    <EyufHero id="kurs-h" yorliq={`Bepul kurs · ${KURS_HOLATI_YORLIQ[kurs.holat]}`} sarlavha={kurs.nomi} matn="Chet elda o'qish qimmat va murakkab ko'rinadi. Bu kurs uning nima berishini, qayerda ehtiyot bo'lish kerakligini va grantlar orqali qanday arzon yoki bepul o'qish mumkinligini ko'rsatadi. 5 bo'lim, taxminan 15 daqiqa o'qish." ixcham />
 
     <nav class="mundarija" aria-label="Kurs bo'limlari">
       <ol>
@@ -56,62 +54,62 @@ const mundarija = [
     </nav>
 
     <section id="sifat" class="bolim" aria-labelledby="sifat-h">
-      <p class="ustki">1-bo'lim</p>
-      <h2 id="sifat-h">Ta'lim sifati va xalqaro tan olinish</h2>
+      <p class="ustki">1-boʻlim</p>
+      <h2 id="sifat-h">Taʼlim sifati va xalqaro tan olinish</h2>
       <h3>Diplomning qadri</h3>
-      <p>Kuchli universitet diplomi ish beruvchiga va keyingi o'qish joyiga bitta narsani aytadi: siz qattiq tanlovdan o'tgansiz va xalqaro standartda o'qigansiz. Bu ayniqsa xorijiy kompaniyalar, xalqaro tashkilotlar va ilmiy ishda seziladi.</p>
-      <p>O'zbekistonda ham shunday yo'l bor: "El-yurt umidi" stipendiatlarining xorijda ta'lim olganligi haqidagi hujjatlari va ilmiy darajalari maxsus sinovlarsiz to'g'ridan-to'g'ri tan olinadi (PF-77, 15-band, <a href="#oxiri-sarlavha">EY02</a>).</p>
+      <p>Kuchli universitet diplomi ish beruvchiga va keyingi oʻqish joyiga bitta narsani aytadi: siz qattiq tanlovdan oʻtgansiz va xalqaro standartda oʻqigansiz. Bu ayniqsa xorijiy kompaniyalar, xalqaro tashkilotlar va ilmiy ishda seziladi.</p>
+      <p>Oʻzbekistonda ham shunday yoʻl bor: "El-yurt umidi" stipendiatlarining xorijda taʼlim olganligi haqidagi hujjatlari va ilmiy darajalari maxsus sinovlarsiz toʻgʻridan-toʻgʻri tan olinadi (PF-77, 15-band, <a href="#oxiri-sarlavha">EY02</a>).</p>
 
       <h3>Reyting tizimlari: QS va THE</h3>
-      <p>Universitetlarni solishtirishda ko'pincha xalqaro reytinglar ishlatiladi. Eng ko'p tilga olinadigan ikkitasi: <b>QS World University Rankings</b> (Quacquarelli Symonds) va <b>THE</b> (Times Higher Education).</p>
-      <p>Bu reytinglar O'zbekistonda rasmiy ahamiyatga ega: El-Yurt Umidi jamg'armasi bakalavriat uchun QS, magistratura va doktorantura uchun THE reytingiga qaraydi (PF-77, 10-band "e", EY02). Batafsil 4-bo'limda.</p>
+      <p>Universitetlarni solishtirishda koʻpincha xalqaro reytinglar ishlatiladi. Eng koʻp tilga olinadigan ikkitasi: <b>QS World University Rankings</b> (Quacquarelli Symonds) va <b>THE</b> (Times Higher Education).</p>
+      <p>Bu reytinglar Oʻzbekistonda rasmiy ahamiyatga ega: El-Yurt Umidi jamgʻarmasi bakalavriat uchun QS, magistratura va doktorantura uchun THE reytingiga qaraydi (PF-77, 10-band "e", EY02). Batafsil 4-boʻlimda.</p>
       <aside class="eslatma">
-        <p class="eslatma-sarlavha">Ehtiyot bo'ling</p>
-        <p>Reyting butun universitetni baholaydi, sizning aniq dasturingizni emas. Tanlashda dastur mazmuni, o'qituvchilar, amaliyot imkoniyati va bitiruvchilar qayerda ishlashini ham ko'ring.</p>
+        <p class="eslatma-sarlavha">Ehtiyot boʻling</p>
+        <p>Reyting butun universitetni baholaydi, sizning aniq dasturingizni emas. Tanlashda dastur mazmuni, oʻqituvchilar, amaliyot imkoniyati va bitiruvchilar qayerda ishlashini ham koʻring.</p>
       </aside>
     </section>
 
     <section id="karyera" class="bolim" aria-labelledby="karyera-h">
-      <p class="ustki">2-bo'lim</p>
+      <p class="ustki">2-boʻlim</p>
       <h2 id="karyera-h">Karyera imkoniyatlari</h2>
       <h3>Xalqaro tajriba</h3>
-      <p>Chet elda siz boshqa ish madaniyatida guruh loyihalari, taqdimotlar va muddatlar bilan ishlaysiz. Rezyumeda bu "xalqaro muhitda ishlay oladi" degan dalil bo'ladi. Ko'p dasturlarda yozgi amaliyot (internship) yoki sanoat loyihalari bor: ularni oldindan rejalashtiring.</p>
+      <p>Chet elda siz boshqa ish madaniyatida guruh loyihalari, taqdimotlar va muddatlar bilan ishlaysiz. Rezyumeda bu "xalqaro muhitda ishlay oladi" degan dalil boʻladi. Koʻp dasturlarda yozgi amaliyot (internship) yoki sanoat loyihalari bor: ularni oldindan rejalashtiring.</p>
       <h3>Tarmoq (networking)</h3>
-      <p>Kursdoshlaringiz turli davlatlardan keladi va keyin turli sohalarda ishlaydi. Professorlar, bitiruvchilar uyushmasi (alumni), karyera markazi va konferensiyalar keyingi ish yoki tavsiyanoma uchun eshik ochadi. Tarmoq o'zi paydo bo'lmaydi: tadbirlarga boring, LinkedIn'da aloqani saqlang, savol bering.</p>
-      <h3>Til ko'nikmalari</h3>
-      <p>Har kuni ingliz (yoki boshqa) tilida o'qish, yozish va bahslashish tilni darslikdan ko'ra tezroq rivojlantiradi. Akademik yozuv va ommaviy nutq ko'nikmasi ham shu yerda shakllanadi.</p>
+      <p>Kursdoshlaringiz turli davlatlardan keladi va keyin turli sohalarda ishlaydi. Professorlar, bitiruvchilar uyushmasi (alumni), karyera markazi va konferensiyalar keyingi ish yoki tavsiyanoma uchun eshik ochadi. Tarmoq oʻzi paydo boʻlmaydi: tadbirlarga boring, LinkedInʼda aloqani saqlang, savol bering.</p>
+      <h3>Til koʻnikmalari</h3>
+      <p>Har kuni ingliz (yoki boshqa) tilida oʻqish, yozish va bahslashish tilni darslikdan koʻra tezroq rivojlantiradi. Akademik yozuv va ommaviy nutq koʻnikmasi ham shu yerda shakllanadi.</p>
       <aside class="eslatma">
-        <p class="eslatma-sarlavha">Grant bilan o'qisangiz, rejani oldindan tuzing</p>
-        <p>El-Yurt Umidi stipendiati o'qishni tugatgach to'liq bandlik rejimida uzluksiz ishlab berishi kerak: bakalavriat uchun 5 yil, magistratura uchun 3 yil, doktorantura uchun 5 yil. Shartnoma bajarilmasa, sarflangan xarajatlarning ikki barobari qoplanadi (PF-77, 13-band, EY02). Chevening stipendiatlari esa o'qish tugagach kamida ikki yil o'z davlatiga qaytishi kerak (CH02). Karyera rejangizni shu shartlar bilan tuzing.</p>
+        <p class="eslatma-sarlavha">Grant bilan oʻqisangiz, rejani oldindan tuzing</p>
+        <p>El-Yurt Umidi stipendiati oʻqishni tugatgach toʻliq bandlik rejimida uzluksiz ishlab berishi kerak: bakalavriat uchun 5 yil, magistratura uchun 3 yil, doktorantura uchun 5 yil. Shartnoma bajarilmasa, sarflangan xarajatlarning ikki barobari qoplanadi (PF-77, 13-band, EY02). Chevening stipendiatlari esa oʻqish tugagach kamida ikki yil oʻz davlatiga qaytishi kerak (CH02). Karyera rejangizni shu shartlar bilan tuzing.</p>
       </aside>
     </section>
 
     <section id="rivojlanish" class="bolim" aria-labelledby="rivojlanish-h">
-      <p class="ustki">3-bo'lim</p>
+      <p class="ustki">3-boʻlim</p>
       <h2 id="rivojlanish-h">Shaxsiy rivojlanish</h2>
       <h3>Mustaqillik</h3>
-      <p>Uy-joy topish, byudjet yuritish, bank, viza va sug'urta ishlarini o'zingiz hal qilasiz. Muammoni kimgadir topshirib bo'lmaydi: shu tajriba qaror qabul qilish va mas'uliyatni tez o'rgatadi.</p>
+      <p>Uy-joy topish, byudjet yuritish, bank, viza va sugʻurta ishlarini oʻzingiz hal qilasiz. Muammoni kimgadir topshirib boʻlmaydi: shu tajriba qaror qabul qilish va masʼuliyatni tez oʻrgatadi.</p>
       <h3>Madaniyatlararo tajriba</h3>
-      <p>Boshqa qarashdagi odamlar bilan bir guruhda ishlash sizni tinglashga, o'z fikringizni dalil bilan aytishga va farqni hurmat qilishga o'rgatadi. Bu ko'nikma xalqaro kompaniya va tashkilotlarda alohida qadrlanadi.</p>
+      <p>Boshqa qarashdagi odamlar bilan bir guruhda ishlash sizni tinglashga, oʻz fikringizni dalil bilan aytishga va farqni hurmat qilishga oʻrgatadi. Bu koʻnikma xalqaro kompaniya va tashkilotlarda alohida qadrlanadi.</p>
       <aside class="eslatma">
         <p class="eslatma-sarlavha">Umumiy tendensiya</p>
-        <p>Birinchi oylarda uyni sog'inish va "madaniy zarba" ko'p talabada bo'ladi. Universitetlarning xalqaro talabalar ofisi va psixologik yordam xizmatidan foydalanish odatiy hol, uyalmang.</p>
+        <p>Birinchi oylarda uyni sogʻinish va "madaniy zarba" koʻp talabada boʻladi. Universitetlarning xalqaro talabalar ofisi va psixologik yordam xizmatidan foydalanish odatiy hol, uyalmang.</p>
       </aside>
     </section>
 
     <section id="moliya" class="bolim" aria-labelledby="moliya-h">
-      <p class="ustki">4-bo'lim</p>
+      <p class="ustki">4-boʻlim</p>
       <h2 id="moliya-h">Moliyaviy imkoniyatlar: grant va stipendiyalar</h2>
-      <p>Chet elda o'qish har doim ham to'liq pullik emas. Quyida arzon yoki bepul o'qishning uch xil yo'li: davlat stipendiyasi, xorijiy hukumat stipendiyasi va to'lovsiz davlat universitetlari.</p>
+      <p>Chet elda oʻqish har doim ham toʻliq pullik emas. Quyida arzon yoki bepul oʻqishning uch xil yoʻli: davlat stipendiyasi, xorijiy hukumat stipendiyasi va toʻlovsiz davlat universitetlari.</p>
 
       <div class="dastur">
-        <h3>El-Yurt Umidi (O'zbekiston)</h3>
+        <h3>El-Yurt Umidi (Oʻzbekiston)</h3>
         <ul>
           <li>Bakalavriat, magistratura va doktorantura, shuningdek qisqa muddatli maqsadli stajirovka.</li>
-          <li>G'oliblar ochiq tanlovda test sinovlari va suhbat orqali aniqlanadi (10-band "a").</li>
-          <li>Reytingning birinchi 100 taligidagi universitetga o'qish to'lovi (tuition fee) to'liq qoplanadigan grant bilan qabul qilingan bo'lsangiz, stipendiya tanlovsiz beriladi (10-band "e", i).</li>
-          <li>Birinchi 300 talikdagi universitetga shunday grant bilan qabul qilingan bo'lsangiz, xalqaro transport va turarjoy xarajatlari uchun stipendiya beriladi (10-band "e", ii).</li>
-          <li>Majburiyat: o'qishdan keyin ishlab berish (2-bo'limga qarang).</li>
+          <li>Gʻoliblar ochiq tanlovda test sinovlari va suhbat orqali aniqlanadi (10-band "a").</li>
+          <li>Reytingning birinchi 100 taligidagi universitetga oʻqish toʻlovi (tuition fee) toʻliq qoplanadigan grant bilan qabul qilingan boʻlsangiz, stipendiya tanlovsiz beriladi (10-band "e", i).</li>
+          <li>Birinchi 300 talikdagi universitetga shunday grant bilan qabul qilingan boʻlsangiz, xalqaro transport va turarjoy xarajatlari uchun stipendiya beriladi (10-band "e", ii).</li>
+          <li>Majburiyat: oʻqishdan keyin ishlab berish (2-boʻlimga qarang).</li>
         </ul>
         <p class="manba">Manba: PF-77-son Farmon, lex.uz (EY02), tekshirilgan {sana}. Joriy tanlov sanalari: <a href={yol('/uz/deadline/')}>Deadline sahifasi</a>.</p>
       </div>
@@ -119,19 +117,19 @@ const mundarija = [
       <div class="dastur">
         <h3>Chevening (Buyuk Britaniya)</h3>
         <ul>
-          <li>Buyuk Britaniya hukumatining to'liq moliyalashtiriladigan ("fully-funded") stipendiyasi (CH01).</li>
+          <li>Buyuk Britaniya hukumatining toʻliq moliyalashtiriladigan ("fully-funded") stipendiyasi (CH01).</li>
           <li>Bir yillik magistratura uchun (CH01).</li>
-          <li>O'qish tugagach kamida ikki yil o'z davlatiga qaytish shart (CH02).</li>
+          <li>Oʻqish tugagach kamida ikki yil oʻz davlatiga qaytish shart (CH02).</li>
         </ul>
-        <p class="manba">Manba: chevening.org (CH01, CH02), tekshirilgan {sana}. 2027-2028 arizalari rasmiy sahifada yopilgan deb ko'rsatilgan: keyingi tanlov e'lonini kuting.</p>
+        <p class="manba">Manba: chevening.org (CH01, CH02), tekshirilgan {sana}. 2027-2028 arizalari rasmiy sahifada yopilgan deb koʻrsatilgan: keyingi tanlov eʼlonini kuting.</p>
       </div>
 
       <div class="dastur">
         <h3>Germaniya va DAAD</h3>
         <ul>
-          <li>Germaniyadagi davlat oliy ta'lim muassasalarida bakalavriat va ko'pchilik magistratura dasturlari uchun odatda o'qish to'lovi yo'q (DA01).</li>
-          <li>Istisnolar bor: Baden-Württemberg Yevropa Ittifoqidan tashqari fuqarolardan semestriga 1 500 EUR oladi, Bavariyada muassasalar to'lov olishi mumkin, xususiy universitetlar qimmatroq (DA01).</li>
-          <li>Har bir talaba semestr badalini to'laydi, odatda 70–430 EUR; u ko'pincha jamoat transporti chiptasini ham o'z ichiga oladi (DA01).</li>
+          <li>Germaniyadagi davlat oliy taʼlim muassasalarida bakalavriat va koʻpchilik magistratura dasturlari uchun odatda oʻqish toʻlovi yoʻq (DA01).</li>
+          <li>Istisnolar bor: Baden-Württemberg Yevropa Ittifoqidan tashqari fuqarolardan semestriga 1 500 EUR oladi, Bavariyada muassasalar toʻlov olishi mumkin, xususiy universitetlar qimmatroq (DA01).</li>
+          <li>Har bir talaba semestr badalini toʻlaydi, odatda 70–430 EUR; u koʻpincha jamoat transporti chiptasini ham oʻz ichiga oladi (DA01).</li>
           <li>DAAD (German Academic Exchange Service) xalqaro talabalar uchun stipendiyalar beradi; ularni DAAD stipendiya bazasidan qidiring.</li>
         </ul>
         <p class="manba">Manba: daad.de (DA01), tekshirilgan {sana}.</p>
@@ -139,31 +137,31 @@ const mundarija = [
 
       <aside class="eslatma">
         <p class="eslatma-sarlavha">Muhim</p>
-        <p>Har bir dastur shartlari har yili o'zgarishi mumkin. Ariza oldidan rasmiy saytdagi joriy e'lonni o'qing. Tayanch natijani kafolatlamaydi.</p>
+        <p>Har bir dastur shartlari har yili oʻzgarishi mumkin. Ariza oldidan rasmiy saytdagi joriy eʼlonni oʻqing. Tayanch natijani kafolatlamaydi.</p>
       </aside>
     </section>
 
     <section id="raqamlar" class="bolim" aria-labelledby="raqamlar-h">
-      <p class="ustki">5-bo'lim</p>
+      <p class="ustki">5-boʻlim</p>
       <h2 id="raqamlar-h">Raqamlar va misollar</h2>
-      <p>Chet elda o'qiganlar ko'proq daromad oladi yoki tezroq ish topadi degan gaplarni tez-tez eshitasiz. Biz bunday raqamlarni tasdiqlaydigan ishonchli rasmiy manba topmadik, shuning uchun ularni yozmaymiz. Quyidagilar rasmiy manbalardagi raqamlar asosidagi hisob va umumiy tendensiyalar.</p>
+      <p>Chet elda oʻqiganlar koʻproq daromad oladi yoki tezroq ish topadi degan gaplarni tez-tez eshitasiz. Biz bunday raqamlarni tasdiqlaydigan ishonchli rasmiy manba topmadik, shuning uchun ularni yozmaymiz. Quyidagilar rasmiy manbalardagi raqamlar asosidagi hisob va umumiy tendensiyalar.</p>
 
       <div class="namuna">
         <p class="namuna-yorliq">Namuna hisob</p>
-        <p>Baden-Württemberg'dagi davlat universitetida bakalavriat: yiliga 2 semestr × 1 500 EUR = <b>3 000 EUR o'qish to'lovi</b>, unga semestr badali qo'shiladi (har semestrga odatda 70–430 EUR, DA01). Germaniyaning boshqa ko'p yerlarida o'qish to'lovi umuman yo'q, faqat semestr badali qoladi. Yashash xarajati bu hisobga kirmaydi.</p>
+        <p>Baden-Württembergʻdagi davlat universitetida bakalavriat: yiliga 2 semestr × 1 500 EUR = <b>3 000 EUR oʻqish toʻlovi</b>, unga semestr badali qoʻshiladi (har semestrga odatda 70–430 EUR, DA01). Germaniyaning boshqa koʻp yerlarida oʻqish toʻlovi umuman yoʻq, faqat semestr badali qoladi. Yashash xarajati bu hisobga kirmaydi.</p>
       </div>
 
       <div class="namuna">
         <p class="namuna-yorliq">Namuna hisob</p>
-        <p>El-Yurt Umidi stipendiyasi bilan magistraturani tugatdingiz: 3 yil to'liq bandlikda ishlab berasiz (EY02). Magistratura 2 yil bo'lsa, o'qishni boshlagan kundan majburiyat tugashigacha taxminan 5 yil o'tadi. Bu muddatni oila, ish va keyingi o'qish rejalaringiz bilan solishtiring.</p>
+        <p>El-Yurt Umidi stipendiyasi bilan magistraturani tugatdingiz: 3 yil toʻliq bandlikda ishlab berasiz (EY02). Magistratura 2 yil boʻlsa, oʻqishni boshlagan kundan majburiyat tugashigacha taxminan 5 yil oʻtadi. Bu muddatni oila, ish va keyingi oʻqish rejalaringiz bilan solishtiring.</p>
       </div>
 
       <aside class="eslatma">
         <p class="eslatma-sarlavha">Umumiy tendensiya (taxminiy)</p>
         <ul>
-          <li>Kuchli universitetlarda to'liq grantlar uchun raqobat juda yuqori: bir nechta universitet va stipendiyaga parallel topshirish odatiy strategiya.</li>
-          <li>Ko'p stipendiyalar o'qishdan keyin vatanga qaytish yoki ishlab berish shartini qo'yadi (masalan EY02, CH02).</li>
-          <li>Ariza muddatlari o'qish boshlanishidan ancha oldin, odatda bir yil oldin yopiladi: tayyorgarlikni erta boshlang.</li>
+          <li>Kuchli universitetlarda toʻliq grantlar uchun raqobat juda yuqori: bir nechta universitet va stipendiyaga parallel topshirish odatiy strategiya.</li>
+          <li>Koʻp stipendiyalar oʻqishdan keyin vatanga qaytish yoki ishlab berish shartini qoʻyadi (masalan EY02, CH02).</li>
+          <li>Ariza muddatlari oʻqish boshlanishidan ancha oldin, odatda bir yil oldin yopiladi: tayyorgarlikni erta boshlang.</li>
         </ul>
       </aside>
     </section>
@@ -171,43 +169,41 @@ const mundarija = [
     <section id="xulosa" class="bolim" aria-labelledby="xulosa-h">
       <h2 id="xulosa-h">Xulosa va keyingi qadam</h2>
       <ol class="qadamlar">
-        <li>Maqsadingizni yozing: qaysi soha, qaysi daraja, o'qishdan keyin qayerda ishlamoqchisiz.</li>
-        <li>Mos dasturlarni toping va ularning shartlarini (to'lov, grant, qaytish majburiyati) solishtiring.</li>
+        <li>Maqsadingizni yozing: qaysi soha, qaysi daraja, oʻqishdan keyin qayerda ishlamoqchisiz.</li>
+        <li>Mos dasturlarni toping va ularning shartlarini (toʻlov, grant, qaytish majburiyati) solishtiring.</li>
         <li>Muddatlarni kuzating: <a href={yol('/uz/deadline/')}>Deadline sahifasi</a>.</li>
-        <li>El-Yurt Umidi suhbatiga tayyorlaning: <a href={yol('/uz/eyuf/kurslar/el-yurt-umidi/')}>"El-Yurt Umidi'ni yutaylik" kursi</a> (tez orada).</li>
+        <li>El-Yurt Umidi suhbatiga tayyorlaning: <a href={yol('/uz/eyuf/kurslar/el-yurt-umidi/')}>"El-Yurt Umidiʼni yutaylik" kursi</a> (tez orada).</li>
       </ol>
       <p><a class="orqaga" href={yol('/uz/eyuf/kurslar/')}>Barcha kurslar</a></p>
     </section>
   </article>
   <SahifaOxiri manbalar={MANBALAR} tekshirilgan={sana} keyingiTekshiruv={keyingi} tekshirilmagan={tekshirilmagan} />
-<p class="ichki">Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p>
+<p class="ichki">Tayanch El-yurt umidi jamgʻarmasining rasmiy platformasi emas.</p>
 </BolimQobiq>
 
 <style>
-  .kurs { display: grid; gap: var(--b-10); padding-block: var(--b-6); max-width: 72ch; }
-  .bosh { display: grid; gap: var(--b-3); }
-  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
-  .yorliq { padding: 4px 12px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700; }
-  .yorliq.tayyor { color: var(--matn); }
-  h1 { font-size: var(--matn-h1); font-weight: 800; line-height: 1.12; letter-spacing: var(--oraliq-sarlavha); }
-  h2 { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
-  h3 { font-size: 19px; font-weight: 800; margin-top: var(--b-2); }
-  .tavsif { font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
-  .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
-  .mundarija { border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); }
-  .mundarija ol { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--b-1); }
-  .mundarija a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rang-havola); font-weight: 700; }
-  .bolim { display: grid; gap: var(--b-3); scroll-margin-top: var(--b-6); }
-  .bolim a, .manba a { color: var(--rang-havola); font-weight: 700; }
-  a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
-  ul, ol { padding-left: 1.2em; display: grid; gap: var(--b-2); }
-  .eslatma, .namuna { background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); display: grid; gap: var(--b-2); }
-  .eslatma-sarlavha, .namuna-yorliq { font-weight: 800; }
-  .namuna { border: 1px dashed var(--chiziq-kuchli); background: transparent; }
-  .namuna-yorliq { font-size: var(--matn-mayda); text-transform: uppercase; letter-spacing: .06em; color: var(--matn-ikkinchi); }
-  .dastur { border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); padding: var(--b-5) var(--b-6); display: grid; gap: var(--b-3); }
+  .kurs { display: grid; gap: var(--space-10); padding-block: var(--space-6); max-width: 72ch; }
+  .bosh { display: grid; gap: var(--space-3); }
+  .yorliqlar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .yorliq { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-eyuf-tile); color: var(--color-eyuf-text-muted); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); }
+  .yorliq.tayyor { color: var(--color-eyuf-text); }
+    h3 { font-size: var(--text-h3-size); margin-top: var(--space-2); }
+  .tavsif { font-size: var(--font-size-body-d); color: var(--color-eyuf-text-muted); }
+  .ustki { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: var(--text-eyuf-yorliq-ls); text-transform: uppercase; color: var(--color-eyuf-text-muted); }
+  .mundarija { border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6); }
+  .mundarija ol { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-1); }
+  .mundarija a { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-weight: var(--font-weight-bold); }
+  .bolim { display: grid; gap: var(--space-3); scroll-margin-top: var(--space-6); }
+  .bolim a, .manba a { color: var(--color-link); font-weight: var(--font-weight-bold); }
+  a:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  ul, ol { padding-left: 1.2em; display: grid; gap: var(--space-2); }
+  .eslatma, .namuna { background: var(--color-eyuf-tile); border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6); display: grid; gap: var(--space-2); }
+  .eslatma-sarlavha, .namuna-yorliq { font-weight: var(--font-weight-extrabold); }
+  .namuna { border: var(--border-width-1) dashed var(--color-eyuf-line-strong); background: transparent; }
+  .namuna-yorliq { font-size: var(--text-caption-size); text-transform: uppercase; letter-spacing: var(--text-eyuf-yorliq-ls); color: var(--color-eyuf-text-muted); }
+  .dastur { border: var(--border-width-1) solid var(--color-eyuf-line-strong); border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6); display: grid; gap: var(--space-3); }
   .dastur h3 { margin-top: 0; }
-  .manba { font-size: var(--matn-mayda); color: var(--matn-sust); }
-  .qadamlar li::marker { font-weight: 800; }
-  .orqaga { display: inline-flex; align-items: center; min-height: 44px; }
+  .manba { font-size: var(--text-caption-size); color: var(--color-eyuf-text-muted); }
+  .qadamlar li::marker { font-weight: var(--font-weight-extrabold); }
+  .orqaga { display: inline-flex; align-items: center; min-height: var(--size-touch-min); }
 </style>

@@ -2,6 +2,7 @@
 // SAT "fokus" ekrani: yon panelsiz, ustida yopish tugmasi, sarlavha va progress.
 // Dizayn: Tayanch-SAT-dizayn.md, "Mashq" va "Lug'at" ekranlari.
 import '../styles/global.css';
+import '../styles/sat.css';
 import BoshQism from '../components/BoshQism.astro';
 import { yol } from '../lib/yol';
 import BolimYon from '../components/BolimYon.astro';
@@ -47,7 +48,7 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
   <head>
     <BoshQism title={title} description={description} holat={indeks ? "chop-etilgan" : "qoralama"} />
   </head>
-  <body class="fokus">
+  <body class="fokus sat">
     <a class="otish" href="#asosiy">{M.otish}</a>
     <BolimYon bolim="sat" />
     <section class:list={['fokus-bosh', { 'fokus-qisqa': qisqaMashq }]} aria-labelledby="fokus-nomi">
@@ -68,7 +69,7 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
       ) : <span class="fokus-oraliq" aria-hidden="true"></span>}
       <slot name="amal" />
     </section>
-    <main id="asosiy" class="fokus-asosiy">
+    <main id="asosiy" class="fokus-asosiy sat t-fon">
       <div class="fokus-yol"><QavatYoli bandlar={bandlar} sahifaNomi={title.split(' · ')[0]} ota={yopish?.href} /></div>
       {joriyMavzu ? (
         <div class="fokus-kurs">
@@ -93,32 +94,50 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
 </html>
 
 <style is:global>
-  body.fokus { min-height: 100vh; display: flex; flex-direction: column; }
+  /* DS PR 5c (2026-11-23): SAT fokus (test) rejimi. Fon sat-bg, ustki qator zich sirt (ostida hech narsa
+     surilmaydi, shuning uchun blursiz), nom Sora, progress sat-blue-fill. Tab bar bu qolipda yo'q. */
+  body.fokus { min-height: 100vh; display: flex; flex-direction: column; background: var(--color-sat-bg); }
   .fokus-bosh {
     min-height: 72px; flex: none;
-    padding: var(--b-3) var(--b-8);
-    background: var(--color-surface);
-    border-bottom: var(--border-width-1) solid var(--color-border);
-    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-6);
+    padding: var(--space-3) var(--space-8);
+    background: var(--color-sat-glass-strong);
+    border-bottom: var(--border-width-1) solid var(--color-sat-line);
+    color: var(--color-sat-text);
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6);
   }
   .fokus-bosh .yopish {
-    width: 44px; height: 44px; border-radius: var(--r-yon);
+    width: var(--size-touch-min); height: var(--size-touch-min); border-radius: var(--radius-full);
     display: flex; align-items: center; justify-content: center;
-    color: var(--matn); background: var(--fon-ikkinchi);
+    color: var(--color-sat-text); background: transparent;
+    border: var(--border-width-1) solid var(--color-sat-line-strong);
   }
-  @media (hover: hover) and (pointer: fine) { .fokus-bosh .yopish:hover { background: var(--sirt-ikkinchi); } }
-  .fokus-bosh .sarlavha { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .fokus-bosh .ustki { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
-  .fokus-bosh .nomi { font-size: 17px; font-weight: 800; }
-  .fokus-bosh .jarayon { flex: 1 1 240px; display: flex; align-items: center; gap: 14px; max-width: 520px; margin-left: auto; }
-  .fokus-bosh .progress { flex: 1; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--rang-asosiy); border-radius: var(--r-toliq); }
-  .fokus-bosh .progress-matn { font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-ikkinchi); white-space: nowrap; }
+  @media (hover: hover) and (pointer: fine) { .fokus-bosh .yopish:hover { border-color: var(--color-sat-blue); } }
+  .fokus-bosh .sarlavha { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .fokus-bosh .ustki {
+    font-size: var(--text-caption-size); line-height: var(--text-caption-lh);
+    font-weight: var(--font-weight-semibold); letter-spacing: 0.04em; color: var(--color-sat-text-muted);
+  }
+  .fokus-bosh .nomi { font-family: var(--font-sat); font-size: var(--text-body-size); font-weight: var(--font-weight-semibold); }
+  .fokus-bosh .jarayon { flex: 1 1 240px; display: flex; align-items: center; gap: var(--space-3); max-width: 520px; margin-left: auto; }
+  .fokus-bosh .progress { flex: 1; height: 8px; border-radius: var(--radius-full); background: var(--color-sat-line); overflow: hidden; }
+  .fokus-bosh .progress-toldirish { height: 100%; width: 0; background: var(--color-sat-blue-fill); border-radius: var(--radius-full); }
+  .fokus-bosh .progress-matn { font-size: var(--text-small-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .fokus-bosh .fokus-oraliq { flex: 1; }
-  .fokus-asosiy { flex: 1; padding: var(--b-6) var(--b-8) var(--b-10); }
-  .fokus-yol { max-width: 760px; margin: 0 auto var(--b-5); }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .fokus-bosh { background: var(--color-sat-surface); border-bottom-color: var(--color-sat-line-strong); }
+  }
+  /* Ko'k kapsula nofaol holatda poydevordagi nofaol tugma kabi (sat.css keyin yuklanadi) */
+  .t-tugma.sat-tugma--kok:is(:disabled, [aria-disabled='true']) {
+    border-color: var(--btn-disabled-border);
+    background: var(--btn-disabled-bg);
+    box-shadow: none;
+    color: var(--btn-disabled-text);
+  }
+  /* main: #225 dagi .sat token sohasi + .t-fon nur dog'lari (backdrop yo'q, savol paneli ichma-ich blursiz) */
+  .fokus-asosiy { flex: 1; padding: var(--space-6) var(--space-8) var(--space-10); }
+  .fokus-yol { max-width: 760px; margin: 0 auto var(--space-5); }
   .fokus-kurs { margin-inline: auto; max-inline-size: var(--size-content-max); }
-  .fokus-kurs-ichki { color: var(--matn); }
+  .fokus-kurs-ichki { color: var(--color-sat-text); }
   .fokus-kurs-ichki summary, .fokus-kurs-nav a {
     min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
     align-content: center; padding-inline: var(--space-3);
@@ -140,16 +159,16 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
   }
 
   @media (max-width: 640px) {
-    .fokus-bosh { padding: var(--b-3) var(--b-4); }
+    .fokus-bosh { padding: var(--space-3) var(--space-4); }
     .fokus-bosh .jarayon { order: 5; flex-basis: 100%; max-width: none; margin-left: 0; }
-    .fokus-asosiy { padding: var(--b-6) var(--b-4); }
+    .fokus-asosiy { padding: var(--space-6) var(--space-4); }
 
     /* Desmos va progress keyin yangilanganda ham ustunlar va satrlar joyida qoladi. */
     .fokus-qisqa {
       display: grid;
       grid-template-columns: var(--size-touch-min) minmax(0, 1fr) calc(var(--space-14) * 2);
       grid-template-rows: var(--control-height-md) var(--space-5);
-      gap: var(--b-2);
+      gap: var(--space-2);
     }
     .fokus-qisqa .ustki, .fokus-qisqa .nomi {
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -157,7 +176,7 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
     .fokus-qisqa .desmos-havola { grid-area: 1 / 3; justify-self: end; }
     .fokus-qisqa .jarayon {
       grid-area: 2 / 1 / 3 / -1;
-      display: grid; grid-template-columns: minmax(0, 1fr) 8ch; gap: var(--b-2);
+      display: grid; grid-template-columns: minmax(0, 1fr) 8ch; gap: var(--space-2);
     }
     .fokus-qisqa .progress-matn { text-align: end; }
   }

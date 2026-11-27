@@ -1,7 +1,7 @@
 // Savol ko'rsatkichi (P06): R&W va Math, test javobli (mcq) va o'zi yoziladigan (spr) savollar.
 // Boshqariladigan komponent: holatni faqat ota sahifa o'zgartiradi (hodisa → ota → yangila(holat)).
 // Tarmoq so'rovi, Supabase, localStorage yo'q. Matn faqat xavfsizMatn() orqali (innerHTML yo'q).
-// Uslub: src/components/sat/SavolUslub.astro (sahifaga bir marta qo'yiladi). Matn inglizcha (SAT bo'limi).
+// Uslub va konteyner: src/components/sat/SatSavol.astro (sahifaga bir marta qo'yiladi). Matn inglizcha (SAT bo'limi).
 //
 // Klaviatura (fokus komponent ichida bo'lsa):
 //   A–D (yoki variant kaliti): variantni tanlash; strelkalar / Home / End: variantlar orasida yurish va tanlash

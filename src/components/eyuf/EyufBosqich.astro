@@ -1,0 +1,41 @@
+---
+// EyufBosqich (DS 5-qavat, PR 9): bosqich kartalari, katta oltin serif raqam, nom, 1 qatorli izoh, holat chipi.
+// Holat rang bilan yolg'iz aytilmaydi: chipda so'z va ikonka. Joriy bosqich: havolali kartada aria-current="page",
+// havolasizda aria-current="step". `zich`: karta main ustida (sahnadan tashqarida), shuning uchun zich sirt.
+// Bosqich nomlari Tayanch kurslari tartibi; rasmiy bosqich nomi bo'lsa manbasi sahifada (yoki "Namuna").
+import '../../styles/eyuf.css';
+export type EyufBosqichHolat = 'bajarildi' | 'hozir' | 'keyin';
+export interface EyufBosqichBand { nomi: string; izoh?: string; href?: string; holat?: EyufBosqichHolat }
+interface Props { bosqichlar: EyufBosqichBand[]; zich?: boolean; yorliq?: string }
+const { bosqichlar, zich = false, yorliq } = Astro.props;
+const holatSoz: Record<EyufBosqichHolat, string> = { bajarildi: 'Bajarildi', hozir: 'Hozir', keyin: 'Keyin' };
+const raqam = (i: number) => String(i + 1).padStart(2, '0');
+---
+<div class="eyuf-bosqich-oram">
+  <ol class:list={['eyuf-bosqichlar', zich && 'eyuf-bosqichlar--zich']} aria-label={yorliq}>
+    {bosqichlar.map((b, i) => {
+      const ichki = (
+        <Fragment>
+          <b aria-hidden="true">{raqam(i)}</b>
+          <h3>{b.nomi}</h3>
+          {b.izoh && <p>{b.izoh}</p>}
+          {b.holat && (
+            <span class="holat">
+              {b.holat === 'bajarildi' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>}
+              {b.holat === 'hozir' && <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="5"/></svg>}
+              {b.holat === 'keyin' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>}
+              {holatSoz[b.holat]}
+            </span>
+          )}
+        </Fragment>
+      );
+      return (
+        <li>
+          {b.href
+            ? <a class="eyuf-bosqich" href={b.href} data-holat={b.holat} aria-current={b.holat === 'hozir' ? 'page' : undefined}>{ichki}</a>
+            : <div class="eyuf-bosqich" data-holat={b.holat} aria-current={b.holat === 'hozir' ? 'step' : undefined}>{ichki}</div>}
+        </li>
+      );
+    })}
+  </ol>
+</div>

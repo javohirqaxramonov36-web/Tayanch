@@ -1,6 +1,7 @@
 ---
 import Asosiy from '../../../layouts/Asosiy.astro';
 import DeadlineRoyxati from '../../../components/DeadlineRoyxati.astro';
+import GrantMuddatlari from '../../../components/GrantMuddatlari.astro';
 ---
 <Asosiy
   title="Muddatlar"
@@ -13,12 +14,19 @@ import DeadlineRoyxati from '../../../components/DeadlineRoyxati.astro';
 >
   <section class="ichki sahifa">
     <h1>Muddatlar</h1>
-    <p class="izoh">Bu yerda faqat chiqaruvchi tashkilotning o'z sayti yoki rasmiy hujjati bilan tasdiqlangan muddatlar chiqadi. Topshirishdan oldin muddatni rasmiy manbada o'zingiz ham tekshiring.</p>
-    <DeadlineRoyxati />
+    <p class="izoh">Bu yerda faqat chiqaruvchi tashkilotning oʻz sayti yoki rasmiy hujjati bilan tasdiqlangan muddatlar chiqadi. Topshirishdan oldin muddatni rasmiy manbada oʻzingiz ham tekshiring.</p>
+    <section class="bolak" aria-labelledby="dastur-muddat-h">
+      <h2 id="dastur-muddat-h">Tanlov va dastur muddatlari</h2>
+      <DeadlineRoyxati />
+    </section>
+    <GrantMuddatlari />
   </section>
 </Asosiy>
 
 <style>
   .sahifa { padding-block: var(--b-14) 0; display: flex; flex-direction: column; gap: var(--b-6); }
-  .izoh { background: var(--rang-ogoh-fon); border-radius: var(--r-orta); padding: var(--b-4) var(--b-5); max-width: 70ch; }
+  .bolak { display: grid; gap: var(--space-4); }
+  .bolak h2 { margin: 0; }
+  /* Izoh: Navigator krem paneli (nav-cream, ikkala mavzuda yorug', matn nav-on-paper; ekranda bitta) */
+  .izoh { background: var(--color-nav-cream); color: var(--color-nav-on-paper); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); max-width: var(--size-measure); }
 </style>

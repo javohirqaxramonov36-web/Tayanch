@@ -1,0 +1,161 @@
+---
+// 1-qavat · "Bino chiroqlari": 5 qavatli bino (pastda 1 Navigator, tepada 5 EYUF), har vazifa = bitta deraza.
+// Bajarilgan vazifa = yonib turgan deraza (iliq sariq). Ma'lumot progress modulidan (src/lib/progress.ts, faqat brauzerda),
+// vazifalar ro'yxati src/data/progressBandlar.ts. "tayanch-progress" hodisasida qayta chiziladi, yangi yongan deraza
+// yumshoq yonadi (opacity + transform, reduced motion'da darhol). Qavat qatori = havola, shu qavatga o'tadi.
+// Bino qora sahnada (.nav-sahna), ikkala mavzuda bir xil, shuning uchun chiroq dark rejimda ham ko'rinadi.
+import { qavatlar } from '../../data/qavatlar';
+import { QAVAT_BANDLARI } from '../../data/progressBandlar';
+import { yol } from '../../lib/yol';
+
+const binoQavatlari = qavatlar.filter((q) => q.raqam <= 5).sort((a, b) => b.raqam - a.raqam);
+const ikki = (n: number) => String(n).padStart(2, '0');
+const izoh = (q: (typeof qavatlar)[number], done: number, total: number) =>
+  `${q.raqam}-qavat, ${q.nomi}: ${total ? `${done} / ${total} vazifa bajarilgan` : 'vazifalar tez orada'}. Qavatga oʻtish`;
+---
+<section class="bino-blok" aria-labelledby="bino-h2" data-bino data-bandlar={JSON.stringify(QAVAT_BANDLARI)}>
+  <div class="bino-matn">
+    <h2 id="bino-h2" class="nav-nom">Bino chiroqlari</h2>
+    <p class="bino-lead">Har bajarilgan vazifa binoda bitta derazani yoqadi. Qavat ustiga bosing — oʻsha qavatga oʻtasiz.</p>
+    <div class="bino-bosh" data-bino-bosh>
+      <p class="bino-bosh-sarlavha">Birinchi chiroqni yoqing</p>
+      <a class="bino-bosh-havola" href={yol('/uz/top-admission/')}>Top Admission qavatidan boshlash</a>
+    </div>
+    <p class="bino-izoh">Progress faqat shu qurilmada saqlanadi.</p>
+  </div>
+  <div class="nav-sahna bino">
+    <span class="bino-tom" aria-hidden="true"></span>
+    <ol class="bino-qavatlar" role="list">
+      {binoQavatlari.map((q) => {
+        const bandlar = QAVAT_BANDLARI[q.slug as keyof typeof QAVAT_BANDLARI] ?? [];
+        return <li>
+          <a class="bino-qavat" href={yol(q.manzil)} data-qavat={q.slug} data-raqam={q.raqam} data-nomi={q.nomi} aria-label={izoh(q, 0, bandlar.length)}>
+            <span class="bino-raqam" aria-hidden="true">{ikki(q.raqam)}</span>
+            <span class="bino-nom" aria-hidden="true">{q.qisqaNom}</span>
+            <span class="bino-derazalar" aria-hidden="true" data-derazalar>
+              {bandlar.map((id) => <span class="deraza" data-id={id}></span>)}
+            </span>
+            <span class="bino-son" aria-hidden="true" data-son>{bandlar.length ? `0/${bandlar.length}` : 'Tez orada'}</span>
+          </a>
+        </li>;
+      })}
+    </ol>
+    <span class="bino-yer" aria-hidden="true"></span>
+  </div>
+</section>
+<script>
+  import { getAll, getFloorProgress, registerItems, PROGRESS_HODISASI, type ProgressQavat } from '../../lib/progress';
+
+  const blok = document.querySelector<HTMLElement>('[data-bino]');
+  if (blok) {
+    let bandlar: Partial<Record<ProgressQavat, string[]>> = {};
+    try { bandlar = JSON.parse(blok.dataset.bandlar ?? '{}'); } catch { /* bo'sh */ }
+    // Jami to'g'ri hisoblanishi uchun ro'yxatni progress moduliga e'lon qilamiz (belgilarga tegmaydi)
+    for (const [slug, ids] of Object.entries(bandlar)) if (ids?.length) registerItems(slug as ProgressQavat, ids);
+
+    let oldingi: Set<string> | null = null; // birinchi chizishda animatsiya yo'q, faqat keyin yonganlar
+    const bosh = blok.querySelector<HTMLElement>('[data-bino-bosh]');
+
+    const chiz = () => {
+      const hammasi = getAll();
+      const hozir = new Set<string>();
+      let jamiDone = 0;
+      blok.querySelectorAll<HTMLAnchorElement>('.bino-qavat').forEach((qator) => {
+        const slug = qator.dataset.qavat as ProgressQavat;
+        const done = hammasi[slug]?.done ?? [];
+        const { total } = getFloorProgress(slug);
+        // Derazalar: ro'yxatdagilar, keyin ro'yxatda yo'q bajarilganlar, keyin boshqa sahifa e'lon qilgan noma'lumlar
+        const ids = [...new Set([...(bandlar[slug] ?? []), ...done])];
+        const soni = Math.max(total, ids.length);
+        const quti = qator.querySelector<HTMLElement>('[data-derazalar]')!;
+        const mavjud = quti.children;
+        while (mavjud.length < soni) quti.append(Object.assign(document.createElement('span'), { className: 'deraza' }));
+        while (mavjud.length > soni) quti.lastElementChild!.remove();
+        const doneSet = new Set(done);
+        for (let i = 0; i < soni; i++) {
+          const d = mavjud[i] as HTMLElement;
+          const id = ids[i] ?? `${slug}:${i}`;
+          d.dataset.id = id;
+          const yonik = doneSet.has(id);
+          if (yonik) hozir.add(`${slug}/${id}`);
+          const yangi = yonik && oldingi !== null && !oldingi.has(`${slug}/${id}`);
+          d.classList.toggle('yonik', yonik);
+          if (yangi) { d.classList.remove('yangi'); void d.offsetWidth; d.classList.add('yangi'); }
+          else if (!yonik) d.classList.remove('yangi');
+        }
+        jamiDone += done.length;
+        qator.querySelector<HTMLElement>('[data-son]')!.textContent = soni ? `${done.length}/${soni}` : 'Tez orada';
+        const raqam = qator.dataset.raqam, nomi = qator.dataset.nomi;
+        qator.setAttribute('aria-label', `${raqam}-qavat, ${nomi}: ${soni ? `${done.length} / ${soni} vazifa bajarilgan` : 'vazifalar tez orada'}. Qavatga oʻtish`);
+      });
+      if (bosh) bosh.hidden = jamiDone > 0;
+      oldingi = hozir;
+    };
+
+    chiz();
+    window.addEventListener(PROGRESS_HODISASI, chiz);
+  }
+</script>
+<style>
+  .bino-blok { display: grid; gap: var(--space-6); align-items: center; }
+  .bino-matn { display: grid; gap: var(--space-4); justify-items: start; min-width: 0; }
+  .bino-matn h2 { margin: 0; }
+  .bino-lead { margin: 0; max-width: var(--home-copy-width); color: var(--color-nav-text-muted); font-size: var(--text-body-size); line-height: var(--text-body-lh); }
+  .bino-bosh { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-4); border: var(--border-width-1) dashed var(--color-nav-line-strong); border-radius: var(--radius-lg); }
+  .bino-bosh[hidden] { display: none; }
+  .bino-bosh-sarlavha { margin: 0; color: var(--color-nav-text); font-weight: var(--font-weight-bold); font-size: var(--text-body-size); line-height: var(--text-body-lh); }
+  .bino-bosh-havola { display: inline-flex; align-items: center; min-height: var(--size-touch-min); color: var(--color-link); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); text-underline-offset: 0.25em; }
+  .bino-izoh { margin: 0; color: var(--color-nav-text-muted); font-size: var(--text-caption-size); line-height: var(--text-small-lh); }
+
+  /* Bino: qora sahna, ikkala mavzuda bir xil */
+  .bino { position: relative; width: 100%; max-width: var(--size-nav-bino); justify-self: center; display: grid; padding: var(--space-4) var(--space-4) 0; }
+  .bino-tom { display: block; height: var(--space-3); margin-inline: var(--space-6); border: var(--border-width-1) solid var(--color-nav-line-on-stage); border-bottom: 0; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+  .bino-qavatlar { list-style: none; margin: 0; padding: 0; border: var(--border-width-1) solid var(--color-nav-line-on-stage); border-bottom: 0; }
+  .bino-qavatlar li + li { border-top: var(--border-width-1) solid var(--color-nav-line-on-stage); }
+  .bino-yer { display: block; height: var(--border-width-1); margin-inline: calc(-1 * var(--space-4)); margin-bottom: var(--space-4); background: var(--color-nav-line-on-stage); }
+
+  .bino-qavat {
+    --q-rang: var(--color-floor-navigator-400);
+    position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "raqam derazalar son" "nom derazalar son";
+    column-gap: var(--space-3); align-items: center; min-height: var(--size-touch-min); padding: var(--space-3);
+    color: var(--color-nav-on-stage); text-decoration: none;
+  }
+  .nav-sahna .bino-qavat { text-decoration: none; }
+  .bino-qavat[data-qavat="top-admission"] { --q-rang: var(--color-floor-admission-400); }
+  .bino-qavat[data-qavat="sat"] { --q-rang: var(--color-floor-sat-400); }
+  .bino-qavat[data-qavat="ielts"] { --q-rang: var(--color-floor-ielts-400); }
+  .bino-qavat[data-qavat="eyuf"] { --q-rang: var(--color-floor-eyuf-400); }
+  /* Hover/fokus fon qatlami: faqat opacity */
+  .bino-qavat::before { content: ''; position: absolute; inset: 0; background: var(--color-nav-glass-stage); opacity: 0; transition: opacity var(--duration-base) var(--ease-state); pointer-events: none; }
+  .bino-qavat:is(:hover, :focus-visible)::before { opacity: 1; }
+  .bino-raqam { grid-area: raqam; font-family: var(--font-display); font-weight: var(--font-weight-bold); font-size: var(--text-h3-size); line-height: 1; color: var(--q-rang); }
+  .bino-nom { grid-area: nom; font-family: var(--font-mono); font-size: var(--text-nav-yorliq-size); line-height: var(--text-nav-yorliq-lh); letter-spacing: var(--text-nav-yorliq-ls); text-transform: uppercase; color: var(--color-nav-on-stage-muted); white-space: nowrap; }
+  .bino-derazalar { grid-area: derazalar; display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
+  .bino-son { grid-area: son; font-family: var(--font-mono); font-size: var(--text-nav-kod-size); line-height: var(--text-nav-kod-lh); color: var(--color-nav-on-stage-muted); text-align: end; white-space: nowrap; }
+
+  .deraza { position: relative; flex: none; width: var(--size-nav-deraza-w); height: var(--size-nav-deraza-h); border: var(--border-width-1) solid var(--color-nav-line-on-stage); border-radius: var(--radius-none); background: var(--color-nav-stage-raised); }
+  /* Chiroq (rang) va nur (soya) alohida qatlam: faqat opacity va transform o'zgaradi */
+  .deraza::before, .deraza::after { content: ''; position: absolute; inset: calc(-1 * var(--border-width-1)); border-radius: inherit; opacity: 0; pointer-events: none; }
+  .deraza::before { background: var(--color-nav-chiroq); }
+  .deraza::after { box-shadow: 0 0 var(--space-3) var(--space-1) var(--color-nav-chiroq-nur); }
+  .deraza.yonik::before, .deraza.yonik::after { opacity: 1; }
+  .deraza.yangi::before { animation: chiroq-yonish var(--duration-slow) var(--ease-enter) both; }
+  .deraza.yangi::after { animation: nur-yonish var(--duration-slow) var(--ease-enter) var(--duration-stagger) both; }
+  @keyframes chiroq-yonish { from { opacity: 0; transform: scale(var(--nav-chiroq-masshtab)); } to { opacity: 1; transform: none; } }
+  @keyframes nur-yonish { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (min-width: 960px) {
+    .bino-blok { grid-template-columns: minmax(0, 1fr) minmax(0, var(--size-nav-bino)); gap: var(--space-12); }
+  }
+  @media (width < 768px) {
+    .bino-lead { font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+    .bino-qavat { column-gap: var(--space-2); padding: var(--space-2) var(--space-3); }
+    .bino-derazalar { gap: var(--space-1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bino-qavat::before { transition: none; }
+    .deraza.yangi::before, .deraza.yangi::after { animation: none; }
+  }
+  :global(:root[data-motion="reduced"]) .deraza.yangi::before,
+  :global(:root[data-motion="reduced"]) .deraza.yangi::after { animation: none; }
+</style>

@@ -6,7 +6,7 @@
 // yoki vaqt tugaganda yuboriladi. Kurs mini-testida taymer yo'q, javoblar faqat Finish'da birga yuboriladi.
 // Sof mantiq: src/lib/sat/sessiya.ts. Dev mock: src/lib/sat/sessiyaMock.ts (?mock=..., faqat DEV).
 import SatFokus from '../../../../../layouts/SatFokus.astro';
-import SavolUslub from '../../../../../components/sat/SavolUslub.astro';
+import SatSavol from '../../../../../components/sat/SatSavol.astro';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import DesmosHavola from '../../../../../components/sat/DesmosHavola.astro';
 import XabarDialog from '../../../../../components/sat/XabarDialog.astro';
@@ -40,19 +40,19 @@ const IK = {
       <span class="sr-only">Time left:</span>
       <span class="taymer-vaqt" id="taymer-vaqt" role="timer">--:--</span>
     </div>
-    <button type="button" class="kichik-tugma kulrang" id="taymer-yashir" aria-pressed="false" aria-controls="taymer" hidden>Hide timer</button>
-    <button type="button" class="kichik-tugma kulrang" id="saqla-tugma" aria-pressed="false" hidden>
+    <button type="button" class="t-tugma t-tugma--ikkinchi kulrang" id="taymer-yashir" aria-pressed="false" aria-controls="taymer" hidden>Hide timer</button>
+    <button type="button" class="t-tugma t-tugma--ikkinchi kulrang" id="saqla-tugma" aria-pressed="false" hidden>
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.saqla.map((d) => <path d={d} />)}</svg>
       Save question
     </button>
     <DesmosHavola id="desmos" hidden />
-    <button type="button" class="kichik-tugma kulrang" id="xarita-och" aria-haspopup="dialog" hidden>
+    <button type="button" class="t-tugma t-tugma--ikkinchi kulrang" id="xarita-och" aria-haspopup="dialog" hidden>
       <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">{IK.xarita.map((d) => <path d={d} />)}</svg>
       Questions
     </button>
   </div>
 
-  <SavolUslub />
+  <SatSavol />
   <div class="sessiya" id="sessiya" data-bank-url={bankUrl} data-kirish-url={yol('/uz/hisob/kirish/')} data-rejalar-url={yol('/uz/hisob/profil/')} data-kurs-yollar={kursYollar}
     data-redo-url={yol('/uz/sat/vosita/takrorlash/')} data-natijalar-url={yol('/uz/sat/vosita/natijalar/')}>
     {import.meta.env.DEV && <p class="pill-namuna" id="namuna-pill" hidden>Sample · dev mock</p>}
@@ -65,8 +65,8 @@ const IK = {
       <h1 id="xabar-h" class="holat-sarlavha" tabindex="-1"></h1>
       <p id="xabar-matn" class="holat-matn"></p>
       <div class="holat-amal">
-        <button type="button" class="asosiy-tugma" id="xabar-qayta" hidden>Try again</button>
-        <a class="asosiy-tugma" id="xabar-havola" hidden></a>
+        <button type="button" class="t-tugma sat-tugma--kok" id="xabar-qayta" hidden>Try again</button>
+        <a class="t-tugma sat-tugma--kok" id="xabar-havola" hidden></a>
       </div>
     </section>
 
@@ -74,15 +74,15 @@ const IK = {
       <h1 class="sr-only" id="savol-h" tabindex="-1">Question</h1>
       <div class="saqlash" id="saqlash" hidden>
         <p id="saqlash-matn"></p>
-        <button type="button" class="matn-tugma" id="saqlash-qayta" hidden>Retry now</button>
-        <a class="matn-tugma" id="saqlash-havola" hidden>See plans</a>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="saqlash-qayta" hidden>Retry now</button>
+        <a class="t-tugma t-tugma--ikkinchi" id="saqlash-havola" hidden>See plans</a>
       </div>
       <div id="savol-joy"></div>
       <div class="sessiya-pastki" id="pastki">
-        <button type="button" class="ikkinchi-tugma" id="oldingi">Back</button>
-        <button type="button" class="ikkinchi-tugma" id="otkaz">Skip</button>
-        <button type="button" class="asosiy-tugma" id="tekshir" disabled aria-describedby="tekshir-izoh">Check</button>
-        <button type="button" class="asosiy-tugma" id="keyingi">Next</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="oldingi">Back</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="otkaz">Skip</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="tekshir" disabled aria-describedby="tekshir-izoh">Check</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="keyingi">Next</button>
       </div>
       <p class="sr-only" id="tekshir-izoh">Choose an answer first.</p>
     </section>
@@ -91,8 +91,8 @@ const IK = {
       <h1 id="yuborish-h" class="holat-sarlavha" tabindex="-1">Submitting your answers…</h1>
       <p id="yuborish-matn" class="holat-matn" role="status"></p>
       <div class="holat-amal">
-        <button type="button" class="asosiy-tugma" id="yuborish-qayta" hidden>Try again</button>
-        <a class="ikkinchi-tugma" id="yuborish-rejalar" hidden>See plans</a>
+        <button type="button" class="t-tugma sat-tugma--kok" id="yuborish-qayta" hidden>Try again</button>
+        <a class="t-tugma t-tugma--ikkinchi" id="yuborish-rejalar" hidden>See plans</a>
       </div>
     </section>
 
@@ -124,8 +124,8 @@ const IK = {
         <li><span class="namuna-katak flag" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M4 22V4" /><path d="M4 4h13l-2 4 2 4H4" /></svg></span> Marked for review</li>
       </ul>
       <div class="xarita-amal">
-        <button type="button" class="ikkinchi-tugma" id="xarita-qayt">Back to questions</button>
-        <button type="button" class="asosiy-tugma" id="yakunla">Finish session</button>
+        <button type="button" class="t-tugma t-tugma--ikkinchi" id="xarita-qayt">Back to questions</button>
+        <button type="button" class="t-tugma sat-tugma--kok" id="yakunla">Finish session</button>
       </div>
     </div>
   </dialog>
@@ -783,7 +783,7 @@ const IK = {
     const quti = el('div', 'redo');
     const holat = el('p', 'redo-holat');
     holat.setAttribute('role', 'status');
-    const tugma = el('button', 'kichik-tugma kulrang');
+    const tugma = el('button', 't-tugma t-tugma--ikkinchi kulrang');
     tugma.type = 'button';
     const sabab = xatomi ? sababGuruh(b) : null;
     const chiz = () => {
@@ -883,7 +883,7 @@ const IK = {
     }
     a.append(redoBoshqaruv(b, tur === 'xato'));
     if (xabarDialog) {
-      const t = el('button', 'kichik-tugma kulrang natija-xabar');
+      const t = el('button', 't-tugma t-tugma--ikkinchi kulrang natija-xabar');
       t.type = 'button';
       const yoz = () => {
         const bor = xabarlar.has(b.savol.id);
@@ -976,18 +976,18 @@ const IK = {
 
     const amal = el('div', 'natija-amal');
     const kursYoli = S.course && Object.hasOwn(kursYollar, S.course.topic_id) ? kursYollar[S.course.topic_id] : undefined;
-    const orqaga = el('a', 'asosiy-tugma', kursYoli ? 'Back to the topic' : 'Back to the question bank');
+    const orqaga = el('a', 't-tugma sat-tugma--kok', kursYoli ? 'Back to the topic' : 'Back to the question bank');
     orqaga.href = kursYoli?.mavzu ?? BANK;
     amal.append(orqaga);
     if (kursYoli?.keyingi) {
-      const keyingi = el('a', 'ikkinchi-tugma', 'Next topic');
+      const keyingi = el('a', 't-tugma t-tugma--ikkinchi', 'Next topic');
       keyingi.href = kursYoli.keyingi;
       amal.append(keyingi);
     }
     if (S.course) {
-      const redo = el('a', 'ikkinchi-tugma', 'Go to your redo list');
+      const redo = el('a', 't-tugma t-tugma--ikkinchi', 'Go to your redo list');
       redo.href = ildiz.dataset.redoUrl!;
-      const natijalar = el('a', 'ikkinchi-tugma', 'View your analytics');
+      const natijalar = el('a', 't-tugma t-tugma--ikkinchi', 'View your analytics');
       natijalar.href = ildiz.dataset.natijalarUrl!;
       amal.append(redo, natijalar);
     }
@@ -1227,7 +1227,7 @@ const IK = {
 
 <style is:global>
   /* Global: natija, xarita va redo elementlarini skript yaratadi (scoped uslub ularga tegmaydi). Sinf nomlari shu sahifaga xos. */
-  .sessiya { max-width: var(--kenglik); margin: 0 auto; display: flex; flex-direction: column; gap: var(--b-5); }
+  .sessiya { max-width: var(--kenglik); margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-5); }
   .sessiya [hidden], .amallar [hidden] { display: none !important; }
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
@@ -1235,46 +1235,40 @@ const IK = {
   }
   .pill-namuna {
     align-self: flex-start; margin: 0;
-    padding: 4px 12px; border-radius: var(--r-toliq);
-    border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi);
-    font-size: var(--matn-mayda); font-weight: 700;
+    padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+    border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted);
+    font-size: var(--text-caption-size); font-weight: var(--font-weight-bold);
   }
 
   /* Sarlavhadagi amallar: taymer, yashirish, xarita */
-  .amallar { display: flex; align-items: center; gap: var(--b-2); flex-wrap: wrap; }
+  .amallar { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
   .taymer {
-    display: inline-flex; align-items: center; gap: var(--b-2);
-    min-height: 48px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
-    background: var(--fon-ikkinchi); color: var(--matn);
-    font-weight: 800; font-variant-numeric: tabular-nums;
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: 48px; padding: 0 var(--space-4); border-radius: var(--radius-full);
+    background: var(--color-sat-sunken); color: var(--color-sat-text);
+    font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums;
   }
-  .taymer.kam { background: var(--matn); color: var(--fon); }
-  .kichik-tugma {
-    display: inline-flex; align-items: center; gap: var(--b-2);
-    min-height: 48px; padding: 0 var(--b-4); border-radius: var(--r-toliq);
-    border: 0; font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
-  }
-  .kichik-tugma.kulrang { background: var(--sirt-ikkinchi); color: var(--matn); }
-  @media (hover: hover) and (pointer: fine) { .kichik-tugma.kulrang:hover { background: var(--chiziq-kuchli); } }
-  .kichik-tugma[aria-busy='true'] { cursor: progress; }
-  #saqla-tugma[aria-pressed='true'] { background: var(--rang-asosiy-och); color: var(--matn); box-shadow: inset 0 0 0 1.5px var(--rang-asosiy); }
+  .taymer.kam { background: var(--color-sat-text); color: var(--color-sat-surface); }
+  .t-tugma { display: inline-flex; }
+  
+  #saqla-tugma[aria-pressed='true'] { background: var(--color-sat-blue-subtle); color: var(--color-sat-text); box-shadow: inset 0 0 0 1.5px var(--color-sat-blue-fill); }
   #saqla-tugma[aria-pressed='true'] svg { fill: currentColor; }
 
   .holat-karta {
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
-    background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta);
-    padding: var(--b-6);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+    background: var(--color-sat-surface); border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg);
+    padding: var(--space-6);
   }
-  .holat-sarlavha { margin: 0; font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; }
+  .holat-sarlavha { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); line-height: 1.25; }
   .holat-sarlavha:focus { outline: none; }
-  .holat-matn { margin: 0; color: var(--matn-ikkinchi); max-width: 62ch; }
-  .holat-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .holat-matn { margin: 0; color: var(--color-sat-text-muted); max-width: 62ch; }
+  .holat-amal { display: flex; flex-wrap: wrap; gap: var(--space-3); }
   .holat-amal:empty { display: none; }
 
   .saqlash {
-    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4);
-    background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
-    border-radius: var(--r-orta); padding: var(--b-2) var(--b-4); font-size: var(--matn-kichik); font-weight: 600;
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4);
+    background: var(--color-warning-subtle); color: var(--color-warning-text);
+    border-radius: var(--radius-md); padding: var(--space-2) var(--space-4); font-size: var(--text-small-size); font-weight: var(--font-weight-semibold);
   }
   .saqlash p { margin: 0; }
 
@@ -1283,136 +1277,139 @@ const IK = {
   #savol-joy .sk-natija { scroll-margin-bottom: 96px; }
   .sessiya-pastki {
     position: sticky; bottom: 0; z-index: 2;
-    display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3);
-    padding: var(--b-3) 0; margin-top: var(--b-2);
-    background: var(--fon-ikkinchi); border-top: 1px solid var(--chiziq);
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);
+    padding: var(--space-3) 0; margin-top: var(--space-2);
+    /* DS PR 5c: zich shisha (savol ostidan suriladi); savol paneli bilan yonma-yon, ichma-ich emas */
+    background: var(--color-sat-glass-strong); border-top: var(--border-width-1) solid var(--color-sat-line);
+    -webkit-backdrop-filter: var(--glass-backdrop); backdrop-filter: var(--glass-backdrop);
   }
-  [data-mavzu='qorongi'] .sessiya-pastki { background: var(--fon); }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .sessiya-pastki { background: var(--color-sat-surface); border-top-color: var(--color-sat-line-strong); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
   .sessiya-pastki #tekshir, .sessiya-pastki #keyingi { margin-left: auto; }
   .sessiya-pastki #otkaz:not([hidden]) + #tekshir { margin-left: 0; }
   .sessiya-pastki #otkaz { margin-left: auto; }
   #keyingi { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
   #keyingi:hover { background: var(--btn-primary-bg-hover); }
-  .asosiy-tugma:focus-visible, .ikkinchi-tugma:focus-visible, .kichik-tugma:focus-visible, .matn-tugma:focus-visible,
   .katak:focus-visible, .yopish-tugma:focus-visible, .chip:focus-visible, .izoh-ochiq summary:focus-visible, .yigma summary:focus-visible {
-    outline: 3px solid var(--rang-asosiy); outline-offset: 2px;
+    outline: 3px solid var(--color-sat-blue-fill); outline-offset: 2px;
   }
 
   /* Savollar xaritasi */
   .xarita {
     width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px);
-    border: 1.5px solid var(--matn); border-radius: var(--r-katta); padding: 0;
-    background: var(--fon); color: var(--matn);
+    border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg); padding: 0;
+    background: var(--color-sat-surface); color: var(--color-sat-text);
   }
   .xarita::backdrop { background: var(--parda); }
-  .xarita-ichi { padding: var(--b-6); display: flex; flex-direction: column; gap: var(--b-4); }
-  .xarita-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--b-3); }
-  .xarita-bosh h2 { margin: 0; font-size: var(--matn-h3); font-weight: 800; }
+  .xarita-ichi { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .xarita-bosh { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .xarita-bosh h2 { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); }
   .yopish-tugma {
-    width: 48px; height: 48px; border-radius: var(--r-yon); border: 0;
+    width: 48px; height: 48px; border-radius: var(--radius-md); border: 0;
     display: flex; align-items: center; justify-content: center;
-    background: var(--fon-ikkinchi); color: var(--matn); cursor: pointer;
+    background: var(--color-sat-sunken); color: var(--color-sat-text); cursor: pointer;
   }
-  .xarita-izoh { margin: 0; color: var(--matn-ikkinchi); font-weight: 600; }
+  .xarita-izoh { margin: 0; color: var(--color-sat-text-muted); font-weight: var(--font-weight-semibold); }
   .xarita-ogoh {
-    margin: 0; background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn);
-    border-radius: var(--r-orta); padding: var(--b-3) var(--b-4); font-weight: 700;
+    margin: 0; background: var(--color-warning-subtle); color: var(--color-warning-text);
+    border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); font-weight: var(--font-weight-bold);
   }
-  .xarita-panjara { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: var(--b-2); }
+  .xarita-panjara { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: var(--space-2); }
   .katak {
-    position: relative; width: 100%; min-width: 48px; height: 48px; border-radius: var(--r-orta);
-    border: 2px solid var(--chiziq-maydon); background: var(--fon); color: var(--matn);
-    font: inherit; font-weight: 800; cursor: pointer;
+    position: relative; width: 100%; min-width: 48px; height: 48px; border-radius: var(--radius-md);
+    border: 2px solid var(--color-sat-line-strong); background: var(--color-sat-surface); color: var(--color-sat-text);
+    font: inherit; font-weight: var(--font-weight-extrabold); cursor: pointer;
   }
-  .katak.answered, .katak.pending { background: var(--rang-asosiy); border-color: var(--rang-asosiy); color: var(--rang-asosiy-matn); }
+  .katak.answered, .katak.pending { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); }
   .katak.skipped { border-style: dashed; }
-  .katak[aria-current] { box-shadow: 0 0 0 3px var(--fon), 0 0 0 5px var(--matn); }
+  .katak[aria-current] { box-shadow: 0 0 0 3px var(--color-sat-surface), 0 0 0 5px var(--color-sat-text); }
   .katak-bayroq { position: absolute; top: 3px; right: 3px; }
-  .xarita-belgi { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--b-2) var(--b-5); font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
-  .xarita-belgi li { display: inline-flex; align-items: center; gap: var(--b-2); }
+  .xarita-belgi { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
+  .xarita-belgi li { display: inline-flex; align-items: center; gap: var(--space-2); }
   .namuna-katak {
-    width: 18px; height: 18px; border-radius: var(--r-kichik); border: 2px solid var(--chiziq-maydon); background: var(--fon);
-    display: inline-flex; align-items: center; justify-content: center; color: var(--matn);
+    width: 18px; height: 18px; border-radius: var(--radius-sm); border: 2px solid var(--color-sat-line-strong); background: var(--color-sat-surface);
+    display: inline-flex; align-items: center; justify-content: center; color: var(--color-sat-text);
   }
-  .namuna-katak.answered { background: var(--rang-asosiy); border-color: var(--rang-asosiy); }
+  .namuna-katak.answered { background: var(--color-sat-blue-fill); border-color: var(--color-sat-blue-fill); }
   .namuna-katak.skipped { border-style: dashed; }
   .namuna-katak.flag { border: 0; }
-  .xarita-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); justify-content: flex-end; }
+  .xarita-amal { display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: flex-end; }
 
   /* Natija */
-  #natija { display: flex; flex-direction: column; gap: var(--b-6); }
-  .natija-h { margin: 0; font-size: var(--matn-h1); font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; }
-  .lead { margin: 0; font-size: var(--matn-katta); color: var(--matn-ikkinchi); }
+  #natija { display: flex; flex-direction: column; gap: var(--space-6); }
+  .natija-h { margin: 0; font-size: var(--text-h1-size); font-weight: var(--font-weight-extrabold); line-height: 1.1; letter-spacing: -0.5px; }
+  .lead { margin: 0; font-size: var(--font-size-body-d); color: var(--color-sat-text-muted); }
   /* Bitta panel: ball asosiy, vaqt va javoblar ikkinchi darajali (uchta bir xil karta emas) */
   .statlar {
     margin: 0; display: grid; grid-template-columns: 1.4fr 1fr 1fr;
-    background: var(--fon); border: 1.5px solid var(--matn); border-radius: var(--r-katta); overflow: hidden;
+    background: var(--color-sat-surface); border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-lg); overflow: hidden;
   }
-  .stat { padding: var(--b-5) var(--b-6); }
-  .stat + .stat { border-left: 1px solid var(--chiziq); }
-  .stat:nth-child(4) { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--chiziq); }
-  .stat dt { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
+  .stat { padding: var(--space-5) var(--space-6); }
+  .stat + .stat { border-left: 1px solid var(--color-sat-line); }
+  .stat:nth-child(4) { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--color-sat-line); }
+  .stat dt { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
   .stat dd { margin: 0; }
-  .stat-son { font-size: var(--matn-h3); font-weight: 900; font-variant-numeric: tabular-nums; }
-  .stat:first-child .stat-son { font-size: var(--matn-hero); line-height: 1; color: var(--rang-havola); }
-  .stat-izoh { color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
-  .natija-bolim { display: flex; flex-direction: column; gap: var(--b-3); }
-  .natija-bolim h2 { margin: 0; font-size: var(--matn-h3); font-weight: 800; display: inline; }
-  .bolim-izoh { margin: 0; color: var(--matn-ikkinchi); max-width: 62ch; }
-  .skill-jadval { width: 100%; border-collapse: collapse; background: var(--fon); border-radius: var(--r-orta); overflow: hidden; }
-  .skill-jadval th, .skill-jadval td { text-align: left; padding: var(--b-3) var(--b-4); border-bottom: 1px solid var(--chiziq); vertical-align: middle; }
-  .skill-jadval thead th { font-size: var(--matn-mayda); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--matn-sust); }
-  .skill-jadval tbody th { font-weight: 700; }
+  .stat-son { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; }
+  .stat:first-child .stat-son { font-size: var(--text-display-size); line-height: 1; color: var(--color-sat-blue-text); }
+  .stat-izoh { color: var(--color-sat-text-muted); font-size: var(--text-small-size); }
+  .natija-bolim { display: flex; flex-direction: column; gap: var(--space-3); }
+  .natija-bolim h2 { margin: 0; font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); display: inline; }
+  .bolim-izoh { margin: 0; color: var(--color-sat-text-muted); max-width: 62ch; }
+  .skill-jadval { width: 100%; border-collapse: collapse; background: var(--color-sat-surface); border-radius: var(--radius-md); overflow: hidden; }
+  .skill-jadval th, .skill-jadval td { text-align: left; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-sat-line); vertical-align: middle; }
+  .skill-jadval thead th { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-sat-text-muted); }
+  .skill-jadval tbody th { font-weight: var(--font-weight-bold); }
   .skill-nomi { display: block; }
-  .skill-bolim { display: block; font-size: var(--matn-mayda); font-weight: 600; color: var(--matn-sust); }
+  .skill-bolim { display: block; font-size: var(--text-caption-size); font-weight: var(--font-weight-semibold); color: var(--color-sat-text-muted); }
   .skill-jadval td { width: 40%; }
-  .skill-son { display: block; font-weight: 800; font-variant-numeric: tabular-nums; margin-bottom: var(--b-1); }
-  .skill-bar { display: block; height: 8px; border-radius: var(--r-toliq); background: var(--sirt-ikkinchi); overflow: hidden; }
-  .skill-bar-ich { display: block; height: 100%; background: var(--rang-havola); border-radius: var(--r-toliq); }
+  .skill-son { display: block; font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; margin-bottom: var(--space-1); }
+  .skill-bar { display: block; height: 8px; border-radius: var(--radius-full); background: var(--color-sat-line); overflow: hidden; }
+  .skill-bar-ich { display: block; height: 100%; background: var(--color-sat-blue-text); border-radius: var(--radius-full); }
 
   .natija-karta {
-    background: var(--fon); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta);
-    padding: var(--b-5); display: flex; flex-direction: column; gap: var(--b-3);
+    background: var(--color-sat-surface); border: 1.5px solid var(--color-sat-line-strong); border-radius: var(--radius-lg);
+    padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3);
   }
-  .natija-karta-h { margin: 0; display: flex; align-items: center; gap: var(--b-2); font-size: var(--matn-katta); font-weight: 800; }
-  .natija-ikonka { width: 18px; height: 18px; color: var(--rang-havola); }
-  .natija-meta { margin: 0; font-size: var(--matn-kichik); color: var(--matn-sust); font-weight: 600; }
+  .natija-karta-h { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--font-size-body-d); font-weight: var(--font-weight-extrabold); }
+  .natija-ikonka { width: 18px; height: 18px; color: var(--color-sat-blue-text); }
+  .natija-meta { margin: 0; font-size: var(--text-small-size); color: var(--color-sat-text-muted); font-weight: var(--font-weight-semibold); }
   .natija-stem { margin: 0; }
-  .natija-javob { margin: 0; display: flex; flex-wrap: wrap; gap: var(--b-1) var(--b-5); font-weight: 700; }
-  .izoh-ochiq { border-top: 1px solid var(--chiziq); padding-top: var(--b-2); }
-  .izoh-ochiq summary, .yigma summary { min-height: 48px; display: flex; align-items: center; font-weight: 800; cursor: pointer; }
-  .izoh-matn { color: var(--matn-ikkinchi); padding-bottom: var(--b-2); }
-  .yigma { display: flex; flex-direction: column; gap: var(--b-3); }
-  .yigma > :not(summary) { margin-top: var(--b-3); }
-  .redo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-2) var(--b-4); border-top: 1px solid var(--chiziq); padding-top: var(--b-3); }
+  .natija-javob { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-5); font-weight: var(--font-weight-bold); }
+  .izoh-ochiq { border-top: 1px solid var(--color-sat-line); padding-top: var(--space-2); }
+  .izoh-ochiq summary, .yigma summary { min-height: 48px; display: flex; align-items: center; font-weight: var(--font-weight-extrabold); cursor: pointer; }
+  .izoh-matn { color: var(--color-sat-text-muted); padding-bottom: var(--space-2); }
+  .yigma { display: flex; flex-direction: column; gap: var(--space-3); }
+  .yigma > :not(summary) { margin-top: var(--space-3); }
+  .redo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); border-top: 1px solid var(--color-sat-line); padding-top: var(--space-3); }
   .natija-xabar { align-self: flex-start; }
-  .redo-holat { margin: 0; display: inline-flex; align-items: center; gap: var(--b-2); font-weight: 700; font-size: var(--matn-kichik); }
-  .redo-ikonka { color: var(--rang-havola); }
-  .sabab { flex-basis: 100%; display: flex; flex-direction: column; gap: var(--b-2); }
-  .sabab-yorliq { margin: 0; font-size: var(--matn-kichik); font-weight: 700; color: var(--matn-sust); }
-  .sabab-chiplar { display: flex; flex-wrap: wrap; gap: var(--b-2); }
-  .sabab-izoh { margin: 0; min-height: 1em; font-size: var(--matn-kichik); color: var(--matn-ikkinchi); }
+  .redo-holat { margin: 0; display: inline-flex; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-bold); font-size: var(--text-small-size); }
+  .redo-ikonka { color: var(--color-sat-blue-text); }
+  .sabab { flex-basis: 100%; display: flex; flex-direction: column; gap: var(--space-2); }
+  .sabab-yorliq { margin: 0; font-size: var(--text-small-size); font-weight: var(--font-weight-bold); color: var(--color-sat-text-muted); }
+  .sabab-chiplar { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .sabab-izoh { margin: 0; min-height: 1em; font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
   .chip {
-    min-height: 48px; padding: 0 16px; border-radius: var(--r-toliq);
-    font: inherit; font-weight: 700; font-size: var(--matn-kichik); cursor: pointer;
-    background: var(--fon); color: var(--matn); border: 2px solid var(--chiziq-maydon);
+    min-height: 48px; padding: 0 var(--space-4); border-radius: var(--radius-full);
+    font: inherit; font-weight: var(--font-weight-bold); font-size: var(--text-small-size); cursor: pointer;
+    background: var(--color-sat-surface); color: var(--color-sat-text); border: 2px solid var(--color-sat-line-strong);
   }
-  .chip[aria-pressed='true'] { background: var(--rang-asosiy); color: var(--rang-asosiy-matn); border-color: var(--rang-asosiy); }
-  .natija-amal { display: flex; flex-wrap: wrap; gap: var(--b-3); }
+  .chip[aria-pressed='true'] { background: var(--color-sat-blue-fill); color: var(--color-sat-on-blue-fill); border-color: var(--color-sat-blue-fill); }
+  .natija-amal { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
   @media (max-width: 640px) {
     .amallar { width: 100%; }
     .amallar #xarita-och { margin-left: auto; }
-    .holat-karta { padding: var(--b-5); }
-    .sessiya-pastki { padding-bottom: calc(var(--b-3) + env(safe-area-inset-bottom, 0px)); }
-    .sessiya-pastki > * { flex: 1 1 0; padding: 0 var(--b-4); }
+    .holat-karta { padding: var(--space-5); }
+    .sessiya-pastki { padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0)); }
+    .sessiya-pastki > * { flex: 1 1 0; padding: 0 var(--space-4); }
     .sessiya-pastki #tekshir, .sessiya-pastki #keyingi, .sessiya-pastki #otkaz { margin-left: 0; }
-    .xarita-ichi { padding: var(--b-5); }
+    .xarita-ichi { padding: var(--space-5); }
     .xarita-amal > * { flex: 1 1 100%; }
     .natija-amal > * { flex: 1 1 100%; }
     .statlar { grid-template-columns: 1fr 1fr; }
     .stat:first-child { grid-column: 1 / -1; }
-    .stat + .stat { border-left: 0; border-top: 1px solid var(--chiziq); }
-    .stat:nth-child(3) { border-left: 1px solid var(--chiziq); }
+    .stat + .stat { border-left: 0; border-top: 1px solid var(--color-sat-line); }
+    .stat:nth-child(3) { border-left: 1px solid var(--color-sat-line); }
   }
 </style>

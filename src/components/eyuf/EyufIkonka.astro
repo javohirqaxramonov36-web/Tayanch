@@ -1,0 +1,23 @@
+---
+// 5-qavat chiziqli ikonkalari (DS EyufRoyxat / EyufHero, 24×24, stroke currentColor). Bezak: aria-hidden.
+export type EyufIkonkaNomi =
+  | 'hujjat' | 'reja' | 'kurs' | 'iq' | 'trenajyor' | 'mock' | 'suhbat' | 'soha' | 'hudud' | 'natija'
+  | 'qalpoq' | 'chevron';
+interface Props { nomi: EyufIkonkaNomi; qalinlik?: number }
+const { nomi, qalinlik = 1.75 } = Astro.props;
+const yollar: Record<EyufIkonkaNomi, string> = {
+  hujjat: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  reja: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M8 17h6"/>',
+  kurs: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M9 8h7"/>',
+  iq: '<path d="M9 4h6v4l3 3v4l-3 3v2H9v-2l-3-3v-4l3-3z"/><path d="M12 8v4M10 14h4"/>',
+  trenajyor: '<path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4z"/><path d="M16.5 14v6M13.5 17h6"/>',
+  mock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M10 2h4"/>',
+  suhbat: '<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+  soha: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  hudud: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  natija: '<path d="M6 21V4M6 4h11l-2 4 2 4H6"/>',
+  qalpoq: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><path d="M22 9v6"/>',
+  chevron: '<path d="M9 6l6 6-6 6"/>',
+};
+---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width={qalinlik} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" set:html={yollar[nomi]} />

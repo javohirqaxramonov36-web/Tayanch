@@ -4,7 +4,7 @@
 // Savol bo'lmasa, Supabase sozlanmagan bo'lsa yoki yuklashda xato bo'lsa butun blok yashirin qoladi (soxta savol yo'q).
 // Kvota sarflamaydi. Mantiq: src/lib/sat/kunSavoli.ts, server: supabase/migrations/20261111220000_kun_savoli.sql.
 // Dev: ?kun-mock=mehmon|kirgan|yoq|xato|eskirgan (&kun-sana=YYYY-MM-DD).
-import SavolUslub from './SavolUslub.astro';
+import SatSavol from './SatSavol.astro';
 import { manbalar } from '../../data/manbalar';
 import { yol } from '../../lib/yol';
 import { KUN_MATN as M } from '../../lib/sat/kunSavoli';
@@ -13,7 +13,7 @@ const cb12 = manbalar.find((m) => m.id === 'CB12');
 if (!cb12 || cb12.tekshiruvDarajasi !== 'rasmiy') throw new Error('KunSavoli: CB12 rasmiy manbasi topilmadi');
 const kirish = yol('/uz/hisob/kirish/');
 ---
-<SavolUslub />
+<SatSavol />
 <section class="kun" id="kun-savoli" aria-labelledby="kun-h" hidden data-kirish={kirish}>
   <div class="kun-bosh">
     <div class="kun-sarlavha">
@@ -35,20 +35,20 @@ const kirish = yol('/uz/hisob/kirish/');
   <div id="kun-savol-joy"></div>
 
   <div class="kun-amal" id="kun-amal" hidden>
-    <button type="button" class="kun-tugma kun-asosiy" id="kun-tekshir" aria-disabled="true" aria-describedby="kun-xabar">{M.tekshir}</button>
+    <button type="button" class="t-tugma sat-tugma--kok" id="kun-tekshir" aria-disabled="true" aria-describedby="kun-xabar">{M.tekshir}</button>
     <p class="kun-xabar" id="kun-xabar" role="status"></p>
   </div>
 
   <div class="kun-eskirgan" id="kun-eskirgan" hidden>
     <p id="kun-eskirgan-matn" tabindex="-1">{M.eskirgan}</p>
-    <button type="button" class="kun-tugma kun-ikkinchi" id="kun-yangila">{M.yangisiniOch}</button>
+    <button type="button" class="t-tugma t-tugma--ikkinchi" id="kun-yangila">{M.yangisiniOch}</button>
   </div>
 
   <div class="kun-ertaga" id="kun-ertaga" hidden>
     <h3 id="kun-ertaga-h" tabindex="-1">{M.ertaga}</h3>
     <p class="kun-vaqt" id="kun-vaqt"></p>
     <div class="kun-mehmon" id="kun-mehmon" hidden>
-      <a class="kun-tugma kun-asosiy" id="kun-kirish" href={kirish}>{M.saqlashTaklif}</a>
+      <a class="t-tugma sat-tugma--kok" id="kun-kirish" href={kirish}>{M.saqlashTaklif}</a>
       <p class="kun-mayda">{M.saqlashIzoh}</p>
     </div>
   </div>
@@ -278,63 +278,70 @@ const kirish = yol('/uz/hisob/kirish/');
 </script>
 
 <style>
-  .kun { display: flex; flex-direction: column; gap: var(--b-5); }
+  .kun { display: flex; flex-direction: column; gap: var(--space-5); }
   .kun[hidden] { display: none; }
   .kun [hidden] { display: none !important; }
   .kun-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  .kun-bosh { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--b-3) var(--b-6); }
-  .kun-sarlavha { display: flex; flex-direction: column; gap: var(--b-2); min-width: 0; }
-  .kun h2 { font-size: var(--matn-h2); font-weight: 800; line-height: 1.2; letter-spacing: var(--oraliq-sarlavha); text-wrap: balance; }
+  .kun-bosh { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-3) var(--space-6); }
+  .kun-sarlavha { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .kun h2 { font-family: var(--font-sat); font-size: var(--text-sat-h2-size); font-weight: var(--font-weight-semibold); line-height: var(--text-sat-h2-lh); letter-spacing: var(--text-sat-h2-ls); text-wrap: balance; }
+  /* SatSavol (DS PR 5c): /uz/sat/ da blok foto fonning zich shishasi ichida, shuning uchun
+     savol paneli qattiq karta (ichma-ich blur yo'q, DESIGN.md "Sirtlar"). */
+  .kun :global(:is(.sk-passage, .sk-savol, .sk-natija)) {
+    background: var(--color-sat-surface); border-color: var(--color-sat-line);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .kun :global(.sk-natija.sk-natija-togri) { border-color: var(--color-success-ui); }
   .kun h2:focus { outline: none; }
-  .kun-izoh { color: var(--matn-ikkinchi); max-width: 62ch; text-wrap: pretty; }
+  .kun-izoh { color: var(--color-sat-text-muted); max-width: 62ch; text-wrap: pretty; }
 
   /* Kun "chiptasi": sana va bo'lim. Bu komponentning yagona ta'kidi. */
   .kun-kun {
     display: inline-flex; align-items: stretch; margin: 0;
-    border: 1.5px solid var(--matn); border-radius: var(--r-toliq); overflow: hidden;
-    font-size: var(--matn-kichik); font-weight: 700;
+    border: 1.5px solid var(--color-sat-text); border-radius: var(--radius-full); overflow: hidden;
+    font-size: var(--text-small-size); font-weight: var(--font-weight-bold);
   }
-  .kun-sana { padding: var(--b-2) var(--b-4); background: var(--matn); color: var(--fon); white-space: nowrap; }
-  .kun-bolim { padding: var(--b-2) var(--b-4); color: var(--matn); white-space: nowrap; }
+  .kun-sana { padding: var(--space-2) var(--space-4); background: var(--color-sat-text); color: var(--color-sat-surface); white-space: nowrap; }
+  .kun-bolim { padding: var(--space-2) var(--space-4); color: var(--color-sat-text); white-space: nowrap; }
 
   .kun-namuna {
-    align-self: flex-start; margin: 0; padding: 4px 12px; border-radius: var(--r-toliq);
-    border: 1.5px dashed var(--matn-sust); color: var(--matn-ikkinchi); font-size: var(--matn-mayda); font-weight: 700;
+    align-self: flex-start; margin: 0; padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+    border: 1.5px dashed var(--color-sat-text-muted); color: var(--color-sat-text-muted); font-size: var(--text-caption-size); font-weight: var(--font-weight-bold);
   }
 
-  .kun-streak { display: flex; align-items: center; gap: var(--b-2); margin: 0; font-weight: 700; color: var(--matn); }
-  .kun-streak svg { flex: none; color: var(--rang-havola); }
+  .kun-streak { display: flex; align-items: center; gap: var(--space-2); margin: 0; font-weight: var(--font-weight-bold); color: var(--color-sat-text); }
+  .kun-streak svg { flex: none; color: var(--color-sat-blue-text); }
 
-  .kun-amal { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-3) var(--b-4); }
+  .kun-amal { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
   /* Jonli hudud doim DOM'da va ko'rinadigan bo'lib qoladi (display: none bo'lsa yangi xabar e'lon qilinmasligi mumkin). */
-  .kun-xabar { margin: 0; color: var(--matn-ikkinchi); font-size: var(--matn-kichik); }
+  .kun-xabar { margin: 0; color: var(--color-sat-text-muted); font-size: var(--text-small-size); }
 
   .kun-eskirgan, .kun-ertaga {
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-3);
-    background: var(--fon-ikkinchi); border-radius: var(--r-katta); padding: var(--b-6);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+    background: var(--color-sat-sunken); border-radius: var(--radius-lg); padding: var(--space-6);
   }
-  .kun-eskirgan p { margin: 0; font-weight: 700; }
+  .kun-eskirgan p { margin: 0; font-weight: var(--font-weight-bold); }
   .kun-eskirgan p:focus { outline: none; }
-  .kun-ertaga h3 { font-size: var(--matn-h3); font-weight: 800; line-height: 1.25; letter-spacing: var(--oraliq-kichik-sarlavha); }
+  .kun-ertaga h3 { font-size: var(--text-h3-size); font-weight: var(--font-weight-extrabold); line-height: 1.25; letter-spacing: var(--oraliq-kichik-sarlavha); }
   .kun-ertaga h3:focus { outline: none; }
-  .kun-vaqt { margin: 0; color: var(--matn-ikkinchi); }
-  .kun-mehmon { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b-2); padding-top: var(--b-1); }
-  .kun-mayda { font-size: var(--matn-kichik); color: var(--matn-sust); }
+  .kun-vaqt { margin: 0; color: var(--color-sat-text-muted); }
+  .kun-mehmon { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding-top: var(--space-1); }
+  .kun-mayda { font-size: var(--text-small-size); color: var(--color-sat-text-muted); }
 
-  .kun-rasmiy { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--b-3); margin: 0; }
+  .kun-rasmiy { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); margin: 0; }
   .kun-rasmiy a {
-    display: inline-flex; align-items: center; gap: var(--b-1); min-height: 44px;
-    color: var(--rang-havola); font-weight: 700; text-underline-offset: 0.15em;
+    display: inline-flex; align-items: center; gap: var(--space-1); min-height: 44px;
+    color: var(--color-sat-blue-text); font-weight: var(--font-weight-bold); text-underline-offset: 0.15em;
   }
 
   @media (max-width: 640px) {
     .kun { order: 2; }
-    .kun h2 { font-size: 22px; }
-    .kun-izoh { font-size: var(--matn-kichik); }
-    .kun-tugma { width: 100%; }
+    .kun h2 { font-size: var(--text-h2-size); }
+    .kun-izoh { font-size: var(--text-small-size); }
+    .t-tugma { width: 100%; }
     .kun-amal { flex-direction: column; align-items: stretch; }
-    .kun-eskirgan, .kun-ertaga { padding: var(--b-5); border-radius: var(--r-orta); }
+    .kun-eskirgan, .kun-ertaga { padding: var(--space-5); border-radius: var(--radius-md); }
     .kun-mehmon { align-self: stretch; }
   }
 </style>

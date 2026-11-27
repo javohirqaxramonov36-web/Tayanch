@@ -1,23 +1,35 @@
 ---
 import TayanchLogo from '../TayanchLogo.astro';
 import { yol } from '../../lib/yol';
+import { yolTili } from '../../data/umumiyMatn';
+// SAT sahifalarida (yolTili = en) matn inglizcha; kirish sahifalarining o'zi 1-qavatda, o'zbekcha.
+const en = yolTili(Astro.url.pathname) === 'en';
+// Inglizcha huquqiy sahifalar faqat SAT'da bor; IELTS'da o'zbekcha umumiy sahifalarga "(in Uzbek)" belgisi bilan.
+const sat = /\/uz\/sat(\/|$)/.test(Astro.url.pathname);
+const T = en
+  ? { yop: 'Close', sarlavha: 'Sign in to your account', izoh: 'Your progress, deadlines and test results are saved. Sign in with Google or with email and password.', google: 'Continue with Google', yoki: 'or', email: 'Sign in with email and password', xato: 'Sign-in failed. Please try again.' }
+  : { yop: 'Yopish', sarlavha: 'Hisobingizga kiring', izoh: 'Progressingiz, deadlineʼlaringiz va test natijalaringiz saqlanadi. Google yoki email va parol orqali kiring.', google: 'Google orqali kirish', yoki: 'yoki', email: 'Email va parol orqali kirish', xato: "Kirishda xatolik. Qaytadan urinib ko'ring." };
 ---
-<dialog class="kirish-dialog" data-kirish-dialog aria-labelledby="kirish-dialog-h" aria-describedby="kirish-dialog-izoh" lang="uz">
-  <button type="button" class="dialog-yop" aria-label="Yopish" data-kirish-yop><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+<dialog class="kirish-dialog" data-kirish-dialog aria-labelledby="kirish-dialog-h" aria-describedby="kirish-dialog-izoh" lang={en ? 'en' : 'uz'} data-xato-matn={T.xato}>
+  <button type="button" class="dialog-yop" aria-label={T.yop} data-kirish-yop><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
   <div class="dialog-logo"><TayanchLogo /></div>
-  <h1 id="kirish-dialog-h">Hisobingizga kiring</h1>
-  <p id="kirish-dialog-izoh">Progressingiz, deadline'laringiz va test natijalaringiz saqlanadi. Google yoki email va parol orqali kiring.</p>
+  <h1 id="kirish-dialog-h">{T.sarlavha}</h1>
+  <p id="kirish-dialog-izoh">{T.izoh}</p>
   <button type="button" class="dialog-provider google-provider" data-kirish-google>    <svg class="google-g" aria-hidden="true" focusable="false" width="20" height="20" viewBox="10 10 20 20">
       <path d="M29.6 20.2273C29.6 19.5182 29.5364 18.8364 29.4182 18.1818H20V22.05H25.3818C25.15 23.3 24.4455 24.3591 23.3864 25.0682V27.5773H26.6182C28.5091 25.8364 29.6 23.2727 29.6 20.2273Z" fill="#4285F4" />
       <path d="M20 30C22.7 30 24.9636 29.1045 26.6181 27.5773L23.3863 25.0682C22.4909 25.6682 21.3454 26.0227 20 26.0227C17.3954 26.0227 15.1909 24.2636 14.4045 21.9H11.0636V24.4909C12.7091 27.7591 16.0909 30 20 30Z" fill="#34A853" />
       <path d="M14.4045 21.9C14.2045 21.3 14.0909 20.6591 14.0909 20C14.0909 19.3409 14.2045 18.7 14.4045 18.1V15.5091H11.0636C10.3864 16.8591 10 18.3864 10 20C10 21.6136 10.3864 23.1409 11.0636 24.4909L14.4045 21.9Z" fill="#FBBC04" />
       <path d="M20 13.9773C21.4681 13.9773 22.7863 14.4818 23.8227 15.4727L26.6909 12.6045C24.9591 10.9909 22.6954 10 20 10C16.0909 10 12.7091 12.2409 11.0636 15.5091L14.4045 18.1C15.1909 15.7364 17.3954 13.9773 20 13.9773Z" fill="#E94235" />
     </svg>
-Google orqali kirish</button>
-  <div class="dialog-divider"><span>yoki</span></div>
-  <a class="dialog-provider email-provider" href={yol('/uz/hisob/kirish/')} data-parol-kirish>Email va parol orqali kirish</a>
+{T.google}</button>
+  <div class="dialog-divider"><span>{T.yoki}</span></div>
+  <a class="dialog-provider email-provider" href={yol('/uz/hisob/kirish/')} data-parol-kirish>{T.email}</a>
   <p class="dialog-error" role="alert" data-kirish-xato hidden></p>
-  <p class="dialog-small dialog-terms">Davom etish orqali <a href={yol('/uz/shartlar/')}>Foydalanish shartlari</a> va <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>ga rozilik bildirasiz.</p>
+  {en
+    ? sat
+      ? <p class="dialog-small dialog-terms">By continuing, you agree to the <a href={yol('/uz/sat/huquqiy/shartlar/')}>Terms of Use</a> and the <a href={yol('/uz/sat/huquqiy/maxfiylik/')}>Privacy Policy</a>.</p>
+      : <p class="dialog-small dialog-terms">By continuing, you agree to the <a href={yol('/uz/shartlar/')} hreflang="uz">Terms of Use</a> and the <a href={yol('/uz/maxfiylik/')} hreflang="uz">Privacy Policy</a> (in Uzbek).</p>
+    : <p class="dialog-small dialog-terms">Davom etish orqali <a href={yol('/uz/shartlar/')}>Foydalanish shartlari</a> va <a href={yol('/uz/maxfiylik/')}>Maxfiylik siyosati</a>ga rozilik bildirasiz.</p>}
 </dialog>
 <script>
   import { kirishDialogniUla } from '../../lib/kirishDialog';

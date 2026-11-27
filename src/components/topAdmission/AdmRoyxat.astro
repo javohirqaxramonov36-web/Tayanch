@@ -1,0 +1,26 @@
+---
+// AdmRoyxat (2-qavat mini-DS, ADR 005, PR 7): zich shisha panel ichida belgilanadigan qatorlar.
+// Manba: DS artifakti v15, components/AdmRoyxat. Har qator <label> ichida haqiqiy <input type="checkbox">,
+// .belgi (belgilanganda to'q sariq fill, qora belgi) va matn; o'ngda ixtiyoriy <small> izoh.
+// Qator balandligi 52px. Holatni sahifa skripti boshqaradi (data-* atributlar orqali), komponentning o'zi saqlamaydi.
+// Fokus: global halqa .belgi da. Stillar src/styles/adm.css.
+import '../../styles/adm.css';
+
+export interface Props {
+  yorliq: string;
+  qatorlar: { matn: string; izoh?: string; data?: Record<string, string> }[];
+}
+const { yorliq, qatorlar } = Astro.props;
+---
+<ul class="adm-shisha adm-shisha--zich adm-royxat" aria-label={yorliq}>
+  {qatorlar.map((q) => (
+    <li>
+      <label>
+        <input type="checkbox" {...Object.fromEntries(Object.entries(q.data ?? {}).map(([k, v]) => [`data-${k}`, v]))} />
+        <span class="belgi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
+        <span>{q.matn}</span>
+        {q.izoh && <small>{q.izoh}</small>}
+      </label>
+    </li>
+  ))}
+</ul>

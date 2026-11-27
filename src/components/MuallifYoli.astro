@@ -5,7 +5,7 @@ import { yol } from '../lib/yol';
 <section class="qora-sahna" aria-labelledby="muallif-sarlavha">
   <div class="ichki sahna-ichki">
     <div class="chap">
-      <h2 id="muallif-sarlavha">Bu yo'lni men o'zim bosib o'tganman.</h2>
+      <h2 id="muallif-sarlavha">Bu yoʻlni men oʻzim bosib oʻtganman.</h2>
       <p class="lead">Qimmat kurslarsiz, mustaqil tayyorgarlik bilan. Endi navbat sizda.</p>
       <div class="kim">
         <span class="avatar" aria-hidden="true">J</span>
@@ -42,13 +42,13 @@ import { yol } from '../lib/yol';
         </ul>
         <ul class="nomlar">{qabulXatlari.qolganlari.map((n) => <li>{n}</li>)}</ul>
       </details>
-      <p class="izoh">Previewlar faqat ma'lumot uchun: original hujjat emas va tekshiruv uchun yaroqsiz. Shaxsiy ma'lumotlar, identifikatorlar va moliyaviy tafsilotlar yopilgan.</p>
+      <p class="izoh">Previewlar faqat maʼlumot uchun: original hujjat emas va tekshiruv uchun yaroqsiz. Shaxsiy maʼlumotlar, identifikatorlar va moliyaviy tafsilotlar yopilgan.</p>
     </div>
   </div>
 </section>
 
 <style>
-  .qora-sahna { background: var(--qora); color: #ffffff; }
+  .qora-sahna { background: var(--qora); color: var(--qora-matn); }
   .sahna-ichki {
     padding-block: var(--b-14);
     display: flex; flex-wrap: wrap; gap: var(--b-14);
@@ -62,7 +62,7 @@ import { yol } from '../lib/yol';
   .kim > span:last-child { display: flex; flex-direction: column; }
   .avatar {
     width: 52px; height: 52px; border-radius: var(--r-toliq);
-    background: #ffffff; color: var(--qora);
+    background: var(--qora-matn); color: var(--qora);
     font-weight: 900; font-size: 22px;
     display: flex; align-items: center; justify-content: center;
   }

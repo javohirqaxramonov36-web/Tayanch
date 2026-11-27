@@ -1,0 +1,19 @@
+---
+// Navigator katta raqami (DS NavRaqam): raqam va nom bitta sarlavhada, ekran o'quvchi "02 Top Admission" deb o'qiydi.
+// Raqam har doim ikki xonali va faqat haqiqiy tartibni bildiradi (qavat raqami, qadam tartibi).
+// Stil: src/styles/nav.css (.nav-raqam-blok, .nav-num, .nav-nom). Rang konteynerdan (sahna, qog'oz, sirt) olinadi.
+interface Props {
+  raqam: number;
+  teg?: 'h2' | 'h3' | 'p';
+  /** Faol raqam laymda: faqat qora sahna ichida */
+  laym?: boolean;
+  id?: string;
+  class?: string;
+}
+const { raqam, teg: Teg = 'h2', laym = false, id, class: klass } = Astro.props;
+const ikkiXona = String(raqam).padStart(2, '0');
+---
+<Teg class:list={['nav-raqam-blok', klass]} id={id}>
+  <span class:list={['nav-num', laym && 'nav-num--laym']}>{ikkiXona}</span>
+  <span class="nav-nom"><slot /></span>
+</Teg>

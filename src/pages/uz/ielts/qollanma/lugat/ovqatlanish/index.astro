@@ -4,79 +4,79 @@ import { darsSavollari } from '../../../../../../data/ieltsDarslar';
 import { yol } from '../../../../../../lib/yol';
 
 const iboralar = [
-  { ibora: 'balanced diet', mano: 'Turli oziq-ovqat guruhlarini o‘z ichiga olgan ovqatlanish.' },
-  { ibora: 'cut down on', mano: 'Miqdor yoki iste’molni kamaytirish.' },
-  { ibora: 'home-cooked meal', mano: 'Uyda tayyorlangan taom.' },
-  { ibora: 'skip breakfast', mano: 'Nonushta qilmaslik.' },
-  { ibora: 'food waste', mano: 'Iste’mol qilinmay tashlab yuboriladigan ovqat.' },
+  { ibora: 'balanced diet', mano: 'eating food from a range of food groups', uz: 'muvozanatli ovqatlanish' },
+  { ibora: 'cut down on', mano: 'to reduce how much of something you have', uz: 'kamaytirmoq' },
+  { ibora: 'home-cooked meal', mano: 'a meal prepared at home', uz: 'uyda tayyorlangan taom' },
+  { ibora: 'skip breakfast', mano: 'not to eat breakfast', uz: 'nonushta qilmaslik' },
+  { ibora: 'food waste', mano: 'food that is thrown away uneaten', uz: 'ovqat isrofi' },
 ];
 ---
 <DarsQolip
   bolim="ielts"
   modul="iv-ovqatlanish"
   savollar={darsSavollari['iv-ovqatlanish']}
-  yolBandlari={["Qo‘llanmalar", 'Lug‘at']}
-  darsTuri="Lug‘at darsi"
+  yolBandlari={['Guides', 'Vocabulary']}
+  darsTuri="Vocabulary lesson"
   imtihon="IELTS"
   manbalar={[]}
   tekshirilgan="2026-11-22"
-  keyingiTekshiruv="Muallif ko‘rigidan keyin"
-  title="Ovqatlanish kollokatsiyalari · IELTS"
-  description="Ovqatlanishga oid beshta inglizcha iboraning ma’nosini kontekstda farqlash. Qoida, misol va beshta original namuna mashq."
-  yonalish="Lug‘at"
-  sarlavha="Ovqatlanish haqida tabiiy iboralar"
-  lead="Bitta so‘zni tanish bilan cheklanmay, yonidagi so‘zlar bilan birga tushuning. Beshta iborani misolda ko‘rib, kontekstga mos ma’nosini tanlaysiz."
-  qadamNomlari={['Misol', 'Qoida', 'Sinab ko‘r']}
+  keyingiTekshiruv="After the author's review"
+  title="Food collocations · IELTS"
+  description="Tell apart the meanings of five English phrases about food in context. A rule, an example and five original sample exercises."
+  yonalish="Vocabulary"
+  sarlavha="Natural phrases about food"
+  lead="Don't stop at knowing a single word: understand it together with the words around it. You see five phrases in examples and choose the meaning that fits the context."
+  qadamNomlari={['Example', 'Rule', 'Try it']}
   savolTili="en"
-  savolKorsatma="Gapni o‘qing va iboraning kontekstga mos ma’nosini tanlang."
+  savolKorsatma="Read the sentence and choose the meaning of the phrase that fits the context."
   katalogYoli="/uz/ielts/"
   takrorlashHref={yol('/uz/ielts/vosita/takrorlash/')}
-  keyingi={{ nomi: 'Xatolarni takrorlash', href: yol('/uz/ielts/vosita/takrorlash/'), turi: 'qadam' }}
+  keyingi={{ nomi: 'Review mistakes', href: yol('/uz/ielts/vosita/takrorlash/'), turi: 'qadam' }}
   maqsadlar={[
-    'Beshta iboraning kontekstdagi ma’nosini farqlaysiz.',
-    'Matnda aytilmagan ma’lumotni iboraga qo‘shib yubormaysiz.',
-    'Javob izohi orqali xatoni tushunib, qayta mashq qilasiz.',
+    'Tell apart the meanings of five phrases in context.',
+    'Avoid adding information to a phrase that the text does not give.',
+    'Understand your mistakes from the answer explanations and practise again.',
   ]}
   xulosa={[
-    'Iborani uni o‘rab turgan gap bilan birga o‘qing.',
-    'Miqdor kamayishi butunlay to‘xtashni bildirmaydi.',
-    'Tayyorlash joyi mahsulot qayerdan kelganini aytmaydi.',
-    'Variantdagi qo‘shimcha ma’lumotni matn tasdiqlashini tekshiring.',
-    'Xato qilgan iborangizni qayta ishlang va o‘zingiz yangi gap tuzing.',
+    'Read a phrase together with the sentence around it.',
+    'Reducing an amount does not mean stopping completely.',
+    'Where food is cooked does not tell you where it comes from.',
+    'Check that the text supports any extra information in an option.',
+    'Practise the phrases you got wrong and make your own new sentence.',
   ]}
   tekshirilmagan={[
-    'Misollar va mashqlar Tayanch uchun mustaqil yozilgan AI qoralamasi. Inglizcha matn, tarjima va javoblar muallif ko‘rigini kutmoqda.',
-    'Dars mavzusi muallif foydalanish ruxsatini tasdiqlagan materiallar katalogidan tanlangan.',
+    'The examples and exercises are an AI draft written independently for Tayanch. The English text, translations and answers are awaiting the author\'s review.',
+    'The lesson topic was chosen from a catalogue of materials the author has confirmed permission to use.',
   ]}
 >
   <section slot="sahna" class="lugat-sahna" aria-labelledby="iboralar-h">
-    <p class="pill">Namuna</p>
-    <h2 id="iboralar-h">Birga ishlatiladigan so‘zlar</h2>
+    <p class="pill">Sample</p>
+    <h2 id="iboralar-h">Words that go together</h2>
     <dl class="iboralar">
-      {iboralar.map(({ ibora, mano }) => (
-        <div><dt lang="en">{ibora}</dt><dd>{mano}</dd></div>
+      {iboralar.map(({ ibora, mano, uz }) => (
+        <div><dt>{ibora}</dt><dd>{mano}</dd><dd class="uz">Uzbek: <span lang="uz">{uz}</span></dd></div>
       ))}
     </dl>
   </section>
 
   <div slot="animatsiya" class="qadam-matn">
-    <p class="pill">Namuna</p>
-    <p lang="en">Amina now cooks dinner at home three evenings a week. She is <strong>cutting down on</strong> takeaway meals.</p>
-    <p>Amina tayyor ovqat buyurtma qilishni kamaytiryapti. Gap uni butunlay to‘xtatganini aytmaydi.</p>
-    <button type="button" class="katta asosiy" data-qadamga="formula">Qoidani ko‘rish</button>
+    <p class="pill">Sample</p>
+    <p>Amina now cooks dinner at home three evenings a week. She is <strong>cutting down on</strong> takeaway meals.</p>
+    <p>Amina is ordering takeaway less often. The sentence does not say she has stopped completely.</p>
+    <button type="button" class="katta asosiy" data-qadamga="formula">See the rule</button>
   </div>
 
   <div slot="formula" class="qadam-matn">
-    <p>Avval iborani toping, keyin butun gapdagi ma’nosini tekshiring.</p>
-    <p><span lang="en">Cut down on</span> miqdorni kamaytiradi. Joyni yoki vaqtni o‘zgartirishning o‘zi kamayishni bildirmaydi.</p>
-    <p><span lang="en">Home-cooked</span> taom qayerda tayyorlanganini bildiradi. Tarkib yoki retsept haqida qo‘shimcha xulosa chiqarish uchun boshqa ma’lumot kerak.</p>
-    <button type="button" class="katta asosiy" data-qadamga="sinab">Sinab ko‘rish</button>
+    <p>Find the phrase first, then check its meaning in the whole sentence.</p>
+    <p><em>Cut down on</em> reduces an amount. Changing the place or the time does not in itself mean less.</p>
+    <p><em>Home-cooked</em> tells you where a meal was prepared. To conclude anything about ingredients or the recipe, you need other information.</p>
+    <button type="button" class="katta asosiy" data-qadamga="sinab">Try it</button>
   </div>
 
   <div slot="sinab" class="qadam-matn">
-    <p>Pastdagi beshta mashqda iboraning kontekstga mos ma’nosini tanlang. Javobdan keyin izohni o‘qing.</p>
-    <p>Oxirida iboralardan biri bilan o‘zingiz gap tuzing va uni ovoz chiqarib ayting.</p>
-    <a class="katta asosiy" href="#mashqlar">Mashqlarga o‘tish</a>
+    <p>In the five exercises below, choose the meaning of the phrase that fits the context. Read the explanation after each answer.</p>
+    <p>At the end, make your own sentence with one of the phrases and say it aloud.</p>
+    <a class="katta asosiy" href="#mashqlar">Go to the exercises</a>
   </div>
 </DarsQolip>
 
@@ -93,4 +93,5 @@ const iboralar = [
   .iboralar > div { border-bottom: var(--border-width-1) solid var(--color-border); padding-bottom: var(--space-4); }
   .iboralar dt { font-weight: var(--font-weight-semibold); }
   .iboralar dd { margin: var(--space-1) 0 0; color: var(--color-text-secondary); }
+  .iboralar dd.uz { font-size: var(--text-small-size); }
 </style>

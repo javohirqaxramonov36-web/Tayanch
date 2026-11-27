@@ -68,9 +68,9 @@ export function haqiqiyApi(): WritingApi | null {
 
 const NAMUNA_MEZON = (band: number, misol: string) => ({
   band,
-  feedback: 'Namuna: you give a clear position, but some ideas are listed rather than explained.',
+  feedback: 'Sample: you give a clear position, but some ideas are listed rather than explained.',
   example_from_text: misol,
-  improvement_tip: 'Namuna: add one specific example to each body paragraph and explain how it supports your view.',
+  improvement_tip: 'Sample: add one specific example to each body paragraph and explain how it supports your view.',
 });
 
 export function mockApi(rejim: string): WritingApi {
@@ -100,7 +100,7 @@ export function mockApi(rejim: string): WritingApi {
           lexical_resource: NAMUNA_MEZON(6.5, birinchi),
           grammatical_range_accuracy: NAMUNA_MEZON(6, ''),
         },
-        overall_summary: 'Namuna: your opinion is clear and easy to follow. The main weakness is that body paragraphs need more developed support.',
+        overall_summary: 'Sample: your opinion is clear and easy to follow. The main weakness is that body paragraphs need more developed support.',
         under_length: soz < 250,
       };
       const kesh = rejim === 'kesh';

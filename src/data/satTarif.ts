@@ -1,6 +1,8 @@
 // SAT tariflari sahifasi (/uz/sat/hisob/obuna/) va to'lov natijasi sahifasi sozlamasi.
 // Narx va muddat bu yerda YO'Q: ular faqat bazada (plans.price_uzs, plans.period_days; P19 da muallif beradi).
 // Narxi yo'q yoki faol emas tarif ekranda "Not available yet" bo'ladi, to'lov tugmasi chiqmaydi.
+// Istisno: `kutilayotgan` (sotuvga chiqmagan tarifning rejalashtirilgan narxi, faqat ko'rsatish uchun; to'lov baribir
+// serverdagi plans qatoridan).
 // Matn inglizcha (SAT bo'limi qoidasi); kod nomlari o'zbekcha.
 
 import type { QatorTur } from '../lib/sat/tarifJadval';
@@ -8,6 +10,13 @@ import type { QatorTur } from '../lib/sat/tarifJadval';
 export type TarifKod = 'free' | 'pro' | 'max';
 export type DavrKod = 'oylik' | '3oylik';
 export type TolovUsuli = 'click' | 'payme' | 'uzcard-humo';
+
+export interface KutilayotganTarif {
+  /** plans.price_uzs bilan bir xil (migratsiya 20261124120000_tarif_max_narx.sql). */
+  narxUzs: number;
+  kun: number;
+  imkoniyatlar: string[];
+}
 
 export const satTarif = {
   tariflar: [
@@ -31,6 +40,17 @@ export const satTarif = {
   /** Qaytarish (refund) siyosati sahifasi, yol() ga beriladigan yo'l (P23). null: havola chiqmaydi, "not published yet". */
   // P23 (2026-11-11): Refund Policy qoralamasi (inglizcha nusxa; asosiy matn /uz/qaytarish/).
   qaytarishHavola: '/uz/sat/huquqiy/qaytarish/' as null | string,
+  /**
+   * Sotuvga chiqmagan tarif (plans.is_active = false, RLS tufayli bazadan kelmaydi): kartada "Coming soon" bilan
+   * rejalashtirilgan narx va imkoniyatlar. Max: muallif qarori 2026-11-24; AI tutor tayyor bo'lgach sotuvga chiqadi.
+   */
+  kutilayotgan: {
+    max: {
+      narxUzs: 119000,
+      kun: 30,
+      imkoniyatlar: ['AI tutor: step-by-step help with questions and mistakes (being built)', 'Unlimited mock tests'],
+    },
+  } as Partial<Record<TarifKod, KutilayotganTarif>>,
   /** Obuna eslatmasi: tugashiga shu kun yoki kamroq qolganda (P22). */
   eslatmaKun: 7,
   /** Kutilayotgan to'lov shu daqiqadan eski bo'lsa "Check payment status" (P22; inpay-muvofiqlash ham 15 daqiqadan). */

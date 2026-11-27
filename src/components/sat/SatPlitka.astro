@@ -1,0 +1,87 @@
+---
+// SatPlitka (3-qavat mini-DS, ADR 005, PR 5a): navy sahnada bo'limlarga tez kirish plitkalari.
+// Manba: DS artifakti v15, components/SatPlitka. Faqat .sat-sahna ichida ishlatiladi (src/styles/sat.css).
+// Plitka = <a>: ikonka (.t-shisha, sahnada navy shisha) va ostida yorliq. Ikonka chiziqli SVG, emoji emas.
+// Joriy bo'lim: aria-current="page" (ko'k fill + nur). Hover (faqat sichqoncha): chet sat-blue va nur, darhol.
+// Bosish: ikonka --bosilish (150ms, faqat transform; reduced motion'da siljish yo'q). Fokus: global halqa.
+export type SatPlitkaIkonka = 'test' | 'mock' | 'bank' | 'lugat' | 'reja' | 'natija';
+
+export interface Props {
+  bandlar: { href: string; nomi: string; ikonka: SatPlitkaIkonka }[];
+  /** Joriy sahifa havolasi (aria-current="page") */
+  joriy?: string;
+  /** Ro'yxat sarlavhasining id si */
+  sarlavhaId?: string;
+}
+
+const { bandlar, joriy, sarlavhaId } = Astro.props;
+---
+<ul class="sat-plitkalar" aria-labelledby={sarlavhaId}>
+  {bandlar.map((b) => (
+    <li>
+      <a class="sat-plitka" href={b.href} aria-current={b.href === joriy ? 'page' : undefined}>
+        <span class="sat-plitka-ikon t-shisha" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            {b.ikonka === 'test' && <><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 2.5" /><path d="M9 2h6" /></>}
+            {b.ikonka === 'mock' && <><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6" /><path d="M9 12h6" /><path d="M9 16h3" /></>}
+            {b.ikonka === 'bank' && <><path d="M12 3 3 8l9 5 9-5z" /><path d="m3 13 9 5 9-5" /></>}
+            {b.ikonka === 'lugat' && <><rect x="3" y="7" width="13" height="14" rx="2" /><path d="M8 3h11a2 2 0 0 1 2 2v12" /></>}
+            {b.ikonka === 'reja' && <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18" /><path d="M8 3v4" /><path d="M16 3v4" /></>}
+            {b.ikonka === 'natija' && <><path d="M3 20h18" /><path d="M7 16v-4" /><path d="M12 16V7" /><path d="M17 16v-6" /></>}
+          </svg>
+        </span>
+        <span class="sat-plitka-nom">{b.nomi}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .sat-plitkalar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 720px) {
+    .sat-plitkalar { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  }
+  .sat-plitka {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: var(--space-2);
+    padding-block: var(--space-1);
+    border-radius: var(--radius-md);
+    color: var(--color-sat-on-navy);
+    font-size: var(--text-caption-size);
+    line-height: var(--text-caption-lh);
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sat-plitka-ikon {
+    display: grid;
+    place-items: center;
+    width: var(--size-sat-plitka);
+    height: var(--size-sat-plitka);
+    border-radius: var(--radius-md);
+    color: var(--color-sat-sky);
+    transition: transform var(--duration-fast) var(--ease-state);
+  }
+  .sat-plitka-ikon svg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
+  @media (hover: hover) and (pointer: fine) {
+    .sat-plitka:hover .sat-plitka-ikon { border-color: var(--color-sat-blue); box-shadow: var(--shadow-sat-plitka-hover); }
+  }
+  .sat-plitka:active .sat-plitka-ikon { transform: var(--bosilish); }
+  .sat-plitka[aria-current='page'] .sat-plitka-ikon {
+    border-color: var(--color-sat-sky);
+    background: var(--color-sat-blue-fill);
+    box-shadow: var(--shadow-sat-plitka-joriy);
+    color: var(--color-sat-on-blue-fill);
+  }
+  .sat-plitka-nom { overflow-wrap: break-word; }
+</style>

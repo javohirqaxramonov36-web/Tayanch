@@ -1,94 +1,17 @@
 ---
-import { bepulImkoniyatlar } from '../data/boshSahifa';
-import { yol } from '../lib/yol';
+// 1-qavat · Bosh sahifa tariflar bo'limi. Kartalar, taqqoslash va FAQ: TarifTanlov.
+// Pro narxi src/data/tariflar.ts dan; to'lov SAT Subscription sahifasida (/uz/sat/hisob/obuna/).
+import TarifTanlov from './TarifTanlov.astro';
 ---
 <section class="home-pricing" aria-labelledby="tarif-h">
-  <p class="tarif-label">TARIFLAR</p><h2 id="tarif-h">O'zingizga mos tarifni tanlang</h2>
-  <div class="tarif-cards">
-    <article class="tarif-card"><h3>Bepul</h3><p class="tarif-price">0 so'm</p>
-      <ul>{bepulImkoniyatlar.map((x) => <li>{x}</li>)}</ul>
-      <a class="tarif-button" href={yol('/uz/#qavatlar')}>Bepul boshlash</a>
-    </article>
-    <article class="tarif-card pro"><p class="tarif-strip">Tavsiya etamiz</p><h3>Pro</h3><p class="tarif-scope">SAT bo'limi uchun</p>
-      <p class="tarif-price" data-home-price>[TO'LDIRING: Pro narxi va davri]</p>
-      <p class="tarif-day" data-home-day></p>
-      <ul data-home-features><li>[TO'LDIRING: Pro imkoniyatlari]</li></ul>
-      <button type="button" class="tarif-button" data-home-pro disabled>Pro bilan boshlash</button>
-      <p class="tarif-status" data-home-price-status role="status">Amaldagi tarif tekshirilmoqda.</p>
-    </article>
-  </div>
+  <p class="nav-chip tarif-label">Tariflar</p>
+  <h2 id="tarif-h" class="nav-nom">Oʻzingizga mos tarifni tanlang</h2>
+  <p class="tarif-lead">Asosiy imkoniyatlar bepul. Pullik tarif hozircha faqat SAT boʻlimida.</p>
+  <TarifTanlov id="bosh-tarif" />
 </section>
-<script>
-  import { hisobMijoz, rozilikHolati, rozilikYoli } from '../lib/hisob';
-  import { funksiya, tolovniEsla } from '../lib/sat/tolov';
-  import { bayroqlar } from '../lib/sat/tarifJadval';
-  import { yol } from '../lib/yol';
-  const tugma = document.querySelector<HTMLButtonElement>('[data-home-pro]')!;
-  const holat = document.querySelector<HTMLElement>('[data-home-price-status]')!;
-  const son = (n: number) => new Intl.NumberFormat('ru-RU').format(n).replace(/\u00a0/g, ' ');
-  let tayyor = false;
-  async function narxniOl() {
-    const c = hisobMijoz();
-    if (!c) { holat.textContent = 'Tarif ma’lumoti hozircha yuklanmadi.'; return; }
-    try {
-      const { data, error } = await c.from('plans').select('price_uzs, period_days, features').eq('bolim', 'sat').eq('code', 'pro').eq('is_active', true).maybeSingle();
-      if (error || !data || !Number.isSafeInteger(data.price_uzs) || data.price_uzs <= 0 || !Number.isInteger(data.period_days) || data.period_days <= 0) throw new Error('Tarif');
-      document.querySelector('[data-home-price]')!.textContent = `${son(data.price_uzs)} so'm / ${data.period_days} kun`;
-      document.querySelector('[data-home-day]')!.textContent = `≈ ${son(Math.round(data.price_uzs / data.period_days))} so'm / kun`;
-      const royxat = document.querySelector('[data-home-features]')!;
-      const imkoniyatlar = ['Bepul tarifdagi barcha imkoniyatlar'];
-      if (bayroqlar(data.features).has('analytics_extended')) imkoniyatlar.push('SAT kengaytirilgan analitikasi — qiyinlik va vaqt tahlili');
-      royxat.replaceChildren(...imkoniyatlar.map((matn) => { const li = document.createElement('li'); li.textContent = matn; return li; }));
-      tayyor = true;
-      tugma.disabled = false;
-      holat.textContent = 'Bir martalik to’lov. Avtomatik yangilanmaydi.';
-    } catch { holat.textContent = 'Tarif ma’lumoti yuklanmadi. Sahifani yangilab, qayta urinib ko’ring.'; }
-  }
-  async function tolov() {
-    if (!tayyor || tugma.disabled) return;
-    const c = hisobMijoz();
-    if (!c) return;
-    tugma.disabled = true;
-    tugma.setAttribute('aria-busy', 'true');
-    try {
-      const { data } = await c.auth.getSession();
-      if (!data.session) {
-        document.dispatchEvent(new CustomEvent('tayanch:kirish-och', { detail: { keyin: yol('/uz/?pro=1'), ochuvchi: tugma } }));
-        return;
-      }
-      if ((await rozilikHolati(c, data.session)) === 'yoq') { location.assign(rozilikYoli(yol('/uz/?pro=1'))); return; }
-      const r = await funksiya<{ payment_id: string; checkout_url: string }>('tolov-yaratish', { plan_code: 'pro', period: 'oylik' });
-      if (!r.ok || !r.data.checkout_url?.startsWith('https://')) throw new Error('Tolov');
-      tolovniEsla(r.data.payment_id);
-      location.assign(r.data.checkout_url);
-    } catch { holat.textContent = 'To’lovni ochib bo’lmadi. Qaytadan urinib ko’ring.'; }
-    finally { tugma.disabled = false; tugma.removeAttribute('aria-busy'); }
-  }
-  tugma.addEventListener('click', () => void tolov());
-  document.addEventListener('tayanch:hisob-kirdi', () => { if (new URL(location.href).searchParams.get('pro') === '1') void tolov(); });
-  void narxniOl().then(() => {
-    const manzil = new URL(location.href);
-    if (manzil.searchParams.get('pro') === '1') {
-      manzil.searchParams.delete('pro');
-      history.replaceState(null, '', manzil.pathname + manzil.search + manzil.hash);
-      void tolov();
-    }
-  });
-</script>
 <style>
-  .home-pricing { padding-block: var(--space-8) var(--space-12); }
-  .tarif-label { color: var(--color-link); font-size: var(--text-caption-size); font-weight: 700; letter-spacing: var(--text-caption-ls); }
-  .tarif-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-8); }
-  .tarif-card { position: relative; display: flex; flex-direction: column; padding: var(--space-8); gap: var(--space-4); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); }
-  .tarif-card p { margin: 0; }
-  .tarif-card.pro { border: var(--border-width-2) solid var(--header-accent); padding-top: var(--space-14); }
-  .tarif-strip { position: absolute; inset: 0 0 auto; text-align: center; padding: var(--space-2); border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--header-accent); color: var(--color-neutral-0); font-size: var(--text-small-size); font-weight: 700; }
-  .tarif-price { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); font-weight: 800; min-height: calc(var(--text-h2-lh) * 2); }
-  .tarif-day { min-height: var(--text-small-lh); }
-  .tarif-day, .tarif-status, .tarif-scope { color: var(--color-text-secondary); font-size: var(--text-small-size); }
-  .tarif-card ul { margin: 0 0 var(--space-4); padding-left: var(--space-5); display: grid; gap: var(--space-3); }
-  .tarif-button { display: flex; align-items: center; justify-content: center; min-height: var(--space-12); margin-top: auto; padding: var(--space-3); border: var(--border-width-1) solid var(--color-border); border-radius: var(--home-button-radius); background: var(--color-surface-sunken); color: var(--color-text-primary); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
-  .pro .tarif-button { background: var(--header-accent); color: var(--color-neutral-0); }
-  .tarif-button:disabled { opacity: var(--opacity-muted); cursor: default; }
-  @media (width < 768px) { .tarif-cards { grid-template-columns: 1fr; } .tarif-card { padding: var(--space-6); } }
+  /* 1-qavat Navigator mini-DS: yorliq NavYorliq (.nav-chip), sarlavha .nav-nom, bitta urg'u (laym, faqat sahnada) */
+  .home-pricing { display: grid; gap: var(--space-3); padding-block: 0 var(--space-12); }
+  .home-pricing > :not(.tt) { justify-self: start; }
+  .tarif-lead { margin: 0 0 var(--space-8); color: var(--color-nav-text-muted); max-width: 60ch; }
 </style>

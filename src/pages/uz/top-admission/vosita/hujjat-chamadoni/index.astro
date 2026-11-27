@@ -1,0 +1,36 @@
+---
+// 2-qavat · Top Admission · Vositalar · Hujjat chamadoni.
+// Ro'yxat ma'lumoti: src/data/topAdmission/chamadon/*.json. Hozircha faqat namuna qatorlar (muallif to'ldiradi).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import SahifaOxiri from '../../../../../components/SahifaOxiri.astro';
+import HujjatChamadoni from '../../../../../components/topAdmission/HujjatChamadoni.astro';
+
+const MANBALAR = ['SH01', 'TB01'];
+const TEKSHIRILMAGAN = ["Hujjatlar roʻyxati hali toʻldirilmagan: hozirgi qatorlar namuna, rasmiy saytdan tekshirish kerak."];
+---
+<BolimQobiq
+  title="Hujjat chamadoni"
+  description="Yoʻnalish boʻyicha hujjatlarni belgilab, ariza uchun nima tayyorligini kuzating."
+  turi="vosita"
+  bolim="top-admission"
+  holat="qoralama"
+  manbalar={MANBALAR}
+  tekshirilmagan={TEKSHIRILMAGAN}
+  yol={['Vositalar']}
+>
+  <div class="ichki hch-sahifa">
+    <header class="hch-bosh-qism">
+      <h1>Hujjat chamadoni</h1>
+      <p>Tayyor hujjatning kartasini bosing: u chamadonga tushadi. Xato bosgan boʻlsangiz, yana bosing. Belgilar shu brauzerda saqlanadi.</p>
+    </header>
+    <HujjatChamadoni />
+  </div>
+  <SahifaOxiri manbalar={MANBALAR} tekshirilmagan={TEKSHIRILMAGAN} />
+</BolimQobiq>
+
+<style>
+  .hch-sahifa { display: grid; gap: var(--b-8); }
+  .hch-bosh-qism { display: grid; gap: var(--b-3); }
+  .hch-bosh-qism h1 { margin: 0; }
+  .hch-bosh-qism p { margin: 0; color: var(--matn-ikkinchi); max-inline-size: 60ch; }
+</style>

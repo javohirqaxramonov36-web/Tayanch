@@ -1,6 +1,6 @@
 # Tarif qoidalari (SAT, P19)
 
-Holat: 2026-11-11. Manba: jonli `plans` jadvali va migratsiyalar `20261111090000_tariflar_p19.sql`, `20261111120000_analitika.sql`, `20261111210000_kvota_p19.sql`.
+Holat: 2026-11-24. Manba: jonli `plans` jadvali va migratsiyalar `20261111090000_tariflar_p19.sql`, `20261111120000_analitika.sql`, `20261111210000_kvota_p19.sql`, `20261124120000_tarif_max_narx.sql` (Max narxi; jonli bazaga 2026-11-24 da qo'llangan).
 Raqamlarni faqat muallif beradi. Ular kodga emas, `public.plans` qatoriga yoziladi (pastdagi "Qiymatni o'zgartirish" bo'limi).
 
 ## Tariflar
@@ -9,27 +9,49 @@ Tariflar: Free, Pro, Max (muallif qarori, 2026-11-11). 2026-11-11 gacha nomi Eli
 
 | | Free (`free`) | Pro (`pro`) | Max (`max`) |
 | --- | --- | --- | --- |
-| Holat | faol | faol | faol emas ("Coming soon") |
-| Narx | to'lovsiz | 59 000 so'm | belgilanmagan |
-| Davr | — | 30 kun, bir martalik to'lov, avtomatik yangilanmaydi | belgilanmagan |
+| Holat | faol | faol | faol emas ("Coming soon"), AI tutor tayyor bo'lgach sotuvga |
+| Narx | to'lovsiz | 59 000 so'm | 119 000 so'm (muallif, 2026-11-24) |
+| Davr | — | 30 kun, bir martalik to'lov, avtomatik yangilanmaydi | 30 kun, bir martalik, avtomatik yangilanmaydi |
 | 90 kunlik davr, chegirma | — | yo'q (muallif, 2026-11-11) | yo'q |
 | Sinov muddati | — | yo'q (muallif, 2026-11-11) | yo'q |
-| Kuniga savol (`questions`) | cheklovsiz | cheklovsiz | belgilanmagan |
-| Kuniga sessiya (`sessions`) | cheklovsiz | cheklovsiz | belgilanmagan |
-| Kuniga javob (`answers`) | cheklovsiz | cheklovsiz | belgilanmagan |
-| Kuniga yangi so'z (`new_words`, P15) | cheklovsiz | cheklovsiz | belgilanmagan |
-| Reja qayta tuzish (`plan_rebuilds`, P13) | cheklovsiz | cheklovsiz | belgilanmagan |
-| Yangi mock imtihon (`mock_first`, P30) | cheklovsiz | cheklovsiz | belgilanmagan |
-| Mock retake (`mock_retake`, P30) | cheklovsiz | cheklovsiz | belgilanmagan |
+| Kuniga savol (`questions`) | cheklovsiz | cheklovsiz | cheklovsiz |
+| Kuniga sessiya (`sessions`) | cheklovsiz | cheklovsiz | cheklovsiz |
+| Kuniga javob (`answers`) | cheklovsiz | cheklovsiz | cheklovsiz |
+| Kuniga yangi so'z (`new_words`, P15) | cheklovsiz | cheklovsiz | cheklovsiz |
+| Reja qayta tuzish (`plan_rebuilds`, P13) | cheklovsiz | cheklovsiz | cheklovsiz |
+| Yangi mock imtihon (`mock_first`, P30) | cheklovsiz; Max sotuvida oyiga 1 | cheklovsiz; Max sotuvida oyiga 2 | cheklovsiz |
+| Mock retake (`mock_retake`, P30) | cheklovsiz; Max sotuvida oyiga 1 | cheklovsiz; Max sotuvida oyiga 2 | cheklovsiz |
 | Kengaytirilgan analitika (`analytics_extended`) | yo'q | bor | bor |
 | O'z so'zlarim (`vocab_my_words`, P15) | belgilanmagan | belgilanmagan | belgilanmagan |
 | Rasmiy test yozuvlari | cheklovsiz (kvota kaliti yo'q) | cheklovsiz | cheklovsiz |
-| AI Tutor (`ai_messages` kunlik, `ai_messages_month` oylik, P33) | yopiq (limit yo'q) | yopiq (limit yo'q) | yopiq |
-| Pro va Max farqi | — | — | belgilanmagan |
+| AI Tutor (`ai_messages` kunlik, `ai_messages_month` oylik, P33) | yopiq (faqat Max'da bo'ladi) | yopiq (faqat Max'da bo'ladi) | yopiq; ochiladi, limit raqami belgilanmagan |
+| Pro va Max farqi | — | — | AI tutor va cheklovsiz mock (muallif, 2026-11-24) |
 
 "Cheklovsiz" degani `plans.limits` da shu kalit yo'q (muallif qarori, 2026-11-11: "hozircha cheklovsiz"). Hisoblagich baribir yuritiladi, `UsageBar` sarfni ko'rsatadi.
 
-**Istisno: AI Tutor (P33).** `ai_messages` va `ai_messages_month` uchun kalit yo'qligi "cheklovsiz" emas, **"yopiq"** degani: cheksiz bepul foydalanish yo'q. AI faqat ikkala kalit ham `max > 0` bilan yozilganda ochiladi (umumiy byudjet va kalit ham kerak). Taklif (muallif qarori kerak): Free kuniga 3 / oyiga 30, Pro kuniga 30 / oyiga 300. Batafsil: `docs/ai-tutor.md`.
+**Istisno: AI Tutor (P33).** `ai_messages` va `ai_messages_month` uchun kalit yo'qligi "cheklovsiz" emas, **"yopiq"** degani: cheksiz bepul foydalanish yo'q. AI faqat ikkala kalit ham `max > 0` bilan yozilganda ochiladi (umumiy byudjet va kalit ham kerak). 2026-11-24 dan qaror: AI Tutor faqat Max'da, Free va Pro'da yopiq qoladi. Max limiti raqami AI tutor qurilgach belgilanadi (muallif). Batafsil: `docs/ai-tutor.md`.
+
+## Max sotuvga chiqishi (muallif qarori, 2026-11-24)
+
+- Narx 119 000 so'm, 30 kun, bir martalik (`20261124120000_tarif_max_narx.sql`, `is_active = false` qoladi). O'sha migratsiya Pro'ning eskirgan ko'rinadigan matnlarini olib tashlaydi (`features = ["analytics_extended"]`).
+- Pro'dan farqi: AI tutor (faqat Max'da) va cheklovsiz mock imtihon.
+- Sotuv AI tutor tayyor bo'lgach ochiladi (kalit, byudjet, `ai-tutor` deploy: `docs/ai-tutor.md`). Shungacha bosh sahifa (`src/data/tariflar.ts`) va `/uz/sat/hisob/obuna/` (`satTarif.kutilayotgan`) Max narxini "Tez orada" / "Coming soon" bilan ko'rsatadi; to'lov tugmasi yo'q.
+- Mock limitlari sotuv bilan birga kuchga kiradi (sotib olib bo'lmaydigan tarifga yo'naltirmaslik uchun).
+- Sotuvga chiqarish migratsiyasi (keyin, alohida PR; `<kun>` va `<oy>` muallifdan):
+
+```sql
+update public.plans set limits = limits
+  || '{"mock_first": {"max": 1, "per": "month"}, "mock_retake": {"max": 1, "per": "month"}}'::jsonb
+ where code = 'free' and bolim = 'sat';
+update public.plans set limits = limits
+  || '{"mock_first": {"max": 2, "per": "month"}, "mock_retake": {"max": 2, "per": "month"}}'::jsonb
+ where code = 'pro' and bolim = 'sat';
+update public.plans set is_active = true, limits = limits
+  || '{"ai_messages": {"max": <kun>, "per": "day"}, "ai_messages_month": {"max": <oy>, "per": "month"}}'::jsonb
+ where code = 'max' and bolim = 'sat';
+```
+
+  Shu bilan birga: `satTarif.kutilayotgan.max` o'chiriladi, `tariflar.ts` da Max `cta` qo'yiladi, AI Tutor va mock qatorlari yangilanadi, `satTarif.tavsiya` qayta ko'riladi.
 
 ## Hisoblash qoidalari
 

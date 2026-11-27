@@ -17,7 +17,7 @@ export async function ishgaTushirNatija(): Promise<void> {
   const urinish = id ? repo.topUrinish(id) : (hammasi[hammasi.length - 1] ?? null);
 
   if (!urinish) {
-    ildiz.innerHTML = `<p class="rn-bosh-xabar">${qoch(id ? RM.natijaYoq : RM.tarixBosh)}</p><div class="rn-amal"><a class="tugma tugma-asosiy" href="${qoch(
+    ildiz.innerHTML = `<p class="rn-bosh-xabar">${qoch(id ? RM.natijaYoq : RM.tarixBosh)}</p><div class="rn-amal"><a class="t-tugma ielts-tugma--urgu" href="${qoch(
       yol(READING_YOL.boshlash),
     )}">${RM.boshlashSahifasi}</a></div>`;
     return;

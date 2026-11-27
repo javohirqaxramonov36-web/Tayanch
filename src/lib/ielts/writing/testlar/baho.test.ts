@@ -23,17 +23,17 @@ test('tekshir: savol, chegaralar', () => {
 });
 
 test('sanoqIzohi: 250 dan kam, yetarli, ortiq', () => {
-  assert.match(sanoqIzohi(10), /kamida 250/);
-  assert.match(sanoqIzohi(200), /Yana 50 so'z/);
-  assert.match(sanoqIzohi(250), /bajarildi/);
-  assert.match(sanoqIzohi(700), /qisqartiring/);
+  assert.match(sanoqIzohi(10), /at least 250/);
+  assert.match(sanoqIzohi(200), /50 more words/);
+  assert.match(sanoqIzohi(250), /Requirement met/);
+  assert.match(sanoqIzohi(700), /shorten/);
 });
 
 test('xatoMatni: limit soni, retry, noma\'lum kod', () => {
-  assert.match(xatoMatni('quota_exceeded', { daily_limit: 2 }), /2 ta bepul/);
-  assert.match(xatoMatni('rate_limited', { retry_after: 7 }), /7 soniya/);
-  assert.match(xatoMatni('assessment_failed'), /limitdan sanalmadi/);
-  assert.match(xatoMatni('http_500'), /Xatolik/);
+  assert.match(xatoMatni('quota_exceeded', { daily_limit: 2 }), /2 free/);
+  assert.match(xatoMatni('rate_limited', { retry_after: 7 }), /7 seconds/);
+  assert.match(xatoMatni('assessment_failed'), /not counted/);
+  assert.match(xatoMatni('http_500'), /Something went wrong/);
 });
 
 test('bandMatni', () => {

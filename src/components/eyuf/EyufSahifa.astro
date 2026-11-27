@@ -1,6 +1,8 @@
 ---
 import BolimQobiq from '../../layouts/BolimQobiq.astro';
 import QavatFoto from '../QavatFoto.astro';
+import EyufHero from './EyufHero.astro';
+import '../../styles/eyuf.css';
 import { yol } from '../../lib/yol';
 import sourceRegistry from '../../../data/eyuf/sources.json';
 interface Props { title: string; description: string }
@@ -9,13 +11,15 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
 ---
 <BolimQobiq title={`${title} · EYUF`} description={description} turi="vosita" bolim="eyuf" holat="qoralama">
   <div class="ichki eyuf-ui">
+    <EyufHero id="eyuf-sahifa-h" yorliq="5-qavat · El-Yurt Umidi" sarlavha={title} matn={description} ixcham />
     <nav class="eyuf-tabs" aria-label="EYUF tayyorgarlik"><a href={yol('/uz/eyuf/')}>EYUF</a>{links.map(([name, path]) => <a href={yol(path)} aria-current={Astro.url.pathname === path ? 'page' : undefined}>{name}</a>)}</nav>
-    <header><h1>{title}</h1><p>{description}</p></header>
     <slot />
-    <footer class="eyuf-panel eyuf-small"><p>Tayanch El-yurt umidi jamg‘armasining rasmiy platformasi emas.</p><p>Manba reyestri yangilangan sana — {sourceRegistry.as_of}. Har manbaning davri alohida qayd etiladi. Joriy tanlov uchun rasmiy e’lonni tekshiring. <a href="https://el-yurt.uz/candidates" target="_blank" rel="noopener noreferrer">Jamg‘arma sayti (yangi oynada)</a></p><button type="button" class="tugma tugma-ikkinchi" data-eyuf-tozala>EYUF ma’lumotlarimni o‘chirish</button><p data-eyuf-tozalash-xabar role="status"></p></footer>
+    <footer class="eyuf-panel eyuf-small"><p>Tayanch El-yurt umidi jamgʻarmasining rasmiy platformasi emas.</p><p>Manba reyestri yangilangan sana — {sourceRegistry.as_of}. Har manbaning davri alohida qayd etiladi. Joriy tanlov uchun rasmiy eʼlonni tekshiring. <a href="https://el-yurt.uz/candidates" target="_blank" rel="noopener noreferrer">Jamgʻarma sayti (yangi oynada)</a></p><button type="button" class="t-tugma t-tugma--ikkinchi" data-eyuf-tozala>EYUF maʼlumotlarimni oʻchirish</button><p data-eyuf-tozalash-xabar role="status"></p></footer>
   </div><QavatFoto bolim="eyuf" />
 </BolimQobiq>
 <style is:global>
+/* 5-qavat mini-DS (PR 9): main foto ustida zich shishada, shuning uchun ichidagi panellar tekis zich sirt
+   (eyuf-glass-strong, blur yo'q). Forma, test va uzun matn faqat shu panelda. Ranglar eyuf.css qavat qatlamidan. */
 .eyuf-ui {
   display: grid;
   gap: var(--space-6);
@@ -24,52 +28,68 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
 .eyuf-ui [hidden] {
   display: none !important;
 }
-.eyuf-ui header {
-  display: grid;
-  gap: var(--space-3);
-}
-.eyuf-ui header p,
 .eyuf-ui .eyuf-small {
   color: var(--color-text-secondary);
-}
-.eyuf-ui .eyuf-small {
   font-size: var(--text-small-size);
 }
 .eyuf-ui .eyuf-panel {
   display: grid;
   gap: var(--space-4);
   padding: var(--space-5);
-  border: var(--border-width-1) solid var(--color-border);
+  border: var(--border-width-1) solid var(--color-eyuf-glass-border);
   border-radius: var(--radius-xl);
-  background: var(--nav-glass-bg);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--nav-glass-mobile);
+  background: var(--color-eyuf-glass-strong);
+  box-shadow: inset 0 1px 0 var(--color-glass-highlight), var(--shadow-1);
 }
 .eyuf-ui .eyuf-panel .eyuf-panel {
-  backdrop-filter: none;
-  background: var(--color-surface);
+  border-color: var(--color-eyuf-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-eyuf-tile);
+  box-shadow: none;
+}
+.eyuf-ui .eyuf-panel p { max-width: var(--size-measure); }
+@media (min-width: 720px) {
+  .eyuf-ui .eyuf-panel { padding: var(--space-6); }
 }
 .eyuf-ui .eyuf-tabs,
 .eyuf-ui .eyuf-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-2);
   align-items: center;
 }
+.eyuf-ui .eyuf-actions { gap: var(--space-3); }
+/* Bo'lim tablari: chip; joriy sahifa zumrad fill + qalin, holat rangdan tashqari aria-current va vazn bilan */
 .eyuf-ui .eyuf-tabs a {
   display: inline-flex;
   align-items: center;
   min-height: var(--size-touch-min);
-  padding-inline: var(--space-3);
-  color: var(--color-link);
+  padding-inline: var(--space-4);
+  border: var(--border-width-1) solid var(--color-eyuf-line-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-eyuf-glass-strong);
+  color: var(--color-eyuf-text);
+  font-size: var(--text-small-size);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .eyuf-ui .eyuf-tabs a:hover { border-color: var(--color-eyuf-accent-text); }
+}
+.eyuf-ui .eyuf-tabs a[aria-current="page"] {
+  border-color: var(--color-eyuf-accent);
+  background: var(--color-eyuf-accent);
+  color: var(--color-eyuf-on-accent);
+  font-weight: var(--font-weight-bold);
 }
 .eyuf-ui a[aria-current="page"] {
   font-weight: var(--font-weight-bold);
   text-decoration-thickness: var(--border-width-2);
 }
+.eyuf-ui .eyuf-panel a:not(.tugma, .t-tugma, .eyuf-qator, .eyuf-bosqich) { color: var(--color-link); }
 .eyuf-ui fieldset {
   min-width: 0;
-  border: var(--border-width-1) solid var(--color-border);
+  border: var(--border-width-1) solid var(--color-eyuf-line);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   display: grid;
@@ -77,6 +97,8 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
 }
 .eyuf-ui legend {
   padding-inline: var(--space-2);
+  font-family: var(--font-eyuf);
+  font-size: var(--text-h3-size);
   font-weight: var(--font-weight-semibold);
 }
 .eyuf-ui label {
@@ -90,10 +112,10 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
   min-width: 0;
   min-height: var(--size-touch-min);
   padding: var(--space-3);
-  border: var(--border-width-1) solid var(--color-border-strong);
+  border: var(--border-width-1) solid var(--color-eyuf-line-strong);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text-primary);
+  background: var(--color-eyuf-surface);
+  color: var(--color-eyuf-text);
   font: inherit;
 }
 .eyuf-ui textarea {
@@ -119,17 +141,19 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
   margin-top: var(--space-1);
   width: var(--space-5);
   height: var(--space-5);
+  accent-color: var(--color-eyuf-accent);
 }
 .eyuf-ui .eyuf-list {
   display: grid;
   gap: var(--space-3);
   padding-left: var(--space-5);
 }
+.eyuf-ui .eyuf-list li::marker { color: var(--color-eyuf-gold); font-family: var(--font-eyuf); }
 .eyuf-ui .eyuf-error {
   color: var(--color-text-primary);
-  border-inline-start: var(--border-width-2) solid var(--color-border-strong);
+  border-inline-start: var(--border-width-2) solid var(--color-eyuf-line-strong);
   padding: var(--space-3);
-  background: var(--color-surface);
+  background: var(--color-eyuf-surface);
 }
 .eyuf-ui summary {
   cursor: pointer;
@@ -155,30 +179,25 @@ const links = [['Reja', '/uz/eyuf/reja/'], ['Kurslar', '/uz/eyuf/tayyorgarlik/']
 .eyuf-ui progress {
   width: 100%;
   height: var(--space-3);
-  accent-color: var(--floor-ui);
+  accent-color: var(--color-eyuf-accent);
 }
 .eyuf-ui dialog {
   max-width: calc(100% - var(--space-6));
   max-height: calc(100% - var(--space-6));
   padding: var(--space-4);
-  border: var(--border-width-1) solid var(--color-border);
+  border: var(--border-width-1) solid var(--color-eyuf-line-strong);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  color: var(--color-text-primary);
+  background: var(--color-eyuf-surface);
+  color: var(--color-eyuf-text);
 }
 .eyuf-ui dialog img {
   max-width: 100%;
   height: auto;
 }
-@supports not (backdrop-filter: blur(1px)) {
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
   .eyuf-ui .eyuf-panel {
-    background: var(--color-surface);
-  }
-}
-@media (prefers-reduced-transparency: reduce) {
-  .eyuf-ui .eyuf-panel {
-    background: var(--color-surface);
-    backdrop-filter: none;
+    border-color: var(--color-eyuf-line-strong);
+    background: var(--color-eyuf-surface);
   }
 }
 </style>

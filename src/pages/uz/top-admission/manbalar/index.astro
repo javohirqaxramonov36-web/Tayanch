@@ -1,4 +1,5 @@
 ---
+// 2-qavat mini-DS (ADR 005, PR 7): adm.css (.adm doira, eyebrow, Onest 800 sarlavha; uzun matn zich sirtda).
 // 2-qavat · Top Admission · qo'llanma: Ochiq manbalar kutubxonasi (Admission G).
 // Ma'lumot: src/data/topAdmission/ochiqManbalar.json (Codex tadqiqot to'plami, `npm run malumot:tadqiqot`).
 // Statik sahifa, JS yo'q. Faqat havola va qisqa izoh: manba matni ko'chirilmaydi.
@@ -7,11 +8,12 @@ import { sanaMatni } from '../../../../lib/topAdmission/fakt';
 import { DARAJA_MATNI, type Daraja } from '../../../../lib/topAdmission/grantKatalog';
 import manbalarJson from '../../../../data/topAdmission/ochiqManbalar.json';
 import { yol } from '../../../../lib/yol';
+import '../../../../styles/adm.css';
 
 interface Resurs { id: string; guruh: string; daraja: Daraja; nom: string; url: string; nima_uchun: string; bepul: boolean; tekshirilgan_sana: string }
 const resurslar = manbalarJson as Resurs[];
 const guruhlar = [
-  { id: 'ariza', nomi: 'Ariza va esse', izoh: "Universitetlar va platformalarning o'z yo'riqnomalari." },
+  { id: 'ariza', nomi: 'Ariza va esse', izoh: "Universitetlar va platformalarning oʻz yoʻriqnomalari." },
   { id: 'magistr', nomi: 'Magistratura, CV va tavsiyanoma', izoh: 'Statement of purpose, CV va moliyalashtirish.' },
   { id: 'qidiruv', nomi: 'Dastur va grant qidirish', izoh: "Rasmiy bazalar va maslahat xizmatlari." },
   { id: 'stem', nomi: 'STEM tayyorgarlik', izoh: "Profilni kuchaytirish uchun bepul kurslar." },
@@ -31,10 +33,10 @@ const arzon = yol('/uz/top-admission/arzon-yollar/');
 >
   <div class="ichki om-sahifa">
     <header class="om-bosh">
-      <p class="ustki">Qo'llanma</p>
-      <h1>Ochiq manbalar</h1>
-      <p class="matn">{resurslar.length} ta bepul rasmiy manba: universitetlar, ariza platformalari va davlat tashkilotlarining o'z sahifalari. Har biri nima uchun kerakligi bilan.</p>
-      <p class="matn sust">Hammasi {sanaMatni(sana)} da bepul o'qish uchun ochiq edi. Manbani o'qing va havola bering: to'liq matnni ko'chirmang.</p>
+      <p class="adm-eyebrow">Qoʻllanma</p>
+      <h1 class="adm-h1">Ochiq manbalar</h1>
+      <p class="matn">{resurslar.length} ta bepul rasmiy manba: universitetlar, ariza platformalari va davlat tashkilotlarining oʻz sahifalari. Har biri nima uchun kerakligi bilan.</p>
+      <p class="matn sust">Hammasi {sanaMatni(sana)} da bepul oʻqish uchun ochiq edi. Manbani oʻqing va havola bering: toʻliq matnni koʻchirmang.</p>
     </header>
 
     {guruhlar.map((g) => {
@@ -58,27 +60,27 @@ const arzon = yol('/uz/top-admission/arzon-yollar/');
       );
     })}
 
-    <p class="matn">Xarajatni kamaytirish yo'llari: <a class="havola-matn" href={arzon}>Arzonroq o'qish yo'llari</a>.</p>
+    <p class="matn">Xarajatni kamaytirish yoʻllari: <a class="havola-matn" href={arzon}>Arzonroq oʻqish yoʻllari</a>.</p>
   </div>
 </BolimQobiq>
 
 <style>
-  .om-sahifa { display: grid; gap: var(--b-8); padding-bottom: var(--b-6); }
-  .om-bosh { display: grid; gap: var(--b-3); }
-  .ustki { margin: 0; font-size: var(--matn-mayda); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--matn-sust); }
+  .om-sahifa { display: grid; gap: var(--space-8); padding-bottom: var(--space-6); }
+  .om-bosh { display: grid; gap: var(--space-3); }
+  .ustki { margin: 0; font-size: var(--text-adm-eyebrow-size); line-height: var(--text-adm-eyebrow-lh); font-weight: var(--font-weight-semibold); letter-spacing: var(--text-adm-eyebrow-ls); text-transform: uppercase; color: var(--color-adm-text-muted); }
   .matn { max-width: 62ch; margin: 0; }
-  .sust { margin: 0; color: var(--matn-ikkinchi); }
-  .guruh { display: grid; gap: var(--b-4); }
-  .guruh-bosh { display: grid; gap: var(--b-1); }
+  .sust { margin: 0; color: var(--color-adm-text-muted); }
+  .guruh { display: grid; gap: var(--space-4); }
+  .guruh-bosh { display: grid; gap: var(--space-1); }
   .guruh-bosh h2 { margin: 0; }
-  .royxat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--b-3); }
+  .royxat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
   .band {
-    display: grid; gap: var(--b-1); align-content: start; min-width: 0;
-    padding: var(--b-4) var(--b-5); border: 1.5px solid var(--chiziq-kuchli); border-radius: var(--r-katta); background: var(--sirt);
+    display: grid; gap: var(--space-1); align-content: start; min-width: 0;
+    padding: var(--space-4) var(--space-5); border: var(--border-width-1) solid var(--color-adm-glass-border); border-radius: var(--radius-xl); background: var(--color-adm-glass-strong); box-shadow: var(--shadow-glass);
   }
-  .havola { color: var(--rang-havola); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; overflow-wrap: anywhere; }
+  .havola { color: var(--color-link); font-weight: var(--font-weight-bold); min-height: 44px; display: inline-flex; align-items: center; overflow-wrap: anywhere; }
   .izoh { margin: 0; }
   .yorliqlar { margin: 0; }
-  .havola-matn { color: var(--rang-havola); font-weight: 700; }
+  .havola-matn { color: var(--color-link); font-weight: var(--font-weight-bold); }
   @media (max-width: 760px) { .royxat { grid-template-columns: 1fr; } }
 </style>

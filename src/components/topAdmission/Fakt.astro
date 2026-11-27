@@ -13,8 +13,10 @@ interface Props {
   format?: (qiymat: Fakt['qiymat']) => string;
   /** Jadval uchun: fakt yo'q bo'lsa uzun matn o'rniga "—" (ekran o'quvchiga "ma'lumot tekshirilmoqda"). */
   qisqa?: boolean;
+  /** Manba va sana karta ostida bitta qatorda ko'rsatilganda (umumiyManba): fakt yonida takrorlanmaydi. */
+  metasiz?: boolean;
 }
-const { fakt, birlik, format, qisqa } = Astro.props;
+const { fakt, birlik, format, qisqa, metasiz } = Astro.props;
 const korinadi = faktKorinadimi(fakt);
 const eskirgan = korinadi && faktEskirganmi(fakt);
 const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatni(fakt.qiymat)) : '';
@@ -22,28 +24,30 @@ const qiymat = korinadi && fakt ? (format ? format(fakt.qiymat) : faktQiymatMatn
 {korinadi && fakt ? (
   <span class="fakt">
     <span class="fakt-qiymat">{qiymat}{birlik && <> {birlik}</>}</span>
-    <span class="fakt-meta">
-      <a href={fakt.source_url} rel="noopener">Manba</a>
-      <span>tekshirilgan <time datetime={fakt.tekshirilgan_sana}>{sanaMatni(fakt.tekshirilgan_sana)}</time></span>
-      {eskirgan && <span class="fakt-belgi">qayta tekshirilmoqda</span>}
-    </span>
+    {(!metasiz || eskirgan) && (
+      <span class="fakt-meta">
+        {!metasiz && <a href={fakt.source_url} rel="noopener">Manba</a>}
+        {!metasiz && <span>tekshirilgan <time datetime={fakt.tekshirilgan_sana}>{sanaMatni(fakt.tekshirilgan_sana)}</time></span>}
+        {eskirgan && <span class="fakt-belgi">qayta tekshirilmoqda</span>}
+      </span>
+    )}
   </span>
 ) : qisqa ? (
-  <span class="fakt fakt-yoq fakt-qisqa"><span aria-hidden="true">—</span><span class="fakt-sr">Ma'lumot tekshirilmoqda</span></span>
+  <span class="fakt fakt-yoq fakt-qisqa"><span aria-hidden="true">—</span><span class="fakt-sr">Maʼlumot tekshirilmoqda</span></span>
 ) : (
-  <span class="fakt fakt-yoq">Ma'lumot tekshirilmoqda</span>
+  <span class="fakt fakt-yoq">Maʼlumot tekshirilmoqda</span>
 )}
 
 <style>
-  .fakt { display: inline-flex; flex-direction: column; gap: var(--b-1); min-width: 0; }
-  .fakt-qiymat { font-weight: 700; overflow-wrap: anywhere; }
-  .fakt-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--b-1) var(--b-2); font-size: var(--matn-mayda); color: var(--matn-ikkinchi); }
-  .fakt-meta a { color: var(--rang-havola); }
+  .fakt { display: inline-flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+  .fakt-qiymat { font-weight: var(--font-weight-bold); overflow-wrap: anywhere; }
+  .fakt-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); font-size: var(--text-caption-size); color: var(--color-adm-text-muted); }
+  .fakt-meta a { color: var(--color-link); }
   .fakt-belgi {
     display: inline-flex; align-items: center; min-height: var(--badge-height); padding: 0 var(--badge-pad);
-    border-radius: var(--badge-radius); background: var(--rang-ogoh-fon); color: var(--rang-ogoh-matn); font-weight: 600;
+    border-radius: var(--badge-radius); background: var(--color-warning-subtle); color: var(--color-warning-text); font-weight: var(--font-weight-semibold);
   }
-  .fakt-yoq { color: var(--matn-sust); font-style: italic; }
+  .fakt-yoq { color: var(--color-adm-text-muted); font-style: italic; }
   .fakt-qisqa { font-style: normal; }
   .fakt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>

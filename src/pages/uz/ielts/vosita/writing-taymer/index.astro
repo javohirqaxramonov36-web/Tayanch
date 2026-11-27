@@ -1,0 +1,340 @@
+---
+// IELTS Writing taymeri: Task 1 / Task 2, jonli soʻz hisoblagichi, vaqt birinchi harfdan boshlanadi.
+// Vosita baholamaydi: faqat vaqt va soʻz sonini koʻrsatadi.
+// Vaqt va minimal soʻz: src/data/ielts/writingTaymer.ts. Qoralama faqat localStorage (tayanch:ielts-writing-taymer:v1).
+// Minimalga vaqt ichida yetilsa: markDone(4, 'writing-task1' | 'writing-task2') (src/lib/progress.ts).
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { IKONKA } from '../../../../../data/ieltsSahifalar';
+import { WRITING_TAYMER, WRITING_TAYMER_MANBA } from '../../../../../data/ielts/writingTaymer';
+import { yol } from '../../../../../lib/yol';
+
+const rejimlar = Object.values(WRITING_TAYMER);
+const boshlangich = WRITING_TAYMER.task1;
+const mmss = (daqiqa: number) => `${String(daqiqa).padStart(2, '0')}:00`;
+---
+<BolimQobiq
+  title="Writing timer · IELTS"
+  description="A timer and live word counter for IELTS Writing Task 1 and Task 2. Your text is saved only on this device."
+  turi="vosita"
+  yol={["Tools"]}
+  bolim="ielts"
+  holat="chop-etilgan"
+>
+  <div class="ichki wt">
+    <header class="bosh">
+      <p class="ustki-kok">Tool</p>
+      <h1>Writing timer</h1>
+      <p class="izoh-m">Choose a mode and start writing: the clock starts with your first letter. When time is up you get a warning, but you can keep writing.</p>
+    </header>
+
+    <fieldset class="format">
+      <legend>Mode</legend>
+      {rejimlar.map((r) => (
+        <label>
+          <input type="radio" name="wt-rejim" value={r.id} checked={r.id === boshlangich.id} />
+          <span>{r.nomi}</span>
+          <span class="f-izoh">{r.daqiqa} minutes · at least {r.minSoz} words</span>
+        </label>
+      ))}
+    </fieldset>
+    <p class="izoh manba">{WRITING_TAYMER_MANBA}</p>
+
+    <section class="panel" aria-labelledby="wt-matn-yorliq">
+      <div class="holat-qator">
+        <div class="hisob" data-wt-vaqt-blok>
+          <p class="n-ustki" id="wt-vaqt-yorliq">Time left</p>
+          <p class="n-son" data-wt-vaqt aria-labelledby="wt-vaqt-yorliq">{mmss(boshlangich.daqiqa)}</p>
+        </div>
+        <div class="hisob" data-wt-soz-blok>
+          <p class="n-ustki" id="wt-soz-yorliq">Words</p>
+          <p class="n-son"><span data-wt-soz>0</span> <span class="n-min">/ <span data-wt-min>{boshlangich.minSoz}</span></span></p>
+          <p class="yorliq" data-wt-soz-izoh>{boshlangich.minSoz} words to the minimum</p>
+        </div>
+        <div class="tugmalar">
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-wt-pauza disabled>Pause</button>
+          <button type="button" class="t-tugma t-tugma--ikkinchi" data-wt-tozalash>Clear</button>
+        </div>
+      </div>
+
+      <div class="ogoh" data-wt-ogoh role="status" hidden>
+        <strong>Time is up.</strong> You can keep writing; the extra time is shown separately.
+      </div>
+
+      <label class="maydon-yorliq" for="wt-matn" id="wt-matn-yorliq">Your text (<span data-wt-nom>{boshlangich.nomi}</span>)</label>
+      <textarea id="wt-matn" data-wt-matn rows="16" spellcheck="true" lang="en" autocomplete="off" aria-describedby="wt-maxfiy wt-holat-izoh"></textarea>
+      <p class="izoh" id="wt-holat-izoh" data-wt-holat>Start writing: the timer starts with your first letter.</p>
+      <p class="maxfiy" id="wt-maxfiy">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Your text stays on this device only and is not sent anywhere.
+      </p>
+      <p class="sr-only" aria-live="polite" data-wt-elon></p>
+    </section>
+
+    <div class="tushuntirish">
+      <h2>How it works</h2>
+      <p>Each mode keeps its own text and time used: if you switch from Task 1 to Task 2, the Task 1 timer stops and continues when you come back. If you reopen the page, the timer is paused and starts again when you continue writing.</p>
+      <p>If you reach the minimum word count within the time, this practice is marked in your progress on the IELTS floor.</p>
+      <p class="izoh">Criteria and essay structure: <a href={yol('/uz/ielts/qollanma/writing-task-2/')}>Task 2 guide</a>, <a href={yol('/uz/ielts/writing/')}>Writing page</a>.</p>
+    </div>
+  </div>
+</BolimQobiq>
+
+<script>
+  import { WRITING_TAYMER, KALIT_WRITING_TAYMER, type TaymerRejim } from '../../../../../data/ielts/writingTaymer';
+  import { QAVAT_BANDLARI } from '../../../../../data/progressBandlar';
+  import { markDone, isDone, registerItems } from '../../../../../lib/progress';
+
+  registerItems(4, [...QAVAT_BANDLARI.ielts]);
+
+  interface TaskYozuv { matn: string; sarflanganMs: number }
+  interface Ombor { rejim: TaymerRejim; task1: TaskYozuv; task2: TaskYozuv }
+
+  const bosh = (): TaskYozuv => ({ matn: '', sarflanganMs: 0 });
+  function oqi(): Ombor {
+    const o: Ombor = { rejim: 'task1', task1: bosh(), task2: bosh() };
+    try {
+      const x = JSON.parse(localStorage.getItem(KALIT_WRITING_TAYMER) ?? 'null');
+      if (x && typeof x === 'object') {
+        if (x.rejim === 'task1' || x.rejim === 'task2') o.rejim = x.rejim;
+        for (const k of ['task1', 'task2'] as const) {
+          const t = x[k];
+          if (t && typeof t.matn === 'string') o[k].matn = t.matn;
+          if (t && Number.isFinite(t.sarflanganMs) && t.sarflanganMs > 0) o[k].sarflanganMs = t.sarflanganMs;
+        }
+      }
+    } catch { /* buzilgan yoki ruxsat yoʻq: boshidan */ }
+    return o;
+  }
+  const ombor = oqi();
+  function saqla() {
+    try { localStorage.setItem(KALIT_WRITING_TAYMER, JSON.stringify(ombor)); } catch { /* private rejim: shu sahifada qoladi */ }
+  }
+
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const matnEl = $<HTMLTextAreaElement>('[data-wt-matn]');
+  const vaqtEl = $('[data-wt-vaqt]');
+  const vaqtYorliq = $('#wt-vaqt-yorliq');
+  const vaqtBlok = $('[data-wt-vaqt-blok]');
+  const sozEl = $('[data-wt-soz]');
+  const minEl = $('[data-wt-min]');
+  const sozBlok = $('[data-wt-soz-blok]');
+  const sozIzoh = $('[data-wt-soz-izoh]');
+  const nomEl = $('[data-wt-nom]');
+  const pauzaBtn = $<HTMLButtonElement>('[data-wt-pauza]');
+  const tozaBtn = $<HTMLButtonElement>('[data-wt-tozalash]');
+  const ogoh = $('[data-wt-ogoh]');
+  const holatEl = $('[data-wt-holat]');
+  const elon = $('[data-wt-elon]');
+  const radiolar = [...document.querySelectorAll<HTMLInputElement>('input[name="wt-rejim"]')];
+
+  let ishlayapti = false;
+  let oxirgiTik = 0;
+  let tikId = 0;
+  let saqlashVaqti = 0;
+  let tozaTasdiqId = 0;
+
+  const sozla = () => WRITING_TAYMER[ombor.rejim];
+  const joriy = () => ombor[ombor.rejim];
+  const limitMs = () => sozla().daqiqa * 60_000;
+
+  /** Soʻz: boʻshliq bilan ajratilgan, kamida bitta harf yoki raqami bor boʻlak */
+  const sozSoni = (m: string) => m.split(/\s+/).filter((b) => /[\p{L}\p{N}]/u.test(b)).length;
+
+  function vaqtMatn(ms: number) {
+    const s = Math.floor(Math.abs(ms) / 1000);
+    return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  }
+
+  function vaqtChiz() {
+    const qolgan = limitMs() - joriy().sarflanganMs;
+    const tugadi = qolgan <= 0;
+    vaqtYorliq.textContent = tugadi ? 'Extra time' : 'Time left';
+    vaqtEl.textContent = tugadi ? `+${vaqtMatn(-qolgan)}` : vaqtMatn(Math.ceil(qolgan / 1000) * 1000);
+    vaqtBlok.classList.toggle('tugadi', tugadi);
+    ogoh.hidden = !tugadi;
+  }
+
+  function sozChiz() {
+    const n = sozSoni(matnEl.value);
+    const min = sozla().minSoz;
+    sozEl.textContent = String(n);
+    minEl.textContent = String(min);
+    const yetdi = n >= min;
+    sozBlok.classList.toggle('yetdi', yetdi);
+    sozIzoh.textContent = yetdi ? 'Minimum reached' : `${min - n} ${min - n === 1 ? 'word' : 'words'} to the minimum`;
+    return yetdi;
+  }
+
+  function holatChiz() {
+    const s = joriy().sarflanganMs;
+    pauzaBtn.disabled = s === 0 && !ishlayapti;
+    pauzaBtn.textContent = ishlayapti || s === 0 ? 'Pause' : 'Resume';
+    pauzaBtn.setAttribute('aria-pressed', String(!ishlayapti && s > 0));
+    const belgi = isDone(4, sozla().itemId) ? ' This mode is marked in your progress.' : '';
+    holatEl.textContent = ishlayapti
+      ? `The timer is running.${belgi}`
+      : s === 0
+        ? `Start writing: the timer starts with your first letter.${belgi}`
+        : `Paused. Keep writing or press “Resume” and the timer starts again.${belgi}`;
+  }
+
+  function tekshirBelgi() {
+    if (sozChiz() && ishlayapti && joriy().sarflanganMs <= limitMs()) {
+      if (markDone(4, sozla().itemId)) {
+        elon.textContent = `You reached the minimum of ${sozla().minSoz} words within the time. Marked in your progress.`;
+        holatChiz();
+      }
+    }
+  }
+
+  function tik() {
+    const hozir = performance.now();
+    const oldin = joriy().sarflanganMs;
+    joriy().sarflanganMs += hozir - oxirgiTik;
+    oxirgiTik = hozir;
+    if (oldin < limitMs() && joriy().sarflanganMs >= limitMs()) {
+      elon.textContent = 'Time is up. You can keep writing.';
+    }
+    vaqtChiz();
+    if (hozir - saqlashVaqti > 2000) { saqlashVaqti = hozir; saqla(); }
+  }
+
+  function boshla() {
+    if (ishlayapti) return;
+    ishlayapti = true;
+    oxirgiTik = performance.now();
+    tikId = window.setInterval(tik, 250);
+    holatChiz();
+  }
+
+  function toxtat() {
+    if (!ishlayapti) return;
+    tik();
+    ishlayapti = false;
+    window.clearInterval(tikId);
+    saqla();
+    holatChiz();
+  }
+
+  function rejimgaOt(r: TaymerRejim) {
+    toxtat();
+    ombor.rejim = r;
+    matnEl.value = joriy().matn;
+    nomEl.textContent = sozla().nomi;
+    tozaQaytar();
+    saqla();
+    vaqtChiz(); sozChiz(); holatChiz();
+  }
+
+  function tozaQaytar() {
+    window.clearTimeout(tozaTasdiqId);
+    tozaBtn.textContent = 'Clear';
+    delete tozaBtn.dataset.tasdiq;
+  }
+
+  matnEl.addEventListener('input', () => {
+    joriy().matn = matnEl.value;
+    if (!ishlayapti && /[\p{L}\p{N}]/u.test(matnEl.value)) boshla();
+    saqla();
+    tekshirBelgi();
+  });
+
+  pauzaBtn.addEventListener('click', () => {
+    if (ishlayapti) { toxtat(); elon.textContent = 'Timer paused.'; }
+    else if (joriy().sarflanganMs > 0) { boshla(); elon.textContent = 'Timer resumed.'; matnEl.focus(); }
+  });
+
+  // Tozalash ikki bosqichli: birinchi bosish soʻraydi, 4 soniya ichida ikkinchisi tozalaydi.
+  tozaBtn.addEventListener('click', () => {
+    if (!tozaBtn.dataset.tasdiq) {
+      tozaBtn.dataset.tasdiq = '1';
+      tozaBtn.textContent = 'Yes, clear';
+      elon.textContent = `The ${sozla().nomi} text and time will be deleted. Press again to confirm.`;
+      tozaTasdiqId = window.setTimeout(tozaQaytar, 4000);
+      return;
+    }
+    tozaQaytar();
+    toxtat();
+    ombor[ombor.rejim] = bosh();
+    matnEl.value = '';
+    saqla();
+    vaqtChiz(); sozChiz(); holatChiz();
+    elon.textContent = `${sozla().nomi} cleared.`;
+    matnEl.focus();
+  });
+  tozaBtn.addEventListener('blur', tozaQaytar);
+
+  radiolar.forEach((r) => r.addEventListener('change', () => { if (r.checked) rejimgaOt(r.value as TaymerRejim); }));
+
+  window.addEventListener('pagehide', () => { if (ishlayapti) tik(); saqla(); });
+
+  // Boshlangʻich holat: saqlangan rejim va matn, taymer pauzada.
+  radiolar.forEach((r) => { r.checked = r.value === ombor.rejim; });
+  rejimgaOt(ombor.rejim);
+</script>
+
+<style>
+  .wt { padding-top: calc(2 * var(--space-6)); display: flex; flex-direction: column; gap: var(--space-5); max-width: calc(860px + 2 * var(--space-10)) !important; }
+  .bosh { display: flex; flex-direction: column; gap: var(--space-3); }
+  .ustki-kok { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-link); }
+  h1 { font-size: var(--text-display-size); line-height: 1.1; font-weight: var(--font-weight-extrabold); }
+  h2 { font-size: var(--text-h2-size); line-height: 1.2; font-weight: var(--font-weight-extrabold); }
+  .izoh-m { line-height: 1.6; color: var(--color-ielts-text-muted); max-width: 60ch; }
+  .izoh { font-size: var(--text-small-size); color: var(--color-ielts-text-muted); line-height: 1.5; }
+  .izoh a { color: var(--color-link); font-weight: var(--font-weight-bold); }
+  .manba { margin-top: calc(-1 * var(--space-3)); }
+
+  .format { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .format legend { font-weight: var(--font-weight-bold); margin-bottom: var(--space-2); }
+  .format label {
+    display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--space-1) var(--space-2); min-height: 44px; padding: var(--space-2) var(--space-4);
+    border: 1.5px solid var(--color-ielts-line); border-radius: var(--radius-md); cursor: pointer; font-weight: var(--font-weight-bold); background: var(--color-ielts-bg); color: var(--color-ielts-text);
+  }
+  .format .f-izoh { font-weight: var(--font-weight-medium); font-size: var(--text-small-size); color: var(--color-ielts-text-muted); }
+  .format label:has(input:checked) { background: var(--color-ielts-tile); border-color: var(--color-ielts-accent-text); }
+  .format label:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .format input { accent-color: var(--color-ielts-accent-text); width: 18px; height: 18px; margin: 0; }
+
+  .panel { background: var(--color-ielts-bg); border: 1.5px solid var(--color-ielts-text); border-radius: var(--radius-lg); box-shadow: var(--shadow-glass); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .holat-qator { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: var(--space-4); align-items: stretch; }
+  .hisob { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-ielts-tile); border: 1.5px solid transparent; }
+  .n-ustki { font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ielts-text-muted); }
+  .n-son { font-size: var(--text-h1-size); line-height: 1.1; white-space: nowrap; font-weight: var(--font-weight-extrabold); font-variant-numeric: tabular-nums; color: var(--color-ielts-text); }
+  .n-min { font-size: var(--text-body-size); font-weight: var(--font-weight-bold); color: var(--color-ielts-text-muted); }
+  .yorliq { align-self: flex-start; font-size: var(--text-caption-size); font-weight: var(--font-weight-bold); padding: 2px var(--space-2); border-radius: var(--radius-full); border: 1px solid var(--color-ielts-line-strong); color: var(--color-ielts-text-muted); }
+  .hisob.yetdi { background: var(--color-success-subtle); border-color: var(--color-success-ui); }
+  .hisob.yetdi .n-son, .hisob.yetdi .yorliq { color: var(--color-success-text); }
+  .hisob.yetdi .yorliq { border-color: var(--color-success-ui); }
+  .hisob.tugadi { border-color: var(--color-error-ui); }
+  .hisob.tugadi .n-son, .hisob.tugadi .n-ustki { color: var(--color-error-text); }
+  .tugmalar { display: flex; flex-direction: column; gap: var(--space-2); justify-content: center; }
+  .tugmalar .t-tugma { min-height: 44px; justify-content: center; min-width: 9.5em; }
+
+  .ogoh { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); border: 1.5px solid var(--color-error-ui); background: var(--color-error-subtle); color: var(--color-ielts-text); line-height: 1.5; }
+  .ogoh[hidden] { display: none; }
+
+  .maydon-yorliq { font-weight: var(--font-weight-bold); }
+  textarea {
+    width: 100%; min-height: 22rem; resize: vertical; padding: var(--space-4); border-radius: var(--radius-md);
+    border: 1.5px solid var(--chiziq-maydon); background: var(--color-ielts-bg); color: var(--color-ielts-text);
+    font: inherit; font-size: var(--text-body-size); line-height: 1.7;
+  }
+  textarea:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+  .maxfiy { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-small-size); font-weight: var(--font-weight-medium); color: var(--color-ielts-text); }
+  .maxfiy svg { flex: none; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  .tushuntirish { display: flex; flex-direction: column; gap: var(--space-3); }
+  .tushuntirish p { line-height: 1.6; max-width: 70ch; }
+
+  @media (max-width: 640px) {
+    .wt { padding-top: var(--space-6); }
+    .panel { padding: var(--space-4); }
+    .holat-qator { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .tugmalar { grid-column: 1 / -1; flex-direction: row; }
+    .tugmalar .t-tugma { flex: 1; min-width: 0; }
+    .format label { flex: 1 1 100%; }
+    textarea { min-height: 16rem; }
+    .n-son { font-size: var(--text-h2-size); }
+  }
+</style>
