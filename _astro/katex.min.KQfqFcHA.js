@@ -1,0 +1,1 @@
+var e=`/_astro/katex.min.Cp-YI5mj.css`;export{e as default};
