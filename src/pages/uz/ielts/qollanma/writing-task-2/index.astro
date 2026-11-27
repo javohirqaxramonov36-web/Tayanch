@@ -12,72 +12,72 @@ import { yol } from '../../../../../lib/yol';
 
 const ie05 = manbalar.find((x) => x.id === 'IE05')!;
 const mundarija = [
-  { id: 'mezonlar', nomi: 'Baholash mezonlari' },
-  { id: 'turlar', nomi: 'Topshiriq nimani so\'raydi' },
-  { id: 'tuzilma', nomi: 'Insho tuzilmasi' },
-  { id: 'tuzoq', nomi: 'Tuzoqlar' },
-  { id: 'mashq', nomi: 'Insho mashqi' },
+  { id: 'mezonlar', nomi: 'Assessment criteria' },
+  { id: 'turlar', nomi: 'What the task asks' },
+  { id: 'tuzilma', nomi: 'Essay structure' },
+  { id: 'tuzoq', nomi: 'Traps' },
+  { id: 'mashq', nomi: 'Essay practice' },
 ];
 const mezonlar = [
-  ['Task response', "Topshiriq talabiga qanchalik aniq, oʻrinli va toʻliq javob berganing. Fikrni qanday rivojlantirganing, dalil va misollar (oʻz tajribangdan ham boʻlishi mumkin)."],
-  ['Coherence and cohesion', "Matn qanchalik aniq va ravon, fikrlar qanday tartiblangan. Fikrlar mantiqiy ketma-ketlikda, bogʻlovchi vositalar (bogʻlovchi soʻzlar, olmoshlar) oʻrinli ishlatilgan."],
-  ['Lexical resource', "Qanchalik keng soʻz boyligidan foydalanganing va soʻzlarni qanchalik toʻgʻri va oʻrinli ishlatganing."],
-  ['Grammatical range and accuracy', "Qanchalik xilma-xil grammatik tuzilmalar ishlatganing va ularni qanchalik toʻgʻri va oʻrinli qoʻllaganing."],
+  ['Task response', 'How clearly, relevantly and fully you answer what the task asks. How you develop your ideas, with support and examples (these can come from your own experience).'],
+  ['Coherence and cohesion', 'How clear and fluent the text is and how the ideas are organised. Ideas follow a logical order, and linking devices (linking words, pronouns) are used appropriately.'],
+  ['Lexical resource', 'How wide a range of vocabulary you use, and how accurately and appropriately you use words.'],
+  ['Grammatical range and accuracy', 'How varied your grammatical structures are, and how accurately and appropriately you use them.'],
 ];
 const turlar = [
-  ['Muammoga yechim', "Muammo beriladi: sabablarini va yechimini taklif qilasan."],
-  ["Fikr bildirish va asoslash", "Bir qarash beriladi: qanchalik qoʻshilishingni aytib, sabab va misol bilan asoslaysan."],
-  ['Solishtirish', "Ikki qarash, dalil yoki oqibat solishtiriladi: ikkalasini muhokama qilib, oʻz fikringni aytasan."],
-  ["Baholash va eʼtiroz", "Gʻoya yoki dalil beriladi: uning kuchli va zaif tomonini baholaysan."],
+  ['Solution to a problem', 'You are given a problem: you suggest its causes and a solution.'],
+  ['Giving and justifying an opinion', 'You are given a view: you say how far you agree and support it with reasons and examples.'],
+  ['Comparing', 'Two views, pieces of evidence or consequences are compared: you discuss both and give your own opinion.'],
+  ['Evaluating and challenging', 'You are given an idea or argument: you assess its strengths and weaknesses.'],
 ];
 const tuzilma = [
-  ['Kirish', "Savolni oʻz soʻzlaring bilan qayta ayt va pozitsiyangni bitta gapda aniq bildir.", '2–3 gap'],
-  ['1-asosiy paragraf', "Bitta asosiy fikr: birinchi gapda ayt, keyin izohla va misol keltir.", '4–6 gap'],
-  ['2-asosiy paragraf', "Ikkinchi fikr yoki qarama-qarshi qarash, xuddi shu tartibda.", '4–6 gap'],
-  ['Xulosa', "Pozitsiyangni boshqa soʻzlar bilan takrorla. Yangi fikr qoʻshma.", '2–3 gap'],
+  ['Introduction', 'Restate the question in your own words and state your position clearly in one sentence.', '2–3 sentences'],
+  ['Body paragraph 1', 'One main idea: state it in the first sentence, then explain it and give an example.', '4–6 sentences'],
+  ['Body paragraph 2', 'A second idea or the opposing view, in the same order.', '4–6 sentences'],
+  ['Conclusion', 'Restate your position in different words. Do not add a new idea.', '2–3 sentences'],
 ];
 const tuzoqlar = [
-  ["Mavzudan chetga chiqish.", "Savol katta mavzuning bitta jihati haqida boʻlsa, faqat shu jihatni yoz. Mavzuga aloqasiz yozish jazolanadi.", true],
-  ["Eslatma yoki roʻyxat koʻrinishida yozish.", "Javob toʻliq gaplardan iborat yaxlit matn boʻlishi kerak: bullet va eslatmalar jazolanadi.", true],
-  ["Boshqa manbadan koʻchirish.", "Koʻchirilgan matn qattiq jazolanadi.", true],
-  ["250 soʻzdan kam yozish.", "Matn juda qisqa boʻlsa, yuqori band uchun til dalili yetmasligi mumkin.", true],
-  ["Juda uzun yozish.", "250 dan koʻp yozish jazolanmaydi, lekin oxirida tekshirishga vaqt qolmasligi va baʼzi fikrlar savoldan uzoqlashishi mumkin.", true],
-  ["Savolning bir qismini unutish.", "\"Discuss both views and give your opinion\" kabi savolda ikkala qarash ham, oʻz fikring ham boʻlishi kerak. Rejani shunga qarab tuz.", false],
+  ['Going off topic.', 'If the question is about one aspect of a big topic, write only about that aspect. Writing off topic is penalised.', true],
+  ['Writing in notes or lists.', 'Your answer must be a connected text of full sentences: bullet points and notes are penalised.', true],
+  ['Copying from another source.', 'Copied text is heavily penalised.', true],
+  ['Writing fewer than 250 words.', 'If the text is very short, there may not be enough evidence of your language for a high band.', true],
+  ['Writing far too much.', 'Writing more than 250 words is not penalised, but you may run out of time to check at the end, and some ideas may drift away from the question.', true],
+  ['Forgetting part of the question.', 'In a question like "Discuss both views and give your opinion", you need both views and your own opinion. Plan with this in mind.', false],
 ] as const;
 // Namuna mavzular (Tayanch uchun yozilgan): src/data/ielts/writingSavollar.ts. Qo'llanmada birinchi uchtasi.
 const mavzular = writingMavzular.slice(0, 3);
 // O'zini tekshirish savollari: IE05 dagi mezon ta'riflari asosida Tayanch tuzgan.
 const tekshiruv = [
   { mezon: 'Task response', savollar: [
-    ['tr1', "Kirishda savolga aniq javob (pozitsiyam) bor."],
-    ['tr2', "Savolning hamma qismiga javob berdim (masalan, ikkala qarash va oʻz fikrim)."],
-    ['tr3', 'Har asosiy fikr izoh va misol bilan rivojlangan.'],
-    ['tr4', "Hamma paragraf aynan shu savol haqida, umumiy mavzuga chiqib ketmadim."],
+    ['tr1', 'My introduction answers the question clearly (my position).'],
+    ['tr2', 'I answered every part of the question (for example, both views and my own opinion).'],
+    ['tr3', 'Each main idea is developed with an explanation and an example.'],
+    ['tr4', 'Every paragraph is about this exact question; I did not drift into the general topic.'],
   ] },
   { mezon: 'Coherence and cohesion', savollar: [
-    ['cc1', "Har paragrafda bitta asosiy fikr bor va u birinchi gapda aytilgan."],
-    ['cc2', "Paragraflar ajratilgan va mantiqiy tartibda."],
-    ['cc3', "Bogʻlovchi soʻzlar (however, as a result) oʻrinli va meʼyorida, har gap boshida emas."],
-    ['cc4', "Takrorlanuvchi otlar oʻrniga olmoshlar (this, they, it) toʻgʻri ishlatilgan."],
+    ['cc1', 'Each paragraph has one main idea, stated in the first sentence.'],
+    ['cc2', 'The paragraphs are separated and in a logical order.'],
+    ['cc3', 'Linking words (however, as a result) are used appropriately and not too often, not at the start of every sentence.'],
+    ['cc4', 'Pronouns (this, they, it) are used correctly instead of repeating nouns.'],
   ] },
   { mezon: 'Lexical resource', savollar: [
-    ['lr1', "Savoldagi iboralarni koʻchirmay, oʻz soʻzlarim bilan aytdim."],
-    ['lr2', "Bitta soʻzni qayta-qayta takrorlamadim."],
-    ['lr3', "Maʼnosini aniq bilmagan \"chiroyli\" soʻzni ishlatmadim."],
-    ['lr4', 'Imlo xatolarini tekshirdim.'],
+    ['lr1', 'I did not copy phrases from the question; I used my own words.'],
+    ['lr2', 'I did not repeat the same word again and again.'],
+    ['lr3', 'I did not use a "fancy" word whose meaning I am not sure of.'],
+    ['lr4', 'I checked my spelling.'],
   ] },
   { mezon: 'Grammatical range and accuracy', savollar: [
-    ['gr1', "Oddiy va qoʻshma gaplar aralash (because, which, although)."],
-    ['gr2', "Feʼl zamonlari va ega-kesim moslashuvi toʻgʻri (he goes, they go)."],
-    ['gr3', "Artikllar (a, an, the) va koʻplik shakllarini tekshirdim."],
-    ['gr4', 'Har gap katta harf bilan boshlanib, tinish belgisi bilan tugaydi.'],
+    ['gr1', 'I mixed simple and complex sentences (because, which, although).'],
+    ['gr2', 'Verb tenses and subject–verb agreement are correct (he goes, they go).'],
+    ['gr3', 'I checked articles (a, an, the) and plural forms.'],
+    ['gr4', 'Every sentence starts with a capital letter and ends with punctuation.'],
   ] },
 ];
 const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.map((g) => ({ mezon: g.mezon, idlar: g.savollar.map(([id, m]) => ({ id, matn: m })) })) };
 ---
 <BolimQobiq
-  title="Writing Task 2 qo'llanmasi · IELTS"
-  description="IELTS Academic Writing Task 2: format, to'rt baholash mezoni, topshiriq turlari, insho tuzilmasi, tuzoqlar va so'z hisoblagichli insho mashqi."
+  title="Writing Task 2 guide · IELTS"
+  description="IELTS Academic Writing Task 2: the format, the four assessment criteria, task types, essay structure, traps and essay practice with a word counter."
   turi="qollanma"
   yol={["Writing"]}
   ota={yol('/uz/ielts/writing/')}
@@ -86,21 +86,21 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
 >
   <div class="ichki qol">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Qoʻllanma</span><span class="pill-ochiq">ochiq</span></p>
-      <h1>Writing Task 2: <span class="kok">aniq fikr, aniq tuzilma</span></h1>
-      <p class="lead">Task 2 da bitta qarash, bahs yoki muammo haqida insho yozasan. Bu qoʻllanma imtihonchi nimaga qarashini, inshoni qanday qurishni va oʻzingni qanday tekshirishni koʻrsatadi.</p>
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill-ochiq">open</span></p>
+      <h1>Writing Task 2: <span class="kok">a clear idea, a clear structure</span></h1>
+      <p class="lead">In Task 2 you write an essay about a point of view, an argument or a problem. This guide shows what the examiner looks for, how to build the essay and how to check your own work.</p>
     </header>
 
-    <section class="format" aria-label="Format kartasi">
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Topshiriq</span><span class="f-qiymat">Task 2</span><span class="f-izoh">IELTS Academic</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">40 daqiqa</span><span class="f-izoh">koʻpi bilan; Writing jami 60 daqiqa</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg>Hajm</span><span class="f-qiymat">250 soʻz</span><span class="f-izoh">kamida</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14" /></svg>Ogʻirlik</span><span class="f-qiymat">2 baravar</span><span class="f-izoh">Task 1 ga nisbatan</span></div>
+    <section class="format" aria-label="Format card">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />Task</span><span class="f-qiymat">Task 2</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Time</span><span class="f-qiymat">40 minutes</span><span class="f-izoh">at most; Writing is 60 minutes in total</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg>Length</span><span class="f-qiymat">250 words</span><span class="f-izoh">at least</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14" /></svg>Weight</span><span class="f-qiymat">twice</span><span class="f-izoh">as much as Task 1</span></div>
     </section>
 
     <details class="mundarija-tel">
       <summary>
-        Mundarija
+        Contents
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </summary>
       <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
@@ -109,54 +109,54 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     <div class="ikki">
       <article class="maqola">
         <section id="mezonlar" aria-labelledby="mezonlar-h">
-          <h2 id="mezonlar-h">Baholash mezonlari</h2>
-          <p class="izoh-m">Inshoni sertifikatlangan imtihonchi toʻrt mezon boʻyicha baholaydi (<a href={ie05.havola} rel="noopener">ielts.org</a>). Quyida har birining taʼrifi qisqa, oʻz soʻzlarimiz bilan.</p>
+          <h2 id="mezonlar-h">Assessment criteria</h2>
+          <p class="izoh-m">A certified examiner marks the essay on four criteria (<a href={ie05.havola} rel="noopener">ielts.org</a>). Below is a short description of each, in our own words.</p>
           <ul class="turlar">
             {mezonlar.map(([n, t]) => <li><span class="t-nom" lang="en">{n}</span><span class="t-matn">{t}</span></li>)}
           </ul>
         </section>
 
         <section id="turlar" aria-labelledby="turlar-h">
-          <h2 id="turlar-h">Topshiriq nimani soʻraydi</h2>
-          <p class="izoh-m">Rasmiy sahifaga koʻra Task 2 shu koʻnikmalarni tekshiradi. Darsliklarda ular koʻpincha "opinion", "discussion", "problem–solution" deb ataladi: bu nomlar rasmiy emas.</p>
+          <h2 id="turlar-h">What the task asks</h2>
+          <p class="izoh-m">According to the official page, Task 2 tests these skills. Textbooks often call them "opinion", "discussion" and "problem–solution": these names are not official.</p>
           <div class="juft">
             {turlar.map(([n, t]) => <div class="kul"><h3>{n}</h3><p class="ikkinchi-m">{t}</p></div>)}
           </div>
         </section>
 
         <section id="tuzilma" aria-labelledby="tuzilma-h">
-          <h2 id="tuzilma-h">Insho tuzilmasi</h2>
-          <p class="izoh-m">Eng koʻp ishlatiladigan sxema: toʻrt paragraf. Bu Tayanch tavsiyasi, rasmiy talab emas: imtihonchi tuzilmaning aniqligiga qaraydi, paragraflar soniga emas.</p>
+          <h2 id="tuzilma-h">Essay structure</h2>
+          <p class="izoh-m">The most common plan: four paragraphs. This is Tayanch's suggestion, not an official requirement: the examiner looks at how clear the structure is, not at the number of paragraphs.</p>
           <ol class="tuzilma">
             {tuzilma.map(([n, t, h], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><div><p class="tz-bosh"><b>{n}</b><span class="izoh">{h}</span></p><p class="ikkinchi-m">{t}</p></div></li>)}
           </ol>
           <div class="vaqt-karta">
             <div class="chiziqlar" aria-hidden="true"><span></span><span class="qora"></span><span></span></div>
             <div class="ulushlar">
-              <span><b>Reja</b><br /><span class="ikkinchi-m">taxminan 5 daqiqa</span></span>
-              <span><b>Yozish</b><br /><span class="ikkinchi-m">taxminan 30 daqiqa</span></span>
-              <span><b>Tekshirish</b><br /><span class="ikkinchi-m">taxminan 5 daqiqa</span></span>
+              <span><b>Plan</b><br /><span class="ikkinchi-m">about 5 minutes</span></span>
+              <span><b>Write</b><br /><span class="ikkinchi-m">about 30 minutes</span></span>
+              <span><b>Check</b><br /><span class="ikkinchi-m">about 5 minutes</span></span>
             </div>
-            <p class="izoh">40 daqiqani boʻlish Tayanch tavsiyasi, rasmiy qoida emas.</p>
+            <p class="izoh">This split of the 40 minutes is Tayanch's suggestion, not an official rule.</p>
           </div>
         </section>
 
         <section id="tuzoq" aria-labelledby="tuzoq-h">
-          <h2 id="tuzoq-h">Tuzoqlar</h2>
+          <h2 id="tuzoq-h">Traps</h2>
           <ol class="tuzoqlar">
-            {tuzoqlar.map(([b, t, rasmiy], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span>{rasmiy ? <span class="izoh"> (ielts.org)</span> : <span class="izoh"> (Tayanch tavsiyasi)</span>}</p></li>)}
+            {tuzoqlar.map(([b, t, rasmiy], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span>{rasmiy ? <span class="izoh"> (ielts.org)</span> : <span class="izoh"> (Tayanch's advice)</span>}</p></li>)}
           </ol>
         </section>
 
         <section id="mashq" class="mashq" aria-labelledby="mashq-h" data-sozlama={JSON.stringify(sozlama)}>
           <div class="m-bosh">
-            <h2 id="mashq-h">Insho mashqi</h2>
-            <span class="izoh">Ball qoʻyilmaydi</span>
+            <h2 id="mashq-h">Essay practice</h2>
+            <span class="izoh">Not scored</span>
           </div>
-          <p class="izoh-m">Mavzu tanla, yoz va oʻzingni toʻrt mezon boʻyicha tekshir. Matn faqat shu brauzerda saqlanadi, hech qayerga yuborilmaydi.</p>
+          <p class="izoh-m">Choose a topic, write, and check yourself against the four criteria. Your text is saved only in this browser and is not sent anywhere.</p>
 
           <div class="bosqich" id="b-mavzu">
-            <p class="ustki-yorliq" id="mavzu-h">1. Mavzu tanla <span class="pill-namuna">Namuna</span></p>
+            <p class="ustki-yorliq" id="mavzu-h">1. Choose a topic <span class="pill-namuna">Sample</span></p>
             <div class="mavzular" role="group" aria-labelledby="mavzu-h">
               {mavzular.map((m) => (
                 <button type="button" class="mavzu" aria-pressed="false" data-mavzu={m.id}>
@@ -168,29 +168,29 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
           </div>
 
           <div class="bosqich" id="b-yozish" hidden>
-            <p class="ustki-yorliq">2. Yoz</p>
+            <p class="ustki-yorliq">2. Write</p>
             <blockquote class="savol-matn" id="tanlangan-mavzu" lang="en"></blockquote>
             <div class="yozish-ust">
-              <p class="hisob" id="hisob" aria-live="off"><b id="soz-soni">0</b> / 250 soʻz</p>
+              <p class="hisob" id="hisob" aria-live="off"><b id="soz-soni">0</b> / 250 words</p>
               <div class="taymer">
-                <span class="vaqt" id="vaqt" role="timer" aria-label="Qolgan vaqt">40:00</span>
-                <button type="button" class="t-tugma t-tugma--ikkinchi kichik-t" id="taymer-tugma">Taymerni boshlash</button>
+                <span class="vaqt" id="vaqt" role="timer" aria-label="Time left">40:00</span>
+                <button type="button" class="t-tugma t-tugma--ikkinchi kichik-t" id="taymer-tugma">Start timer</button>
               </div>
             </div>
             <p class="sr" id="elon" aria-live="polite"></p>
-            <label class="sr" for="matn">Insho matni</label>
-            <textarea id="matn" lang="en" rows="16" spellcheck="false" autocapitalize="sentences" placeholder="Inshoni shu yerga yoz…"></textarea>
-            <p class="izoh" id="saqlash-holat">Qoralama shu brauzerda avtomatik saqlanadi.</p>
+            <label class="sr" for="matn">Essay text</label>
+            <textarea id="matn" lang="en" rows="16" spellcheck="false" autocapitalize="sentences" placeholder="Write your essay here…"></textarea>
+            <p class="izoh" id="saqlash-holat">Your draft is saved automatically in this browser.</p>
             <div class="tugmalar">
-              <button type="button" class="t-tugma ielts-tugma--urgu" id="tekshirishga">Oʻzimni tekshirish</button>
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="mavzu-almashtir">Boshqa mavzu</button>
+              <button type="button" class="t-tugma ielts-tugma--urgu" id="tekshirishga">Check myself</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="mavzu-almashtir">Another topic</button>
             </div>
             <p class="ogoh" id="qisqa-ogoh" hidden></p>
           </div>
 
           <div class="bosqich" id="b-tekshiruv" hidden>
-            <p class="ustki-yorliq">3. Oʻzingni tekshir</p>
-            <p class="izoh-m">Inshoni qayta oʻqi va bajarilgan bandlarni belgila. Halol belgila: bu faqat oʻzing uchun.</p>
+            <p class="ustki-yorliq">3. Check yourself</p>
+            <p class="izoh-m">Read your essay again and tick the points you have done. Be honest: this is only for you.</p>
             {tekshiruv.map((g) => (
               <fieldset class="t-guruh">
                 <legend lang="en">{g.mezon}</legend>
@@ -203,47 +203,47 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
               </fieldset>
             ))}
             <div class="tugmalar">
-              <button type="button" class="t-tugma ielts-tugma--urgu" id="xulosaga">Xulosani koʻrish</button>
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="matnga-1">Matnga qaytish</button>
+              <button type="button" class="t-tugma ielts-tugma--urgu" id="xulosaga">See summary</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="matnga-1">Back to the text</button>
             </div>
           </div>
 
           <div class="bosqich" id="b-xulosa" hidden>
-            <p class="ustki-yorliq">4. Xulosa</p>
-            <h3 id="xulosa-h" tabindex="-1">Oʻz-oʻzini tekshirish natijasi</h3>
+            <p class="ustki-yorliq">4. Summary</p>
+            <h3 id="xulosa-h" tabindex="-1">Self-check result</h3>
             <ul class="xulosa-mezon" id="xulosa-mezon"></ul>
             <div id="ishlash-blok">
-              <p><b>Keyingi inshoda eʼtibor ber:</b></p>
+              <p><b>In your next essay, pay attention to:</b></p>
               <ul class="ishlash" id="ishlash"></ul>
             </div>
-            <p class="izoh">Bu band emas: rasmiy bandʼni faqat sertifikatlangan imtihonchi qoʻyadi. Roʻyxat inshoni qayta koʻrib chiqish uchun.</p>
+            <p class="izoh">This is not a band: only a certified examiner gives an official band. The list is for reviewing your essay.</p>
             <div class="tugmalar">
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="matnga-2">Matnga qaytish</button>
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tekshiruvga">Belgilarni oʻzgartirish</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="matnga-2">Back to the text</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tekshiruvga">Change ticks</button>
             </div>
           </div>
 
           <div class="tozalash">
-            <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">Qoralamani oʻchirish</button>
-            <span class="tasdiq" id="tasdiq" hidden>Insho matni va belgilar oʻchirilsinmi?
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">Ha, oʻchirish</button>
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">Bekor qilish</button>
+            <button type="button" class="t-tugma t-tugma--ikkinchi" id="tozala">Delete draft</button>
+            <span class="tasdiq" id="tasdiq" hidden>Delete the essay text and ticks?
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-ha">Yes, delete</button>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="tasdiq-yoq">Cancel</button>
             </span>
           </div>
         </section>
 
         <section class="keyingi" aria-labelledby="keyingi-h">
-          <p class="ustki-yorliq kok-q">Keyingi qadam</p>
-          <h2 id="keyingi-h">Rasmiy namunadagi Task 2 ni 40 daqiqada yoz</h2>
-          <p class="k-matn">Keyin yuqoridagi tekshiruv roʻyxatidan oʻtkaz. Reja vositasi Writing kunlarini haftaga boʻlib beradi.</p>
+          <p class="ustki-yorliq kok-q">Next step</p>
+          <h2 id="keyingi-h">Write an official sample Task 2 in 40 minutes</h2>
+          <p class="k-matn">Then go through the checklist above. The plan tool spreads Writing days across the week.</p>
           <div class="k-tugmalar">
-            <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja tuzish</a>
-            <a class="t-tugma" href={yol('/uz/ielts/#rasmiy')}>Rasmiy namunalar</a>
+            <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/vosita/reja/')}>Build a 30-day plan</a>
+            <a class="t-tugma" href={yol('/uz/ielts/#rasmiy')}>Official samples</a>
           </div>
         </section>
       </article>
-      <nav class="mundarija" aria-label="Sahifa mundarijasi">
-        <p class="ustki-yorliq">Mundarija</p>
+      <nav class="mundarija" aria-label="Page contents">
+        <p class="ustki-yorliq">Contents</p>
         {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
       </nav>
     </div>
@@ -253,10 +253,10 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Band descriptors (har mezon bo'yicha band qanday qo'yilishi) bu sahifada berilmagan.",
-        "General Training Writing formati (bu sahifa Academic bo'yicha).",
-        "Insho tuzilmasi, vaqt bo'linishi va tekshiruv savollari Tayanch tavsiyasi, rasmiy talab emas.",
-        "Mashq mavzulari Tayanch uchun yozilgan namuna, rasmiy IELTS savoli emas.",
+        "The band descriptors (how a band is given for each criterion) are not on this page.",
+        "The General Training Writing format (this page covers Academic).",
+        "The essay structure, time split and checklist are Tayanch's suggestions, not official requirements.",
+        "The practice topics are samples written for Tayanch, not official IELTS questions.",
       ]}
     />
   </div>
@@ -298,8 +298,8 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     try { localStorage.setItem(S.kalit, JSON.stringify(h)); saqlashMumkin = true; }
     catch { saqlashMumkin = false; }
     $('saqlash-holat').textContent = saqlashMumkin
-      ? 'Qoralama shu brauzerda avtomatik saqlanadi.'
-      : "Brauzer saqlashga ruxsat bermadi: sahifa yopilsa, matn yo'qoladi.";
+      ? 'Your draft is saved automatically in this browser.'
+      : 'The browser did not allow saving: if you close the page, the text will be lost.';
   }
 
   // ---------- So'z soni ----------
@@ -324,14 +324,14 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     vaqtEl.classList.toggle('kam', q <= 5 * 60 * 1000);
     const daqiqa = Math.ceil(q / 60000);
     if (h.tugash !== null && oldingiDaqiqa !== null && daqiqa !== oldingiDaqiqa && (daqiqa === 10 || daqiqa === 5)) {
-      $('elon').textContent = `${daqiqa} daqiqa qoldi.`;
+      $('elon').textContent = `${daqiqa} ${daqiqa === 1 ? 'minute' : 'minutes'} left.`;
     }
     oldingiDaqiqa = daqiqa;
     if (h.tugash !== null && q === 0) {
       h.tugash = null; h.qoldi = 0; saqla();
-      $('elon').textContent = "Vaqt tugadi. Yozishni davom ettirishing mumkin, lekin imtihonda bu yerda to'xtarding.";
+      $('elon').textContent = 'Time is up. You can keep writing, but in the test you would stop here.';
     }
-    taymerTugma.textContent = h.tugash !== null ? "To'xtatish" : h.qoldi === 0 ? 'Qaytadan boshlash' : h.qoldi < TOLIQ_MS ? 'Davom ettirish' : 'Taymerni boshlash';
+    taymerTugma.textContent = h.tugash !== null ? 'Pause' : h.qoldi === 0 ? 'Start again' : h.qoldi < TOLIQ_MS ? 'Resume' : 'Start timer';
     if (h.tugash === null && tik !== undefined) { clearInterval(tik); tik = undefined; }
     if (h.tugash !== null && tik === undefined) tik = window.setInterval(taymerChiz, 500);
   }
@@ -378,7 +378,7 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     const n = sozSoni(matn.value);
     const ogoh = $('qisqa-ogoh');
     if (n < MIN_SOZ && ogoh.hidden) {
-      ogoh.textContent = `Hozir ${n} so'z: imtihonda kamida ${MIN_SOZ} so'z kerak. Baribir tekshirmoqchi bo'lsang, tugmani yana bos.`;
+      ogoh.textContent = `You have ${n} ${n === 1 ? 'word' : 'words'}: the test needs at least ${MIN_SOZ}. If you still want to check, press the button again.`;
       ogoh.hidden = false;
       saqla();
       return;

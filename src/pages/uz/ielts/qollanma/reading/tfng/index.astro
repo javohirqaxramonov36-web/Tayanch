@@ -18,14 +18,14 @@ const gaplar = [
   'The vegetables are not sold: they are eaten by the families or given to a local kitchen.',
 ];
 const misollar: Davo[] = [
-  { matn: 'Every family has to help with work that is shared.', javob: 'True', dalil: 2, izoh: "3-gap: \"they must help with shared jobs\". Soʻzlar boshqa, maʼno bir xil." },
-  { matn: 'Families pay a yearly fee for their plot.', javob: 'False', dalil: 2, izoh: "3-gap: \"Families pay nothing\". Matn daʼvoning teskarisini aytadi." },
-  { matn: 'The garden has won a prize for its vegetables.', javob: 'Not Given', dalil: -1, izoh: "Sabzavotlar tilga olingan, lekin mukofot haqida hech bir gap yoʻq: na tasdiq, na inkor." },
+  { matn: 'Every family has to help with work that is shared.', javob: 'True', dalil: 2, izoh: "Sentence 3: \"they must help with shared jobs\". Different words, same meaning." },
+  { matn: 'Families pay a yearly fee for their plot.', javob: 'False', dalil: 2, izoh: "Sentence 3: \"Families pay nothing\". The text says the opposite of the statement." },
+  { matn: 'The garden has won a prize for its vegetables.', javob: 'Not Given', dalil: -1, izoh: "Vegetables are mentioned, but no sentence is about a prize: nothing confirms or denies it." },
 ];
 const sinovlar: Davo[] = [
-  { matn: 'The garden used to be a car park.', javob: 'True', dalil: 0, izoh: "1-gap: bog' boʻsh avtoturargohda boshlangan." },
-  { matn: 'Some of the vegetables are sold at a market.', javob: 'False', dalil: 3, izoh: "4-gap: \"The vegetables are not sold\". Bu daʼvoga zid." },
-  { matn: 'Most of the families live on Park Road.', javob: 'Not Given', dalil: -1, izoh: "Park Road faqat bog' manzili. Oilalar qayerda yashashi aytilmagan." },
+  { matn: 'The garden used to be a car park.', javob: 'True', dalil: 0, izoh: "Sentence 1: the garden was started in an empty car park." },
+  { matn: 'Some of the vegetables are sold at a market.', javob: 'False', dalil: 3, izoh: "Sentence 4: \"The vegetables are not sold\". This contradicts the statement." },
+  { matn: 'Most of the families live on Park Road.', javob: 'Not Given', dalil: -1, izoh: "Park Road is only the garden's address. The text does not say where the families live." },
 ];
 const JAVOBLAR: Javob[] = ['True', 'False', 'Not Given'];
 ---
@@ -33,92 +33,92 @@ const JAVOBLAR: Javob[] = ['True', 'False', 'Not Given'];
   bolim="ielts"
   modul="ir-tfng"
   savollar={darsSavollari['ir-tfng']}
-  yolBandlari={["Qo'llanmalar", 'Reading']}
-  darsTuri="Reading darsi"
+  yolBandlari={['Guides', 'Reading']}
+  darsTuri="Reading lesson"
   imtihon="IELTS"
   manbalar={['IE02']}
   tekshirilgan="2026-11-06"
   keyingiTekshiruv="2026-12-06"
   title="True / False / Not Given · IELTS"
-  description="IELTS Reading: da'vo matnga mos, zid yoki matnda yo'qligini ajrating. Avval dalil gapni toping, keyin javob bering. 5 ta mashq."
+  description="IELTS Reading: decide whether a statement agrees with the text, contradicts it, or is not in it. Find the evidence sentence first, then answer. 5 exercises."
   yonalish="Identifying information"
-  sarlavha="True, False yoki Not Given: dalil gapdan boshlang"
-  lead="Bu savolda ko'pchilik False va Not Given ni chalkashtiradi. Farqi bitta: False uchun matnda zid gap bo'lishi shart. Shuning uchun avval dalil gapni topasiz, javobni keyin tanlaysiz."
-  qadamNomlari={['Misol', 'Qoida', "Sinab ko'r"]}
+  sarlavha="True, False or Not Given: start from the evidence sentence"
+  lead="Many people mix up False and Not Given in this question. There is one difference: False needs a sentence in the text that contradicts the statement. So you find the evidence sentence first and choose the answer after."
+  qadamNomlari={['Example', 'Rule', 'Try it']}
   savolTili="en"
-  savolKorsatma="Parchani o'qing. Da'vo matndagi ma'lumotga mos kelsa True, zid bo'lsa False, matnda bu haqda ma'lumot bo'lmasa Not Given."
+  savolKorsatma="Read the passage. If the statement agrees with the information in the text, choose True; if it contradicts it, False; if the text gives no information about it, Not Given."
   keyingi={{ nomi: 'Matching headings', href: yol('/uz/ielts/qollanma/reading/sarlavhalar/') }}
   maqsadlar={[
-    "Da'voning har qismini matndagi aniq gap bilan solishtirasiz.",
-    "False (matn zid) va Not Given (matnda yo'q) ni dalil bo'yicha ajratasiz.",
-    "Parafrazni taniysiz: boshqa so'zlar bilan aytilgan bir xil ma'no.",
+    "Compare each part of a statement with a specific sentence in the text.",
+    "Tell False (the text contradicts) from Not Given (not in the text) by the evidence.",
+    "Recognise paraphrase: the same meaning in different words.",
   ]}
   xulosa={[
-    "Avval da'voni o'qing va uning kalit qismini ajrating: kim, nima, qachon, qancha.",
-    "Matnda shu qismga tegadigan gapni toping. U boshqa so'zlar bilan yozilgan bo'lishi mumkin.",
-    "Gap da'voni tasdiqlasa True, teskarisini aytsa False.",
-    "Zid gap topilmasa, javob Not Given. Umumiy bilim va taxmin hisob emas.",
-    "\"At first\", \"today\", \"more than\" kabi so'zlarga e'tibor bering: ular ma'noni o'zgartiradi.",
+    "Read the statement first and pick out its key part: who, what, when, how much.",
+    "Find the sentence in the text that deals with that part. It may use different words.",
+    "If the sentence confirms the statement, it is True; if it says the opposite, False.",
+    "If no sentence contradicts it, the answer is Not Given. General knowledge and guesses do not count.",
+    "Watch words like \"at first\", \"today\" and \"more than\": they change the meaning.",
   ]}
   tekshirilmagan={[
-    "Parchalar va savollar Tayanch uchun yozilgan, vaziyatlar o'ylab topilgan; muallif tekshirmaganlari \"tekshirilmagan\" deb belgilangan.",
-    "Tuzoq turlari (parafraz, eski holat, yaqin so'z, taxmin) Tayanch tavsiyasi, rasmiy tasnif emas.",
-    "Haqiqiy imtihonda bitta matnga bir nechta da'vo beriladi; bu yerda har mashq qisqa parcha.",
+    "The passages and questions were written for Tayanch and the situations are made up; those the author has not checked are marked \"unchecked\".",
+    "The trap types (paraphrase, past situation, similar word, guess) are Tayanch's own grouping, not an official classification.",
+    "In the real test one text comes with several statements; here each exercise is a short passage.",
   ]}
 >
   <div slot="sahna">
     <div class="sahna-quti ir-quti">
-      <p class="ir-namuna"><span class="pill">Namuna</span> <span class="kichik ikkinchi">Oʻylab topilgan vaziyat</span></p>
+      <p class="ir-namuna"><span class="pill">Sample</span> <span class="kichik ikkinchi">Made-up situation</span></p>
       <div class="ir-davo">
-        <span class="kichik ikkinchi" id="ir-davo-nom">1-daʼvo</span>
+        <span class="kichik ikkinchi" id="ir-davo-nom">Statement 1</span>
         <span lang="en" id="ir-davo-matn">{misollar[0].matn}</span>
       </div>
-      <div class="bolaklar gap-bolaklar" id="ir-matn" role="group" aria-label="Parcha gaplari" lang="en">
+      <div class="bolaklar gap-bolaklar" id="ir-matn" role="group" aria-label="Passage sentences" lang="en">
         {gaplar.map((g, k) => (
           <button type="button" class="bolak gap" data-bolak={k} aria-pressed="false">
             <span class="gap-matn">{g}</span>
-            <span class="gap-yorliq" lang="uz" hidden></span>
+            <span class="gap-yorliq" hidden></span>
           </button>
         ))}
       </div>
-      <p class="ir-yoq" id="ir-yoq" hidden>Matnda bu daʼvoga tegadigan gap yoʻq.</p>
+      <p class="ir-yoq" id="ir-yoq" hidden>No sentence in the text deals with this statement.</p>
     </div>
     <p class="sahna-izoh" id="ir-holat" aria-live="polite"></p>
     <script type="application/json" id="ir-data" set:html={JSON.stringify({ misollar, sinovlar })} />
   </div>
 
   <div slot="animatsiya">
-    <p>Bitta parcha, uch daʼvo. Daʼvoni tanlang: sahnada dalil gap koʻk chegara bilan belgilanadi, yonida munosabati yoziladi.</p>
-    <div class="segment" role="group" aria-label="Misol da'vo">
+    <p>One passage, three statements. Choose a statement: the evidence sentence is outlined in blue on the stage, with its relation written next to it.</p>
+    <div class="segment" role="group" aria-label="Example statement">
       {misollar.map((m, k) => (
         <button type="button" data-misol={k} aria-pressed={k === 0 ? 'true' : 'false'}>{m.javob}</button>
       ))}
     </div>
-    <div class="formula"><span class="kichik ikkinchi">Nega</span><span class="f-qiymat ir-qoida" id="ir-misol-izoh">{misollar[0].izoh}</span></div>
-    <div class="segment"><button type="button" class="t-tugma ielts-tugma--urgu" data-qadamga="sinab">Oʻzim topaman</button></div>
+    <div class="formula"><span class="kichik ikkinchi">Why</span><span class="f-qiymat ir-qoida" id="ir-misol-izoh">{misollar[0].izoh}</span></div>
+    <div class="segment"><button type="button" class="t-tugma ielts-tugma--urgu" data-qadamga="sinab">Let me find it</button></div>
   </div>
 
   <div slot="formula">
     <dl class="ir-qoidalar">
-      <div><dt>True</dt><dd>Matndagi gap daʼvo bilan bir xil maʼnoni aytadi, soʻzlari boshqa boʻlsa ham.</dd></div>
-      <div><dt>False</dt><dd>Matndagi gap daʼvoga zid. Bunday gapni koʻrsata olishingiz kerak.</dd></div>
-      <div><dt>Not Given</dt><dd>Matnda daʼvoni tasdiqlaydigan ham, inkor qiladigan ham gap yoʻq.</dd></div>
-      <div><dt>Tekshirish savoli</dt><dd>"Qaysi gap?" Javob bera olmasangiz, False emas, Not Given.</dd></div>
+      <div><dt>True</dt><dd>A sentence in the text says the same thing as the statement, even if the words are different.</dd></div>
+      <div><dt>False</dt><dd>A sentence in the text contradicts the statement. You must be able to point to it.</dd></div>
+      <div><dt>Not Given</dt><dd>No sentence in the text confirms or denies the statement.</dd></div>
+      <div><dt>Check question</dt><dd>"Which sentence?" If you can't answer, it is Not Given, not False.</dd></div>
     </dl>
   </div>
 
   <div slot="sinab">
     <div class="vazifa">
-      <p><b id="ir-sinab-nom">1 / 3.</b> Avval sahnadagi dalil gapni bosing yoki "Bunday gap yoʻq" ni tanlang. Keyin javobni tanlab, tekshiring.</p>
-      <div class="segment"><button type="button" class="t-tugma t-tugma--ikkinchi" id="ir-yoq-tugma" aria-pressed="false">Bunday gap yoʻq</button></div>
-      <div class="segment" role="group" aria-label="Javob">
+      <p><b id="ir-sinab-nom">1 / 3.</b> First tap the evidence sentence on the stage, or choose "No such sentence". Then choose your answer and check it.</p>
+      <div class="segment"><button type="button" class="t-tugma t-tugma--ikkinchi" id="ir-yoq-tugma" aria-pressed="false">No such sentence</button></div>
+      <div class="segment" role="group" aria-label="Answer">
         {JAVOBLAR.map((j) => <button type="button" data-javob={j} aria-pressed="false" lang="en">{j}</button>)}
       </div>
-      <p class="vazifa-holat" id="ir-sinab-holat" aria-live="polite">Hali tanlanmagan.</p>
+      <p class="vazifa-holat" id="ir-sinab-holat" aria-live="polite">Nothing chosen yet.</p>
     </div>
     <div class="segment">
-      <button type="button" class="t-tugma ielts-tugma--urgu" id="ir-tekshir">Tekshirish</button>
-      <button type="button" class="t-tugma t-tugma--ikkinchi" id="ir-keyingi">Keyingi daʼvo</button>
+      <button type="button" class="t-tugma ielts-tugma--urgu" id="ir-tekshir">Check</button>
+      <button type="button" class="t-tugma t-tugma--ikkinchi" id="ir-keyingi">Next statement</button>
     </div>
   </div>
 </DarsQolip>
@@ -161,15 +161,15 @@ const JAVOBLAR: Javob[] = ['True', 'False', 'Not Given'];
     $('ir-yoq').hidden = true;
     if (tanlovniHam) g.tanla(-1);
   }
-  const munosabat = (d: Davo) => (d.javob === 'True' ? 'Mos' : 'Zid');
+  const munosabat = (d: Davo) => (d.javob === 'True' ? 'Agrees' : 'Contradicts');
   function davoKorsat(nom: string, d: Davo) {
     $('ir-davo-nom').textContent = nom;
     $('ir-davo-matn').textContent = d.matn;
   }
   function holatYoz() {
     const k = g.tanlangan();
-    const dalil = yoq ? "Bunday gap yo'q" : k >= 0 ? `${k + 1}-gap` : 'dalil tanlanmagan';
-    holat.textContent = `Tanlov: ${dalil}; javob: ${javob || 'tanlanmagan'}.`;
+    const dalil = yoq ? 'No such sentence' : k >= 0 ? `sentence ${k + 1}` : 'no evidence chosen';
+    holat.textContent = `Chosen: ${dalil}; answer: ${javob || 'not chosen'}.`;
     holat.dataset.ok = '';
   }
 
@@ -177,12 +177,12 @@ const JAVOBLAR: Javob[] = ['True', 'False', 'Not Given'];
     tozala(true);
     g.faol(false);
     const d = misollar[misol];
-    davoKorsat(`${misol + 1}-da'vo`, d);
+    davoKorsat(`Statement ${misol + 1}`, d);
     misolTugmalar.forEach((t, k) => t.setAttribute('aria-pressed', String(k === misol)));
     $('ir-misol-izoh').textContent = d.izoh;
     if (d.dalil >= 0) yorliq(d.dalil, munosabat(d), 'gap-togri');
     else $('ir-yoq').hidden = false;
-    $('ir-holat').textContent = `${misol + 1}-da'vo: ${d.javob}. ${d.dalil >= 0 ? `Dalil: ${d.dalil + 1}-gap, ${munosabat(d).toLowerCase()}.` : "Dalil gap yo'q."}`;
+    $('ir-holat').textContent = `Statement ${misol + 1}: ${d.javob}. ${d.dalil >= 0 ? `Evidence: sentence ${d.dalil + 1}, ${munosabat(d).toLowerCase()}.` : 'No evidence sentence.'}`;
   }
   function chizSinov() {
     tozala(true);
@@ -191,30 +191,30 @@ const JAVOBLAR: Javob[] = ['True', 'False', 'Not Given'];
     yoqTugma.setAttribute('aria-pressed', 'false');
     javobTugmalar.forEach((t) => { t.setAttribute('aria-pressed', 'false'); t.disabled = false; });
     yoqTugma.disabled = false;
-    davoKorsat(`Sinov: ${sinov + 1}-da'vo`, sinovlar[sinov]);
+    davoKorsat(`Practice: statement ${sinov + 1}`, sinovlar[sinov]);
     $('ir-sinab-nom').textContent = `${sinov + 1} / ${sinovlar.length}.`;
-    holat.textContent = 'Hali tanlanmagan.'; holat.dataset.ok = '';
-    $('ir-holat').textContent = "Da'voga tegadigan gapni toping.";
+    holat.textContent = 'Nothing chosen yet.'; holat.dataset.ok = '';
+    $('ir-holat').textContent = 'Find the sentence that deals with the statement.';
   }
   function chiz() { if (qadam === 'sinab') chizSinov(); else chizMisol(); }
 
   function tekshir() {
     const d = sinovlar[sinov];
     const k = g.tanlangan();
-    if (!javob || (!yoq && k < 0)) { holat.textContent = "Avval dalilni (yoki \"Bunday gap yo'q\") va javobni tanlang."; holat.dataset.ok = ''; return; }
+    if (!javob || (!yoq && k < 0)) { holat.textContent = 'First choose the evidence (or "No such sentence") and an answer.'; holat.dataset.ok = ''; return; }
     const dalilOk = d.dalil < 0 ? yoq : k === d.dalil;
     const javobOk = javob === d.javob;
     tozala(false);
     if (d.dalil >= 0) yorliq(d.dalil, munosabat(d), 'gap-togri');
     else $('ir-yoq').hidden = false;
-    if (!yoq && k >= 0 && k !== d.dalil) yorliq(k, 'Siz tanlagan', 'gap-xato');
+    if (!yoq && k >= 0 && k !== d.dalil) yorliq(k, 'Your choice', 'gap-xato');
     if (javobOk && dalilOk) {
-      holat.textContent = `To'g'ri: ${d.javob}. ${d.izoh}`; holat.dataset.ok = '1';
+      holat.textContent = `Correct: ${d.javob}. ${d.izoh}`; holat.dataset.ok = '1';
       g.faol(false); yoqTugma.disabled = true; javobTugmalar.forEach((t) => { t.disabled = true; });
     } else if (javobOk) {
-      holat.textContent = `Javob to'g'ri (${d.javob}), lekin dalil boshqa. ${d.izoh}`; holat.dataset.ok = '';
+      holat.textContent = `The answer is right (${d.javob}), but the evidence is elsewhere. ${d.izoh}`; holat.dataset.ok = '';
     } else {
-      holat.textContent = `Javob ${d.javob}. ${d.izoh} Yana urinib ko'ring yoki keyingi da'voga o'ting.`; holat.dataset.ok = '';
+      holat.textContent = `The answer is ${d.javob}. ${d.izoh} Try again or go to the next statement.`; holat.dataset.ok = '';
     }
   }
 

@@ -13,41 +13,41 @@ const ie07 = manbalar.find((x) => x.id === 'IE07')!;
 const listeningMashqlar = mashqlar.filter((m) => m.qism?.startsWith('mashq/listening'));
 
 const mundarija = [
-  { id: 'qismlar', nomi: "Toʻrt qism" },
-  { id: 'turlar', nomi: 'Savol turlari' },
-  { id: 'cheklov', nomi: "Soʻz cheklovi" },
-  { id: 'imlo', nomi: 'Imlo va sana' },
-  { id: 'strategiya', nomi: 'Strategiya' },
-  { id: 'mashq', nomi: 'Mashqlar' },
+  { id: 'qismlar', nomi: 'Four parts' },
+  { id: 'turlar', nomi: 'Question types' },
+  { id: 'cheklov', nomi: 'Word limit' },
+  { id: 'imlo', nomi: 'Spelling and dates' },
+  { id: 'strategiya', nomi: 'Strategy' },
+  { id: 'mashq', nomi: 'Practice' },
 ];
 // IE07: qism tavsifi
 const qismlar = [
-  ['Ikki kishi suhbati', 'Kundalik, ijtimoiy vaziyat.'],
-  ["Bitta asosiy soʻzlovchi", 'Kundalik, ijtimoiy vaziyat.'],
-  ['Ikki asosiy so\'zlovchi suhbati', "Taʼlim va oʻqish bilan bogʻliq vaziyat."],
-  ['Bitta kishi, akademik mavzu', "Taʼlim va oʻqish bilan bogʻliq vaziyat."],
+  ['A conversation between two people', 'An everyday social situation.'],
+  ['One main speaker', 'An everyday social situation.'],
+  ['A conversation between two main speakers', 'A situation linked to education and training.'],
+  ['One speaker, an academic subject', 'A situation linked to education and training.'],
 ];
 // [nomi, rasmiy tavsif (IE07), Tayanch maslahati]
 const turlar = [
-  ['Multiple choice', "Bitta toʻgʻri javobni tanlaysan; baʼzan uzunroq roʻyxatdan bir nechtasini.", "Variantlar orasidagi farqni oldindan belgila. Yozuvda bir nechta variant tilga olinishi mumkin: soʻzlovchi oxirida nimani tasdiqlaganini tingla."],
-  ['Matching', "Yozuvdagi bandlarni berilgan variantlar roʻyxatiga moslaysan.", "Variantlar roʻyxatini avval oʻqib chiq. Yozuvda ular koʻpincha boshqa soʻzlar bilan aytiladi."],
-  ['Plan, map, diagram labelling', "Rasm, xarita yoki chizmadagi belgilarni toʻldirasan; javob roʻyxatdan tanlanadi.", "Avval boshlangʻich nuqtani top. \"Opposite\", \"next to\", \"on your left\" kabi joy soʻzlarini kut."],
-  ['Form, note, table, flow chart completion', "Yozuvning bir qismi yoki butun mazmuni berilgan sxemadagi boʻsh joylarni toʻldirasan.", "Boʻsh joy atrofiga qarab, qanday soʻz kerakligini taxmin qil: son, ism, sana yoki narsa nomi."],
-  ['Sentence completion', "Har gapdagi boʻsh joyni yozuvdagi maʼlumot bilan toʻldirasan.", "Yozgan gaping grammatik jihatdan toʻgʻri oʻqilishini tekshir: birlik yoki koʻplik, artikl."],
-  ['Short-answer questions', "Savolni oʻqib, yozuvdagi maʼlumot bilan qisqa javob yozasan.", "Savol soʻziga qara (who, when, how much): u javob turini aytadi. Soʻz chekloviga amal qil."],
+  ['Multiple choice', 'You choose one correct answer, or sometimes several from a longer list.', 'Mark the differences between the options in advance. Several options may be mentioned in the recording: listen for what the speaker confirms in the end.'],
+  ['Matching', 'You match items in the recording to a list of options.', 'Read the list of options first. In the recording they are often said in other words.'],
+  ['Plan, map, diagram labelling', 'You complete labels on a plan, map or diagram; answers are chosen from a list.', 'Find the starting point first. Listen for place words like "opposite", "next to" and "on your left".'],
+  ['Form, note, table, flow chart completion', 'You fill the gaps in an outline of part or all of the recording.', 'Look around each gap and predict what kind of word is needed: a number, a name, a date or the name of a thing.'],
+  ['Sentence completion', 'You fill the gap in each sentence with information from the recording.', 'Check that your completed sentence reads correctly: singular or plural, articles.'],
+  ['Short-answer questions', 'You read a question and write a short answer using information from the recording.', 'Look at the question word (who, when, how much): it tells you the type of answer. Keep to the word limit.'],
 ];
 // Tayanch maslahati (rasmiy qoida emas)
 const strategiyalar = [
-  ['Oldindan o\'qi.', "Yozuv boshlanishidan oldin savollarni oʻqib chiq: qaysi soʻz kutilayotganini bilsang, eshitish osonlashadi. Yozuv bir marta eshitiladi (IE07), shuning uchun tayyor turish muhim."],
-  ["Kalit soʻzni belgila.", "Har savolda ism, son, sana yoki muhim otning tagiga chiz. Shu soʻz yozuvda qayerda kelishini kutasan."],
-  ['Sinonimni kut.', "Savoldagi soʻz yozuvda boshqacha aytilishi mumkin. Masalan, savolda \"cheap\", yozuvda \"it doesn't cost much\" (namuna)."],
-  ['"Distractor"ga tushma.', "Soʻzlovchi fikrini oʻzgartirishi mumkin: \"Tuesday… actually, Wednesday is better\" (namuna). Birinchi eshitgan soʻzni emas, oxirida tasdiqlanganini yoz."],
-  ["Bitta savolda qotib qolma.", "Javobni oʻtkazib yuborsang, keyingi savolga oʻt. Yozuv toʻxtamaydi."],
+  ['Read ahead.', 'Read the questions before the recording starts: if you know which word to expect, it is easier to hear. You hear the recording once (IE07), so being ready matters.'],
+  ['Mark the key word.', 'In each question, underline a name, number, date or important noun. Then wait for where that word comes in the recording.'],
+  ['Expect synonyms.', 'A word in the question may be said differently in the recording. For example, the question says "cheap" and the recording says "it doesn\'t cost much" (sample).'],
+  ['Don\'t fall for the distractor.', 'A speaker may change their mind: "Tuesday… actually, Wednesday is better" (sample). Write what is confirmed in the end, not the first word you hear.'],
+  ['Don\'t get stuck on one question.', 'If you miss an answer, move on to the next question. The recording does not stop.'],
 ];
 ---
 <BolimQobiq
-  title="Listening qo'llanmasi · IELTS"
-  description="IELTS Listening: to'rt qism, olti savol turi, so'z cheklovi, imlo va sana yozish, oldindan o'qish va distractorlar."
+  title="Listening guide · IELTS"
+  description="IELTS Listening: four parts, six question types, the word limit, spelling and dates, reading ahead and distractors."
   turi="qollanma"
   yol={["Listening"]}
   ota={yol('/uz/ielts/listening/')}
@@ -56,21 +56,21 @@ const strategiyalar = [
 >
   <div class="ichki qol">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Qoʻllanma</span><span class="pill-ochiq">ochiq</span></p>
-      <h1>Listening: eshitishdan oldin <span class="kok">nimani kutishni bil</span></h1>
-      <p class="lead">Yozuv faqat bir marta eshitiladi. Bu qoʻllanma tayyor turishni oʻrgatadi: toʻrt qism, savol turlari, soʻz cheklovi, imlo va sana, oldindan oʻqish va "distractor"lar.</p>
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill-ochiq">open</span></p>
+      <h1>Listening: know <span class="kok">what to expect</span> before you hear it</h1>
+      <p class="lead">You hear the recording only once. This guide teaches you to be ready: the four parts, question types, the word limit, spelling and dates, reading ahead and distractors.</p>
     </header>
 
-    <section class="format" aria-label="Format kartasi">
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Boʻlim</span><span class="f-qiymat">Listening</span><span class="f-izoh">IELTS Academic</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">taxminan 30 daqiqa</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Savollar</span><span class="f-qiymat">40 ta</span><span class="f-izoh">har toʻgʻri javob 1 ball</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7" /></svg>Qismlar</span><span class="f-qiymat">4 ta</span><span class="f-izoh">yozuv bir marta eshitiladi</span></div>
+    <section class="format" aria-label="Format card">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.listening} />Section</span><span class="f-qiymat">Listening</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Time</span><span class="f-qiymat">about 30 minutes</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Questions</span><span class="f-qiymat">40</span><span class="f-izoh">1 mark for each correct answer</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7" /></svg>Parts</span><span class="f-qiymat">4</span><span class="f-izoh">you hear the recording once</span></div>
     </section>
 
     <details class="mundarija-tel">
       <summary>
-        Mundarija
+        Contents
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </summary>
       <ul>{mundarija.map((m) => <li><a href={`#${m.id}`}>{m.nomi}</a></li>)}</ul>
@@ -79,23 +79,23 @@ const strategiyalar = [
     <div class="ikki">
       <article class="maqola">
         <section id="qismlar" aria-labelledby="qismlar-h">
-          <h2 id="qismlar-h">Toʻrt qism</h2>
-          <p class="izoh-m">Birinchi ikki qism kundalik hayotdan, oxirgi ikkitasi oʻqish va taʼlimdan (<a href={ie07.havola} rel="noopener">ielts.org</a>).</p>
+          <h2 id="qismlar-h">Four parts</h2>
+          <p class="izoh-m">The first two parts are about everyday life, the last two about education and training (<a href={ie07.havola} rel="noopener">ielts.org</a>).</p>
           <ol class="raqamli">
-            {qismlar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{i + 1}-qism. {b}.</b> <span class="ikkinchi-m">{t}</span></p></li>)}
+            {qismlar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>Part {i + 1}. {b}.</b> <span class="ikkinchi-m">{t}</span></p></li>)}
           </ol>
         </section>
 
         <section id="turlar" aria-labelledby="turlar-h">
-          <h2 id="turlar-h">Savol turlari</h2>
-          <p class="izoh-m">Rasmiy sahifada oltita tur bor. "Nima qilasan" ielts.orgʻdan, "Maslahat" Tayanch tavsiyasi.</p>
+          <h2 id="turlar-h">Question types</h2>
+          <p class="izoh-m">The official page lists six types. "What you do" is from ielts.org; "Tip" is Tayanch's advice.</p>
           <ul class="turlar">
             {turlar.map(([n, r, m]) => (
               <li>
                 <span class="t-nom" lang="en">{n}</span>
                 <div class="t-ong">
-                  <p><span class="t-yorliq">Nima qilasan.</span> {r}</p>
-                  <p class="ikkinchi-m"><span class="t-yorliq">Maslahat.</span> {m}</p>
+                  <p><span class="t-yorliq">What you do.</span> {r}</p>
+                  <p class="ikkinchi-m"><span class="t-yorliq">Tip.</span> {m}</p>
                 </div>
               </li>
             ))}
@@ -103,30 +103,30 @@ const strategiyalar = [
         </section>
 
         <section id="cheklov" aria-labelledby="cheklov-h">
-          <h2 id="cheklov-h">Soʻz cheklovi</h2>
-          <div class="qoida" role="group" aria-label="Qoida va misol">
+          <h2 id="cheklov-h">Word limit</h2>
+          <div class="qoida" role="group" aria-label="Rule and example">
             <div class="q-chap">
-              <p class="ustki-kok">Qoida</p>
-              <p class="q-asosiy">Topshiriqda soʻz cheklovi beriladi, masalan <span lang="en">"NO MORE THAN TWO WORDS AND/OR A NUMBER"</span>. Ortiqcha soʻz yozsang, javob toʻgʻri boʻlsa ham ball yoʻqoladi.</p>
-              <p class="ikkinchi-m">Manba: <a href={ie07.havola} rel="noopener">ielts.org</a>.</p>
+              <p class="ustki-kok">Rule</p>
+              <p class="q-asosiy">The task gives a word limit, for example "NO MORE THAN TWO WORDS AND/OR A NUMBER". If you write extra words, you lose the mark even if the answer is right.</p>
+              <p class="ikkinchi-m">Source: <a href={ie07.havola} rel="noopener">ielts.org</a>.</p>
             </div>
             <figure class="q-ong">
-              <figcaption class="ustki-yorliq">Qanday sanaladi</figcaption>
+              <figcaption class="ustki-yorliq">How words are counted</figcaption>
               <ul class="sanash">
-                <li><span lang="en">check-in</span><span>1 soʻz: defis bilan yozilgan soʻz bitta hisoblanadi</span></li>
-                <li><span lang="en">train station</span><span>2 soʻz</span></li>
-                <li><span lang="en">platform 2</span><span>1 soʻz va 1 raqam</span></li>
+                <li><span lang="en">check-in</span><span>1 word: a hyphenated word counts as one</span></li>
+                <li><span lang="en">train station</span><span>2 words</span></li>
+                <li><span lang="en">platform 2</span><span>1 word and 1 number</span></li>
               </ul>
-              <p class="ikkinchi-m"><span lang="en">"they're"</span> kabi qisqartma soʻzlar soʻralmaydi.</p>
+              <p class="ikkinchi-m">Contracted words like "they're" are not tested.</p>
             </figure>
           </div>
 
           <section class="mashq" aria-labelledby="mashq-h">
             <div class="m-bosh">
-              <p id="mashq-h" class="ustki-kok">Mini-mashq · namuna</p>
-              <span class="izoh">Ball hisoblanmaydi</span>
+              <p id="mashq-h" class="ustki-kok">Mini drill · sample</p>
+              <span class="izoh">Not scored</span>
             </div>
-            <p class="dawo">Cheklov: <span lang="en">NO MORE THAN TWO WORDS AND/OR A NUMBER</span>. Qaysi javob ballni yoʻqotadi?</p>
+            <p class="dawo">Limit: NO MORE THAN TWO WORDS AND/OR A NUMBER. Which answer loses the mark?</p>
             <div class="variantlar" role="radiogroup" aria-labelledby="mashq-h">
               <button type="button" role="radio" aria-checked="false" data-v="a" lang="en">train station</button>
               <button type="button" role="radio" aria-checked="false" data-v="b" lang="en">the train station</button>
@@ -134,42 +134,42 @@ const strategiyalar = [
             </div>
             <div class="javob" id="javob" aria-live="polite" hidden>
               <p class="j-sarlavha" id="j-sarlavha"></p>
-              <p class="ikkinchi-m"><span lang="en">"the train station"</span> uch soʻz: <span lang="en">the</span> ham soʻz hisoblanadi. <span lang="en">"train station"</span> ikki soʻz, <span lang="en">"platform 2"</span> bir soʻz va bir raqam: ikkalasi cheklovga sigʻadi.</p>
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Qayta urinish</button>
+              <p class="ikkinchi-m">"the train station" is three words: "the" counts as a word too. "train station" is two words and "platform 2" is one word and one number: both fit the limit.</p>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Try again</button>
             </div>
           </section>
         </section>
 
         <section id="imlo" aria-labelledby="imlo-h">
-          <h2 id="imlo-h">Imlo va sana</h2>
+          <h2 id="imlo-h">Spelling and dates</h2>
           <div class="juft">
             <div class="kul">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.writing} />
-              <h3>Imlo</h3>
-              <p>Xato yozilgan soʻz notoʻgʻri javob hisoblanadi, eshitgan boʻlsang ham.</p>
-              <p class="ikkinchi-m">Britancha va amerikancha imlo ikkalasi qabul qilinadi (<span lang="en">colour / color</span>), lekin bittasini izchil ishlat. Manba: IDP (ID02).</p>
+              <h3>Spelling</h3>
+              <p>A misspelled word is a wrong answer, even if you heard it correctly.</p>
+              <p class="ikkinchi-m">Both British and American spelling are accepted (colour / color), but use one consistently. Source: IDP (ID02).</p>
             </div>
             <div class="kul">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reja} />
-              <h3>Sana</h3>
-              <p>Britancha (kun, oy) va amerikancha (oy, kun) tartib ikkalasi qabul qilinadi.</p>
-              <p class="ikkinchi-m">Toʻgʻri: <span lang="en">24 April</span>, <span lang="en">April 24</span>, <span lang="en">24th April</span>; raqam bilan <span lang="en">19/02</span> yoki <span lang="en">02/19</span>. Soʻz chekloviga baribir amal qil. Manba: IDP (ID03).</p>
+              <h3>Dates</h3>
+              <p>Both the British (day, month) and American (month, day) order are accepted.</p>
+              <p class="ikkinchi-m">Correct: 24 April, April 24, 24th April; in numbers, 19/02 or 02/19. Still keep to the word limit. Source: IDP (ID03).</p>
             </div>
           </div>
         </section>
 
         <section id="strategiya" aria-labelledby="strategiya-h">
-          <h2 id="strategiya-h">Strategiya</h2>
-          <p class="izoh-m">Bu Tayanch tavsiyasi, rasmiy qoida emas. Misollar namuna.</p>
+          <h2 id="strategiya-h">Strategy</h2>
+          <p class="izoh-m">This is Tayanch's advice, not an official rule. The examples are samples.</p>
           <ol class="raqamli">
             {strategiyalar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span></p></li>)}
           </ol>
         </section>
 
         <section id="mashq" class="keyingi" aria-labelledby="keyingi-h">
-          <p class="ustki-yorliq kok-q">Mashqlar</p>
-          <h2 id="keyingi-h">Quloq va qoʻlni birga mashq qildir</h2>
-          <p class="k-matn">Imlo yoki raqamdagi bitta xato toʻgʻri eshitilgan javobni ham notoʻgʻri qiladi. Shu ikkisini alohida mashq qil.</p>
+          <p class="ustki-yorliq kok-q">Practice</p>
+          <h2 id="keyingi-h">Train your ear and your hand together</h2>
+          <p class="k-matn">One mistake in spelling or a number makes even a correctly heard answer wrong. Practise these two separately.</p>
           <ul class="k-royxat">
             {listeningMashqlar.map((m) => (
               <li>
@@ -184,8 +184,8 @@ const strategiyalar = [
         </section>
       </article>
 
-      <nav class="mundarija" aria-label="Sahifa mundarijasi">
-        <p class="ustki-yorliq">Mundarija</p>
+      <nav class="mundarija" aria-label="Page contents">
+        <p class="ustki-yorliq">Contents</p>
         {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'true' : undefined}>{m.nomi}</a>)}
       </nav>
     </div>
@@ -195,10 +195,10 @@ const strategiyalar = [
       tekshirilgan="2026-11-12"
       keyingiTekshiruv="2026-12-12"
       tekshirilmagan={[
-        "Qog'oz testda javoblarni ko'chirish vaqti: IE07 sahifasida yozilmagan, tekshirilmoqda.",
-        "Kompyuterdagi testda javob kiritish tartibi: tekshirilmoqda.",
-        "General Training Listening formati (bu sahifa Academic bo'yicha).",
-        "Strategiya va maslahatlar Tayanch tavsiyasi; mini-mashq va misollar Tayanch uchun yozilgan namuna, rasmiy IELTS materiali emas.",
+        "Time to transfer answers in the paper test: not stated on the IE07 page; being checked.",
+        "How answers are entered in the computer test: being checked.",
+        "The General Training Listening format (this page covers Academic).",
+        "The strategy and tips are Tayanch's advice; the mini drill and examples are samples written for Tayanch, not official IELTS material.",
       ]}
     />
   </div>
@@ -220,7 +220,7 @@ const strategiyalar = [
       x.classList.toggle('sust', x.dataset.v !== TOGRI && x !== b);
     });
     javob.classList.toggle('j-togri', togrimi);
-    document.getElementById('j-sarlavha')!.textContent = togrimi ? "To'g'ri: \"the train station\"" : "Bu safar emas. Ballni \"the train station\" yo'qotadi";
+    document.getElementById('j-sarlavha')!.textContent = togrimi ? 'Correct: "the train station"' : 'Not this time. "the train station" loses the mark';
     javob.hidden = false;
   };
   tugmalar.forEach((b) => b.addEventListener('click', () => tanla(b)));

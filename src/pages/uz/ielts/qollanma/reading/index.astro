@@ -9,29 +9,29 @@ import { yol } from '../../../../../lib/yol';
 
 const ie02 = manbalar.find((x) => x.id === 'IE02')!;
 const mundarija = [
-  { id: 'turlar', nomi: 'Savol turlari' },
-  { id: 'skim', nomi: 'Skimming va scanning' },
+  { id: 'turlar', nomi: 'Question types' },
+  { id: 'skim', nomi: 'Skimming and scanning' },
   { id: 'tfng', nomi: 'True / False / Not Given' },
-  { id: 'tuzoq', nomi: 'Tuzoqlar' },
-  { id: 'vaqt', nomi: 'Vaqt strategiyasi' },
+  { id: 'tuzoq', nomi: 'Traps' },
+  { id: 'vaqt', nomi: 'Time strategy' },
 ];
 const turlar = [
-  ['True / False / Not Given', "Fakt matnga mosmi, zidmi yoki umuman yoʻqmi"],
-  ['Yes / No / Not Given', "Xuddi shunday, lekin muallifning fikri haqida"],
-  ['Matching headings', "Har abzasning asosiy gʻoyasi"],
-  ['Multiple choice', 'Bir variantni dalil bilan tasdiqlash, qolganini rad etish'],
-  ['Completion', "Gap, jadval yoki xulosadagi boʻsh joy: soʻz cheklovini oʻqi"],
+  ['True / False / Not Given', "Does a fact agree with the text, contradict it, or not appear at all?"],
+  ['Yes / No / Not Given', "The same, but about the writer's views"],
+  ['Matching headings', "The main idea of each paragraph"],
+  ['Multiple choice', 'Confirm one option with evidence and rule out the rest'],
+  ['Completion', "A gap in a sentence, table or summary: read the word limit"],
 ];
 const tuzoqlar = [
-  ["Bir xil soʻz, boshqa maʼno.", "Savoldagi soʻz matnda bor, lekin u boshqa fikrni aytayotgan boʻlishi mumkin."],
-  ["Not Givenʼni False deb belgilash.", "Zid gapni topmaguncha False qoʻyma."],
-  ['"Some", "always", "only".', "Bitta cheklovchi soʻz javobni butunlay oʻzgartiradi."],
-  ['Bitta savolda qotib qolish.', "Belgilab qoʻy, keyingisiga oʻt, oxirida qayt."],
+  ["Same word, different meaning.", "A word from the question is in the text, but it may be saying something else."],
+  ["Marking Not Given as False.", "Don't choose False until you have found a sentence that contradicts it."],
+  ['"Some", "always", "only".', "One limiting word can change the answer completely."],
+  ['Getting stuck on one question.', "Flag it, move on, and come back at the end."],
 ];
 ---
 <BolimQobiq
-  title="Reading qo'llanmasi · IELTS"
-  description="IELTS Reading: savol turlari, skimming va scanning, True/False/Not Given, tuzoqlar va vaqt strategiyasi."
+  title="Reading guide · IELTS"
+  description="IELTS Reading: question types, skimming and scanning, True/False/Not Given, traps and time strategy."
   turi="qollanma"
   yol={["Reading"]}
   ota={yol('/uz/ielts/reading/')}
@@ -40,21 +40,21 @@ const tuzoqlar = [
 >
   <div class="ichki qol">
     <header class="bosh">
-      <p class="pill-qator"><span class="ustki-kok">Qoʻllanma</span><span class="pill-ochiq">ochiq</span></p>
-      <h1>Reading: javobni emas, <span class="kok">dalilni qidir</span></h1>
-      <p class="lead">Har bir toʻgʻri javobning orqasida matndagi bitta gap turadi. Bu qoʻllanma oʻsha gapni tez topishni oʻrgatadi: savol turlari, skimming va scanning, True/False/Not Given va vaqt.</p>
+      <p class="pill-qator"><span class="ustki-kok">Guide</span><span class="pill-ochiq">open</span></p>
+      <h1>Reading: look for <span class="kok">the evidence</span>, not the answer</h1>
+      <p class="lead">Behind every correct answer is one sentence in the text. This guide teaches you to find that sentence fast: question types, skimming and scanning, True/False/Not Given, and timing.</p>
     </header>
 
-    <section class="format" aria-label="Format kartasi">
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reading} />Boʻlim</span><span class="f-qiymat">Reading</span><span class="f-izoh">IELTS Academic</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Vaqt</span><span class="f-qiymat">60 daqiqa</span><span class="f-izoh">koʻchirish vaqti ichida</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Savollar</span><span class="f-qiymat">40 ta</span></div>
-      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6" /></svg>Matnlar</span><span class="f-qiymat">3 boʻlim</span><span class="f-izoh">jami 2150–2750 soʻz</span></div>
+    <section class="format" aria-label="Format card">
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={IKONKA.reading} />Section</span><span class="f-qiymat">Reading</span><span class="f-izoh">IELTS Academic</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 6v6l4 2" /></svg>Time</span><span class="f-qiymat">60 minutes</span><span class="f-izoh">including transfer time</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Questions</span><span class="f-qiymat">40</span></div>
+      <div><span class="f-yorliq"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6" /></svg>Passages</span><span class="f-qiymat">3 sections</span><span class="f-izoh">2,150–2,750 words in total</span></div>
     </section>
 
     <details class="mundarija-tel">
       <summary>
-        Mundarija
+        Contents
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </summary>
       <ul>{mundarija.map((m, i) => <li><a href={`#${m.id}`} aria-current={i === 0 ? 'location' : undefined}>{m.nomi}</a></li>)}</ul>
@@ -63,27 +63,27 @@ const tuzoqlar = [
     <div class="ikki">
       <article class="maqola">
         <section id="turlar" aria-labelledby="turlar-h">
-          <h2 id="turlar-h">Savol turlari</h2>
-          <p class="izoh-m">Savol turini birinchi boʻlib aniqla: u matnda nimani qidirishingni aytadi.</p>
+          <h2 id="turlar-h">Question types</h2>
+          <p class="izoh-m">Identify the question type first: it tells you what to look for in the text.</p>
           <ul class="turlar">
             {turlar.map(([n, t]) => <li><span class="t-nom">{n}</span><span class="t-matn">{t}</span></li>)}
           </ul>
         </section>
 
         <section id="skim" aria-labelledby="skim-h">
-          <h2 id="skim-h">Skimming va scanning</h2>
+          <h2 id="skim-h">Skimming and scanning</h2>
           <div class="juft">
             <div class="kul">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z" /></svg>
               <h3>Skimming</h3>
-              <p><b>Nima uchun:</b> abzasning asosiy gʻoyasi.</p>
-              <p class="ikkinchi-m">Sarlavha, birinchi va oxirgi gaplarni oʻqi. Tafsilotga toʻxtama.</p>
+              <p><b>What for:</b> the main idea of a paragraph.</p>
+              <p class="ikkinchi-m">Read the title and the first and last sentences. Don't stop on details.</p>
             </div>
             <div class="kul">
               <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM21 21l-4.3-4.3" /></svg>
               <h3>Scanning</h3>
-              <p><b>Nima uchun:</b> aniq ism, son yoki sana.</p>
-              <p class="ikkinchi-m">Savoldan kalit soʻzni ol, matnda oʻzini va sinonimini izla.</p>
+              <p><b>What for:</b> a specific name, number or date.</p>
+              <p class="ikkinchi-m">Take the key word from the question and look for it, or a synonym, in the text.</p>
             </div>
           </div>
         </section>
@@ -91,31 +91,31 @@ const tuzoqlar = [
         <section id="tfng" aria-labelledby="tfng-h">
           <h2 id="tfng-h">True / False / Not Given</h2>
           <dl class="tfng">
-            <div><dt>True</dt><dd>Matn xuddi shu narsani aytadi, boshqa soʻzlar bilan boʻlsa ham.</dd></div>
-            <div><dt>False</dt><dd>Matn buning teskarisini aytadi.</dd></div>
-            <div><dt>Not Given</dt><dd>Matnda bu haqda tasdiq ham, inkor ham yoʻq.</dd></div>
+            <div><dt>True</dt><dd>The text says the same thing, even if in other words.</dd></div>
+            <div><dt>False</dt><dd>The text says the opposite.</dd></div>
+            <div><dt>Not Given</dt><dd>The text neither confirms nor denies it.</dd></div>
           </dl>
 
-          <div class="qoida" role="group" aria-label="Qoida va misol">
+          <div class="qoida" role="group" aria-label="Rule and example">
             <div class="q-chap">
-              <p class="ustki-kok">Qoida</p>
-              <p class="q-asosiy">False uchun matnda zid gap boʻlishi shart. Uni topa olmasang, javob Not Given.</p>
-              <p class="ikkinchi-m">Umumiy bilimingga suyanma: faqat matn hisob.</p>
+              <p class="ustki-kok">Rule</p>
+              <p class="q-asosiy">False needs a sentence in the text that contradicts the statement. If you can't find one, the answer is Not Given.</p>
+              <p class="ikkinchi-m">Don't rely on general knowledge: only the text counts.</p>
             </div>
             <figure class="q-ong">
-              <figcaption class="ustki-yorliq">Misol · passage parchasi (namuna)</figcaption>
+              <figcaption class="ustki-yorliq">Example · passage extract (sample)</figcaption>
               <p lang="en">The town library opened in 1998 in a former railway station. <mark>At first it held only a few thousand books, but its collection grew quickly after local schools began sending classes there every week.</mark> Today the building also hosts language clubs in the evenings.</p>
-              <p class="belgi-izoh"><span aria-hidden="true" class="chiziqcha"></span>Koʻk tagchiziq: savolga eng yaqin gap</p>
+              <p class="belgi-izoh"><span aria-hidden="true" class="chiziqcha"></span>Blue underline: the sentence closest to the question</p>
             </figure>
           </div>
 
           <section class="mashq" aria-labelledby="mashq-h">
             <div class="m-bosh">
-              <p id="mashq-h" class="ustki-kok">Mini-mashq</p>
-              <span class="izoh">Ball hisoblanmaydi</span>
+              <p id="mashq-h" class="ustki-kok">Mini drill</p>
+              <span class="izoh">Not scored</span>
             </div>
             <p class="dawo" lang="en">"Most of the library's visitors today are school students."</p>
-            <p class="izoh-m">Yuqoridagi parchaga koʻra bu gap qanday?</p>
+            <p class="izoh-m">According to the extract above, what is this statement?</p>
             <div class="variantlar" role="radiogroup" aria-labelledby="mashq-h">
               <button type="button" role="radio" aria-checked="false" data-v="t">True</button>
               <button type="button" role="radio" aria-checked="false" data-v="f">False</button>
@@ -123,48 +123,48 @@ const tuzoqlar = [
             </div>
             <div class="javob" id="javob" aria-live="polite" hidden>
               <p class="j-sarlavha" id="j-sarlavha"></p>
-              <p>Eng yaqin gap: <mark lang="en">its collection grew quickly after local schools began sending classes there every week.</mark></p>
-              <p class="ikkinchi-m">Matnda maktablar sinflarni yuborgani aytilgan, lekin bugungi tashrifchilarning koʻpchiligi kim ekani haqida hech narsa yoʻq: na tasdiq, na inkor. Shuning uchun javob Not Given. False boʻlishi uchun matnda "koʻpchilik oʻquvchilar emas" degan zid gap boʻlishi kerak edi.</p>
-              <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Qayta urinish</button>
+              <p>Closest sentence: <mark lang="en">its collection grew quickly after local schools began sending classes there every week.</mark></p>
+              <p class="ikkinchi-m">The text says schools sent classes, but says nothing about who most of today's visitors are: it neither confirms nor denies it. So the answer is Not Given. For False, the text would need a contradicting sentence such as "most visitors are not students".</p>
+              <button type="button" class="t-tugma t-tugma--ikkinchi" id="qayta">Try again</button>
             </div>
           </section>
-          <p class="dars-havolalar">Koʻproq mashq: <a href={yol('/uz/ielts/qollanma/reading/tfng/')}>True / False / Not Given darsi</a> va <a href={yol('/uz/ielts/qollanma/reading/sarlavhalar/')}>Matching headings darsi</a> (interaktiv, 5 tadan mashq).</p>
+          <p class="dars-havolalar">More practice: the <a href={yol('/uz/ielts/qollanma/reading/tfng/')}>True / False / Not Given lesson</a> and the <a href={yol('/uz/ielts/qollanma/reading/sarlavhalar/')}>Matching headings lesson</a> (interactive, 5 exercises each).</p>
         </section>
 
         <section id="tuzoq" aria-labelledby="tuzoq-h">
-          <h2 id="tuzoq-h">Tuzoqlar</h2>
+          <h2 id="tuzoq-h">Traps</h2>
           <ol class="tuzoqlar">
             {tuzoqlar.map(([b, t], i) => <li><span class="t-raqam" aria-hidden="true">{i + 1}</span><p><b>{b}</b> <span class="ikkinchi-m">{t}</span></p></li>)}
           </ol>
         </section>
 
         <section id="vaqt" aria-labelledby="vaqt-h">
-          <h2 id="vaqt-h">Vaqt strategiyasi</h2>
-          <p class="izoh-m">Umumiy vaqt: 60 daqiqa, 3 boʻlim, javoblarni koʻchirish ham shu vaqt ichida (<a href={ie02.havola} rel="noopener">ielts.org</a>). Uni matnlar orasida oldindan boʻlib qoʻy va soatga qarab tur.</p>
+          <h2 id="vaqt-h">Time strategy</h2>
+          <p class="izoh-m">Total time: 60 minutes for 3 sections, and transferring your answers is included (<a href={ie02.havola} rel="noopener">ielts.org</a>). Split it between the passages in advance and keep an eye on the clock.</p>
           <div class="vaqt-karta">
             <div class="chiziqlar" aria-hidden="true"><span></span><span></span><span class="qora"></span></div>
             <div class="ulushlar">
-              <span><b>1-matn</b><br /><span class="ikkinchi-m">taxminan 17 daqiqa</span></span>
-              <span><b>2-matn</b><br /><span class="ikkinchi-m">taxminan 20 daqiqa</span></span>
-              <span><b>3-matn</b><br /><span class="ikkinchi-m">taxminan 20 daqiqa + 3 daqiqa tekshiruv</span></span>
+              <span><b>Passage 1</b><br /><span class="ikkinchi-m">about 17 minutes</span></span>
+              <span><b>Passage 2</b><br /><span class="ikkinchi-m">about 20 minutes</span></span>
+              <span><b>Passage 3</b><br /><span class="ikkinchi-m">about 20 minutes + 3 minutes to check</span></span>
             </div>
-            <p class="izoh">Bu Tayanch tavsiyasi, rasmiy qoida emas. Matnlar odatda qiyinlashib boradi, shuning uchun birinchisiga kamroq vaqt.</p>
+            <p class="izoh">This is Tayanch's suggestion, not an official rule. The passages usually get harder, so the first gets less time.</p>
           </div>
         </section>
 
         <section class="keyingi qora-kontekst" aria-labelledby="keyingi-h">
-          <p class="ustki-yorliq kok-q">Keyingi qadam</p>
-          <h2 id="keyingi-h">Bitta Reading testini soat bilan ishla</h2>
-          <p class="k-matn">60 daqiqa, 40 savol. Tugagach har xatoning dalil gapini koʻrasan, xatolar takrorlashga tushadi.</p>
+          <p class="ustki-yorliq kok-q">Next step</p>
+          <h2 id="keyingi-h">Take one Reading test against the clock</h2>
+          <p class="k-matn">60 minutes, 40 questions. When you finish, you see the evidence sentence for each mistake, and your mistakes go into review.</p>
           <div class="k-tugmalar">
-            <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/mashq/reading/')}>Reading testini boshlash</a>
-            <a class="t-tugma" href={yol('/uz/ielts/vosita/reja/')}>30 kunlik reja tuzish</a>
+            <a class="t-tugma ielts-tugma--urgu" href={yol('/uz/ielts/mashq/reading/')}>Start the Reading test</a>
+            <a class="t-tugma" href={yol('/uz/ielts/vosita/reja/')}>Build a 30-day plan</a>
           </div>
         </section>
       </article>
 
-      <nav class="mundarija" aria-label="Sahifa mundarijasi">
-        <p class="ustki-yorliq">Mundarija</p>
+      <nav class="mundarija" aria-label="Page contents">
+        <p class="ustki-yorliq">Contents</p>
         {mundarija.map((m, i) => <a href={`#${m.id}`} aria-current={i === 0 ? 'location' : undefined}>{m.nomi}</a>)}
       </nav>
     </div>
@@ -174,9 +174,9 @@ const tuzoqlar = [
       tekshirilgan="2026-11-05"
       keyingiTekshiruv="2026-12-05"
       tekshirilmagan={[
-        "Savol turlari ro'yxati rasmiy manba bilan to'liq solishtirilmagan.",
-        "General Training Reading formati (bu sahifa Academic bo'yicha).",
-        "Mini-mashq parchasi Tayanch uchun yozilgan namuna, rasmiy IELTS matni emas.",
+        "The list of question types has not been fully compared with the official source.",
+        "The General Training Reading format (this page covers Academic).",
+        "The mini-drill extract is a sample written for Tayanch, not an official IELTS text.",
       ]}
     />
   </div>
@@ -198,7 +198,7 @@ const tuzoqlar = [
       x.classList.toggle('sust', x.dataset.v !== TOGRI && x !== b);
     });
     javob.classList.toggle('j-togri', togrimi);
-    document.getElementById('j-sarlavha')!.textContent = togrimi ? "To'g'ri: Not Given" : "Bu safar emas. To'g'ri javob: Not Given";
+    document.getElementById('j-sarlavha')!.textContent = togrimi ? 'Correct: Not Given' : 'Not this time. The correct answer: Not Given';
     javob.hidden = false;
   };
   tugmalar.forEach((b) => b.addEventListener('click', () => tanla(b)));
