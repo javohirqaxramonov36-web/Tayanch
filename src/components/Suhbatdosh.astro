@@ -102,13 +102,15 @@ const matn = inglizcha ? {
     display: grid;
     place-items: center;
     min-inline-size: 0;
-    block-size: clamp(calc(var(--space-16) * 2.4), 36dvh, calc(var(--space-16) * 4.1));
+    /* Portret model: telefonda ekranning ko'pi bilan yarmi */
+    block-size: clamp(calc(var(--space-16) * 3), 46dvh, calc(var(--space-16) * 6.5));
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: var(--color-surface-sunken);
     text-align: center;
   }
-  .qa-sahna :global(canvas) { display: block; max-inline-size: 100%; }
+  .qa-sahna :global(canvas) { display: block; max-inline-size: 100%; border-radius: var(--radius-lg); }
+  .qa-sahna :global(.qa-yuklanmoqda) { color: var(--color-text-secondary); }
   .qa-tugmalar { flex-wrap: wrap; }
   .qa-javob { padding: var(--space-3); overflow-wrap: anywhere; background: var(--color-surface-sunken); border-radius: var(--radius-md); }
   [data-savol-matn] { color: var(--color-text-secondary); margin-block-end: var(--space-1); }
