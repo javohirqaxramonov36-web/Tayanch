@@ -13,7 +13,7 @@ const T = en
 <dialog class="kirish-dialog" data-kirish-dialog aria-labelledby="kirish-dialog-h" aria-describedby="kirish-dialog-izoh" lang={en ? 'en' : 'uz'} data-xato-matn={T.xato}>
   <button type="button" class="dialog-yop" aria-label={T.yop} data-kirish-yop><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
   <div class="dialog-logo"><TayanchLogo /></div>
-  <h1 id="kirish-dialog-h">{T.sarlavha}</h1>
+  <h2 id="kirish-dialog-h">{T.sarlavha}</h2>
   <p id="kirish-dialog-izoh">{T.izoh}</p>
   <button type="button" class="dialog-provider google-provider" data-kirish-google>    <svg class="google-g" aria-hidden="true" focusable="false" width="20" height="20" viewBox="10 10 20 20">
       <path d="M29.6 20.2273C29.6 19.5182 29.5364 18.8364 29.4182 18.1818H20V22.05H25.3818C25.15 23.3 24.4455 24.3591 23.3864 25.0682V27.5773H26.6182C28.5091 25.8364 29.6 23.2727 29.6 20.2273Z" fill="#4285F4" />
@@ -40,7 +40,7 @@ const T = en
   .kirish-dialog::backdrop { background: var(--login-backdrop); }
   .dialog-yop { position: absolute; top: var(--space-2); right: var(--space-2); display: grid; place-items: center; min-width: var(--size-touch-min); min-height: var(--size-touch-min); border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-text-primary); cursor: pointer; }
   .dialog-logo { width: var(--header-logo); margin-bottom: var(--space-7); }
-  .kirish-dialog h1 { font-size: var(--text-h2-size); line-height: var(--text-h2-lh); }
+  .kirish-dialog h2 { font-weight: var(--text-h1-weight); letter-spacing: var(--text-h1-ls); font-size: var(--text-h2-size); line-height: var(--text-h2-lh); }
   #kirish-dialog-izoh { font-size: var(--text-small-size); color: var(--color-text-secondary); margin-block: var(--space-3) var(--space-6); }
   .dialog-provider { display: flex; align-items: center; justify-content: center; gap: var(--space-3); width: 100%; min-height: var(--login-button-height); padding: var(--space-3); border: var(--border-width-1) solid var(--color-border); border-radius: var(--home-button-radius); font: inherit; font-size: var(--text-small-size); font-weight: 600; cursor: pointer; }
   .google-provider { background: var(--color-neutral-0); color: var(--color-neutral-900); }
