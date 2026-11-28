@@ -11,7 +11,7 @@ import { joriyQavat } from '../data/qavatlar';
 import SatEslatma from '../components/SatEslatma.astro';
 import SatSinxron from '../components/SatSinxron.astro';
 import { matn } from '../data/umumiyMatn';
-import { kursHavola, kursOchiq, kursPreview, kursMavzulari, mavzuManzili } from '../lib/sat/kursKatalog';
+import { kursHavola, kursOchiq, kursPreview, kursMavzulari, kursMavzuOchiq, mavzuManzili } from '../lib/sat/kursKatalog';
 // SAT bo'limi: matn inglizcha (CLAUDE.md).
 const M = matn.en;
 
@@ -40,7 +40,9 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
   .map((mavzu) => {
     const href = kursHavola(mavzuManzili(mavzu));
     const current: 'page' | 'location' | undefined = mavzu.id === joriyMavzu.id ? (href === Astro.url.pathname ? 'page' : 'location') : undefined;
-    return { href, current, nomi: mavzu.topic };
+    // Chiqmagan mavzu havola emas: aks holda 404 ga olib boradi.
+    const ochiq = kursPreview || kursMavzuOchiq(mavzu.id);
+    return { href: ochiq ? href : undefined, current, nomi: mavzu.topic };
   }) : [];
 ---
 <!doctype html>
@@ -77,11 +79,11 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
             <details class="fokus-kurs-tel">
               <summary>Course topics</summary>
               <nav aria-label="Course topics" class="fokus-kurs-nav">
-                {mavzuBandlari.map(({ href, current, nomi }) => <a href={href} aria-current={current}>{nomi}</a>)}
+                {mavzuBandlari.map(({ href, current, nomi }) => href ? <a href={href} aria-current={current}>{nomi}</a> : <span class="fokus-kurs-yopiq">{nomi} <small>Coming soon</small></span>)}
               </nav>
             </details>
             <nav aria-label="Course topics" class="fokus-kurs-nav fokus-kurs-keng">
-              {mavzuBandlari.map(({ href, current, nomi }) => <a href={href} aria-current={current}>{nomi}</a>)}
+              {mavzuBandlari.map(({ href, current, nomi }) => href ? <a href={href} aria-current={current}>{nomi}</a> : <span class="fokus-kurs-yopiq">{nomi} <small>Coming soon</small></span>)}
             </nav>
           </div>
           <slot />
@@ -138,12 +140,14 @@ const mavzuBandlari = joriyMavzu ? kursMavzulari.filter((mavzu) => mavzu.domainS
   .fokus-yol { max-width: 760px; margin: 0 auto var(--space-5); }
   .fokus-kurs { margin-inline: auto; max-inline-size: var(--size-content-max); }
   .fokus-kurs-ichki { color: var(--color-sat-text); }
-  .fokus-kurs-ichki summary, .fokus-kurs-nav a {
+  .fokus-kurs-ichki summary, .fokus-kurs-nav a, .fokus-kurs-yopiq {
     min-block-size: var(--size-touch-min); min-inline-size: var(--size-touch-min);
     align-content: center; padding-inline: var(--space-3);
   }
   .fokus-kurs-ichki summary { cursor: pointer; font-weight: var(--font-weight-bold); }
   .fokus-kurs-nav { display: grid; }
+  .fokus-kurs-yopiq { color: var(--color-sat-text-muted); }
+  .fokus-kurs-yopiq small { font-size: var(--font-size-caption); }
   .fokus-kurs-keng { display: none; }
   .fokus-kurs-nav [aria-current] {
     background: var(--color-surface-sunken); border-radius: var(--radius-md); font-weight: var(--font-weight-bold);
