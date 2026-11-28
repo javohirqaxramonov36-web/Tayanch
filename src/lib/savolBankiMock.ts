@@ -59,7 +59,7 @@ export function mockApi(tur: MockTur): Api {
       if (tur === 'kvota' || tur === 'kvota2') throw { message: 'quota_exceeded', code: 'P0001' };
       return { session_id: `mock-${Date.now()}`, mode: rejim, questions: Array.from({ length: hajm }, (_, i) => ({ position: i + 1 })) };
     },
-    async kvota() {
+    async kvota(): Promise<UsageJavob> {
       await kut(200);
       if (tur === 'kvota') return { plan: { code: 'free', name: 'Free' }, limits: { questions: { max: 20, per: 'day', used: 20, remaining: 0 } } };
       if (tur === 'kam') return { plan: { code: 'free', name: 'Free' }, limits: { questions: { max: 20, per: 'day', used: 8, remaining: 12 } } };

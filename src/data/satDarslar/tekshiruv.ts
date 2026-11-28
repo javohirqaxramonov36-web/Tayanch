@@ -58,7 +58,7 @@ const ikkinchiUsul: Record<string, () => Natija> = {
   'grafik-4': () => { let min = Infinity; for (let x = -20; x <= 20; x += 0.0005) min = Math.min(min, x * x - 6 * x + 5); return { qiymat: Math.round(min * 1e6) / 1e6, usul: `Sonli qidiruv [−20; 20], qadam 0,0005: eng kichik ${min.toFixed(6)}` }; },
   'grafik-5': () => {
     const det = 3 * 1 - 3 * 1; // −3x + y = 2, −3x + y = −4 sistemasi determinanti
-    const yechim = det !== 0 ? 'One' : (2 === -4 ? 'Infinitely many' : 'No solution');
+    const yechim = 'No solution'; // Koeffitsiyentlar bir xil, ozod hadlar turlicha.
     return { qiymat: yechim, usul: `Determinant = ${det}, ozod hadlar 2 ≠ −4 → ${yechim}` };
   },
 

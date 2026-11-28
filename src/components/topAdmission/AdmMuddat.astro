@@ -25,7 +25,7 @@ export interface Props {
   sarlavhaDarajasi?: 2 | 3;
 }
 const { id, nomi, yorliq, chip, qatorlar, ochilish, kun, oxir, zaxiraSon = '', zaxiraMatn, manba, sarlavhaDarajasi = 3 } = Astro.props;
-const H = `h${sarlavhaDarajasi}`;
+const H = sarlavhaDarajasi === 2 ? 'h2' : 'h3';
 ---
 <article class="adm-shisha adm-shisha--zich adm-muddat" aria-labelledby={`${id}-nomi`} data-ochilish={ochilish ?? undefined} data-kun={kun} data-oxir={oxir}>
   <div class="adm-muddat-tepa">

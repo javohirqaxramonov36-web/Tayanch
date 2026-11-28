@@ -407,7 +407,7 @@ const sahifaUrl = yol('/uz/sat/vosita/takrorlash/');
       if (on) ochiq.add(b.kalit); else ochiq.delete(b.kalit);
       if (on && !tana.childElementCount) tanaQur(b, tana, tegYoz, mavzuEl.id);
     };
-    och.addEventListener('click', () => ochGa(tana.hidden));
+    och.addEventListener('click', () => ochGa(Boolean(tana.hidden)));
     ochGa(ochiq.has(b.kalit));
     return li;
   }

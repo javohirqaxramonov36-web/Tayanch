@@ -324,7 +324,7 @@ const sozlama = { kalit: KALIT_IELTS_WRITING_T2, mavzular, tekshiruv: tekshiruv.
     vaqtEl.classList.toggle('kam', q <= 5 * 60 * 1000);
     const daqiqa = Math.ceil(q / 60000);
     if (h.tugash !== null && oldingiDaqiqa !== null && daqiqa !== oldingiDaqiqa && (daqiqa === 10 || daqiqa === 5)) {
-      $('elon').textContent = `${daqiqa} ${daqiqa === 1 ? 'minute' : 'minutes'} left.`;
+      $('elon').textContent = `${daqiqa} minutes left.`;
     }
     oldingiDaqiqa = daqiqa;
     if (h.tugash !== null && q === 0) {

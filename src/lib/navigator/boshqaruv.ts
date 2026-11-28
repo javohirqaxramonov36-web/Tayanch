@@ -80,7 +80,7 @@ export function navigatorniIshgaTushir(): void {
     };
   }
 
-  function formgaYoz(p: YolProfil | null) {
+  const formgaYoz = (p: YolProfil | null) => {
     forma.reset();
     const tanla = (nom: string, qiymat: string | null) =>
       inputlar(nom).forEach((i) => (i.checked = qiymat !== null && i.value === qiymat));
@@ -90,7 +90,7 @@ export function navigatorniIshgaTushir(): void {
     sanaMaydon.value = p?.examDate ?? '';
     tanla('kunlik', p?.dailyMinutes ? String(p.dailyMinutes) : null);
     sanaTegildi = false;
-  }
+  };
 
   /** Error text for the date field, or null when valid. */
   function sanaXatosi(q: Qoralama): string | null {
