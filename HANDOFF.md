@@ -1,5 +1,7 @@
 # Tayanch: sessiyalar orasida holat (2026-11-09)
 
+- **2026-11-28, lokal SAT Math katalogi va IELTS Listening kirishi.** SAT bosh sahifasida `#math-worksheets` uchta to‘plamdagi savol sonini ko‘rsatadi (11 + 20 + 15). IELTS bosh sahifasi mavjud Listening mock katalogiga havola beradi. Ikkala havola tegishli lokal kontent bilan qurilganda chiqadi. Kvadratik modellar 20-savol javobi shartdan qayta hisoblandi (C). HTML yo‘llari va baholash Chrome’da sinaldi. Kontent validatorida 46/46 draft, standart build158, lokal build161, test436.
+
 - **2026-11-28, SAT Math variantlar va birinchi natija.** Lokal mashqlar 11 + 19 + 15 ta, jism harakatida 2 ta variantli savol. Javoblar avvalgi `tayanch:sat-<mavzu>:v1` formatida, birinchi baho va chizilgan variantlar `:progress` qo‘shimchali kalitda. Keyingi baholar Practice sifatida joriy sahifada ko‘rinadi. Reset joriy to‘plamning ikki kaliti, yechimlar va tanlovlarini tozalaydi. Chrome sinovida eski uch yozma javob tiklandi, birinchi 2/15 qayta tekshirishdagi 5/15 dan keyin ham saqlandi. Lokal build161, test436, 45 savol dry-run draft.
 
 - **2026-11-28, SAT Math yechiladigan lokal to‘plamlar.** `TAYANCH_SAT_MATH_DIR` ga `mocklar/sat-math/` berilganda `/uz/sat/mashq/materiallar/{parabola,parabola-models,projectile-motion}/` sahifalari quriladi. 11 + 18 + 11 savol, har to‘plam javoblarini brauzerda saqlaydi, tekshirishdan keyin natija va yechimlar ochiladi. To‘plamlar kontent papkasida va 40 savol import dry-run'da draft. Standart build bu sahifalarni chiqarmaydi.

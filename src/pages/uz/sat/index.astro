@@ -14,9 +14,11 @@ import SatMaqsadSarlavha from '../../../components/sat/SatMaqsadSarlavha.astro';
 import SatBugun from '../../../components/sat/SatBugun.astro';
 import SatKirganBelgi from '../../../components/sat/SatKirganBelgi.astro';
 import SatPlitka, { type SatPlitkaIkonka } from '../../../components/sat/SatPlitka.astro';
+import { saytMashqVaraglari } from '../../../lib/sat/saytMashqVaraglari';
 import '../../../styles/sat.css';
 
 const sat = (qism: string) => yol(`/uz/sat/${qism}`);
+const mashqVaraglari = await saytMashqVaraglari();
 // Navy sahnadagi plitkalar (DS 3-qavat, SatPlitka): nom va manzil satSahifalar.ts dan, faqat tayyor sahifalar.
 const plitkaQismlar: [string, SatPlitkaIkonka][] = [
   ['mashq/test/', 'test'], ['mashq/mock/', 'mock'], ['mashq/bank/', 'bank'],
@@ -128,6 +130,17 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     </section>
 
     <SatBugun />
+
+    {mashqVaraglari.length > 0 && (
+      <section class="math-worksheets" id="math-worksheets" aria-labelledby="math-worksheets-title">
+        <h2 id="math-worksheets-title">SAT Math worksheets</h2>
+        <ul>
+          {mashqVaraglari.map(({ id, name, items }) => (
+            <li><a class="t-tugma t-tugma--ikkinchi" href={sat(`mashq/materiallar/${id}/`)}>{name} · {items.length} questions</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     <KunSavoli />
 
@@ -261,6 +274,8 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
   .cta { display: flex; flex-wrap: wrap; gap: var(--space-3); padding-top: var(--space-1); }
   .hero-plitka { display: flex; flex-direction: column; gap: var(--space-4); }
   .hero-plitka .sat-yorliq { color: var(--color-sat-on-navy); }
+  .math-worksheets { display: grid; gap: var(--space-4); scroll-margin-block-start: var(--space-6); }
+  .math-worksheets ul { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
 
   /* Imtihon tuzilmasi: zich navy shisha (sahnada .t-shisha--zich), ichidagi qatorlar tekis (ichma-ich blur yo'q) */
   .tuzilma {
@@ -422,6 +437,8 @@ const qadamlar: { yorliq: string; nomi: string; tavsif: string; havola: string; 
     .hero-plitka { order: 2; }
     .tuzilma { order: 3; flex: none; padding: var(--space-5); }
     .sat-kirish > :global(.kun) { order: 2; }
+    .math-worksheets { order: 2; }
+    .math-worksheets li, .math-worksheets .t-tugma { width: 100%; }
     .yol { order: 3; }
     .kutilmoqda { order: 4; }
     .qayerda { order: 5; }

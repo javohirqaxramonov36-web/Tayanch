@@ -6,6 +6,7 @@ import QavatFoto from '../../../components/QavatFoto.astro';
 import { konikmalar, konikmaQism } from '../../../data/ieltsSahifalar';
 import { hammaSavollar } from '../../../data/ieltsDarslar';
 import { manbalar } from '../../../data/manbalar';
+import { saytListeningTestlari } from '../../../lib/ielts/listening/saytTestlari';
 import { saytTestlari } from '../../../lib/ielts/reading/saytTestlari';
 import { savolRaqamlari } from '../../../lib/ielts/reading/sxema';
 import { yol } from '../../../lib/yol';
@@ -17,6 +18,7 @@ const testlar = (await saytTestlari()).map((test) => ({
   jami: test.passages.flatMap((p) => p.groups.flatMap((g) => g.questions.flatMap(savolRaqamlari))).length,
 }));
 const reading = yol('/uz/ielts/mashq/reading/');
+const listening = await saytListeningTestlari();
 const reja = yol('/uz/ielts/vosita/reja/');
 const mashq = yol('/uz/ielts/mashq/');
 const takrorlash = yol('/uz/ielts/vosita/takrorlash/');
@@ -59,6 +61,7 @@ const malumot = { testlar, darsIdlar: hammaSavollar.map((s) => s.id) };
         </article>
         <div class="amallar">
           {testlar.length > 0 && <a class="t-tugma ielts-tugma--urgu" href={reading} data-yangi-test>Free Reading test</a>}
+          {listening.length > 0 && <a class="t-tugma t-tugma--ikkinchi" href={yol('/uz/ielts/mashq/listening/')}>Listening mocks · {listening.length}</a>}
           <a class="t-tugma t-tugma--ikkinchi" href={mashq}>Practice catalogue</a>
         </div>
       </div>

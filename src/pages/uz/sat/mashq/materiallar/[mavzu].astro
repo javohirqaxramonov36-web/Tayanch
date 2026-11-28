@@ -1,61 +1,17 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
 import SatSavol from '../../../../../components/sat/SatSavol.astro';
-import { variantKalitlari, type Savol } from '../../../../../data/savolSxema';
-import type { MashqSavoli } from '../../../../../lib/sat/mashqVaragi';
-import { sprTekshir } from '../../../../../lib/sat/sprFormat';
+import { saytMashqVaraglari, type MashqMavzusi } from '../../../../../lib/sat/saytMashqVaraglari';
 import { yol } from '../../../../../lib/yol';
 
-interface Mavzu {
-  id: string;
-  name: string;
-  items: MashqSavoli[];
-}
-
 interface Props {
-  mavzu: Mavzu;
+  mavzu: MashqMavzusi;
   boshqalar: { id: string; name: string }[];
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // The drafts are supplied by the local preview. The standard site build has no worksheet routes.
-  const folder = process.env.TAYANCH_SAT_MATH_DIR;
-  if (!folder) return [];
-
-  const titles = {
-    parabola: 'Parabolas',
-    'parabola-models': 'Quadratic models',
-    'projectile-motion': 'Projectile motion',
-  };
-  const files = await readdir(folder);
-  const sets: Mavzu[] = [];
-  for (const [id, name] of Object.entries(titles)) {
-    if (!files.includes(id + '.json')) continue;
-    const data = JSON.parse(await readFile(join(folder, id + '.json'), 'utf8')) as Savol[];
-    if (!Array.isArray(data) || !data.length || new Set(data.map((q) => q.external_id)).size !== data.length) {
-      throw new Error(`${id}: expected a non-empty set with distinct question IDs`);
-    }
-    const items = data.map<MashqSavoli>(({ external_id, section, format, stem, answer, explanation, options }) => {
-      if (section !== 'math' || !/^[a-z0-9][a-z0-9-]{2,63}$/.test(external_id) || !stem || !explanation) {
-        throw new Error(`${external_id}: expected a Math question with an explanation`);
-      }
-      if (format === 'spr' && Array.isArray(answer) && answer.length &&
-          answer.every((value) => typeof value === 'string' && sprTekshir(value).ok)) {
-        return { external_id, stem, explanation, format, answer };
-      }
-      if (format === 'mcq' && typeof answer === 'string' && variantKalitlari.includes(answer) &&
-          options?.length === variantKalitlari.length &&
-          options.every((option, index) => option?.key === variantKalitlari[index] &&
-            typeof option.text === 'string' && option.text.trim())) {
-        return { external_id, stem, explanation, format, answer, options };
-      }
-      throw new Error(`${external_id}: expected valid written or multiple-choice answers`);
-    });
-    sets.push({ id, name, items });
-  }
+  const sets = await saytMashqVaraglari();
   return sets.map((mavzu) => ({
     params: { mavzu: mavzu.id },
     props: { mavzu, boshqalar: sets.filter((set) => set.id !== mavzu.id).map(({ id, name }) => ({ id, name })) },
@@ -68,6 +24,7 @@ const { mavzu, boshqalar } = Astro.props;
   <SatSavol />
   <div class="ichki worksheet sk" data-worksheet={mavzu.id}>
     <header>
+      <a href={yol('/uz/sat/#math-worksheets')}>All SAT Math worksheets</a>
       <h1>{mavzu.name}</h1>
       <p>{mavzu.items.length} SAT Math practice questions</p>
     </header>
