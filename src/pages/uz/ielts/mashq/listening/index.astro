@@ -1,0 +1,93 @@
+---
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import '../../../../../styles/ielts-reading.css';
+import { saytListeningTestlari } from '../../../../../lib/ielts/listening/saytTestlari';
+
+const tests = await saytListeningTestlari();
+---
+<BolimQobiq title="Listening mock · IELTS" description="Take Listening mocks with audio." turi="mashq" yol={['Practice']} bolim="ielts" holat="chop-etilgan">
+  <div class="ichki ls" id="ls">
+    <header><h1>IELTS Listening</h1></header>
+    <section id="ls-katalog" aria-label="Mock tanlash">
+      {tests.length > 0 ? (
+        <>
+          <label for="ls-tanlov">Choose a mock</label>
+          <select id="ls-tanlov">{tests.map((test) => <option value={test.testId}>{test.title} · {test.durationMinutes} minutes</option>)}</select>
+          <p class="ls-izoh">40 questions · 4 parts</p>
+          <button type="button" class="tugma tugma-asosiy" id="ls-boshla">Start</button>
+        </>
+      ) : <p>Listening mocks are being prepared.</p>}
+    </section>
+    {tests.length > 0 && (
+      <>
+        <p id="ls-holat" role="status"></p>
+        <p id="ls-xotira" role="status"></p>
+        <button type="button" class="tugma" id="ls-davom" hidden>Continue in this tab</button>
+        <section id="ls-ish" aria-labelledby="ls-nomi" hidden>
+          <div class="ls-nazorat">
+            <h2 id="ls-nomi"></h2>
+            <span role="timer" aria-label="Time remaining" id="ls-vaqt">45:00</span>
+            <span id="ls-javob-son" aria-label="Answered questions">0/40</span>
+            <button type="button" class="tugma" id="ls-yakunla">Finish</button>
+          </div>
+          <div class="ls-player">
+            <label for="ls-audio">Test audio</label>
+            <audio id="ls-audio" controls preload="metadata"></audio>
+            <p id="ls-audio-holat" role="status"></p>
+            <button type="button" class="tugma" id="ls-audio-qayta" hidden>Reload audio</button>
+          </div>
+          <div class="ls-qismlar" id="ls-qismlar" role="group" aria-label="Test parts"></div>
+          <div id="ls-savollar" tabindex="-1"></div>
+          <button type="button" class="tugma tugma-ikkinchi" id="ls-chiqish">Save and exit</button>
+        </section>
+        <section id="ls-natija" aria-label="Test result" hidden></section>
+        <section id="ls-tarix-oram" aria-labelledby="ls-tarix-h" hidden>
+          <h2 id="ls-tarix-h">Recent results</h2>
+          <ul id="ls-tarix"></ul>
+        </section>
+        <dialog id="ls-yakun" aria-labelledby="ls-yakun-h">
+          <h2 id="ls-yakun-h">Finish this test?</h2>
+          <p id="ls-javobsiz"></p>
+          <div class="ls-amal">
+            <button type="button" class="tugma tugma-asosiy" id="ls-yakun-ha">Finish</button>
+            <button type="button" class="tugma tugma-ikkinchi" id="ls-yakun-yoq">Return to test</button>
+          </div>
+        </dialog>
+      </>
+    )}
+  </div>
+</BolimQobiq>
+<script>
+  import { ishgaTushirListening } from '../../../../../lib/ielts/listening/ekran';
+  if (document.getElementById('ls-tanlov')) ishgaTushirListening();
+</script>
+<style>
+  .ls { display: grid; gap: var(--space-6); padding-block: var(--space-8); }
+  .ls :global([hidden]) { display: none !important; }
+  #ls-katalog, #ls-ish, .ls-player { display: grid; gap: var(--space-4); min-width: 0; }
+  #ls-katalog label, .ls-player label { font-weight: var(--font-weight-semibold); }
+  #ls-tanlov { width: 100%; min-width: 0; min-height: var(--size-touch-min); padding: var(--space-3); border: var(--border-width-1) solid var(--input-border); border-radius: var(--radius-md); background: var(--input-bg); color: var(--input-text); font: inherit; }
+  #ls-tanlov:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  .ls-izoh { color: var(--color-text-secondary); margin: 0; }
+  #ls-holat:empty, #ls-xotira:empty, #ls-audio-holat:empty { display: none; }
+  .ls-nazorat { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3); position: sticky; top: var(--space-2); z-index: 1; background: var(--color-surface); padding: var(--space-3); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); }
+  .ls-nazorat h2 { flex: 1; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  #ls-vaqt { font-variant-numeric: tabular-nums; font-weight: var(--font-weight-semibold); }
+  #ls-audio { width: 100%; min-width: 0; }
+  .ls-qismlar, .ls-amal { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+  .ls-qismlar :global(button) { min-width: var(--size-touch-min); min-height: var(--size-touch-min); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text-primary); padding: var(--space-2) var(--space-4); font: inherit; }
+  .ls-qismlar :global(button[aria-pressed='true']) { border-color: var(--color-text-primary); font-weight: var(--font-weight-semibold); }
+  #ls-savollar :global(.ls-guruh) { display: grid; gap: var(--space-4); margin-bottom: var(--space-8); }
+  #ls-savollar :global(.ls-korsatma) { white-space: pre-line; }
+  #ls-savollar :global(.ls-savol) { border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); min-width: 0; padding: var(--space-4); }
+  #ls-savollar :global(legend) { font-weight: var(--font-weight-semibold); margin-bottom: var(--space-3); }
+  #ls-savollar :global(.ls-xarita) { width: 100%; max-width: 100%; height: auto; }
+  #ls-natija :global(.ls-javoblar) { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
+  #ls-natija :global(summary) { min-height: var(--size-touch-min); padding: var(--space-3); cursor: pointer; }
+  #ls-natija :global(details) { border-bottom: var(--border-width-1) solid var(--color-border); }
+  #ls-natija :global(details p) { padding: var(--space-3); overflow-wrap: anywhere; }
+  #ls-tarix { list-style: none; padding: 0; }
+  #ls-tarix :global(button) { min-height: var(--size-touch-min); font: inherit; color: var(--color-text-primary); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); }
+  #ls-yakun { max-width: calc(100% - var(--space-8)); padding: var(--space-6); color: var(--color-text-primary); background: var(--color-surface); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-xl); }
+  #ls-yakun h2, #ls-yakun p { margin-bottom: var(--space-4); }
+</style>

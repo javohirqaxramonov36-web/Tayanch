@@ -15,6 +15,8 @@ export interface FaolUrinish {
   startedAt: string;
   /** epoch milliseconds */
   deadline: number;
+  /** Optional playback position for Listening attempts. */
+  audioPosition?: number;
   answers: Javoblar;
   /** keys of questions flagged for review */
   flags: string[];

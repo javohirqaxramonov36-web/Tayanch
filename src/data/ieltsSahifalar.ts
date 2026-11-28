@@ -42,7 +42,8 @@ export const darslar: IeltsBand[] = [
 
 /** Mashq testlari (hozircha faqat Reading ishlaydi) */
 export const mashqlar: IeltsBand[] = [
-  { nomi: 'Mashq testlari', tavsif: "Reading test ochiq, qolgan bo'limlar tez orada", qism: 'mashq/', ikonka: IKONKA.namuna },
+  { nomi: 'Listening mock', tavsif: 'Audio bilan to‘liq Listening testi', qism: 'mashq/listening/', ikonka: IKONKA.listening },
+  { nomi: 'Mashq testlari', tavsif: "Reading, Listening va Writing mashqlari", qism: 'mashq/', ikonka: IKONKA.namuna },
   { nomi: 'Reading test', tavsif: '60 daqiqa, 40 savol, taxminiy band', qism: 'mashq/reading/', ikonka: IKONKA.reading },
   { nomi: 'Listening imlo', tavsif: "So'zni tinglab, to'g'ri yozish", qism: 'mashq/listening-imlo/', ikonka: IKONKA.listening },
   { nomi: 'Harf va raqam diktanti', tavsif: 'Ism, telefon, sana va narxni tinglab yozish', qism: 'mashq/listening-raqamlar/', ikonka: IKONKA.listening },
