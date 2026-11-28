@@ -1,5 +1,6 @@
 ---
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import { tashqiReadingMocklar } from '../../../../../data/ielts/tashqiReadingMocklar';
 import IeltsMashqKarta from '../../../../../components/ielts/IeltsMashqKarta.astro';
 import { savolRaqamlari } from '../../../../../lib/ielts/reading/sxema';
 import { READING_YOL } from '../../../../../lib/ielts/reading/ekran/yollar';
@@ -11,6 +12,7 @@ import { yol } from '../../../../../lib/yol';
 const barchaTestlar = await saytTestlari();
 const yuklanganTestlar = barchaTestlar.filter((test) => test.source?.kind === 'uploaded');
 const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
+const vaqtinchaYopiq = tashqiReadingMocklar.filter(({ id }) => !yuklanganTestlar.some((test) => test.testId === id));
 ---
 <BolimQobiq
   title="Reading test · IELTS"
@@ -45,6 +47,13 @@ const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
         })}
       </div> : <p>Mocks are being prepared. <a href={yol('/uz/ielts/qollanma/reading/')}>Open the Reading guide</a>.</p>}
     </section>
+
+    {vaqtinchaYopiq.length > 0 && <section class="mocklar" aria-labelledby="tashqi-mocklar-h">
+      <h2 id="tashqi-mocklar-h">External mocks</h2>
+      <div class="kartalar">
+        {vaqtinchaYopiq.map(({ nomi }) => <IeltsMashqKarta nomi={nomi} tur="Mock" vaqtinchaYopiq />)}
+      </div>
+    </section>}
 
     <section class="tarix" id="rb-tarix-oram" aria-labelledby="rb-tarix-h">
       <h2 id="rb-tarix-h">Recent results</h2>

@@ -8,14 +8,18 @@ interface Props {
   holatKaliti?: string;
   testId?: string;
   jami?: number;
+  vaqtinchaYopiq?: boolean;
 }
-const { nomi, tur, vaqt, tavsif, href, holatKaliti, testId, jami } = Astro.props;
+const { nomi, tur, vaqt, tavsif, href, holatKaliti, testId, jami, vaqtinchaYopiq = false } = Astro.props;
 ---
 <article class:list={['mashq-karta', { 'kelajak': !href }]} data-mashq-karta data-holat-kaliti={holatKaliti} data-test-id={testId} data-jami={jami}>
   <h3>{nomi}</h3>
   <p class="meta">{[tur, vaqt].filter(Boolean).join(' · ')}</p>
   {tavsif && <p class="izoh">{tavsif}</p>}
-  <p class:list={['holat', { 'ochiq': !!href }]} data-mashq-holat>{href ? 'Not started' : 'Coming soon'}</p>
+  <p class:list={['holat', { 'ochiq': !!href }]} data-mashq-holat>
+    {vaqtinchaYopiq ? <span lang="uz">Vaqtincha ishlamaydi</span> : href ? 'Not started' : 'Coming soon'}
+  </p>
+  {holatKaliti === 'reading' && <p class="izoh" lang="uz">Natijalar faqat shu qurilmada saqlanadi.</p>}
   {href && <footer>
     <a class="t-tugma t-tugma--ikkinchi" href={href} data-mashq-amal data-bosh-havola={href}>
       <span data-amal-matn>{holatKaliti === 'reading' && !testId ? 'Choose a mock' : 'Start'}</span>

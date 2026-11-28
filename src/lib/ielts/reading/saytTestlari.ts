@@ -4,6 +4,7 @@
 // a normal build never loads it, so it cannot reach production.
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { tashqiReadingMocklar } from '../../../data/ielts/tashqiReadingMocklar.ts';
 import type { ReadingTest } from './sxema.ts';
 import { tekshirManbalar, type TestManba } from './testlarTekshir.ts';
 
@@ -23,7 +24,15 @@ export async function saytTestlari(): Promise<ReadingTest[]> {
   if (mockPapka) {
     const fayllar = (await readdir(mockPapka)).filter((f) => f.endsWith('.json')).sort();
     for (const fayl of fayllar) {
-      manbalar.push({ fayl, fixture: false, matn: await readFile(join(mockPapka, fayl), 'utf8') });
+      const manba = { fayl, fixture: false, matn: await readFile(join(mockPapka, fayl), 'utf8') };
+      if (tashqiReadingMocklar.some(({ id }) => fayl === `${id}.json`)) {
+        const tekshiruv = tekshirManbalar([manba]);
+        if (tekshiruv.xatolar.length) {
+          console.warn(`[IELTS] External mock unavailable: ${tekshiruv.xatolar.join('; ')}`);
+          continue;
+        }
+      }
+      manbalar.push(manba);
     }
   }
   if (process.env.IELTS_FIXTURE === '1') manbalar.push(...(await oqi(fixture, true)));
