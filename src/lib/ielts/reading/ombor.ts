@@ -51,9 +51,12 @@ function oqiJson(ombor: Ombor, kalit: string): unknown {
   }
 }
 
-export function urinishOmbori(ombor: Ombor = brauzerOmbori()): UrinishOmbori {
+export function urinishOmbori(
+  ombor: Ombor = brauzerOmbori(),
+  kalitlar = { faol: FAOL_KALIT, urinishlar: URINISHLAR_KALIT },
+): UrinishOmbori {
   const urinishlar = (): Urinish[] => {
-    const x = oqiJson(ombor, URINISHLAR_KALIT);
+    const x = oqiJson(ombor, kalitlar.urinishlar);
     return Array.isArray(x) ? x.filter(urinishmi) : [];
   };
   return {
@@ -61,24 +64,24 @@ export function urinishOmbori(ombor: Ombor = brauzerOmbori()): UrinishOmbori {
       return ombor.doimiy;
     },
     faol() {
-      const x = oqiJson(ombor, FAOL_KALIT);
+      const x = oqiJson(ombor, kalitlar.faol);
       if (x === null) return null;
       if (!faolmi(x)) {
-        ombor.ochir(FAOL_KALIT);
+        ombor.ochir(kalitlar.faol);
         return null;
       }
       return x;
     },
     saqlaFaol(u) {
-      return ombor.yoz(FAOL_KALIT, JSON.stringify(u)) && ombor.doimiy;
+      return ombor.yoz(kalitlar.faol, JSON.stringify(u)) && ombor.doimiy;
     },
     tozalaFaol() {
-      ombor.ochir(FAOL_KALIT);
+      ombor.ochir(kalitlar.faol);
     },
     urinishlar,
     qoshUrinish(u) {
       const hammasi = [...urinishlar().filter((x) => x.id !== u.id), u].slice(-URINISH_CHEGARA);
-      return ombor.yoz(URINISHLAR_KALIT, JSON.stringify(hammasi)) && ombor.doimiy;
+      return ombor.yoz(kalitlar.urinishlar, JSON.stringify(hammasi)) && ombor.doimiy;
     },
     topUrinish(id) {
       return urinishlar().find((x) => x.id === id) ?? null;

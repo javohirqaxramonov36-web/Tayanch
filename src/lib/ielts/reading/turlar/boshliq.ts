@@ -7,7 +7,11 @@ export const boshliq: SavolTuri = {
   type: 'gap-fill',
   render({ savol, javob, matnId }) {
     const kalit = String(savol.number);
-    const limit = typeof savol.wordLimit === 'number' ? `<span class="savol-izoh" id="${qoch(matnId)}-izoh">${RM.sozLimit(savol.wordLimit)}</span>` : '';
+    const limitMatn = savol.allowNumber
+      ? `${RM.sozLimit(savol.wordLimit ?? 1)} and/or one number`
+      : RM.sozLimit(savol.wordLimit ?? 1);
+    const limit = typeof savol.wordLimit === 'number'
+      ? `<span class="savol-izoh" id="${qoch(matnId)}-izoh">${limitMatn}</span>` : '';
     return `<div class="boshliq"><input class="maydon" type="text" data-savol="${qoch(kalit)}" value="${qoch(
       typeof javob === 'string' ? javob : '',
     )}" aria-labelledby="${qoch(matnId)}"${
