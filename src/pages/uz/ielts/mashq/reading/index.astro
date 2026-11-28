@@ -1,5 +1,8 @@
 ---
 import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import IeltsMashqKarta from '../../../../../components/ielts/IeltsMashqKarta.astro';
+import { savolRaqamlari } from '../../../../../lib/ielts/reading/sxema';
+import { READING_YOL } from '../../../../../lib/ielts/reading/ekran/yollar';
 import ManbaBlok from '../../../../../components/ManbaBlok.astro';
 import '../../../../../styles/ielts-reading.css';
 import { saytTestlari } from '../../../../../lib/ielts/reading/saytTestlari';
@@ -21,22 +24,26 @@ const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
   <div class="ichki rb" id="rb">
     <header class="bosh">
       <h1>IELTS Reading</h1>
-      <p class="format">60 minutes · 40 questions · 3 passages</p>
+      <p class="format">Choose a mock. Your progress is saved in this browser, and the timer keeps running if you leave the test.</p>
     </header>
 
-    <section class="boshla" aria-label="Choose a mock">
-      {testlar.length > 0 ? (
-        <>
-          <label for="rb-test">Choose a mock</label>
-          <select id="rb-test">
-            {testlar.map((test) => (
-              <option value={test.testId}>{test.title}</option>
-            ))}
-          </select>
-          <a class="t-tugma ielts-tugma--urgu" id="rb-boshla" href={`${yol('/uz/ielts/mashq/reading/test/')}?boshla=1&test=${encodeURIComponent(testlar[0].testId)}`}>Start</a>
-          <p class="boshla-davom" id="rb-davom" role="status" hidden></p>
-        </>
-      ) : <p>Mocks are being prepared.</p>}
+    <section class="mocklar" aria-labelledby="mocklar-h">
+      <h2 id="mocklar-h">Mocks</h2>
+      <p data-reading-fallback hidden>You have a saved attempt. <a href={yol(READING_YOL.test)}>Open it before starting another mock</a>.</p>
+      {testlar.length > 0 ? <div class="kartalar">
+        {testlar.map((test) => {
+          const jami = test.passages.flatMap((p) => p.groups.flatMap((g) => g.questions.flatMap(savolRaqamlari))).length;
+          return <IeltsMashqKarta
+            nomi={test.title}
+            tur={`Mock · ${jami} questions`}
+            vaqt={`${test.durationMinutes} minutes`}
+            href={`${yol(READING_YOL.test)}?boshla=1&test=${encodeURIComponent(test.testId)}`}
+            holatKaliti="reading"
+            testId={test.testId}
+            jami={jami}
+          />;
+        })}
+      </div> : <p>Mocks are being prepared. <a href={yol('/uz/ielts/qollanma/reading/')}>Open the Reading guide</a>.</p>}
     </section>
 
     <section class="tarix" id="rb-tarix-oram" aria-labelledby="rb-tarix-h">
@@ -69,11 +76,10 @@ const testlar = yuklanganTestlar.length > 0 ? yuklanganTestlar : barchaTestlar;
   .rb { display: flex; flex-direction: column; gap: var(--space-8); padding-block: var(--space-8); }
   .bosh { display: grid; gap: var(--space-3); }
   .format { color: var(--color-text-secondary); margin: 0; }
-  .boshla { display: grid; gap: var(--space-4); }
-  .boshla label { font-weight: var(--font-weight-semibold); }
-  .boshla select { width: 100%; min-width: 0; min-height: var(--size-touch-min); padding: var(--space-3); border: var(--border-width-1) solid var(--input-border); border-radius: var(--radius-md); background: var(--input-bg); color: var(--input-text); font: inherit; }
-  .boshla select:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
-  .boshla-davom { margin: 0; color: var(--color-text-secondary); }
+  .mocklar, .kartalar { display: grid; gap: var(--space-4); }
+  [data-reading-fallback][hidden] { display: none; }
+  [data-reading-fallback] a { display: inline-flex; align-items: center; min-height: var(--size-touch-min); }
+  @media (min-width: 768px) { .kartalar { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .tarix { display: grid; gap: var(--space-4); }
   .tarix h2 { font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
   .manba-izoh { border-top: var(--border-width-1) solid var(--color-border); padding-top: var(--space-4); }

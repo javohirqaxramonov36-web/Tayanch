@@ -1,0 +1,140 @@
+---
+interface Props {
+  nomi: string;
+  tur: string;
+  vaqt?: string;
+  tavsif?: string;
+  href?: string;
+  holatKaliti?: string;
+  testId?: string;
+  jami?: number;
+}
+const { nomi, tur, vaqt, tavsif, href, holatKaliti, testId, jami } = Astro.props;
+---
+<article class:list={['mashq-karta', { 'kelajak': !href }]} data-mashq-karta data-holat-kaliti={holatKaliti} data-test-id={testId} data-jami={jami}>
+  <h3>{nomi}</h3>
+  <p class="meta">{[tur, vaqt].filter(Boolean).join(' · ')}</p>
+  {tavsif && <p class="izoh">{tavsif}</p>}
+  <p class:list={['holat', { 'ochiq': !!href }]} data-mashq-holat>{href ? 'Not started' : 'Coming soon'}</p>
+  {href && <footer>
+    <a class="t-tugma t-tugma--ikkinchi" href={href} data-mashq-amal data-bosh-havola={href}>
+      <span data-amal-matn>{holatKaliti === 'reading' && !testId ? 'Choose a mock' : 'Start'}</span>
+      <span class="ekranda-yoq"> {nomi}</span>
+    </a>
+    {testId && <button class="t-tugma t-tugma--ikkinchi" type="button" disabled hidden data-mashq-band>Finish the active mock first</button>}
+  </footer>}
+</article>
+
+<script>
+  import { KALIT_IELTS_IMLO } from '../../data/ielts/imloToplamlar';
+  import { KALIT_IELTS_RAQAMLAR } from '../../data/ielts/raqamToplamlar';
+  import { KALIT_QORALAMA, qoralamaniOqi } from '../../lib/ielts/writing/baho';
+  import { urinishOmbori, FAOL_KALIT, URINISHLAR_KALIT } from '../../lib/ielts/reading/ombor';
+  import { qolganMs, vaqtMatn } from '../../lib/ielts/reading/taymer';
+  import { READING_YOL } from '../../lib/ielts/reading/ekran/yollar';
+  import { yol } from '../../lib/yol';
+
+  const oqi = (kalit: string) => {
+    try { return localStorage.getItem(kalit); } catch { return null; }
+  };
+  function json(kalit: string): unknown {
+    try { return JSON.parse(oqi(kalit) ?? 'null'); } catch { return null; }
+  }
+  const obyekt = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
+  const ombor = urinishOmbori({ oqi, yoz: () => false, ochir: () => {}, doimiy: false });
+  // The speaking guide stores notes and checked items, while the TFNG drill has no saved state.
+  const speakingKaliti = 'tayanch:ielts-speaking';
+  const kartalar = [...document.querySelectorAll<HTMLElement>('[data-mashq-karta]')];
+  let taymer: number | undefined;
+
+  function qisqaMashqBajarilgan(kalit: string) {
+    const yozuv = json(kalit);
+    return obyekt(yozuv) && yozuv.v === 1 && obyekt(yozuv.toplamlar)
+      && Object.values(yozuv.toplamlar).some((t) => obyekt(t) && Number.isInteger(t.eng) && Number.isInteger(t.jami));
+  }
+
+  function yangila() {
+    window.clearTimeout(taymer);
+    const faol = ombor.faol();
+    const tarix = ombor.urinishlar();
+    const qoldi = faol ? qolganMs(faol.deadline, Date.now()) : 0;
+    const fallback = document.querySelector<HTMLElement>('[data-reading-fallback]');
+    if (fallback) fallback.hidden = !faol || kartalar.some((k) => k.dataset.testId === faol.testId);
+
+    for (const karta of kartalar) {
+      const havola = karta.querySelector<HTMLAnchorElement>('[data-mashq-amal]');
+      if (!havola) continue;
+      const amalMatni = havola.querySelector<HTMLElement>('[data-amal-matn]')!;
+      const holatMatni = karta.querySelector<HTMLElement>('[data-mashq-holat]')!;
+      const band = karta.querySelector<HTMLElement>('[data-mashq-band]');
+      const id = karta.dataset.testId;
+      const kalit = karta.dataset.holatKaliti;
+      let amal = kalit === 'reading' && !id ? 'Choose a mock' : 'Start';
+      let holat = 'Not started';
+      let manzil = havola.dataset.boshHavola!;
+      const boshqaFaol = !!(id && faol && faol.testId !== id);
+
+      if (kalit === 'reading') {
+        const oxirgi = tarix.findLast((u) => !id || u.testId === id);
+        if (oxirgi) {
+          const jami = Object.values(oxirgi.perTypeStats).reduce((soni, s) => soni + (s && Number.isSafeInteger(s.jami) && s.jami > 0 ? s.jami : 0), 0)
+            || Number(karta.dataset.jami);
+          holat = jami ? `Last result: ${oxirgi.raw}/${jami}` : `Last result: ${oxirgi.raw} correct`;
+          amal = 'Try again';
+        }
+        if (faol && (!id || faol.testId === id)) {
+          holat = qoldi ? `In progress · ${vaqtMatn(qoldi)} left` : 'Time is up';
+          amal = qoldi ? 'Continue' : 'Open attempt';
+          manzil = yol(READING_YOL.test);
+        }
+      }
+      if (kalit === 'writing') {
+        const insho = qoralamaniOqi(oqi(KALIT_QORALAMA));
+        if (insho?.insho.trim()) {
+          holat = 'Essay draft saved';
+          amal = 'Continue';
+        }
+      }
+      if (kalit === 'speaking') {
+        const saqlangan = json(speakingKaliti);
+        if (obyekt(saqlangan) && saqlangan.v === 1 &&
+          ((typeof saqlangan.eslatma === 'string' && saqlangan.eslatma.trim()) ||
+            (Array.isArray(saqlangan.belgilar) && saqlangan.belgilar.length))) {
+          holat = 'Practice notes or checklist saved';
+          amal = 'Continue';
+        }
+      }
+      if ((kalit === 'imlo' && qisqaMashqBajarilgan(KALIT_IELTS_IMLO)) ||
+        (kalit === 'raqamlar' && qisqaMashqBajarilgan(KALIT_IELTS_RAQAMLAR))) {
+        holat = 'Practice result saved';
+        amal = 'Try again';
+      }
+
+      if (holatMatni.textContent !== holat) holatMatni.textContent = holat;
+      if (amalMatni.textContent !== amal) amalMatni.textContent = amal;
+      if (havola.getAttribute('href') !== manzil) havola.href = manzil;
+      havola.hidden = boshqaFaol;
+      if (band) band.hidden = !boshqaFaol;
+    }
+    if (qoldi && !document.hidden) taymer = window.setTimeout(yangila, Math.min(1000, qoldi));
+  }
+
+  yangila();
+  const kalitlar = [FAOL_KALIT, URINISHLAR_KALIT, KALIT_QORALAMA, KALIT_IELTS_IMLO, KALIT_IELTS_RAQAMLAR, speakingKaliti];
+  addEventListener('storage', (event) => { if (!event.key || kalitlar.includes(event.key)) yangila(); });
+  addEventListener('pageshow', (event) => { if (event.persisted) yangila(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) yangila(); else window.clearTimeout(taymer); });
+</script>
+
+<style>
+  .mashq-karta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); min-width: 0; padding: var(--space-5); border: var(--border-width-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: var(--shadow-1); }
+  .mashq-karta h3 { overflow-wrap: anywhere; font-size: var(--text-h3-size); line-height: var(--text-h3-lh); }
+  .meta, .izoh { color: var(--color-text-secondary); font-size: var(--text-small-size); line-height: var(--text-small-lh); }
+  .holat { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); color: var(--color-text-secondary); background: var(--color-surface-sunken); font-size: var(--text-small-size); }
+  .ochiq { color: var(--color-success-text); background: var(--color-success-subtle); }
+  .kelajak { border-style: dashed; }
+  footer { margin-top: auto; padding-top: var(--space-2); }
+  .t-tugma { min-height: var(--size-touch-min); }
+  .mashq-karta [hidden] { display: none !important; }
+  @media (width < 768px) { footer, footer .t-tugma { width: 100%; } }
+</style>
