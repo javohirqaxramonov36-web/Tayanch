@@ -329,3 +329,34 @@ test('only imported mocks may explicitly omit unverified source evidence', () =>
   const result = baholash(t, TOGRI);
   assert.equal(result.raw, 5);
 });
+
+
+test('imported completion may allow a number in addition to two words', () => {
+  const t = nusxa();
+  const q = t.passages[0].groups.find((g) => g.type === 'gap-fill')!.questions[0];
+  q.answer = '12 million years';
+  q.wordLimit = 2;
+  q.allowNumber = true;
+  assert.equal(boshliqTogri('12 million years', q), true);
+  assert.deepEqual(tekshirTest(t, { jamiSavol: 5 }), []);
+  q.allowNumber = false;
+  assert.equal(boshliqTogri('12 million years', q), false);
+  assert.ok(tekshirTest(t, { jamiSavol: 5 }).some((e) => e.includes('longer than wordLimit')));
+});
+
+
+test('Listening attempt keys keep Reading progress separate and preserve playback position', () => {
+  const storage = xotiraOmbori();
+  const reading = urinishOmbori(storage);
+  const listeningKeys = { faol: 'tayanch:ielts-listening-faol:v1', urinishlar: 'tayanch:ielts-listening-urinishlar:v1' };
+  const listening = urinishOmbori(storage, listeningKeys);
+  const readingAttempt = yangiUrinish(fixture, 1000, 'reading-active');
+  const listeningAttempt = { ...yangiUrinish(fixture, 2000, 'listening-active'), audioPosition: 35 };
+  reading.saqlaFaol(readingAttempt);
+  listening.saqlaFaol(listeningAttempt);
+  assert.equal(reading.faol()?.id, 'reading-active');
+  assert.equal(listening.faol()?.audioPosition, 35);
+  listening.tozalaFaol();
+  assert.equal(listening.faol(), null);
+  assert.equal(reading.faol()?.id, 'reading-active');
+});

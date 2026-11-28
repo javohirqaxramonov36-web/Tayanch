@@ -1,0 +1,279 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BolimQobiq from '../../../../../layouts/BolimQobiq.astro';
+import SatSavol from '../../../../../components/sat/SatSavol.astro';
+import { saytMashqVaraglari, type MashqMavzusi } from '../../../../../lib/sat/saytMashqVaraglari';
+import { yol } from '../../../../../lib/yol';
+
+interface Props {
+  mavzu: MashqMavzusi;
+  boshqalar: { id: string; name: string }[];
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const sets = await saytMashqVaraglari();
+  return sets.map((mavzu) => ({
+    params: { mavzu: mavzu.id },
+    props: { mavzu, boshqalar: sets.filter((set) => set.id !== mavzu.id).map(({ id, name }) => ({ id, name })) },
+  }));
+};
+
+const { mavzu, boshqalar } = Astro.props;
+---
+<BolimQobiq title={`${mavzu.name} · SAT Math`} description={`Practise ${mavzu.name.toLowerCase()} with SAT Math questions.`} turi="mashq" holat="qoralama" yol={['Practice']}>
+  <SatSavol />
+  <div class="ichki worksheet sk" data-worksheet={mavzu.id}>
+    <header>
+      <a href={yol('/uz/sat/#math-worksheets')}>All SAT Math worksheets</a>
+      <h1>{mavzu.name}</h1>
+      <p>{mavzu.items.length} SAT Math practice questions</p>
+    </header>
+    <ol aria-label="Practice questions">
+      {mavzu.items.map((item, index) => (
+        <li class="question" data-question>
+          <div class="sk-matn" id={`stem-${index}`} data-stem>{item.stem}</div>
+          {item.format === 'mcq' ? (
+            <fieldset class="choices" aria-describedby={`stem-${index} feedback-${index}`}>
+              <legend class="sk-sr">Question {index + 1}</legend>
+              {item.options.map((option) => (
+                <div class="choice" data-choice={option.key}>
+                  <label>
+                    <input type="radio" name={`answer-${index}`} value={option.key} />
+                    <span data-choice-caption><strong>{option.key}.</strong> <span data-option-text>{option.text}</span></span>
+                  </label>
+                  <button type="button" data-eliminate aria-label={`Question ${index + 1}: eliminate choice ${option.key}`} aria-pressed="false">Eliminate</button>
+                </div>
+              ))}
+            </fieldset>
+          ) : (
+            <>
+              <label class="answer-label" for={`answer-${index}`}><span class="sk-sr">Question {index + 1}. </span>Your answer</label>
+              <input class="written-answer" id={`answer-${index}`} data-answer type="text" maxlength="64" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby={`feedback-${index}`} />
+            </>
+          )}
+          <p id={`feedback-${index}`} data-feedback hidden></p>
+          <div class="solution sk-matn" data-solution hidden>
+            <p><strong>Answer:</strong> {item.format === 'mcq' ? item.answer : item.answer[0]}</p>
+            <div data-explanation></div>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="actions">
+      <button class="t-tugma sat-tugma--kok" type="button" data-check disabled>Check answers</button>
+      <button class="t-tugma t-tugma--ikkinchi" type="button" data-reset disabled>Reset</button>
+    </div>
+    <div class="results">
+      <p data-first-result role="status"></p>
+      <p data-practice-result role="status"></p>
+      <p data-storage role="status"></p>
+    </div>
+    {boshqalar.length > 0 && (
+      <nav aria-label="More SAT Math practice">
+        {boshqalar.map(({ id, name }) => <a href={yol(`/uz/sat/mashq/materiallar/${id}/`)}>{name}</a>)}
+      </nav>
+    )}
+    <script type="application/json" data-questions set:html={JSON.stringify(mavzu.items).replace(/</g, '\\u003c')} />
+  </div>
+</BolimQobiq>
+
+<script>
+  import { brauzerOmbori } from '../../../../../lib/navigator/ombor';
+  import { baholaMashqJavobi, oqiBirinchiUrinish, oqiMashqJavoblari, oqiObyekt, type MashqBali, type MashqSavoli } from '../../../../../lib/sat/mashqVaragi';
+  import { xavfsizMatn } from '../../../../../lib/sat/xavfsizMatn';
+
+  const root = document.querySelector<HTMLElement>('[data-worksheet]');
+  if (root) {
+    const items: MashqSavoli[] = JSON.parse(root.querySelector('[data-questions]')!.textContent!);
+    const firstResult = root.querySelector<HTMLElement>('[data-first-result]')!;
+    const practiceResult = root.querySelector<HTMLElement>('[data-practice-result]')!;
+    const storageMessage = root.querySelector<HTMLElement>('[data-storage]')!;
+    const checkButton = root.querySelector<HTMLButtonElement>('[data-check]')!;
+    const resetButton = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const storage = brauzerOmbori();
+    const answerKey = `tayanch:sat-${root.dataset.worksheet}:v1`;
+    const progressKey = `${answerKey}:progress`;
+
+    let answers = oqiMashqJavoblari(storage.oqi(answerKey));
+    const savedProgress = storage.oqi(progressKey);
+    let firstAttempt = oqiBirinchiUrinish(savedProgress);
+    const savedEliminated = oqiObyekt(savedProgress).eliminated;
+    const eliminated = new Map<string, Set<string>>();
+    let explanationsLoaded = false;
+
+    const questions = Array.from(root.querySelectorAll<HTMLElement>('[data-question]'), (element, index) => {
+      const item = items[index];
+      const written = element.querySelector<HTMLInputElement>('[data-answer]');
+      const feedback = element.querySelector<HTMLElement>('[data-feedback]')!;
+      const solution = element.querySelector<HTMLElement>('[data-solution]')!;
+      const rows = Array.from(element.querySelectorAll<HTMLElement>('[data-choice]'), (row) => ({
+        row,
+        radio: row.querySelector<HTMLInputElement>('input[type="radio"]')!,
+        button: row.querySelector<HTMLButtonElement>('[data-eliminate]')!,
+      }));
+
+      void xavfsizMatn(item.stem, element.querySelector<HTMLElement>('[data-stem]')!);
+      if (item.format === 'mcq') {
+        rows.forEach(({ row }, i) => {
+          void xavfsizMatn(item.options[i].text, row.querySelector<HTMLElement>('[data-option-text]')!);
+        });
+      }
+
+      const saved = savedEliminated && typeof savedEliminated === 'object' && Object.hasOwn(savedEliminated, item.external_id)
+        ? (savedEliminated as Record<string, unknown>)[item.external_id] : null;
+      const crossedOut = new Set<string>();
+      if (Array.isArray(saved)) {
+        for (const { radio } of rows) if (saved.includes(radio.value) && radio.value !== answers[item.external_id]) {
+          crossedOut.add(radio.value);
+        }
+      }
+      if (crossedOut.size) eliminated.set(item.external_id, crossedOut);
+
+      function refreshInputs() {
+        const value = answers[item.external_id] ?? '';
+        if (written) written.value = value.slice(0, written.maxLength);
+        rows.forEach(({ row, radio, button }) => {
+          radio.checked = radio.value === value;
+          const crossed = eliminated.get(item.external_id)?.has(radio.value) ?? false;
+          row.toggleAttribute('data-eliminated', crossed);
+          button.setAttribute('aria-pressed', String(crossed));
+        });
+      }
+
+      function clearFeedback() {
+        written?.removeAttribute('aria-invalid');
+        feedback.hidden = true;
+        practiceResult.textContent = '';
+      }
+
+      function changeAnswer(value: string) {
+        answers[item.external_id] = value;
+        save(answerKey, answers);
+        clearFeedback();
+      }
+
+      function toggleEliminated(value: string, crossed: boolean) {
+        const chosen = eliminated.get(item.external_id) ?? new Set<string>();
+        if (crossed) chosen.add(value);
+        else chosen.delete(value);
+        if (chosen.size) eliminated.set(item.external_id, chosen);
+        else eliminated.delete(item.external_id);
+        saveProgress();
+      }
+
+      refreshInputs();
+      written?.addEventListener('input', () => changeAnswer(written.value));
+      rows.forEach(({ radio, button }) => {
+        radio.addEventListener('change', () => {
+          changeAnswer(radio.value);
+          if (eliminated.get(item.external_id)?.has(radio.value)) toggleEliminated(radio.value, false);
+          refreshInputs();
+        });
+        button.addEventListener('click', () => {
+          const crossed = !eliminated.get(item.external_id)?.has(radio.value);
+          if (crossed && radio.checked) changeAnswer('');
+          toggleEliminated(radio.value, crossed);
+          refreshInputs();
+        });
+      });
+
+      return { item, written, feedback, solution, refreshInputs, clearFeedback };
+    });
+
+    function save(key: string, value: object) {
+      if (!storage.yoz(key, JSON.stringify(value)) || !storage.doimiy) {
+        storageMessage.textContent = 'Changes may be lost when you leave this page.';
+      }
+    }
+
+    function saveProgress() {
+      firstAttempt ??= oqiBirinchiUrinish(storage.oqi(progressKey));
+      save(progressKey, {
+        firstAttempt,
+        eliminated: Object.fromEntries(Array.from(eliminated, ([id, choices]) => [id, [...choices]])),
+      });
+    }
+
+    function formatResult({ correct, total, unanswered }: MashqBali) {
+      return `${correct}/${total} correct · ${unanswered} unanswered`;
+    }
+
+    function showFirstAttempt() {
+      firstResult.textContent = firstAttempt ? `First attempt · ${formatResult(firstAttempt)}` : '';
+      if (!firstAttempt) return;
+      for (const { item, solution } of questions) {
+        solution.hidden = false;
+        if (!explanationsLoaded) void xavfsizMatn(item.explanation, solution.querySelector<HTMLElement>('[data-explanation]')!);
+      }
+      explanationsLoaded = true;
+    }
+
+    showFirstAttempt();
+    checkButton.disabled = false;
+    resetButton.disabled = false;
+
+    checkButton.addEventListener('click', () => {
+      const score: MashqBali = { correct: 0, unanswered: 0, total: questions.length };
+      for (const { item, written, feedback } of questions) {
+        const { status, text } = baholaMashqJavobi(item, answers[item.external_id] ?? '');
+        if (status === 'correct') score.correct += 1;
+        if (status === 'unanswered') score.unanswered += 1;
+        if (status === 'invalid') written?.setAttribute('aria-invalid', 'true');
+        else written?.removeAttribute('aria-invalid');
+        feedback.textContent = text;
+        feedback.hidden = false;
+      }
+      firstAttempt ??= oqiBirinchiUrinish(storage.oqi(progressKey));
+      if (firstAttempt) {
+        practiceResult.textContent = `Practice · ${formatResult(score)}`;
+      } else {
+        firstAttempt = score;
+        saveProgress();
+      }
+      showFirstAttempt();
+    });
+
+    resetButton.addEventListener('click', () => {
+      storage.ochir(answerKey);
+      storage.ochir(progressKey);
+      answers = {};
+      firstAttempt = null;
+      eliminated.clear();
+      for (const { refreshInputs, clearFeedback, solution } of questions) {
+        refreshInputs();
+        clearFeedback();
+        solution.hidden = true;
+      }
+      showFirstAttempt();
+      practiceResult.textContent = 'Worksheet reset.';
+    });
+  }
+</script>
+
+<style>
+  .worksheet { display: grid; gap: var(--space-5); padding-block: var(--space-6); }
+  .worksheet.sk { max-width: 49rem; }
+  .worksheet h1 { font-size: var(--text-h1-size); line-height: var(--text-h1-lh); }
+  header p { margin: var(--space-2) 0 0; color: var(--color-sat-text-muted); }
+  ol { margin: 0; padding-inline-start: var(--space-6); }
+  .question { padding-block: var(--space-5); border-block-end: var(--border-width-1) solid var(--color-sat-line-strong); overflow-wrap: anywhere; }
+  .question::marker { font-weight: var(--font-weight-bold); }
+  .answer-label { display: block; margin-block: var(--space-3) var(--space-1); font-weight: var(--font-weight-semibold); }
+  .written-answer { width: min(100%, 12rem); min-height: var(--size-touch-min); padding: var(--space-2) var(--space-3); border: var(--border-width-1) solid var(--color-sat-line-strong); border-radius: var(--radius-md); background: var(--color-sat-surface); color: var(--color-sat-text); font: inherit; }
+  .written-answer[aria-invalid='true'] { border-style: dashed; }
+  .choices { display: grid; gap: var(--space-2); min-inline-size: 0; margin-block-start: var(--space-3); padding: 0; border: 0; }
+  .choice { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2); align-items: stretch; }
+  .choice label, .choice button { min-height: var(--size-touch-min); border: var(--border-width-1) solid var(--color-sat-line-strong); border-radius: var(--radius-md); background: var(--color-sat-surface); color: var(--color-sat-text); cursor: pointer; }
+  .choice label { display: flex; gap: var(--space-2); align-items: center; padding: var(--space-2) var(--space-3); }
+  .choice input { flex: none; margin: 0; accent-color: var(--color-sat-blue-text); }
+  .choice button { padding: var(--space-2) var(--space-3); font: inherit; font-size: var(--text-small-size); }
+  .choice button[aria-pressed='true'] { border-style: dashed; font-weight: var(--font-weight-semibold); }
+  .choice[data-eliminated] [data-choice-caption] { text-decoration: line-through; }
+  .choice label:has(input:focus-visible), .choice button:focus-visible, .written-answer:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-gap); }
+  [data-feedback] { margin-block: var(--space-2); font-weight: var(--font-weight-semibold); }
+  .solution { padding-block-start: var(--space-2); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .results p { margin: 0; }
+  [data-first-result] { font-weight: var(--font-weight-bold); }
+  nav { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+</style>

@@ -86,7 +86,12 @@ export const konikmalar: Konikma[] = [
     mashqlar: [
       band('Listening spelling', 'Listen to a word and spell it correctly', IKONKA.listening, 'mashq/listening-imlo/'),
       band('Letters and numbers dictation', 'Listen and write names, phone numbers, dates and prices', IKONKA.listening, 'mashq/listening-raqamlar/'),
-      band('Listening mock', 'A full Listening test', IKONKA.namuna),
+      band(
+        'Listening mock',
+        'A full Listening test',
+        IKONKA.namuna,
+        import.meta.env.SSR && process.env.TAYANCH_IELTS_LISTENING_DIR ? 'mashq/listening/' : undefined,
+      ),
     ],
     natijalar: [],
   },
